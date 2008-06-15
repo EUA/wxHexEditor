@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="wxHexEditor" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-march=native -mtune=native" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="`wx-config --cflags`" />
+			<Add option="-Winvalid-pch" />
+			<Add option="-include wx_pch.h" />
+			<Add option="-DWX_PRECOMP" />
+		</Compiler>
+		<Linker>
+			<Add option="`wx-config --libs`" />
+		</Linker>
+		<Unit filename="HexEditorFrame.cpp" />
+		<Unit filename="HexEditorFrame.h" />
+		<Unit filename="HexEditorGui.cpp" />
+		<Unit filename="HexEditorGui.fbp" />
+		<Unit filename="HexEditorGui.h" />
+		<Unit filename="wxHexEditor.cpp" />
+		<Unit filename="wxHexEditor.h" />
+		<Unit filename="wxHexEditorApp.cpp" />
+		<Unit filename="wxHexEditorApp.h" />
+		<Unit filename="wxHexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
+		<Unit filename="wxHexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
+		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrl.cpp" />
+		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrl.h" />
+		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrlGui.cpp" />
+		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrlGui.h" />
+		<Unit filename="wx_pch.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

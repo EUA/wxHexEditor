@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="app.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="162" topLine="0" />
+	</File>
+	<File name="main.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1090" topLine="36" />
+	</File>
+	<File name="wxHexCtrl/wxHexCtrl.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="18680" topLine="543" />
+	</File>
+	<File name="wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="3">
+		<Cursor position="6837" topLine="141" />
+	</File>
+	<File name="wxHexEditorCtrl.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="4017" topLine="87" />
+	</File>
+	<File name="wxHexEditorCtrl.h" open="0" top="0" tabpos="4">
+		<Cursor position="1681" topLine="15" />
+	</File>
+	<File name="wxHexEditorCtrlGui.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="2967" topLine="63" />
+	</File>
+	<File name="wxHexEditorCtrlGui.h" open="0" top="0" tabpos="5">
+		<Cursor position="293" topLine="40" />
+	</File>
+</CodeBlocks_layout_file>

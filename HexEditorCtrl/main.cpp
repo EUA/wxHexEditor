@@ -44,7 +44,7 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
-    new wxHexEditorCtrl(this, -1, wxDefaultPosition, wxDefaultSize);
+    new HexEditorCtrl(this, -1, wxDefaultPosition, wxDefaultSize);
 
     wxMenu* helpMenu = new wxMenu(_T(""));
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));

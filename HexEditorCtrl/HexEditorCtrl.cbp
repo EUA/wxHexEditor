@@ -43,16 +43,16 @@
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
+		<Unit filename="HexEditorCtrl.cpp" />
+		<Unit filename="HexEditorCtrl.h" />
+		<Unit filename="HexEditorCtrlGui.cpp" />
+		<Unit filename="HexEditorCtrlGui.h" />
 		<Unit filename="app.cpp" />
 		<Unit filename="app.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.cpp" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.h" />
-		<Unit filename="wxHexEditorCtrl.cpp" />
-		<Unit filename="wxHexEditorCtrl.h" />
-		<Unit filename="wxHexEditorCtrlGui.cpp" />
-		<Unit filename="wxHexEditorCtrlGui.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

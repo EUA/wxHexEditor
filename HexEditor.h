@@ -25,10 +25,10 @@
 #define __wxHexEditor__
 
 #include <wx/filename.h>
-#include "wxHexEditorCtrl/wxHexEditorCtrl.h"
+#include "HexEditorCtrl/HexEditorCtrl.h"
 
 class scrollthread;
-class wxHexEditor: public wxHexEditorCtrl {
+class wxHexEditor: public HexEditorCtrl {
 	public:
 	    wxHexEditor(wxWindow* parent,
 					int id,
@@ -135,6 +135,8 @@ class scrollthread:wxThreadHelper{
 		}
 	void *Entry(){
 		while( !(GetThread()->TestDestroy()) ){
+			if(speed == 0)
+				continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 			int64_t FileLenght = parent->FileLenght();
 			parent->start_offset += ( parent->hex_ctrl->BytePerLine() )*speed;
 			if( parent->start_offset < 0 )
@@ -169,7 +171,6 @@ class scrollthread:wxThreadHelper{
 			GetThread()->Pause();
 		else
 			GetThread()->Resume();
-
 		speed = new_speed;
 		sleeper = sleeptime;
 		cursor = parent->GetHexInsertionPoint();

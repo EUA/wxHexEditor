@@ -20,27 +20,27 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
-#include "wxHexEditorCtrl.h"
-//wxHexEditorCtrlGUI???
-//BEGIN_EVENT_TABLE(wxHexEditorCtrlGui,wxScrolledWindow )
+#include "HexEditorCtrl.h"
+//???
+//BEGIN_EVENT_TABLE(,wxScrolledWindow )
 //	EVT_CHAR( wxHexCtrl::OnChar )
 //  EVT_PAINT(wxHexCtrl::OnPaint )
-//    EVT_SIZE( wxHexEditorCtrl::OnResize )
+//    EVT_SIZE( HexEditorCtrl::OnResize )
 //    EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
 //    EVT_SET_FOCUS( wxHexCtrl::OnFocus )
 //    EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
 //END_EVENT_TABLE()
 
-wxHexEditorCtrl::wxHexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const wxSize& size, long style):
-    wxHexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
+HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const wxSize& size, long style):
+    HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
 	m_static_offset->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_adress->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_byteview->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	hex_offset=false;
-	offset_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(wxHexEditorCtrl::OnOffsetMouseFocus),NULL, this);
+	offset_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnOffsetMouseFocus),NULL, this);
     }
 
-void wxHexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset, bool paint ){
+void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset, bool paint ){
 	static wxMutex MyBufferMutex;
 	MyBufferMutex.Lock();
 	if( lenght != ByteCapacity() ){
@@ -72,7 +72,7 @@ void wxHexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer
 	MyBufferMutex.Unlock();
 	}
 
-void wxHexEditorCtrl::PaintSelection( void ){
+void HexEditorCtrl::PaintSelection( void ){
 	if(selection.state != selector::SELECTION_FALSE ){
 		int64_t start_byte = selection.start_offset;
 		int64_t end_byte = selection.end_offset;
@@ -107,30 +107,30 @@ void wxHexEditorCtrl::PaintSelection( void ){
 		ClearPaint();
 	}
 
-void inline wxHexEditorCtrl::MyFreeze(){
+void inline HexEditorCtrl::MyFreeze(){
 	hex_ctrl->Freeze();
 	text_ctrl->Freeze();
 	offset_ctrl->Freeze();
 	}
 
-void inline wxHexEditorCtrl::MyThaw(){
+void inline HexEditorCtrl::MyThaw(){
 	hex_ctrl->Thaw();
 	text_ctrl->Thaw();
 	offset_ctrl->Thaw();
 	}
 
-void wxHexEditorCtrl::Clear( bool RePaint, bool cursor_reset ){
+void HexEditorCtrl::Clear( bool RePaint, bool cursor_reset ){
 	hex_ctrl->Clear( RePaint, cursor_reset );
 	text_ctrl->Clear( RePaint, cursor_reset );
 	offset_ctrl->Clear( RePaint, cursor_reset );
 	}
 
-void inline wxHexEditorCtrl::ClearPaint( void ){
+void inline HexEditorCtrl::ClearPaint( void ){
 	hex_ctrl ->ClearSelection();
 	text_ctrl->ClearSelection();
 	}
 
-void wxHexEditorCtrl::OnResize( wxSizeEvent &event){
+void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 
@@ -174,37 +174,37 @@ void wxHexEditorCtrl::OnResize( wxSizeEvent &event){
 	this->Layout();
     }
 
-void wxHexEditorCtrl::TextCharReplace( long char_location, const wxChar chr){
+void HexEditorCtrl::TextCharReplace( long char_location, const wxChar chr){
 	text_ctrl->Replace( char_location, TextFilter( chr ), true );
 	char_location *= 2; //Converting Byte location to Hex Location;
 	wxString temp = wxString::Format(wxT("%02X"),chr);
 	hex_ctrl->Replace(char_location,char_location+2, temp);
 	}
 
-void wxHexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
+void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 	hex_ctrl->Replace( hex_location, chr );
 	hex_location /=2;	// hex loc is now byte loc
 	char rdchr = hex_ctrl->ReadByte(hex_location);
 	text_ctrl->Replace(	hex_location, TextFilter( rdchr ), true );
 	}
 
-wxChar inline wxHexEditorCtrl::TextFilter(const unsigned char ch){
+wxChar inline HexEditorCtrl::TextFilter(const unsigned char ch){
 	if( (ch !=173 && ch>31 && ch<127 ) || ch>159 )	// showable chars
 		return ch;
 	else
 		return ' '; //Special Character '?'
 	}
 
-int wxHexEditorCtrl::GetHexInsertionPoint(){					//returns position of Hex Cursor
+int HexEditorCtrl::GetHexInsertionPoint(){					//returns position of Hex Cursor
 	return hex_ctrl->GetInsertionPoint();
 	}
 
-void wxHexEditorCtrl::SetHexInsertionPoint( int hex_location ){	//returns position of Hex Cursor
+void HexEditorCtrl::SetHexInsertionPoint( int hex_location ){	//returns position of Hex Cursor
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}
 
-void wxHexEditorCtrl::OnOffsetMouseFocus( wxMouseEvent& event ){
+void HexEditorCtrl::OnOffsetMouseFocus( wxMouseEvent& event ){
 	hex_offset = hex_offset ? false : true;
 	wxString offset_string;
 	int64_t offset_position = start_offset;

@@ -22,24 +22,19 @@
 *************************************************************************/
 
 #include "HexEditorFrame.h"
-#include "wxHexEditor.h"
+#include "HexEditor.h"
 #include <wx/filename.h>
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				HexEditorGui( parent, id )
 				{
-//				wxFileName myfilename;
-//				myfilename.SetFullName( _("/home/death/programing/wxHexEditor/es28.avi") );
-//				MyHexEditor->FileOpen( myfilename );
-//				MyHexEditor->Select( 1000, 2001 );
-
 				MyAUI = new wxAuiManager( this );
 				MyNotebook = new wxAuiNotebook(this,-1);
+				MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
+				MyNotebook->SetWindowStyleFlag(0);
 				MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().Name(wxT("wxHE")).Caption(wxT("HexEditor")).
 						MinSize(wxSize(400,100)).CloseButton(false).
 						Center().Layer(1)	);
-
-//				MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, &myfilename), myfilename.GetName(), true);
 
 //	myinterpreter = new DataInterpreter( this, -1 );
 //	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusbar, myinterpreter) );
@@ -52,8 +47,10 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 
 #if defined( _DEBUG_ )
-//   wxFileName myname(_("wxHexEditor"));
-//   MyNotebook->AddPage( new HexEditor(myname, MyNotebook, -1, statusbar, myinterpreter), myname.GetFullName() );
+   wxFileName myname(_("./testfile"));
+   MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, &myname ), myname.GetFullName() );
+//				MyHexEditor->FileOpen( myfilename );
+//				MyHexEditor->Select( 1000, 2001 );
 #endif
 
 	//SetDropTarget( new DnDFile( MyNotebook, statusbar, myinterpreter) );
@@ -72,7 +69,7 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 											wxDefaultPosition);
 	if(wxID_OK == filediag->ShowModal()){
 		wxFileName myname(filediag->GetPath());
-		MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, &myname ), myname.GetName(), true);
+		MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, &myname ), myname.GetFullName(), true);
 		filediag->Destroy();
 		}
 	event.Skip();

@@ -38,11 +38,63 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuFileClose = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Close") ) , wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileClose );
 	
+	fileMenu->AppendSeparator();
+	
 	wxMenuItem* menuFileQuit;
 	menuFileQuit = new wxMenuItem( fileMenu, idMenuQuit, wxString( wxT("&Quit") ) + wxT('\t') + wxT("Alt+F4"), wxT("Quit the application"), wxITEM_NORMAL );
 	fileMenu->Append( menuFileQuit );
 	
 	mbar->Append( fileMenu, wxT("&File") );
+	
+	editMenu = new wxMenu();
+	wxMenuItem* menuEditUndo;
+	menuEditUndo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Undo") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditUndo );
+	menuEditUndo->Enable( false );
+	
+	wxMenuItem* menuEditRedo;
+	menuEditRedo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Redo") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditRedo );
+	menuEditRedo->Enable( false );
+	
+	editMenu->AppendSeparator();
+	
+	wxMenuItem* menuEditCopy;
+	menuEditCopy = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Copy") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditCopy );
+	menuEditCopy->Enable( false );
+	
+	wxMenuItem* menuEditCut;
+	menuEditCut = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Cut") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditCut );
+	menuEditCut->Enable( false );
+	
+	wxMenuItem* menuEditPaste;
+	menuEditPaste = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Paste") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditPaste );
+	menuEditPaste->Enable( false );
+	
+	editMenu->AppendSeparator();
+	
+	wxMenuItem* menuEditFind;
+	menuEditFind = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Find") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditFind );
+	menuEditFind->Enable( false );
+	
+	wxMenuItem* menuEditGotobyte;
+	menuEditGotobyte = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Goto Byte") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditGotobyte );
+	menuEditGotobyte->Enable( false );
+	
+	mbar->Append( editMenu, wxT("&Edit") );
+	
+	viewMenu = new wxMenu();
+	wxMenuItem* menuViewInterprator;
+	menuViewInterprator = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Interpretor") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( menuViewInterprator );
+	menuViewInterprator->Enable( false );
+	
+	mbar->Append( viewMenu, wxT("&View") );
 	
 	helpMenu = new wxMenu();
 	wxMenuItem* menuHelpAbout;

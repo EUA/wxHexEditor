@@ -37,7 +37,7 @@
 #pragma hdrstop
 #endif //__BORLANDC__
 
-#include "wxHexEditorApp.h"
+#include "HexEditorApp.h"
 #include "HexEditorFrame.h"
 
 IMPLEMENT_APP(wxHexEditorApp);

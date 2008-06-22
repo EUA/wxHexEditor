@@ -21,8 +21,8 @@
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 
-#include "wxHexEditor.h"
-#include "wxHexEditorCtrl/wxHexEditorCtrl.h"
+#include "HexEditor.h"
+#include "HexEditorCtrl/HexEditorCtrl.h"
 #include <wx/file.h>
 wxHexEditor::wxHexEditor(	wxWindow* parent,
 							int id,
@@ -32,7 +32,7 @@ wxHexEditor::wxHexEditor(	wxWindow* parent,
 							const wxPoint& pos,
 							const wxSize& size,
 							long style ):
-			wxHexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL)
+			HexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL)
 			,statusbar(statbar)
 //			,interpreter(interpreter)
 			{
@@ -46,6 +46,7 @@ wxHexEditor::wxHexEditor(	wxWindow* parent,
 		offset_scroll->Enable( true );
 		selection.start_offset = selection.end_offset = 0;
 		selection.state = selector::SELECTION_FALSE;
+
 		start_offset=0;
 		Dynamic_Connector();
 //		myfilename = NULL;
@@ -172,7 +173,7 @@ void wxHexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint
 	}
 
 void wxHexEditor::OnResize( wxSizeEvent &event){
-	wxHexEditorCtrl::OnResize( event );
+	HexEditorCtrl::OnResize( event );
 	//event.Skip( true );
 	if(myfile != NULL && 0 < ByteCapacity()){
 		offset_scroll->SetScrollbar(start_offset / ByteCapacity(),

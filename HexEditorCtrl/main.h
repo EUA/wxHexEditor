@@ -2,7 +2,7 @@
 #define MAIN_H
 
 #include "app.h"
-#include "wxHexEditorCtrl.h"
+#include "HexEditorCtrl.h"
 
 class MyFrame: public wxFrame
 {
@@ -12,7 +12,7 @@ class MyFrame: public wxFrame
 	private:
 		void OnQuit(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent& event);
-		wxHexEditorCtrl *hex_ctrl;
+		HexEditorCtrl *hex_ctrl;
 		DECLARE_EVENT_TABLE();
 };
 

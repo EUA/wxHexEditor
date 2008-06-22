@@ -7,7 +7,7 @@
         <property name="disconnect_events">1</property>
         <property name="encoding">UTF-8</property>
         <property name="event_generation">connect</property>
-        <property name="file">wxHexEditorCtrlGui</property>
+        <property name="file">HexEditorCtrlGui</property>
         <property name="first_id">1000</property>
         <property name="help_provider">none</property>
         <property name="internationalize">0</property>
@@ -28,7 +28,7 @@
             <property name="id">ID_DEFAULT</property>
             <property name="maximum_size"></property>
             <property name="minimum_size">-1,-1</property>
-            <property name="name">wxHexEditorCtrlGui</property>
+            <property name="name">HexEditorCtrlGui</property>
             <property name="pos"></property>
             <property name="size">342,170</property>
             <property name="subclass">; </property>
@@ -66,7 +66,7 @@
                 <property name="orient">wxHORIZONTAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="1">
-                    <property name="border">5</property>
+                    <property name="border">0</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
                     <object class="wxFlexGridSizer" expanded="0">
@@ -402,7 +402,7 @@
                     </object>
                 </object>
                 <object class="sizeritem" expanded="1">
-                    <property name="border">5</property>
+                    <property name="border">0</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
                     <object class="wxScrollBar" expanded="1">

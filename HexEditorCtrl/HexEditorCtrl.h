@@ -23,11 +23,11 @@
 #ifndef __wxHexEditorCtrl__
 #define __wxHexEditorCtrl__
 
-#include "wxHexEditorCtrlGui.h"
+#include "HexEditorCtrlGui.h"
 
-class wxHexEditorCtrl: public wxHexEditorCtrlGui {
+class HexEditorCtrl: public HexEditorCtrlGui {
 	public:
-		wxHexEditorCtrl(wxWindow* parent, int id,
+		HexEditorCtrl(wxWindow* parent, int id,
 						const wxPoint& pos=wxDefaultPosition,
 						const wxSize& size=wxDefaultSize,
 						long style=0);

@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __wxHexEditorCtrlGui__
-#define __wxHexEditorCtrlGui__
+#ifndef __HexEditorCtrlGui__
+#define __HexEditorCtrlGui__
 
 class wxHexCtrl;
 class wxHexOffsetCtrl;
@@ -32,9 +32,9 @@ class wxHexTextCtrl;
 #define ID_TEXTBOX 1001
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class wxHexEditorCtrlGui
+/// Class HexEditorCtrlGui
 ///////////////////////////////////////////////////////////////////////////////
-class wxHexEditorCtrlGui : public wxPanel 
+class HexEditorCtrlGui : public wxPanel 
 {
 	private:
 	
@@ -54,9 +54,9 @@ class wxHexEditorCtrlGui : public wxPanel
 		
 	
 	public:
-		wxHexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 342,170 ), long style = wxTAB_TRAVERSAL );
-		~wxHexEditorCtrlGui();
+		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 342,170 ), long style = wxTAB_TRAVERSAL );
+		~HexEditorCtrlGui();
 	
 };
 
-#endif //__wxHexEditorCtrlGui__
+#endif //__HexEditorCtrlGui__

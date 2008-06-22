@@ -16,6 +16,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-D_DEBUG_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -46,21 +47,21 @@
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
+		<Unit filename="HexEditor.cpp" />
+		<Unit filename="HexEditor.h" />
+		<Unit filename="HexEditorApp.cpp" />
+		<Unit filename="HexEditorApp.h" />
+		<Unit filename="HexEditorCtrl/HexEditorCtrl.cpp" />
+		<Unit filename="HexEditorCtrl/HexEditorCtrl.h" />
+		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.cpp" />
+		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.h" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
 		<Unit filename="HexEditorFrame.cpp" />
 		<Unit filename="HexEditorFrame.h" />
 		<Unit filename="HexEditorGui.cpp" />
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="HexEditorGui.h" />
-		<Unit filename="wxHexEditor.cpp" />
-		<Unit filename="wxHexEditor.h" />
-		<Unit filename="wxHexEditorApp.cpp" />
-		<Unit filename="wxHexEditorApp.h" />
-		<Unit filename="wxHexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
-		<Unit filename="wxHexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
-		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrl.cpp" />
-		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrl.h" />
-		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrlGui.cpp" />
-		<Unit filename="wxHexEditorCtrl/wxHexEditorCtrlGui.h" />
 		<Unit filename="wx_pch.h">
 			<Option compile="1" />
 			<Option weight="0" />

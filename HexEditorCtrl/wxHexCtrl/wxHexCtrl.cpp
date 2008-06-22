@@ -66,7 +66,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	//HexAttr.SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 //	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 //  SetBackgroundColour( *wxGREEN );
-
+    ClearSelection();
     SetDefaultStyle( HexDefaultAttr );
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;

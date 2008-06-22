@@ -19,11 +19,20 @@
 #include <wx/settings.h>
 #include <wx/statusbr.h>
 #include <wx/frame.h>
+#include <wx/checkbox.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/statbox.h>
+#include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
+#define ID_DEFAULT wxID_ANY // Default
 #define idMenuQuit 1000
 #define idMenuAbout 1001
+#define ID_CHK_UNSIGNED 1002
+#define ID_CHK_BIGENDIAN 1003
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -52,6 +61,35 @@ class HexEditorGui : public wxFrame
 	public:
 		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxWidgets Application Template"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 481,466 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class InterpreterGui
+///////////////////////////////////////////////////////////////////////////////
+class InterpreterGui : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxCheckBox* m_check_unsigned;
+		wxCheckBox* m_check_bigendian;
+		wxStaticText* m_static_8bit;
+		wxTextCtrl* m_textctrl_8bit;
+		wxStaticText* m_static_16bit;
+		wxTextCtrl* m_textctrl_16bit;
+		wxStaticText* m_static_32bit;
+		wxTextCtrl* m_textctrl_32bit;
+		wxStaticText* m_static_64bit;
+		wxTextCtrl* m_textctrl_64bit;
+		wxStaticText* m_static_float;
+		wxTextCtrl* m_textctrl_float;
+		wxStaticText* m_static_double;
+		wxTextCtrl* m_textctrl_double;
+	
+	public:
+		InterpreterGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxPoint( 200,500 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~InterpreterGui();
 	
 };
 

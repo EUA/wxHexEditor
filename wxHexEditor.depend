@@ -5217,20 +5217,21 @@
 1212816188 /usr/include/wx-2.8/wx/gtk/notebook.h
 	"wx/list.h"
 
-1210599647 source:/home/C++/Project/wxHexEditor/wx_pch.h
+1214139101 source:/home/C++/Project/wxHexEditor/wx_pch.h
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1214098173 source:/home/C++/Project/wxHexEditor/HexEditorFrame.cpp
+1214151101 source:/home/C++/Project/wxHexEditor/HexEditorFrame.cpp
 	"HexEditorFrame.h"
-	"HexEditor.h"
-	<wx/filename.h>
 
-1213519250 /home/C++/Project/wxHexEditor/HexEditorFrame.h
+1214140890 /home/C++/Project/wxHexEditor/HexEditorFrame.h
 	"HexEditorGui.h"
+	"HexEditor.h"
+	"DataInterpreter.h"
+	<wx/filename.h>
 	<wx/aui/aui.h>
 
-1214095097 /home/C++/Project/wxHexEditor/HexEditorGui.h
+1214139553 /home/C++/Project/wxHexEditor/HexEditorGui.h
 	<wx/string.h>
 	<wx/bitmap.h>
 	<wx/image.h>
@@ -5242,6 +5243,12 @@
 	<wx/settings.h>
 	<wx/statusbr.h>
 	<wx/frame.h>
+	<wx/checkbox.h>
+	<wx/sizer.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/statbox.h>
+	<wx/panel.h>
 
 1214093676 /home/C++/Project/wxHexEditor/wxHexEditor.h
 	<wx/filename.h>
@@ -5269,10 +5276,11 @@
 	<wx/wx.h>
 	<wx/dcbuffer.h>
 
-1214095626 source:/home/C++/Project/wxHexEditor/HexEditorGui.cpp
+1214151188 source:/home/C++/Project/wxHexEditor/HexEditorGui.cpp
 	"wx/wxprec.h"
 	<wx/wx.h>
 	"HexEditorGui.h"
+	"DataInterpreter.h"
 
 1213518760 source:/home/C++/Project/wxHexEditor/wxHexEditor.cpp
 	"wxHexEditor.h"
@@ -5284,7 +5292,7 @@
 	"wxHexEditorApp.h"
 	"HexEditorFrame.h"
 
-1210599647 /home/C++/Project/wxHexEditor/wx_pch.h
+1214139101 /home/C++/Project/wxHexEditor/wx_pch.h
 	<wx/wxprec.h>
 	<wx/wx.h>
 
@@ -5305,19 +5313,20 @@
 	"wxHexCtrl/wxHexCtrl.h"
 	"wxHexEditorCtrlGui.h"
 
-1214137411 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
+1214153600 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
-	"HexEditorCtrl/HexEditorCtrl.h"
-	<wx/file.h>
 
-1214136604 /home/C++/Project/wxHexEditor/HexEditor.h
+1214153459 /home/C++/Project/wxHexEditor/HexEditor.h
 	<wx/filename.h>
+	<wx/file.h>
+	"DataInterpreter.h"
+	"HexEditorGui.h"
 	"HexEditorCtrl/HexEditorCtrl.h"
 
-1214136902 /home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
+1214153346 /home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
 	"HexEditorCtrlGui.h"
 
-1214136806 /home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
+1214139101 /home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
 	<wx/string.h>
 	<wx/stattext.h>
 	<wx/gdicmn.h>
@@ -5330,31 +5339,36 @@
 	<wx/panel.h>
 	"wxHexCtrl/wxHexCtrl.h"
 
-1212886234 /home/C++/Project/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
+1214139101 /home/C++/Project/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
 	<wx/textctrl.h>
 	<wx/caret.h>
 	<wx/wx.h>
 	<wx/dcbuffer.h>
 
-1214098025 source:/home/C++/Project/wxHexEditor/HexEditorApp.cpp
+1214139101 source:/home/C++/Project/wxHexEditor/HexEditorApp.cpp
 	"wx_pch.h"
 	"HexEditorApp.h"
 	"HexEditorFrame.h"
 
-1210599647 /home/C++/Project/wxHexEditor/HexEditorApp.h
+1214139101 /home/C++/Project/wxHexEditor/HexEditorApp.h
 	<wx/app.h>
 
-1214137612 source:/home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
+1214153626 source:/home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
 	"HexEditorCtrl.h"
 
-1214136806 source:/home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
+1214150686 source:/home/C++/Project/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
 	"wx/wxprec.h"
 	<wx/wx.h>
 	"wxHexCtrl/wxHexCtrl.h"
 	"HexEditorCtrlGui.h"
 
-1214137748 source:/home/C++/Project/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
+1214139321 source:/home/C++/Project/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
 	"wxHexCtrl.h"
 	"wx/caret.h"
 	"wx/numdlg.h"
+
+1214151519 /home/C++/Project/wxHexEditor/DataInterpreter.h
+	"HexEditorGui.h"
+	<wx_pch.h>
+	<wx/wx.h>
 

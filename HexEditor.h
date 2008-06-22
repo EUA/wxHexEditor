@@ -25,6 +25,10 @@
 #define __wxHexEditor__
 
 #include <wx/filename.h>
+#include <wx/file.h>
+
+#include "DataInterpreter.h"
+#include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 
 class scrollthread;
@@ -33,13 +37,14 @@ class wxHexEditor: public HexEditorCtrl {
 	    wxHexEditor(wxWindow* parent,
 					int id,
 					wxStatusBar *statusbar=NULL,
-//					DataInterpreter *interpreter=NULL,
+					DataInterpreter *interpreter=NULL,
 					wxFileName* myfile=NULL,
 					const wxPoint& pos=wxDefaultPosition,
 					const wxSize& size=wxDefaultSize,
 					long style=0);
 		~wxHexEditor( void );
 		friend class scrollthread;
+		DataInterpreter *interpreter;
 
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
@@ -57,7 +62,9 @@ class wxHexEditor: public HexEditorCtrl {
 //		int64_t find( wxString *target, int size, int64_t start_from, bool as_hex = false );
 		int64_t GetHexOffset( void );
 		void SetHexOffset( int64_t HexOffset );
+		void SetHexInsertionPoint ( int local_hex_location );
 		bool Select ( int64_t start_offset, int64_t end_offset );
+		void UpdateInterpreter();
 protected:
 //public4test		bool Select ( int64_t start_offset, int64_t end_offset );
 
@@ -96,12 +103,11 @@ private:
 	int search_at_buffer( const char *bfr, int bfr_size, const char* search, int search_size );
 
 protected:
-   	friend class scrollthread;
    	friend class FindDialog;
 	scrollthread *myscroll;
 	copy_maker *copy_mark;
     DataInterpreter *interpreter;
-	void UpdateInterpreter();
+
 
 */
 //=======================
@@ -173,7 +179,7 @@ class scrollthread:wxThreadHelper{
 			GetThread()->Resume();
 		speed = new_speed;
 		sleeper = sleeptime;
-		cursor = parent->GetHexInsertionPoint();
+		cursor = parent->GetLocalHexInsertionPoint();
 		}
 	void Exit(){
 		GetThread()->Delete();

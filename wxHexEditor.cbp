@@ -47,6 +47,7 @@
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
+		<Unit filename="DataInterpreter.h" />
 		<Unit filename="HexEditor.cpp" />
 		<Unit filename="HexEditor.h" />
 		<Unit filename="HexEditorApp.cpp" />

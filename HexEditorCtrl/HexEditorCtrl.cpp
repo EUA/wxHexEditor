@@ -195,11 +195,11 @@ wxChar inline HexEditorCtrl::TextFilter(const unsigned char ch){
 		return ' '; //Special Character '?'
 	}
 
-int HexEditorCtrl::GetHexInsertionPoint(){					//returns position of Hex Cursor
+int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor
 	return hex_ctrl->GetInsertionPoint();
 	}
 
-void HexEditorCtrl::SetHexInsertionPoint( int hex_location ){	//returns position of Hex Cursor
+void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//returns position of Hex Cursor
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}

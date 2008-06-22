@@ -20,10 +20,7 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
-
 #include "HexEditorFrame.h"
-#include "HexEditor.h"
-#include <wx/filename.h>
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				HexEditorGui( parent, id )
@@ -36,19 +33,19 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 						MinSize(wxSize(400,100)).CloseButton(false).
 						Center().Layer(1)	);
 
-//	myinterpreter = new DataInterpreter( this, -1 );
+	MyInterpreter = new DataInterpreter( this, -1 );
 //	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusbar, myinterpreter) );
-//	MyAUI -> AddPane( myinterpreter, wxAuiPaneInfo().
-//					Name(wxT("wxHEint")).Caption(wxT("DataInterpreter")).
-//					MinSize(wxSize(207,-1)).
-//					Left().Layer(1)
-//					);
-//	MyAUI->GetPane(myinterpreter).Float();
+	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
+					Name(wxT("wxHEint")).Caption(wxT("DataInterpreter")).
+					MinSize(wxSize(207,-1)).
+					Left().Layer(1)
+					);
+	MyAUI->GetPane(MyInterpreter).Float();
 
 
 #if defined( _DEBUG_ )
    wxFileName myname(_("./testfile"));
-   MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, &myname ), myname.GetFullName() );
+   MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName() );
 //				MyHexEditor->FileOpen( myfilename );
 //				MyHexEditor->Select( 1000, 2001 );
 #endif
@@ -69,7 +66,7 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 											wxDefaultPosition);
 	if(wxID_OK == filediag->ShowModal()){
 		wxFileName myname(filediag->GetPath());
-		MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, &myname ), myname.GetFullName(), true);
+		MyNotebook->AddPage( new wxHexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName(), true);
 		filediag->Destroy();
 		}
 	event.Skip();
@@ -79,7 +76,7 @@ void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 	if( MyHexEditor != NULL )
 		if( MyHexEditor->FileClose() ){
 			MyNotebook->DeletePage( MyNotebook->GetSelection() );
-			//delete MyHexEditor;
+			// delete MyHexEditor; not neccessery, deletepage also delete this
 			}
 	event.Skip();
 	}

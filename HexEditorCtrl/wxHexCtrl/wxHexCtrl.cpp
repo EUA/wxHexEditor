@@ -57,10 +57,9 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
 
-	HexSelectAttr = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
+	HexSelectAttr  = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
 								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
-
 
 	//wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION)
 	//HexAttr.SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));

@@ -67,8 +67,8 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();
 		void MyThaw();
-		int GetHexInsertionPoint( void );
-virtual	void SetHexInsertionPoint( int hex_location );
+		int GetLocalHexInsertionPoint( void );
+virtual	void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		bool hex_offset;
 		int64_t start_offset;	//holds current start offset of file

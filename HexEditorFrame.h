@@ -25,6 +25,10 @@
 #define __HexEditorFrame__
 
 #include "HexEditorGui.h"
+#include "HexEditor.h"
+#include "DataInterpreter.h"
+
+#include <wx/filename.h>
 #include <wx/aui/aui.h>
 
 class HexEditorFrame : public HexEditorGui {
@@ -43,6 +47,7 @@ class HexEditorFrame : public HexEditorGui {
 	private:
 		wxAuiNotebook *MyNotebook;
 		wxAuiManager *MyAUI;
+		DataInterpreter *MyInterpreter;
 	};
 
 #endif

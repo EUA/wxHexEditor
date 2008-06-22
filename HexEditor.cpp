@@ -22,21 +22,20 @@
 *************************************************************************/
 
 #include "HexEditor.h"
-#include "HexEditorCtrl/HexEditorCtrl.h"
-#include <wx/file.h>
+
 wxHexEditor::wxHexEditor(	wxWindow* parent,
 							int id,
 							wxStatusBar *statbar,
-//							DataInterpreter *interpreter,
+							DataInterpreter *interpreter,
 							wxFileName* myfilenm,
 							const wxPoint& pos,
 							const wxSize& size,
 							long style ):
 			HexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL)
-			,statusbar(statbar)
-//			,interpreter(interpreter)
+			,statusbar(statbar),
+			interpreter(interpreter)
 			{
-		printf("Rahman ve Rahim olan Allah'ın adıyla."); // Praying to GOD
+		printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
 		myfile = NULL;
 
 		if( myfilenm != NULL ){
@@ -206,7 +205,7 @@ void inline wxHexEditor::ClearPaint( void ){
 bool wxHexEditor::Selector( void ){
 	static bool polarity_possitive;
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
-		selection.end_offset = start_offset + GetHexInsertionPoint()/2;
+		selection.end_offset = start_offset + GetLocalHexInsertionPoint()/2;
 	else{
 		wxLogError(wxT("Selector without focuse captured"));
 		return false;
@@ -311,13 +310,13 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 						}
 					}
 					else
-						SetHexInsertionPoint( GetHexInsertionPoint() - HexPerLine() );
+						SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() );
 					break;
 
 				case (WXK_DOWN):case (WXK_NUMPAD_DOWN):
 					if ( ActiveLine() == LineCount() ){			//If cursor at bottom of screen
 						if(start_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
-							int temp = GetHexInsertionPoint();	//preserving cursor location
+							int temp = GetLocalHexInsertionPoint();	//preserving cursor location
 							start_offset += BytePerLine();		//offset increasing one line
 							LoadFromOffset( start_offset );		//update text with new location, makes screen slide illusion
 							SetHexInsertionPoint(temp);			//restoring cursor location
@@ -329,11 +328,11 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					else if( ActiveLine() * HexPerLine() > GetLastPosition() )
 						wxBell();	//If cursor at last line but not at bottom of screen
 					else
-						SetHexInsertionPoint( GetHexInsertionPoint() + HexPerLine() );
+						SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() );
 					break;
 
 				case (WXK_LEFT):case (WXK_NUMPAD_LEFT):
-					if( GetHexInsertionPoint() == 0){
+					if( GetLocalHexInsertionPoint() == 0){
 						if(start_offset == 0)
 							wxBell();
 						else{
@@ -343,11 +342,11 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 							}
 						}
 					else
-						SetHexInsertionPoint( GetHexInsertionPoint() - ((myctrl == hex_ctrl) ? 1 : 2) );
+						SetHexInsertionPoint( GetLocalHexInsertionPoint() - ((myctrl == hex_ctrl) ? 1 : 2) );
 					break;
 
 				case (WXK_RIGHT):case (WXK_NUMPAD_RIGHT):
-					if( GetHexInsertionPoint() >= GetLastPosition() + 1 ){
+					if( GetLocalHexInsertionPoint() >= GetLastPosition() + 1 ){
 						if(start_offset + ByteCapacity() < myfile->Length() ){	//Checks if its EOF or not
 							start_offset += BytePerLine();
 							LoadFromOffset( start_offset );
@@ -357,15 +356,15 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 							wxBell();
 						}
 					else
-						SetHexInsertionPoint( GetHexInsertionPoint() +  ((myctrl == hex_ctrl)? 1 : 2) );
+						SetHexInsertionPoint( GetLocalHexInsertionPoint() +  ((myctrl == hex_ctrl)? 1 : 2) );
 					break;
 
 				case (WXK_HOME):case(WXK_NUMPAD_HOME):{
-					SetHexInsertionPoint( GetHexInsertionPoint() - GetHexInsertionPoint() % HexPerLine() );
+					SetHexInsertionPoint( GetLocalHexInsertionPoint() - GetLocalHexInsertionPoint() % HexPerLine() );
 					break;
 					}
 				case (WXK_END):case(WXK_NUMPAD_END):{
-					SetHexInsertionPoint( GetHexInsertionPoint() + HexPerLine() - (GetHexInsertionPoint() % HexPerLine()) - 1  );
+					SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() - (GetLocalHexInsertionPoint() % HexPerLine()) - 1  );
 					break;
 					}
 				case (WXK_PAGEUP):case (WXK_NUMPAD_PAGEUP):
@@ -376,7 +375,7 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 //							SetHexInsertionPoint(temp);
 							}
 						else{
-							int temp = GetHexInsertionPoint() % HexPerLine();
+							int temp = GetLocalHexInsertionPoint() % HexPerLine();
 							start_offset=0;
 							LoadFromOffset( start_offset );
 							SetHexInsertionPoint(temp);
@@ -386,13 +385,13 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 
 				case (WXK_PAGEDOWN):case (WXK_NUMPAD_PAGEDOWN):
 						if(start_offset + ByteCapacity()*2 < myfile->Length()){ //*2 for cosmetic
-							int temp = GetHexInsertionPoint();
+							int temp = GetLocalHexInsertionPoint();
 							start_offset += ByteCapacity();
 							LoadFromOffset( start_offset );
 							SetHexInsertionPoint( temp );
 							}
 						else{
-							int temp = ( GetHexInsertionPoint() %  HexPerLine() ) + ( LineCount()-1 ) * HexPerLine();
+							int temp = ( GetLocalHexInsertionPoint() %  HexPerLine() ) + ( LineCount()-1 ) * HexPerLine();
 							start_offset = myfile->Length() - ByteCapacity();
 							start_offset += BytePerLine() - start_offset % BytePerLine(); //cosmetic
 							LoadFromOffset( start_offset );
@@ -716,7 +715,7 @@ void wxHexEditor::UpdateStatusBar(){
 	}
 
 int64_t wxHexEditor::GetHexOffset( void ){
-	return start_offset * 2  + GetHexInsertionPoint();
+	return start_offset * 2  + GetLocalHexInsertionPoint();
 	}
 
 void wxHexEditor::SetHexOffset( int64_t HexOffset ){
@@ -763,7 +762,7 @@ void wxHexEditor::OnMouseMove( wxMouseEvent& event ){
 		else if ( FindFocus() == text_ctrl )
 			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(), event.GetY() ) ));
 
-		int old_location = GetHexInsertionPoint();
+		int old_location = GetLocalHexInsertionPoint();
 		if( new_location != old_location ){
 			if(selection.state != selector::SELECTION_TRUE)		// At first selection
 				Selector();
@@ -783,4 +782,19 @@ void wxHexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	}
 int64_t wxHexEditor::FileLenght(){
 	return myfile->Length();
+	}
+
+void wxHexEditor::SetHexInsertionPoint( int local_hex_location){
+	SetLocalHexInsertionPoint( local_hex_location );
+	UpdateInterpreter();
+	}
+
+void wxHexEditor::UpdateInterpreter(){
+	if( interpreter != NULL ){
+		myfile->Seek( GetLocalHexInsertionPoint()/2+start_offset, wxFromStart );
+		char *bfr = new char [8];
+		int size=myfile->Read( bfr, 8);
+		interpreter->Set( bfr, size);
+		delete bfr;
+		}
 	}

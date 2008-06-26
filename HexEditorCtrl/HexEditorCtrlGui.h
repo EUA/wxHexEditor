@@ -19,8 +19,8 @@ class wxHexTextCtrl;
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/textctrl.h>
-#include <wx/sizer.h>
 #include <wx/scrolbar.h>
+#include <wx/sizer.h>
 #include <wx/panel.h>
 
 #include "wxHexCtrl/wxHexCtrl.h"
@@ -42,6 +42,7 @@ class HexEditorCtrlGui : public wxPanel
 		wxStaticText* m_static_offset;
 		wxStaticText* m_static_adress;
 		wxStaticText* m_static_byteview;
+		wxStaticText* m_static_null;
 		wxHexOffsetCtrl* offset_ctrl;
 		wxHexCtrl* hex_ctrl;
 		wxHexTextCtrl* text_ctrl;
@@ -54,7 +55,7 @@ class HexEditorCtrlGui : public wxPanel
 		
 	
 	public:
-		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 342,170 ), long style = wxTAB_TRAVERSAL );
+		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,200 ), long style = wxTAB_TRAVERSAL );
 		~HexEditorCtrlGui();
 	
 };

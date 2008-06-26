@@ -157,20 +157,17 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	text_ctrl->SetMinSize( wxSize( textx, y ));
 	text_ctrl->SetSize( wxSize( textx, y ));
 
-	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 3, 0, 0 );
+	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
 	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
 	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
 	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 5 );
 
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
-	bSizer1->Add( fgSizer1, 1, wxEXPAND, 5 );
-	bSizer1->Add( offset_scroll, 0, wxEXPAND, 5 );
-
-	this->SetSizer( bSizer1 );
+	this->SetSizer( fgSizer1 );
 	this->Layout();
     }
 

@@ -41,6 +41,7 @@ class HexEditorFrame : public HexEditorGui {
 		void OnFileOpen( wxCommandEvent& event );
 //		virtual void OnFileSave( wxCommandEvent& event ){ event.Skip(); }
 		void OnFileClose( wxCommandEvent& event );
+		void OnViewInterpretor( wxCommandEvent& event );
 //		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 //		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 

@@ -29,18 +29,25 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				MyNotebook = new wxAuiNotebook(this,-1);
 				MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
 				MyNotebook->SetWindowStyleFlag(0);
-				MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().Name(wxT("wxHE")).Caption(wxT("HexEditor")).
-						MinSize(wxSize(400,100)).CloseButton(false).
+//				MyAUI->AddPane( MyNotebook, wxCENTER);
+
+				MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().Name(wxT("wxHE")).
+						CaptionVisible(false).
+						MinSize(wxSize(400,100)).
+						CloseButton(false).
 						Center().Layer(1)	);
 
-	MyInterpreter = new DataInterpreter( this, -1 );
+
 //	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusbar, myinterpreter) );
-	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
-					Name(wxT("wxHEint")).Caption(wxT("DataInterpreter")).
-					MinSize(wxSize(207,-1)).
-					Left().Layer(1)
-					);
-	MyAUI->GetPane(MyInterpreter).Float();
+
+		MyInterpreter = new DataInterpreter( this, -1 );
+		MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().Name(wxT("wxHEint")).Caption(wxT("DataInterpreter")).
+			MinSize(wxSize(207,-1)).Left().Layer(1).Hide()	);
+//	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().Name(wxT("wxHEint")).Caption(wxT("DataInterpreter")).
+//					MinSize(wxSize(207,-1)).Left().Layer(1)	);
+
+//MyAUI -> AddPane( MyInterpreter, wxLEFT);
+//	MyAUI->GetPane(MyInterpreter).Float();
 
 
 #if defined( _DEBUG_ )
@@ -79,4 +86,13 @@ void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 			// delete MyHexEditor; not neccessery, deletepage also delete this
 			}
 	event.Skip();
+	}
+
+void HexEditorFrame::OnViewInterpretor( wxCommandEvent& event ){
+	if( event.IsChecked() ){
+		MyAUI->GetPane(MyInterpreter).Show();
+		}
+	else
+		MyAUI->GetPane(MyInterpreter).Hide();
+	MyAUI->Update();
 	}

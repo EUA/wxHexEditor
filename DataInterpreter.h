@@ -94,7 +94,7 @@ class DataInterpreter : public InterpreterGui
 		unidata.big.ubit64 = reinterpret_cast< uint64_t*>(unidata.mraw+(size - 8));
 		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
 		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
-		wxCommandEvent event(0,0);
+		wxCommandEvent event(0);
 		OnUpdate( event );
 		}
 

@@ -92,7 +92,6 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxMenuItem* menuViewInterprator;
 	menuViewInterprator = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Interpretor") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewInterprator );
-	menuViewInterprator->Enable( false );
 	
 	mbar->Append( viewMenu, wxT("&View") );
 	
@@ -113,6 +112,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
 	this->Connect( menuFileClose->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileClose ) );
 	this->Connect( menuFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
+	this->Connect( menuViewInterprator->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -124,6 +124,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileClose ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -145,59 +146,54 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	mainSizer->Add( optionSizer, 0, wxEXPAND, 5 );
 	
-	wxBoxSizer* lownumSizer;
-	lownumSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxFlexGridSizer* numSizer;
+	numSizer = new wxFlexGridSizer( 2, 2, 0, 0 );
+	numSizer->AddGrowableCol( 1 );
+	numSizer->SetFlexibleDirection( wxHORIZONTAL );
 	
 	m_static_8bit = new wxStaticText( this, ID_DEFAULT, wxT("8 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	m_static_8bit->Wrap( -1 );
-	lownumSizer->Add( m_static_8bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	numSizer->Add( m_static_8bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), wxTE_READONLY );
-	lownumSizer->Add( m_textctrl_8bit, 0, wxALL|wxEXPAND, 2 );
+	numSizer->Add( m_textctrl_8bit, 0, wxALL|wxEXPAND, 2 );
 	
 	m_static_16bit = new wxStaticText( this, ID_DEFAULT, wxT("16 bit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_16bit->Wrap( -1 );
-	lownumSizer->Add( m_static_16bit, 0, wxALIGN_CENTER|wxALL, 0 );
+	numSizer->Add( m_static_16bit, 0, wxALIGN_CENTER|wxALL, 0 );
 	
 	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
-	lownumSizer->Add( m_textctrl_16bit, 0, wxALL|wxEXPAND, 2 );
-	
-	mainSizer->Add( lownumSizer, 0, wxEXPAND, 5 );
-	
-	wxFlexGridSizer* bignumSizer;
-	bignumSizer = new wxFlexGridSizer( 2, 2, 0, 0 );
-	bignumSizer->AddGrowableCol( 1 );
-	bignumSizer->SetFlexibleDirection( wxHORIZONTAL );
+	numSizer->Add( m_textctrl_16bit, 0, wxALL|wxEXPAND, 2 );
 	
 	m_static_32bit = new wxStaticText( this, ID_DEFAULT, wxT("32 bit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_32bit->Wrap( -1 );
-	bignumSizer->Add( m_static_32bit, 0, wxALIGN_CENTER|wxALL, 2 );
+	numSizer->Add( m_static_32bit, 0, wxALIGN_CENTER|wxALL, 2 );
 	
 	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	bignumSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 2 );
+	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 2 );
 	
 	m_static_64bit = new wxStaticText( this, ID_DEFAULT, wxT("64 bit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_64bit->Wrap( -1 );
-	bignumSizer->Add( m_static_64bit, 0, wxALIGN_CENTER|wxALL, 2 );
+	numSizer->Add( m_static_64bit, 0, wxALIGN_CENTER|wxALL, 2 );
 	
 	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	bignumSizer->Add( m_textctrl_64bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 2 );
+	numSizer->Add( m_textctrl_64bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 2 );
 	
 	m_static_float = new wxStaticText( this, ID_DEFAULT, wxT("Float"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_float->Wrap( -1 );
-	bignumSizer->Add( m_static_float, 0, wxALIGN_CENTER|wxALL, 2 );
+	numSizer->Add( m_static_float, 0, wxALIGN_CENTER|wxALL, 2 );
 	
 	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	bignumSizer->Add( m_textctrl_float, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 2 );
+	numSizer->Add( m_textctrl_float, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 2 );
 	
 	m_static_double = new wxStaticText( this, ID_DEFAULT, wxT("Double"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_double->Wrap( -1 );
-	bignumSizer->Add( m_static_double, 0, wxALIGN_CENTER|wxBOTTOM|wxTOP, 5 );
+	numSizer->Add( m_static_double, 0, wxALIGN_CENTER|wxBOTTOM|wxTOP, 5 );
 	
 	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	bignumSizer->Add( m_textctrl_double, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 2 );
+	numSizer->Add( m_textctrl_double, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 2 );
 	
-	mainSizer->Add( bignumSizer, 1, wxEXPAND, 5 );
+	mainSizer->Add( numSizer, 1, wxEXPAND, 5 );
 	
 	this->SetSizer( mainSizer );
 	this->Layout();

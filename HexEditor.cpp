@@ -57,10 +57,8 @@ wxHexEditor::wxHexEditor(	wxWindow* parent,
 	}
 
 void wxHexEditor::Dynamic_Connector(){
-	//hex_ctrl ->Connect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this);
     hex_ctrl ->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this);
 //	hex_ctrl ->Connect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
-	//text_ctrl->Connect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this );
     text_ctrl->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl->Connect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
 
@@ -69,7 +67,7 @@ void wxHexEditor::Dynamic_Connector(){
 	hex_ctrl ->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(wxHexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(wxHexEditor::OnMouseSelectionEnd),NULL, this);
 
-//    hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(wxHexEditor::hex_mouse_input_handler),NULL, this);
+//	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(wxHexEditor::hex_mouse_input_handler),NULL, this);
 	hex_ctrl ->Connect( wxEVT_MOTION,wxMouseEventHandler(wxHexEditor::OnMouseMove),NULL, this);
 
 //	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(wxHexEditor::hex_mouse_input_handler),NULL, this);
@@ -79,8 +77,8 @@ void wxHexEditor::Dynamic_Connector(){
 void wxHexEditor::Dynamic_Disconnector(){
 	//hex_ctrl ->Disconnect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this);
     hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this);
-//    hex_ctrl ->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
-	//text_ctrl->Disconnect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this );
+//  hex_ctrl ->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
+//	text_ctrl->Disconnect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this );
     text_ctrl->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(wxHexEditor::OnHexMouseFocus),NULL, this);
@@ -475,207 +473,6 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 		}
 	}
 
-/*
-void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
-	if(myfile != NULL){
-		void *myvoid = FindFocus();		//avoid reinterpret_cast for speed
-		wxHexCtrl* myctrl;
-		if( myvoid == text_ctrl )
-			myctrl = text_ctrl;
-		else if ( myvoid == hex_ctrl )
-			myctrl = hex_ctrl;
-		else
-			{
-			wxBell();
-			return;
-			}
-
-		if(event.ShiftDown() && !event.ControlDown()){	//Selection from keyboard code
-			if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
-				event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
-				event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
-				event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
-				event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
-				event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
-				event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
-				event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
-				)
-				OnKeyboardSelector(event);	//Selection Starter call
-			}
-		switch (event.GetKeyCode()){
-			case (WXK_UP):case (WXK_NUMPAD_UP):
-				if (myctrl->ActiveLine() == 1){	//If cursor at first line
-					if(start_offset == 0)
-						wxBell();					// there is no line over up!
-					else{							// Illusion code
-						int temp = myctrl->GetInsertionPoint();	//preserving cursor location
-						start_offset -= myctrl->BytePerLine();//offset decreasing one line
-						LoadFromOffset( start_offset );		//update text with new location, makes screen slide illusion
-						myctrl->SetInsertionPoint(temp);		//restoring cursor location
-						}
-					}
-					else
-						//event.Skip(false))
-						myctrl->SetInsertionPoint( myctrl->GetInsertionPoint() - myctrl->CharPerLine() );
-
-					break;
-				case (WXK_DOWN):case (WXK_NUMPAD_DOWN):
-					if (myctrl->ActiveLine() == myctrl->LineCount()){	//If cursor at bottom of screen
-						if(start_offset + myctrl->ByteCapacity() < myfile->Length() ){//detects if another line is present or not
-							int temp = myctrl->GetInsertionPoint();			//preserving cursor location
-							start_offset += myctrl->BytePerLine();		//offset increasing one line
-							LoadFromOffset(start_offset);					//update text with new location, makes screen slide illusion
-							myctrl->SetInsertionPoint(temp);					//restoring cursor location
-							}
-						else{
-							wxBell();											//there is no line to slide bell
-							}
-						}
-					else if(myctrl->ActiveLine()*myctrl->HexPerLine() > myctrl->GetLastPosition())
-						wxBell();	//If cursor at last line but not at bottom of screen
-					else
-						//event.Skip(false);
-						myctrl->SetInsertionPoint(myctrl->GetInsertionPoint() + myctrl->HexPerLine());	// HexPerLine = BytePerLine()*2
-					break;
-
-				case (WXK_LEFT):case (WXK_NUMPAD_LEFT):
-					if( myctrl->GetInsertionPoint() == 0){
-						if(start_offset == 0)
-							wxBell();
-						else{
-							start_offset -= myctrl->BytePerLine();
-							LoadFromOffset( start_offset );
-							myctrl->SetInsertionPoint( myctrl->HexPerLine() - 1 );
-							}
-						}
-					else
-						myctrl->PrevChar();
-					break;
-
-				case (WXK_RIGHT):case (WXK_NUMPAD_RIGHT):
-					if( myctrl->GetInsertionPoint() >= myctrl->GetLastPosition()-1 ){
-						if(start_offset + myctrl->ByteCapacity() < myfile->Length() ){	//Checks if its EOF or not
-							start_offset += myctrl->BytePerLine();
-							LoadFromOffset(start_offset);
-							myctrl->SetInsertionPoint( (myctrl->LineCount() - 1) * myctrl->HexPerLine() );
-							}
-						else
-							wxBell();
-						}
-					else
-						myctrl->NextChar();
-					break;
-
-				case (WXK_HOME):case(WXK_NUMPAD_HOME):{
-					myctrl->Home();
-					break;
-					}
-				case (WXK_END):case(WXK_NUMPAD_END):{
-					myctrl->End();
-					break;
-					}
-				case (WXK_PAGEUP):case (WXK_NUMPAD_PAGEUP):
-						if(start_offset - myctrl->ByteCapacity() > 0){
-							int temp = myctrl->GetInsertionPoint();
-							start_offset -= myctrl->ByteCapacity();
-							LoadFromOffset(start_offset);
-							myctrl->SetInsertionPoint(temp);
-							}
-						else{
-							int temp = myctrl->GetInsertionPoint() % (myctrl->HexPerLine());
-							start_offset=0;
-							LoadFromOffset(start_offset);
-							myctrl->SetInsertionPoint(temp);
-							wxBell();
-							}
-					break;
-				case (WXK_PAGEDOWN):case (WXK_NUMPAD_PAGEDOWN):
-						if(start_offset + (myctrl->ByteCapacity()*2) < myfile->Length()){ // *2 for cosmetic
-							int temp = myctrl->GetInsertionPoint();
-							start_offset += myctrl->ByteCapacity();
-							LoadFromOffset(start_offset);
-							myctrl->SetInsertionPoint(temp);
-							}
-						else{
-//							int temp = (myctrl->GetInsertionPoint() % (myctrl->HexPerLine())) + (myctrl->LineCount()-1)*myctrl->CharPerLinex();
-//							start_offset = myfile->Length() - myctrl->ByteCapacity();
-//							start_offset += myctrl->BytePerLine() - start_offset%myctrl->BytePerLine(); //cosmetic
-//							LoadFromOffset(start_offset);
-//							text_ctrl->SetInsertionPoint(temp);
-//							wxBell();
-							}
-					break;
-				case (WXK_DELETE):case (WXK_NUMPAD_DELETE):
-					if( myctrl->GetInsertionPoint() != myctrl->GetLastPosition() ){
-						int hex_loc = myctrl->GetInsertionPoint();
-						HexCharReplace(hex_loc,'0');
-						myctrl->SetInsertionPoint(hex_loc);
-						}
-					else
-						wxBell();
-
-					break;
-				case (WXK_BACK):{
-					if( myctrl->GetInsertionPoint()!=0 ){
-						HexCharReplace(myctrl->GetInsertionPoint()-1,'0');
-						myctrl->SetInsertionPoint(myctrl->GetInsertionPoint()-1);
-						}
-					else
-						if(start_offset == 0)
-							wxBell();
-						else{	//Has to be a line over up
-		// TODO (death#3#): if BytePerLine() changes, current offset gona be mad, like taking minus argument because it thinks a compleete line over up... spend caution about it.
-							start_offset -= myctrl->BytePerLine();
-							LoadFromOffset( start_offset );
-							HexCharReplace(myctrl->HexPerLine()-1,'0');
-							myctrl->SetInsertionPoint(myctrl->HexPerLine()-1);
-							}
-					}
-				case( 26 ):		// 26 == CTRL+Z = UNDO
-					//if(event.ShiftDown())
-					//	redo();	// UNDO with shift = REDO
-					//else
-					//	undo();
-					break;
-				case( 25 ):		// 25 == CTRL+Y = REDO
-					//redo();
-					break;
-				case( 19 ):{	// 19 == CTRL+S = SAVE
-					//save();
-					// TODO (death#1#): File Name star'in * when file changed & saved
-					}
-					break;
-				case(  1 ):		//  1 == CTRL+A = ALL
-					//select(0, myTempFile->Length());
-					break;
-				case( 24 ):		// 24 == CTRL+X = CUT
-					wxBell();
-					break;
-				case(  3 ):		//  3 == CTRL+C = COPY
-					//copy( true );
-					break;
-				case( 22 ):		// 22 == CTRL+V = PASTE
-					//replace();
-					break;
-				case(  6 ):		//  6 == CTRL+F = FIND
-					//finddlg();
-					break;
-				case( 15 ):		// 15 == CTRL+O = OPEN
-					wxBell();
-					break;
-				default:
-					event.Skip( );
-					break;
-				}//switch end
-			if(offset_scroll->GetRange() != (myfile->Length() / myctrl->ByteCapacity()))
-				offset_scroll->SetRange((myfile->Length() / myctrl->ByteCapacity())+1);
-			if( offset_scroll->GetThumbPosition() != start_offset / myctrl->ByteCapacity() )
-				offset_scroll->SetThumbPosition( start_offset / myctrl->ByteCapacity() );
-			OnKeyboardSelector(event);
-			PaintSelection( start_offset );
-		}
-	}
-*/
 //void wxHexEditor::RefreshCursor( int64_t cursor_offset ){
 	/*
 	if(cursor_hex_offset == -1){	//if cursor_offset is not returned

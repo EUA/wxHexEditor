@@ -103,7 +103,7 @@ void wxHexEditor::FileOpen(wxFileName& myfn){
 			wxDialog *dlg = new wxMessageDialog(this,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 			dlg->ShowModal();dlg->Destroy();
 			}
-		SetHexOffset(0);
+		SetHexInsertionPoint(0);
 		}
 	else{
 		wxMessageDialog *dlg = new wxMessageDialog(this,_("File not found."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);

@@ -35,20 +35,9 @@
 class DataInterpreter : public InterpreterGui
 {
 	protected:
-		struct union_data{
-			union little_endian{
-				int8_t bit8;
-				int16_t bit16;
-				int32_t bit32;
-				int64_t bit64;
-				uint8_t ubit8;
-				uint16_t ubit16;
-				uint32_t ubit32;
-				uint64_t ubit64;
-				float bitfloat;
-				double bitdouble;
-				} *lttdata;
-			struct big_endian{
+		struct unidata{
+			char *raw, *mraw;
+			struct endian{
 				int8_t *bit8;
 				int16_t *bit16;
 				int32_t *bit32;
@@ -59,92 +48,72 @@ class DataInterpreter : public InterpreterGui
 				uint64_t *ubit64;
 				float 	*bitfloat;
 				double *bitdouble;
-				} bigdata;
-			short datasize;
-			char *bfr;
+				} little, big;
+			short size;
 			char *mirrorbfr;
 			}unidata;
 
 	public:
 	DataInterpreter(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 	:InterpreterGui( parent, id, pos, size, style){
-		unidata.bfr = new char[8];
-		unidata.mirrorbfr = new char[8];
-		for( int i = 0; i < 8 ; i++ )
-			unidata.bfr[i] = unidata.mirrorbfr[i]= 0;
-		unidata.datasize = 8;
-		Set( unidata.bfr, 8 );
+		unidata.raw = unidata.mraw = NULL;
 		};
-
 	void Set( const char* buffer, int size ){
-		if( buffer == NULL ) return;
-		//unidata mydata = reinterpret_cast< unidata* > (ch);
-		if( buffer != unidata.bfr ){	//if its not constructor call
-			if( unidata.bfr != NULL )
-				delete unidata.bfr;
-			if( unidata.mirrorbfr != NULL )
-				delete unidata.mirrorbfr;
-			unidata.bfr = new char[ size ];
-			unidata.mirrorbfr = new char[ size ];
-			memcpy( unidata.bfr, buffer, size );
-			memcpy( unidata.mirrorbfr, buffer, size );
-			unidata.datasize = size;
-			}
-		unidata.lttdata = reinterpret_cast< union_data::little_endian*>(unidata.bfr);
+		if( buffer == NULL )
+			return;
+		if( unidata.raw != NULL )
+			delete unidata.raw;
+		if( unidata.mraw != NULL )
+			delete unidata.mraw;
+		unidata.raw = new char[ size ];
+		unidata.mraw = new char[ size ];
+		memcpy( unidata.raw, buffer, size );
+		memcpy( unidata.mraw, buffer, size );
+		unidata.size = size;
+		for(int i = 0 ; i < unidata.size ; i++)	// make mirror image of mydata
+			unidata.mraw[i]=unidata.raw[unidata.size-i-1];
 
-		for(int i = 0 ; i < unidata.datasize ; i++)	// make mirror image of mydata
-			unidata.mirrorbfr[i]=unidata.bfr[unidata.datasize-i-1];
+		unidata.little.bit8   = reinterpret_cast< int8_t*  >(unidata.raw);
+		unidata.little.ubit8  = reinterpret_cast< uint8_t* >(unidata.raw);
+		unidata.little.bit16  = reinterpret_cast< int16_t* >(unidata.raw);
+		unidata.little.ubit16 = reinterpret_cast< uint16_t*>(unidata.raw);
+		unidata.little.bit32  = reinterpret_cast< int32_t* >(unidata.raw);
+		unidata.little.ubit32 = reinterpret_cast< uint32_t*>(unidata.raw);
+		unidata.little.bit64  = reinterpret_cast< int64_t* >(unidata.raw);
+		unidata.little.ubit64 = reinterpret_cast< uint64_t*>(unidata.raw);
+		unidata.little.bitfloat = reinterpret_cast< float* >(unidata.raw);
+		unidata.little.bitdouble = reinterpret_cast< double* >(unidata.raw);
 
-		unidata.bigdata.bit8 = reinterpret_cast< int8_t* >(unidata.mirrorbfr+(size - 1));
-		unidata.bigdata.ubit8 = reinterpret_cast< uint8_t* >(unidata.mirrorbfr+(size - 1));
-		unidata.bigdata.bit16 = reinterpret_cast< int16_t* >(unidata.mirrorbfr+(size - 2));
-		unidata.bigdata.ubit16 = reinterpret_cast< uint16_t* >(unidata.mirrorbfr+(size - 2));
-		unidata.bigdata.bit32 = reinterpret_cast< int32_t* >(unidata.mirrorbfr+(size - 4));
-		unidata.bigdata.ubit32 = reinterpret_cast< uint32_t* >(unidata.mirrorbfr+(size - 4));
-		unidata.bigdata.bit64 = reinterpret_cast< int64_t* >(unidata.mirrorbfr+(size - 8));
-		unidata.bigdata.ubit64 = reinterpret_cast< uint64_t* >(unidata.mirrorbfr+(size - 8));
-		unidata.bigdata.bitfloat = reinterpret_cast< float* >(unidata.mirrorbfr+(size - 4));
-		unidata.bigdata.bitdouble = reinterpret_cast< double* >(unidata.mirrorbfr+(size - 8));
-
-		Update();
+		unidata.big.bit8   = reinterpret_cast< int8_t*  >(unidata.mraw+(size - 1));
+		unidata.big.ubit8  = reinterpret_cast< uint8_t* >(unidata.mraw+(size - 1));
+		unidata.big.bit16  = reinterpret_cast< int16_t* >(unidata.mraw+(size - 2));
+		unidata.big.ubit16 = reinterpret_cast< uint16_t*>(unidata.mraw+(size - 2));
+		unidata.big.bit32  = reinterpret_cast< int32_t* >(unidata.mraw+(size - 4));
+		unidata.big.ubit32 = reinterpret_cast< uint32_t*>(unidata.mraw+(size - 4));
+		unidata.big.bit64  = reinterpret_cast< int64_t* >(unidata.mraw+(size - 8));
+		unidata.big.ubit64 = reinterpret_cast< uint64_t*>(unidata.mraw+(size - 8));
+		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
+		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
+		wxCommandEvent event(0,0);
+		OnUpdate( event );
 		}
 
-	void Update( ){
-		if( m_check_bigendian->GetValue() ){
-			union_data::big_endian *X = &unidata.bigdata;
-			if( m_check_unsigned->GetValue() ){
-				m_textctrl_8bit->ChangeValue( wxString::Format(wxT("%u"), *X->ubit8 ));
-				m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"), *X->ubit16 ));
-				m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"), *X->ubit32 ));
-				m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%llu"), *X->ubit64 ));
-				}
-			else {
-				m_textctrl_8bit->ChangeValue( wxString::Format(wxT("%i"), *X->bit8 ));
-				m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"), *X->bit16 ));
-				m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"), *X->bit32 ));
-				m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%lld"), *X->bit64 ));
-				}
-			m_textctrl_float->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
-			m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
+	void OnUpdate( wxCommandEvent& event ){
+		unidata::endian *X = m_check_bigendian->GetValue() ?  &unidata.big : &unidata.little;
+		if( m_check_unsigned->GetValue() ){
+			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit8 ));
+			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit16 ));
+			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit32 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%llu"),*X->ubit64 ));
 			}
-
-		else{
-			union_data::little_endian *X = unidata.lttdata;
-			if( m_check_unsigned->GetValue() ){
-				m_textctrl_8bit->ChangeValue( wxString::Format(wxT("%u"), X->ubit8 ));
-				m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"), X->ubit16 ));
-				m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"), X->ubit32 ));
-				m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%llu"), X->ubit64 ));
-				}
-			else {
-				m_textctrl_8bit->ChangeValue( wxString::Format(wxT("%i"), X->bit8 ));
-				m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"), X->bit16 ));
-				m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"), X->bit32 ));
-				m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%lld"), X->bit64 ));
-				}
-			m_textctrl_float->ChangeValue( wxString::Format(wxT("%.14g"), X->bitfloat ));
-			m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), X->bitdouble ));
-		}
+		else {
+			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%i"),  *X->bit8 ));
+			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit16 ));
+			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit32 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%lld"),*X->bit64 ));
+			}
+		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
+		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
 	}
 };
 

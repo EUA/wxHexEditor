@@ -5231,7 +5231,7 @@
 	<wx/filename.h>
 	<wx/aui/aui.h>
 
-1214139553 /home/C++/Project/wxHexEditor/HexEditorGui.h
+1214165779 /home/C++/Project/wxHexEditor/HexEditorGui.h
 	<wx/string.h>
 	<wx/bitmap.h>
 	<wx/image.h>
@@ -5276,11 +5276,10 @@
 	<wx/wx.h>
 	<wx/dcbuffer.h>
 
-1214151188 source:/home/C++/Project/wxHexEditor/HexEditorGui.cpp
+1214165779 source:/home/C++/Project/wxHexEditor/HexEditorGui.cpp
 	"wx/wxprec.h"
 	<wx/wx.h>
 	"HexEditorGui.h"
-	"DataInterpreter.h"
 
 1213518760 source:/home/C++/Project/wxHexEditor/wxHexEditor.cpp
 	"wxHexEditor.h"
@@ -5313,7 +5312,7 @@
 	"wxHexCtrl/wxHexCtrl.h"
 	"wxHexEditorCtrlGui.h"
 
-1214153600 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
+1214163327 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
 1214153459 /home/C++/Project/wxHexEditor/HexEditor.h
@@ -5367,7 +5366,7 @@
 	"wx/caret.h"
 	"wx/numdlg.h"
 
-1214151519 /home/C++/Project/wxHexEditor/DataInterpreter.h
+1214488440 /home/C++/Project/wxHexEditor/DataInterpreter.h
 	"HexEditorGui.h"
 	<wx_pch.h>
 	<wx/wx.h>

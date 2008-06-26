@@ -86,6 +86,10 @@ class InterpreterGui : public wxPanel
 		wxTextCtrl* m_textctrl_float;
 		wxStaticText* m_static_double;
 		wxTextCtrl* m_textctrl_double;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnUpdate( wxCommandEvent& event ){ event.Skip(); }
+		
 	
 	public:
 		InterpreterGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxPoint( 200,500 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );

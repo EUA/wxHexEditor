@@ -385,7 +385,7 @@
                 <event name="OnUpdateUI"></event>
             </object>
         </object>
-        <object class="Panel" expanded="1">
+        <object class="Panel" expanded="0">
             <property name="bg"></property>
             <property name="context_help"></property>
             <property name="enabled">1</property>

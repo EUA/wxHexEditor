@@ -23,7 +23,7 @@
 
 #include "HexEditor.h"
 
-wxHexEditor::wxHexEditor(	wxWindow* parent,
+HexEditor::HexEditor(	wxWindow* parent,
 							int id,
 							wxStatusBar *statbar,
 							DataInterpreter *interpreter,
@@ -51,46 +51,46 @@ wxHexEditor::wxHexEditor(	wxWindow* parent,
 //		myfilename = NULL;
 //		myTempFile = NULL;
 	}
-	wxHexEditor::~wxHexEditor(){
+	HexEditor::~HexEditor(){
 		Dynamic_Disconnector();
 		FileClose();
 	}
 
-void wxHexEditor::Dynamic_Connector(){
-    hex_ctrl ->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this);
-//	hex_ctrl ->Connect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
-    text_ctrl->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this );
-//	text_ctrl->Connect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
+void HexEditor::Dynamic_Connector(){
+    hex_ctrl ->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+//	hex_ctrl ->Connect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+    text_ctrl->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
+//	text_ctrl->Connect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 
-	hex_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(wxHexEditor::OnHexMouseFocus),NULL, this);
-	text_ctrl->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(wxHexEditor::OnTextMouseFocus),NULL, this);
-	hex_ctrl ->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(wxHexEditor::OnMouseSelectionEnd),NULL, this);
-	text_ctrl->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(wxHexEditor::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
+	text_ctrl->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
+	hex_ctrl ->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	text_ctrl->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 
-//	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(wxHexEditor::hex_mouse_input_handler),NULL, this);
-	hex_ctrl ->Connect( wxEVT_MOTION,wxMouseEventHandler(wxHexEditor::OnMouseMove),NULL, this);
+//	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::hex_mouse_input_handler),NULL, this);
+	hex_ctrl ->Connect( wxEVT_MOTION,wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 
-//	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(wxHexEditor::hex_mouse_input_handler),NULL, this);
-	text_ctrl->Connect( wxEVT_MOTION,wxMouseEventHandler(wxHexEditor::OnMouseMove),NULL, this);
+//	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::hex_mouse_input_handler),NULL, this);
+	text_ctrl->Connect( wxEVT_MOTION,wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
-void wxHexEditor::Dynamic_Disconnector(){
-	//hex_ctrl ->Disconnect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this);
-    hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this);
-//  hex_ctrl ->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
-//	text_ctrl->Disconnect( wxEVT_CHAR,wxKeyEventHandler(wxHexEditor::OnKeyboardChar),NULL, this );
-    text_ctrl->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(wxHexEditor::OnKeyboardInput),NULL, this );
-//	text_ctrl->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(wxHexEditor::OnKeyboardSelectionEnd),NULL, this);
-	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(wxHexEditor::OnHexMouseFocus),NULL, this);
-	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(wxHexEditor::OnTextMouseFocus),NULL, this);
+void HexEditor::Dynamic_Disconnector(){
+	//hex_ctrl ->Disconnect( wxEVT_CHAR,wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+    hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+//  hex_ctrl ->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+//	text_ctrl->Disconnect( wxEVT_CHAR,wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this );
+    text_ctrl->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
+//	text_ctrl->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
+	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
 	}
 
-void wxHexEditor::FileOpen(wxFileName& myfn){
+void HexEditor::FileOpen(wxFileName& myfn){
 	myfilename = wxFileName(myfn);
 	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
 	else if(myfilename.FileExists()){
 //		myTempFile = new FileDiff( myfilename );
-		myfile = new wxFile( myfilename.GetFullName() );
+		myfile = new wxFile( myfilename.GetFullPath() );
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
@@ -109,7 +109,7 @@ void wxHexEditor::FileOpen(wxFileName& myfn){
 		}
 	}
 
-bool wxHexEditor::FileClose( void ){
+bool HexEditor::FileClose( void ){
 	/*
 		if(myTempFile->changed()){
 		wxMessageDialog *msg = new wxMessageDialog(
@@ -145,7 +145,7 @@ bool wxHexEditor::FileClose( void ){
 	return true;
 	}
 
-void wxHexEditor::OnOffsetScroll( wxScrollEvent& event ){
+void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     start_offset = static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity();
 	wxString str;
 	str << _("Slider at position: ") << offset_scroll->GetThumbPosition()
@@ -156,7 +156,7 @@ void wxHexEditor::OnOffsetScroll( wxScrollEvent& event ){
     wxYieldIfNeeded();
 	}
 
-void wxHexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
+void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
 	static wxMutex MyMutex;
 	MyMutex.Lock();
 
@@ -169,7 +169,7 @@ void wxHexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint
 	MyMutex.Unlock();
 	}
 
-void wxHexEditor::OnResize( wxSizeEvent &event){
+void HexEditor::OnResize( wxSizeEvent &event){
 	HexEditorCtrl::OnResize( event );
 	//event.Skip( true );
 	if(myfile != NULL && 0 < ByteCapacity()){
@@ -182,7 +182,7 @@ void wxHexEditor::OnResize( wxSizeEvent &event){
 		}
     }
 
-bool wxHexEditor::Select ( int64_t start_offset, int64_t end_offset ){
+bool HexEditor::Select ( int64_t start_offset, int64_t end_offset ){
 	if( start_offset < 0 || end_offset < 0 ||
 		start_offset > myfile->Length() ||  end_offset > myfile->Length()){
 		wxBell();
@@ -195,12 +195,12 @@ bool wxHexEditor::Select ( int64_t start_offset, int64_t end_offset ){
 	return true;
 	}
 
-void inline wxHexEditor::ClearPaint( void ){
+void inline HexEditor::ClearPaint( void ){
 	hex_ctrl ->ClearSelection();
 	text_ctrl->ClearSelection();
 	}
 
-bool wxHexEditor::Selector( void ){
+bool HexEditor::Selector( void ){
 	static bool polarity_possitive;
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
 		selection.end_offset = start_offset + GetLocalHexInsertionPoint()/2;
@@ -259,7 +259,7 @@ bool wxHexEditor::Selector( void ){
 	return true;
 	}
 
-void wxHexEditor::OnKeyboardSelector(wxKeyEvent& event){
+void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 	if(! event.ShiftDown() ){
 		if( selection.state == selector::SELECTION_TRUE )
 			selection.state = selector::SELECTION_END;
@@ -272,7 +272,7 @@ void wxHexEditor::OnKeyboardSelector(wxKeyEvent& event){
 // TODO (death#1#): BUG: Hex-Text Selection at release shift action
 // TODO (death#5#): File Name star'in * when file changed & saved
 
-void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
+void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 	if(myfile != NULL){
 		void *myvoid = FindFocus();		//avoid reinterpret_cast for speed
 		wxHexCtrl* myctrl;
@@ -473,7 +473,7 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 		}
 	}
 
-//void wxHexEditor::RefreshCursor( int64_t cursor_offset ){
+//void HexEditor::RefreshCursor( int64_t cursor_offset ){
 	/*
 	if(cursor_hex_offset == -1){	//if cursor_offset is not returned
 		cursor_hex_offset = GetHexOffset();
@@ -498,7 +498,7 @@ void wxHexEditor::OnKeyboardInput( wxKeyEvent& event ){
 	*/
 //	}
 
-void wxHexEditor::UpdateStatusBar(){
+void HexEditor::UpdateStatusBar(){
 	if( statusbar != NULL ){
 		statusbar->SetStatusText(wxString::Format(_("Page: %d"),GetHexOffset()/hex_ctrl->ByteCapacity() ), 0);
 		statusbar->SetStatusText(wxString::Format(_("Offset: %lld"),GetHexOffset() ), 1);
@@ -511,29 +511,29 @@ void wxHexEditor::UpdateStatusBar(){
 		}
 	}
 
-int64_t wxHexEditor::GetHexOffset( void ){
+int64_t HexEditor::GetHexOffset( void ){
 	return start_offset * 2  + GetLocalHexInsertionPoint();
 	}
 
-void wxHexEditor::SetHexOffset( int64_t HexOffset ){
+void HexEditor::SetHexOffset( int64_t HexOffset ){
 //	RefreshCursor( HexOffset );
 	}
 
-void wxHexEditor::OnHexMouseFocus(wxMouseEvent& event){
+void HexEditor::OnHexMouseFocus(wxMouseEvent& event){
 	selection.state=selector::SELECTION_FALSE;
 	ClearPaint();
 	hex_ctrl->SetFocus();
 	SetHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
 	}
 
-void wxHexEditor::OnTextMouseFocus(wxMouseEvent& event){
+void HexEditor::OnTextMouseFocus(wxMouseEvent& event){
 	selection.state=selector::SELECTION_FALSE;
 	ClearPaint();
 	text_ctrl->SetFocus();
 	SetHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
 	}
 
-void wxHexEditor::OnMouseMove( wxMouseEvent& event ){
+void HexEditor::OnMouseMove( wxMouseEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLeft mouse button:" << event.m_leftDown << std::endl;
@@ -571,22 +571,22 @@ void wxHexEditor::OnMouseMove( wxMouseEvent& event ){
 		}
 	}
 
-void wxHexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
+void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	if(selection.state == selector::SELECTION_TRUE)
 		selection.state = selector::SELECTION_END;
 	event.Skip();
 	myscroll->UpdateSpeed( 0 );
 	}
-int64_t wxHexEditor::FileLenght(){
+int64_t HexEditor::FileLenght(){
 	return myfile->Length();
 	}
 
-void wxHexEditor::SetHexInsertionPoint( int local_hex_location){
+void HexEditor::SetHexInsertionPoint( int local_hex_location){
 	SetLocalHexInsertionPoint( local_hex_location );
 	UpdateInterpreter();
 	}
 
-void wxHexEditor::UpdateInterpreter(){
+void HexEditor::UpdateInterpreter(){
 	if( interpreter != NULL ){
 		myfile->Seek( GetLocalHexInsertionPoint()/2+start_offset, wxFromStart );
 		char *bfr = new char [8];

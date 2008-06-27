@@ -32,9 +32,9 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 
 class scrollthread;
-class wxHexEditor: public HexEditorCtrl {
+class HexEditor: public HexEditorCtrl {
 	public:
-	    wxHexEditor(wxWindow* parent,
+	    HexEditor(wxWindow* parent,
 					int id,
 					wxStatusBar *statusbar=NULL,
 					DataInterpreter *interpreter=NULL,
@@ -42,7 +42,7 @@ class wxHexEditor: public HexEditorCtrl {
 					const wxPoint& pos=wxDefaultPosition,
 					const wxSize& size=wxDefaultSize,
 					long style=0);
-		~wxHexEditor( void );
+		~HexEditor( void );
 		friend class scrollthread;
 		DataInterpreter *interpreter;
 
@@ -127,10 +127,10 @@ protected:
 
 class scrollthread:wxThreadHelper{
 	private:
-		wxHexEditor *parent;
+		HexEditor *parent;
 		int speed, sleeper,cursor;
 	public:
-	scrollthread(int initial_speed, wxHexEditor *parent ):parent(parent){
+	scrollthread(int initial_speed, HexEditor *parent ):parent(parent){
 		sleeper = 25;
 		cursor = 0;
 		speed = initial_speed;

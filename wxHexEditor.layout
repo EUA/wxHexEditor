@@ -2,45 +2,45 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="DataInterpreter.h" open="1" top="0" tabpos="2">
-		<Cursor position="4363" topLine="94" />
+		<Cursor position="1416" topLine="1" />
 	</File>
-	<File name="HexEditor.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="21393" topLine="579" />
+	<File name="HexEditor.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="4815" topLine="84" />
 	</File>
 	<File name="HexEditor.h" open="0" top="0" tabpos="6">
-		<Cursor position="6620" topLine="170" />
+		<Cursor position="1824" topLine="43" />
 	</File>
 	<File name="HexEditorApp.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="1937" topLine="33" />
+		<Cursor position="1839" topLine="9" />
 	</File>
 	<File name="HexEditorApp.h" open="0" top="0" tabpos="5">
-		<Cursor position="336" topLine="0" />
+		<Cursor position="259" topLine="0" />
 	</File>
 	<File name="HexEditorCtrl/HexEditorCtrl.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="5876" topLine="153" />
+		<Cursor position="1416" topLine="1" />
 	</File>
 	<File name="HexEditorCtrl/HexEditorCtrl.h" open="0" top="0" tabpos="6">
-		<Cursor position="3489" topLine="61" />
+		<Cursor position="1416" topLine="1" />
 	</File>
 	<File name="HexEditorCtrl/HexEditorCtrlGui.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="6168" topLine="87" />
 	</File>
 	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="15615" topLine="519" />
+		<Cursor position="1416" topLine="1" />
 	</File>
 	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="2">
-		<Cursor position="5049" topLine="95" />
+		<Cursor position="1416" topLine="1" />
 	</File>
-	<File name="HexEditorFrame.cpp" open="1" top="1" tabpos="3">
-		<Cursor position="3920" topLine="80" />
+	<File name="HexEditorFrame.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="4248" topLine="87" />
 	</File>
-	<File name="HexEditorFrame.h" open="1" top="0" tabpos="5">
-		<Cursor position="2170" topLine="36" />
+	<File name="HexEditorFrame.h" open="0" top="0" tabpos="5">
+		<Cursor position="1416" topLine="1" />
 	</File>
-	<File name="HexEditorGui.cpp" open="1" top="0" tabpos="6">
+	<File name="HexEditorGui.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="4606" topLine="50" />
 	</File>
-	<File name="HexEditorGui.h" open="1" top="0" tabpos="4">
+	<File name="HexEditorGui.h" open="0" top="0" tabpos="4">
 		<Cursor position="1579" topLine="68" />
 	</File>
 </CodeBlocks_layout_file>

@@ -5221,15 +5221,16 @@
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1214505564 source:/home/C++/Project/wxHexEditor/HexEditorFrame.cpp
+1214527390 source:/home/C++/Project/wxHexEditor/HexEditorFrame.cpp
 	"HexEditorFrame.h"
 
-1214500307 /home/C++/Project/wxHexEditor/HexEditorFrame.h
+1214527073 /home/C++/Project/wxHexEditor/HexEditorFrame.h
 	"HexEditorGui.h"
 	"HexEditor.h"
 	"DataInterpreter.h"
 	<wx/filename.h>
 	<wx/aui/aui.h>
+	<wx/dnd.h>
 
 1214497749 /home/C++/Project/wxHexEditor/HexEditorGui.h
 	<wx/string.h>
@@ -5312,10 +5313,10 @@
 	"wxHexCtrl/wxHexCtrl.h"
 	"wxHexEditorCtrlGui.h"
 
-1214497474 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
+1214527390 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
-1214153459 /home/C++/Project/wxHexEditor/HexEditor.h
+1214527399 /home/C++/Project/wxHexEditor/HexEditor.h
 	<wx/filename.h>
 	<wx/file.h>
 	"DataInterpreter.h"
@@ -5385,4 +5386,20 @@
 
 1212816188 /usr/include/wx-2.8/wx/gtk/statline.h
 	"wx/defs.h"
+
+1212816188 /usr/include/wx-2.8/wx/dnd.h
+	"wx/defs.h"
+	"wx/dataobj.h"
+	"wx/cursor.h"
+	"wx/msw/ole/dropsrc.h"
+	"wx/msw/ole/droptgt.h"
+	"wx/motif/dnd.h"
+	"wx/x11/dnd.h"
+	"wx/gtk/dnd.h"
+	"wx/gtk1/dnd.h"
+	"wx/mac/dnd.h"
+	"wx/os2/dnd.h"
+
+1212816188 /usr/include/wx-2.8/wx/gtk/dnd.h
+	"wx/icon.h"
 

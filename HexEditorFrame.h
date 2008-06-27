@@ -30,6 +30,7 @@
 
 #include <wx/filename.h>
 #include <wx/aui/aui.h>
+#include <wx/dnd.h>
 
 class HexEditorFrame : public HexEditorGui {
 	public:
@@ -50,5 +51,20 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
 	};
+
+class DnDFile : public wxFileDropTarget {
+	public:
+		DnDFile(wxAuiNotebook *pOwner, wxStatusBar *statusbarx, DataInterpreter *interpreterx) {
+			m_pOwner = pOwner;
+			statusbar = statusbarx;
+			myinterpreter = interpreterx;
+			}
+	virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
+	private:
+		wxAuiNotebook *m_pOwner;
+		wxStatusBar	*statusbar;
+		DataInterpreter *myinterpreter;
+	};
+
 
 #endif

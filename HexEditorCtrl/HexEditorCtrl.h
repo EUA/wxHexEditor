@@ -32,7 +32,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 						const wxSize& size=wxDefaultSize,
 						long style=0);
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
-
+		int64_t CursorOffset( void );
 	protected:
 		int HexPerLine( void )  { return hex_ctrl->HexPerLine(); }
 virtual int BytePerLine( void )	{ return HexPerLine() / 2; }

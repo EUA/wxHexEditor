@@ -60,14 +60,11 @@ class HexEditor: public HexEditorCtrl {
 //		void finddlg( void );
 //		int64_t findbin( const char *target, int size, int64_t start_from );
 //		int64_t find( wxString *target, int size, int64_t start_from, bool as_hex = false );
-		int64_t GetHexOffset( void );
-		void SetHexOffset( int64_t HexOffset );
 		void SetHexInsertionPoint ( int local_hex_location );
 		bool Select ( int64_t start_offset, int64_t end_offset );
-		void UpdateInterpreter();
 protected:
 //public4test		bool Select ( int64_t start_offset, int64_t end_offset );
-
+		void UpdateCursorLocation();
 		void OnKeyboardInput(wxKeyEvent& event);
 
 		void OnKeyboardSelector( wxKeyEvent& event );
@@ -77,6 +74,7 @@ protected:
 		void OnTextMouseFocus( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event );
+		void OnOffsetMouseFocus( wxMouseEvent& event );
 //=====================
 /*
 
@@ -104,9 +102,7 @@ private:
 
 protected:
    	friend class FindDialog;
-	scrollthread *myscroll;
 	copy_maker *copy_mark;
-    DataInterpreter *interpreter;
 
 
 */
@@ -115,14 +111,13 @@ protected:
 		wxStatusBar* statusbar;
 		wxFileName myfilename;
 		wxFile *myfile;
-		void UpdateStatusBar();
 		scrollthread *myscroll;
 
 	private:
 	    void Dynamic_Connector( void );
 	    void Dynamic_Disconnector( void );
 		void inline ClearPaint( void );
-		bool Selector( void );
+		bool Selector( bool mode=true );
 };
 
 class scrollthread:wxThreadHelper{

@@ -134,7 +134,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 
-    x -= offset_ctrl->GetSize().GetX() + offset_scroll->GetSize().GetX() + 4 ;	//Remove Offset Contorl box X because its changeable +4 for borders
+    x -= offset_ctrl->GetSize().GetX() + offset_scroll->GetSize().GetX() + 4 ;	//Remove Offset Control box X because its changeable +4 for borders
     y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
     int charx = hex_ctrl->m_Char.x;
 	int i=2;
@@ -213,4 +213,8 @@ void HexEditorCtrl::OnOffsetMouseFocus( wxMouseEvent& event ){
 		offset_position += BytePerLine();
 		}
 	offset_ctrl->ChangeValue(offset_string, true);
+	}
+
+int64_t HexEditorCtrl::CursorOffset( void ){
+	return GetLocalHexInsertionPoint()/2 + start_offset;
 	}

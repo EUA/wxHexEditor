@@ -72,6 +72,8 @@ void HexEditor::Dynamic_Connector(){
 
 //	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::hex_mouse_input_handler),NULL, this);
 	text_ctrl->Connect( wxEVT_MOTION,wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+
+	offset_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnOffsetMouseFocus),NULL, this);
 	}
 
 void HexEditor::Dynamic_Disconnector(){
@@ -200,7 +202,7 @@ void inline HexEditor::ClearPaint( void ){
 	text_ctrl->ClearSelection();
 	}
 
-bool HexEditor::Selector( void ){
+bool HexEditor::Selector( bool mode ){
 	static bool polarity_possitive;
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
 		selection.end_offset = start_offset + GetLocalHexInsertionPoint()/2;
@@ -217,27 +219,6 @@ bool HexEditor::Selector( void ){
 		first_selection			= true;
 		}
 
-//	else if(selection.start_offset == selection.end_offset)		//Cancel selection code
-//		if(!first_selection)
-//			selection.state	= selector::SELECTION_FALSE;
-//		else
-//			selection.start_offset = selection.end_offset;
-
-/*	//wxTextCtrl style fix code, I don't know how it works exactly
-	if ( FindFocus() == text_ctrl && !first_selection){
-		if((selection.start_offset > selection.end_hex) && (!polarity_possitive)){
-			selection.start_offset--;							//end_hex is "INCLUDED to selection"
-			polarity_possitive = true;
-			}
-		if(selection.start_offset < selection.end_hex){
-			selection.end_hex--;
-			if (polarity_possitive){
-				selection.start_offset++;
-				polarity_possitive = false;
-				}
-			}
-		}
-*/
 	if( statusbar != NULL ){
 		int start = selection.start_offset;
 		int end = selection.end_offset;
@@ -247,13 +228,13 @@ bool HexEditor::Selector( void ){
 			end = temp;
 			}
 		if( selection.state == selector::SELECTION_FALSE ){
-			statusbar->SetStatusText(_("Block: None"), 3);
-			statusbar->SetStatusText(_("Size: None") ,4);
+			statusbar->SetStatusText(_("Block: \tn/a"), 3);
+			statusbar->SetStatusText(_("Size: \tn/a") ,4);
 			}
 
 		else{
-			statusbar->SetStatusText(wxString::Format(_("Block: %d -> %d"),start,end), 3);
-			statusbar->SetStatusText(wxString::Format(_("Size: %d"), abs(start-end)+1), 4);
+			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
+			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
 			}
 		}
 	return true;
@@ -305,6 +286,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					else{							// Illusion code
 						start_offset -= BytePerLine(); 	//offset decreasing one line
 						LoadFromOffset( start_offset );	//update text with new location, makes screen slide illusion
+						UpdateCursorLocation();
 						}
 					}
 					else
@@ -370,6 +352,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 //							int temp = GetHexInsertionPoint();
 							start_offset -= ByteCapacity();
 							LoadFromOffset(start_offset );
+							UpdateCursorLocation();
 //							SetHexInsertionPoint(temp);
 							}
 						else{
@@ -498,29 +481,10 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 	*/
 //	}
 
-void HexEditor::UpdateStatusBar(){
-	if( statusbar != NULL ){
-		statusbar->SetStatusText(wxString::Format(_("Page: %d"),GetHexOffset()/hex_ctrl->ByteCapacity() ), 0);
-		statusbar->SetStatusText(wxString::Format(_("Offset: %lld"),GetHexOffset() ), 1);
-		uint8_t ch;
-		myfile->Seek( GetHexOffset()/2 );
-		myfile->Read( reinterpret_cast<char*>(&ch), 1);
-		statusbar->SetStatusText(wxString::Format(_("=%u"), ch), 2);
-		//statbar->SetStatusText(wxString::Format(_("Block: %d-%d"),0,0), 3);
-		//statbar->SetStatusText(wxString::Format(_("Size: %d"),myTempFile->Length()), 4);
-		}
-	}
-
-int64_t HexEditor::GetHexOffset( void ){
-	return start_offset * 2  + GetLocalHexInsertionPoint();
-	}
-
-void HexEditor::SetHexOffset( int64_t HexOffset ){
-//	RefreshCursor( HexOffset );
-	}
-
 void HexEditor::OnHexMouseFocus(wxMouseEvent& event){
 	selection.state=selector::SELECTION_FALSE;
+	statusbar->SetStatusText(_("Block: \tn/a"), 3);
+	statusbar->SetStatusText(_("Size: \tn/a") ,4);
 	ClearPaint();
 	hex_ctrl->SetFocus();
 	SetHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
@@ -528,6 +492,8 @@ void HexEditor::OnHexMouseFocus(wxMouseEvent& event){
 
 void HexEditor::OnTextMouseFocus(wxMouseEvent& event){
 	selection.state=selector::SELECTION_FALSE;
+	statusbar->SetStatusText(_("Block: \tn/a"), 3);
+	statusbar->SetStatusText(_("Size: \tn/a") ,4);
 	ClearPaint();
 	text_ctrl->SetFocus();
 	SetHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
@@ -563,7 +529,6 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 		if( new_location != old_location ){
 			if(selection.state != selector::SELECTION_TRUE)		// At first selection
 				Selector();
-
 			SetHexInsertionPoint( new_location );
 			Selector();
 			PaintSelection( );
@@ -583,10 +548,10 @@ int64_t HexEditor::FileLenght(){
 
 void HexEditor::SetHexInsertionPoint( int local_hex_location){
 	SetLocalHexInsertionPoint( local_hex_location );
-	UpdateInterpreter();
+	UpdateCursorLocation();
 	}
 
-void HexEditor::UpdateInterpreter(){
+void HexEditor::UpdateCursorLocation(){
 	if( interpreter != NULL ){
 		myfile->Seek( GetLocalHexInsertionPoint()/2+start_offset, wxFromStart );
 		char *bfr = new char [8];
@@ -594,4 +559,26 @@ void HexEditor::UpdateInterpreter(){
 		interpreter->Set( bfr, size);
 		delete bfr;
 		}
+
+	if( statusbar != NULL ){
+		statusbar->SetStatusText(wxString::Format(_("Page: %d"), CursorOffset()/hex_ctrl->ByteCapacity() ), 0);
+		if( hex_offset )
+			statusbar->SetStatusText(wxString::Format(_("Offset: %llX"), CursorOffset() ), 1);
+		else
+			statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
+		uint8_t ch;
+		myfile->Seek( CursorOffset() );
+		myfile->Read( reinterpret_cast<char*>(&ch), 1);
+		statusbar->SetStatusText(wxString::Format(_("=\t%u"), ch), 2);
+		//statbar->SetStatusText(wxString::Format(_("Block: %d-%d"),0,0), 3);
+		//statbar->SetStatusText(wxString::Format(_("Size: %d"),myTempFile->Length()), 4);
+		}
+	}
+
+void HexEditor::OnOffsetMouseFocus( wxMouseEvent& event ){
+	if( ! hex_offset )	// ! needed hex_offset shows current state, post state is different
+		statusbar->SetStatusText(wxString::Format(_("Offset: %llX"), CursorOffset() ), 1);
+	else
+		statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
+	event.Skip();
 	}

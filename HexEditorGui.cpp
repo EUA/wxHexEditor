@@ -104,7 +104,9 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	this->SetMenuBar( mbar );
 	
-	statusBar = this->CreateStatusBar( 2, wxST_SIZEGRIP, wxID_ANY );
+	statusBar = this->CreateStatusBar( 5, wxST_SIZEGRIP, wxID_ANY );
+	statusBar->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );

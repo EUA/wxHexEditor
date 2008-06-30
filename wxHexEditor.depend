@@ -5221,7 +5221,7 @@
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1214527390 source:/home/C++/Project/wxHexEditor/HexEditorFrame.cpp
+1214838991 source:/home/C++/Project/wxHexEditor/HexEditorFrame.cpp
 	"HexEditorFrame.h"
 
 1214527073 /home/C++/Project/wxHexEditor/HexEditorFrame.h
@@ -5232,7 +5232,7 @@
 	<wx/aui/aui.h>
 	<wx/dnd.h>
 
-1214497749 /home/C++/Project/wxHexEditor/HexEditorGui.h
+1214838869 /home/C++/Project/wxHexEditor/HexEditorGui.h
 	<wx/string.h>
 	<wx/bitmap.h>
 	<wx/image.h>
@@ -5248,7 +5248,6 @@
 	<wx/sizer.h>
 	<wx/stattext.h>
 	<wx/textctrl.h>
-	<wx/statbox.h>
 	<wx/panel.h>
 
 1214093676 /home/C++/Project/wxHexEditor/wxHexEditor.h
@@ -5277,7 +5276,7 @@
 	<wx/wx.h>
 	<wx/dcbuffer.h>
 
-1214755555 source:/home/C++/Project/wxHexEditor/HexEditorGui.cpp
+1214838869 source:/home/C++/Project/wxHexEditor/HexEditorGui.cpp
 	"wx/wxprec.h"
 	<wx/wx.h>
 	"HexEditorGui.h"
@@ -5313,7 +5312,7 @@
 	"wxHexCtrl/wxHexCtrl.h"
 	"wxHexEditorCtrlGui.h"
 
-1214766796 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
+1214768198 source:/home/C++/Project/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
 1214766331 /home/C++/Project/wxHexEditor/HexEditor.h

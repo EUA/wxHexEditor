@@ -31,14 +31,15 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				MyNotebook->SetWindowStyleFlag(0);
 //				MyAUI->AddPane( MyNotebook, wxCENTER);
 
-				MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().Name(wxT("wxHE")).
+				MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().
 						CaptionVisible(false).
 						MinSize(wxSize(400,100)).
 						CloseButton(false).
 						Center().Layer(1)	);
 		MyInterpreter = new DataInterpreter( this, -1 );
-		MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().Name(wxT("wxHEint")).Caption(wxT("DataInterpreter")).
-			MinSize(wxSize(207,-1)).Left().Layer(1).Hide()	);
+		MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().Caption(wxT("DataInterpreter")).
+			MinSize(wxSize(170,-1)).Left().Layer(1) );
+		mbar->Check( wxID_INTERPRATOR, true );
 
 		MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter) );
 

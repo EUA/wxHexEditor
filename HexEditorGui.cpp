@@ -26,13 +26,12 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	mbar = new wxMenuBar( 0 );
 	fileMenu = new wxMenu();
 	wxMenuItem* menuFileOpen;
-	menuFileOpen = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Open") ) , wxEmptyString, wxITEM_NORMAL );
+	menuFileOpen = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Open") ) + wxT('\t') + wxT("CTRL+O"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileOpen );
 	
 	wxMenuItem* menuFileSave;
-	menuFileSave = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Save") ) , wxEmptyString, wxITEM_NORMAL );
+	menuFileSave = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileSave );
-	menuFileSave->Enable( false );
 	
 	wxMenuItem* menuFileClose;
 	menuFileClose = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Close") ) , wxEmptyString, wxITEM_NORMAL );
@@ -48,38 +47,42 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	editMenu = new wxMenu();
 	wxMenuItem* menuEditUndo;
-	menuEditUndo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Undo") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditUndo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditUndo );
 	menuEditUndo->Enable( false );
 	
 	wxMenuItem* menuEditRedo;
-	menuEditRedo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Redo") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditRedo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditRedo );
 	menuEditRedo->Enable( false );
 	
 	editMenu->AppendSeparator();
 	
 	wxMenuItem* menuEditCopy;
-	menuEditCopy = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Copy") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditCopy = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Copy") ) + wxT('\t') + wxT("CTRL+C"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditCopy );
 	menuEditCopy->Enable( false );
 	
 	wxMenuItem* menuEditCut;
-	menuEditCut = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Cut") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditCut = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Cut") ) + wxT('\t') + wxT("CTRL+X"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditCut );
 	menuEditCut->Enable( false );
 	
 	wxMenuItem* menuEditPaste;
-	menuEditPaste = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Paste") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditPaste = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Paste") ) + wxT('\t') + wxT("CTRL+V"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditPaste );
 	menuEditPaste->Enable( false );
 	
 	editMenu->AppendSeparator();
 	
 	wxMenuItem* menuEditFind;
-	menuEditFind = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Find") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditFind = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Find") ) + wxT('\t') + wxT("CTRL+F"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditFind );
 	menuEditFind->Enable( false );
+	
+	wxMenuItem* menuEditReplace;
+	menuEditReplace = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Replace") ) + wxT('\t') + wxT("CTRL+R"), wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditReplace );
 	
 	wxMenuItem* menuEditGotobyte;
 	menuEditGotobyte = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Goto Byte") ) , wxEmptyString, wxITEM_NORMAL );
@@ -90,7 +93,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	viewMenu = new wxMenu();
 	wxMenuItem* menuViewInterprator;
-	menuViewInterprator = new wxMenuItem( viewMenu, wxID_ANY, wxString( wxT("Interpretor") ) , wxEmptyString, wxITEM_CHECK );
+	menuViewInterprator = new wxMenuItem( viewMenu, wxID_INTERPRATOR, wxString( wxT("Interpretor") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewInterprator );
 	
 	mbar->Append( viewMenu, wxT("&View") );
@@ -132,68 +135,96 @@ HexEditorGui::~HexEditorGui()
 
 InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxStaticBoxSizer* mainSizer;
-	mainSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Data Interpreter") ), wxVERTICAL );
+	wxBoxSizer* mainSizer;
+	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
 	wxBoxSizer* optionSizer;
 	optionSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_check_unsigned = new wxCheckBox( this, ID_CHK_UNSIGNED, wxT("Unsigned"), wxDefaultPosition, wxDefaultSize, 0 );
 	
+	m_check_unsigned->SetFont( wxFont( 8, 74, 90, 90, false, wxT("Sans") ) );
+	
 	optionSizer->Add( m_check_unsigned, 0, wxALL, 5 );
 	
 	m_check_bigendian = new wxCheckBox( this, ID_CHK_BIGENDIAN, wxT("Big Endian"), wxDefaultPosition, wxDefaultSize, 0 );
 	
+	m_check_bigendian->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	optionSizer->Add( m_check_bigendian, 0, wxALL, 5 );
 	
-	mainSizer->Add( optionSizer, 0, wxEXPAND, 5 );
+	mainSizer->Add( optionSizer, 0, wxEXPAND, 4 );
 	
 	wxFlexGridSizer* numSizer;
 	numSizer = new wxFlexGridSizer( 2, 2, 0, 0 );
 	numSizer->AddGrowableCol( 1 );
 	numSizer->SetFlexibleDirection( wxHORIZONTAL );
 	
-	m_static_8bit = new wxStaticText( this, ID_DEFAULT, wxT("8 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+	m_static_8bit = new wxStaticText( this, ID_DEFAULT, wxT("8 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_8bit->Wrap( -1 );
+	m_static_8bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	numSizer->Add( m_static_8bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), wxTE_READONLY );
-	numSizer->Add( m_textctrl_8bit, 0, wxALL|wxEXPAND, 2 );
+	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
+	m_textctrl_8bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	m_static_16bit = new wxStaticText( this, ID_DEFAULT, wxT("16 bit"), wxDefaultPosition, wxDefaultSize, 0 );
+	numSizer->Add( m_textctrl_8bit, 0, wxALL|wxEXPAND, 1 );
+	
+	m_static_16bit = new wxStaticText( this, ID_DEFAULT, wxT("16 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_16bit->Wrap( -1 );
+	m_static_16bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	numSizer->Add( m_static_16bit, 0, wxALIGN_CENTER|wxALL, 0 );
 	
 	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
-	numSizer->Add( m_textctrl_16bit, 0, wxALL|wxEXPAND, 2 );
+	m_textctrl_16bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	m_static_32bit = new wxStaticText( this, ID_DEFAULT, wxT("32 bit"), wxDefaultPosition, wxDefaultSize, 0 );
+	numSizer->Add( m_textctrl_16bit, 0, wxALL|wxEXPAND, 1 );
+	
+	m_static_32bit = new wxStaticText( this, ID_DEFAULT, wxT("32 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_32bit->Wrap( -1 );
+	m_static_32bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	numSizer->Add( m_static_32bit, 0, wxALIGN_CENTER|wxALL, 2 );
 	
 	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 2 );
+	m_textctrl_32bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	m_static_64bit = new wxStaticText( this, ID_DEFAULT, wxT("64 bit"), wxDefaultPosition, wxDefaultSize, 0 );
+	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 1 );
+	
+	m_static_64bit = new wxStaticText( this, ID_DEFAULT, wxT("64 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_64bit->Wrap( -1 );
+	m_static_64bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	numSizer->Add( m_static_64bit, 0, wxALIGN_CENTER|wxALL, 2 );
 	
 	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	numSizer->Add( m_textctrl_64bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 2 );
+	m_textctrl_64bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	m_static_float = new wxStaticText( this, ID_DEFAULT, wxT("Float"), wxDefaultPosition, wxDefaultSize, 0 );
+	numSizer->Add( m_textctrl_64bit, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 1 );
+	
+	m_static_float = new wxStaticText( this, ID_DEFAULT, wxT("Float"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_float->Wrap( -1 );
+	m_static_float->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
 	numSizer->Add( m_static_float, 0, wxALIGN_CENTER|wxALL, 2 );
 	
 	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	numSizer->Add( m_textctrl_float, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 2 );
+	m_textctrl_float->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	m_static_double = new wxStaticText( this, ID_DEFAULT, wxT("Double"), wxDefaultPosition, wxDefaultSize, 0 );
+	numSizer->Add( m_textctrl_float, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 1 );
+	
+	m_static_double = new wxStaticText( this, ID_DEFAULT, wxT("Double"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_double->Wrap( -1 );
-	numSizer->Add( m_static_double, 0, wxALIGN_CENTER|wxBOTTOM|wxTOP, 5 );
+	m_static_double->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
+	numSizer->Add( m_static_double, 0, wxALIGN_CENTER|wxBOTTOM|wxTOP, 3 );
 	
 	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	numSizer->Add( m_textctrl_double, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 2 );
+	m_textctrl_double->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	
+	numSizer->Add( m_textctrl_double, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 1 );
 	
 	mainSizer->Add( numSizer, 1, wxEXPAND, 5 );
 	

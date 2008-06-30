@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="DataInterpreter.h" open="1" top="0" tabpos="2">
-		<Cursor position="1416" topLine="1" />
+	<File name="DataInterpreter.h" open="1" top="0" tabpos="3">
+		<Cursor position="1416" topLine="103" />
 	</File>
 	<File name="HexEditor.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="4815" topLine="84" />
+		<Cursor position="17935" topLine="566" />
 	</File>
-	<File name="HexEditor.h" open="0" top="0" tabpos="6">
-		<Cursor position="1824" topLine="43" />
+	<File name="HexEditor.h" open="1" top="0" tabpos="2">
+		<Cursor position="4635" topLine="110" />
 	</File>
 	<File name="HexEditorApp.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1839" topLine="9" />
@@ -16,22 +16,22 @@
 	<File name="HexEditorApp.h" open="0" top="0" tabpos="5">
 		<Cursor position="259" topLine="0" />
 	</File>
-	<File name="HexEditorCtrl/HexEditorCtrl.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="1416" topLine="1" />
+	<File name="HexEditorCtrl/HexEditorCtrl.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="2486" topLine="24" />
 	</File>
-	<File name="HexEditorCtrl/HexEditorCtrl.h" open="0" top="0" tabpos="6">
-		<Cursor position="1416" topLine="1" />
+	<File name="HexEditorCtrl/HexEditorCtrl.h" open="1" top="0" tabpos="6">
+		<Cursor position="2040" topLine="42" />
 	</File>
 	<File name="HexEditorCtrl/HexEditorCtrlGui.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="6168" topLine="87" />
 	</File>
-	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="1416" topLine="1" />
+	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="18892" topLine="631" />
 	</File>
 	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="2">
 		<Cursor position="1416" topLine="1" />
 	</File>
-	<File name="HexEditorFrame.cpp" open="1" top="0" tabpos="3">
+	<File name="HexEditorFrame.cpp" open="1" top="0" tabpos="4">
 		<Cursor position="4248" topLine="87" />
 	</File>
 	<File name="HexEditorFrame.h" open="0" top="0" tabpos="5">

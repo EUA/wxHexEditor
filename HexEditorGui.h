@@ -23,16 +23,16 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/statbox.h>
 #include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
 #define ID_DEFAULT wxID_ANY // Default
 #define idMenuQuit 1000
-#define idMenuAbout 1001
-#define ID_CHK_UNSIGNED 1002
-#define ID_CHK_BIGENDIAN 1003
+#define wxID_INTERPRATOR 1001
+#define idMenuAbout 1002
+#define ID_CHK_UNSIGNED 1003
+#define ID_CHK_BIGENDIAN 1004
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -93,7 +93,7 @@ class InterpreterGui : public wxPanel
 		
 	
 	public:
-		InterpreterGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxPoint( 200,500 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		InterpreterGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
 	
 };

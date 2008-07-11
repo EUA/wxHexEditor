@@ -29,7 +29,7 @@
 
 #define ID_DEFAULT wxID_ANY // Default
 #define idMenuQuit 1000
-#define wxID_INTERPRATOR 1001
+#define wxID_INTERPRETER 1001
 #define idMenuAbout 1002
 #define ID_CHK_UNSIGNED 1003
 #define ID_CHK_BIGENDIAN 1004
@@ -55,6 +55,8 @@ class HexEditorGui : public wxFrame
 		virtual void OnFileSave( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFileClose( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewInterpretor( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		

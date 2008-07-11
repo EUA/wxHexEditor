@@ -195,8 +195,10 @@ wxChar inline HexEditorCtrl::TextFilter(const unsigned char ch){
 int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor
 	return hex_ctrl->GetInsertionPoint();
 	}
-
-void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//returns position of Hex Cursor
+int HexEditorCtrl::GetLocalInsertionPoint(){					//returns position of Text Cursor
+	return text_ctrl->GetInsertionPoint();
+	}
+void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}

@@ -36,27 +36,19 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 						MinSize(wxSize(400,100)).
 						CloseButton(false).
 						Center().Layer(1)	);
-		MyInterpreter = new DataInterpreter( this, -1 );
-		MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().Caption(wxT("DataInterpreter")).
-			MinSize(wxSize(170,-1)).Left().Layer(1) );
-		mbar->Check( wxID_INTERPRATOR, true );
-
-		MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter) );
-
-//	MyAUI -> AddPane( MyInterpreter, wxLEFT);
-//	MyAUI->GetPane(MyInterpreter).Float();
-
+	MyInterpreter = new DataInterpreter( this, -1 );
+	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().Caption(wxT("DataInterpreter")).
+					TopDockable(false).BottomDockable(false).
+					MinSize(wxSize(170,-1)).Left().Layer(1) );
+	mbar->Check( wxID_INTERPRETER, true );
+	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter) );
 
 #if defined( _DEBUG_ )
-   wxFileName myname(_("./testfile"));
-   MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName() );
-//				MyHexEditor->FileOpen( myfilename );
-//				MyHexEditor->Select( 1000, 2001 );
+	wxFileName myname(_("./testfile"));
+	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName() );
 #endif
-
-	//SetDropTarget( new DnDFile( MyNotebook, statusbar, myinterpreter) );
-				MyAUI->Update();
-				}
+	MyAUI->Update();
+	}
 
 HexEditorFrame::~HexEditorFrame(){}
 
@@ -85,6 +77,20 @@ void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 	event.Skip();
 	}
 
+void HexEditorFrame::OnEditUndo( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		MyHexEditor->FileUndo();
+	event.Skip();
+	}
+
+void HexEditorFrame::OnEditRedo( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		MyHexEditor->FileRedo();
+	event.Skip();
+	}
+
 void HexEditorFrame::OnViewInterpretor( wxCommandEvent& event ){
 	if( event.IsChecked() ){
 		MyAUI->GetPane(MyInterpreter).Show();
@@ -95,12 +101,12 @@ void HexEditorFrame::OnViewInterpretor( wxCommandEvent& event ){
 	}
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
-		size_t nFiles = filenames.GetCount();
-		for ( size_t n = 0; n < nFiles; n++ ) {
-			wxFileName myfl( filenames[n] );
-			if ( myfl.FileExists() ){
-				m_pOwner->AddPage( new HexEditor( m_pOwner, 1, statusbar, myinterpreter, &myfl), myfl.GetFullName(), true);
-				}
+	size_t nFiles = filenames.GetCount();
+	for ( size_t n = 0; n < nFiles; n++ ) {
+		wxFileName myfl( filenames[n] );
+		if ( myfl.FileExists() ){
+			m_pOwner->AddPage( new HexEditor( m_pOwner, 1, statusbar, myinterpreter, &myfl), myfl.GetFullName(), true);
 			}
-		return TRUE;
 		}
+	return TRUE;
+	}

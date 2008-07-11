@@ -80,9 +80,8 @@ virtual	bool IsAllowedChar(char chr);
 		int xCountDenied( int x );
 
 		// Movement Support
-		int HexPerLine( void );
-		int CharPerLine( void ) { return HexPerLine(); }
-virtual int BytePerLine( void )	{ return HexPerLine() / 2; }
+virtual	int CharacterPerLine( void );
+		int BytePerLine( void )	{ return CharacterPerLine() / 2; }
 		int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
 		int LineCount( void )	{ return m_Window.y; }
 		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
@@ -151,7 +150,6 @@ class wxHexTextCtrl : public wxHexCtrl{
 		int PixelCoordToInternalPosition( wxPoint mouse );
 		int ToExactPosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int ExactPosition ){ return ExactPosition; }
-		int BytePerLine( void ){ return HexPerLine(); }
 		bool IsAllowedChar(char chr);
 	};
 

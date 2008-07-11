@@ -48,6 +48,8 @@
 			<Add option="`wx-config --libs`" />
 		</Linker>
 		<Unit filename="DataInterpreter.h" />
+		<Unit filename="FileDifference.cpp" />
+		<Unit filename="FileDifference.h" />
 		<Unit filename="HexEditor.cpp" />
 		<Unit filename="HexEditor.h" />
 		<Unit filename="HexEditorApp.cpp" />

@@ -48,8 +48,6 @@ HexEditor::HexEditor(	wxWindow* parent,
 
 		start_offset=0;
 		Dynamic_Connector();
-//		myfilename = NULL;
-//		myTempFile = NULL;
 	}
 	HexEditor::~HexEditor(){
 		Dynamic_Disconnector();
@@ -57,42 +55,42 @@ HexEditor::HexEditor(	wxWindow* parent,
 	}
 
 void HexEditor::Dynamic_Connector(){
-    hex_ctrl ->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
-//	hex_ctrl ->Connect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-    text_ctrl->Connect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
-//	text_ctrl->Connect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-
-	hex_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
-	text_ctrl->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
-	hex_ctrl ->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
-	text_ctrl->Connect( wxEVT_LEFT_UP,wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
-
-//	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::hex_mouse_input_handler),NULL, this);
-	hex_ctrl ->Connect( wxEVT_MOTION,wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
-
-//	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::hex_mouse_input_handler),NULL, this);
-	text_ctrl->Connect( wxEVT_MOTION,wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
-
-	offset_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnOffsetMouseFocus),NULL, this);
+    hex_ctrl 	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+//	hex_ctrl 	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+    text_ctrl	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
+//	text_ctrl	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+	offset_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnOffsetMouseFocus),NULL, this);
+	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
+	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	text_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	hex_ctrl	-> Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	text_ctrl	-> Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
 void HexEditor::Dynamic_Disconnector(){
-	//hex_ctrl ->Disconnect( wxEVT_CHAR,wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
-    hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
-//  hex_ctrl ->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-//	text_ctrl->Disconnect( wxEVT_CHAR,wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this );
-    text_ctrl->Disconnect( wxEVT_KEY_DOWN,wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
-//	text_ctrl->Disconnect( wxEVT_KEY_UP,wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
-	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
+    hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+//	hex_ctrl ->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+    text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
+//	text_ctrl->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+	offset_ctrl->Disconnect(wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnOffsetMouseFocus),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
+	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
 void HexEditor::FileOpen(wxFileName& myfn){
 	myfilename = wxFileName(myfn);
 	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
 	else if(myfilename.FileExists()){
-//		myTempFile = new FileDiff( myfilename );
-		myfile = new wxFile( myfilename.GetFullPath() );
+		myfile = new FileDifference( myfilename );
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
@@ -111,9 +109,32 @@ void HexEditor::FileOpen(wxFileName& myfn){
 		}
 	}
 
+bool HexEditor::FileSave( bool question ){
+	wxMessageDialog *msg = new wxMessageDialog(
+								this, _( "Do you want to save this file?\n")
+							, _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
+	int selection=msg->ShowModal();
+	msg->Destroy();
+	switch( selection ){
+		case(wxID_YES):
+			if( !myfile->Apply() ){
+				wxMessageDialog *msg = new wxMessageDialog(
+							this, _( "File cannot saved. Operation Cancelled\n")
+							, _("File Save Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+				msg->ShowModal();
+				msg->Destroy();
+				return false;
+				}
+		case(wxID_NO):
+			return true;
+		case(wxID_CANCEL):
+		default: return false;
+		}
+	}
+
 bool HexEditor::FileClose( void ){
-	/*
-		if(myTempFile->changed()){
+// TODO (death#1#): repair here!
+	if( myfile->IsChanged() ){
 		wxMessageDialog *msg = new wxMessageDialog(
 								this, _( "Do you want to save file?\n")
 							, _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
@@ -121,7 +142,7 @@ bool HexEditor::FileClose( void ){
 		msg->Destroy();
 		switch(state){
 			case(wxID_YES):
-				if(!save( false ))
+				if( !FileSave( false ) )
 					return false;
 				break;
 			case(wxID_NO):
@@ -130,31 +151,53 @@ bool HexEditor::FileClose( void ){
 				return false;
 			}
 		}
-*/
-//	myscroll->Exit();
-//	delete myscroll;
-//	delete copy_mark;
-	Clear( true );
-//	delete myTempFile;
-//	delete myfilename;
-//	myTempFile = NULL;
-//	myfilename = NULL;
-	myfilename.Clear();
+	myscroll->Exit();
+	delete myscroll;
 	if( myfile != NULL )
 		myfile->Close();
+//	delete copy_mark;
+	Clear( true );
 	delete myfile;
 	myfile = NULL;
+	myfilename.Clear();
 	return true;
+	}
+
+bool HexEditor::FileUndo( void ){
+	GoTo( myfile->Undo() );
+	}
+bool HexEditor::FileRedo( void ){
+	GoTo( myfile->Redo() );
+	}
+
+void HexEditor::GoTo( int64_t goto_offset ){
+	zzz
+	if( goto_offset == -1){	//if cursor_offset is not returned
+		goto_offset = CursorOffset();
+		start_offset -= goto_offset % hex_ctrl->BytePerLine();	//to allign offset
+		if( start_offset < 0 ) start_offset = 0;
+		LoadFromOffset( start_offset );
+		SetLocalHexInsertionPoint( goto_offset*2 );
+		}
+	else
+		if(goto_offset <= CursorOffset() && goto_offset + hex_ctrl->ByteCapacity() >= CursorOffset() ){ // cursor_offset is in visible area
+			//LoadFromOffset( current_offset );
+			SetLocalHexInsertionPoint( CursorOffset()*2 );
+			}
+		else{// out of view
+			start_offset = CursorOffset();
+			start_offset -= static_cast<int64_t>( hex_ctrl->ByteCapacity() * 0.20 ); //make load some lines to upside
+			start_offset -= CursorOffset() % hex_ctrl->BytePerLine();	//to allign offset
+			if(start_offset < 0) start_offset = 0;
+			LoadFromOffset( start_offset );
+			SetLocalHexInsertionPoint( CursorOffset()/2 );
+			}
 	}
 
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     start_offset = static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity();
-	wxString str;
-	str << _("Slider at position: ") << offset_scroll->GetThumbPosition()
-		<< _(" LoadableByteSize: ") << ByteCapacity()
-		<< _(" Load from Position: ") << start_offset;
-//    statusbar->SetStatusText(str);
-    LoadFromOffset(start_offset, true);
+    LoadFromOffset( start_offset );
+    UpdateCursorLocation();
     wxYieldIfNeeded();
 	}
 
@@ -163,8 +206,8 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
 	MyMutex.Lock();
 
     myfile->Seek(position, wxFromStart);
-	char *buffer = new char[hex_ctrl->ByteCapacity()];
-	int readedbytes = myfile->Read(buffer,hex_ctrl->ByteCapacity());
+	char *buffer = new char[ ByteCapacity() ];
+	int readedbytes = myfile->Read(buffer, ByteCapacity());
 	ReadFromBuffer( position, readedbytes, buffer, cursor_reset, paint );
 	delete buffer;
 
@@ -252,6 +295,9 @@ void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 // TODO (death#1#): BUG: Remove Text Selection when UNDO (CTRL+SHIFT)
 // TODO (death#1#): BUG: Hex-Text Selection at release shift action
 // TODO (death#5#): File Name star'in * when file changed & saved
+// TODO (death#1#): BUG: Remove Text Selection when UNDO (CTRL+SHIFT)
+// TODO (death#1#): BUG: Hex-Text Selection at release shift action
+// TODO (death#5#): File Name star'in * when file changed & saved
 
 void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 	if(myfile != NULL){
@@ -266,17 +312,17 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 			wxBell();
 			return;
 			}
-			//Keyboard Selection Code
-			if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
-				event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
-				event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
-				event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
-				event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
-				event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
-				event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
-				event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
-				)
-				OnKeyboardSelector(event);	//Selection Starter call
+		//Keyboard Selection Code
+		if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
+			event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
+			event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
+			event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
+			event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
+			event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
+			event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
+			event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
+			)
+			OnKeyboardSelector(event);	//Selection Starter call
 
 		switch (event.GetKeyCode()){
 			case (WXK_UP):case (WXK_NUMPAD_UP):
@@ -310,7 +356,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					else
 						SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() );
 					break;
-
+// TODO (death#1#): bug in left & text ctrl
 				case (WXK_LEFT):case (WXK_NUMPAD_LEFT):
 					if( GetLocalHexInsertionPoint() == 0){
 						if(start_offset == 0)
@@ -324,9 +370,8 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					else
 						SetHexInsertionPoint( GetLocalHexInsertionPoint() - ((myctrl == hex_ctrl) ? 1 : 2) );
 					break;
-
 				case (WXK_RIGHT):case (WXK_NUMPAD_RIGHT):
-					if( GetLocalHexInsertionPoint() >= GetLastPosition() + 1 ){
+					if( myctrl->GetInsertionPoint() >= myctrl->GetLastPosition() ){
 						if(start_offset + ByteCapacity() < myfile->Length() ){	//Checks if its EOF or not
 							start_offset += BytePerLine();
 							LoadFromOffset( start_offset );
@@ -363,7 +408,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 							wxBell();
 							}
 					break;
-
+// TODO (death#5#): Add last byte problem. Also text ctrl has +1 issue
 				case (WXK_PAGEDOWN):case (WXK_NUMPAD_PAGEDOWN):
 						if(start_offset + ByteCapacity()*2 < myfile->Length()){ //*2 for cosmetic
 							int temp = GetLocalHexInsertionPoint();
@@ -412,16 +457,16 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					break;
 
 				case( 26 ):		// 26 == CTRL+Z = UNDO
-					//if(event.ShiftDown())
-					//	redo();	// UNDO with shift = REDO
-					//else
-					//	undo();
+					if(event.ShiftDown())
+						FileRedo();	// UNDO with shift = REDO
+					else
+						FileUndo();
 					break;
 				case( 25 ):		// 25 == CTRL+Y = REDO
-					//redo();
+					FileRedo();
 					break;
 				case( 19 ):{	// 19 == CTRL+S = SAVE
-					//save();
+					FileSave();
 					// TODO (death#1#): File Name star'in * when file changed & saved
 					}
 					break;
@@ -444,7 +489,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					wxBell();
 					break;
 				default:
-					event.Skip( );
+					OnKeyboardChar( event );
 					break;
 				}//switch end
 			if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()))
@@ -453,6 +498,80 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 				offset_scroll->SetThumbPosition( start_offset / ByteCapacity() );
 			OnKeyboardSelector(event);
 			PaintSelection( );
+		}
+	}
+
+void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
+	if(myfile != NULL){
+		wxChar chr = event.GetKeyCode();
+		void *myctrl = FindFocus();		//avoid reinterpret_cast for speed
+		if( myctrl == text_ctrl )
+			myctrl = text_ctrl;
+		else if ( myctrl == hex_ctrl )
+			myctrl = hex_ctrl;
+		else
+			{
+			wxBell();
+			return;
+			}
+
+		if( myctrl == hex_ctrl )
+			if( isxdigit(chr) ){
+				(chr>='a'&&chr<='f')?(chr-=('a'-'A')):(chr=chr);		// Upper() for Char
+				HexCharReplace( GetLocalHexInsertionPoint(), chr);		// write to screen
+
+				char rdchr = hex_ctrl->ReadByte( GetLocalHexInsertionPoint()/2 );	// read from screen
+				myfile->Add( CursorOffset(), &rdchr ,1);				// add node to file
+
+				if( hex_ctrl->GetInsertionPoint() >= hex_ctrl->GetLastPosition() ){
+					if( CursorOffset() + hex_ctrl->ByteCapacity() <= myfile->Length() ){	//Checks if its EOF or not
+						start_offset += hex_ctrl->BytePerLine();
+						LoadFromOffset( start_offset );
+						hex_ctrl->LastLine();
+						}
+					else
+						wxBell();
+					}
+                else
+                	hex_ctrl->NextChar();
+				}
+			else
+				wxBell();
+		else if( myctrl == text_ctrl ){
+			if( wxString((wxChar)event.GetKeyCode()).IsAscii() &&
+				event.GetKeyCode()!=WXK_BACK &&
+				event.GetKeyCode()!=WXK_DELETE &&
+				!event.ControlDown()
+				){
+
+/*				if( text_ctrl->GetInsertionPoint() >= text_ctrl->GetLastPosition()){
+					if(current_offset+hex_ctrl->ByteCapacity() <= myTempFile->Length() ){	//Checks if its EOF or not
+						current_offset += hex_ctrl->BytePerLine();
+						LoadFromOffset(current_offset);
+						text_ctrl->LastLine();	// HexPerLine = BytePerLine()*2
+						}
+					}
+*/
+				TextCharReplace(GetLocalInsertionPoint(), event.GetKeyCode());
+
+				char rdchr = hex_ctrl->ReadByte( GetLocalInsertionPoint() );	// read from screen
+				myfile->Add( CursorOffset(), &rdchr ,1);				// add node to file
+
+				if( text_ctrl->GetInsertionPoint() >= text_ctrl->GetLastPosition() ){
+					if( start_offset + hex_ctrl->ByteCapacity() <= myfile->Length() ){	//Checks if its EOF or not
+						start_offset += hex_ctrl->BytePerLine();
+						LoadFromOffset(start_offset);
+						text_ctrl->LastLine();
+						}
+					else
+						wxBell();
+					}
+                else
+                	text_ctrl->NextChar();
+				}
+			else
+				wxBell();
+			}
 		}
 	}
 
@@ -552,6 +671,12 @@ void HexEditor::SetHexInsertionPoint( int local_hex_location){
 	}
 
 void HexEditor::UpdateCursorLocation(){
+	static wxMutex update;
+	update.Lock();
+	if( GetLocalHexInsertionPoint()/2+start_offset > myfile->Length() ){
+		SetLocalHexInsertionPoint( (myfile->Length() - start_offset)*2 - 1 );
+		}
+
 	if( interpreter != NULL ){
 		myfile->Seek( GetLocalHexInsertionPoint()/2+start_offset, wxFromStart );
 		char *bfr = new char [8];
@@ -563,7 +688,7 @@ void HexEditor::UpdateCursorLocation(){
 	if( statusbar != NULL ){
 		statusbar->SetStatusText(wxString::Format(_("Page: %d"), CursorOffset()/hex_ctrl->ByteCapacity() ), 0);
 		if( hex_offset )
-			statusbar->SetStatusText(wxString::Format(_("Offset: %llX"), CursorOffset() ), 1);
+			statusbar->SetStatusText(wxString::Format(_("Offset: 0x%llX"), CursorOffset() ), 1);
 		else
 			statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
 		uint8_t ch;
@@ -573,12 +698,19 @@ void HexEditor::UpdateCursorLocation(){
 		//statbar->SetStatusText(wxString::Format(_("Block: %d-%d"),0,0), 3);
 		//statbar->SetStatusText(wxString::Format(_("Size: %d"),myTempFile->Length()), 4);
 		}
+	update.Unlock();
 	}
 
 void HexEditor::OnOffsetMouseFocus( wxMouseEvent& event ){
 	if( ! hex_offset )	// ! needed hex_offset shows current state, post state is different
-		statusbar->SetStatusText(wxString::Format(_("Offset: %llX"), CursorOffset() ), 1);
+		statusbar->SetStatusText(wxString::Format(_("Offset: 0x%llX"), CursorOffset() ), 1);
 	else
 		statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
 	event.Skip();
 	}
+
+void HexEditor::OnMouseTest( wxMouseEvent& event ){
+	myfile->ShowDebugState();
+	}
+
+

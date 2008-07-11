@@ -25,8 +25,8 @@
 #define __wxHexEditor__
 
 #include <wx/filename.h>
-#include <wx/file.h>
 
+#include "FileDifference.h"
 #include "DataInterpreter.h"
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
@@ -50,11 +50,14 @@ class HexEditor: public HexEditorCtrl {
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 
 		int64_t FileLenght( void );
-		void FileOpen( wxFileName& filename  );	//opens a file
+		void FileOpen( wxFileName& filename  );
+		bool FileSave( bool question = true );
 		bool FileClose( void );
-//		bool FileSave( bool question = true );
+		bool FileUndo( void );
+		bool FileRedo( void );
+		void GoTo( int64_t goto_offset=-1 );
 		void OnResize( wxSizeEvent &event );
-//		bool save( bool question = true );
+
 //		void redo( void );
 //		void undo( void );
 //		void finddlg( void );
@@ -65,10 +68,11 @@ class HexEditor: public HexEditorCtrl {
 protected:
 //public4test		bool Select ( int64_t start_offset, int64_t end_offset );
 		void UpdateCursorLocation();
+		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);
-
 		void OnKeyboardSelector( wxKeyEvent& event );
 		void OnKeyboardSelectionEnd( wxKeyEvent& event );
+		void OnMouseTest( wxMouseEvent& event );
 		//void RefreshCursor(int64_t cursor_location = -1 );
 		void OnHexMouseFocus( wxMouseEvent& event );
 		void OnTextMouseFocus( wxMouseEvent& event );
@@ -110,7 +114,7 @@ protected:
 	protected:
 		wxStatusBar* statusbar;
 		wxFileName myfilename;
-		wxFile *myfile;
+		FileDifference *myfile;
 		scrollthread *myscroll;
 
 	private:

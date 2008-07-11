@@ -34,8 +34,8 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:
-		int HexPerLine( void )  { return hex_ctrl->HexPerLine(); }
-virtual int BytePerLine( void )	{ return HexPerLine() / 2; }
+		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
+		int BytePerLine( void )	{ return text_ctrl->CharacterPerLine(); }
 		int ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
 		int LineCount( void )	{ return hex_ctrl->LineCount(); }
 		int ActiveLine( void )	{ return hex_ctrl->ActiveLine(); }
@@ -68,6 +68,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void MyFreeze();
 		void MyThaw();
 		int GetLocalHexInsertionPoint( void );
+		int GetLocalInsertionPoint( void );
 virtual	void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		bool hex_offset;

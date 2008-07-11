@@ -34,13 +34,13 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	fileMenu->Append( menuFileSave );
 	
 	wxMenuItem* menuFileClose;
-	menuFileClose = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Close") ) , wxEmptyString, wxITEM_NORMAL );
+	menuFileClose = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Close") ) + wxT('\t') + wxT("CTRL+W"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileClose );
 	
 	fileMenu->AppendSeparator();
 	
 	wxMenuItem* menuFileQuit;
-	menuFileQuit = new wxMenuItem( fileMenu, idMenuQuit, wxString( wxT("&Quit") ) + wxT('\t') + wxT("Alt+F4"), wxT("Quit the application"), wxITEM_NORMAL );
+	menuFileQuit = new wxMenuItem( fileMenu, idMenuQuit, wxString( wxT("&Quit") ) + wxT('\t') + wxT("CTRL+Q"), wxT("Quit the application"), wxITEM_NORMAL );
 	fileMenu->Append( menuFileQuit );
 	
 	mbar->Append( fileMenu, wxT("&File") );
@@ -49,12 +49,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxMenuItem* menuEditUndo;
 	menuEditUndo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditUndo );
-	menuEditUndo->Enable( false );
 	
 	wxMenuItem* menuEditRedo;
 	menuEditRedo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditRedo );
-	menuEditRedo->Enable( false );
 	
 	editMenu->AppendSeparator();
 	
@@ -83,6 +81,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxMenuItem* menuEditReplace;
 	menuEditReplace = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Replace") ) + wxT('\t') + wxT("CTRL+R"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditReplace );
+	menuEditReplace->Enable( false );
 	
 	wxMenuItem* menuEditGotobyte;
 	menuEditGotobyte = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Goto Byte") ) , wxEmptyString, wxITEM_NORMAL );
@@ -92,9 +91,9 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	mbar->Append( editMenu, wxT("&Edit") );
 	
 	viewMenu = new wxMenu();
-	wxMenuItem* menuViewInterprator;
-	menuViewInterprator = new wxMenuItem( viewMenu, wxID_INTERPRATOR, wxString( wxT("Interpretor") ) , wxEmptyString, wxITEM_CHECK );
-	viewMenu->Append( menuViewInterprator );
+	wxMenuItem* menuViewInterprater;
+	menuViewInterprater = new wxMenuItem( viewMenu, wxID_INTERPRETER, wxString( wxT("Data Interpreter") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( menuViewInterprater );
 	
 	mbar->Append( viewMenu, wxT("&View") );
 	
@@ -117,7 +116,9 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
 	this->Connect( menuFileClose->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileClose ) );
 	this->Connect( menuFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
-	this->Connect( menuViewInterprator->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
+	this->Connect( menuEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditUndo ) );
+	this->Connect( menuEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditRedo ) );
+	this->Connect( menuViewInterprater->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -129,6 +130,8 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileClose ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditUndo ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditRedo ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }

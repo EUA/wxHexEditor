@@ -158,7 +158,7 @@
                         <property name="label">&amp;Close</property>
                         <property name="name">menuFileClose</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">CTRL+W</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnFileClose</event>
                         <event name="OnUpdateUI"></event>
@@ -176,7 +176,7 @@
                         <property name="label">&amp;Quit</property>
                         <property name="name">menuFileQuit</property>
                         <property name="permission">none</property>
-                        <property name="shortcut">Alt+F4</property>
+                        <property name="shortcut">CTRL+Q</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnQuit</event>
                         <event name="OnUpdateUI"></event>
@@ -189,7 +189,7 @@
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
-                        <property name="enabled">0</property>
+                        <property name="enabled">1</property>
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
@@ -198,13 +198,13 @@
                         <property name="permission">none</property>
                         <property name="shortcut">CTRL+Z</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnEditUndo</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
-                        <property name="enabled">0</property>
+                        <property name="enabled">1</property>
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
@@ -213,7 +213,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">CTRL+Y</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnEditRedo</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="separator" expanded="1">
@@ -285,7 +285,7 @@
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
-                        <property name="enabled">1</property>
+                        <property name="enabled">0</property>
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
@@ -322,10 +322,10 @@
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
                         <property name="help"></property>
-                        <property name="id">wxID_INTERPRATOR</property>
+                        <property name="id">wxID_INTERPRETER</property>
                         <property name="kind">wxITEM_CHECK</property>
-                        <property name="label">Interpretor</property>
-                        <property name="name">menuViewInterprator</property>
+                        <property name="label">Data Interpreter</property>
+                        <property name="name">menuViewInterprater</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>

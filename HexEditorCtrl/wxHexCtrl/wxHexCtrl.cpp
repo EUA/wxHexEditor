@@ -214,7 +214,7 @@ int wxHexCtrl::xCountDenied( int x ){
 	return -1;
 	}
 
-int wxHexCtrl::HexPerLine( void ){
+int wxHexCtrl::CharacterPerLine( void ){
 	int avoid=0;
 	for ( int x = 0 ; x < m_Window.x ; x++)
 		if ( IsDenied(x) )
@@ -223,7 +223,7 @@ int wxHexCtrl::HexPerLine( void ){
 	}
 
 int wxHexCtrl::GetInsertionPoint( void ){
-	return ( m_Caret.x - xCountDenied(m_Caret.x) ) + HexPerLine() * m_Caret.y;
+	return ( m_Caret.x - xCountDenied(m_Caret.x) ) + CharacterPerLine() * m_Caret.y;
 	}
 
 void wxHexCtrl::SetInsertionPoint( unsigned int pos ){
@@ -234,9 +234,9 @@ void wxHexCtrl::SetInsertionPoint( unsigned int pos ){
 	}
 
 int wxHexCtrl::ToExactPosition( int InternalPosition ){
-	if( HexPerLine() == 0 ) return 0;
-	int y = InternalPosition / HexPerLine();
-	int x = InternalPosition - y * HexPerLine();
+	if( CharacterPerLine() == 0 ) return 0;
+	int y = InternalPosition / CharacterPerLine();
+	int x = InternalPosition - y * CharacterPerLine();
 	for( int i = 0, denied = 0 ; i < m_Window.x ; i++ ){
 		if( IsDenied(i) ) denied++;
 		if( i - denied == x )
@@ -249,7 +249,7 @@ int wxHexCtrl::ToExactPosition( int InternalPosition ){
 int wxHexCtrl::ToInternalPosition( int ExactPosition ){
 	int y = ExactPosition / m_Window.x;
 	int x = ExactPosition - y * m_Window.x;
-	return ( x - xCountDenied(x) + y * HexPerLine() );
+	return ( x - xCountDenied(x) + y * CharacterPerLine() );
 	}
 
 wxPoint wxHexCtrl::InternalPositionToExactCoord( int position ){
@@ -262,7 +262,7 @@ wxPoint wxHexCtrl::InternalPositionToExactCoord( int position ){
 
 int wxHexCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 	mouse = PixelCoordToInternalCoord( mouse );
-	return ( mouse.x - xCountDenied(mouse.x) + mouse.y * HexPerLine() );
+	return ( mouse.x - xCountDenied(mouse.x) + mouse.y * CharacterPerLine() );
 	}
 
 wxPoint wxHexCtrl::PixelCoordToInternalCoord( wxPoint mouse ){
@@ -510,8 +510,8 @@ void wxHexCtrl::MoveCaret(int x, int y){
 }
 
 void wxHexCtrl::MoveCaret(int x){
-	m_Caret.y = x/HexPerLine();
-    m_Caret.x = x - m_Caret.y*HexPerLine();
+	m_Caret.y = x/CharacterPerLine();
+    m_Caret.x = x - m_Caret.y*CharacterPerLine();
     DoMoveCaret();
 }
 
@@ -522,10 +522,8 @@ void wxHexCtrl::DoMoveCaret(){
                     m_Margin.x + m_Caret.y * m_Char.y);
 }
 
-// NB: this method is horrible inefficient especially because the caret
-//     needs to be redrawn often and in this case we only have to redraw
-//     the caret location and not the entire window - in a real program we
-//     would use GetUpdateRegion() and iterate over rectangles it contains
+// NB: this method is horrible inefficient! But required!
+
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
     wxCaretSuspend cs(this);
 
@@ -988,7 +986,7 @@ int wxHexTextCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 
 	int x = (mouse.x - m_Margin.x + m_Char.x/2) / m_Char.x;
 	int y = (mouse.y - m_Margin.y             ) / m_Char.y;
-	return ( x + y * HexPerLine() );
+	return ( x + y * CharacterPerLine() );
 	}
 
 void wxHexOffsetCtrl::ChangeValue( const wxString& value, bool paint ){

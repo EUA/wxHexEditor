@@ -85,8 +85,6 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	// Connect Events
 	this->Connect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ) );
 	this->Connect( wxEVT_SIZE, wxSizeEventHandler( HexEditorCtrlGui::OnResize ) );
-	hex_ctrl->Connect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ), NULL, this );
-	text_ctrl->Connect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ), NULL, this );
 	offset_scroll->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
 	offset_scroll->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
 	offset_scroll->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
@@ -103,8 +101,6 @@ HexEditorCtrlGui::~HexEditorCtrlGui()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ) );
 	this->Disconnect( wxEVT_SIZE, wxSizeEventHandler( HexEditorCtrlGui::OnResize ) );
-	hex_ctrl->Disconnect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ), NULL, this );
-	text_ctrl->Disconnect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ), NULL, this );
 	offset_scroll->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
 	offset_scroll->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
 	offset_scroll->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );

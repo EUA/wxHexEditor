@@ -53,7 +53,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 {
     m_text = (wxChar *)NULL;
 
-	HexDefaultAttr = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
+	HexDefaultAttr = wxTextAttr(( *wxBLACK ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
 

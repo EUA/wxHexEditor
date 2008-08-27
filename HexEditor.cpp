@@ -66,8 +66,10 @@ void HexEditor::Dynamic_Connector(){
 	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	text_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-	hex_ctrl	-> Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
-	text_ctrl	-> Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	hex_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	text_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	hex_ctrl	->Connect( wxEVT_MOUSEWHEEL,wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
+	text_ctrl	->Connect( wxEVT_MOUSEWHEEL,wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
 	}
 
 void HexEditor::Dynamic_Disconnector(){
@@ -171,15 +173,14 @@ bool HexEditor::FileRedo( void ){
 	}
 
 void HexEditor::GoTo( int64_t goto_offset ){
-	zzz
-	if( goto_offset == -1){	//if cursor_offset is not returned
+	if( goto_offset == -1){	//if cursor_offset not returned
 		goto_offset = CursorOffset();
 		start_offset -= goto_offset % hex_ctrl->BytePerLine();	//to allign offset
 		if( start_offset < 0 ) start_offset = 0;
 		LoadFromOffset( start_offset );
 		SetLocalHexInsertionPoint( goto_offset*2 );
 		}
-	else
+	else					//if cursor_offset is returned
 		if(goto_offset <= CursorOffset() && goto_offset + hex_ctrl->ByteCapacity() >= CursorOffset() ){ // cursor_offset is in visible area
 			//LoadFromOffset( current_offset );
 			SetLocalHexInsertionPoint( CursorOffset()*2 );
@@ -616,6 +617,39 @@ void HexEditor::OnTextMouseFocus(wxMouseEvent& event){
 	ClearPaint();
 	text_ctrl->SetFocus();
 	SetHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
+	}
+
+void HexEditor::OnMouseWhell( wxMouseEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "MouseWhell Rotation = " << event.GetWheelRotation() << "\t Delta = " << event.GetWheelDelta() << std::endl;
+#endif
+	if(event.GetWheelRotation() > 0){
+//		if (ActiveLine() == 1){	//If cursor first line
+			if( start_offset == 0 )
+				wxBell();					// there is no line over up!
+			else{							// Illusion code
+				start_offset -= BytePerLine(); 	//offset decreasing one line
+				LoadFromOffset( start_offset );	//update text with new location, makes screen slide illusion
+				SetHexInsertionPoint(GetLocalHexInsertionPoint() + HexPerLine());	//restoring cursor location
+				}
+			}
+//		else
+//			SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() );
+//		}
+	else if(event.GetWheelRotation() < 0 ){
+//		if ( ActiveLine() == LineCount() ){			//If cursor at bottom of screen
+			if(start_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
+				start_offset += BytePerLine();		//offset increasing one line
+				LoadFromOffset( start_offset );		//update text with new location, makes screen slide illusion
+				SetHexInsertionPoint(GetLocalHexInsertionPoint() - HexPerLine());	//restoring cursor location
+				}
+			else{
+				wxBell();							//there is no line to slide bell
+				}
+			}
+//		else
+//			SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() );
+//		}
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){

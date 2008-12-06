@@ -64,7 +64,7 @@ class HexEditor: public HexEditorCtrl {
 //		int64_t findbin( const char *target, int size, int64_t start_from );
 //		int64_t find( wxString *target, int size, int64_t start_from, bool as_hex = false );
 		void SetHexInsertionPoint ( int local_hex_location );
-		bool Select ( int64_t start_offset, int64_t end_offset );
+
 protected:
 //public4test		bool Select ( int64_t start_offset, int64_t end_offset );
 		void UpdateCursorLocation();
@@ -121,8 +121,6 @@ protected:
 	private:
 	    void Dynamic_Connector( void );
 	    void Dynamic_Disconnector( void );
-		void inline ClearPaint( void );
-		bool Selector( bool mode=true );
 };
 
 class scrollthread:wxThreadHelper{

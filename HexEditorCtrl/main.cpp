@@ -59,8 +59,10 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     SetStatusText(_("Hello Code::Blocks user !"),0);
     SetStatusText(wxbuildinfo(short_f),1);
 #endif // wxUSE_STATUSBAR
-
-//	hexed->
+	char *buf = new char [512];
+	for(unsigned i=0; i<512 ; i++)
+		buf[i]=i%256;
+	hexed->ReadFromBuffer( 0, 512, buf );
 
 }
 

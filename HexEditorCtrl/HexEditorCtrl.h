@@ -57,18 +57,15 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void ClearPaint( void );
 		void PaintSelection( void );
 		void TagPaint( void );
+
 		struct selector{		//selection structure
 			enum states{ SELECTION_FALSE = 0, SELECTION_TRUE, SELECTION_END };
 			enum states state;
 			int64_t start_offset;	//real start position
 			int64_t end_offset;	//real end position, included to selection
 			} selection;
-		struct tagblk{
-			int64_t start_offset;
-			int64_t end_offset;
-			wxColor color;
-			wxString tagstring;
-			} temptag;
+		bool Selector( bool mode=true );
+		bool Select ( int64_t start_offset, int64_t end_offset );
 		void HexCharReplace( long char_location, const wxChar chr);
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();

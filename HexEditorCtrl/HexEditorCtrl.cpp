@@ -50,7 +50,6 @@ void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, 
 	Clear( false, cursor_reset );
 	wxString text_string;
 // Optimized Code
-	wxChar x;
 	for( int i=0 ; i<lenght ; i++ ){
 		text_string << text_ctrl->Filter(buffer[i]);
 		}
@@ -77,6 +76,66 @@ void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 	}
 
 //-----VISUAL FUNCTIONS------//
+
+bool HexEditorCtrl::Selector( bool mode ){
+	static bool polarity_possitive;
+	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
+		selection.end_offset = start_offset + GetLocalHexInsertionPoint()/2;
+	else{
+		wxLogError(wxT("Selector without focuse captured"));
+		return false;
+		}
+
+	bool first_selection = false;
+	if( selection.state != selector::SELECTION_TRUE ){			// If no selection available,
+		selection.state	= selector::SELECTION_TRUE;				// then selection start procedure code
+		selection.start_offset	= selection.end_offset;
+		polarity_possitive		= false;
+		first_selection			= true;
+		}
+
+#if wxUSE_STATUSBAR
+    wxFrame *frame = wxDynamicCast(GetParent(), wxFrame);
+    if ( frame && frame->GetStatusBar() ){
+		wxStatusBar *statusbar = frame->GetStatusBar();
+		int start = selection.start_offset;
+		int end = selection.end_offset;
+		if(start > end ){
+			int temp = start;
+			start = end;
+			end = temp;
+			}
+		if( selection.state == selector::SELECTION_FALSE ){
+			statusbar->SetStatusText(_("Block: \tn/a"), 3);
+			statusbar->SetStatusText(_("Size: \tn/a") ,4);
+			}
+		else{
+			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
+			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
+			}
+		}
+#endif // wxUSE_STATUSBAR
+	return true;
+	}
+
+bool HexEditorCtrl::Select ( int64_t start_offset, int64_t end_offset ){
+	if( start_offset < 0 || end_offset < 0
+//	|| start_offset > myfile->Length() ||  end_offset > myfile->Length()
+		){
+		wxBell();
+		return false;
+		}
+	selection.state	= selector::SELECTION_END;
+	selection.start_offset = start_offset;
+	selection.end_offset  = end_offset;
+	PaintSelection( );
+	return true;
+	}
+
+void inline HexEditorCtrl::ClearPaint( void ){
+	hex_ctrl ->ClearSelection();
+	text_ctrl->ClearSelection();
+	}
 
 void HexEditorCtrl::PaintSelection( void ){
 	if(selection.state != selector::SELECTION_FALSE ){
@@ -129,11 +188,6 @@ void HexEditorCtrl::Clear( bool RePaint, bool cursor_reset ){
 	hex_ctrl->Clear( RePaint, cursor_reset );
 	text_ctrl->Clear( RePaint, cursor_reset );
 	offset_ctrl->Clear( RePaint, cursor_reset );
-	}
-
-void inline HexEditorCtrl::ClearPaint( void ){
-	hex_ctrl ->ClearSelection();
-	text_ctrl->ClearSelection();
 	}
 
 void HexEditorCtrl::OnResize( wxSizeEvent &event){

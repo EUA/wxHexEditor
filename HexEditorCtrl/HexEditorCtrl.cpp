@@ -36,9 +36,10 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	m_static_offset->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_adress->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_byteview->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
-	hex_offset=false;
-	offset_ctrl ->Connect( wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnOffsetMouseFocus),NULL, this);
     }
+
+
+//-----READ/WRITE FUNCTIONS-------//
 
 void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset, bool paint ){
 	static wxMutex MyBufferMutex;
@@ -47,30 +48,35 @@ void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, 
 		//last line could be NULL;
 		}
 	Clear( false, cursor_reset );
-	wxString text_string,offset_string;
-
+	wxString text_string;
 // Optimized Code
+	wxChar x;
 	for( int i=0 ; i<lenght ; i++ ){
-		text_string << TextFilter(buffer[i]);
+		text_string << text_ctrl->Filter(buffer[i]);
 		}
-	int64_t offset_position = position;
-	for( int i=0 ; i<hex_ctrl->LineCount() ; i++ ){
-		if (hex_offset)
-			offset_string << ( wxString::Format( wxT("%012lX"), offset_position ) );
-		else
-			offset_string << ( wxString::Format( wxT("%012ld"), offset_position ) );
-		offset_position += BytePerLine();
-		}
-		//hex_ctrl->WriteText(hex_string);
-
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
-	offset_ctrl->ChangeValue(offset_string, true);
+	offset_ctrl->SetValue( position, hex_ctrl->BytePerLine() );
 	if( paint )
 		PaintSelection();
-
 	MyBufferMutex.Unlock();
 	}
+
+void HexEditorCtrl::TextCharReplace( long char_location, const wxChar chr){
+	text_ctrl->Replace( char_location, chr, true );
+	char_location *= 2; //Converting Byte location to Hex Location;
+	wxString temp = wxString::Format(wxT("%02X"),chr);
+	hex_ctrl->Replace(char_location,char_location+2, temp);
+	}
+
+void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
+	hex_ctrl->Replace( hex_location, chr );
+	hex_location /=2;	// hex loc is now byte loc
+	char rdchr = hex_ctrl->ReadByte(hex_location);
+	text_ctrl->Replace(	hex_location, rdchr, true );
+	}
+
+//-----VISUAL FUNCTIONS------//
 
 void HexEditorCtrl::PaintSelection( void ){
 	if(selection.state != selector::SELECTION_FALSE ){
@@ -169,29 +175,11 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 
 	this->SetSizer( fgSizer1 );
 	this->Layout();
+
+	offset_ctrl->BytePerLine = BytePerLine();
     }
 
-void HexEditorCtrl::TextCharReplace( long char_location, const wxChar chr){
-	text_ctrl->Replace( char_location, TextFilter( chr ), true );
-	char_location *= 2; //Converting Byte location to Hex Location;
-	wxString temp = wxString::Format(wxT("%02X"),chr);
-	hex_ctrl->Replace(char_location,char_location+2, temp);
-	}
-
-void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
-	hex_ctrl->Replace( hex_location, chr );
-	hex_location /=2;	// hex loc is now byte loc
-	char rdchr = hex_ctrl->ReadByte(hex_location);
-	text_ctrl->Replace(	hex_location, TextFilter( rdchr ), true );
-	}
-
-wxChar inline HexEditorCtrl::TextFilter(const unsigned char ch){
-	if( (ch !=173 && ch>31 && ch<127 ) || ch>159 )	// showable chars
-		return ch;
-	else
-		return ' '; //Special Character '?'
-	}
-
+//------ADAPTERS----------//
 int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor
 	return hex_ctrl->GetInsertionPoint();
 	}
@@ -201,20 +189,6 @@ int HexEditorCtrl::GetLocalInsertionPoint(){					//returns position of Text Curs
 void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
-	}
-
-void HexEditorCtrl::OnOffsetMouseFocus( wxMouseEvent& event ){
-	hex_offset = hex_offset ? false : true;
-	wxString offset_string;
-	int64_t offset_position = start_offset;
-	for( int i=0 ; i<hex_ctrl->LineCount() ; i++ ){
-		if (hex_offset)
-			offset_string << ( wxString::Format( wxT("%012lX"), offset_position ) );
-		else
-			offset_string << ( wxString::Format( wxT("%012ld"), offset_position ) );
-		offset_position += BytePerLine();
-		}
-	offset_ctrl->ChangeValue(offset_string, true);
 	}
 
 int64_t HexEditorCtrl::CursorOffset( void ){

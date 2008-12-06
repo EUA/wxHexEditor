@@ -102,9 +102,10 @@ virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true
 		void DoMoveCaret();		// move the caret to m_Caret.x, m_Caret.y
 
 		// Shaper Classes, All other classes has to be depended to this function for proper action!
-virtual bool inline IsDenied() { return IsDenied( m_Caret.x );}
+virtual bool IsDenied() { return IsDenied( m_Caret.x );}
 virtual bool IsDenied( int x );
-virtual	bool IsAllowedChar(char chr);
+virtual	bool IsAllowedChar(const char& chr);
+//virtual	const char Filter(const char& ch);
 		int xCountDenied( int x );
 
 		// Movement Support
@@ -141,9 +142,9 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );
-		void OnMouseLeft( wxMouseEvent& event );
-		void OnMouseRight( wxMouseEvent& event );
-		void OnMouseMove( wxMouseEvent& event );
+virtual	void OnMouseLeft( wxMouseEvent& event );
+virtual	void OnMouseRight( wxMouseEvent& event );
+virtual	void OnMouseMove( wxMouseEvent& event );
 		void OnFocus( wxFocusEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void OnResize( wxSizeEvent &event );
@@ -179,21 +180,22 @@ class wxHexTextCtrl : public wxHexCtrl{
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				wxWindow::SetCursor( wxCURSOR_CHAR );
 				};
-		bool inline IsDenied(){ return false; }
-		bool inline IsDenied( int x ){ return false; }
+		bool IsDenied(){ return false; }
+		bool IsDenied( int x ){ return false; }
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
 		int PixelCoordToInternalPosition( wxPoint mouse );
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
-		bool IsAllowedChar(char chr);
+		bool IsAllowedChar(const char& chr);
+		wxChar Filter(const char& chr);
 	};
 
 class wxHexOffsetCtrl : public wxHexCtrl{
 	public:
-		wxHexOffsetCtrl():wxHexCtrl(){}
-		wxHexOffsetCtrl( wxWindow *parent ): wxHexCtrl( parent ){}
+		wxHexOffsetCtrl():wxHexCtrl(){ hex_offset=false;offset_position=0; }
+		wxHexOffsetCtrl( wxWindow *parent ): wxHexCtrl( parent ){ hex_offset=false; offset_position=0;}
 		wxHexOffsetCtrl(wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
@@ -204,11 +206,20 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				GetCaret()->Hide();
 				SetCaret( NULL );
+				hex_offset=false;
+				offset_position=0;
 				};
-		bool inline IsDenied(){ return false; }
-		bool inline IsDenied( int x ){ return false; }
-		void ChangeValue( const wxString& value, bool paint );
+		bool IsDenied(){ return false; }
+		bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
+		void SetValue( uint64_t position );
+		void SetValue( uint64_t position, int byteperline );
+		void OnMouseRight( wxMouseEvent& event ){event.Skip(false);}
+		void OnMouseLeft( wxMouseEvent& event );
+		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
+		bool hex_offset;
+		uint64_t offset_position;
+		int BytePerLine;
 	};
 #endif

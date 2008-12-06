@@ -59,7 +59,6 @@ void HexEditor::Dynamic_Connector(){
 //	hex_ctrl 	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
     text_ctrl	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-	offset_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnOffsetMouseFocus),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
@@ -77,7 +76,6 @@ void HexEditor::Dynamic_Disconnector(){
 //	hex_ctrl ->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
     text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-	offset_ctrl->Disconnect(wxEVT_LEFT_DOWN,wxMouseEventHandler(HexEditor::OnOffsetMouseFocus),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
@@ -723,7 +721,7 @@ void HexEditor::UpdateCursorLocation(){
 
 	if( statusbar != NULL ){
 		statusbar->SetStatusText(wxString::Format(_("Page: %d"), CursorOffset()/hex_ctrl->ByteCapacity() ), 0);
-		if( hex_offset )
+		if( offset_ctrl->hex_offset )
 			statusbar->SetStatusText(wxString::Format(_("Offset: 0x%llX"), CursorOffset() ), 1);
 		else
 			statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
@@ -735,14 +733,6 @@ void HexEditor::UpdateCursorLocation(){
 		//statbar->SetStatusText(wxString::Format(_("Size: %d"),myTempFile->Length()), 4);
 		}
 	update.Unlock();
-	}
-
-void HexEditor::OnOffsetMouseFocus( wxMouseEvent& event ){
-	if( ! hex_offset )	// ! needed hex_offset shows current state, post state is different
-		statusbar->SetStatusText(wxString::Format(_("Offset: 0x%llX"), CursorOffset() ), 1);
-	else
-		statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
-	event.Skip();
 	}
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){

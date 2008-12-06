@@ -50,7 +50,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		wxPoint PixelCoordToInternalCoord( wxPoint mouse );
 */
 
-		wxChar TextFilter(const unsigned char ch);
+
 		void Clear( bool RePaint, bool cursor_reset=true );
 //		DECLARE_EVENT_TABLE()
 		virtual void OnResize( wxSizeEvent& event);
@@ -69,7 +69,6 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			wxColor color;
 			wxString tagstring;
 			} temptag;
-//		wxVectorBase< struct tagblk > Tags;
 		void HexCharReplace( long char_location, const wxChar chr);
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();
@@ -78,7 +77,6 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		int GetLocalInsertionPoint( void );
 virtual	void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
-		bool hex_offset;
 		int64_t start_offset;	//holds current start offset of file
 
 //		virtual void OnKeyboardChar( wxKeyEvent& event );

@@ -44,7 +44,7 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
-    new HexEditorCtrl(this, -1, wxDefaultPosition, wxDefaultSize);
+    HexEditorCtrl *hexed = new HexEditorCtrl(this, -1, wxDefaultPosition, wxDefaultSize);
 
     wxMenu* helpMenu = new wxMenu(_T(""));
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
@@ -59,6 +59,9 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     SetStatusText(_("Hello Code::Blocks user !"),0);
     SetStatusText(wxbuildinfo(short_f),1);
 #endif // wxUSE_STATUSBAR
+
+//	hexed->
+
 }
 
 MyFrame::~MyFrame()

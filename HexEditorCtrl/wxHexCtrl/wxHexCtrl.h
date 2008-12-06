@@ -28,6 +28,32 @@
 #include <wx/caret.h>
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
+#include "TagDialogGui.h"
+#define idTagMenu 1500
+#include <wx/colordlg.h>
+#include <wx/popupwin.h>
+struct TagElement{
+			unsigned start;
+			unsigned end;
+			wxString tag;
+			wxColourData FontClrData;
+			wxColourData NoteClrData;
+			//WXFont tagFont;
+			};
+WX_DEFINE_ARRAY(TagElement *, wxArrayTAG);
+
+class TagDialog : public TagDialogGui{
+	public:
+		TagDialog( TagElement& TE, wxWindow* parent );
+		void OnFontColor( wxCommandEvent& event );
+		void OnNoteColor( wxCommandEvent& event );
+		void OnSave( wxCommandEvent& event );
+		void OnDelete( wxCommandEvent& event );
+		void ChooseColor( wxColourData& tmpClrData );
+		TagElement& Tag;
+		TagElement TmpTag;
+	};
+
 class wxHexCtrl : public wxScrolledWindow{
 	public:
 		wxHexCtrl() { }
@@ -40,7 +66,6 @@ class wxHexCtrl : public wxScrolledWindow{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator);
 		~wxHexCtrl();
-
 		//wxChar& CharAt(int x, int y) { return m_text.GetWritableChar(x + m_Chars.x * y); }
 		//wxChar& CharAt(int x, int y) { return m_text.GetWritableChar(x + byte_per_line * y); }
 		wxChar& CharAt(int offset){ return m_text.GetWritableChar(offset); }
@@ -50,10 +75,13 @@ class wxHexCtrl : public wxScrolledWindow{
 virtual void SetDefaultStyle( wxTextAttr& new_attr );
 		void SetSelectionStyle( wxTextAttr& new_attr );
 virtual void CreateCaret( void );
-		void MoveCaret( int x, int y);
 		void MoveCaret( int x );
+		void MoveCaret( wxPoint p );
 		void Clear( bool ClearDC=true, bool cursor_reset=true );
-		void WriteBytes( char* buffer, int byte_count, bool repaint = true );
+		void SetBinValue( wxString buffer, bool repaint = true );
+		void SetBinValue( char* buffer, int byte_count, bool repaint = true );
+		void SetValue( wxString buffer, bool repaint = true );
+		wxString GetValue( void );
 		long ReadBytes( char* buffer, int start_location, int byte_count, bool no_repaint = false );
 		char ReadByte(int byte_location);
 		char* HexToChar(const wxString& HexValue);
@@ -89,18 +117,21 @@ virtual	int CharacterPerLine( void );
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
 		int GetLastPosition( void ){ return m_text.Length() - 1; }
-virtual int ToExactPosition( int InternalPosition );
-virtual int ToInternalPosition( int ExactPosition );
+virtual int ToVisiblePosition( int InternalPosition );
+virtual int ToInternalPosition( int VisiblePosition );
 virtual int PixelCoordToInternalPosition( wxPoint mouse );
-		wxPoint InternalPositionToExactCoord( int position );
+		wxPoint InternalPositionToVisibleCoord( int position );
 		wxPoint PixelCoordToInternalCoord( wxPoint mouse );
+
+		// TAG Support and Selection
+		wxArrayTAG	TagArray;
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );
-		struct selector{		//selection
-			unsigned start;		//selection start hex
-			unsigned end;		//selection end hex, included to selection
+		struct selector: public TagElement{		//selection
 			bool selected;		//selection available variable
 			} select;
+		void TagPainter( wxMemoryDC& DC, TagElement& TG );
+		void TagPopup(TagElement& TG, const wxPoint& pos, wxWindow *parent );
 		void RePaint(){
 			wxPaintEvent painter;
 			OnPaint( painter );
@@ -110,18 +141,24 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );
+		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseRight( wxMouseEvent& event );
+		void OnMouseMove( wxMouseEvent& event );
 		void OnFocus( wxFocusEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void OnResize( wxSizeEvent &event );
+		void OnTagSelection( wxCommandEvent &event );
+		void ShowContextMenu(const wxPoint& pos);
 		DECLARE_EVENT_TABLE();
 
+		void OnTestCall(void); // 4 Test
 		void ChangeSize();	// update the geometry
 		wxPoint   m_Margin;	// the margin around the text (looks nicer)
 		wxPoint   m_Caret;	// position (in text coords) of the caret
 		wxPoint	  m_Window;	// the size (in text coords) of the window
 		wxString  m_text;
-		wxTextAttr HexDefaultAttr,HexSelectAttr;
+		wxTextAttr HexDefaultAttr;
+		//wxTextAttr HexSelectAttr;
 //		wxMutex frost;
 	public:
 		wxPoint   m_Char;	// size (in pixels) of one character
@@ -148,8 +185,8 @@ class wxHexTextCtrl : public wxHexCtrl{
 		void ChangeValue( const wxString& value, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
 		int PixelCoordToInternalPosition( wxPoint mouse );
-		int ToExactPosition( int InternalPosition ){ return InternalPosition; }
-		int ToInternalPosition( int ExactPosition ){ return ExactPosition; }
+		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
+		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 		bool IsAllowedChar(char chr);
 	};
 
@@ -171,7 +208,7 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 		bool inline IsDenied(){ return false; }
 		bool inline IsDenied( int x ){ return false; }
 		void ChangeValue( const wxString& value, bool paint );
-		int ToExactPosition( int InternalPosition ){ return InternalPosition; }
-		int ToInternalPosition( int ExactPosition ){ return ExactPosition; }
+		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
+		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 	};
 #endif

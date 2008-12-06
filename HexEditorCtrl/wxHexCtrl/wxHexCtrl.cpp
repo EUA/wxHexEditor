@@ -32,8 +32,11 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
 	EVT_SIZE( wxHexCtrl::OnResize )
     EVT_PAINT(wxHexCtrl::OnPaint )
+    EVT_LEFT_DOWN( wxHexCtrl::OnMouseLeft )
     //EVT_MOUSE( wxHexCtrl::OnResize)
     EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
+    EVT_MENU( idTagMenu, wxHexCtrl::OnTagSelection )
+	EVT_MOTION( wxHexCtrl::OnMouseMove )
     EVT_SET_FOCUS( wxHexCtrl::OnFocus )
     EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
 END_EVENT_TABLE()
@@ -51,20 +54,16 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								pos, size,
 								wxSUNKEN_BORDER )
 {
-    m_text = (wxChar *)NULL;
+	HexDefaultAttr = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
+								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
+								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ) );
+
+	SetSelectionStyle( HexDefaultAttr );
 
 	HexDefaultAttr = wxTextAttr(( *wxBLACK ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
 
-	HexSelectAttr  = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
-								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
-								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
-
-	//wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION)
-	//HexAttr.SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
-//	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
-//  SetBackgroundColour( *wxGREEN );
     ClearSelection();
     SetDefaultStyle( HexDefaultAttr );
     m_Caret.x = m_Caret.y =
@@ -73,7 +72,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
     select.start = select.end = 0;
     select.selected = false;
     CreateCaret();
-    ChangeSize();
+  //  ChangeSize();
 
     wxCaret *caret = GetCaret();
     if ( caret )
@@ -91,7 +90,8 @@ wxHexCtrl::~wxHexCtrl()
 	wxBrush bbrush( HexDefaultAttr.GetBackgroundColour() );
     dc.SetBackground(bbrush );
     dc.Clear();
-
+	while(TagArray.Count() != 0)
+		TagArray.Remove(0);
 }
 
 void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
@@ -204,7 +204,7 @@ bool inline wxHexCtrl::IsDenied( int x ){	// State Of The Art :) Hex plotter fun
 	return !( ( x + 1 ) % 3 );				// Byte coupling
 	}
 
-int wxHexCtrl::xCountDenied( int x ){
+int wxHexCtrl::xCountDenied( int x ){		//Counts denied character locations (spaces) on given x coordination
 	for( int i = 0, denied = 0 ; i <  m_Window.x ; i++ ){
 		if( IsDenied(i) )
 			denied++;
@@ -214,7 +214,7 @@ int wxHexCtrl::xCountDenied( int x ){
 	return -1;
 	}
 
-int wxHexCtrl::CharacterPerLine( void ){
+int wxHexCtrl::CharacterPerLine( void ){	//Without spaces
 	int avoid=0;
 	for ( int x = 0 ; x < m_Window.x ; x++)
 		if ( IsDenied(x) )
@@ -229,12 +229,12 @@ int wxHexCtrl::GetInsertionPoint( void ){
 void wxHexCtrl::SetInsertionPoint( unsigned int pos ){
 	if(pos > m_text.Length())
 		pos = m_text.Length();
-	pos = ToExactPosition(pos);
-	MoveCaret( pos%m_Window.x , pos/m_Window.x );
+	pos = ToVisiblePosition(pos);
+	MoveCaret( wxPoint(pos%m_Window.x , pos/m_Window.x) );
 	}
 
-int wxHexCtrl::ToExactPosition( int InternalPosition ){
-	if( CharacterPerLine() == 0 ) return 0;
+int wxHexCtrl::ToVisiblePosition( int InternalPosition ){	// I mean for this string on hex editor  "00 FC 05 C[C]" , while [] is cursor
+	if( CharacterPerLine() == 0 ) return 0;					// Visible position is 8 but internal position is 11
 	int y = InternalPosition / CharacterPerLine();
 	int x = InternalPosition - y * CharacterPerLine();
 	for( int i = 0, denied = 0 ; i < m_Window.x ; i++ ){
@@ -242,21 +242,22 @@ int wxHexCtrl::ToExactPosition( int InternalPosition ){
 		if( i - denied == x )
 			return ( i + y * m_Window.x );
 		}
-	wxLogError(wxString::Format(_T("Fatal error at fx ToExactPosition(%d)"),InternalPosition));
+	wxLogError(wxString::Format(_T("Fatal error at fx ToVisiblePosition(%d)"),InternalPosition));
 	return 0;
 	}
 
-int wxHexCtrl::ToInternalPosition( int ExactPosition ){
-	int y = ExactPosition / m_Window.x;
-	int x = ExactPosition - y * m_Window.x;
+int wxHexCtrl::ToInternalPosition( int VisiblePosition ){
+	int y = VisiblePosition / m_Window.x;
+	int x = VisiblePosition - y * m_Window.x;
 	return ( x - xCountDenied(x) + y * CharacterPerLine() );
 	}
-
-wxPoint wxHexCtrl::InternalPositionToExactCoord( int position ){
+																	// 00 15 21 CC FC
+																	// 55 10 49 54 [7]7
+wxPoint wxHexCtrl::InternalPositionToVisibleCoord( int position ){	// Visible position is 19, Visible Coord is (9,2)
 	if( position < 0 )
-		wxLogError(wxString::Format(_T("Fatal error at fx InternalPositionToExactCoord(%d)"),position));
+		wxLogError(wxString::Format(_T("Fatal error at fx InternalPositionToVisibleCoord(%d)"),position));
 	int x = m_Window.x? m_Window.x : 1;	//prevents divide zero error;
-	int pos = ToExactPosition( position );
+	int pos = ToVisiblePosition( position );
 	return wxPoint( pos - (pos / x) * x, pos / x );
 	}
 
@@ -291,7 +292,11 @@ void wxHexCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
 }
 
 void wxHexCtrl::SetSelectionStyle( wxTextAttr& new_attr ){
-	HexSelectAttr = new_attr;
+	wxColourData clrData;
+	clrData.SetColour( new_attr.GetTextColour() );
+	select.FontClrData = clrData;
+	clrData.SetColour( new_attr.GetBackgroundColour() );
+	select.NoteClrData = clrData;
 	}
 
 void wxHexCtrl::SetSelection( unsigned start, unsigned end ){
@@ -360,8 +365,8 @@ void wxHexCtrl::SetStyle(unsigned start, unsigned end, wxTextAttr& new_attr ){
 		if( end > m_text.Length() )
 			end = m_text.Length();
 
-		wxPoint _start_ = InternalPositionToExactCoord( start );
-		wxPoint _end_	= InternalPositionToExactCoord( end );
+		wxPoint _start_ = InternalPositionToVisibleCoord( start );
+		wxPoint _end_	= InternalPositionToVisibleCoord( end );
 		wxPoint _temp_	= _start_;
 		for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
 			wxString line;
@@ -409,8 +414,8 @@ void wxHexCtrl::SetStyle(unsigned start, unsigned end, wxTextAttr& new_attr ){
 		if( end > m_text.Length() )
 			end = m_text.Length();
 
-		wxPoint _start_ = InternalPositionToExactCoord( start );
-		wxPoint _end_	= InternalPositionToExactCoord( end );
+		wxPoint _start_ = InternalPositionToVisibleCoord( start );
+		wxPoint _end_	= InternalPositionToVisibleCoord( end );
 		wxPoint _temp_	= _start_;
 		for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
 			wxString line;
@@ -478,8 +483,8 @@ void wxHexCtrl::SetStyle(unsigned start, unsigned end, wxTextAttr& new_attr ){
 		if( end > m_text.Length() )
 			end = m_text.Length();
 
-		wxPoint _start_ = InternalPositionToExactCoord( start );
-		wxPoint _end_	= InternalPositionToExactCoord( end );
+		wxPoint _start_ = InternalPositionToVisibleCoord( start );
+		wxPoint _end_	= InternalPositionToVisibleCoord( end );
 		wxPoint _temp_	= _start_;
 		for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
 			wxString line;
@@ -503,9 +508,11 @@ void wxHexCtrl::SetStyle(unsigned start, unsigned end, wxTextAttr& new_attr ){
 	}
 */
 
-void wxHexCtrl::MoveCaret(int x, int y){
-    m_Caret.x = x;
-	m_Caret.y = y;
+void wxHexCtrl::MoveCaret(wxPoint p){
+#ifdef _DEBUG_
+	std::cout << "MoveCaret(wxPoint) Coordinate X:Y = " << p.x	<< " " << p.y << std::endl;
+#endif
+    m_Caret = p;
     DoMoveCaret();
 }
 
@@ -521,8 +528,6 @@ void wxHexCtrl::DoMoveCaret(){
 		caret->Move(m_Margin.x + m_Caret.x * m_Char.x,
                     m_Margin.x + m_Caret.y * m_Char.y);
 }
-
-// NB: this method is horrible inefficient! But required!
 
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
     wxCaretSuspend cs(this);
@@ -540,7 +545,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 
 		wxString line;
 		unsigned int z = 0;
-		for ( int y = 0 ; y < m_Window.y; y++ ){
+		for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
 			line.Empty();
 			for ( int x = 0 ; x < m_Window.x; x++ ){
 				if( IsDenied(x)){
@@ -555,55 +560,21 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 			dcTemp.DrawText( line, m_Margin.x, m_Margin.x + y * m_Char.y );
 			}
 
-		if(select.selected){	//Selection Painter
-			dcTemp.SetFont( HexSelectAttr.GetFont() );
-			dcTemp.SetTextForeground( HexSelectAttr.GetTextColour() );
-			dcTemp.SetTextBackground( HexSelectAttr.GetBackgroundColour() );
-			wxBrush sbrush( HexSelectAttr.GetBackgroundColour() );
-			dcTemp.SetBackground( sbrush );
-			dcTemp.SetBackgroundMode( wxSOLID ); // overwrite old value
-			m_Char.y = dcTemp.GetCharHeight();
-			m_Char.x = dcTemp.GetCharWidth();
-
-			int start = select.start;
-			int end = select.end;
-
-			if( start > end ){
-				int temp = end;
-				end = start;
-				start = temp;
-				}
-
-			if( start < 0 )
-				start = 0;
-			if ( end > ByteCapacity()*2)
-				 end = ByteCapacity()*2;
-
-			wxPoint _start_ = InternalPositionToExactCoord( start );
-			wxPoint _end_	= InternalPositionToExactCoord( end );
-			wxPoint _temp_	= _start_;
-			for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
-				wxString line;
-				_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start
-				int z = ( _temp_.y == _end_.y ) ? _end_.x : m_Window.x;	// and end point
-				for ( int x = _temp_.x; x < z; x++ ){					//Prepare line to write process
-					if( IsDenied(x) ){
-						if(x+1 < z)
-							line += wxT(' ');
-						continue;
-						}
-					wxChar ch = CharAt(start++);
-					line += ch;
-					}
-				dcTemp.DrawText( line, m_Margin.x + _temp_.x * m_Char.x,	//Write prepared line
-									   m_Margin.x + _temp_.y * m_Char.y );
+		int TAC = TagArray.Count();
+		if( TAC != 0 ){
+			TagElement *TAX;
+			for(int i = 0 ; i < TAC ; i++){
+				TAX = TagArray.Item(i);
+				TagPainter( dcTemp, *TAX );
 				}
 			}
+		if(select.selected)
+			TagPainter( dcTemp, select );
 		wxPaintDC dc( this );
 		PrepareDC( dc );
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), &dcTemp, 0, 0, wxCOPY);
 		}
-
+/*
 	if(0){	//Alternate code
 		wxBufferedPaintDC bdc(this);
 		bdc.SetFont( HexDefaultAttr.GetFont() );
@@ -630,13 +601,62 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 			bdc.DrawText( line, m_Margin.x, m_Margin.x + y * m_Char.y );
 			}
 		}
+
+*/
 	}
+void wxHexCtrl::TagPainter( wxMemoryDC& DC, TagElement& TG ){
+	{	//Selection Painter
+		DC.SetFont( HexDefaultAttr.GetFont() );
+		DC.SetTextForeground( TG.FontClrData.GetColour() );
+		DC.SetTextBackground( TG.NoteClrData.GetColour() );
+		wxBrush sbrush( TG.NoteClrData.GetColour() );
+		DC.SetBackground( sbrush );
+		DC.SetBackgroundMode( wxSOLID ); // overwrite old value
+		m_Char.y = DC.GetCharHeight();
+		m_Char.x = DC.GetCharWidth();
+
+		int start = TG.start;
+		int end = TG.end;
+
+		if( start > end ){
+			int temp = end;
+			end = start;
+			start = temp;
+			}
+
+		if( start < 0 )
+			start = 0;
+		if ( end > ByteCapacity()*2)
+			 end = ByteCapacity()*2;
+
+		wxPoint _start_ = InternalPositionToVisibleCoord( start );
+		wxPoint _end_	= InternalPositionToVisibleCoord( end );
+		wxPoint _temp_	= _start_;
+		for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
+			wxString line;
+			_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start
+			int z = ( _temp_.y == _end_.y ) ? _end_.x : m_Window.x;	// and end point
+			for ( int x = _temp_.x; x < z; x++ ){					//Prepare line to write process
+				if( IsDenied(x) ){
+					if(x+1 < z)
+						line += wxT(' ');
+					continue;
+					}
+				wxChar ch = CharAt(start++);
+				line += ch;
+				}
+			DC.DrawText( line, m_Margin.x + _temp_.x * m_Char.x,	//Write prepared line
+								   m_Margin.x + _temp_.y * m_Char.y );
+			}
+		}
+	}
+
 bool wxHexCtrl::IsAllowedChar(char chr){
 	return isxdigit( chr );
 	}
 
 bool wxHexTextCtrl::IsAllowedChar(char chr){
-	return ((chr !=173) && (chr>31 && chr<127 || chr>159));
+	return ((chr !=173) && ( (chr>31 && chr<127) || chr>159));	//Visible Char filter
 	}
 
 void wxHexCtrl::OnChar( wxKeyEvent &event ){
@@ -706,8 +726,6 @@ void wxHexCtrl::ChangeSize(){
 		m_Window.x = 1;
     if ( m_Window.y < 1 )
 		m_Window.y = 1;
-
-    //m_text.Empty();
 	RePaint();
     SetInsertionPoint( gip );
 
@@ -721,9 +739,9 @@ void wxHexCtrl::ChangeSize(){
     }
 #endif // wxUSE_STATUSBAR
 }
+//--------WRITE FUNCTIONS-------------//
 
-void wxHexCtrl::WriteHex( const wxString& value ){
-// TODO (death#4#): Need Insertion?
+void wxHexCtrl::WriteHex( const wxString& value ){	//write string as hex value to current position
 	Replace(GetInsertionPoint(), GetInsertionPoint()+value.Length(), value);
 	}
 
@@ -733,6 +751,25 @@ void wxHexCtrl::WriteByte( const unsigned char& byte ){
 	buffer << (byte >> 4);
 	buffer << (byte & 0x0F);
 	Replace( byte_location*2,byte_location*2+2,buffer );
+	}
+
+void wxHexCtrl::SetBinValue( wxString buffer, bool repaint ){
+	m_text.Clear();
+	for( int i=0 ; i < buffer.Length() ; i++ )
+		m_text += wxString::Format(_("%02X"), static_cast<unsigned char>(buffer.at(i)));
+	if(repaint)
+		RePaint();
+	}
+void wxHexCtrl::SetBinValue( char* buffer, int byte_count, bool repaint ){
+	m_text.Clear();
+	for( int i=0 ; i < byte_count ; i++ )
+		m_text += wxString::Format(_("%02X"), static_cast<unsigned char>(buffer[i]));
+	if(repaint)
+		RePaint();
+	}
+
+wxString wxHexCtrl::GetValue( void ){
+	return m_text;
 	}
 
 void wxHexCtrl::Replace(unsigned hex_location, const wxChar& value, bool paint){
@@ -773,13 +810,7 @@ void wxHexCtrl::Replace(unsigned from, unsigned to, const wxString& value){
 		wxBell();
 	}
 
-void wxHexCtrl::WriteBytes( char* buffer, int byte_count, bool repaint ){
-	m_text.Clear();
-	for( int i=0 ; i < byte_count ; i++ )
-		m_text += wxString::Format(_("%02X"), static_cast<unsigned char>(buffer[i]));
-	if(repaint)
-		RePaint();
-	}
+
 
 char wxHexCtrl::ReadByte( int byte_location ){
 	wxString hx;
@@ -829,7 +860,7 @@ char* wxHexCtrl::HexToChar(const wxString& HexValue){
 		}
 	return buffer;
 	}
-
+//------------EVENT HANDLERS---------------//
 void wxHexCtrl::OnFocus(wxFocusEvent& event ){
 	wxCaret *caret = GetCaret();
     if ( caret )
@@ -846,74 +877,118 @@ void wxHexCtrl::OnResize( wxSizeEvent &event ){
     event.Skip();
 	}
 
-void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
+
+void wxHexCtrl::OnTagSelection( wxCommandEvent& event ){
 	wxBell();
+	if(select.selected){
+		TagElement *TE = new TagElement;
+		TE->start=select.start;
+		TE->end=select.end;
+		wxColourData DefColour;//Default wxBlack
+		TE->FontClrData = DefColour;
+		DefColour.SetColour( *wxRED );
+		TE->NoteClrData = DefColour;
+		TagDialog *x=new TagDialog( *TE, this );
+		if( x->ShowModal() == wxID_SAVE )
+			TagArray.Add( TE );
+		//else if (z == wxID_REMOVE)
+		}
+	}
 
-#if wxUSE_STATUSBAR
-	event.Skip(true);
+void wxHexCtrl::OnMouseLeft( wxMouseEvent& event ){
+	SetInsertionPoint( PixelCoordToInternalPosition( event.GetPosition() ) );
+	select.start=GetInsertionPoint();
+	event.Skip();
+	}
 
+void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
+	event.Skip();
+	ShowContextMenu( event.GetPosition() );
+	}
+
+void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
+#ifdef _DEBUG2_
+	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+			<< "\tLMR mouse button:" << event.m_leftDown << event.m_middleDown << event.m_rightDown << std::endl;
+#endif
+	if(event.m_leftDown){
+		select.end = PixelCoordToInternalPosition( event.GetPosition() );
+		SetInsertionPoint( select.end );
+		if(select.start != select.end)
+			select.selected = true;
+		else
+			select.selected = false;
+#ifdef _DEBUG_
+		std::cout << "Selection is " << (select.selected?"true":"false") << " from " << select.start << " to " << select.end << std::endl;
+#endif
+		RePaint();
+		}
+	else{
+		int TagDetect = PixelCoordToInternalPosition( event.GetPosition() );
+		TagElement *TAX;
+		for( int i = 0 ; i < TagArray.Count() ; i++ ){
+			TAX = TagArray.Item(i);
+			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) )	//end not included!
+				{
+				TagPopup( *TAX, event.GetPosition()+((wxWindow*)event.GetEventObject())->ClientToScreen(wxPoint(0,0)) , this );
+				break;
+				}
+			}
+		}
+	}
+void wxHexCtrl::TagPopup(TagElement& TG, const wxPoint& pos, wxWindow *parent ){
+	//wxScrolledWindow *m_panel = new wxScrolledWindow( this, wxID_ANY );
+	wxPopupTransientWindow *wxP = new wxPopupTransientWindow( parent );
+	wxP->SetBackgroundColour( TG.NoteClrData.GetColour() );
+	wxStaticText *text = new wxStaticText( wxP, wxID_ANY, TG.tag );
+	wxBoxSizer *topSizer = new wxBoxSizer( wxVERTICAL );
+	topSizer->Add( text, 0, wxALL, 5 );
+	wxP->SetAutoLayout( true );
+	wxP->SetSizer( topSizer );
+	topSizer->Fit(wxP);
+	wxP->Position( pos, topSizer->GetSize() );
+	wxP->Popup();
+	}
+
+void wxHexCtrl::ShowContextMenu(const wxPoint& pos){
+    wxMenu menu;
+    menu.Append(wxID_ABOUT, _T("&About"));
+    menu.Append(idTagMenu, _T("Tag Selection"));
+    menu.AppendSeparator();
+    menu.Append(wxID_EXIT, _T("E&xit"));
+    PopupMenu(&menu, pos.x, pos.y);
+    // test for destroying items in popup menus
+#if 0 // doesn't work in wxGTK!
+    menu.Destroy(Menu_Popup_Submenu);
+    PopupMenu( &menu, event.GetX(), event.GetY() );
+#endif // 0
+}
+
+void wxHexCtrl::OnTestCall( void ){
+	wxBell();
     wxFrame *frame = wxDynamicCast(GetParent(), wxFrame);
-    static int i=39;
     wxString msg;
     if ( frame && frame->GetStatusBar() )
     switch(1){
-    	case 0:{	// ToExactPosition & ToInternalPosition fx manual debug case
-			if( i++ > 50 )
-				i = 0;
-			msg.Empty();
-			msg.Printf(_T("ToExactPosition(%d)=%d"), i, ToExactPosition(i));
-			frame->SetStatusText(msg, 0);
-			msg.Empty();
-			msg.Printf(_T("ToInternalPosition(%d)=%d"), i, ToInternalPosition(i) );
-			frame->SetStatusText(msg, 1);
-			break;
-			}
-		case 1:{	// ToExactPosition & ToInternalPosition fx manual test case
-			for(i = 0 ; i < 100 ; i++){
-				int denied = 0;
-				while( IsDenied(i-denied) )
-					denied++;
-				if( i-denied != ToExactPosition(ToInternalPosition(i))){
-					msg.Empty();
-					msg.Printf(_T("To(Exact/Internal)Position fx are false at: %d"), i);
-					frame->SetStatusText(msg, 0);
+		case 0:{	// ToVisiblePosition & ToInternalPosition fx test case
+			for(unsigned int i = 0 ; i < m_text.Length() ; i++)
+				if( ToInternalPosition(i) != ToInternalPosition(ToVisiblePosition(ToInternalPosition(i)))){
+					msg.Printf(_T("To[Visible/Internal]Position fx test false at: %d"), i);
 					break;
 					}
-				}
-			msg.Empty();
-			msg.Printf(_T("To(Exact/Internal)Position fx are false at: %d"), i);
-			frame->SetStatusText(msg, 0);
+				std::cout << "To[Visible/Internal]Position fx test success" << std::endl;
 			break;
 			}
-		case 2:{	// SetInsertionPoint & GetInsertionPoint fx manual debug case
-			if( ++i > GetLastPosition() )
-				i = 0;
-			SetInsertionPoint(i);
-			DoMoveCaret();
-			msg.Empty();
-			msg.Printf(_T("SetInsertionPoint: %d"), i);
-			frame->SetStatusText(msg, 0);
-			msg.Empty();
-			msg.Printf(_T("GetInsertionPoint: %d"), GetInsertionPoint() );
-			frame->SetStatusText(msg, 1);
-			break;
-			}
-		case 3:{	// SetInsertionPoint & GetInsertionPoint fx manual test case
-			for( i = 0 ; i < 100 ; i++){
+		case 1:{	// SetInsertionPoint & GetInsertionPoint fx test case
+			for (int i = 0 ; i < GetLastPosition() ; i++ ){
 				SetInsertionPoint(i);
-				if( GetLastPosition() != i ){
-					msg.Empty();
-					msg.Printf(_T("(G/S)etInsertionPoint False At: %d"), i);
-					frame->SetStatusText(msg, 0);
-					break;
-					}
+				if( i != GetInsertionPoint() )
+					std::cout << "[Set/Get]InsertionPoint false at: " <<  GetInsertionPoint() << i  << std::endl;
 				}
-				msg.Empty();
-				msg.Printf(_T("(G/S)etInsertionPoint True"), i);
-				frame->SetStatusText(msg, 0);
+			std::cout << "[Set/Get]InsertionPoint fx test success" << std::endl;
 			break;
 			}
-		case 4:{
+		case 2:{
 			char x = 0;
 			WriteByte(x);
 			msg.Empty();
@@ -923,15 +998,15 @@ void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
 			else
 				msg << _("FAILED");
 			frame->SetStatusText(msg, 0);
-			break;
 			}
+			break;
 		case 5:{
 			//SetStyle(4,5,HexSelectAttr);
 			break;
 			}
 		case 6:{
 			char x[] = "0123456789000000";
-			WriteBytes(x,16);
+			SetBinValue(x,16);
 			/*
 			msg.Empty();
 			msg << _("ReadByte/WriteByte: ");
@@ -944,8 +1019,11 @@ void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
 			break;
 			}
 		}
-#endif // wxUSE_STATUSBAR
 	}
+
+
+
+//------HEXTEXTCTRL-----/
 
 void wxHexTextCtrl::Replace(unsigned text_location, const wxChar& value, bool paint){
 	if( text_location < m_text.Length() )
@@ -993,4 +1071,78 @@ void wxHexOffsetCtrl::ChangeValue( const wxString& value, bool paint ){
 	m_text = value;
 	if( paint )
 		RePaint();
+	}
+
+//----------TAG DIALOG-----------//
+TagDialog::TagDialog(TagElement& TagE, wxWindow* parent):TagDialogGui( parent ),Tag(TagE){
+	TmpTag = Tag;
+	TagTextCtrl->SetValue( TmpTag.tag );
+//	TagTextCtrl->SetBinValue( TmpTag.tag );
+//	wxTextAttr attr;
+//	attr.SetTextColour( TmpTag.FontClrData.GetColour() );
+//	attr.SetBackgroundColour( TmpTag.NoteClrData.GetColour() );
+//	attr.SetBackgroundColour( *wxRED );
+//	TagTextCtrl->SetDefaultStyle( attr );
+
+	wxBitmap bitmap( 100, 25);
+    wxMemoryDC dc;
+    dc.SelectObject( bitmap );
+    dc.SetBackground( TmpTag.FontClrData.GetColour() );
+    dc.Clear();
+    dc.SelectObject( wxNullBitmap );
+    FontBitmapButton->SetBitmapLabel( bitmap );
+
+	dc.SelectObject( bitmap );
+    dc.SetBackground( TmpTag.NoteClrData.GetColour() );
+    dc.Clear();
+    dc.SelectObject( wxNullBitmap );
+    NoteBitmapButton->SetBitmapLabel( bitmap );
+	}
+
+void TagDialog::OnFontColor( wxCommandEvent& event ){
+	ChooseColor( TmpTag.FontClrData );
+	}
+void TagDialog::OnNoteColor( wxCommandEvent& event ){
+	ChooseColor( TmpTag.NoteClrData );
+	}
+void TagDialog::ChooseColor( wxColourData& tmpClrData ){
+#if wxUSE_COLOURDLG
+	wxColourDialog dialog(this, &tmpClrData);
+#elif USE_COLOURDLG_GENERIC
+	wxGenericColourDialog *dialog = new wxGenericColourDialog(this, &tmpClrData);
+#endif
+	if( &tmpClrData == &TmpTag.FontClrData )	//Cannot compare wxColourData, so I am comparing it's memory adresses :)
+		dialog.SetTitle(_T("Choose the font colour"));
+	else
+		dialog.SetTitle(_T("Choose the background colour"));
+
+    if (dialog.ShowModal() == wxID_OK)
+        tmpClrData = dialog.GetColourData();
+
+	wxBitmap bitmap( 100, 25);
+    wxMemoryDC dc;
+    dc.SelectObject( bitmap );
+    dc.SetBackground( tmpClrData.GetColour() );
+    dc.Clear();
+    dc.SelectObject( wxNullBitmap );
+
+	if( &tmpClrData == &TmpTag.FontClrData)
+		FontBitmapButton->SetBitmapLabel( bitmap );
+	else
+		NoteBitmapButton->SetBitmapLabel( bitmap );
+
+//	wxTextAttr attr;
+//	attr.SetTextColour( TmpTag.FontClrData.GetColour() );
+//	attr.SetBackgroundColour( TmpTag.NoteClrData.GetColour() );
+//	TagTextCtrl->SetDefaultStyle( attr );
+	}
+
+void TagDialog::OnSave( wxCommandEvent& event ){
+	TmpTag.tag = TagTextCtrl->GetValue();
+	Tag = TmpTag;
+	EndModal(wxID_SAVE);
+	}
+
+void TagDialog::OnDelete( wxCommandEvent& event ){
+	EndModal(wxID_DELETE);
 	}

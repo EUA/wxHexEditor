@@ -58,6 +58,8 @@
 		<Unit filename="HexEditorCtrl/HexEditorCtrl.h" />
 		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.cpp" />
 		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.h" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialogGui.h" />
 		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
 		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
 		<Unit filename="HexEditorFrame.cpp" />

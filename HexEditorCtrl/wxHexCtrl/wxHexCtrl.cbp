@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-D_DEBUG_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -42,6 +43,8 @@
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
+		<Unit filename="TagDialogGui.cpp" />
+		<Unit filename="TagDialogGui.h" />
 		<Unit filename="app.cpp" />
 		<Unit filename="app.h" />
 		<Unit filename="main.cpp" />
@@ -54,6 +57,8 @@
 		</Unit>
 		<Extensions>
 			<code_completion />
+			<envvars />
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

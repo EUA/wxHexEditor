@@ -84,6 +84,8 @@ void HexEditor::Dynamic_Disconnector(){
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	//hex_ctrl ->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	//text_ctrl->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
@@ -745,6 +747,7 @@ void HexEditor::OnOffsetMouseFocus( wxMouseEvent& event ){
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
+
 	}
 
 

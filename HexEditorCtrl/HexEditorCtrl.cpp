@@ -63,7 +63,7 @@ void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, 
 		}
 		//hex_ctrl->WriteText(hex_string);
 
-	hex_ctrl->WriteBytes(buffer, lenght, false );
+	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
 	offset_ctrl->ChangeValue(offset_string, true);
 	if( paint )

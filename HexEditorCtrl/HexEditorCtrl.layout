@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="HexEditorCtrl.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="2073" topLine="28" />
+	<File name="HexEditorCtrl.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="3232" topLine="48" />
 	</File>
-	<File name="HexEditorCtrl.h" open="1" top="0" tabpos="2">
+	<File name="HexEditorCtrl.h" open="1" top="0" tabpos="4">
 		<Cursor position="1736" topLine="16" />
 	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="4">
+	<File name="main.cpp" open="1" top="0" tabpos="6">
 		<Cursor position="1075" topLine="35" />
 	</File>
-	<File name="main.h" open="1" top="0" tabpos="1">
+	<File name="main.h" open="1" top="0" tabpos="3">
 		<Cursor position="282" topLine="0" />
+	</File>
+	<File name="wxHexCtrl/wxHexCtrl.cpp" open="1" top="1" tabpos="7">
+		<Cursor position="31557" topLine="1059" />
 	</File>
 </CodeBlocks_layout_file>

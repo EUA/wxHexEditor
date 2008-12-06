@@ -24,7 +24,6 @@
 #define __wxHexEditorCtrl__
 
 #include "HexEditorCtrlGui.h"
-
 class HexEditorCtrl: public HexEditorCtrlGui {
 	public:
 		HexEditorCtrl(wxWindow* parent, int id,
@@ -57,12 +56,20 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		virtual void OnResize( wxSizeEvent& event);
 		void ClearPaint( void );
 		void PaintSelection( void );
+		void TagPaint( void );
 		struct selector{		//selection structure
 			enum states{ SELECTION_FALSE = 0, SELECTION_TRUE, SELECTION_END };
 			enum states state;
 			int64_t start_offset;	//real start position
 			int64_t end_offset;	//real end position, included to selection
 			} selection;
+		struct tagblk{
+			int64_t start_offset;
+			int64_t end_offset;
+			wxColor color;
+			wxString tagstring;
+			} temptag;
+//		wxVectorBase< struct tagblk > Tags;
 		void HexCharReplace( long char_location, const wxChar chr);
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();
@@ -79,3 +86,4 @@ virtual	void SetLocalHexInsertionPoint( int hex_location );
 	};
 
 #endif
+//

@@ -51,6 +51,8 @@
 		<Unit filename="app.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
+		<Unit filename="wxHexCtrl/TagDialogGui.cpp" />
+		<Unit filename="wxHexCtrl/TagDialogGui.h" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.cpp" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.h" />
 		<Extensions>

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="TagDialogGui.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="309" topLine="8" />
+	</File>
+	<File name="TagDialogGui.h" open="1" top="0" tabpos="7">
+		<Cursor position="1555" topLine="18" />
+	</File>
 	<File name="app.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="main.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="1086" topLine="28" />
+		<Cursor position="545" topLine="9" />
 	</File>
-	<File name="wxHexCtrl.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="0" topLine="0" />
+	<File name="main.h" open="1" top="0" tabpos="5">
+		<Cursor position="297" topLine="0" />
 	</File>
-	<File name="wxHexCtrl.h" open="1" top="1" tabpos="4">
-		<Cursor position="0" topLine="136" />
+	<File name="wxHexCtrl.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="28100" topLine="921" />
+	</File>
+	<File name="wxHexCtrl.h" open="1" top="0" tabpos="4">
+		<Cursor position="5832" topLine="116" />
 	</File>
 </CodeBlocks_layout_file>

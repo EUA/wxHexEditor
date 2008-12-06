@@ -1579,3 +1579,109 @@
 	"wx/caret.h"
 	"wx/numdlg.h"
 
+1228516622 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
+	"HexEditorCtrl.h"
+
+1228134562 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
+	"HexEditorCtrlGui.h"
+
+1215261181 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
+	<wx/string.h>
+	<wx/stattext.h>
+	<wx/gdicmn.h>
+	<wx/font.h>
+	<wx/colour.h>
+	<wx/settings.h>
+	<wx/textctrl.h>
+	<wx/scrolbar.h>
+	<wx/sizer.h>
+	<wx/panel.h>
+	"wxHexCtrl/wxHexCtrl.h"
+
+1228516216 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
+	<wx/textctrl.h>
+	<wx/caret.h>
+	<wx/wx.h>
+	<wx/dcbuffer.h>
+	"TagDialogGui.h"
+	<wx/colordlg.h>
+	<wx/popupwin.h>
+
+1214873892 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
+	"wx/wxprec.h"
+	<wx/wx.h>
+	"wxHexCtrl/wxHexCtrl.h"
+	"HexEditorCtrlGui.h"
+
+1214139101 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/app.cpp
+	"app.h"
+	"main.h"
+
+1214139101 /home/C++/projects/wxHexEditor/HexEditorCtrl/app.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+
+1214139101 /home/C++/projects/wxHexEditor/HexEditorCtrl/main.h
+	"app.h"
+	"HexEditorCtrl.h"
+
+1214139101 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/main.cpp
+	"main.h"
+
+1228516475 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
+	"wxHexCtrl.h"
+	"wx/caret.h"
+	"wx/numdlg.h"
+
+1228503669 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/TagDialogGui.h
+	<wx/intl.h>
+	<wx/string.h>
+	<wx/textctrl.h>
+	<wx/gdicmn.h>
+	<wx/font.h>
+	<wx/colour.h>
+	<wx/settings.h>
+	<wx/stattext.h>
+	<wx/bitmap.h>
+	<wx/image.h>
+	<wx/icon.h>
+	<wx/bmpbuttn.h>
+	<wx/button.h>
+	<wx/sizer.h>
+	<wx/dialog.h>
+
+1212816188 /usr/include/wx-2.8/wx/colordlg.h
+	"wx/defs.h"
+	"wx/msw/colordlg.h"
+	"wx/mac/colordlg.h"
+	"wx/gtk/colordlg.h"
+	"wx/palmos/colordlg.h"
+	"wx/generic/colrdlgg.h"
+
+1212816188 /usr/include/wx-2.8/wx/gtk/colordlg.h
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1212816188 /usr/include/wx-2.8/wx/generic/colrdlgg.h
+	"wx/defs.h"
+	"wx/gdicmn.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1212816188 /usr/include/wx-2.8/wx/popupwin.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/msw/popupwin.h"
+	"wx/os2/popupwin.h"
+	"wx/gtk/popupwin.h"
+	"wx/gtk1/popupwin.h"
+	"wx/x11/popupwin.h"
+	"wx/motif/popupwin.h"
+	"wx/mgl/popupwin.h"
+	"wx/mac/popupwin.h"
+
+1212816188 /usr/include/wx-2.8/wx/gtk/popupwin.h
+
+1228503669 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp
+	"TagDialogGui.h"
+

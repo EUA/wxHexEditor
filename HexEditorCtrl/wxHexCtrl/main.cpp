@@ -43,7 +43,7 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     wxMenu* fileMenu = new wxMenu(_T(""));
     fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
-    new wxHexCtrl(this, -1, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_NO_VSCROLL);
+    hex_ctrl = new wxHexCtrl(this, -1, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_NO_VSCROLL);
 
     wxMenu* helpMenu = new wxMenu(_T(""));
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
@@ -58,6 +58,12 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     SetStatusText(_("Hello Code::Blocks user !"),0);
     SetStatusText(wxbuildinfo(short_f),1);
 #endif // wxUSE_STATUSBAR
+
+	wxString ch;
+	for(int j=0 ; j < 90 ; j++ ){
+			ch.Append(j);
+	hex_ctrl->SetBinValue( ch.char_str(),90,true );
+	}
 }
 
 MyFrame::~MyFrame()

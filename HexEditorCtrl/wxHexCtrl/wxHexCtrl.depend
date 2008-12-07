@@ -1523,7 +1523,7 @@
 	"app.h"
 	"wxHexCtrl.h"
 
-1228516216 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
+1228598604 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
 	<wx/textctrl.h>
 	<wx/caret.h>
 	<wx/wx.h>
@@ -1535,7 +1535,7 @@
 1228495627 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/main.cpp
 	"main.h"
 
-1228516475 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
+1228596686 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
 	"wxHexCtrl.h"
 	"wx/caret.h"
 	"wx/numdlg.h"

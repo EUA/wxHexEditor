@@ -70,6 +70,10 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();
 		void MyThaw();
+		//------EVENTS---------//
+		void OnHexAndTextMouseFocus(wxMouseEvent& event);
+
+		//----ADAPTERS----//
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );
 virtual	void SetLocalHexInsertionPoint( int hex_location );

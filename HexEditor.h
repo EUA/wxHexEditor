@@ -66,7 +66,7 @@ class HexEditor: public HexEditorCtrl {
 		void SetHexInsertionPoint ( int local_hex_location );
 
 protected:
-//public4test		bool Select ( int64_t start_offset, int64_t end_offset );
+		bool Selector( bool=true );
 		void UpdateCursorLocation();
 		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);

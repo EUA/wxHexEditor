@@ -36,6 +36,9 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	m_static_offset->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_adress->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_byteview->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
+
+	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexAndTextMouseFocus),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexAndTextMouseFocus),NULL, this);
     }
 
 
@@ -93,28 +96,6 @@ bool HexEditorCtrl::Selector( bool mode ){
 		polarity_possitive		= false;
 		first_selection			= true;
 		}
-
-#if wxUSE_STATUSBAR
-    wxFrame *frame = wxDynamicCast(GetParent(), wxFrame);
-    if ( frame && frame->GetStatusBar() ){
-		wxStatusBar *statusbar = frame->GetStatusBar();
-		int start = selection.start_offset;
-		int end = selection.end_offset;
-		if(start > end ){
-			int temp = start;
-			start = end;
-			end = temp;
-			}
-		if( selection.state == selector::SELECTION_FALSE ){
-			statusbar->SetStatusText(_("Block: \tn/a"), 3);
-			statusbar->SetStatusText(_("Size: \tn/a") ,4);
-			}
-		else{
-			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
-			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
-			}
-		}
-#endif // wxUSE_STATUSBAR
 	return true;
 	}
 
@@ -166,7 +147,7 @@ void HexEditorCtrl::PaintSelection( void ){
 		end_byte	-= start_offset;
 
 		text_ctrl->SetSelection(start_byte, end_byte+1);
-		hex_ctrl->SetSelection( start_byte*2, (end_byte+1)*2);
+		hex_ctrl ->SetSelection(start_byte*2, (end_byte+1)*2);
 		}
 	else
 		ClearPaint();
@@ -229,9 +210,13 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 
 	this->SetSizer( fgSizer1 );
 	this->Layout();
-
-	offset_ctrl->BytePerLine = BytePerLine();
+//	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
     }
+//------EVENTS---------//
+void HexEditorCtrl::OnHexAndTextMouseFocus(wxMouseEvent& event){
+	selection.state=selector::SELECTION_FALSE;
+	ClearPaint();
+	}
 
 //------ADAPTERS----------//
 int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor

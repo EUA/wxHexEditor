@@ -80,10 +80,10 @@ void HexEditor::Dynamic_Disconnector(){
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
-	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-	//hex_ctrl ->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-	//text_ctrl->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	text_ctrl->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+//	hex_ctrl ->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+//	text_ctrl->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
@@ -545,23 +545,50 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 	*/
 //	}
 
+bool HexEditor::Selector(bool mode){
+	bool temp = HexEditorCtrl::Selector( mode );
+#if wxUSE_STATUSBAR
+    if ( statusbar ){
+		int start = selection.start_offset;
+		int end = selection.end_offset;
+		if(start > end ){
+			int temp = start;
+			start = end;
+			end = temp;
+			}
+		if( selection.state == selector::SELECTION_FALSE ){
+			statusbar->SetStatusText(_("Block: \tn/a"), 3);
+			statusbar->SetStatusText(_("Size: \tn/a") ,4);
+			}
+		else{
+			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
+			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
+			}
+		}
+#endif // wxUSE_STATUSBAR
+	return temp;
+	}
 
-// TODO (death#1#): Goto HexEditorCtrl
 void HexEditor::OnHexMouseFocus(wxMouseEvent& event){
-	selection.state=selector::SELECTION_FALSE;
-	statusbar->SetStatusText(_("Block: \tn/a"), 3);
-	statusbar->SetStatusText(_("Size: \tn/a") ,4);
-	ClearPaint();
 	hex_ctrl->SetFocus();
+	OnHexAndTextMouseFocus( event );
+	#if wxUSE_STATUSBAR
+    if ( statusbar ){
+		statusbar->SetStatusText(_("Block: \tn/a"), 3);
+		statusbar->SetStatusText(_("Size: \tn/a") ,4);
+		}
+	#endif // wxUSE_STATUSBAR
 	SetHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
 	}
-// TODO (death#1#): Goto HexEditorCtrl
 void HexEditor::OnTextMouseFocus(wxMouseEvent& event){
-	selection.state=selector::SELECTION_FALSE;
-	statusbar->SetStatusText(_("Block: \tn/a"), 3);
-	statusbar->SetStatusText(_("Size: \tn/a") ,4);
-	ClearPaint();
 	text_ctrl->SetFocus();
+	OnHexAndTextMouseFocus( event );
+	#if wxUSE_STATUSBAR
+    if ( statusbar ){
+		statusbar->SetStatusText(_("Block: \tn/a"), 3);
+		statusbar->SetStatusText(_("Size: \tn/a") ,4);
+		}
+	#endif // wxUSE_STATUSBAR
 	SetHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
 	}
 

@@ -899,6 +899,9 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	}
 
 void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
+#if defined( _DEBUG_ )
+	std::cout << "wxHexOffsetCtrl::OnMouseLeft()" << std::endl;
+#endif
 	hex_offset = hex_offset ? false : true;
 	SetValue( offset_position );
 	}

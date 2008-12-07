@@ -7,17 +7,17 @@
 	<File name="TagDialogGui.h" open="0" top="0" tabpos="7">
 		<Cursor position="1555" topLine="18" />
 	</File>
-	<File name="app.cpp" open="1" top="1" tabpos="1">
+	<File name="app.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="2">
+	<File name="main.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="545" topLine="9" />
 	</File>
-	<File name="main.h" open="1" top="0" tabpos="3">
+	<File name="main.h" open="0" top="0" tabpos="3">
 		<Cursor position="297" topLine="0" />
 	</File>
 	<File name="wxHexCtrl.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="28100" topLine="921" />
+		<Cursor position="12820" topLine="411" />
 	</File>
 	<File name="wxHexCtrl.h" open="0" top="0" tabpos="4">
 		<Cursor position="5832" topLine="116" />

@@ -111,7 +111,7 @@ virtual	bool IsAllowedChar(const char& chr);
 		// Movement Support
 virtual	int CharacterPerLine( void );
 		int BytePerLine( void )	{ return CharacterPerLine() / 2; }
-		int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
+virtual	int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
 		int LineCount( void )	{ return m_Window.y; }
 		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
 		int GetByteCount( void ){ return m_text.Length()/2;	}
@@ -190,6 +190,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 		bool IsAllowedChar(const char& chr);
 		wxChar Filter(const char& chr);
+		int ByteCapacity( void ){ return m_Window.y*CharacterPerLine(); }
 	};
 
 class wxHexOffsetCtrl : public wxHexCtrl{
@@ -213,13 +214,13 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 		bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
-		void SetValue( uint64_t position );
-		void SetValue( uint64_t position, int byteperline );
+		void SetValue( int64_t position );
+		void SetValue( int64_t position, int byteperline );
 		void OnMouseRight( wxMouseEvent& event ){event.Skip(false);}
 		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
 		bool hex_offset;
-		uint64_t offset_position;
+		int64_t offset_position;
 		int BytePerLine;
 	};
 #endif

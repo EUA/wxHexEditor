@@ -880,11 +880,11 @@ int wxHexTextCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 	return ( x + y * CharacterPerLine() );
 	}
 
-void wxHexOffsetCtrl::SetValue( uint64_t position ){
+void wxHexOffsetCtrl::SetValue( int64_t position ){
 	SetValue( position, BytePerLine );
 	}
 
-void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
+void wxHexOffsetCtrl::SetValue( int64_t position, int byteperline ){
 	int64_t temp_offset_position = offset_position = position;
 	BytePerLine = byteperline;
 	m_text.Clear();

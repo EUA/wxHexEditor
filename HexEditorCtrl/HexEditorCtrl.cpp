@@ -36,12 +36,30 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	m_static_offset->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_adress->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_byteview->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
-
-	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexAndTextMouseFocus),NULL, this);
-	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexAndTextMouseFocus),NULL, this);
+	Dynamic_Connector();
+	selection.start_offset = selection.end_offset = 0;
+	selection.state = selector::SELECTION_FALSE;
+	start_offset=0;
     }
 
+void HexEditorCtrl::Dynamic_Connector(){
+	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
+	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	text_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 
+	}
+
+void HexEditorCtrl::Dynamic_Disconnector(){
+	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
+	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
+	hex_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	text_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl	->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	text_ctrl	->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	}
 //-----READ/WRITE FUNCTIONS-------//
 
 void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset, bool paint ){
@@ -213,9 +231,46 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
     }
 //------EVENTS---------//
-void HexEditorCtrl::OnHexAndTextMouseFocus(wxMouseEvent& event){
+void HexEditorCtrl::OnHexMouseFocus(wxMouseEvent& event){
+	hex_ctrl->SetFocus();
 	selection.state=selector::SELECTION_FALSE;
 	ClearPaint();
+	SetLocalHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
+	}
+
+void HexEditorCtrl::OnTextMouseFocus(wxMouseEvent& event){
+	text_ctrl->SetFocus();
+	selection.state=selector::SELECTION_FALSE;
+	ClearPaint();
+	SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) - 1);
+	}
+
+void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
+#ifdef _DEBUG2_
+	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+			<< "\tLeft mouse button:" << event.m_leftDown << std::endl;
+#endif
+	if(event.m_leftDown){
+		int new_location;
+		if( FindFocus() == hex_ctrl )
+			new_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
+		else if ( FindFocus() == text_ctrl )
+			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
+		int old_location = GetLocalHexInsertionPoint();
+		if( new_location != old_location ){
+			if(selection.state != selector::SELECTION_TRUE)		// At first selection
+				Selector();
+			SetLocalHexInsertionPoint( new_location );
+			Selector();
+			PaintSelection( );
+			}
+		}
+	}
+
+void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
+	if(selection.state == selector::SELECTION_TRUE)
+		selection.state = selector::SELECTION_END;
+	event.Skip();
 	}
 
 //------ADAPTERS----------//

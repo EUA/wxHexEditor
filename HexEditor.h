@@ -67,7 +67,7 @@ class HexEditor: public HexEditorCtrl {
 
 protected:
 		bool Selector( bool=true );
-		void UpdateCursorLocation();
+		void UpdateCursorLocation( bool force=false );
 		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);
 		void OnKeyboardSelector( wxKeyEvent& event );

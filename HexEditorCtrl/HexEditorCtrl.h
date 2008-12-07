@@ -30,9 +30,14 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 						const wxPoint& pos=wxDefaultPosition,
 						const wxSize& size=wxDefaultSize,
 						long style=0);
+		~HexEditorCtrl( void ){
+			Dynamic_Disconnector();
+			}
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:
+		void Dynamic_Connector();
+		void Dynamic_Disconnector();
 		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
 		int BytePerLine( void )	{ return text_ctrl->CharacterPerLine(); }
 		int ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
@@ -62,7 +67,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			enum states{ SELECTION_FALSE = 0, SELECTION_TRUE, SELECTION_END };
 			enum states state;
 			int64_t start_offset;	//real start position
-			int64_t end_offset;	//real end position, included to selection
+			int64_t end_offset;		//real end position, included to selection
 			} selection;
 		bool Selector( bool mode=true );
 		bool Select ( int64_t start_offset, int64_t end_offset );
@@ -71,8 +76,10 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void MyFreeze();
 		void MyThaw();
 		//------EVENTS---------//
-		void OnHexAndTextMouseFocus(wxMouseEvent& event);
-
+		void OnHexMouseFocus(wxMouseEvent& event);
+		void OnTextMouseFocus(wxMouseEvent& event);
+		void OnMouseMove( wxMouseEvent& event );
+		void OnMouseSelectionEnd( wxMouseEvent& event );
 		//----ADAPTERS----//
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );

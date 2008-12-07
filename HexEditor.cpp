@@ -43,10 +43,6 @@ HexEditor::HexEditor(	wxWindow* parent,
 			FileOpen( myfilename );
 			}
 		offset_scroll->Enable( true );
-		selection.start_offset = selection.end_offset = 0;
-		selection.state = selector::SELECTION_FALSE;
-
-		start_offset=0;
 		Dynamic_Connector();
 	}
 	HexEditor::~HexEditor(){
@@ -570,26 +566,24 @@ bool HexEditor::Selector(bool mode){
 	}
 
 void HexEditor::OnHexMouseFocus(wxMouseEvent& event){
-	hex_ctrl->SetFocus();
-	OnHexAndTextMouseFocus( event );
+	HexEditorCtrl::OnHexMouseFocus( event );
 	#if wxUSE_STATUSBAR
     if ( statusbar ){
 		statusbar->SetStatusText(_("Block: \tn/a"), 3);
 		statusbar->SetStatusText(_("Size: \tn/a") ,4);
 		}
 	#endif // wxUSE_STATUSBAR
-	SetHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
+	UpdateCursorLocation();
 	}
 void HexEditor::OnTextMouseFocus(wxMouseEvent& event){
-	text_ctrl->SetFocus();
-	OnHexAndTextMouseFocus( event );
+	HexEditorCtrl::OnTextMouseFocus( event );
 	#if wxUSE_STATUSBAR
     if ( statusbar ){
 		statusbar->SetStatusText(_("Block: \tn/a"), 3);
 		statusbar->SetStatusText(_("Size: \tn/a") ,4);
 		}
 	#endif // wxUSE_STATUSBAR
-	SetHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(),event.GetY() ) ) );
+	UpdateCursorLocation();
 	}
 
 void HexEditor::OnMouseWhell( wxMouseEvent& event ){
@@ -645,28 +639,13 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 #ifdef _DEBUG2_
 		std::cout << "Scroll Speed = " << spd << std::endl;
 #endif
-		int new_location;
-		if( FindFocus() == hex_ctrl )
-			new_location = hex_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(), event.GetY() ) );
-		else if ( FindFocus() == text_ctrl )
-			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( wxPoint( event.GetX(), event.GetY() ) ));
-
-		int old_location = GetLocalHexInsertionPoint();
-		if( new_location != old_location ){
-			if(selection.state != selector::SELECTION_TRUE)		// At first selection
-				Selector();
-			SetHexInsertionPoint( new_location );
-			Selector();
-			PaintSelection( );
-			}
+		HexEditorCtrl::OnMouseMove( event );
+		UpdateCursorLocation();
 		}
-//	hex_ctrl->OnMouseMove( event );
 	}
 
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
-	if(selection.state == selector::SELECTION_TRUE)
-		selection.state = selector::SELECTION_END;
-	event.Skip();
+	HexEditorCtrl::OnMouseSelectionEnd( event );
 	myscroll->UpdateSpeed( 0 );
 	}
 
@@ -679,8 +658,13 @@ void HexEditor::SetHexInsertionPoint( int local_hex_location){
 	UpdateCursorLocation();
 	}
 
-void HexEditor::UpdateCursorLocation(){
+void HexEditor::UpdateCursorLocation( bool force ){
 	static wxMutex update;
+	static int64_t lastPoint=GetLocalHexInsertionPoint()/2;	//? Speed up Van goh
+	if( !force )
+		if( lastPoint == GetLocalHexInsertionPoint()/2 )
+			return;
+
 	update.Lock();
 	if( GetLocalHexInsertionPoint()/2+start_offset > myfile->Length() ){
 		SetLocalHexInsertionPoint( (myfile->Length() - start_offset)*2 - 1 );

@@ -435,7 +435,7 @@ void wxHexCtrl::TagPainter( wxMemoryDC& DC, TagElement& TG ){
 			start = 0;
 		if ( end > ByteCapacity()*2)
 			 end = ByteCapacity()*2;
-
+// TODO (death#1#): Here problem with Text Ctrl.Use smart pointer...?
 		wxPoint _start_ = InternalPositionToVisibleCoord( start );
 		wxPoint _end_	= InternalPositionToVisibleCoord( end );
 		wxPoint _temp_	= _start_;
@@ -687,13 +687,10 @@ void wxHexCtrl::OnTagSelection( wxCommandEvent& event ){
 		TagElement *TE = new TagElement;
 		TE->start=select.start;
 		TE->end=select.end;
-		wxColourData DefColour;//Default wxBlack
-		TE->FontClrData = DefColour;
-		DefColour.SetColour( *wxRED );
-		TE->NoteClrData = DefColour;
 		TagDialog *x=new TagDialog( *TE, this );
 		if( x->ShowModal() == wxID_SAVE )
 			TagArray.Add( TE );
+		x->Destroy();
 		//else if (z == wxID_REMOVE)
 		}
 	}
@@ -733,24 +730,13 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 			TAX = TagArray.Item(i);
 			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) )	//end not included!
 				{
-				TagPopup( *TAX, event.GetPosition()+((wxWindow*)event.GetEventObject())->ClientToScreen(wxPoint(0,0)) , this );
+				TAX->Show( event.GetPosition()+((wxWindow*)event.GetEventObject())->ClientToScreen(wxPoint(0,0)) , this );
 				break;
 				}
+			else if( TAX->visible )
+				TAX->Hide();
 			}
 		}
-	}
-void wxHexCtrl::TagPopup(TagElement& TG, const wxPoint& pos, wxWindow *parent ){
-	//wxScrolledWindow *m_panel = new wxScrolledWindow( this, wxID_ANY );
-	wxPopupTransientWindow *wxP = new wxPopupTransientWindow( parent );
-	wxP->SetBackgroundColour( TG.NoteClrData.GetColour() );
-	wxStaticText *text = new wxStaticText( wxP, wxID_ANY, TG.tag );
-	wxBoxSizer *topSizer = new wxBoxSizer( wxVERTICAL );
-	topSizer->Add( text, 0, wxALL, 5 );
-	wxP->SetAutoLayout( true );
-	wxP->SetSizer( topSizer );
-	topSizer->Fit(wxP);
-	wxP->Position( pos, topSizer->GetSize() );
-	wxP->Popup();
 	}
 
 void wxHexCtrl::ShowContextMenu(const wxPoint& pos){
@@ -899,83 +885,7 @@ void wxHexOffsetCtrl::SetValue( int64_t position, int byteperline ){
 	}
 
 void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
-#if defined( _DEBUG_ )
-	std::cout << "wxHexOffsetCtrl::OnMouseLeft()" << std::endl;
-#endif
 	hex_offset = hex_offset ? false : true;
 	SetValue( offset_position );
 	}
 
-//----------TAG DIALOG-----------//
-TagDialog::TagDialog(TagElement& TagE, wxWindow* parent):TagDialogGui( parent ),Tag(TagE){
-	TmpTag = Tag;
-	TagTextCtrl->SetValue( TmpTag.tag );
-//	TagTextCtrl->SetBinValue( TmpTag.tag );
-//	wxTextAttr attr;
-//	attr.SetTextColour( TmpTag.FontClrData.GetColour() );
-//	attr.SetBackgroundColour( TmpTag.NoteClrData.GetColour() );
-//	attr.SetBackgroundColour( *wxRED );
-//	TagTextCtrl->SetDefaultStyle( attr );
-
-	wxBitmap bitmap( 100, 25);
-    wxMemoryDC dc;
-    dc.SelectObject( bitmap );
-    dc.SetBackground( TmpTag.FontClrData.GetColour() );
-    dc.Clear();
-    dc.SelectObject( wxNullBitmap );
-    FontBitmapButton->SetBitmapLabel( bitmap );
-
-	dc.SelectObject( bitmap );
-    dc.SetBackground( TmpTag.NoteClrData.GetColour() );
-    dc.Clear();
-    dc.SelectObject( wxNullBitmap );
-    NoteBitmapButton->SetBitmapLabel( bitmap );
-	}
-
-void TagDialog::OnFontColor( wxCommandEvent& event ){
-	ChooseColor( TmpTag.FontClrData );
-	}
-void TagDialog::OnNoteColor( wxCommandEvent& event ){
-	ChooseColor( TmpTag.NoteClrData );
-	}
-void TagDialog::ChooseColor( wxColourData& tmpClrData ){
-#if wxUSE_COLOURDLG
-	wxColourDialog dialog(this, &tmpClrData);
-#elif USE_COLOURDLG_GENERIC
-	wxGenericColourDialog *dialog = new wxGenericColourDialog(this, &tmpClrData);
-#endif
-	if( &tmpClrData == &TmpTag.FontClrData )	//Cannot compare wxColourData, so I am comparing it's memory adresses :)
-		dialog.SetTitle(_T("Choose the font colour"));
-	else
-		dialog.SetTitle(_T("Choose the background colour"));
-
-    if (dialog.ShowModal() == wxID_OK)
-        tmpClrData = dialog.GetColourData();
-
-	wxBitmap bitmap( 100, 25);
-    wxMemoryDC dc;
-    dc.SelectObject( bitmap );
-    dc.SetBackground( tmpClrData.GetColour() );
-    dc.Clear();
-    dc.SelectObject( wxNullBitmap );
-
-	if( &tmpClrData == &TmpTag.FontClrData)
-		FontBitmapButton->SetBitmapLabel( bitmap );
-	else
-		NoteBitmapButton->SetBitmapLabel( bitmap );
-
-//	wxTextAttr attr;
-//	attr.SetTextColour( TmpTag.FontClrData.GetColour() );
-//	attr.SetBackgroundColour( TmpTag.NoteClrData.GetColour() );
-//	TagTextCtrl->SetDefaultStyle( attr );
-	}
-
-void TagDialog::OnSave( wxCommandEvent& event ){
-	TmpTag.tag = TagTextCtrl->GetValue();
-	Tag = TmpTag;
-	EndModal(wxID_SAVE);
-	}
-
-void TagDialog::OnDelete( wxCommandEvent& event ){
-	EndModal(wxID_DELETE);
-	}

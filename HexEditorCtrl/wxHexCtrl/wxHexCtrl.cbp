@@ -3,7 +3,6 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="wxHexCtrl" />
-		<Option pch_mode="0" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
@@ -14,7 +13,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="-D_DEBUG_" />
+					<Add option="-D_DEBUG2_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -34,15 +33,17 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wall" />
 			<Add option="`wx-config --cflags`" />
 			<Add option="-Winvalid-pch" />
 			<Add option="-include wx_pch.h" />
 			<Add option="-DUSE_PCH" />
-			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
+		<Unit filename="Tag.cpp" />
+		<Unit filename="Tag.h" />
 		<Unit filename="TagDialogGui.cpp" />
 		<Unit filename="TagDialogGui.h" />
 		<Unit filename="app.cpp" />

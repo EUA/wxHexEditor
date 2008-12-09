@@ -91,7 +91,7 @@ void HexEditorCtrl::TextCharReplace( long char_location, const wxChar chr){
 
 void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 	hex_ctrl->Replace( hex_location, chr );
-	hex_location /=2;	// hex loc is now byte loc
+	hex_location /=2;	// Hex location is now Byte location
 	char rdchr = hex_ctrl->ReadByte(hex_location);
 	text_ctrl->Replace(	hex_location, rdchr, true );
 	}
@@ -119,7 +119,7 @@ bool HexEditorCtrl::Selector( bool mode ){
 
 bool HexEditorCtrl::Select ( int64_t start_offset, int64_t end_offset ){
 	if( start_offset < 0 || end_offset < 0
-//	|| start_offset > myfile->Length() ||  end_offset > myfile->Length()
+//	|| start_offset > myfile->Length() ||  end_offset > myfile->Length() //??
 		){
 		wxBell();
 		return false;
@@ -232,24 +232,20 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
     }
 //------EVENTS---------//
 void HexEditorCtrl::OnHexMouseFocus(wxMouseEvent& event){
-	hex_ctrl->SetFocus();
 	selection.state=selector::SELECTION_FALSE;
 	ClearPaint();
+	hex_ctrl->SetFocus();
 	SetLocalHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
 	}
 
 void HexEditorCtrl::OnTextMouseFocus(wxMouseEvent& event){
-	text_ctrl->SetFocus();
 	selection.state=selector::SELECTION_FALSE;
 	ClearPaint();
+	text_ctrl->SetFocus();
 	SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) - 1);
 	}
 
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
-#ifdef _DEBUG2_
-	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
-			<< "\tLeft mouse button:" << event.m_leftDown << std::endl;
-#endif
 	if(event.m_leftDown){
 		int new_location;
 		if( FindFocus() == hex_ctrl )
@@ -262,8 +258,11 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 				Selector();
 			SetLocalHexInsertionPoint( new_location );
 			Selector();
-			PaintSelection( );
+			PaintSelection();
 			}
+		}
+	else{
+		event.Skip(); //enable tags but problems with paint?
 		}
 	}
 

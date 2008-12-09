@@ -642,6 +642,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 		HexEditorCtrl::OnMouseMove( event );
 		UpdateCursorLocation();
 		}
+	event.Skip();
 	}
 
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
@@ -677,7 +678,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 		interpreter->Set( bfr, size);
 		delete bfr;
 		}
-
+#if wxUSE_STATUSBAR
 	if( statusbar != NULL ){
 		statusbar->SetStatusText(wxString::Format(_("Page: %d"), CursorOffset()/hex_ctrl->ByteCapacity() ), 0);
 		if( offset_ctrl->hex_offset )
@@ -688,9 +689,24 @@ void HexEditor::UpdateCursorLocation( bool force ){
 		myfile->Seek( CursorOffset() );
 		myfile->Read( reinterpret_cast<char*>(&ch), 1);
 		statusbar->SetStatusText(wxString::Format(_("=\t%u"), ch), 2);
-		//statbar->SetStatusText(wxString::Format(_("Block: %d-%d"),0,0), 3);
-		//statbar->SetStatusText(wxString::Format(_("Size: %d"),myTempFile->Length()), 4);
+
+		int start = selection.start_offset;
+		int end = selection.end_offset;
+		if(start > end ){
+			int temp = start;
+			start = end;
+			end = temp;
+			}
+		if( selection.state == selector::SELECTION_FALSE ){
+			statusbar->SetStatusText(_("Block: \tn/a"), 3);
+			statusbar->SetStatusText(_("Size: \tn/a") ,4);
+			}
+		else{
+			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
+			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
+			}
 		}
+#endif // wxUSE_STATUSBAR
 	update.Unlock();
 	}
 

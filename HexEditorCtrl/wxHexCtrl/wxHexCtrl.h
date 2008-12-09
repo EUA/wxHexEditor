@@ -21,38 +21,17 @@
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 
-#ifndef wxHEX_CTRL_H
-#define wxHEX_CTRL_H
+#ifndef __wxHexCtrl__
+#define __wxHexCtrl__
 
 #include <wx/textctrl.h>
 #include <wx/caret.h>
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
-#include "TagDialogGui.h"
+#include "Tag.h"
 #define idTagMenu 1500
-#include <wx/colordlg.h>
-#include <wx/popupwin.h>
-struct TagElement{
-			unsigned start;
-			unsigned end;
-			wxString tag;
-			wxColourData FontClrData;
-			wxColourData NoteClrData;
-			//WXFont tagFont;
-			};
-WX_DEFINE_ARRAY(TagElement *, wxArrayTAG);
 
-class TagDialog : public TagDialogGui{
-	public:
-		TagDialog( TagElement& TE, wxWindow* parent );
-		void OnFontColor( wxCommandEvent& event );
-		void OnNoteColor( wxCommandEvent& event );
-		void OnSave( wxCommandEvent& event );
-		void OnDelete( wxCommandEvent& event );
-		void ChooseColor( wxColourData& tmpClrData );
-		TagElement& Tag;
-		TagElement TmpTag;
-	};
+WX_DEFINE_ARRAY(TagElement *, wxArrayTAG);
 
 class wxHexCtrl : public wxScrolledWindow{
 	public:
@@ -132,7 +111,6 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			bool selected;		//selection available variable
 			} select;
 		void TagPainter( wxMemoryDC& DC, TagElement& TG );
-		void TagPopup(TagElement& TG, const wxPoint& pos, wxWindow *parent );
 		void RePaint(){
 			wxPaintEvent painter;
 			OnPaint( painter );

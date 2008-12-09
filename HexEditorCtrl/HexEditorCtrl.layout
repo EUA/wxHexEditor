@@ -13,10 +13,16 @@
 	<File name="main.h" open="0" top="0" tabpos="1">
 		<Cursor position="282" topLine="0" />
 	</File>
-	<File name="wxHexCtrl/wxHexCtrl.cpp" open="0" top="0" tabpos="5">
+	<File name="wxHexCtrl/Tag.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="66" />
+	</File>
+	<File name="wxHexCtrl/Tag.h" open="0" top="0" tabpos="0">
+		<Cursor position="1773" topLine="12" />
+	</File>
+	<File name="wxHexCtrl/wxHexCtrl.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="25395" topLine="865" />
 	</File>
-	<File name="wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="6">
+	<File name="wxHexCtrl/wxHexCtrl.h" open="1" top="0" tabpos="6">
 		<Cursor position="5672" topLine="73" />
 	</File>
 </CodeBlocks_layout_file>

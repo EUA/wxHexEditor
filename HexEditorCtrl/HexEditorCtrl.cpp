@@ -43,20 +43,27 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
     }
 
 void HexEditorCtrl::Dynamic_Connector(){
+	this->Connect( idTagMenu, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
+	text_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
 	hex_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	text_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
-
 	}
 
 void HexEditorCtrl::Dynamic_Disconnector(){
+	this->Disconnect( idTagMenu, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+
 	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
 	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
 	text_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl	->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
+	text_ctrl	->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	text_ctrl	->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	}
@@ -94,6 +101,21 @@ void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 	hex_location /=2;	// Hex location is now Byte location
 	char rdchr = hex_ctrl->ReadByte(hex_location);
 	text_ctrl->Replace(	hex_location, rdchr, true );
+	}
+//-----MENUS--------//
+
+void HexEditorCtrl::ShowContextMenu(const wxPoint& pos){
+    wxMenu menu;
+    menu.Append(wxID_ABOUT, _T("&About"));
+    menu.Append(idTagMenu, _T("Tag Selection"));
+    menu.AppendSeparator();
+    menu.Append(wxID_EXIT, _T("E&xit"));
+    PopupMenu(&menu, pos.x, pos.y);
+    // test for destroying items in popup menus
+#if 0 // doesn't work in wxGTK!
+    menu.Destroy(Menu_Popup_Submenu);
+    PopupMenu( &menu, event.GetX(), event.GetY() );
+#endif // 0
 	}
 
 //-----VISUAL FUNCTIONS------//
@@ -270,6 +292,22 @@ void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
 	if(selection.state == selector::SELECTION_TRUE)
 		selection.state = selector::SELECTION_END;
 	event.Skip();
+	}
+
+void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
+	ShowContextMenu( event.GetPosition() );
+	}
+
+void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
+	if(selection.state == selector::SELECTION_END){
+		TagElement *TE = new TagElement;
+		TE->start=selection.start_offset;
+		TE->end=selection.end_offset;
+		TagDialog *x=new TagDialog( *TE, this );
+		if( x->ShowModal() == wxID_SAVE )
+			TagArray.Add( TE );
+		x->Destroy();
+		}
 	}
 
 //------ADAPTERS----------//

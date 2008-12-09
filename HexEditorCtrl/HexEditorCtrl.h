@@ -34,9 +34,11 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 			Dynamic_Disconnector();
 
 			}
+		enum IDS{ idTagMenu=1001 };
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:
+		ArrayOfTAG TagArray;
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
 		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
@@ -76,11 +78,14 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();
 		void MyThaw();
+		void ShowContextMenu(const wxPoint& pos);
 		//------EVENTS---------//
 		void OnHexMouseFocus(wxMouseEvent& event);
 		void OnTextMouseFocus(wxMouseEvent& event);
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
+		void OnMouseRight( wxMouseEvent& event );
+		void OnTagSelection( wxCommandEvent& event );
 		//----ADAPTERS----//
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );

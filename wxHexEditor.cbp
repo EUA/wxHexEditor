@@ -3,6 +3,7 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="wxHexEditor" />
+		<Option pch_mode="0" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
@@ -39,13 +40,19 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="`wx-config --cflags`" />
+			<Add option="-I/home/compile/wxWidgets-2.8.9/lib/wx/include/gtk2-unicode-release-static-2.8" />
+			<Add option="-I/home/compile/wxWidgets-2.8.9/include" />
+			<Add option="-I/home/compile/wxWidgets-2.8.9/contrib/include" />
+			<Add option="-D_FILE_OFFSET_BITS=64" />
+			<Add option="-D_LARGE_FILES" />
+			<Add option="-D__WXGTK__" />
+			<Add option="-pthread" />
 			<Add option="-Winvalid-pch" />
 			<Add option="-include wx_pch.h" />
 			<Add option="-DWX_PRECOMP" />
 		</Compiler>
 		<Linker>
-			<Add option="`wx-config --libs`" />
+			<Add option="-L/home/compile/wxWidgets-2.8.9/lib -pthread   -L/usr/lib64   /home/compile/wxWidgets-2.8.9/lib/libwx_gtk2u-2.8.a -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lgthread-2.0 -lrt -lglib-2.0 -lXinerama -lXxf86vm -lSM -lpng -lz -ljpeg -ltiff -lwxregexu-2.8 -lz -ldl -lm" />
 		</Linker>
 		<Unit filename="DataInterpreter.h" />
 		<Unit filename="FileDifference.cpp" />
@@ -55,9 +62,13 @@
 		<Unit filename="HexEditorApp.cpp" />
 		<Unit filename="HexEditorApp.h" />
 		<Unit filename="HexEditorCtrl/HexEditorCtrl.cpp" />
+		<Unit filename="HexEditorCtrl/HexEditorCtrl.fbp" />
 		<Unit filename="HexEditorCtrl/HexEditorCtrl.h" />
 		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.cpp" />
 		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.h" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/Tag.cpp" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/Tag.h" />
+		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialog.fbp" />
 		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp" />
 		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialogGui.h" />
 		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />

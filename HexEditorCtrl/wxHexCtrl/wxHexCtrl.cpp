@@ -36,7 +36,7 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
     EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
     //EVT_MOUSE( wxHexCtrl::OnResize)
     EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
-    EVT_MENU( idTagMenu, wxHexCtrl::OnTagSelection )
+    EVT_MENU( __idTagMenu__, wxHexCtrl::OnTagSelection )
 	EVT_MOTION( wxHexCtrl::OnMouseMove )
     EVT_SET_FOCUS( wxHexCtrl::OnFocus )
     EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
@@ -742,7 +742,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 void wxHexCtrl::ShowContextMenu(const wxPoint& pos){
     wxMenu menu;
     menu.Append(wxID_ABOUT, _T("&About"));
-    menu.Append(idTagMenu, _T("Tag Selection"));
+    menu.Append(__idTagMenu__, _T("Tag Selection"));
     menu.AppendSeparator();
     menu.Append(wxID_EXIT, _T("E&xit"));
     PopupMenu(&menu, pos.x, pos.y);
@@ -751,7 +751,7 @@ void wxHexCtrl::ShowContextMenu(const wxPoint& pos){
     menu.Destroy(Menu_Popup_Submenu);
     PopupMenu( &menu, event.GetX(), event.GetY() );
 #endif // 0
-}
+	}
 
 void wxHexCtrl::OnTestCall( void ){
 	wxBell();

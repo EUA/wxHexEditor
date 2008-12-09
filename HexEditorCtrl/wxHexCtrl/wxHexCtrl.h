@@ -29,7 +29,7 @@
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
 #include "Tag.h"
-#define idTagMenu 1500
+#define __idTagMenu__ 1500
 
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 

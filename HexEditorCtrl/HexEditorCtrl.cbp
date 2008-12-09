@@ -43,6 +43,7 @@
 			<Add option="`wx-config --libs`" />
 		</Linker>
 		<Unit filename="HexEditorCtrl.cpp" />
+		<Unit filename="HexEditorCtrl.fbp" />
 		<Unit filename="HexEditorCtrl.h" />
 		<Unit filename="HexEditorCtrlGui.cpp" />
 		<Unit filename="HexEditorCtrlGui.h" />
@@ -50,6 +51,9 @@
 		<Unit filename="app.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
+		<Unit filename="wxHexCtrl/Tag.cpp" />
+		<Unit filename="wxHexCtrl/Tag.h" />
+		<Unit filename="wxHexCtrl/TagDialog.fbp" />
 		<Unit filename="wxHexCtrl/TagDialogGui.cpp" />
 		<Unit filename="wxHexCtrl/TagDialogGui.h" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.cpp" />

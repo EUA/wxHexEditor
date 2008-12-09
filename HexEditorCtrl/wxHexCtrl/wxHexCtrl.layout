@@ -11,15 +11,15 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="main.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="545" topLine="9" />
+		<Cursor position="1066" topLine="0" />
 	</File>
 	<File name="main.h" open="0" top="0" tabpos="3">
 		<Cursor position="297" topLine="0" />
 	</File>
-	<File name="wxHexCtrl.cpp" open="0" top="0" tabpos="3">
+	<File name="wxHexCtrl.cpp" open="1" top="0" tabpos="3">
 		<Cursor position="22471" topLine="728" />
 	</File>
 	<File name="wxHexCtrl.h" open="0" top="0" tabpos="4">
-		<Cursor position="5832" topLine="116" />
+		<Cursor position="4995" topLine="88" />
 	</File>
 </CodeBlocks_layout_file>

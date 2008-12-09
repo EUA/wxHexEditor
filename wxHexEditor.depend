@@ -5439,7 +5439,7 @@
 	<wx/textctrl.h>
 	<wx/panel.h>
 
-1228790612 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
+1228860560 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
 	"HexEditorCtrlGui.h"
 
 1228790331 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
@@ -5455,7 +5455,7 @@
 	<wx/panel.h>
 	"wxHexCtrl/wxHexCtrl.h"
 
-1228796258 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
+1228859452 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
 	<wx/textctrl.h>
 	<wx/caret.h>
 	<wx/wx.h>

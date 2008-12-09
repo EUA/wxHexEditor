@@ -31,7 +31,7 @@
 #include "Tag.h"
 #define idTagMenu 1500
 
-WX_DEFINE_ARRAY(TagElement *, wxArrayTAG);
+WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 
 class wxHexCtrl : public wxScrolledWindow{
 	public:
@@ -104,13 +104,13 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		wxPoint PixelCoordToInternalCoord( wxPoint mouse );
 
 		// TAG Support and Selection
-		wxArrayTAG	TagArray;
+		ArrayOfTAG TagArray;
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );
 		struct selector: public TagElement{		//selection
 			bool selected;		//selection available variable
 			} select;
-		void TagPainter( wxMemoryDC& DC, TagElement& TG );
+virtual	void TagPainter( wxMemoryDC& DC, TagElement& TG );
 		void RePaint(){
 			wxPaintEvent painter;
 			OnPaint( painter );

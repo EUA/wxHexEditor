@@ -61,11 +61,12 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 
 	SetSelectionStyle( HexDefaultAttr );
 
-	HexDefaultAttr = wxTextAttr(( *wxBLACK ),
-								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
+	HexDefaultAttr = wxTextAttr( *wxBLACK,
+								*wxWHITE,
+								//wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
 
-    ClearSelection();
+    ClearSelection( false );
     SetDefaultStyle( HexDefaultAttr );
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;
@@ -73,6 +74,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
     select.start = select.end = 0;
     select.selected = false;
     CreateCaret();
+
   //  ChangeSize();
 
     wxCaret *caret = GetCaret();
@@ -91,8 +93,7 @@ wxHexCtrl::~wxHexCtrl()
 	wxBrush bbrush( HexDefaultAttr.GetBackgroundColour() );
     dc.SetBackground(bbrush );
     dc.Clear();
-	while(TagArray.Count() != 0)
-		TagArray.Remove(0);
+	TagArray.Clear();
 }
 
 void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
@@ -691,7 +692,6 @@ void wxHexCtrl::OnTagSelection( wxCommandEvent& event ){
 		if( x->ShowModal() == wxID_SAVE )
 			TagArray.Add( TE );
 		x->Destroy();
-		//else if (z == wxID_REMOVE)
 		}
 	}
 
@@ -888,4 +888,3 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 	hex_offset = hex_offset ? false : true;
 	SetValue( offset_position );
 	}
-

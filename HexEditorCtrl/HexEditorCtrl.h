@@ -32,6 +32,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 						long style=0);
 		~HexEditorCtrl( void ){
 			Dynamic_Disconnector();
+
 			}
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );

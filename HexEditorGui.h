@@ -62,7 +62,7 @@ class HexEditorGui : public wxFrame
 		
 	
 	public:
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxWidgets Application Template"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,444 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,444 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
 	
 };

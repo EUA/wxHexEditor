@@ -29,8 +29,10 @@
 #include "DataInterpreter.h"
 
 #include <wx/filename.h>
-#include <wx/aui/aui.h>
 #include <wx/dnd.h>
+#include <wx/artprov.h>
+#include <wx/aui/aui.h>
+#include <wx/aui/auibar.h>
 
 class HexEditorFrame : public HexEditorGui {
 	public:
@@ -54,7 +56,7 @@ class HexEditorFrame : public HexEditorGui {
 		DataInterpreter *MyInterpreter;
 	};
 
-class DnDFile : public wxFileDropTarget {
+class DnDFile : public wxFileDropTarget{
 	public:
 		DnDFile(wxAuiNotebook *pOwner, wxStatusBar *statusbarx, DataInterpreter *interpreterx) {
 			m_pOwner = pOwner;

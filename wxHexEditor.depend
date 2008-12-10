@@ -5406,10 +5406,10 @@
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1228790331 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
+1228864532 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
-1228790331 /home/C++/projects/wxHexEditor/HexEditor.h
+1228864384 /home/C++/projects/wxHexEditor/HexEditor.h
 	<wx/filename.h>
 	"FileDifference.h"
 	"DataInterpreter.h"
@@ -5439,7 +5439,7 @@
 	<wx/textctrl.h>
 	<wx/panel.h>
 
-1228860560 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
+1228867730 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
 	"HexEditorCtrlGui.h"
 
 1228790331 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
@@ -5455,7 +5455,7 @@
 	<wx/panel.h>
 	"wxHexCtrl/wxHexCtrl.h"
 
-1228859452 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
+1228867307 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h
 	<wx/textctrl.h>
 	<wx/caret.h>
 	<wx/wx.h>
@@ -5484,7 +5484,7 @@
 	<wx/aui/aui.h>
 	<wx/aui/auibar.h>
 
-1228795780 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
+1228867671 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
 	"HexEditorCtrl.h"
 
 1228790331 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
@@ -5493,7 +5493,7 @@
 	"wxHexCtrl/wxHexCtrl.h"
 	"HexEditorCtrlGui.h"
 
-1228804329 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
+1228867469 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
 	"wxHexCtrl.h"
 	"wx/caret.h"
 	"wx/numdlg.h"
@@ -5569,12 +5569,12 @@
 1228790331 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp
 	"TagDialogGui.h"
 
-1228790331 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/Tag.h
+1228867624 /home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/Tag.h
 	<wx/colordlg.h>
 	<wx/popupwin.h>
 	"TagDialogGui.h"
 
-1228790331 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/Tag.cpp
+1228867624 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/Tag.cpp
 	"Tag.h"
 
 1214957798 /home/C++/projects/DivFix++/resources/wxbitbtn_path.xpm

@@ -31,6 +31,18 @@ TagElement::TagElement(){
 	wxP = NULL;
 	}
 
+TagElement::TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
+			start(_start), end(_end), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
+	visible = false;
+	wxP = NULL;
+	}
+
+TagElement::~TagElement(){
+	if(wxP != NULL )
+		Hide();
+	tag.Clear();
+	}
+
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 	if( !visible ){
 		visible = true;

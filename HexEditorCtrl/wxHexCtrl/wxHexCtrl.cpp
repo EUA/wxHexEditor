@@ -71,7 +71,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;
     m_Margin.x = m_Margin.x = 0;
-    select.start = select.end = 0;
+
     select.selected = false;
     CreateCaret();
 
@@ -100,6 +100,7 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 	m_text.Clear();
 	if( cursor_reset )
 		SetInsertionPoint(0);
+	TagArray.Clear();
 	ClearSelection( RePaint );
 	}
 
@@ -733,7 +734,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 				TAX->Show( event.GetPosition()+((wxWindow*)event.GetEventObject())->ClientToScreen(wxPoint(0,0)) , this );
 				break;
 				}
-			else if( TAX->visible )
+			else if( TAX->visible == true )
 				TAX->Hide();
 			}
 		}

@@ -30,10 +30,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 						const wxPoint& pos=wxDefaultPosition,
 						const wxSize& size=wxDefaultSize,
 						long style=0);
-		~HexEditorCtrl( void ){
-			Dynamic_Disconnector();
-
-			}
+		~HexEditorCtrl( void );
 		enum IDS{ idTagMenu=1001 };
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
@@ -59,11 +56,12 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 */
 
 
-		void Clear( bool RePaint, bool cursor_reset=true );
+		void Clear( bool RePaint=false, bool cursor_reset=true );
 //		DECLARE_EVENT_TABLE()
 		virtual void OnResize( wxSizeEvent& event);
 		void ClearPaint( void );
 		void PaintSelection( void );
+		void PreparePaintTAGs( void );
 		void TagPaint( void );
 
 		struct selector{		//selection structure
@@ -91,7 +89,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		int GetLocalInsertionPoint( void );
 virtual	void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
-		int64_t start_offset;	//holds current start offset of file
+		int64_t page_offset;	//holds current start offset of file
 
 //		virtual void OnKeyboardChar( wxKeyEvent& event );
 //		virtual void OnKeyboardInput( wxKeyEvent& event );

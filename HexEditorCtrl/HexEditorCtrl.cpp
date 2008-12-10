@@ -39,8 +39,13 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	Dynamic_Connector();
 	selection.start_offset = selection.end_offset = 0;
 	selection.state = selector::SELECTION_FALSE;
-	start_offset=0;
+	page_offset=0;
     }
+HexEditorCtrl::~HexEditorCtrl( void ){
+	Dynamic_Disconnector();
+	Clear();
+	TagArray.Clear();
+	}
 
 void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( idTagMenu, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
@@ -84,8 +89,9 @@ void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, 
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
 	offset_ctrl->SetValue( position, hex_ctrl->BytePerLine() );
-	if( paint )
+	if( paint ){
 		PaintSelection();
+		}
 	MyBufferMutex.Unlock();
 	}
 
@@ -123,7 +129,7 @@ void HexEditorCtrl::ShowContextMenu(const wxPoint& pos){
 bool HexEditorCtrl::Selector( bool mode ){
 	static bool polarity_possitive;
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
-		selection.end_offset = start_offset + GetLocalHexInsertionPoint()/2;
+		selection.end_offset = page_offset + GetLocalHexInsertionPoint()/2;
 	else{
 		wxLogError(wxT("Selector without focuse captured"));
 		return false;
@@ -147,7 +153,7 @@ bool HexEditorCtrl::Select ( int64_t start_offset, int64_t end_offset ){
 		return false;
 		}
 	selection.state	= selector::SELECTION_END;
-	selection.start_offset = start_offset;
+	selection.start_offset = page_offset;
 	selection.end_offset  = end_offset;
 	PaintSelection( );
 	return true;
@@ -158,33 +164,72 @@ void inline HexEditorCtrl::ClearPaint( void ){
 	text_ctrl->ClearSelection();
 	}
 
-void HexEditorCtrl::PaintSelection( void ){
-	if(selection.state != selector::SELECTION_FALSE ){
-		int64_t start_byte = selection.start_offset;
-		int64_t end_byte = selection.end_offset;
+void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
+	TagElement *TAG;
+	TagElement *TAX;
+	for( unsigned i = 0 ; i < TagArray.Count() ; i ++ ){
+		TAG = TagArray.Item(i);
+		int64_t start_byte = TAG->start;
+		int64_t end_byte = TAG->end;
 
-		if(start_byte > end_byte){
+		if(start_byte > end_byte){							// swap if start > end
 			int64_t temp = start_byte;
 			start_byte = end_byte;
 			end_byte = temp;
 			}
 
-		if( start_byte <= start_offset )
-			start_byte = start_offset;
-		else if( start_byte >= start_offset + GetByteCount() ){
+		if( start_byte >= page_offset + GetByteCount() ){	// ...[..].TAG...
 			ClearPaint();
 			return;
 			}
+		else if( start_byte <= page_offset )				// ...TA[G..]....
+			start_byte = page_offset;
 
-		if( end_byte >= start_offset + GetByteCount() )
-			end_byte = GetByteCount() + start_offset;
-		else if( end_byte < start_offset ){
+		if( end_byte < page_offset ){						// ..TAG..[...]...
 			ClearPaint();
 			return;
 			}
+		else if( end_byte >= page_offset + GetByteCount() )	//...[..T]AG...
+			end_byte = GetByteCount() + page_offset;
 
-		start_byte	-= start_offset;
-		end_byte	-= start_offset;
+		start_byte	-= page_offset;
+		end_byte	-= page_offset;
+
+		TAX = new TagElement( start_byte, end_byte+1, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
+		text_ctrl->TagArray.Add( TAX );
+		TAX = new TagElement( start_byte*2, (end_byte+1)*2, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
+		hex_ctrl->TagArray.Add( TAX );
+		}
+	}
+
+void HexEditorCtrl::PaintSelection( void ){
+	PreparePaintTAGs();
+	if(selection.state != selector::SELECTION_FALSE ){
+		int64_t start_byte = selection.start_offset;
+		int64_t end_byte = selection.end_offset;
+
+		if(start_byte > end_byte){	// swap if start > end
+			int64_t temp = start_byte;
+			start_byte = end_byte;
+			end_byte = temp;
+			}
+
+		if( start_byte >= page_offset + GetByteCount() ){	// ...[..].TAG...
+			ClearPaint();
+			return;
+			}
+		else if( start_byte <= page_offset )				// ...TA[G..]....
+			start_byte = page_offset;
+
+		if( end_byte < page_offset ){						// ..TAG..[...]...
+			ClearPaint();
+			return;
+			}
+		else if( end_byte >= page_offset + GetByteCount() )	//...[..T]AG...
+			end_byte = GetByteCount() + page_offset;
+
+		start_byte	-= page_offset;
+		end_byte	-= page_offset;
 
 		text_ctrl->SetSelection(start_byte, end_byte+1);
 		hex_ctrl ->SetSelection(start_byte*2, (end_byte+1)*2);
@@ -304,8 +349,13 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 		TE->start=selection.start_offset;
 		TE->end=selection.end_offset;
 		TagDialog *x=new TagDialog( *TE, this );
-		if( x->ShowModal() == wxID_SAVE )
+		if( x->ShowModal() == wxID_SAVE ){
 			TagArray.Add( TE );
+			PreparePaintTAGs();
+			ClearPaint();
+			text_ctrl->RePaint();
+			hex_ctrl ->RePaint();
+			}
 		x->Destroy();
 		}
 	}
@@ -321,7 +371,6 @@ void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets positi
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}
-
 int64_t HexEditorCtrl::CursorOffset( void ){
-	return GetLocalHexInsertionPoint()/2 + start_offset;
+	return GetLocalHexInsertionPoint()/2 + page_offset;
 	}

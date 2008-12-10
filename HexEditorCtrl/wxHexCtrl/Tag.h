@@ -32,8 +32,10 @@
 class TagElement{
 	public:
 		TagElement();
-		unsigned start;
-		unsigned end;
+		~TagElement();
+		TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr);
+		int64_t start;
+		int64_t end;
 		wxString tag;
 		wxColourData FontClrData;
 		wxColourData NoteClrData;

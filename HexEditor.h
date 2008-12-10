@@ -142,30 +142,30 @@ class scrollthread:wxThreadHelper{
 			if(speed == 0)
 				continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 			int64_t FileLenght = parent->FileLenght();
-			parent->start_offset += ( parent->hex_ctrl->BytePerLine() )*speed;
-			if( parent->start_offset < 0 )
-				parent->start_offset = 0;
-			else if( parent->start_offset + parent->hex_ctrl->ByteCapacity() >= FileLenght ){
-				parent->start_offset = FileLenght - parent->hex_ctrl->ByteCapacity();
-				parent->start_offset += parent->hex_ctrl->BytePerLine() - (parent->start_offset % parent->hex_ctrl->BytePerLine()) ; //cosmetic
+			parent->page_offset += ( parent->hex_ctrl->BytePerLine() )*speed;
+			if( parent->page_offset < 0 )
+				parent->page_offset = 0;
+			else if( parent->page_offset + parent->hex_ctrl->ByteCapacity() >= FileLenght ){
+				parent->page_offset = FileLenght - parent->hex_ctrl->ByteCapacity();
+				parent->page_offset += parent->hex_ctrl->BytePerLine() - (parent->page_offset % parent->hex_ctrl->BytePerLine()) ; //cosmetic
 				}
 			wxMutexGuiEnter();
 		//	parent->MyFreeze();
-			parent->LoadFromOffset( parent->start_offset, false, false );
+			parent->LoadFromOffset( parent->page_offset, false, false );
 
 				parent->SetHexInsertionPoint(cursor);
 				parent->Selector();
 				parent->PaintSelection();
 
-			if( parent->offset_scroll->GetThumbPosition() != parent->start_offset / parent->hex_ctrl->ByteCapacity() )
-				parent->offset_scroll->SetThumbPosition( parent->start_offset / parent->hex_ctrl->ByteCapacity() );
+			if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->hex_ctrl->ByteCapacity() )
+				parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->hex_ctrl->ByteCapacity() );
 		//	parent->MyThaw();
 
 		//	wxYieldIfNeeded();
 			wxMutexGuiLeave();
 			GetThread()->Sleep(sleeper);
-			if( parent->start_offset == 0 ||
-				parent->start_offset + parent->hex_ctrl->ByteCapacity() >= FileLenght )
+			if( parent->page_offset == 0 ||
+				parent->page_offset + parent->hex_ctrl->ByteCapacity() >= FileLenght )
 				GetThread()->Pause();
 			}
 		return NULL;

@@ -818,7 +818,7 @@ inline bool wxHexTextCtrl::IsAllowedChar(const char& chr){
 	return ((chr !=173) && ( (chr>31 && chr<127) || chr>159));	//Visible Char filter
 	}
 
-inline wxChar wxHexTextCtrl::Filter(const char& ch){
+wxChar wxHexTextCtrl::Filter(const char& ch){
 	if( IsAllowedChar(ch) )
 		return ch;
 	else

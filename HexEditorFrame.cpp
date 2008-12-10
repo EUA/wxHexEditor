@@ -36,7 +36,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 			MinSize(wxSize(400,100)).
 			CloseButton(false).
 			Center().Layer(1)	);
-
+/*
     wxAuiToolBarItemArray prepend_items;
     wxAuiToolBarItemArray append_items;
     wxAuiToolBarItem item;
@@ -59,11 +59,12 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
     tb1->SetCustomOverflowItems(prepend_items, append_items);
     tb1->Realize();
 
+
     MyAUI -> AddPane(tb1, wxAuiPaneInfo().
                   Name(wxT("ToolBar")).Caption(wxT("Big Toolbar")).
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
-
+*/
 	MyInterpreter = new DataInterpreter( this, -1 );
 
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().

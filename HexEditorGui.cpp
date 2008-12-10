@@ -30,7 +30,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	fileMenu->Append( menuFileOpen );
 	
 	wxMenuItem* menuFileSave;
-	menuFileSave = new wxMenuItem( fileMenu, wxID_SAVE, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
+	menuFileSave = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileSave );
 	
 	wxMenuItem* menuFileClose;
@@ -151,6 +151,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	optionSizer->Add( m_check_unsigned, 0, wxALL, 5 );
 	
 	m_check_bigendian = new wxCheckBox( this, ID_CHK_BIGENDIAN, wxT("Big Endian"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_check_bigendian->SetValue(true);
 	
 	m_check_bigendian->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	

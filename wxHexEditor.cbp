@@ -78,7 +78,6 @@
 		<Unit filename="HexEditorGui.cpp" />
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="HexEditorGui.h" />
-		<Unit filename="version.h" />
 		<Unit filename="wx_pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
@@ -89,9 +88,9 @@
 			<debugger />
 			<lib_finder disable_auto="1" />
 			<AutoVersioning>
-				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
-				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
-				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Scheme minor_max="100" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="1" svn_directory="/home/C++/projects/wxHexEditor/svn" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%mm.%b of %p" changeslog_path="ChangesLog.txt" />
 			</AutoVersioning>
 		</Extensions>
 	</Project>

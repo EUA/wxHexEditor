@@ -138,7 +138,7 @@
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
                         <property name="help"></property>
-                        <property name="id">wxID_SAVE</property>
+                        <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Save</property>
                         <property name="name">menuFileSave</property>
@@ -149,7 +149,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
-                        <property name="bitmap"></property>
+                        <property name="bitmap">; Load From File [-1; -1]</property>
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
                         <property name="help"></property>
@@ -514,7 +514,7 @@
                             <property name="proportion">0</property>
                             <object class="wxCheckBox" expanded="1">
                                 <property name="bg"></property>
-                                <property name="checked">0</property>
+                                <property name="checked">1</property>
                                 <property name="context_help"></property>
                                 <property name="enabled">1</property>
                                 <property name="fg"></property>

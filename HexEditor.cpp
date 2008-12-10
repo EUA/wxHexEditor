@@ -661,10 +661,13 @@ void HexEditor::SetHexInsertionPoint( int local_hex_location){
 
 void HexEditor::UpdateCursorLocation( bool force ){
 	static wxMutex update;
-	static int64_t lastPoint=GetLocalHexInsertionPoint()/2;	//? Speed up Van goh
+
+	static int64_t lastPoint=0;				//? Speed up Van goh
 	if( !force )
 		if( lastPoint == GetLocalHexInsertionPoint()/2 )
 			return;
+
+	lastPoint = GetLocalHexInsertionPoint()/2;
 
 	update.Lock();
 	if( GetLocalHexInsertionPoint()/2+page_offset > myfile->Length() ){
@@ -712,7 +715,6 @@ void HexEditor::UpdateCursorLocation( bool force ){
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
-
 	}
 
 

@@ -36,7 +36,8 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
     EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
     //EVT_MOUSE( wxHexCtrl::OnResize)
     EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
-    EVT_MENU( __idTagMenu__, wxHexCtrl::OnTagSelection )
+    EVT_MENU( __idTagSelect__, wxHexCtrl::OnTagSelection )
+	EVT_MENU( __idTagEdit__, wxHexCtrl::OnTagEdit )
 	EVT_MOTION( wxHexCtrl::OnMouseMove )
     EVT_SET_FOCUS( wxHexCtrl::OnFocus )
     EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
@@ -71,7 +72,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;
     m_Margin.x = m_Margin.x = 0;
-
+	LastRightClickAt = wxPoint(0,0);
     select.selected = false;
     CreateCaret();
 
@@ -682,31 +683,6 @@ void wxHexCtrl::OnResize( wxSizeEvent &event ){
     event.Skip();
 	}
 
-
-void wxHexCtrl::OnTagSelection( wxCommandEvent& event ){
-	wxBell();
-	if(select.selected){
-		TagElement *TE = new TagElement;
-		TE->start=select.start;
-		TE->end=select.end;
-		TagDialog *x=new TagDialog( *TE, this );
-		if( x->ShowModal() == wxID_SAVE )
-			TagArray.Add( TE );
-		x->Destroy();
-		}
-	}
-
-void wxHexCtrl::OnMouseLeft( wxMouseEvent& event ){
-	SetInsertionPoint( PixelCoordToInternalPosition( event.GetPosition() ) );
-	select.start=GetInsertionPoint();
-	event.Skip();
-	}
-
-void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
-	event.Skip();
-	ShowContextMenu( event.GetPosition() );
-	}
-
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 #ifdef _DEBUG2_
 	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
@@ -740,18 +716,86 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 		}
 	}
 
-void wxHexCtrl::ShowContextMenu(const wxPoint& pos){
-    wxMenu menu;
-    menu.Append(wxID_ABOUT, _T("&About"));
-    menu.Append(__idTagMenu__, _T("Tag Selection"));
-    menu.AppendSeparator();
-    menu.Append(wxID_EXIT, _T("E&xit"));
-    PopupMenu(&menu, pos.x, pos.y);
+void wxHexCtrl::OnMouseLeft( wxMouseEvent& event ){
+	SetInsertionPoint( PixelCoordToInternalPosition( event.GetPosition() ) );
+	select.start=GetInsertionPoint();
+	}
+
+void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
+	event.Skip();
+	LastRightClickAt = event.GetPosition();
+	ShowContextMenu( LastRightClickAt );
+	}
+
+void wxHexCtrl::ShowContextMenu( wxPoint pos ){
+	wxMenu menu;
+
+	unsigned TagPosition = PixelCoordToInternalPosition( pos );
+	TagElement *TAG;
+	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
+		TAG = TagArray.Item(i);
+		if( (TagPosition >= TAG->start ) && (TagPosition < TAG->end ) ){	//end not included!
+			menu.Append(__idTagEdit__, _T("Tag Edit"));
+			break;
+			}
+		}
+
+	if( select.selected ){
+		menu.Append(__idTagSelect__, _T("Tag Selection"));
+		}
+//  menu.AppendSeparator();
+    PopupMenu(&menu, pos);
     // test for destroying items in popup menus
 #if 0 // doesn't work in wxGTK!
     menu.Destroy(Menu_Popup_Submenu);
     PopupMenu( &menu, event.GetX(), event.GetY() );
 #endif // 0
+	}
+
+void wxHexCtrl::OnTagEdit( wxCommandEvent& event ){
+	TagElement *TAG;
+	unsigned pos = PixelCoordToInternalPosition( LastRightClickAt );
+	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
+		TAG = TagArray.Item(i);
+		if( pos >= TAG->start && pos <= TAG->end ){
+			TAG->Hide();	//Hide first, or BUG by double hide...
+			TagElement TAGtemp = *TAG;
+			TagDialog *x=new TagDialog( TAGtemp, this );
+			switch( x->ShowModal() ){
+				case wxID_SAVE:
+					*TAG = TAGtemp;
+					break;
+				case wxID_DELETE:
+					{
+					delete TAG;
+					TagArray.Remove(TAG);
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		break;
+		}
+	}
+
+void wxHexCtrl::OnTagSelection( wxCommandEvent& event ){
+	if(select.selected){
+		TagElement *TAG = new TagElement;
+		TAG->start=select.start;
+		TAG->end=select.end;
+		TagDialog *x=new TagDialog( *TAG, this );
+		if( x->ShowModal() == wxID_SAVE)
+			TagArray.Add( TAG );
+		else
+			delete TAG;
+		x->Destroy();
+		}
+	}
+
+void wxHexCtrl::OnTagHideAll( void ){
+	for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
+		TagArray.Item(i)->Hide();
 	}
 
 void wxHexCtrl::OnTestCall( void ){

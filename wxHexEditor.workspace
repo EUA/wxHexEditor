@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="wxHexEditor Workspace">
-		<Project filename="../../../C++/projects/wxHexEditor/wxHexEditor.cbp" active="1" />
-		<Project filename="../../../C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cbp" />
-		<Project filename="../../../C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
+		<Project filename="wxHexEditor.cbp" active="1" />
+		<Project filename="HexEditorCtrl/HexEditorCtrl.cbp" />
+		<Project filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

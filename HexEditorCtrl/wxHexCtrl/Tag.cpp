@@ -60,9 +60,12 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 	}
 
 void TagElement::Hide( void ){
+	if( visible )
+		{
 		visible=false;
 		wxP->Destroy();
 		}
+	}
 
 //----------TAG DIALOG-----------//
 TagDialog::TagDialog(TagElement& TagE, wxWindow* parent):TagDialogGui( parent ),Tag(TagE){

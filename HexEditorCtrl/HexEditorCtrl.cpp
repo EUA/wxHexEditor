@@ -48,7 +48,8 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 	}
 
 void HexEditorCtrl::Dynamic_Connector(){
-	this->Connect( idTagMenu, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Connect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
@@ -61,7 +62,8 @@ void HexEditorCtrl::Dynamic_Connector(){
 	}
 
 void HexEditorCtrl::Dynamic_Disconnector(){
-	this->Disconnect( idTagMenu, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Disconnect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 
 	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
 	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
@@ -110,13 +112,31 @@ void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 	}
 //-----MENUS--------//
 
-void HexEditorCtrl::ShowContextMenu(const wxPoint& pos){
-    wxMenu menu;
-    menu.Append(wxID_ABOUT, _T("&About"));
-    menu.Append(idTagMenu, _T("Tag Selection"));
-    menu.AppendSeparator();
-    menu.Append(wxID_EXIT, _T("E&xit"));
-    PopupMenu(&menu, pos.x, pos.y);
+void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
+	wxMenu menu;
+	unsigned TagPosition;
+	if( event.GetEventObject() == hex_ctrl )
+		TagPosition = page_offset + (hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) / 2);
+	if( event.GetEventObject() == text_ctrl )
+		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
+
+	TagElement *TAG;
+	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
+		TAG = TagArray.Item(i);
+		if( (TagPosition >= TAG->start ) && (TagPosition <= TAG->end ) ){	//end not included!
+			menu.Append(idTagEdit, _T("Tag Edit"));
+			break;
+			}
+		}
+
+	if( selection.state == selector::SELECTION_END ){
+		menu.Append(idTagSelect, _T("Tag Selection"));
+		}
+//  menu.AppendSeparator();
+	wxPoint pos = event.GetPosition();
+	wxWindow *scr = (wxWindow*) event.GetEventObject();
+	pos += scr->GetPosition();
+    PopupMenu(&menu, pos);
     // test for destroying items in popup menus
 #if 0 // doesn't work in wxGTK!
     menu.Destroy(Menu_Popup_Submenu);
@@ -167,6 +187,8 @@ void inline HexEditorCtrl::ClearPaint( void ){
 void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagElement *TAG;
 	TagElement *TAX;
+	hex_ctrl->TagArray.Clear();
+	text_ctrl->TagArray.Clear();
 	for( unsigned i = 0 ; i < TagArray.Count() ; i ++ ){
 		TAG = TagArray.Item(i);
 		int64_t start_byte = TAG->start;
@@ -315,7 +337,7 @@ void HexEditorCtrl::OnTextMouseFocus(wxMouseEvent& event){
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	if(event.m_leftDown){
 		int new_location;
-		if( FindFocus() == hex_ctrl )
+		if( event.GetEventObject() == hex_ctrl )
 			new_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 		else if ( FindFocus() == text_ctrl )
 			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
@@ -340,7 +362,13 @@ void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
-	ShowContextMenu( event.GetPosition() );
+	if(event.GetEventObject() == hex_ctrl)
+		LastRightClickAt = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() )/2;
+	else if(event.GetEventObject() == text_ctrl)
+		LastRightClickAt = text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
+	else
+		std::cout << "Right click captured without ctrl!\n";
+	ShowContextMenu( event );
 	}
 
 void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
@@ -358,6 +386,43 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 			}
 		x->Destroy();
 		}
+	}
+void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
+	TagElement *TAG;
+	int64_t pos = LastRightClickAt;
+	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
+		TAG = TagArray.Item(i);
+		if( pos >= TAG->start && pos <= TAG->end ){
+			TagHideAll();	//Hide first, or BUG by double hide...
+			TagElement TAGtemp = *TAG;
+			TagDialog *x=new TagDialog( TAGtemp, this );
+			switch( x->ShowModal() ){
+				case wxID_SAVE:
+					*TAG = TAGtemp;
+					PreparePaintTAGs();
+					ClearPaint();
+					text_ctrl->RePaint();
+					hex_ctrl ->RePaint();
+					break;
+				case wxID_DELETE:
+					delete TAG;
+					TagArray.Remove(TAG);
+					PreparePaintTAGs();
+					ClearPaint();
+					text_ctrl->RePaint();
+					hex_ctrl ->RePaint();
+					break;
+				default:
+					break;
+				}
+			}
+		break;
+		}
+	}
+
+void HexEditorCtrl::TagHideAll( void ){
+	hex_ctrl->OnTagHideAll();
+	text_ctrl->OnTagHideAll();
 	}
 
 //------ADAPTERS----------//

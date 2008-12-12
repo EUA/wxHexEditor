@@ -31,7 +31,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 						const wxSize& size=wxDefaultSize,
 						long style=0);
 		~HexEditorCtrl( void );
-		enum IDS{ idTagMenu=1001 };
+		enum IDS{ idTagSelect=1001,idTagEdit };
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:
@@ -76,7 +76,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();
 		void MyThaw();
-		void ShowContextMenu(const wxPoint& pos);
+		void ShowContextMenu(const wxMouseEvent& event);
 		//------EVENTS---------//
 		void OnHexMouseFocus(wxMouseEvent& event);
 		void OnTextMouseFocus(wxMouseEvent& event);
@@ -84,6 +84,9 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseRight( wxMouseEvent& event );
 		void OnTagSelection( wxCommandEvent& event );
+		void OnTagEdit( wxCommandEvent& event );
+		void TagHideAll( void );
+		int64_t LastRightClickAt;
 		//----ADAPTERS----//
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );

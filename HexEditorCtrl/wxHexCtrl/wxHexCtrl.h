@@ -29,7 +29,9 @@
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
 #include "Tag.h"
-#define __idTagMenu__ 1500
+
+#define __idTagSelect__ 1500
+#define __idTagEdit__ 1501
 
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 
@@ -115,8 +117,10 @@ virtual	void TagPainter( wxMemoryDC& DC, TagElement& TG );
 			wxPaintEvent painter;
 			OnPaint( painter );
 			}
+		void OnTagHideAll( void );
 	protected:
 		// event handlers
+		wxPoint LastRightClickAt;
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );
@@ -127,7 +131,8 @@ virtual	void OnMouseMove( wxMouseEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void OnResize( wxSizeEvent &event );
 		void OnTagSelection( wxCommandEvent &event );
-		void ShowContextMenu(const wxPoint& pos);
+		void OnTagEdit( wxCommandEvent &event );
+		void ShowContextMenu( wxPoint pos );
 		DECLARE_EVENT_TABLE();
 
 		void OnTestCall(void); // 4 Test

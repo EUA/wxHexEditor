@@ -58,14 +58,29 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 {
 	HexDefaultAttr = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
-								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ) );
+								wxFont(
+									10,					// point size
+									wxMODERN,			// family
+									wxFONTSTYLE_NORMAL,	// style
+									wxFONTWEIGHT_BOLD,// weight
+									true,				// underline
+									wxT(""),			// facename
+									wxFONTENCODING_CP437) );// msdos encoding
+
 
 	SetSelectionStyle( HexDefaultAttr );
 
 	HexDefaultAttr = wxTextAttr( *wxBLACK,
 								*wxWHITE,
 								//wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
-								wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("") ));
+								wxFont(
+									10,					// point size
+									wxMODERN,			// family
+									wxFONTSTYLE_NORMAL,	// style
+									wxFONTWEIGHT_NORMAL,// weight
+									false,				// underline
+									wxT(""),			// facename
+									wxFONTENCODING_CP437) );// msdos encoding
 
     ClearSelection( false );
     SetDefaultStyle( HexDefaultAttr );
@@ -101,7 +116,16 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 	m_text.Clear();
 	if( cursor_reset )
 		SetInsertionPoint(0);
+	OnTagHideAll();
 	TagArray.Clear();
+	/*BUG!!!
+	TagElement *TAG;
+	while( TagArray.Count() > 0 ){
+		int x =  TagArray.Count();
+		TAG = TagArray.Item(0);
+		TagArray.Remove(0);
+		}
+	*/
 	ClearSelection( RePaint );
 	}
 
@@ -866,7 +890,7 @@ wxChar wxHexTextCtrl::Filter(const char& ch){
 	if( IsAllowedChar(ch) )
 		return ch;
 	else
-		return ' '; //Special Character '?'
+		return '.'; //Special Character '?'
 	}
 
 void wxHexTextCtrl::Replace(unsigned text_location, const wxChar& value, bool paint){

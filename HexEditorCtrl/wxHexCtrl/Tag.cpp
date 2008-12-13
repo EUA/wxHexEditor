@@ -34,12 +34,13 @@ TagElement::TagElement(){
 TagElement::TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
 			start(_start), end(_end), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
 	visible = false;
-	wxP = NULL;
 	}
 
 TagElement::~TagElement(){
-	if(wxP != NULL )
+	if( visible )
 		Hide();
+	if(wxP != NULL)
+		wxP->Destroy();
 	tag.Clear();
 	}
 
@@ -63,7 +64,7 @@ void TagElement::Hide( void ){
 	if( visible )
 		{
 		visible=false;
-		wxP->Destroy();
+		wxP->Hide();
 		}
 	}
 

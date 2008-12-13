@@ -44,15 +44,15 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
 	Clear();
-	TagArray.Clear();
+	MainTagArray.Clear();
 	}
 
 void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 
-	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
-	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
+	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
@@ -65,8 +65,8 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 	this->Disconnect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 
-	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnHexMouseFocus),NULL, this);
-	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnTextMouseFocus),NULL, this);
+	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
 	text_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
@@ -121,8 +121,8 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
 	TagElement *TAG;
-	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
-		TAG = TagArray.Item(i);
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
+		TAG = MainTagArray.Item(i);
 		if( (TagPosition >= TAG->start ) && (TagPosition <= TAG->end ) ){	//end not included!
 			menu.Append(idTagEdit, _T("Tag Edit"));
 			break;
@@ -189,8 +189,8 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagElement *TAX;
 	hex_ctrl->TagArray.Clear();
 	text_ctrl->TagArray.Clear();
-	for( unsigned i = 0 ; i < TagArray.Count() ; i ++ ){
-		TAG = TagArray.Item(i);
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ ){
+		TAG = MainTagArray.Item(i);
 		int64_t start_byte = TAG->start;
 		int64_t end_byte = TAG->end;
 
@@ -200,18 +200,15 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 			end_byte = temp;
 			}
 
-		if( start_byte >= page_offset + GetByteCount() ){	// ...[..].TAG...
-			ClearPaint();
-			return;
-			}
-		else if( start_byte <= page_offset )				// ...TA[G..]....
+		if( start_byte >= page_offset + GetByteCount() )	// ...[..].TAG...
+			continue;
+		else if( end_byte < page_offset )					// ..TAG..[...]...
+			continue;
+
+		if( start_byte <= page_offset )						// ...TA[G..]....
 			start_byte = page_offset;
 
-		if( end_byte < page_offset ){						// ..TAG..[...]...
-			ClearPaint();
-			return;
-			}
-		else if( end_byte >= page_offset + GetByteCount() )	//...[..T]AG...
+		if( end_byte >= page_offset + GetByteCount() )		//...[..T]AG...
 			end_byte = GetByteCount() + page_offset;
 
 		start_byte	-= page_offset;
@@ -320,18 +317,17 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
     }
 //------EVENTS---------//
-void HexEditorCtrl::OnHexMouseFocus(wxMouseEvent& event){
+void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	selection.state=selector::SELECTION_FALSE;
 	ClearPaint();
-	hex_ctrl->SetFocus();
-	SetLocalHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
-	}
-
-void HexEditorCtrl::OnTextMouseFocus(wxMouseEvent& event){
-	selection.state=selector::SELECTION_FALSE;
-	ClearPaint();
-	text_ctrl->SetFocus();
-	SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) - 1);
+	if( event.GetEventObject() == hex_ctrl ){
+		hex_ctrl->SetFocus();
+		SetLocalHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
+		}
+	else if( event.GetEventObject() == text_ctrl ){
+		text_ctrl->SetFocus();
+		SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) - 1);
+		}
 	}
 
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
@@ -378,7 +374,7 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 		TE->end=selection.end_offset;
 		TagDialog *x=new TagDialog( *TE, this );
 		if( x->ShowModal() == wxID_SAVE ){
-			TagArray.Add( TE );
+			MainTagArray.Add( TE );
 			PreparePaintTAGs();
 			ClearPaint();
 			text_ctrl->RePaint();
@@ -390,8 +386,8 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
 	int64_t pos = LastRightClickAt;
-	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
-		TAG = TagArray.Item(i);
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
+		TAG = MainTagArray.Item(i);
 		if( pos >= TAG->start && pos <= TAG->end ){
 			TagHideAll();	//Hide first, or BUG by double hide...
 			TagElement TAGtemp = *TAG;
@@ -406,7 +402,7 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 					break;
 				case wxID_DELETE:
 					delete TAG;
-					TagArray.Remove(TAG);
+					MainTagArray.Remove(TAG);
 					PreparePaintTAGs();
 					ClearPaint();
 					text_ctrl->RePaint();

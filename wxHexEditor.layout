@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="DataInterpreter.h" open="0" top="0" tabpos="4">
-		<Cursor position="4263" topLine="58" />
+		<Cursor position="5884" topLine="97" />
 	</File>
 	<File name="FileDifference.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="1830" topLine="44" />
@@ -10,11 +10,11 @@
 	<File name="FileDifference.h" open="0" top="0" tabpos="4">
 		<Cursor position="3184" topLine="41" />
 	</File>
-	<File name="HexEditor.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="20401" topLine="527" />
+	<File name="HexEditor.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="9036" topLine="195" />
 	</File>
 	<File name="HexEditor.h" open="0" top="0" tabpos="6">
-		<Cursor position="4732" topLine="0" />
+		<Cursor position="5029" topLine="130" />
 	</File>
 	<File name="HexEditorApp.cpp" open="0" top="0" tabpos="12">
 		<Cursor position="1839" topLine="0" />
@@ -22,38 +22,38 @@
 	<File name="HexEditorApp.h" open="0" top="0" tabpos="8">
 		<Cursor position="413" topLine="0" />
 	</File>
-	<File name="HexEditorCtrl/HexEditorCtrl.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="14813" topLine="379" />
+	<File name="HexEditorCtrl/HexEditorCtrl.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="9081" topLine="188" />
 	</File>
-	<File name="HexEditorCtrl/HexEditorCtrl.h" open="1" top="0" tabpos="5">
-		<Cursor position="4191" topLine="69" />
+	<File name="HexEditorCtrl/HexEditorCtrl.h" open="0" top="0" tabpos="4">
+		<Cursor position="4405" topLine="68" />
 	</File>
 	<File name="HexEditorCtrl/HexEditorCtrlGui.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="2766" topLine="32" />
+		<Cursor position="2591" topLine="35" />
 	</File>
 	<File name="HexEditorCtrl/HexEditorCtrlGui.h" open="0" top="0" tabpos="0">
 		<Cursor position="1091" topLine="29" />
 	</File>
-	<File name="HexEditorCtrl/wxHexCtrl/Tag.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="2030" topLine="16" />
+	<File name="HexEditorCtrl/wxHexCtrl/Tag.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="2106" topLine="26" />
 	</File>
 	<File name="HexEditorCtrl/wxHexCtrl/Tag.h" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="23304" topLine="775" />
+		<Cursor position="4444" topLine="100" />
 	</File>
-	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" open="1" top="0" tabpos="1">
-		<Cursor position="5384" topLine="90" />
+	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="1">
+		<Cursor position="5401" topLine="95" />
 	</File>
-	<File name="HexEditorFrame.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="5204" topLine="108" />
+	<File name="HexEditorFrame.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="3833" topLine="61" />
 	</File>
 	<File name="HexEditorFrame.h" open="0" top="0" tabpos="7">
 		<Cursor position="1807" topLine="7" />
 	</File>
 	<File name="HexEditorGui.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="9249" topLine="160" />
+		<Cursor position="6543" topLine="52" />
 	</File>
 	<File name="HexEditorGui.h" open="0" top="0" tabpos="9">
 		<Cursor position="338" topLine="0" />

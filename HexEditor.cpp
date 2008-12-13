@@ -55,8 +55,8 @@ void HexEditor::Dynamic_Connector(){
 //	hex_ctrl 	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
     text_ctrl	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
-	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
+	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
+	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl	->Connect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
@@ -72,8 +72,8 @@ void HexEditor::Dynamic_Disconnector(){
 //	hex_ctrl ->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
     text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnHexMouseFocus),NULL, this);
-	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnTextMouseFocus),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
+	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
@@ -565,18 +565,8 @@ bool HexEditor::Selector(bool mode){
 	return temp;
 	}
 
-void HexEditor::OnHexMouseFocus(wxMouseEvent& event){
-	HexEditorCtrl::OnHexMouseFocus( event );
-	#if wxUSE_STATUSBAR
-    if ( statusbar ){
-		statusbar->SetStatusText(_("Block: \tn/a"), 3);
-		statusbar->SetStatusText(_("Size: \tn/a") ,4);
-		}
-	#endif // wxUSE_STATUSBAR
-	UpdateCursorLocation();
-	}
-void HexEditor::OnTextMouseFocus(wxMouseEvent& event){
-	HexEditorCtrl::OnTextMouseFocus( event );
+void HexEditor::OnMouseLeft(wxMouseEvent& event){
+	HexEditorCtrl::OnMouseLeft( event );
 	#if wxUSE_STATUSBAR
     if ( statusbar ){
 		statusbar->SetStatusText(_("Block: \tn/a"), 3);
@@ -662,7 +652,7 @@ void HexEditor::SetHexInsertionPoint( int local_hex_location){
 void HexEditor::UpdateCursorLocation( bool force ){
 	static wxMutex update;
 
-	static int64_t lastPoint=0;				//? Speed up Van goh
+	static int64_t lastPoint=-1;				//? Speed up Van goh
 	if( !force )
 		if( lastPoint == GetLocalHexInsertionPoint()/2 )
 			return;

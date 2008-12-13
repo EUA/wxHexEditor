@@ -74,8 +74,7 @@ protected:
 		void OnKeyboardSelectionEnd( wxKeyEvent& event );
 		void OnMouseTest( wxMouseEvent& event );
 		//void RefreshCursor(int64_t cursor_location = -1 );
-		void OnHexMouseFocus( wxMouseEvent& event );
-		void OnTextMouseFocus( wxMouseEvent& event );
+		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseWhell( wxMouseEvent& event );

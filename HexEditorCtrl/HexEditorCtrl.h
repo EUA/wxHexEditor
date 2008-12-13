@@ -35,7 +35,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:
-		ArrayOfTAG TagArray;
+		ArrayOfTAG MainTagArray;
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
 		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
@@ -78,8 +78,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void MyThaw();
 		void ShowContextMenu(const wxMouseEvent& event);
 		//------EVENTS---------//
-		void OnHexMouseFocus(wxMouseEvent& event);
-		void OnTextMouseFocus(wxMouseEvent& event);
+		void OnMouseLeft(wxMouseEvent& event);
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseRight( wxMouseEvent& event );

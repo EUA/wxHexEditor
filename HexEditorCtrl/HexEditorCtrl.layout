@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="HexEditorCtrl.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="6842" topLine="101" />
+		<Cursor position="12818" topLine="305" />
 	</File>
 	<File name="HexEditorCtrl.h" open="0" top="0" tabpos="3">
 		<Cursor position="4193" topLine="64" />
@@ -20,7 +20,7 @@
 		<Cursor position="1773" topLine="12" />
 	</File>
 	<File name="wxHexCtrl/wxHexCtrl.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="22076" topLine="723" />
+		<Cursor position="9225" topLine="292" />
 	</File>
 	<File name="wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="6">
 		<Cursor position="5949" topLine="117" />

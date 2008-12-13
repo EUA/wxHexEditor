@@ -83,7 +83,8 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	MyAUI->Update();
 	}
 
-HexEditorFrame::~HexEditorFrame(){}
+HexEditorFrame::~HexEditorFrame(){
+	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 	wxFileDialog* filediag = new wxFileDialog(this,

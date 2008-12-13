@@ -35,7 +35,7 @@
 class DataInterpreter : public InterpreterGui{
 	protected:
 		struct unidata{
-			char *raw, *mraw;
+			char *raw, *mraw;	//big endian and little endian
 			struct endian{
 				int8_t *bit8;
 				int16_t *bit16;

@@ -5,7 +5,7 @@
 		<Cursor position="2599" topLine="38" />
 	</File>
 	<File name="Tag.h" open="0" top="0" tabpos="0">
-		<Cursor position="1779" topLine="22" />
+		<Cursor position="2066" topLine="27" />
 	</File>
 	<File name="TagDialogGui.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="309" topLine="8" />
@@ -23,9 +23,9 @@
 		<Cursor position="297" topLine="0" />
 	</File>
 	<File name="wxHexCtrl.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="22003" topLine="33" />
+		<Cursor position="4442" topLine="100" />
 	</File>
 	<File name="wxHexCtrl.h" open="0" top="0" tabpos="4">
-		<Cursor position="5411" topLine="27" />
+		<Cursor position="5411" topLine="13" />
 	</File>
 </CodeBlocks_layout_file>

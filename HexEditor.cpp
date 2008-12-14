@@ -108,25 +108,27 @@ void HexEditor::FileOpen(wxFileName& myfn){
 	}
 
 bool HexEditor::FileSave( bool question ){
-	wxMessageDialog *msg = new wxMessageDialog(
-								this, _( "Do you want to save this file?\n")
-							, _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-	int selection=msg->ShowModal();
-	msg->Destroy();
-	switch( selection ){
-		case(wxID_YES):
-			if( !myfile->Apply() ){
-				wxMessageDialog *msg = new wxMessageDialog(
-							this, _( "File cannot saved. Operation Cancelled\n")
-							, _("File Save Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-				msg->ShowModal();
-				msg->Destroy();
-				return false;
-				}
-		case(wxID_NO):
-			return true;
-		case(wxID_CANCEL):
-		default: return false;
+	if( myfile->IsChanged() ){
+		wxMessageDialog *msg = new wxMessageDialog(
+									this, _( "Do you want to save this file?\n")
+								, _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
+		int selection=msg->ShowModal();
+		msg->Destroy();
+		switch( selection ){
+			case(wxID_YES):
+				if( !myfile->Apply() ){
+					wxMessageDialog *msg = new wxMessageDialog(
+								this, _( "File cannot saved. Operation Cancelled\n")
+								, _("File Save Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+					msg->ShowModal();
+					msg->Destroy();
+					return false;
+					}
+			case(wxID_NO):
+				return true;
+			case(wxID_CANCEL):
+			default: return false;
+			}
 		}
 	}
 
@@ -578,14 +580,16 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 
 void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 #ifdef _DEBUG_
-	std::cout << "MouseWhell Rotation = " << event.GetWheelRotation() << "\t Delta = " << event.GetWheelDelta() << std::endl;
+	std::cout << "MouseWhell Rotation = " << event.GetWheelRotation() << "\t Delta = " << event.GetWheelDelta()
+			<< "\tLinesPerAction: " << event.GetLinesPerAction() << std::endl;
+
 #endif
 	if(event.GetWheelRotation() > 0){
 //		if (ActiveLine() == 1){	//If cursor first line
 			if( page_offset == 0 )
 				wxBell();					// there is no line over up!
 			else{							// Illusion code
-				page_offset -= BytePerLine(); 	//offset decreasing one line
+				page_offset -= BytePerLine()*event.GetLinesPerAction(); 	//offset decreasing
 				LoadFromOffset( page_offset );	//update text with new location, makes screen slide illusion
 				SetHexInsertionPoint(GetLocalHexInsertionPoint() + HexPerLine());	//restoring cursor location
 				}
@@ -596,7 +600,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 	else if(event.GetWheelRotation() < 0 ){
 //		if ( ActiveLine() == LineCount() ){			//If cursor at bottom of screen
 			if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
-				page_offset += BytePerLine();		//offset increasing one line
+				page_offset += BytePerLine()*event.GetLinesPerAction();		//offset increasing
 				LoadFromOffset( page_offset );		//update text with new location, makes screen slide illusion
 				SetHexInsertionPoint(GetLocalHexInsertionPoint() - HexPerLine());	//restoring cursor location
 				}

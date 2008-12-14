@@ -46,7 +46,8 @@ class HexEditorFrame : public HexEditorGui {
 		void OnFileClose( wxCommandEvent& event );
 		void OnEditUndo( wxCommandEvent& event );
 		void OnEditRedo( wxCommandEvent& event );
-		void OnViewInterpretor( wxCommandEvent& event );
+		void OnUpdateUI( wxUpdateUIEvent& event );
+		void OnViewMenu( wxCommandEvent& event );
 //		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 //		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 
@@ -54,6 +55,7 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiNotebook *MyNotebook;
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
+		wxAuiToolBar* Toolbar;
 	};
 
 class DnDFile : public wxFileDropTarget{

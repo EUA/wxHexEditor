@@ -26,60 +26,60 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	mbar = new wxMenuBar( 0 );
 	fileMenu = new wxMenu();
 	wxMenuItem* menuFileOpen;
-	menuFileOpen = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Open") ) + wxT('\t') + wxT("CTRL+O"), wxEmptyString, wxITEM_NORMAL );
+	menuFileOpen = new wxMenuItem( fileMenu, wxID_OPEN, wxString( wxT("&Open") ) + wxT('\t') + wxT("CTRL+O"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileOpen );
 	
 	wxMenuItem* menuFileSave;
-	menuFileSave = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
+	menuFileSave = new wxMenuItem( fileMenu, wxID_SAVE, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileSave );
 	
 	wxMenuItem* menuFileClose;
-	menuFileClose = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Close") ) + wxT('\t') + wxT("CTRL+W"), wxEmptyString, wxITEM_NORMAL );
+	menuFileClose = new wxMenuItem( fileMenu, idClose, wxString( wxT("&Close") ) + wxT('\t') + wxT("CTRL+W"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileClose );
 	
 	fileMenu->AppendSeparator();
 	
 	wxMenuItem* menuFileQuit;
-	menuFileQuit = new wxMenuItem( fileMenu, idMenuQuit, wxString( wxT("&Quit") ) + wxT('\t') + wxT("CTRL+Q"), wxT("Quit the application"), wxITEM_NORMAL );
+	menuFileQuit = new wxMenuItem( fileMenu, wxID_CLOSE, wxString( wxT("&Quit") ) + wxT('\t') + wxT("CTRL+Q"), wxT("Quit the application"), wxITEM_NORMAL );
 	fileMenu->Append( menuFileQuit );
 	
 	mbar->Append( fileMenu, wxT("&File") );
 	
 	editMenu = new wxMenu();
 	wxMenuItem* menuEditUndo;
-	menuEditUndo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxEmptyString, wxITEM_NORMAL );
+	menuEditUndo = new wxMenuItem( editMenu, wxID_UNDO, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditUndo );
 	
 	wxMenuItem* menuEditRedo;
-	menuEditRedo = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxEmptyString, wxITEM_NORMAL );
+	menuEditRedo = new wxMenuItem( editMenu, wxID_REDO, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditRedo );
 	
 	editMenu->AppendSeparator();
 	
 	wxMenuItem* menuEditCopy;
-	menuEditCopy = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Copy") ) + wxT('\t') + wxT("CTRL+C"), wxEmptyString, wxITEM_NORMAL );
+	menuEditCopy = new wxMenuItem( editMenu, wxID_COPY, wxString( wxT("Copy") ) + wxT('\t') + wxT("CTRL+C"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditCopy );
 	menuEditCopy->Enable( false );
 	
 	wxMenuItem* menuEditCut;
-	menuEditCut = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Cut") ) + wxT('\t') + wxT("CTRL+X"), wxEmptyString, wxITEM_NORMAL );
+	menuEditCut = new wxMenuItem( editMenu, wxID_CUT, wxString( wxT("Cut") ) + wxT('\t') + wxT("CTRL+X"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditCut );
 	menuEditCut->Enable( false );
 	
 	wxMenuItem* menuEditPaste;
-	menuEditPaste = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Paste") ) + wxT('\t') + wxT("CTRL+V"), wxEmptyString, wxITEM_NORMAL );
+	menuEditPaste = new wxMenuItem( editMenu, wxID_PASTE, wxString( wxT("Paste") ) + wxT('\t') + wxT("CTRL+V"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditPaste );
 	menuEditPaste->Enable( false );
 	
 	editMenu->AppendSeparator();
 	
 	wxMenuItem* menuEditFind;
-	menuEditFind = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Find") ) + wxT('\t') + wxT("CTRL+F"), wxEmptyString, wxITEM_NORMAL );
+	menuEditFind = new wxMenuItem( editMenu, wxID_FIND, wxString( wxT("Find") ) + wxT('\t') + wxT("CTRL+F"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditFind );
 	menuEditFind->Enable( false );
 	
 	wxMenuItem* menuEditReplace;
-	menuEditReplace = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Replace") ) + wxT('\t') + wxT("CTRL+R"), wxEmptyString, wxITEM_NORMAL );
+	menuEditReplace = new wxMenuItem( editMenu, wxID_REPLACE, wxString( wxT("Replace") ) + wxT('\t') + wxT("CTRL+R"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditReplace );
 	menuEditReplace->Enable( false );
 	
@@ -92,14 +92,45 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	viewMenu = new wxMenu();
 	wxMenuItem* menuViewInterprater;
-	menuViewInterprater = new wxMenuItem( viewMenu, wxID_INTERPRETER, wxString( wxT("Data Interpreter") ) , wxEmptyString, wxITEM_CHECK );
+	menuViewInterprater = new wxMenuItem( viewMenu, idInterpreter, wxString( wxT("Data Interpreter") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewInterprater );
+	
+	wxMenuItem* menuViewToolbar;
+	menuViewToolbar = new wxMenuItem( viewMenu, idToolbar, wxString( wxT("Toolbar") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( menuViewToolbar );
 	
 	mbar->Append( viewMenu, wxT("&View") );
 	
+	optionsMenu = new wxMenu();
+	menuOptionsWritemode = new wxMenu();
+	wxMenuItem* menuOptionsWritemodeRO;
+	menuOptionsWritemodeRO = new wxMenuItem( menuOptionsWritemode, wxID_ANY, wxString( wxT("Read-Only") ) , wxEmptyString, wxITEM_RADIO );
+	menuOptionsWritemode->Append( menuOptionsWritemodeRO );
+	menuOptionsWritemodeRO->Enable( false );
+	
+	wxMenuItem* menuOptionsWritemodeRW;
+	menuOptionsWritemodeRW = new wxMenuItem( menuOptionsWritemode, wxID_ANY, wxString( wxT("Writeable") ) , wxEmptyString, wxITEM_RADIO );
+	menuOptionsWritemode->Append( menuOptionsWritemodeRW );
+	menuOptionsWritemodeRW->Enable( false );
+	menuOptionsWritemodeRW->Check( true );
+	
+	wxMenuItem* menuOptionsWritemodeDW;
+	menuOptionsWritemodeDW = new wxMenuItem( menuOptionsWritemode, wxID_ANY, wxString( wxT("Direct Write") ) , wxEmptyString, wxITEM_RADIO );
+	menuOptionsWritemode->Append( menuOptionsWritemodeDW );
+	menuOptionsWritemodeDW->Enable( false );
+	
+	optionsMenu->Append( -1, wxT("Write Mode"), menuOptionsWritemode );
+	
+	wxMenuItem* menuOptionsPreferences;
+	menuOptionsPreferences = new wxMenuItem( optionsMenu, wxID_PREFERENCES, wxString( wxT("Preferences") ) , wxEmptyString, wxITEM_NORMAL );
+	optionsMenu->Append( menuOptionsPreferences );
+	menuOptionsPreferences->Enable( false );
+	
+	mbar->Append( optionsMenu, wxT("Options") );
+	
 	helpMenu = new wxMenu();
 	wxMenuItem* menuHelpAbout;
-	menuHelpAbout = new wxMenuItem( helpMenu, idMenuAbout, wxString( wxT("&About") ) + wxT('\t') + wxT("F1"), wxT("Show info about this application"), wxITEM_NORMAL );
+	menuHelpAbout = new wxMenuItem( helpMenu, wxID_ABOUT, wxString( wxT("&About") ) + wxT('\t') + wxT("F1"), wxT("Show info about this application"), wxITEM_NORMAL );
 	helpMenu->Append( menuHelpAbout );
 	
 	mbar->Append( helpMenu, wxT("&Help") );
@@ -118,7 +149,8 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
 	this->Connect( menuEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditUndo ) );
 	this->Connect( menuEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditRedo ) );
-	this->Connect( menuViewInterprater->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
+	this->Connect( menuViewInterprater->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Connect( menuViewToolbar->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -132,7 +164,8 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditUndo ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditRedo ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewInterpretor ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -246,4 +279,12 @@ InterpreterGui::~InterpreterGui()
 	// Disconnect Events
 	m_check_unsigned->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
 	m_check_bigendian->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
+}
+
+InfoPanel::InfoPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+}
+
+InfoPanel::~InfoPanel()
+{
 }

@@ -36,8 +36,9 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 			MinSize(wxSize(400,100)).
 			CloseButton(false).
 			Center().Layer(1)	);
-/*
+
     wxAuiToolBarItemArray prepend_items;
+/*
     wxAuiToolBarItemArray append_items;
     wxAuiToolBarItem item;
     item.SetKind(wxITEM_SEPARATOR);
@@ -46,25 +47,25 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
     item.SetId(wxID_ANY);
     item.SetLabel(_("Customize..."));
     append_items.Add(item);
+*/
+	Toolbar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                                         wxAUI_TB_DEFAULT_STYLE );// wxAUI_TB_OVERFLOW);
+	Toolbar->SetToolBitmapSize(wxSize(48,48));
+    Toolbar->AddTool(wxID_NEW, _T("New File"), wxArtProvider::GetBitmap(wxART_NEW));
+    Toolbar->AddTool(wxID_OPEN, _T("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN));
+    Toolbar->AddTool(wxID_SAVE, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE));
+    Toolbar->AddTool(wxID_SAVEAS, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS));
+    Toolbar->AddTool(idClose, _T("Close File"), wxArtProvider::GetBitmap(wxART_CROSS_MARK));
+//	Toolbar->AddSeparator();
+//  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
+    Toolbar->Realize();
+	mbar->Check( idToolbar, true );
 
-	int ID_SampleItem = 123;
-
-	wxAuiToolBar* tb1 = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                         wxAUI_TB_DEFAULT_STYLE | wxAUI_TB_OVERFLOW);
-	tb1->SetToolBitmapSize(wxSize(48,48));
-    tb1->AddTool(ID_SampleItem+3, _T("New File"), wxArtProvider::GetBitmap(wxART_NEW));
-    tb1->AddTool(ID_SampleItem+1, _T("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN));
-    tb1->AddTool(ID_SampleItem+2, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE));
-	tb1->AddSeparator();
-    tb1->SetCustomOverflowItems(prepend_items, append_items);
-    tb1->Realize();
-
-
-    MyAUI -> AddPane(tb1, wxAuiPaneInfo().
+    MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(wxT("ToolBar")).Caption(wxT("Big Toolbar")).
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
-*/
+
 	MyInterpreter = new DataInterpreter( this, -1 );
 
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
@@ -73,7 +74,8 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 					BottomDockable(false).
 					MinSize(wxSize(170,-1)).
 					Left().Layer(1) );
-	mbar->Check( wxID_INTERPRETER, true );
+	mbar->Check( idInterpreter, true );
+
 	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter) );
 
 #if defined( _DEBUG_ )
@@ -81,9 +83,12 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName() );
 #endif
 	MyAUI->Update();
+
+	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	}
 
 HexEditorFrame::~HexEditorFrame(){
+	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
@@ -101,6 +106,7 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 		}
 	event.Skip();
 	}
+
 void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
@@ -125,13 +131,24 @@ void HexEditorFrame::OnEditRedo( wxCommandEvent& event ){
 	event.Skip();
 	}
 
-void HexEditorFrame::OnViewInterpretor( wxCommandEvent& event ){
-	if( event.IsChecked() ){
-		MyAUI->GetPane(MyInterpreter).Show();
+void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
+	switch( event.GetId() ){
+		case idInterpreter:
+			MyAUI->GetPane(MyInterpreter).Show(event.IsChecked());
+			MyAUI->Update();
+			break;
+		case idToolbar:
+			MyAUI->GetPane(Toolbar).Show(event.IsChecked());
+			MyAUI->Update();
+			break;
+		default:
+			wxBell();
 		}
-	else
-		MyAUI->GetPane(MyInterpreter).Hide();
-	MyAUI->Update();
+	}
+
+void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
+	mbar->Check(idInterpreter, MyInterpreter->IsShown());
+	mbar->Check(idToolbar, Toolbar->IsShown());
 	}
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){

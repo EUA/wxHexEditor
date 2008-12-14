@@ -28,9 +28,9 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #define ID_DEFAULT wxID_ANY // Default
-#define idMenuQuit 1000
-#define wxID_INTERPRETER 1001
-#define idMenuAbout 1002
+#define idClose 1000
+#define idInterpreter 1001
+#define idToolbar 1002
 #define ID_CHK_UNSIGNED 1003
 #define ID_CHK_BIGENDIAN 1004
 
@@ -46,6 +46,8 @@ class HexEditorGui : public wxFrame
 		wxMenu* fileMenu;
 		wxMenu* editMenu;
 		wxMenu* viewMenu;
+		wxMenu* optionsMenu;
+		wxMenu* menuOptionsWritemode;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
 		
@@ -57,7 +59,7 @@ class HexEditorGui : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnViewInterpretor( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		
 	
@@ -97,6 +99,21 @@ class InterpreterGui : public wxPanel
 	public:
 		InterpreterGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class InfoPanel
+///////////////////////////////////////////////////////////////////////////////
+class InfoPanel : public wxPanel 
+{
+	private:
+	
+	protected:
+	
+	public:
+		InfoPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		~InfoPanel();
 	
 };
 

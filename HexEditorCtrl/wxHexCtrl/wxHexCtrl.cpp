@@ -86,7 +86,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
     SetDefaultStyle( HexDefaultAttr );
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;
-    m_Margin.x = m_Margin.x = 0;
+    m_Margin.x = m_Margin.y = 0;
 	LastRightClickAt = wxPoint(0,0);
     select.selected = false;
     CreateCaret();

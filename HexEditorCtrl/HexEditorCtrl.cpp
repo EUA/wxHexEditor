@@ -278,43 +278,80 @@ void HexEditorCtrl::Clear( bool RePaint, bool cursor_reset ){
 void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
-
-    x -= offset_ctrl->GetSize().GetX() + offset_scroll->GetSize().GetX() + 4 ;	//Remove Offset Control box X because its changeable +4 for borders
+    x -= offset_ctrl->GetSize().GetX();			//Remove Offset Control box X because its changeable
+    x -= offset_scroll->GetSize().GetX();		//Remove Offset scroll size
+//    x -= 4;									//Borders?
     y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
     int charx = hex_ctrl->m_Char.x;
-	int i=2;
-	for(;;i++){
-		if( ((charx*3*i)+(charx*i)) > x)
-			break;
-		}
+	int i=2;	//character wide
+	while( ((charx*3*i /*- charx*/ )+(charx*i)) < x)
+		i++;
 	i--;
+	int text_x = charx*i;// + charx/2;
+	int hex_x = charx*3*i /*- charx*/;
 
-	int textx = charx*i + charx/2;
-	int hexx = charx*3*i;
+#ifdef _DEBUG_
+	std::cout<< "HexEditorCtrl SizeEvent Size(X,Y)=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
+			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
+			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
+			<< "Hex Ctrl: \t(" << hex_x << ',' << event.GetSize().GetY() << ")\n"
+			<< "Text Ctrl: \t(" << text_x << ',' << event.GetSize().GetY() << ")\n"
+			<< "Hex Char: " << charx << std::endl;
+
+#endif
 
 	wxString adress;
 	for( int j = 0 ; j < i ; j++ )
 		adress << wxString::Format( wxT("%02X "), j );
  	m_static_adress->SetLabel(adress);
+	hex_ctrl->SetMinSize( wxSize(hex_x, y ));
+	hex_ctrl->SetSize( wxSize( hex_x, y ));
 
-	hex_ctrl->SetMinSize( wxSize(hexx, y ));
-	hex_ctrl->SetSize( wxSize( hexx, y ));
-	text_ctrl->SetMinSize( wxSize( textx, y ));
-	text_ctrl->SetSize( wxSize( textx, y ));
+	text_ctrl->SetMinSize( wxSize( text_x, y ));
+	text_ctrl->SetSize( wxSize( text_x, y ));
 
-	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
-	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
-	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
-	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
-	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
-	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 5 );
+	m_static_offset->SetMinSize( wxSize(offset_ctrl->GetSize().GetX(), m_static_offset->GetSize().GetY()) );
+	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
+	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 
-	this->SetSizer( fgSizer1 );
+//	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
+//	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
+//	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
+//	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+//	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
+//	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+//	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+//	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+//	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 0 );
+//	this->SetSizer( fgSizer1 );
+
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer2->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
+	bSizer2->Add( m_static_adress, 0, wxLEFT, 3 );
+	bSizer2->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+	bSizer2->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer3->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	bSizer3->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	bSizer3->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	bSizer3->Add( offset_scroll, 0, wxEXPAND, 5 );
+	bSizer1->Add( bSizer2, 0, wxEXPAND, 0 );
+	bSizer1->Add( bSizer3, 0, wxEXPAND, 0 );
+	this->SetSizer( bSizer1 );
 	this->Layout();
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
+
+#ifdef _DEBUG_
+	std::cout<< "HexEditorCtrl After Size(X,Y)=(" << x << ',' << y << ")\n"
+			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << offset_scroll->GetSize().GetY()<<")\n"
+			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << offset_ctrl->GetSize().GetY()<<")\n"
+			<< "Hex Ctrl: \t(" << hex_ctrl->GetSize().GetX() << ',' << hex_ctrl->GetSize().GetY()<<")\n"
+			<< "Text Ctrl: \t(" << text_ctrl->GetSize().GetX() << ',' << text_ctrl->GetSize().GetY()<<")\n";
+#endif
     }
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){

@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1229183666 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
+1229246372 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
 	"HexEditorCtrl.h"
 
 1229183627 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.h
 	"HexEditorCtrlGui.h"
 
-1229022455 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
+1229241553 /home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.h
 	<wx/string.h>
 	<wx/stattext.h>
 	<wx/gdicmn.h>
@@ -1544,7 +1544,7 @@
 	<wx/sizer.h>
 	<wx/dialog.h>
 
-1229022455 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
+1229241581 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
 	"wx/wxprec.h"
 	<wx/wx.h>
 	"wxHexCtrl/wxHexCtrl.h"
@@ -1584,7 +1584,7 @@
 1229022455 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp
 	"TagDialogGui.h"
 
-1229183494 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
+1229245324 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp
 	"wxHexCtrl.h"
 	"wx/caret.h"
 	"wx/numdlg.h"

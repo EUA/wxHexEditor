@@ -46,10 +46,10 @@
 	<File name="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" open="0" top="0" tabpos="1">
 		<Cursor position="5401" topLine="95" />
 	</File>
-	<File name="HexEditorFrame.cpp" open="1" top="1" tabpos="2">
+	<File name="HexEditorFrame.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="2628" topLine="43" />
 	</File>
-	<File name="HexEditorFrame.h" open="1" top="0" tabpos="4">
+	<File name="HexEditorFrame.h" open="1" top="0" tabpos="3">
 		<Cursor position="2341" topLine="37" />
 	</File>
 	<File name="HexEditorGui.cpp" open="0" top="0" tabpos="3">

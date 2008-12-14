@@ -16,14 +16,14 @@
 	<File name="app.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="main.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="1066" topLine="0" />
+	<File name="main.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="1247" topLine="30" />
 	</File>
 	<File name="main.h" open="0" top="0" tabpos="3">
 		<Cursor position="297" topLine="0" />
 	</File>
 	<File name="wxHexCtrl.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="4442" topLine="100" />
+		<Cursor position="11956" topLine="358" />
 	</File>
 	<File name="wxHexCtrl.h" open="0" top="0" tabpos="4">
 		<Cursor position="5411" topLine="13" />

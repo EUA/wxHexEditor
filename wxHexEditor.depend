@@ -14,10 +14,10 @@
 	<wx_pch.h>
 	<wx/wx.h>
 
-1229227305 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
+1229313362 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
-1229101745 /home/C++/projects/wxHexEditor/HexEditor.h
+1229312819 /home/C++/projects/wxHexEditor/HexEditor.h
 	<wx/filename.h>
 	"FileDifference.h"
 	"DataInterpreter.h"
@@ -114,7 +114,7 @@
 	<wx/aui/aui.h>
 	<wx/aui/auibar.h>
 
-1229187138 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
+1229312169 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
 	"HexEditorCtrl.h"
 
 1229241581 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp
@@ -134,7 +134,7 @@
 	"wx/caret.h"
 	"wx/numdlg.h"
 
-1229238691 source:/home/C++/projects/wxHexEditor/HexEditorFrame.cpp
+1229314450 source:/home/C++/projects/wxHexEditor/HexEditorFrame.cpp
 	"HexEditorFrame.h"
 
 1229238896 source:/home/C++/projects/wxHexEditor/HexEditorGui.cpp

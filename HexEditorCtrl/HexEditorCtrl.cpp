@@ -280,15 +280,15 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int y = event.GetSize().GetY();
     x -= offset_ctrl->GetSize().GetX();			//Remove Offset Control box X because its changeable
     x -= offset_scroll->GetSize().GetX();		//Remove Offset scroll size
-//    x -= 4;									//Borders?
+    x -= 4*3;									//+x 4 pixel external borders (dark ones, 2 pix each size)
     y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
     int charx = hex_ctrl->m_Char.x;
 	int i=2;	//character wide
-	while( ((charx*3*i /*- charx*/ )+(charx*i)) < x)
+	while( ((charx*3*i +2 - charx )+(charx*i+2)) < x) //+2 for internal window border
 		i++;
 	i--;
-	int text_x = charx*i;// + charx/2;
-	int hex_x = charx*3*i /*- charx*/;
+	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
+	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
 
 #ifdef _DEBUG_
 	std::cout<< "HexEditorCtrl SizeEvent Size(X,Y)=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
@@ -303,6 +303,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	wxString adress;
 	for( int j = 0 ; j < i ; j++ )
 		adress << wxString::Format( wxT("%02X "), j );
+	adress.RemoveLast();	//Remove last ' ' for unwrap
  	m_static_adress->SetLabel(adress);
 	hex_ctrl->SetMinSize( wxSize(hex_x, y ));
 	hex_ctrl->SetSize( wxSize( hex_x, y ));

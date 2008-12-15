@@ -155,6 +155,7 @@ class scrollthread:wxThreadHelper{
 				parent->SetHexInsertionPoint(cursor);
 				parent->Selector();
 				parent->PaintSelection();
+				parent->UpdateCursorLocation( true );
 
 			if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->hex_ctrl->ByteCapacity() )
 				parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->hex_ctrl->ByteCapacity() );

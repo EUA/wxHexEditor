@@ -197,6 +197,10 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     page_offset = static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity();
     LoadFromOffset( page_offset );
     UpdateCursorLocation();
+#if wxUSE_STATUSBAR
+	if( statusbar != NULL )
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/hex_ctrl->ByteCapacity() ), 0);
+#endif
     wxYieldIfNeeded();
 	}
 
@@ -555,12 +559,12 @@ bool HexEditor::Selector(bool mode){
 			end = temp;
 			}
 		if( selection.state == selector::SELECTION_FALSE ){
-			statusbar->SetStatusText(_("Block: \tn/a"), 3);
-			statusbar->SetStatusText(_("Size: \tn/a") ,4);
+			statusbar->SetStatusText(_("Selected Block:N/A"), 3);
+			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
 		else{
-			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
-			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
+			statusbar->SetStatusText(wxString::Format(_("Selected Block: %d -> %d"),start,end), 3);
+			statusbar->SetStatusText(wxString::Format(_("Block Size: %d"), abs(start-end)+1), 4);
 			}
 		}
 #endif // wxUSE_STATUSBAR
@@ -571,8 +575,8 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 	HexEditorCtrl::OnMouseLeft( event );
 	#if wxUSE_STATUSBAR
     if ( statusbar ){
-		statusbar->SetStatusText(_("Block: \tn/a"), 3);
-		statusbar->SetStatusText(_("Size: \tn/a") ,4);
+		statusbar->SetStatusText(_("Selected Block: N/A"), 3);
+		statusbar->SetStatusText(_("Block Size: N/A") ,4);
 		}
 	#endif // wxUSE_STATUSBAR
 	UpdateCursorLocation();
@@ -591,26 +595,20 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 			else{							// Illusion code
 				page_offset -= BytePerLine()*event.GetLinesPerAction(); 	//offset decreasing
 				LoadFromOffset( page_offset );	//update text with new location, makes screen slide illusion
-				SetHexInsertionPoint(GetLocalHexInsertionPoint() + HexPerLine());	//restoring cursor location
+				SetHexInsertionPoint(GetLocalHexInsertionPoint() + HexPerLine()*event.GetLinesPerAction());	//restoring cursor location
 				}
 			}
-//		else
-//			SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() );
-//		}
 	else if(event.GetWheelRotation() < 0 ){
 //		if ( ActiveLine() == LineCount() ){			//If cursor at bottom of screen
 			if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
 				page_offset += BytePerLine()*event.GetLinesPerAction();		//offset increasing
 				LoadFromOffset( page_offset );		//update text with new location, makes screen slide illusion
-				SetHexInsertionPoint(GetLocalHexInsertionPoint() - HexPerLine());	//restoring cursor location
+				SetHexInsertionPoint(GetLocalHexInsertionPoint() - HexPerLine()*event.GetLinesPerAction());	//restoring cursor location
 				}
 			else{
 				wxBell();							//there is no line to slide bell
 				}
 			}
-//		else
-//			SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() );
-//		}
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){
@@ -677,15 +675,15 @@ void HexEditor::UpdateCursorLocation( bool force ){
 		}
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL ){
-		statusbar->SetStatusText(wxString::Format(_("Page: %d"), CursorOffset()/hex_ctrl->ByteCapacity() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/hex_ctrl->ByteCapacity() ), 0);
 		if( offset_ctrl->hex_offset )
-			statusbar->SetStatusText(wxString::Format(_("Offset: 0x%llX"), CursorOffset() ), 1);
+			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%llX"), CursorOffset() ), 1);
 		else
-			statusbar->SetStatusText(wxString::Format(_("Offset: %lld"), CursorOffset() ), 1);
+			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %lld"), CursorOffset() ), 1);
 		uint8_t ch;
 		myfile->Seek( CursorOffset() );
 		myfile->Read( reinterpret_cast<char*>(&ch), 1);
-		statusbar->SetStatusText(wxString::Format(_("=\t%u"), ch), 2);
+		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
 
 		int start = selection.start_offset;
 		int end = selection.end_offset;
@@ -695,12 +693,12 @@ void HexEditor::UpdateCursorLocation( bool force ){
 			end = temp;
 			}
 		if( selection.state == selector::SELECTION_FALSE ){
-			statusbar->SetStatusText(_("Block: \tn/a"), 3);
-			statusbar->SetStatusText(_("Size: \tn/a") ,4);
+			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
+			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
 		else{
-			statusbar->SetStatusText(wxString::Format(_("Block: \t%d -> %d"),start,end), 3);
-			statusbar->SetStatusText(wxString::Format(_("Size= \t%d"), abs(start-end)+1), 4);
+			statusbar->SetStatusText(wxString::Format(_("Selected Block: %d -> %d"),start,end), 3);
+			statusbar->SetStatusText(wxString::Format(_("Block Size: %d"), abs(start-end)+1), 4);
 			}
 		}
 #endif // wxUSE_STATUSBAR

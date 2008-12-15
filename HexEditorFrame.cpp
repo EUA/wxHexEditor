@@ -56,7 +56,21 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
     Toolbar->AddTool(wxID_SAVE, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE));
     Toolbar->AddTool(wxID_SAVEAS, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS));
     Toolbar->AddTool(idClose, _T("Close File"), wxArtProvider::GetBitmap(wxART_CROSS_MARK));
-//	Toolbar->AddSeparator();
+	Toolbar->AddSeparator();
+	Toolbar->AddTool(wxID_FIND, _T("Find"), wxArtProvider::GetBitmap(wxART_FIND));
+	Toolbar->AddTool(wxID_REPLACE, _T("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE));
+	Toolbar->AddTool(wxID_FIND, _T("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD));
+	Toolbar->AddSeparator();
+	Toolbar->AddTool(wxID_UNDO, _T("Undo"), wxArtProvider::GetBitmap(wxART_UNDO));
+	Toolbar->AddTool(wxID_REDO, _T("Redo"), wxArtProvider::GetBitmap(wxART_REDO));
+	Toolbar->AddSeparator();
+	Toolbar->AddTool(wxID_COPY, _T("Copy Block"), wxArtProvider::GetBitmap(wxART_COPY));
+	Toolbar->AddTool(wxID_PASTE, _T("Paste Block"), wxArtProvider::GetBitmap(wxART_PASTE));
+	Toolbar->AddSeparator();
+	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT));
+	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE));
+
+
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
     Toolbar->Realize();
 	mbar->Check( idToolbar, true );

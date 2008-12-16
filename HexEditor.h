@@ -136,6 +136,7 @@ class scrollthread:wxThreadHelper{
 		if(speed == 0)
 			GetThread()->Pause();
 		}
+
 	void *Entry(){
 		while( !(GetThread()->TestDestroy()) ){
 			if(speed == 0)
@@ -178,9 +179,6 @@ class scrollthread:wxThreadHelper{
 		speed = new_speed;
 		sleeper = sleeptime;
 		cursor = parent->GetLocalHexInsertionPoint();
-		}
-	void Exit(){
-		GetThread()->Delete();
 		}
 	};
 

@@ -46,8 +46,8 @@ HexEditor::HexEditor(	wxWindow* parent,
 		Dynamic_Connector();
 	}
 	HexEditor::~HexEditor(){
-		Dynamic_Disconnector();
 		FileClose();
+		Dynamic_Disconnector();
 	}
 
 void HexEditor::Dynamic_Connector(){
@@ -78,8 +78,6 @@ void HexEditor::Dynamic_Disconnector(){
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-//	hex_ctrl ->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-//	text_ctrl->Disconnect( wxEVT_RIGHT_UP,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
@@ -133,33 +131,34 @@ bool HexEditor::FileSave( bool question ){
 	}
 
 bool HexEditor::FileClose( void ){
-// TODO (death#1#): repair here!
-	if( myfile->IsChanged() ){
-		wxMessageDialog *msg = new wxMessageDialog(
-								this, _( "Do you want to save file?\n")
-							, _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-		int state = msg->ShowModal();
-		msg->Destroy();
-		switch(state){
-			case(wxID_YES):
-				if( !FileSave( false ) )
+	if( myfile != NULL ){
+		if( myfile->IsChanged() ){
+			wxMessageDialog *msg = new wxMessageDialog(
+									this, _( "Do you want to save file?\n")
+								, _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
+			int state = msg->ShowModal();
+			msg->Destroy();
+			switch(state){
+				case(wxID_YES):
+					if( !FileSave( false ) )
+						return false;
+					break;
+				case(wxID_NO):
+					break;
+				case(wxID_CANCEL):
 					return false;
-				break;
-			case(wxID_NO):
-				break;
-			case(wxID_CANCEL):
-				return false;
+				}
 			}
-		}
-	myscroll->Exit();
-	delete myscroll;
-	if( myfile != NULL )
+		//myscroll->GetMyThread()->Delete();
+//		myscroll->GetMyThread()->Wait();
+//		delete myscroll;
+//		delete copy_mark;
+		Clear( true );
 		myfile->Close();
-//	delete copy_mark;
-	Clear( true );
-	delete myfile;
-	myfile = NULL;
-	myfilename.Clear();
+		delete myfile;
+		myfile = NULL;
+		myfilename.Clear();
+		}
 	return true;
 	}
 
@@ -588,22 +587,26 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 			<< "\tLinesPerAction: " << event.GetLinesPerAction() << std::endl;
 
 #endif
-	if(event.GetWheelRotation() > 0){
-//		if (ActiveLine() == 1){	//If cursor first line
+	if(event.GetWheelRotation() > 0){		// Going to UP
 			if( page_offset == 0 )
 				wxBell();					// there is no line over up!
 			else{							// Illusion code
 				page_offset -= BytePerLine()*event.GetLinesPerAction(); 	//offset decreasing
 				LoadFromOffset( page_offset );	//update text with new location, makes screen slide illusion
-				SetHexInsertionPoint(GetLocalHexInsertionPoint() + HexPerLine()*event.GetLinesPerAction());	//restoring cursor location
+				if( ActiveLine() + event.GetLinesPerAction() <= LineCount() )	//cursor at bottom
+					SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
+				else
+					SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() + HexPerLine()*(LineCount()-1) );
 				}
 			}
-	else if(event.GetWheelRotation() < 0 ){
-//		if ( ActiveLine() == LineCount() ){			//If cursor at bottom of screen
+	else if(event.GetWheelRotation() < 0 ){	// Going to BOTTOM
 			if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
 				page_offset += BytePerLine()*event.GetLinesPerAction();		//offset increasing
 				LoadFromOffset( page_offset );		//update text with new location, makes screen slide illusion
-				SetHexInsertionPoint(GetLocalHexInsertionPoint() - HexPerLine()*event.GetLinesPerAction());	//restoring cursor location
+				if( ActiveLine() > event.GetLinesPerAction() )	//cursor at top GetLinesPerAction
+					SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
+				else
+					SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() );
 				}
 			else{
 				wxBell();							//there is no line to slide bell

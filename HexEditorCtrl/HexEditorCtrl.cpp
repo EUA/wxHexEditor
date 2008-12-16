@@ -151,7 +151,7 @@ bool HexEditorCtrl::Selector( bool mode ){
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
 		selection.end_offset = page_offset + GetLocalHexInsertionPoint()/2;
 	else{
-		wxLogError(wxT("Selector without focuse captured"));
+		std::cout << "Selector without focuse captured" << std::endl;
 		return false;
 		}
 
@@ -378,7 +378,8 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 		int old_location = GetLocalHexInsertionPoint();
 		if( new_location != old_location ){
 			if(selection.state != selector::SELECTION_TRUE)		// At first selection
-				Selector();
+				if( Selector() == false )						// selection without focus.
+					return;
 			SetLocalHexInsertionPoint( new_location );
 			Selector();
 			PaintSelection();

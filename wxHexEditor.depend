@@ -14,10 +14,10 @@
 	<wx_pch.h>
 	<wx/wx.h>
 
-1229313362 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
+1229379394 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
-1229312819 /home/C++/projects/wxHexEditor/HexEditor.h
+1229377062 /home/C++/projects/wxHexEditor/HexEditor.h
 	<wx/filename.h>
 	"FileDifference.h"
 	"DataInterpreter.h"
@@ -114,7 +114,7 @@
 	<wx/aui/aui.h>
 	<wx/aui/auibar.h>
 
-1229312169 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
+1229379938 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrl.cpp
 	"HexEditorCtrl.h"
 
 1229241581 source:/home/C++/projects/wxHexEditor/HexEditorCtrl/HexEditorCtrlGui.cpp

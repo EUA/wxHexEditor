@@ -3,18 +3,20 @@
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1229022454 source:/home/C++/projects/wxHexEditor/FileDifference.cpp
+1229396004 source:/home/C++/projects/wxHexEditor/FileDifference.cpp
 	"FileDifference.h"
+	<wx/arrimpl.cpp>
 
-1229022453 /home/C++/projects/wxHexEditor/FileDifference.h
+1229395317 /home/C++/projects/wxHexEditor/FileDifference.h
 	<wx/wx.h>
 	<wx/file.h>
 	<wx/filename.h>
 	<wx/msgdlg.h>
+	<wx/dynarray.h>
 	<wx_pch.h>
 	<wx/wx.h>
 
-1229379394 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
+1229396980 source:/home/C++/projects/wxHexEditor/HexEditor.cpp
 	"HexEditor.h"
 
 1229377062 /home/C++/projects/wxHexEditor/HexEditor.h
@@ -92,7 +94,7 @@
 	<wx/sizer.h>
 	<wx/dialog.h>
 
-1229022454 source:/home/C++/projects/wxHexEditor/HexEditorApp.cpp
+1229396903 source:/home/C++/projects/wxHexEditor/HexEditorApp.cpp
 	"wx_pch.h"
 	"HexEditorApp.h"
 	"HexEditorFrame.h"

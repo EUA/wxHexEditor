@@ -21,6 +21,8 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(ArrayOfNode);
 
 FileDifference::FileDifference(wxFileName& myfilename){
 	if(myfilename.FileExists()){
@@ -32,25 +34,23 @@ FileDifference::FileDifference(wxFileName& myfilename){
 			dlg->ShowModal();dlg->Destroy();
 			}
 		}
-	head = tail = NULL;
 	}
 
 FileDifference::~FileDifference(){
-	RemoveTail( head );
-	head = NULL;
+	DiffArray.Clear();
 	}
 
-DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t size, struct DiffNode *prev , bool extension ){
+DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t size, bool sizechange ){
 	DiffNode* newnode = new struct DiffNode;
 	newnode->size = size;
-	newnode->start_byte = start_byte;
+	newnode->start_offset = start_byte;
 	newnode->old_data = new char[size];
 	newnode->new_data = new char[size];
-	newnode->writen = false;
-	newnode->undo = false;
-	newnode->extension = extension;
-	newnode->next = NULL;
-	newnode->prev = prev;
+	newnode->flag_commit = false;
+	newnode->flag_undo = false;
+//	newnode->flag_sizechange = sizechange;
+//	newnode->next = NULL;
+//	newnode->prev = prev;
 
 	if( newnode->old_data == NULL || newnode->new_data == NULL){
 		wxLogError( _("Not Enought RAM") );
@@ -67,72 +67,59 @@ DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t
 	}
 
 bool FileDifference::IsChanged( void ){
-	for( DiffNode *temp = head ; temp != NULL ; temp = temp->next )
-		if( temp->writen == temp->undo )	// means this node has to be (re)writen
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+		if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo )	// means this node has to be (re)writen to disk
 			return true;
 	return false;
 	}
 
 bool FileDifference::Apply( void ){
 	bool success=true;
-	for( DiffNode *temp = head ; temp != NULL ; temp = temp->next ){
-		if(!(temp->undo) && !(temp->writen) ){		// If there is unwriten data without undo flag
-			Seek(temp->start_byte, wxFromStart);	// write it
-			success*=Write(temp->new_data, temp->size);
-			temp->writen = true;
-			}
-		else if( temp->undo && temp->writen){		// If there is writen data with undo flag
-			Seek(temp->start_byte, wxFromStart);	// restore it
-			success*=Write(temp->old_data, temp->size);
-			temp->writen = false;
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+		if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
+			Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
+			success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
+			DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
 			}
 		}
 	return success;
 	}
 
 int64_t FileDifference::Undo( void ){
-	DiffNode* undo = GetFirstUndoNode();
-	if(undo != NULL){					//if there is undo node available
-		if(undo->prev == NULL){			//if this not first node
-			wxBell();
-			return -1;					//this means there is not undo node available
-			}
-		undo->prev->undo = true;		//set previous node is undo
-		return undo->prev->start_byte;	//returning undo transaction start for screen focusing
-		}
-	else{								//if there is no undo node available
-		if(tail != NULL){				//and there is any transactions available
-			tail->undo=true;
-			return tail->start_byte;
-			}
+	if( DiffArray.GetCount() == 0 ){
 		wxBell();						// No possible undo action here bell
 		return -1;
 		}
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
+			if( i - 1 >= 0 ){			//if it is not first node
+				DiffArray.Item( i-1 )->flag_undo = true;	//set previous node as undo node
+				return DiffArray.Item( i-1 )->start_offset;	//and return undo transaction start for screen focusing
+				}
+			else{						//if first node is undo
+				wxBell();				//ring the bell
+				return -1;				//this means there is not undo node available
+				}
+			}
+	DiffArray.Last()->flag_undo=true;
+	DiffArray.Last()->start_offset;
 	}
 
 void FileDifference::ShowDebugState( void ){
 	int i=0;
 	std::cout << "\n\nNumber\t" << "Start\t" << "Size\t" << "DataN\t" << "DataO\t" << "writen\t" << "Undo\n";
-	for( DiffNode *temp = head ; temp != NULL ; temp = temp->next ){
-		std::cout << ++i << '\t' << temp->start_byte << '\t' << temp->size << '\t' << temp->new_data[0] << '\t'
-				<< temp->old_data[0] << '\t' <<	temp->writen << '\t' << temp->undo << std::endl;
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+		std::cout << i << '\t' << DiffArray[i]->start_offset << '\t' << DiffArray[i]->size << '\t' << std::hex << (unsigned short)DiffArray[i]->new_data[0] << '\t'
+				<< (unsigned short)DiffArray[i]->old_data[0] << '\t' <<	DiffArray[i]->flag_commit << '\t' << DiffArray[i]->flag_undo  << std::dec << std::endl;
 		}
-	}
-
-DiffNode* FileDifference::GetFirstUndoNode( void ){
-	for(DiffNode *temp = head; temp != NULL ; temp = temp->next ){
-		if(temp->undo == true )	//if this node is undo node
-			return temp;
-		}
-	return NULL;
 	}
 
 int64_t FileDifference::Redo( void ){
-	DiffNode* undo = GetFirstUndoNode();
-	if(undo != NULL){
-		undo->undo = false;
-		return undo->start_byte+undo->size;
-		}
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
+			DiffArray.Item(i)->flag_undo = false;
+			return DiffArray.Item(i)->start_offset;
+			}
 	wxBell();	// No possible redo action
 	return -1;
 	}
@@ -141,9 +128,8 @@ wxFileOffset FileDifference::Length( void ){
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();
-	for( DiffNode *temp = head; temp != NULL ; temp = temp->next ){
-		(( temp->start_byte + temp->size ) > max_size ) ? ( max_size = temp->start_byte + temp->size ):( max_size=max_size );
-		}
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+		max_size = (( DiffArray[i]->start_offset + DiffArray[i]->size ) > max_size ) ? ( DiffArray[i]->start_offset + DiffArray[i]->size ):( max_size );
 	return max_size;
 	}
 
@@ -157,85 +143,61 @@ long FileDifference::Read( char* buffer, int size ){
 	}
 
 void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
-	for(DiffNode *temp = head; temp != NULL ; temp = temp->next ){
-		/**
-		current_location 					= [
-		current_location + size 			= ]
-		temp->start_byte					= (
-		temp->start_byte + temp_node->size	= )
-		data								= ...
-		changed data						= xxx
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+		/** MANUAL of Code understanding**
+		current_location 						= [
+		current_location + size 				= ]
+		DiffArray[i]'s start_offset				= (
+		DiffArray[i]'s start_offset + it's size	= )
+		data									= ...
+		changed data							= xxx
 		**/
-		if(temp->undo && !temp->writen)
+		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 			continue;
-		//...[...(xxx]xxx)...
-		if(current_location <= temp->start_byte && current_location+size >= temp->start_byte){
-			int irq_loc = temp->start_byte - current_location;
+
+		//State: ...[...(xxx]xxx)...
+		if(current_location <= DiffArray[i]->start_offset && current_location+size >= DiffArray[i]->start_offset){
+			int irq_loc = DiffArray[i]->start_offset - current_location;
 			//...[...(xxx)...]... //not neccessery, this line includes this state
-			int irq_size = (size - irq_loc > temp->size) ? (temp->size) : (size - irq_loc);
-			memcpy(data+irq_loc , temp->undo ? temp->old_data : temp->new_data, irq_size );
+			int irq_size = (size - irq_loc > DiffArray[i]->size) ? (DiffArray[i]->size) : (size - irq_loc);
+			memcpy(data+irq_loc , DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data, irq_size );
 			}
 
-		//...(xxx[xxx)...]...
-		else if (current_location <= temp->start_byte + temp->size && current_location+size >= temp->start_byte + temp->size){
-			int irq_skipper = current_location - temp->start_byte;	//skip this bytes from start
-			int irq_size = temp->size - irq_skipper;
-			memcpy(data, temp->undo ? temp->old_data : temp->new_data + irq_skipper, irq_size );
+		//State: ...(xxx[xxx)...]...
+		else if (current_location <= DiffArray[i]->start_offset + DiffArray[i]->size && current_location+size >= DiffArray[i]->start_offset + DiffArray[i]->size){
+			int irq_skipper = current_location - DiffArray[i]->start_offset;	//skip this bytes from start
+			int irq_size = DiffArray[i]->size - irq_skipper;
+			memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, irq_size );
 			}
 
-		//...(xxx[xxx]xxx)...
-		else if(temp->start_byte <= current_location && temp->start_byte + temp->size >= current_location+size){
-			int irq_skipper = current_location - temp->start_byte;	//skip this bytes from start
-			memcpy(data, temp->undo ? temp->old_data : temp->new_data + irq_skipper, size );
+		//State: ...(xxx[xxx]xxx)...
+		else if(DiffArray[i]->start_offset <= current_location && DiffArray[i]->start_offset + DiffArray[i]->size >= current_location+size){
+			int irq_skipper = current_location - DiffArray[i]->start_offset;	//skip this bytes from start
+			memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, size );
 			}
 		}
-	}
-
-void FileDifference::RemoveTail( DiffNode *remove_node ){
-	DiffNode* temp;
-	if( remove_node == NULL) return;
-	do{
-		temp=remove_node->next;
-		delete remove_node->old_data;
-		delete remove_node->new_data;
-		delete remove_node;
-		remove_node = temp;
-		}while(temp != NULL);
 	}
 
 bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bool extension ){
-	DiffNode* temp=head;
-	if( head == NULL ){
-		tail = head = NewNode(start_byte, data, size, NULL);
-		return head;
-		}
-	else{
-		while(temp->next != NULL){
-			if(temp->undo == true){			//if this is undo node
-				if(temp->writen){			//which has writen data (new_data writen to file)
-					temp->undo = false;		//we have to survive this node as it unwriten, non undo node
-					temp->writen = false;
-					char *temp_buffer = temp->old_data;	//swap old <-> new data
-					temp->old_data = temp->new_data;
-					temp->new_data = temp_buffer;
-					}
-				else{						//if this is undo with no writen data, delete it and its tail...
-					if(temp->prev == NULL){	//This is head node
-						RemoveTail(temp);
-						head = temp = NewNode( start_byte, data, size, NULL );
-						return temp;
-						}
-					else{					//if this node is not head
-						temp = temp->prev;
-						RemoveTail( temp->next );
-						temp->next = NewNode( start_byte, data, size, temp );
-						return temp->next;
-						}
-					}
+	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+		if( DiffArray[i]->flag_undo )
+			if(DiffArray.Item(i)->flag_commit ){	// commited undo node
+				DiffArray[i]->flag_undo = false;		//we have to survive this node as it unwriten, non undo node
+				DiffArray[i]->flag_commit = false;
+				char *temp_buffer = DiffArray[i]->old_data;	//swap old <-> new data
+				DiffArray[i]->old_data = DiffArray[i]->new_data;
+				DiffArray[i]->new_data = temp_buffer;
 				}
-			temp=temp->next;
-			}
-		tail = temp->next = NewNode(start_byte, data, size, temp );
-		return temp;
+			else{									// non committed undo node
+				while( i <= DiffArray.GetCount() ){	// delete beyond here
+					DiffNode *temp;
+					temp = *(DiffArray.Detach( i ));
+					delete temp;
+					}
+				break;								// break for addition
+				}
 		}
+	DiffNode *rtn = NewNode( start_byte, data, size );
+	DiffArray.Add( rtn );	//Add new node to tail
+	return rtn; //if added successfuly
 	}

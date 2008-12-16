@@ -52,9 +52,11 @@ HexEditor::HexEditor(	wxWindow* parent,
 
 void HexEditor::Dynamic_Connector(){
     hex_ctrl 	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+    text_ctrl	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 //	hex_ctrl 	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-    text_ctrl	->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl	->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+    hex_ctrl 	->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+    text_ctrl	->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
@@ -69,9 +71,11 @@ void HexEditor::Dynamic_Connector(){
 
 void HexEditor::Dynamic_Disconnector(){
     hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 //	hex_ctrl ->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-    text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this );
 //	text_ctrl->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+    hex_ctrl ->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+    text_ctrl->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
@@ -247,18 +251,9 @@ void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 
 void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 	if(myfile != NULL){
-		void *myvoid = FindFocus();		//avoid reinterpret_cast for speed
-		wxHexCtrl* myctrl;
-		if( myvoid == text_ctrl )
-			myctrl = text_ctrl;
-		else if ( myvoid == hex_ctrl )
-			myctrl = hex_ctrl;
-		else
-			{
-			wxBell();
-			return;
-			}
+		wxHexCtrl *myctrl = (wxHexCtrl*)event.GetEventObject();
 		//Keyboard Selection Code
+		char x = event.GetKeyCode();
 		if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
 			event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
 			event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
@@ -435,7 +430,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					wxBell();
 					break;
 				default:
-					OnKeyboardChar( event );
+					event.Skip();// ->OnKeyboardChar( event );
 					break;
 				}//switch end
 			if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()))
@@ -450,6 +445,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 	if(myfile != NULL){
 		wxChar chr = event.GetKeyCode();
+		/*
 		void *myctrl = FindFocus();		//avoid reinterpret_cast for speed
 		if( myctrl == text_ctrl )
 			myctrl = text_ctrl;
@@ -460,8 +456,9 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 			wxBell();
 			return;
 			}
+		*/
 
-		if( myctrl == hex_ctrl )
+		if( event.GetEventObject() == hex_ctrl )
 			if( isxdigit(chr) ){
 				(chr>='a'&&chr<='f')?(chr-=('a'-'A')):(chr=chr);		// Upper() for Char
 				HexCharReplace( GetLocalHexInsertionPoint(), chr);		// write to screen
@@ -483,7 +480,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 				}
 			else
 				wxBell();
-		else if( myctrl == text_ctrl ){
+		else if( event.GetEventObject() == text_ctrl ){
 			if( wxString((wxChar)event.GetKeyCode()).IsAscii() &&
 				event.GetKeyCode()!=WXK_BACK &&
 				event.GetKeyCode()!=WXK_DELETE &&

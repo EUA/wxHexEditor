@@ -42,7 +42,7 @@ class HexEditorFrame : public HexEditorGui {
 
 	protected:
 		void OnFileOpen( wxCommandEvent& event );
-//		virtual void OnFileSave( wxCommandEvent& event ){ event.Skip(); }
+		void OnFileSave( wxCommandEvent& event );
 		void OnFileClose( wxCommandEvent& event );
 		void OnEditUndo( wxCommandEvent& event );
 		void OnEditRedo( wxCommandEvent& event );

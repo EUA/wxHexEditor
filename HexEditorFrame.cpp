@@ -121,6 +121,13 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 	event.Skip();
 	}
 
+void HexEditorFrame::OnFileSave( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		MyHexEditor->FileSave();
+	event.Skip();
+	}
+
 void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )

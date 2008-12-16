@@ -930,8 +930,8 @@ int wxHexTextCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 	mouse.y = ( mouse.y < 0 ? 0 : mouse.y);
 	mouse.y = ( mouse.y > m_Char.y*m_Window.y ? m_Char.y*m_Window.y-1 : mouse.y);
 
-	int x = (mouse.x - m_Margin.x + m_Char.x/2) / m_Char.x;
-	int y = (mouse.y - m_Margin.y             ) / m_Char.y;
+	int x = (mouse.x - m_Margin.x) / m_Char.x;
+	int y = (mouse.y - m_Margin.y) / m_Char.y;
 	return ( x + y * CharacterPerLine() );
 	}
 

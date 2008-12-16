@@ -495,10 +495,10 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 						}
 					}
 */
-				TextCharReplace(GetLocalInsertionPoint(), event.GetKeyCode());
-
-				char rdchr = hex_ctrl->ReadByte( GetLocalInsertionPoint() );	// read from screen
-				myfile->Add( CursorOffset(), &rdchr ,1);				// add node to file
+				int GLIP = GetLocalInsertionPoint();	//this required because TextCharReplace() calls HexCtrl->Replace that alters entering point
+				TextCharReplace(GLIP, event.GetKeyCode());
+				char rdchr = hex_ctrl->ReadByte( GLIP );	// read from screen
+				myfile->Add( GLIP + page_offset, &rdchr ,1);						// add node to file
 
 				if( text_ctrl->GetInsertionPoint() >= text_ctrl->GetLastPosition() ){
 					if( page_offset + hex_ctrl->ByteCapacity() <= myfile->Length() ){	//Checks if its EOF or not

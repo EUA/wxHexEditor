@@ -731,7 +731,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 			TAX = TagArray.Item(i);
 			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) )	//end not included!
 				{
-				TAX->Show( event.GetPosition()+((wxWindow*)event.GetEventObject())->ClientToScreen(wxPoint(0,0)) , this );
+				TAX->Show( event.GetPosition()+(static_cast<wxWindow*>( event.GetEventObject() ))->ClientToScreen(wxPoint(0,0)) , this );
 				break;
 				}
 			else if( TAX->visible == true )

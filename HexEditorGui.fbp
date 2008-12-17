@@ -302,10 +302,10 @@
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
                         <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
+                        <property name="id">idGotoOffset</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Goto Byte</property>
-                        <property name="name">menuEditGotobyte</property>
+                        <property name="label">Goto Offset</property>
+                        <property name="name">menuEditGotooffset</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>

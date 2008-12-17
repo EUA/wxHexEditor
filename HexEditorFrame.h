@@ -48,8 +48,8 @@ class HexEditorFrame : public HexEditorGui {
 		void OnEditRedo( wxCommandEvent& event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 		void OnViewMenu( wxCommandEvent& event );
-//		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
-//		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
+		void OnQuit( wxCommandEvent& event );
+		void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 
 	private:
 		wxAuiNotebook *MyNotebook;

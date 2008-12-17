@@ -134,7 +134,7 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 		}
 //  menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
-	wxWindow *scr = (wxWindow*) event.GetEventObject();
+	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
     PopupMenu(&menu, pos);
     // test for destroying items in popup menus

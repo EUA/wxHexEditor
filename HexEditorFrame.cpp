@@ -59,7 +59,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	Toolbar->AddSeparator();
 	Toolbar->AddTool(wxID_FIND, _T("Find"), wxArtProvider::GetBitmap(wxART_FIND));
 	Toolbar->AddTool(wxID_REPLACE, _T("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE));
-	Toolbar->AddTool(wxID_FIND, _T("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD));
+	Toolbar->AddTool(idGotoOffset, _T("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD));
 	Toolbar->AddSeparator();
 	Toolbar->AddTool(wxID_UNDO, _T("Undo"), wxArtProvider::GetBitmap(wxART_UNDO));
 	Toolbar->AddTool(wxID_REDO, _T("Redo"), wxArtProvider::GetBitmap(wxART_REDO));
@@ -70,6 +70,17 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT));
 	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE));
 
+	Toolbar->EnableTool( wxID_SAVEAS, false);
+	Toolbar->EnableTool( wxID_FIND, false);
+	Toolbar->EnableTool( wxID_REPLACE, false);
+	Toolbar->EnableTool( wxID_SAVEAS, false);
+	Toolbar->EnableTool( idGotoOffset, false);
+	Toolbar->EnableTool( wxID_UNDO, false);
+	Toolbar->EnableTool( wxID_REDO, false);
+	Toolbar->EnableTool( wxID_COPY, false);
+	Toolbar->EnableTool( wxID_PASTE, false);
+	Toolbar->EnableTool( wxID_CUT, false);
+	Toolbar->EnableTool( wxID_DELETE, false);
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
     Toolbar->Realize();
@@ -136,6 +147,23 @@ void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 			// delete MyHexEditor; not neccessery, deletepage also delete this
 			}
 	event.Skip();
+	}
+
+void HexEditorFrame::OnQuit( wxCommandEvent& event ){
+	HexEditor *MyHexEditor;
+	for(;;){
+		MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( 0 ) );
+		if( MyHexEditor == NULL ){
+			Destroy();
+			event.Skip();
+			return;
+			}
+		else if( MyHexEditor->FileClose() ){
+			MyNotebook->DeletePage( 0 );
+			MyHexEditor = NULL;
+			}
+		else break;
+		}
 	}
 
 void HexEditorFrame::OnEditUndo( wxCommandEvent& event ){

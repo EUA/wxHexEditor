@@ -29,10 +29,11 @@
 
 #define ID_DEFAULT wxID_ANY // Default
 #define idClose 1000
-#define idInterpreter 1001
-#define idToolbar 1002
-#define ID_CHK_UNSIGNED 1003
-#define ID_CHK_BIGENDIAN 1004
+#define idGotoOffset 1001
+#define idInterpreter 1002
+#define idToolbar 1003
+#define ID_CHK_UNSIGNED 1004
+#define ID_CHK_BIGENDIAN 1005
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui

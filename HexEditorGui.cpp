@@ -83,10 +83,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	editMenu->Append( menuEditReplace );
 	menuEditReplace->Enable( false );
 	
-	wxMenuItem* menuEditGotobyte;
-	menuEditGotobyte = new wxMenuItem( editMenu, wxID_ANY, wxString( wxT("Goto Byte") ) , wxEmptyString, wxITEM_NORMAL );
-	editMenu->Append( menuEditGotobyte );
-	menuEditGotobyte->Enable( false );
+	wxMenuItem* menuEditGotooffset;
+	menuEditGotooffset = new wxMenuItem( editMenu, idGotoOffset, wxString( wxT("Goto Offset") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditGotooffset );
+	menuEditGotooffset->Enable( false );
 	
 	mbar->Append( editMenu, wxT("&Edit") );
 	

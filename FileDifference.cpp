@@ -198,6 +198,10 @@ bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bo
 				}
 		}
 	DiffNode *rtn = NewNode( start_byte, data, size );
-	DiffArray.Add( rtn );	//Add new node to tail
-	return rtn; //if added successfuly
+		if( rtn != NULL ){
+			DiffArray.Add( rtn );					//Add new node to tail
+			return true;
+			}
+		else
+			return false;							//if created successfuly
 	}

@@ -26,7 +26,7 @@
 
 #include <wx/colordlg.h>
 #include <wx/popupwin.h>
-
+#include <wx/dcmemory.h>
 #include "TagDialogGui.h"
 
 class TagElement{

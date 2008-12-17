@@ -89,7 +89,7 @@ void HexEditor::Dynamic_Disconnector(){
 void HexEditor::FileOpen(wxFileName& myfn){
 	myfilename = wxFileName(myfn);
 	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
-	else if(myfilename.FileExists()){
+	else if(myfilename.IsFileReadable()){ //IsFileReadable
 		myfile = new FileDifference( myfilename );
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);

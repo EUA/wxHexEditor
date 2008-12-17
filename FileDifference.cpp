@@ -1,4 +1,3 @@
-#include "FileDifference.h"
 /***********************************(GPL)********************************
 *	wxHexEditor is a hex edit tool for editing massive files in Linux   *
 *	Copyright (C) 2006  Erdem U. Altinyurt                              *
@@ -21,11 +20,12 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
+#include "FileDifference.h"
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
 FileDifference::FileDifference(wxFileName& myfilename){
-	if(myfilename.FileExists()){
+	if(myfilename.IsFileReadable()){//FileExists()){
 		//myfile = new wxFile(wxT("/dev/sda1"), wxFile::read);
 		Open(myfilename.GetFullPath(), wxFile::read_write);
 		// TODO (death#3#): Add option for open read only

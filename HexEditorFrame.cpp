@@ -23,7 +23,7 @@
 #include "HexEditorFrame.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
-				HexEditorGui( parent, id ){
+				HexEditorGui( parent, id, wxT("wxHexEditor v0.04 AlPhA - Development version") ){
 	MyAUI = new wxAuiManager( this );
 
 	MyNotebook = new wxAuiNotebook(this,-1);

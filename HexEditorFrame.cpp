@@ -70,17 +70,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT));
 	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE));
 
-	Toolbar->EnableTool( wxID_SAVEAS, false);
-	Toolbar->EnableTool( wxID_FIND, false);
-	Toolbar->EnableTool( wxID_REPLACE, false);
-	Toolbar->EnableTool( wxID_SAVEAS, false);
-	Toolbar->EnableTool( idGotoOffset, false);
-	Toolbar->EnableTool( wxID_UNDO, false);
-	Toolbar->EnableTool( wxID_REDO, false);
-	Toolbar->EnableTool( wxID_COPY, false);
-	Toolbar->EnableTool( wxID_PASTE, false);
-	Toolbar->EnableTool( wxID_CUT, false);
-	Toolbar->EnableTool( wxID_DELETE, false);
+	ActionDisabler();
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
     Toolbar->Realize();
@@ -106,6 +96,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 #if defined( _DEBUG_ )
 	wxFileName myname(_("./testfile"));
 	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName() );
+	ActionEnabler();
 #endif
 	MyAUI->Update();
 
@@ -114,6 +105,68 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	}
+
+void HexEditorFrame::ActionEnabler( void ){
+	mbar->Enable( idFileRO, true );
+	mbar->Enable( idFileRW, true );
+//	mbar->Enable( idFileDW, true );
+	mbar->Enable( wxID_SAVE, true );
+//	mbar->Enable( wxID_SAVEAS, true );
+	mbar->Enable( idClose, true );
+//	mbar->Enable( wxID_FIND, true );
+//	mbar->Enable( wxID_REPLACE, true );
+//	mbar->Enable( idGotoOffset, true );
+	mbar->Enable( wxID_UNDO, true );
+	mbar->Enable( wxID_REDO, true );
+//	mbar->Enable( wxID_COPY, true );
+//	mbar->Enable( wxID_PASTE, true );
+//	mbar->Enable( wxID_CUT, true );
+//	mbar->Enable( wxID_DELETE, true );
+
+	Toolbar->EnableTool( wxID_SAVE, true);
+//	Toolbar->EnableTool( wxID_SAVEAS, true);
+	Toolbar->EnableTool( idClose, true);
+//	Toolbar->EnableTool( wxID_FIND, false);
+//	Toolbar->EnableTool( wxID_REPLACE, false);
+//	Toolbar->EnableTool( idGotoOffset, true);
+	Toolbar->EnableTool( wxID_UNDO, true);
+	Toolbar->EnableTool( wxID_REDO, true);
+//	Toolbar->EnableTool( wxID_COPY, true);
+//	Toolbar->EnableTool( wxID_PASTE, true);
+//	Toolbar->EnableTool( wxID_CUT, true);
+//	Toolbar->EnableTool( wxID_DELETE, true);
+	}
+
+void HexEditorFrame::ActionDisabler( void ){
+	mbar->Enable( idFileRO, false );
+	mbar->Enable( idFileRW, false );
+	mbar->Enable( idFileDW, false );
+	mbar->Enable( wxID_SAVE, false );
+	mbar->Enable( wxID_SAVEAS, false );
+	mbar->Enable( idClose, false );
+	mbar->Enable( wxID_FIND, false );
+	mbar->Enable( wxID_REPLACE, false );
+	mbar->Enable( idGotoOffset, false );
+	mbar->Enable( wxID_UNDO, false );
+	mbar->Enable( wxID_REDO, false );
+	mbar->Enable( wxID_COPY, false );
+	mbar->Enable( wxID_PASTE, false );
+	mbar->Enable( wxID_CUT, false );
+	mbar->Enable( wxID_DELETE, false );
+
+	Toolbar->EnableTool( wxID_SAVE, false);
+	Toolbar->EnableTool( wxID_SAVEAS, false);
+	Toolbar->EnableTool( idClose, false);
+	Toolbar->EnableTool( wxID_FIND, false);
+	Toolbar->EnableTool( wxID_REPLACE, false);
+	Toolbar->EnableTool( idGotoOffset, false);
+	Toolbar->EnableTool( wxID_UNDO, false);
+	Toolbar->EnableTool( wxID_REDO, false);
+	Toolbar->EnableTool( wxID_COPY, false);
+	Toolbar->EnableTool( wxID_PASTE, false);
+	Toolbar->EnableTool( wxID_CUT, false);
+	Toolbar->EnableTool( wxID_DELETE, false);
 	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
@@ -127,6 +180,7 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 	if(wxID_OK == filediag->ShowModal()){
 		wxFileName myname(filediag->GetPath());
 		MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName(), true);
+		ActionEnabler();
 		filediag->Destroy();
 		}
 	event.Skip();
@@ -146,6 +200,8 @@ void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 			MyNotebook->DeletePage( MyNotebook->GetSelection() );
 			// delete MyHexEditor; not neccessery, deletepage also delete this
 			}
+	 if( MyNotebook->GetPageCount() == 0 )
+		ActionDisabler();
 	event.Skip();
 	}
 
@@ -194,6 +250,32 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 			wxBell();
 		}
 	}
+
+void HexEditorFrame::OnOptionsFileMode( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		if( MyHexEditor != NULL ){
+			switch( event.GetId() ){
+				case idFileRO:
+					if( MyHexEditor->GetFileAccessMode() != FileDifference::ReadOnly )
+						MyHexEditor->SetFileAccessMode( FileDifference::ReadOnly );
+					break;
+
+				case idFileRW:
+					if( MyHexEditor->GetFileAccessMode() == FileDifference::ReadOnly )	//if its not RW or DW
+						MyHexEditor->SetFileAccessMode( FileDifference::ReadWrite );
+					break;
+
+				case idFileDW:
+					wxBell();
+					break;
+
+				default:
+					wxBell();
+				}
+
+			}
+	}
+
 
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());

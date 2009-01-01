@@ -45,7 +45,7 @@ class DataInterpreter : public InterpreterGui{
 				uint16_t *ubit16;
 				uint32_t *ubit32;
 				uint64_t *ubit64;
-				float 	*bitfloat;
+				float  *bitfloat;
 				double *bitdouble;
 				} little, big;
 			short size;

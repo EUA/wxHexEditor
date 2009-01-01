@@ -37,7 +37,6 @@ HexEditor::HexEditor(	wxWindow* parent,
 			{
 		printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
 		myfile = NULL;
-
 		if( myfilenm != NULL ){
 			myfilename = *myfilenm;
 			FileOpen( myfilename );
@@ -253,7 +252,6 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 	if(myfile != NULL){
 		wxHexCtrl *myctrl = static_cast<wxHexCtrl*>(event.GetEventObject());
 		//Keyboard Selection Code
-		char x = event.GetKeyCode();
 		if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
 			event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
 			event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||

@@ -55,15 +55,16 @@ class DiffNode{
 
 WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
-class FileDifference : public wxFile
-{
-	private:
-		ArrayOfNode	DiffArray;
-//		DiffNode *head,*tail;	//linked list holds modification record
-
+class FileDifference : public wxFile{
 	public:
 	    FileDifference(wxFileName& myfilename);
 		~FileDifference();
+
+		enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite };
+		wxFileName the_file;
+		bool SetAccessMode( FileAccessMode fam );
+		int GetAccessMode( );
+
 		bool IsChanged( void );	//returns if file is dirty or not
 		bool Apply( void );		//flush changes to file
 		int64_t Undo( void );	//undo last action
@@ -76,6 +77,12 @@ class FileDifference : public wxFile
 		void ShowDebugState( void );
 		wxFileOffset Length( void );
 		long Read( char* buffer, int size );
+
+	private:
+		FileAccessMode file_access_mode;
+		ArrayOfNode	DiffArray;
+//		DiffNode *head,*tail;	//linked list holds modification record
+
 };
 
 #endif // FILEDIFFERENCE_H

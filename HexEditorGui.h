@@ -32,8 +32,11 @@
 #define idGotoOffset 1001
 #define idInterpreter 1002
 #define idToolbar 1003
-#define ID_CHK_UNSIGNED 1004
-#define ID_CHK_BIGENDIAN 1005
+#define idFileRO 1004
+#define idFileRW 1005
+#define idFileDW 1006
+#define ID_CHK_UNSIGNED 1007
+#define ID_CHK_BIGENDIAN 1008
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -48,7 +51,7 @@ class HexEditorGui : public wxFrame
 		wxMenu* editMenu;
 		wxMenu* viewMenu;
 		wxMenu* optionsMenu;
-		wxMenu* menuOptionsWritemode;
+		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
 		
@@ -56,11 +59,13 @@ class HexEditorGui : public wxFrame
 		virtual void OnClose( wxCloseEvent& event ){ event.Skip(); }
 		virtual void OnFileOpen( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFileSave( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnFileSaveAs( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFileClose( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnMenuView( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnOptionsFileMode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		
 	

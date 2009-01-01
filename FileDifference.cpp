@@ -25,10 +25,10 @@
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
 FileDifference::FileDifference(wxFileName& myfilename){
+	file_access_mode = ReadOnly;
+	the_file = myfilename;
 	if(myfilename.IsFileReadable()){//FileExists()){
-		//myfile = new wxFile(wxT("/dev/sda1"), wxFile::read);
-		Open(myfilename.GetFullPath(), wxFile::read_write);
-		// TODO (death#3#): Add option for open read only
+		Open(myfilename.GetFullPath(), wxFile::read);
 		if(! IsOpened()){
 			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 			dlg->ShowModal();dlg->Destroy();
@@ -38,6 +38,28 @@ FileDifference::FileDifference(wxFileName& myfilename){
 
 FileDifference::~FileDifference(){
 	DiffArray.Clear();
+	}
+
+bool FileDifference::SetAccessMode( FileAccessMode fam ){
+	if( Access( the_file.GetFullPath() , fam == ReadOnly ? wxFile::read : wxFile::read_write ) ){
+		Close();
+		Open( the_file.GetFullPath(), fam == ReadOnly ? wxFile::read : wxFile::read_write );
+		if(! IsOpened()){
+			wxBell();wxBell();wxBell();
+			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File load error!.\nFile closed but not opened while access change. For avoid corruption close the program"),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+			dlg->ShowModal();dlg->Destroy();
+			return false;
+			}
+		return true;
+		}
+	wxBell();
+	wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open in this mode."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+	dlg->ShowModal();dlg->Destroy();
+	return false;
+	}
+
+int FileDifference::GetAccessMode( ){
+	return file_access_mode;
 	}
 
 DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t size, bool sizechange ){
@@ -67,7 +89,7 @@ DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t
 	}
 
 bool FileDifference::IsChanged( void ){
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo )	// means this node has to be (re)writen to disk
 			return true;
 	return false;
@@ -75,7 +97,7 @@ bool FileDifference::IsChanged( void ){
 
 bool FileDifference::Apply( void ){
 	bool success=true;
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 		if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
 			Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
 			success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
@@ -90,7 +112,7 @@ int64_t FileDifference::Undo( void ){
 		wxBell();						// No possible undo action here bell
 		return -1;
 		}
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
 			if( i - 1 >= 0 ){			//if it is not first node
 				DiffArray.Item( i-1 )->flag_undo = true;	//set previous node as undo node
@@ -106,16 +128,15 @@ int64_t FileDifference::Undo( void ){
 	}
 
 void FileDifference::ShowDebugState( void ){
-	int i=0;
 	std::cout << "\n\nNumber\t" << "Start\t" << "Size\t" << "DataN\t" << "DataO\t" << "writen\t" << "Undo\n";
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 		std::cout << i << '\t' << DiffArray[i]->start_offset << '\t' << DiffArray[i]->size << '\t' << std::hex << (unsigned short)DiffArray[i]->new_data[0] << '\t'
 				<< (unsigned short)DiffArray[i]->old_data[0] << '\t' <<	DiffArray[i]->flag_commit << '\t' << DiffArray[i]->flag_undo  << std::dec << std::endl;
 		}
 	}
 
 int64_t FileDifference::Redo( void ){
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
 			DiffArray.Item(i)->flag_undo = false;
 			return DiffArray.Item(i)->start_offset;
@@ -128,7 +149,7 @@ wxFileOffset FileDifference::Length( void ){
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ )
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		max_size = (( DiffArray[i]->start_offset + DiffArray[i]->size ) > max_size ) ? ( DiffArray[i]->start_offset + DiffArray[i]->size ):( max_size );
 	return max_size;
 	}
@@ -143,7 +164,7 @@ long FileDifference::Read( char* buffer, int size ){
 	}
 
 void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 		/** MANUAL of Code understanding**
 		current_location 						= [
 		current_location + size 				= ]
@@ -179,8 +200,8 @@ void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
 	}
 
 bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bool extension ){
-	for( int i=0 ; i < DiffArray.GetCount() ; i++ ){
-		if( DiffArray[i]->flag_undo )
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+		if( DiffArray[i]->flag_undo ){
 			if(DiffArray.Item(i)->flag_commit ){	// commited undo node
 				DiffArray[i]->flag_undo = false;		//we have to survive this node as it unwriten, non undo node
 				DiffArray[i]->flag_commit = false;
@@ -196,6 +217,7 @@ bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bo
 					}
 				break;								// break for addition
 				}
+			}
 		}
 	DiffNode *rtn = NewNode( start_byte, data, size );
 		if( rtn != NULL ){

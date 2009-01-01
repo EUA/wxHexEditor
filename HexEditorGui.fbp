@@ -122,7 +122,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
-                        <property name="help"></property>
+                        <property name="help">Open a file</property>
                         <property name="id">wxID_OPEN</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Open</property>
@@ -136,8 +136,8 @@
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
+                        <property name="enabled">0</property>
+                        <property name="help">Save modifications</property>
                         <property name="id">wxID_SAVE</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Save</property>
@@ -149,10 +149,25 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help">Save current file as...</property>
+                        <property name="id">wxID_SAVEAS</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Save &amp;As</property>
+                        <property name="name">menuFileSaveAs</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut">SHIFT+CTRL+S</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnFileSaveAs</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
                         <property name="bitmap">; Load From File [-1; -1]</property>
                         <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
+                        <property name="enabled">0</property>
+                        <property name="help">Close current file</property>
                         <property name="id">idClose</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Close</property>
@@ -189,7 +204,7 @@
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
-                        <property name="enabled">1</property>
+                        <property name="enabled">0</property>
                         <property name="help"></property>
                         <property name="id">wxID_UNDO</property>
                         <property name="kind">wxITEM_NORMAL</property>
@@ -204,7 +219,7 @@
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
-                        <property name="enabled">1</property>
+                        <property name="enabled">0</property>
                         <property name="help"></property>
                         <property name="id">wxID_REDO</property>
                         <property name="kind">wxITEM_NORMAL</property>
@@ -329,7 +344,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">OnViewMenu</event>
+                        <event name="OnMenuSelection">OnMenuView</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
@@ -344,7 +359,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">OnViewMenu</event>
+                        <event name="OnMenuSelection">OnMenuView</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
@@ -353,37 +368,22 @@
                     <property name="name">optionsMenu</property>
                     <property name="permission">protected</property>
                     <object class="submenu" expanded="1">
-                        <property name="label">Write Mode</property>
-                        <property name="name">menuOptionsWritemode</property>
+                        <property name="label">File Mode</property>
+                        <property name="name">menuOptionsFileMode</property>
                         <property name="permission">protected</property>
-                        <object class="wxMenuItem" expanded="1">
-                            <property name="bitmap"></property>
-                            <property name="checked">0</property>
-                            <property name="enabled">0</property>
-                            <property name="help"></property>
-                            <property name="id">wxID_ANY</property>
-                            <property name="kind">wxITEM_RADIO</property>
-                            <property name="label">Read-Only</property>
-                            <property name="name">menuOptionsWritemodeRO</property>
-                            <property name="permission">none</property>
-                            <property name="shortcut"></property>
-                            <property name="unchecked_bitmap"></property>
-                            <event name="OnMenuSelection"></event>
-                            <event name="OnUpdateUI"></event>
-                        </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
                             <property name="checked">1</property>
                             <property name="enabled">0</property>
                             <property name="help"></property>
-                            <property name="id">wxID_ANY</property>
+                            <property name="id">idFileRO</property>
                             <property name="kind">wxITEM_RADIO</property>
-                            <property name="label">Writeable</property>
-                            <property name="name">menuOptionsWritemodeRW</property>
+                            <property name="label">Read Only</property>
+                            <property name="name">menuOptionsFileModeRO</property>
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
-                            <event name="OnMenuSelection"></event>
+                            <event name="OnMenuSelection">OnOptionsFileMode</event>
                             <event name="OnUpdateUI"></event>
                         </object>
                         <object class="wxMenuItem" expanded="1">
@@ -391,14 +391,29 @@
                             <property name="checked">0</property>
                             <property name="enabled">0</property>
                             <property name="help"></property>
-                            <property name="id">wxID_ANY</property>
+                            <property name="id">idFileRW</property>
                             <property name="kind">wxITEM_RADIO</property>
-                            <property name="label">Direct Write</property>
-                            <property name="name">menuOptionsWritemodeDW</property>
+                            <property name="label">Writeable</property>
+                            <property name="name">menuOptionsFileModeRW</property>
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
-                            <event name="OnMenuSelection"></event>
+                            <event name="OnMenuSelection">OnOptionsFileMode</event>
+                            <event name="OnUpdateUI"></event>
+                        </object>
+                        <object class="wxMenuItem" expanded="1">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">0</property>
+                            <property name="help"></property>
+                            <property name="id">idFileDW</property>
+                            <property name="kind">wxITEM_RADIO</property>
+                            <property name="label">Direct Write</property>
+                            <property name="name">menuOptionsFileModeDW</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">OnOptionsFileMode</event>
                             <event name="OnUpdateUI"></event>
                         </object>
                     </object>

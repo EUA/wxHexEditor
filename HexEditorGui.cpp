@@ -32,10 +32,17 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxMenuItem* menuFileSave;
 	menuFileSave = new wxMenuItem( fileMenu, wxID_SAVE, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileSave );
+	menuFileSave->Enable( false );
+	
+	wxMenuItem* menuFileSaveAs;
+	menuFileSaveAs = new wxMenuItem( fileMenu, wxID_SAVEAS, wxString( wxT("Save &As") ) + wxT('\t') + wxT("SHIFT+CTRL+S"), wxEmptyString, wxITEM_NORMAL );
+	fileMenu->Append( menuFileSaveAs );
+	menuFileSaveAs->Enable( false );
 	
 	wxMenuItem* menuFileClose;
 	menuFileClose = new wxMenuItem( fileMenu, idClose, wxString( wxT("&Close") ) + wxT('\t') + wxT("CTRL+W"), wxEmptyString, wxITEM_NORMAL );
 	fileMenu->Append( menuFileClose );
+	menuFileClose->Enable( false );
 	
 	fileMenu->AppendSeparator();
 	
@@ -49,10 +56,12 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxMenuItem* menuEditUndo;
 	menuEditUndo = new wxMenuItem( editMenu, wxID_UNDO, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditUndo );
+	menuEditUndo->Enable( false );
 	
 	wxMenuItem* menuEditRedo;
 	menuEditRedo = new wxMenuItem( editMenu, wxID_REDO, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditRedo );
+	menuEditRedo->Enable( false );
 	
 	editMenu->AppendSeparator();
 	
@@ -102,24 +111,24 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	mbar->Append( viewMenu, wxT("&View") );
 	
 	optionsMenu = new wxMenu();
-	menuOptionsWritemode = new wxMenu();
-	wxMenuItem* menuOptionsWritemodeRO;
-	menuOptionsWritemodeRO = new wxMenuItem( menuOptionsWritemode, wxID_ANY, wxString( wxT("Read-Only") ) , wxEmptyString, wxITEM_RADIO );
-	menuOptionsWritemode->Append( menuOptionsWritemodeRO );
-	menuOptionsWritemodeRO->Enable( false );
+	menuOptionsFileMode = new wxMenu();
+	wxMenuItem* menuOptionsFileModeRO;
+	menuOptionsFileModeRO = new wxMenuItem( menuOptionsFileMode, idFileRO, wxString( wxT("Read Only") ) , wxEmptyString, wxITEM_RADIO );
+	menuOptionsFileMode->Append( menuOptionsFileModeRO );
+	menuOptionsFileModeRO->Enable( false );
+	menuOptionsFileModeRO->Check( true );
 	
-	wxMenuItem* menuOptionsWritemodeRW;
-	menuOptionsWritemodeRW = new wxMenuItem( menuOptionsWritemode, wxID_ANY, wxString( wxT("Writeable") ) , wxEmptyString, wxITEM_RADIO );
-	menuOptionsWritemode->Append( menuOptionsWritemodeRW );
-	menuOptionsWritemodeRW->Enable( false );
-	menuOptionsWritemodeRW->Check( true );
+	wxMenuItem* menuOptionsFileModeRW;
+	menuOptionsFileModeRW = new wxMenuItem( menuOptionsFileMode, idFileRW, wxString( wxT("Writeable") ) , wxEmptyString, wxITEM_RADIO );
+	menuOptionsFileMode->Append( menuOptionsFileModeRW );
+	menuOptionsFileModeRW->Enable( false );
 	
-	wxMenuItem* menuOptionsWritemodeDW;
-	menuOptionsWritemodeDW = new wxMenuItem( menuOptionsWritemode, wxID_ANY, wxString( wxT("Direct Write") ) , wxEmptyString, wxITEM_RADIO );
-	menuOptionsWritemode->Append( menuOptionsWritemodeDW );
-	menuOptionsWritemodeDW->Enable( false );
+	wxMenuItem* menuOptionsFileModeDW;
+	menuOptionsFileModeDW = new wxMenuItem( menuOptionsFileMode, idFileDW, wxString( wxT("Direct Write") ) , wxEmptyString, wxITEM_RADIO );
+	menuOptionsFileMode->Append( menuOptionsFileModeDW );
+	menuOptionsFileModeDW->Enable( false );
 	
-	optionsMenu->Append( -1, wxT("Write Mode"), menuOptionsWritemode );
+	optionsMenu->Append( -1, wxT("File Mode"), menuOptionsFileMode );
 	
 	wxMenuItem* menuOptionsPreferences;
 	menuOptionsPreferences = new wxMenuItem( optionsMenu, wxID_PREFERENCES, wxString( wxT("Preferences") ) , wxEmptyString, wxITEM_NORMAL );
@@ -145,12 +154,16 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
 	this->Connect( menuFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileOpen ) );
 	this->Connect( menuFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
+	this->Connect( menuFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSaveAs ) );
 	this->Connect( menuFileClose->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileClose ) );
 	this->Connect( menuFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
 	this->Connect( menuEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditUndo ) );
 	this->Connect( menuEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditRedo ) );
-	this->Connect( menuViewInterprater->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewToolbar->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Connect( menuViewInterprater->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuView ) );
+	this->Connect( menuViewToolbar->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuView ) );
+	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsFileMode ) );
+	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsFileMode ) );
+	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsFileMode ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -160,12 +173,16 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileOpen ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSaveAs ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileClose ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnQuit ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditUndo ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnEditRedo ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuView ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuView ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsFileMode ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsFileMode ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsFileMode ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 

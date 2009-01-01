@@ -58,6 +58,9 @@ class HexEditor: public HexEditorCtrl {
 		void GoTo( int64_t goto_offset=-1 );
 		void OnResize( wxSizeEvent &event );
 
+		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); };
+		int GetFileAccessMode( ){ return myfile->GetAccessMode( ); };
+
 //		void redo( void );
 //		void undo( void );
 //		void finddlg( void );

@@ -81,6 +81,15 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
 
+	MyInfoPanel = new InfoPanel( this, -1 );
+	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
+					Caption(wxT("InfoPanel")).
+					TopDockable(false).
+					BottomDockable(false).
+					MinSize(wxSize(150,-1)).
+					Left().Layer(1) );
+	mbar->Check( idInfoPanel, true );
+
 	MyInterpreter = new DataInterpreter( this, -1 );
 
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
@@ -91,11 +100,11 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 					Left().Layer(1) );
 	mbar->Check( idInterpreter, true );
 
-	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter) );
+	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
 
 #if defined( _DEBUG_ )
 	wxFileName myname(_("./testfile"));
-	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName() );
+	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName() );
 	ActionEnabler();
 #endif
 	MyAUI->Update();
@@ -179,7 +188,7 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 											wxDefaultPosition);
 	if(wxID_OK == filediag->ShowModal()){
 		wxFileName myname(filediag->GetPath());
-		MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, &myname ), myname.GetFullName(), true);
+		MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName(), true);
 		ActionEnabler();
 		filediag->Destroy();
 		}
@@ -198,7 +207,7 @@ void HexEditorFrame::OnFileClose( wxCommandEvent& event ){
 	if( MyHexEditor != NULL )
 		if( MyHexEditor->FileClose() ){
 			MyNotebook->DeletePage( MyNotebook->GetSelection() );
-			// delete MyHexEditor; not neccessery, deletepage also delete this
+			// delete MyHexEditor; not neccessery, DeletePage also delete this
 			}
 	 if( MyNotebook->GetPageCount() == 0 )
 		ActionDisabler();
@@ -242,6 +251,10 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 			MyAUI->GetPane(MyInterpreter).Show(event.IsChecked());
 			MyAUI->Update();
 			break;
+		case idInfoPanel:
+			MyAUI->GetPane(MyInfoPanel).Show(event.IsChecked());
+			MyAUI->Update();
+			break;
 		case idToolbar:
 			MyAUI->GetPane(Toolbar).Show(event.IsChecked());
 			MyAUI->Update();
@@ -276,7 +289,6 @@ void HexEditorFrame::OnOptionsFileMode( wxCommandEvent& event ){
 			}
 	}
 
-
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
@@ -287,7 +299,7 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	for ( size_t n = 0; n < nFiles; n++ ) {
 		wxFileName myfl( filenames[n] );
 		if ( myfl.FileExists() ){
-			m_pOwner->AddPage( new HexEditor( m_pOwner, 1, statusbar, myinterpreter, &myfl), myfl.GetFullName(), true);
+			m_pOwner->AddPage( new HexEditor( m_pOwner, 1, statusbar, myinterpreter, myinfopanel, &myfl), myfl.GetFullName(), true);
 			}
 		}
 	return TRUE;

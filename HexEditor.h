@@ -28,6 +28,7 @@
 
 #include "FileDifference.h"
 #include "DataInterpreter.h"
+#include "InfoPanel.h"
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 
@@ -38,6 +39,7 @@ class HexEditor: public HexEditorCtrl {
 					int id,
 					wxStatusBar *statusbar=NULL,
 					DataInterpreter *interpreter=NULL,
+					InfoPanel *infopanel=NULL,
 					wxFileName* myfile=NULL,
 					const wxPoint& pos=wxDefaultPosition,
 					const wxSize& size=wxDefaultSize,
@@ -45,11 +47,11 @@ class HexEditor: public HexEditorCtrl {
 		~HexEditor( void );
 		friend class scrollthread;
 		DataInterpreter *interpreter;
+		InfoPanel *infopanel;
 
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 
-		int64_t FileLenght( void );
 		void FileOpen( wxFileName& filename  );
 		bool FileSave( bool question = true );
 		bool FileClose( void );
@@ -58,6 +60,8 @@ class HexEditor: public HexEditorCtrl {
 		void GoTo( int64_t goto_offset=-1 );
 		void OnResize( wxSizeEvent &event );
 
+
+		int64_t FileLenght( void );
 		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); };
 		int GetFileAccessMode( ){ return myfile->GetAccessMode( ); };
 

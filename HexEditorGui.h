@@ -32,11 +32,12 @@
 #define idGotoOffset 1001
 #define idInterpreter 1002
 #define idToolbar 1003
-#define idFileRO 1004
-#define idFileRW 1005
-#define idFileDW 1006
-#define ID_CHK_UNSIGNED 1007
-#define ID_CHK_BIGENDIAN 1008
+#define idInfoPanel 1004
+#define idFileRO 1005
+#define idFileRW 1006
+#define idFileDW 1007
+#define ID_CHK_UNSIGNED 1008
+#define ID_CHK_BIGENDIAN 1009
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -64,7 +65,7 @@ class HexEditorGui : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnMenuView( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOptionsFileMode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		
@@ -103,23 +104,28 @@ class InterpreterGui : public wxPanel
 		
 	
 	public:
-		InterpreterGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
 	
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class InfoPanel
+/// Class InfoPanelGui
 ///////////////////////////////////////////////////////////////////////////////
-class InfoPanel : public wxPanel 
+class InfoPanelGui : public wxPanel 
 {
 	private:
 	
 	protected:
+		wxStaticText* m_static_name;
+		wxStaticText* m_static_path;
+		wxStaticText* m_static_size;
+		wxStaticText* m_static_accessmode;
+		wxStaticText* m_static_devtype;
 	
 	public:
-		InfoPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
-		~InfoPanel();
+		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~InfoPanelGui();
 	
 };
 

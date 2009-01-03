@@ -59,21 +59,24 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiNotebook *MyNotebook;
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
+		InfoPanel *MyInfoPanel;
 		wxAuiToolBar* Toolbar;
 	};
 
 class DnDFile : public wxFileDropTarget{
 	public:
-		DnDFile(wxAuiNotebook *pOwner, wxStatusBar *statusbarx, DataInterpreter *interpreterx) {
+		DnDFile(wxAuiNotebook *pOwner, wxStatusBar *statusbar_, DataInterpreter *interpreter_, InfoPanel *infopanel_) {
 			m_pOwner = pOwner;
-			statusbar = statusbarx;
-			myinterpreter = interpreterx;
+			statusbar = statusbar_;
+			myinterpreter = interpreter_;
+			myinfopanel = infopanel_;
 			}
 	virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
 	private:
 		wxAuiNotebook *m_pOwner;
 		wxStatusBar	*statusbar;
 		DataInterpreter *myinterpreter;
+		InfoPanel *myinfopanel;
 	};
 
 

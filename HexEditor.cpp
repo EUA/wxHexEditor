@@ -25,20 +25,22 @@
 
 HexEditor::HexEditor(	wxWindow* parent,
 							int id,
-							wxStatusBar *statbar,
-							DataInterpreter *interpreter,
-							wxFileName* myfilenm,
+							wxStatusBar *statbar_,
+							DataInterpreter *interpreter_,
+							InfoPanel *infopanel_,
+							wxFileName* myfilename_,
 							const wxPoint& pos,
 							const wxSize& size,
 							long style ):
 			HexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL)
-			,statusbar(statbar),
-			interpreter(interpreter)
+			,statusbar(statbar_),
+			interpreter(interpreter_),
+			infopanel(infopanel_)
 			{
 		printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
 		myfile = NULL;
-		if( myfilenm != NULL ){
-			myfilename = *myfilenm;
+		if( myfilename_ != NULL ){
+			myfilename = *myfilename_;
 			FileOpen( myfilename );
 			}
 		offset_scroll->Enable( true );

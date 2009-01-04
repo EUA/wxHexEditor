@@ -25,7 +25,7 @@
 #include "InfoPanel.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
-				HexEditorGui( parent, id, wxT("wxHexEditor v0.04 AlPhA - Development version") ){
+				HexEditorGui( parent, id, wxT("wxHexEditor v0.04++ AlPhA - Development version") ){
 	MyAUI = new wxAuiManager( this );
 
 	MyNotebook = new wxAuiNotebook(this,-1);
@@ -308,7 +308,6 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 #endif
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 		if( MyHexEditor != NULL ){
-			//MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->GetFileKind() );
 			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->GetFileAccessModeString() );
 			}
 	}

@@ -103,7 +103,7 @@ void HexEditor::FileOpen(wxFileName& myfilename ){
 		SetHexInsertionPoint(0);
 		}
 	else{
-		wxMessageDialog *dlg = new wxMessageDialog(this,_("File not found."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+		wxMessageDialog *dlg = new wxMessageDialog(this,_("File is not readable. ??Permissions?? "),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 		dlg->ShowModal();dlg->Destroy();
 		}
 	}

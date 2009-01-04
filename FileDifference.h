@@ -60,7 +60,7 @@ class FileDifference : public wxFile{
 	    FileDifference(wxFileName& myfilename);
 		~FileDifference();
 
-		enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite };
+		enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
 		wxFileName the_file;
 		bool SetAccessMode( FileAccessMode fam );
 		int GetAccessMode( void );

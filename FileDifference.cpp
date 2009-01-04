@@ -41,15 +41,17 @@ FileDifference::~FileDifference(){
 	}
 
 bool FileDifference::SetAccessMode( FileAccessMode fam ){
-	if( Access( the_file.GetFullPath() , fam == ReadOnly ? wxFile::read : wxFile::read_write ) ){
+	if( Access( the_file.GetFullPath() , (fam == ReadOnly ? wxFile::read : wxFile::read_write) ) ){
 		Close();
-		Open( the_file.GetFullPath(), fam == ReadOnly ? wxFile::read : wxFile::read_write );
+		Open( the_file.GetFullPath(), (fam == ReadOnly ? wxFile::read : wxFile::read_write) );
 		if(! IsOpened()){
 			wxBell();wxBell();wxBell();
 			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File load error!.\nFile closed but not opened while access change. For avoid corruption close the program"),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 			dlg->ShowModal();dlg->Destroy();
+			file_access_mode = AccessInvalid;
 			return false;
 			}
+		file_access_mode = fam;
 		return true;
 		}
 	wxBell();

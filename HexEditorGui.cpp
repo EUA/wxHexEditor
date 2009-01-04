@@ -109,7 +109,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	viewMenu->Append( menuViewToolbar );
 	
 	wxMenuItem* menuViewInfopanel;
-	menuViewInfopanel = new wxMenuItem( viewMenu, idInfoPanel, wxString( wxT("Info Panel") ) , wxEmptyString, wxITEM_CHECK );
+	menuViewInfopanel = new wxMenuItem( viewMenu, idInfoPanel, wxString( wxT("InfoPanel") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewInfopanel );
 	
 	mbar->Append( viewMenu, wxT("&View") );
@@ -290,7 +290,6 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
-	mainSizer->Fit( this );
 	
 	// Connect Events
 	m_check_unsigned->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
@@ -309,29 +308,73 @@ InfoPanelGui::InfoPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos,
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* nameSizer;
+	nameSizer = new wxBoxSizer( wxHORIZONTAL );
+	
 	m_static_name = new wxStaticText( this, wxID_ANY, wxT("Name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_name->Wrap( -1 );
-	mainSizer->Add( m_static_name, 0, wxALL, 5 );
+	nameSizer->Add( m_static_name, 0, wxALL, 2 );
+	
+	m_name = new wxStaticText( this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_name->Wrap( -1 );
+	nameSizer->Add( m_name, 1, wxBOTTOM|wxTOP, 2 );
+	
+	mainSizer->Add( nameSizer, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* pathSizer;
+	pathSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_static_path = new wxStaticText( this, wxID_ANY, wxT("Path:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_path->Wrap( -1 );
-	mainSizer->Add( m_static_path, 0, wxALL, 5 );
+	pathSizer->Add( m_static_path, 0, wxALL, 2 );
+	
+	m_path = new wxStaticText( this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_path->Wrap( -1 );
+	pathSizer->Add( m_path, 1, wxALL|wxEXPAND, 2 );
+	
+	mainSizer->Add( pathSizer, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* sizeSizer;
+	sizeSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_static_size = new wxStaticText( this, wxID_ANY, wxT("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_size->Wrap( -1 );
-	mainSizer->Add( m_static_size, 0, wxALL, 5 );
+	sizeSizer->Add( m_static_size, 0, wxALL, 2 );
 	
-	m_static_accessmode = new wxStaticText( this, wxID_ANY, wxT("Access Mode:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_static_accessmode->Wrap( -1 );
-	mainSizer->Add( m_static_accessmode, 0, wxALL, 5 );
+	m_size = new wxStaticText( this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_size->Wrap( -1 );
+	sizeSizer->Add( m_size, 0, wxALL, 2 );
 	
-	m_static_devtype = new wxStaticText( this, wxID_ANY, wxT("Device Type:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_static_devtype->Wrap( -1 );
-	mainSizer->Add( m_static_devtype, 0, wxALL, 5 );
+	mainSizer->Add( sizeSizer, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* accessSizer;
+	accessSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_static_access = new wxStaticText( this, wxID_ANY, wxT("Access:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_static_access->Wrap( -1 );
+	accessSizer->Add( m_static_access, 0, wxALL, 2 );
+	
+	m_access = new wxStaticText( this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_access->Wrap( -1 );
+	accessSizer->Add( m_access, 0, wxALL, 2 );
+	
+	mainSizer->Add( accessSizer, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* deviceSizer;
+	deviceSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_static_device = new wxStaticText( this, wxID_ANY, wxT("Device:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_static_device->Wrap( -1 );
+	deviceSizer->Add( m_static_device, 0, wxALL, 2 );
+	
+	m_device = new wxStaticText( this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_device->Wrap( -1 );
+	deviceSizer->Add( m_device, 0, wxALL, 2 );
+	
+	mainSizer->Add( deviceSizer, 0, wxEXPAND, 5 );
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
-	mainSizer->Fit( this );
 }
 
 InfoPanelGui::~InfoPanelGui()

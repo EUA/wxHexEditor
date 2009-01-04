@@ -63,7 +63,9 @@ class FileDifference : public wxFile{
 		enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite };
 		wxFileName the_file;
 		bool SetAccessMode( FileAccessMode fam );
-		int GetAccessMode( );
+		int GetAccessMode( void );
+		wxString GetAccessModeString( void );
+		wxFileName GetFileName( void );
 
 		bool IsChanged( void );	//returns if file is dirty or not
 		bool Apply( void );		//flush changes to file

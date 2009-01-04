@@ -26,13 +26,13 @@
 
 #include "HexEditorGui.h"
 #include "HexEditor.h"
-#include "DataInterpreter.h"
 
 #include <wx/filename.h>
 #include <wx/dnd.h>
 #include <wx/artprov.h>
 #include <wx/aui/aui.h>
 #include <wx/aui/auibar.h>
+#include <wx/aui/auibook.h>
 
 class HexEditorFrame : public HexEditorGui {
 	public:
@@ -54,6 +54,7 @@ class HexEditorFrame : public HexEditorGui {
 
 		void ActionEnabler( void );
 		void ActionDisabler( void );
+		void OnNotebookTabSelection( wxAuiNotebookEvent& event );
 
 	private:
 		wxAuiNotebook *MyNotebook;

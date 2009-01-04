@@ -104,7 +104,7 @@ class InterpreterGui : public wxPanel
 		
 	
 	public:
-		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,190 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
 	
 };
@@ -118,13 +118,18 @@ class InfoPanelGui : public wxPanel
 	
 	protected:
 		wxStaticText* m_static_name;
+		wxStaticText* m_name;
 		wxStaticText* m_static_path;
+		wxStaticText* m_path;
 		wxStaticText* m_static_size;
-		wxStaticText* m_static_accessmode;
-		wxStaticText* m_static_devtype;
+		wxStaticText* m_size;
+		wxStaticText* m_static_access;
+		wxStaticText* m_access;
+		wxStaticText* m_static_device;
+		wxStaticText* m_device;
 	
 	public:
-		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );
 		~InfoPanelGui();
 	
 };

@@ -22,6 +22,8 @@
 *************************************************************************/
 #include "HexEditorFrame.h"
 
+#include "InfoPanel.h"
+
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxT("wxHexEditor v0.04 AlPhA - Development version") ){
 	MyAUI = new wxAuiManager( this );
@@ -86,7 +88,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 					Caption(wxT("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).
-					MinSize(wxSize(150,-1)).
+					MinSize(wxSize(170,111)).
 					Left().Layer(1) );
 	mbar->Check( idInfoPanel, true );
 
@@ -96,7 +98,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 					Caption(wxT("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
-					MinSize(wxSize(170,-1)).
+					MinSize(wxSize(170,190)).
 					Left().Layer(1) );
 	mbar->Check( idInterpreter, true );
 
@@ -110,10 +112,15 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	MyAUI->Update();
 
 	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
+//	this->Connect( wxEVT_AUINOTEBOOK_PAGE_CHANGED
+//	this->Connect( wxEVT_AUINOTEBOOK_PAGE_CLOSE, wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
+// TODO (death#1#): wxEVT_AUINOTEBOOK_PAGE_CHANGED needed here but it doesn't works!
 	}
 
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
@@ -291,16 +298,27 @@ void HexEditorFrame::OnOptionsFileMode( wxCommandEvent& event ){
 
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
+	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
+	}
+
+void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ) \n" ;
+#endif
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		if( MyHexEditor != NULL ){
+			//MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->GetFileKind() );
+			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->GetFileAccessModeString() );
+			}
 	}
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();
 	for ( size_t n = 0; n < nFiles; n++ ) {
 		wxFileName myfl( filenames[n] );
-		if ( myfl.FileExists() ){
+		if ( myfl.FileExists() )
 			m_pOwner->AddPage( new HexEditor( m_pOwner, 1, statusbar, myinterpreter, myinfopanel, &myfl), myfl.GetFullName(), true);
-			}
 		}
 	return TRUE;
 	}

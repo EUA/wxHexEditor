@@ -58,8 +58,18 @@ bool FileDifference::SetAccessMode( FileAccessMode fam ){
 	return false;
 	}
 
-int FileDifference::GetAccessMode( ){
+int FileDifference::GetAccessMode( void ){
 	return file_access_mode;
+	}
+
+wxString FileDifference::GetAccessModeString( void ){
+	return file_access_mode == ReadOnly ? _T("Read-Only") :
+		file_access_mode == ReadWrite ? _T("Read-Write") :
+		file_access_mode == DirectWrite ? _T("Direct-Write") : _("Error!");
+	}
+
+wxFileName FileDifference::GetFileName( void ){
+	return the_file;
 	}
 
 DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t size, bool sizechange ){

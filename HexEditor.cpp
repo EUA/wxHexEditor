@@ -40,8 +40,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 		printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
 		myfile = NULL;
 		if( myfilename_ != NULL ){
-			myfilename = *myfilename_;
-			FileOpen( myfilename );
+			FileOpen( *myfilename_ );
 			}
 		offset_scroll->Enable( true );
 		Dynamic_Connector();
@@ -87,8 +86,7 @@ void HexEditor::Dynamic_Disconnector(){
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
-void HexEditor::FileOpen(wxFileName& myfn){
-	myfilename = wxFileName(myfn);
+void HexEditor::FileOpen(wxFileName& myfilename ){
 	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
 	else if(myfilename.IsFileReadable()){ //IsFileReadable
 		myfile = new FileDifference( myfilename );
@@ -162,7 +160,6 @@ bool HexEditor::FileClose( void ){
 		myfile->Close();
 		delete myfile;
 		myfile = NULL;
-		myfilename.Clear();
 		}
 	return true;
 	}
@@ -640,10 +637,6 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	HexEditorCtrl::OnMouseSelectionEnd( event );
 	myscroll->UpdateSpeed( 0 );
-	}
-
-int64_t HexEditor::FileLenght(){
-	return myfile->Length();
 	}
 
 void HexEditor::SetHexInsertionPoint( int local_hex_location){

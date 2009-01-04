@@ -46,8 +46,6 @@ class HexEditor: public HexEditorCtrl {
 					long style=0);
 		~HexEditor( void );
 		friend class scrollthread;
-		DataInterpreter *interpreter;
-		InfoPanel *infopanel;
 
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
@@ -61,10 +59,11 @@ class HexEditor: public HexEditorCtrl {
 		void OnResize( wxSizeEvent &event );
 
 
-		int64_t FileLenght( void );
+		int64_t FileLenght( void ){ return myfile->Length();};
+		wxFileName GetFileName( void ){ return myfile->GetFileName();};
 		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); };
-		int GetFileAccessMode( ){ return myfile->GetAccessMode( ); };
-
+		int GetFileAccessMode( void ){ return myfile->GetAccessMode();};
+		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();};
 //		void redo( void );
 //		void undo( void );
 //		void finddlg( void );
@@ -98,17 +97,6 @@ private:
     void init_hex_editor( void );
     wxWindow* parent;
 	int id;
-    DECLARE_EVENT_TABLE()
-
-    void OnMouseMove( wxMouseEvent& event );
-	void OnKeyboardChar(wxKeyEvent& event);
-    void OnOffsetControlMouseFocus( wxMouseEvent& event );
-    void OnMouseSelectionEnd( wxMouseEvent& event );
-    wxChar inline TextFilter(const unsigned char);
-	void hex_mouse_input_handler( wxMouseEvent& event );
-	void text_mouse_input_handler( wxMouseEvent& event );
-    void TextCharReplace(long byte, const wxChar chr);
-    void HexCharReplace(long hex_location, const wxChar chr);
 	int search_at_buffer( const char *bfr, int bfr_size, const char* search, int search_size );
 
 protected:
@@ -120,9 +108,10 @@ protected:
 //=======================
 	protected:
 		wxStatusBar* statusbar;
-		wxFileName myfilename;
 		FileDifference *myfile;
 		scrollthread *myscroll;
+		DataInterpreter *interpreter;
+		InfoPanel *infopanel;
 
 	private:
 	    void Dynamic_Connector( void );

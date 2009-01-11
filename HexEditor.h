@@ -85,6 +85,7 @@ protected:
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseWhell( wxMouseEvent& event );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
+
 //=====================
 /*
 

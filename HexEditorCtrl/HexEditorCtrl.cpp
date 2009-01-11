@@ -290,7 +290,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
 
-#ifdef _DEBUG_
+#ifdef _DEBUG2_
 	std::cout<< "HexEditorCtrl SizeEvent Size(X,Y)=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
 			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
 			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
@@ -346,7 +346,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	this->Layout();
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
 
-#ifdef _DEBUG_
+#ifdef _DEBUG2_
 	std::cout<< "HexEditorCtrl After Size(X,Y)=(" << x << ',' << y << ")\n"
 			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << offset_scroll->GetSize().GetY()<<")\n"
 			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << offset_ctrl->GetSize().GetY()<<")\n"

@@ -343,7 +343,7 @@ void wxHexCtrl::ClearSelection( bool repaint ){
 	}
 
 void wxHexCtrl::MoveCaret(wxPoint p){
-#ifdef _DEBUG_
+#ifdef _DEBUG2_
 	std::cout << "MoveCaret(wxPoint) Coordinate X:Y = " << p.x	<< " " << p.y << std::endl;
 #endif
     m_Caret = p;

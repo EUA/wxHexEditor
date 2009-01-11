@@ -26,7 +26,35 @@
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxT("wxHexEditor v0.04++ AlPhA - Development version") ){
-	MyAUI = new wxAuiManager( this );
+
+	PrepareAUI();
+
+#if defined( _DEBUG_ )
+	wxFileName myname(_("./testfile"));
+	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName() );
+	ActionEnabler();
+	MyNotebook->SetSelection( 0 );
+#endif
+
+	MyAUI->Update();
+
+	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+
+	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
+	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED
+	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGING
+	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE
+	// wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
+	}
+
+HexEditorFrame::~HexEditorFrame(){
+	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
+
+	}
+void HexEditorFrame::PrepareAUI( void ){
+		MyAUI = new wxAuiManager( this );
 
 	MyNotebook = new wxAuiNotebook(this,-1);
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
@@ -104,23 +132,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
 
-#if defined( _DEBUG_ )
-	wxFileName myname(_("./testfile"));
-	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName() );
-	ActionEnabler();
-#endif
-	MyAUI->Update();
-
-	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
-//	this->Connect( wxEVT_AUINOTEBOOK_PAGE_CHANGED
-//	this->Connect( wxEVT_AUINOTEBOOK_PAGE_CLOSE, wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
-// TODO (death#1#): wxEVT_AUINOTEBOOK_PAGE_CHANGED needed here but it doesn't works!
-	}
-
-HexEditorFrame::~HexEditorFrame(){
-	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
@@ -297,9 +308,25 @@ void HexEditorFrame::OnOptionsFileMode( wxCommandEvent& event ){
 	}
 
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
+#ifdef _DEBUG_
+	std::cout << "HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event) \n" ;
+#endif
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		if( MyHexEditor != NULL )
+			switch( MyHexEditor->GetFileAccessMode() ){
+				case FileDifference::ReadOnly :
+					mbar->Check(idFileRO, true);
+					break;
+				case FileDifference::ReadWrite :
+					mbar->Check(idFileRW, true);
+					break;
+				case FileDifference::DirectWrite :
+					mbar->Check(idFileDW, true);
+					break;
+				}
 	}
 
 void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){

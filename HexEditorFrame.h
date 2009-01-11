@@ -57,6 +57,7 @@ class HexEditorFrame : public HexEditorGui {
 		void OnNotebookTabSelection( wxAuiNotebookEvent& event );
 
 	private:
+		void PrepareAUI( void );
 		wxAuiNotebook *MyNotebook;
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;

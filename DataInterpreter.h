@@ -115,6 +115,14 @@ class DataInterpreter : public InterpreterGui{
 
 		mutexset.Unlock();
 		}
+	void Clear( void ){
+		m_textctrl_8bit ->Clear();
+		m_textctrl_16bit->Clear();
+		m_textctrl_32bit->Clear();
+		m_textctrl_64bit->Clear();
+		m_textctrl_float->Clear();
+		m_textctrl_double->Clear();
+		}
 
 	void OnUpdate( wxCommandEvent& event ){
 		unidata::endian *X = m_check_bigendian->GetValue() ?  &unidata.big : &unidata.little;

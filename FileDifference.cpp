@@ -24,11 +24,15 @@
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
-FileDifference::FileDifference(wxFileName& myfilename){
-	file_access_mode = ReadOnly;
+FileDifference::FileDifference(wxFileName& myfilename, FileAccessMode FAM ){
+	file_access_mode = FAM;
 	the_file = myfilename;
 	if(myfilename.IsFileReadable()){//FileExists()){
-		Open(myfilename.GetFullPath(), wxFile::read);
+		if( FAM == ReadOnly)
+			Open(myfilename.GetFullPath(), wxFile::read);
+		else
+			Open(myfilename.GetFullPath(), wxFile::read_write);
+
 		if(! IsOpened()){
 			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 			dlg->ShowModal();dlg->Destroy();
@@ -109,12 +113,13 @@ bool FileDifference::IsChanged( void ){
 
 bool FileDifference::Apply( void ){
 	bool success=true;
-	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
-		if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
-			Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
-			success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
-			DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
-			}
+	if( file_access_mode != ReadOnly )
+		for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+			if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
+				Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
+				success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
+				DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
+				}
 		}
 	return success;
 	}

@@ -57,10 +57,10 @@ WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
 class FileDifference : public wxFile{
 	public:
-	    FileDifference(wxFileName& myfilename);
+	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
+	    FileDifference(wxFileName& myfilename, FileAccessMode FAM = ReadOnly);
 		~FileDifference();
 
-		enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
 		wxFileName the_file;
 		bool SetAccessMode( FileAccessMode fam );
 		int GetAccessMode( void );

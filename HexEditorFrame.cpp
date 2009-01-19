@@ -42,10 +42,11 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
+	// wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
 	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED
 	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGING
 	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE
-	// wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
+
 	}
 
 HexEditorFrame::~HexEditorFrame(){
@@ -100,8 +101,6 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT));
 	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE));
 
-	ActionDisabler();
-
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
     Toolbar->Realize();
 	mbar->Check( idToolbar, true );
@@ -130,8 +129,11 @@ void HexEditorFrame::PrepareAUI( void ){
 					Left().Layer(1) );
 	mbar->Check( idInterpreter, true );
 
+	ActionDisabler();
 	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
-
+	MyInfoPanel->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
+	MyInterpreter->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
+	Toolbar->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
@@ -194,6 +196,8 @@ void HexEditorFrame::ActionDisabler( void ){
 	Toolbar->EnableTool( wxID_PASTE, false);
 	Toolbar->EnableTool( wxID_CUT, false);
 	Toolbar->EnableTool( wxID_DELETE, false);
+
+	MyInterpreter->Clear();
 	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
@@ -216,7 +220,7 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 void HexEditorFrame::OnFileSave( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		MyHexEditor->FileSave();
+		MyHexEditor->FileSave( false );
 	event.Skip();
 	}
 

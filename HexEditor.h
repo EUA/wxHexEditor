@@ -32,6 +32,8 @@
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 
+#define MB 1024*1024	//this utility uses old ECS format.
+
 class scrollthread;
 class HexEditor: public HexEditorCtrl {
 	public:

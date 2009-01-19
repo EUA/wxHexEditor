@@ -46,7 +46,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 		Dynamic_Connector();
 	}
 	HexEditor::~HexEditor(){
-		FileClose();
+		//FileClose();
 		Dynamic_Disconnector();
 	}
 
@@ -89,7 +89,12 @@ void HexEditor::Dynamic_Disconnector(){
 void HexEditor::FileOpen(wxFileName& myfilename ){
 	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
 	else if(myfilename.IsFileReadable()){ //IsFileReadable
-		myfile = new FileDifference( myfilename );
+
+		if ( myfilename.GetSize( ) > 50*MB )
+			myfile = new FileDifference( myfilename );
+		else
+			myfile = new FileDifference( myfilename, FileDifference::ReadWrite );
+
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
@@ -110,11 +115,16 @@ void HexEditor::FileOpen(wxFileName& myfilename ){
 
 bool HexEditor::FileSave( bool question ){
 	if( myfile->IsChanged() ){
-		wxMessageDialog *msg = new wxMessageDialog(
-									this, _( "Do you want to save this file?\n")
-								, _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-		int selection=msg->ShowModal();
-		msg->Destroy();
+		int selection;
+		if ( !question )
+			selection = wxID_YES;
+		else{
+			wxMessageDialog *msg = new wxMessageDialog(
+					this, _( "Do you want to save this file?\n")
+					, _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
+			selection=msg->ShowModal();
+			msg->Destroy();
+			}
 		switch( selection ){
 			case(wxID_YES):
 				if( !myfile->Apply() ){

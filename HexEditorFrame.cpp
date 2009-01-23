@@ -30,7 +30,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	PrepareAUI();
 
 #if defined( _DEBUG_ )
-	wxFileName myname(_("./testfile"));
+	wxFileName myname(_("./testfile.swp"));
 	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName() );
 	ActionEnabler();
 	MyNotebook->SetSelection( 0 );
@@ -42,6 +42,8 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
+	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
+
 	// wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
 	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED
 	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGING
@@ -51,9 +53,11 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
-
+	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
+	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 	}
+
 void HexEditorFrame::PrepareAUI( void ){
 		MyAUI = new wxAuiManager( this );
 
@@ -338,10 +342,25 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 	std::cout << "HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ) \n" ;
 #endif
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
-		if( MyHexEditor != NULL ){
+		if( MyHexEditor != NULL )
 			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->GetFileAccessModeString() );
+	}
+
+void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ) \n" ;
+#endif
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( event.GetSelection() ) );
+		if( MyHexEditor != NULL ){
+			if( MyHexEditor->FileClose() ){
+				MyNotebook->DeletePage( event.GetSelection() );
+				// delete MyHexEditor; not neccessery, DeletePage also delete this
+				}
+			if( MyNotebook->GetPageCount() == 0 )
+				ActionDisabler();
 			}
 	}
+
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();

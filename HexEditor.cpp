@@ -595,30 +595,34 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 
 #endif
 	if(event.GetWheelRotation() > 0){		// Going to UP
-			if( page_offset == 0 )
-				wxBell();					// there is no line over up!
-			else{							// Illusion code
-				page_offset -= BytePerLine()*event.GetLinesPerAction(); 	//offset decreasing
-				LoadFromOffset( page_offset );	//update text with new location, makes screen slide illusion
-				if( ActiveLine() + event.GetLinesPerAction() <= LineCount() )	//cursor at bottom
-					SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
-				else
-					SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() + HexPerLine()*(LineCount()-1) );
-				}
+		page_offset -= BytePerLine()*event.GetLinesPerAction(); 	//offset decreasing
+		if( page_offset <= 0 ){
+			page_offset = 0;
+			wxBell();					// there is no line over up!
 			}
+		LoadFromOffset( page_offset );	//update text with new location, makes screen slide illusion
+		if( page_offset != 0 ){
+			if( ActiveLine() + event.GetLinesPerAction() <= LineCount() )	//cursor at bottom
+				SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
+			else
+				SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() + HexPerLine()*(LineCount()-1) );
+			}
+		}
 	else if(event.GetWheelRotation() < 0 ){	// Going to BOTTOM
-			if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
-				page_offset += BytePerLine()*event.GetLinesPerAction();		//offset increasing
-				LoadFromOffset( page_offset );		//update text with new location, makes screen slide illusion
-				if( ActiveLine() > event.GetLinesPerAction() )	//cursor at top GetLinesPerAction
-					SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
-				else
-					SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() );
-				}
-			else{
-				wxBell();							//there is no line to slide bell
-				}
+		if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
+			page_offset += BytePerLine()*event.GetLinesPerAction();		//offset increasing
+			LoadFromOffset( page_offset );		//update text with new location, makes screen slide illusion
+			if( ActiveLine() > event.GetLinesPerAction() )	//cursor at top GetLinesPerAction
+				SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
+			else
+				SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() );
 			}
+		else{
+			wxBell();							//there is no line to slide bell
+			}
+		}
+	if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
+		offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){

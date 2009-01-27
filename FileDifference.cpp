@@ -34,6 +34,7 @@ FileDifference::FileDifference(wxFileName& myfilename, FileAccessMode FAM ){
 			Open(myfilename.GetFullPath(), wxFile::read_write);
 
 		if(! IsOpened()){
+			file_access_mode = AccessInvalid;
 			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 			dlg->ShowModal();dlg->Destroy();
 			}

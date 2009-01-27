@@ -52,7 +52,7 @@ class HexEditor: public HexEditorCtrl {
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 
-		void FileOpen( wxFileName& filename  );
+		bool FileOpen( wxFileName& filename  );
 		bool FileSave( bool question = true );
 		bool FileClose( void );
 		bool FileUndo( void );

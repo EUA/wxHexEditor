@@ -40,7 +40,8 @@ HexEditor::HexEditor(	wxWindow* parent,
 		printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
 		myfile = NULL;
 		if( myfilename_ != NULL ){
-			FileOpen( *myfilename_ );
+			if( !FileOpen( *myfilename_ ) ){
+				}
 			}
 		offset_scroll->Enable( true );
 		Dynamic_Connector();
@@ -86,30 +87,32 @@ void HexEditor::Dynamic_Disconnector(){
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
-void HexEditor::FileOpen(wxFileName& myfilename ){
+bool HexEditor::FileOpen(wxFileName& myfilename ){
 	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
 	else if(myfilename.IsFileReadable()){ //IsFileReadable
-
-		if ( myfilename.GetSize( ) > 50*MB )
-			myfile = new FileDifference( myfilename );
-		else
+		if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 			myfile = new FileDifference( myfilename, FileDifference::ReadWrite );
+		else
+			myfile = new FileDifference( myfilename );
 
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 			LoadFromOffset(0, true);
 			offset_scroll->SetRange((myfile->Length() / hex_ctrl->ByteCapacity())+1);//Adjusting slider to page size
+			SetHexInsertionPoint(0);
+			return true;
 			}
 		else{
 			wxDialog *dlg = new wxMessageDialog(this,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 			dlg->ShowModal();dlg->Destroy();
+			return false;
 			}
-		SetHexInsertionPoint(0);
 		}
 	else{
 		wxMessageDialog *dlg = new wxMessageDialog(this,_("File is not readable. ??Permissions?? "),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 		dlg->ShowModal();dlg->Destroy();
+		return false;
 		}
 	}
 

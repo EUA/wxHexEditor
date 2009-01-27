@@ -214,8 +214,14 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 											wxDefaultPosition);
 	if(wxID_OK == filediag->ShowModal()){
 		wxFileName myname(filediag->GetPath());
-		MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName(), true);
-		ActionEnabler();
+
+		HexEditor *x = new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel );
+		if(x->FileOpen( myname )){
+			MyNotebook->AddPage( x, myname.GetFullName(), true );
+			ActionEnabler();
+			}
+		else
+			x->Destroy();
 		filediag->Destroy();
 		}
 	event.Skip();

@@ -198,7 +198,7 @@ void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
 		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 			continue;
 
-		//State: ...[...(xxx]xxx)...
+		///State: ...[...(xxx]xxx)...
 		if(current_location <= DiffArray[i]->start_offset && current_location+size >= DiffArray[i]->start_offset){
 			int irq_loc = DiffArray[i]->start_offset - current_location;
 			//...[...(xxx)...]... //not neccessery, this line includes this state
@@ -206,14 +206,14 @@ void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
 			memcpy(data+irq_loc , DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data, irq_size );
 			}
 
-		//State: ...(xxx[xxx)...]...
+		///State: ...(xxx[xxx)...]...
 		else if (current_location <= DiffArray[i]->start_offset + DiffArray[i]->size && current_location+size >= DiffArray[i]->start_offset + DiffArray[i]->size){
 			int irq_skipper = current_location - DiffArray[i]->start_offset;	//skip this bytes from start
 			int irq_size = DiffArray[i]->size - irq_skipper;
 			memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, irq_size );
 			}
 
-		//State: ...(xxx[xxx]xxx)...
+		///State: ...(xxx[xxx]xxx)...
 		else if(DiffArray[i]->start_offset <= current_location && DiffArray[i]->start_offset + DiffArray[i]->size >= current_location+size){
 			int irq_skipper = current_location - DiffArray[i]->start_offset;	//skip this bytes from start
 			memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, size );

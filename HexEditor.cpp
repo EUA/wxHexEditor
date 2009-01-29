@@ -146,6 +146,22 @@ bool HexEditor::FileSave( bool question ){
 		}
 	}
 
+bool HexEditor::FileSave( wxString savefilename ){
+// TODO (death#1#): Protection to save opened file/samefile
+	wxFFile savefile( savefilename, _("w") );
+	if(savefile.IsOpened()){
+		myfile->Seek( 0, wxFromStart);
+		char *buffer = new char[MB];
+		while( savefile.Tell() < myfile->Length() ){
+			savefile.Write( buffer, myfile->Read( buffer, MB ) );
+	// TODO (death#3#): Progressbar here?
+			}
+		return true;
+		}
+	else
+		return false;
+	}
+
 bool HexEditor::FileClose( void ){
 	if( myfile != NULL ){
 		if( myfile->IsChanged() ){

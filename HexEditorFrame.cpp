@@ -158,7 +158,7 @@ void HexEditorFrame::ActionEnabler( void ){
 //	mbar->Enable( wxID_DELETE, true );
 
 	Toolbar->EnableTool( wxID_SAVE, true);
-//	Toolbar->EnableTool( wxID_SAVEAS, true);
+	Toolbar->EnableTool( wxID_SAVEAS, true);
 	Toolbar->EnableTool( idClose, true);
 //	Toolbar->EnableTool( wxID_FIND, false);
 //	Toolbar->EnableTool( wxID_REPLACE, false);
@@ -232,6 +232,25 @@ void HexEditorFrame::OnFileSave( wxCommandEvent& event ){
 	if( MyHexEditor != NULL )
 		MyHexEditor->FileSave( false );
 	event.Skip();
+	}
+
+void HexEditorFrame::OnFileSaveAs( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL ){
+		wxFileDialog* filediag = new wxFileDialog(this,
+											_("Choose a file for save as"),
+											_(""),
+											_(""),
+											_("*"),
+											wxFD_SAVE,
+											wxDefaultPosition);
+		if(wxID_OK == filediag->ShowModal()){
+			if( !MyHexEditor->FileSave( filediag->GetPath() )){
+				wxMessageDialog *dlg = new wxMessageDialog(NULL,wxString(_("File cannot save as ")).Append( filediag->GetPath() ),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+				dlg->ShowModal();dlg->Destroy();
+				}
+			}
+		}
 	}
 
 void HexEditorFrame::OnFileClose( wxCommandEvent& event ){

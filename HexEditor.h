@@ -25,6 +25,7 @@
 #define __wxHexEditor__
 
 #include <wx/filename.h>
+#include <wx/ffile.h>
 
 #include "FileDifference.h"
 #include "DataInterpreter.h"
@@ -54,6 +55,7 @@ class HexEditor: public HexEditorCtrl {
 
 		bool FileOpen( wxFileName& filename  );
 		bool FileSave( bool question = true );
+		bool FileSave( wxString filename );
 		bool FileClose( void );
 		bool FileUndo( void );
 		bool FileRedo( void );

@@ -71,14 +71,16 @@ class FileDifference : public wxFile{
 		bool Apply( void );		//flush changes to file
 		int64_t Undo( void );	//undo last action
 		int64_t Redo( void );	//redo last undo
-		void RemoveTail( DiffNode *remove_node );	//remove further tails.
-		bool Add( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
-		DiffNode* NewNode( int64_t start_byte, const char* data, int64_t size, bool extension = false );
-		DiffNode* GetFirstUndoNode( void );
-		void FileIRQ(int64_t location, char* data, int size);
 		void ShowDebugState( void );
 		wxFileOffset Length( void );
 		long Read( char* buffer, int size );
+		bool Add( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
+
+	protected:
+		void RemoveTail( DiffNode *remove_node );	//remove further tails.
+		DiffNode* NewNode( int64_t start_byte, const char* data, int64_t size, bool extension = false );
+		DiffNode* GetFirstUndoNode( void );
+		void FileIRQ(int64_t location, char* data, int size);
 
 	private:
 		FileAccessMode file_access_mode;

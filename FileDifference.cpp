@@ -1,20 +1,20 @@
 /***********************************(GPL)********************************
-*	wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*	Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   wxHexEditor is a hex edit tool for editing massive files in Linux   *
+*   Copyright (C) 2006  Erdem U. Altinyurt                              *
 *                                                                       *
-*	This program is free software; you can redistribute it and/or       *
-*	modify it under the terms of the GNU General Public License         *
-*	as published by the Free Software Foundation; either version 2      *
-*	of the License, or any later version.                               *
+*   This program is free software; you can redistribute it and/or       *
+*   modify it under the terms of the GNU General Public License         *
+*   as published by the Free Software Foundation; either version 2      *
+*   of the License, or any later version.                               *
 *                                                                       *
-*	This program is distributed in the hope that it will be useful,     *
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of      *
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
-*	GNU General Public License for more details.                        *
+*   This program is distributed in the hope that it will be useful,     *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+*   GNU General Public License for more details.                        *
 *                                                                       *
-*	You should have received a copy of the GNU General Public License   *
-*	along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,               *
+*   You should have received a copy of the GNU General Public License   *
+*   along with this program;                                            *
+*   if not, write to the Free Software	Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -60,7 +60,7 @@ bool FileDifference::SetAccessMode( FileAccessMode fam ){
 		return true;
 		}
 	wxBell();
-	wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open in this mode."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+	wxMessageDialog *dlg = new wxMessageDialog(NULL,wxString(_("File cannot open in ")).Append( FAMtoString( fam) ).Append(_(" mode.")),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
 	dlg->ShowModal();dlg->Destroy();
 	return false;
 	}
@@ -70,9 +70,13 @@ int FileDifference::GetAccessMode( void ){
 	}
 
 wxString FileDifference::GetAccessModeString( void ){
-	return file_access_mode == ReadOnly ? _T("Read-Only") :
-		file_access_mode == ReadWrite ? _T("Read-Write") :
-		file_access_mode == DirectWrite ? _T("Direct-Write") : _("Error!");
+	return FAMtoString( file_access_mode );
+	}
+
+wxString FileDifference::FAMtoString( FileAccessMode& FAM ){
+	return FAM == ReadOnly ? _T("Read-Only") :
+		FAM == ReadWrite ? _T("Read-Write") :
+		FAM == DirectWrite ? _T("Direct-Write") : _("Access Invalid");
 	}
 
 wxFileName FileDifference::GetFileName( void ){

@@ -1,20 +1,20 @@
 /***********************************(GPL)********************************
-*	wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*	Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   wxHexEditor is a hex edit tool for editing massive files in Linux   *
+*   Copyright (C) 2006  Erdem U. Altinyurt                              *
 *                                                                       *
-*	This program is free software; you can redistribute it and/or       *
-*	modify it under the terms of the GNU General Public License         *
-*	as published by the Free Software Foundation; either version 2      *
-*	of the License, or any later version.                               *
+*   This program is free software; you can redistribute it and/or       *
+*   modify it under the terms of the GNU General Public License         *
+*   as published by the Free Software Foundation; either version 2      *
+*   of the License, or any later version.                               *
 *                                                                       *
-*	This program is distributed in the hope that it will be useful,     *
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of      *
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
-*	GNU General Public License for more details.                        *
+*   This program is distributed in the hope that it will be useful,     *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+*   GNU General Public License for more details.                        *
 *                                                                       *
-*	You should have received a copy of the GNU General Public License   *
-*	along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,               *
+*   You should have received a copy of the GNU General Public License   *
+*   along with this program;                                            *
+*   if not, write to the Free Software	Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -29,6 +29,10 @@
 #include <wx/wx.h>
 #endif
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #ifndef INFOPANEL_H
 #define INFOPANEL_H
 
@@ -38,34 +42,75 @@ class InfoPanel : public InfoPanelGui{
 	:InfoPanelGui( parent, id, pos, size, style){
 		};
 
-	void Set( wxFileName flnm, wxString AccessMode ){
+	void Set( wxFileName flnm, int64_t lenght, wxString AccessMode, int FD ){
 		static wxMutex mutexinfo;
 		mutexinfo.Lock();
 
 		m_name->SetLabel( flnm.GetFullName() );
 		m_path->SetLabel( flnm.GetPath() );
-// TODO (death#1#): Problem on block device sizes
-		m_size->SetLabel( flnm.GetSize().ToString() );
-
 		m_access->SetLabel( AccessMode );
 
-		wxArrayString a;
-		wxExecute( (wxT("ls -l \"") + flnm.GetFullPath() + wxT("\"") ), a );
-//		system( (wxT("ls -l \"") + flnm.GetFullPath() + wxT("\"") ).ToAscii()  );
-		std::cout << a.Item(0).ToAscii() << std::endl;
-		switch(a.Item(0).GetChar(0)){
-			case '-':
-				m_device->SetLabel(wxT("FILE"));
-				break;
-			case 'b':
-				m_device->SetLabel(wxT("BLOCK"));
-				break;
-			case 'c':
-				m_device->SetLabel(wxT("CHARACTER"));
-				break;
-			default:
-				m_device->SetLabel(wxT("UNKNOWN"));
-			}
+		struct stat *sbufptr = new struct stat;
+        fstat( FD, sbufptr );
+		m_size->SetLabel( wxFileName::GetHumanReadableSize( wxULongLong(lenght) ) );
+
+		if( S_ISREG( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("FILE"));
+		if( S_ISDIR( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("DIRECTORY"));
+		if( S_ISCHR( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("CHARACTER"));
+		if( S_ISBLK( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("BLOCK"));
+		if( S_ISFIFO( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("FIFO"));
+		if( S_ISLNK( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("LINK"));
+		if( S_ISSOCK( sbufptr->st_mode ))
+			m_device->SetLabel(wxT("SOCKET"));
+
+#ifdef _DEBUG_
+		std::cout << flnm.GetPath().ToAscii() << ' ';
+		if( S_ISREG( sbufptr->st_mode ))
+			printf("regular file");
+		if( S_ISDIR( sbufptr->st_mode ))
+			printf("directory");
+		if( S_ISCHR( sbufptr->st_mode ))
+			printf("character device");
+		if( S_ISBLK( sbufptr->st_mode ))
+			printf("block device");
+		if( S_ISFIFO( sbufptr->st_mode ))
+			printf("FIFO");
+		if( S_ISLNK( sbufptr->st_mode ))
+			printf("symbolic link");
+		if( S_ISSOCK( sbufptr->st_mode ))
+			printf("socket");
+		printf("\n");
+#endif
+//		S_IFMT 	0170000 	bitmask for the file type bitfields
+//		S_IFSOCK 	0140000 	socket
+//		S_IFLNK 	0120000 	symbolic link
+//		S_IFREG 	0100000 	regular file
+//		S_IFBLK 	0060000 	block device
+//		S_IFDIR 	0040000 	directory
+//		S_IFCHR 	0020000 	character device
+//		S_IFIFO 	0010000 	FIFO
+//		S_ISUID 	0004000 	set UID bit
+//		S_ISGID 	0002000 	set-group-ID bit (see below)
+//		S_ISVTX 	0001000 	sticky bit (see below)
+//		S_IRWXU 	00700 	mask for file owner permissions
+//		S_IRUSR 	00400 	owner has read permission
+//		S_IWUSR 	00200 	owner has write permission
+//		S_IXUSR 	00100 	owner has execute permission
+//		S_IRWXG 	00070 	mask for group permissions
+//		S_IRGRP 	00040 	group has read permission
+//		S_IWGRP 	00020 	group has write permission
+//		S_IXGRP 	00010 	group has execute permission
+//		S_IRWXO 	00007 	mask for permissions for others (not in group)
+//		S_IROTH 	00004 	others have read permission
+//		S_IWOTH 	00002 	others have write permission
+//		S_IXOTH 	00001 	others have execute permission
+		delete sbufptr;
 		mutexinfo.Unlock();
 		}
 

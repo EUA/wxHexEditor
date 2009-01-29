@@ -1,20 +1,20 @@
 /***********************************(GPL)********************************
-*	wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*	Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   wxHexEditor is a hex edit tool for editing massive files in Linux   *
+*   Copyright (C) 2006  Erdem U. Altinyurt                              *
 *                                                                       *
-*	This program is free software; you can redistribute it and/or       *
-*	modify it under the terms of the GNU General Public License         *
-*	as published by the Free Software Foundation; either version 2      *
-*	of the License, or any later version.                               *
+*   This program is free software; you can redistribute it and/or       *
+*   modify it under the terms of the GNU General Public License         *
+*   as published by the Free Software Foundation; either version 2      *
+*   of the License, or any later version.                               *
 *                                                                       *
-*	This program is distributed in the hope that it will be useful,     *
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of      *
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
-*	GNU General Public License for more details.                        *
+*   This program is distributed in the hope that it will be useful,     *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+*   GNU General Public License for more details.                        *
 *                                                                       *
-*	You should have received a copy of the GNU General Public License   *
-*	along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,               *
+*   You should have received a copy of the GNU General Public License   *
+*   along with this program;                                            *
+*   if not, write to the Free Software	Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -61,10 +61,10 @@ class FileDifference : public wxFile{
 	    FileDifference(wxFileName& myfilename, FileAccessMode FAM = ReadOnly);
 		~FileDifference();
 
-		wxFileName the_file;
 		bool SetAccessMode( FileAccessMode fam );
 		int GetAccessMode( void );
 		wxString GetAccessModeString( void );
+		wxString FAMtoString( FileAccessMode& FAM );
 		wxFileName GetFileName( void );
 
 		bool IsChanged( void );	//returns if file is dirty or not
@@ -83,6 +83,7 @@ class FileDifference : public wxFile{
 	private:
 		FileAccessMode file_access_mode;
 		ArrayOfNode	DiffArray;
+		wxFileName the_file;
 //		DiffNode *head,*tail;	//linked list holds modification record
 
 };

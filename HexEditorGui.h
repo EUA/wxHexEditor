@@ -24,6 +24,10 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/panel.h>
+#include <wx/radiobut.h>
+#include <wx/radiobox.h>
+#include <wx/button.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -65,6 +69,9 @@ class HexEditorGui : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditFind( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditReplace( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditGoto( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOptionsFileMode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
@@ -131,6 +138,33 @@ class InfoPanelGui : public wxPanel
 	public:
 		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );
 		~InfoPanelGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class GotoDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class GotoDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticTextOffset;
+		wxTextCtrl* m_textCtrlOffset;
+		wxRadioButton* m_dec;
+		wxRadioButton* m_hex;
+		wxRadioBox* m_branch;
+		wxButton* m_button_go;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnInput( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnConvert( wxCommandEvent& event ){ event.Skip(); }
+		
+	
+	public:
+		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Goto Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		~GotoDialogGui();
 	
 };
 

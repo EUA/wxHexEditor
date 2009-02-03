@@ -57,6 +57,8 @@
 		<Unit filename="DataInterpreter.h" />
 		<Unit filename="FileDifference.cpp" />
 		<Unit filename="FileDifference.h" />
+		<Unit filename="HexDialogs.cpp" />
+		<Unit filename="HexDialogs.h" />
 		<Unit filename="HexEditor.cpp" />
 		<Unit filename="HexEditor.h" />
 		<Unit filename="HexEditorApp.cpp" />

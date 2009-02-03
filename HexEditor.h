@@ -59,7 +59,7 @@ class HexEditor: public HexEditorCtrl {
 		bool FileClose( void );
 		bool FileUndo( void );
 		bool FileRedo( void );
-		void GoTo( int64_t goto_offset=-1 );
+		void Goto( int64_t goto_offset=-1 );
 		void OnResize( wxSizeEvent &event );
 
 

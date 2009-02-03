@@ -194,34 +194,42 @@ bool HexEditor::FileClose( void ){
 	}
 
 bool HexEditor::FileUndo( void ){
-	GoTo( myfile->Undo() );
+	Goto( myfile->Undo() );
 	}
 bool HexEditor::FileRedo( void ){
-	GoTo( myfile->Redo() );
+	Goto( myfile->Redo() );
 	}
 
-void HexEditor::GoTo( int64_t goto_offset ){
-	if( goto_offset == -1){	//if cursor_offset not returned
-		goto_offset = CursorOffset();
-		page_offset -= goto_offset % hex_ctrl->BytePerLine();	//to allign offset
-		if( page_offset < 0 ) page_offset = 0;
-		LoadFromOffset( page_offset );
-		SetLocalHexInsertionPoint( goto_offset*2 );
+void HexEditor::Goto( int64_t goto_offset ){
+	LoadFromOffset( goto_offset );
+	SetLocalHexInsertionPoint( 0 );
+	UpdateCursorLocation();
+	}
+
+//void HexEditor::RefreshCursor( int64_t cursor_offset ){
+	/*
+	if(cursor_hex_offset == -1){	//if cursor_offset is not returned
+		cursor_hex_offset = GetHexOffset();
+		page_offset -= cursor_hex_offset % hex_ctrl->BytePerLine();	//to allign offset
+		if(page_offset < 0) page_offset = 0;
+			LoadFromOffset( page_offset );
 		}
-	else					//if cursor_offset is returned
-		if(goto_offset <= CursorOffset() && goto_offset + hex_ctrl->ByteCapacity() >= CursorOffset() ){ // cursor_offset is in visible area
-			//LoadFromOffset( current_offset );
-			SetLocalHexInsertionPoint( CursorOffset()*2 );
+	else
+		if(	page_offset <= cursor_hex_offset/2 &&
+			page_offset+hex_ctrl->ByteCapacity() >= cursor_hex_offset/2){ // cursor_offset is in visible area
+			//LoadFromOffset( page_offset );
+			SetHexInsertionPoint( cursor_hex_offset/2 );
 			}
 		else{// out of view
-			page_offset = CursorOffset();
+			page_offset = cursor_offset;
 			page_offset -= static_cast<int64_t>( hex_ctrl->ByteCapacity() * 0.20 ); //make load some lines to upside
-			page_offset -= CursorOffset() % hex_ctrl->BytePerLine();	//to allign offset
+			page_offset -= cursor_offset % hex_ctrl->BytePerLine();	//to allign offset
 			if(page_offset < 0) page_offset = 0;
 			LoadFromOffset( page_offset );
-			SetLocalHexInsertionPoint( CursorOffset()/2 );
+			SetHexInsertionPoint( cursor_hex_offset/2 );
 			}
-	}
+	*/
+//	}
 
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     page_offset = static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity();
@@ -543,31 +551,6 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 			}
 		}
 	}
-
-//void HexEditor::RefreshCursor( int64_t cursor_offset ){
-	/*
-	if(cursor_hex_offset == -1){	//if cursor_offset is not returned
-		cursor_hex_offset = GetHexOffset();
-		page_offset -= cursor_hex_offset % hex_ctrl->BytePerLine();	//to allign offset
-		if(page_offset < 0) page_offset = 0;
-			LoadFromOffset( page_offset );
-		}
-	else
-		if(	page_offset <= cursor_hex_offset/2 &&
-			page_offset+hex_ctrl->ByteCapacity() >= cursor_hex_offset/2){ // cursor_offset is in visible area
-			//LoadFromOffset( page_offset );
-			SetHexInsertionPoint( cursor_hex_offset/2 );
-			}
-		else{// out of view
-			page_offset = cursor_offset;
-			page_offset -= static_cast<int64_t>( hex_ctrl->ByteCapacity() * 0.20 ); //make load some lines to upside
-			page_offset -= cursor_offset % hex_ctrl->BytePerLine();	//to allign offset
-			if(page_offset < 0) page_offset = 0;
-			LoadFromOffset( page_offset );
-			SetHexInsertionPoint( cursor_hex_offset/2 );
-			}
-	*/
-//	}
 
 bool HexEditor::Selector(bool mode){
 	bool temp = HexEditorCtrl::Selector( mode );

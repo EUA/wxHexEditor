@@ -40,7 +40,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-
+	this->Connect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 
@@ -149,7 +149,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	mbar->Enable( idClose, true );
 //	mbar->Enable( wxID_FIND, true );
 //	mbar->Enable( wxID_REPLACE, true );
-//	mbar->Enable( idGotoOffset, true );
+	mbar->Enable( idGotoOffset, true );
 	mbar->Enable( wxID_UNDO, true );
 	mbar->Enable( wxID_REDO, true );
 //	mbar->Enable( wxID_COPY, true );
@@ -162,13 +162,15 @@ void HexEditorFrame::ActionEnabler( void ){
 	Toolbar->EnableTool( idClose, true);
 //	Toolbar->EnableTool( wxID_FIND, false);
 //	Toolbar->EnableTool( wxID_REPLACE, false);
-//	Toolbar->EnableTool( idGotoOffset, true);
+	Toolbar->EnableTool( idGotoOffset, true);
 	Toolbar->EnableTool( wxID_UNDO, true);
 	Toolbar->EnableTool( wxID_REDO, true);
 //	Toolbar->EnableTool( wxID_COPY, true);
 //	Toolbar->EnableTool( wxID_PASTE, true);
 //	Toolbar->EnableTool( wxID_CUT, true);
 //	Toolbar->EnableTool( wxID_DELETE, true);
+
+	MyInterpreter->Enable();
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
@@ -202,6 +204,8 @@ void HexEditorFrame::ActionDisabler( void ){
 	Toolbar->EnableTool( wxID_DELETE, false);
 
 	MyInterpreter->Clear();
+	MyInterpreter->Disable();
+
 	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
@@ -293,6 +297,32 @@ void HexEditorFrame::OnEditRedo( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
 		MyHexEditor->FileRedo();
+	event.Skip();
+	}
+
+void HexEditorFrame::OnEditFind( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		//
+	event.Skip();
+	}
+
+void HexEditorFrame::OnEditReplace( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		//
+	event.Skip();
+	}
+
+void HexEditorFrame::OnEditGoto( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL ){
+		uint64_t newoffset;
+		GotoDialog *mydialog = new GotoDialog( this, newoffset, MyHexEditor->CursorOffset(), MyHexEditor->FileLenght() );
+		if( mydialog->ShowModal() == wxID_OK ){
+			MyHexEditor->Goto( newoffset );
+			}
+		}
 	event.Skip();
 	}
 

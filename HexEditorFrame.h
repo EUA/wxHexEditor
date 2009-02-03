@@ -26,6 +26,7 @@
 
 #include "HexEditorGui.h"
 #include "HexEditor.h"
+#include "HexDialogs.h"
 
 #include <wx/filename.h>
 #include <wx/dnd.h>
@@ -47,6 +48,9 @@ class HexEditorFrame : public HexEditorGui {
 		void OnFileClose( wxCommandEvent& event );
 		void OnEditUndo( wxCommandEvent& event );
 		void OnEditRedo( wxCommandEvent& event );
+		void OnEditFind( wxCommandEvent& event );
+		void OnEditReplace( wxCommandEvent& event );
+		void OnEditGoto( wxCommandEvent& event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 		void OnViewMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );

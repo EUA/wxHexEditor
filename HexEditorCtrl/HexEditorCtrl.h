@@ -39,7 +39,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
 		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
-		int BytePerLine( void )	{ return text_ctrl->CharacterPerLine(); }
+		int BytePerLine( void )	{ return hex_ctrl->BytePerLine(); }
 		int ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
 		int LineCount( void )	{ return hex_ctrl->LineCount(); }
 		int ActiveLine( void )	{ return hex_ctrl->ActiveLine(); }

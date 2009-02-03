@@ -39,7 +39,6 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	Dynamic_Connector();
 	selection.start_offset = selection.end_offset = 0;
 	selection.state = selector::SELECTION_FALSE;
-	page_offset=0;
     }
 HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
@@ -79,6 +78,7 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset, bool paint ){
 	static wxMutex MyBufferMutex;
 	MyBufferMutex.Lock();
+	page_offset = position;
 	if( lenght != ByteCapacity() ){
 		//last line could be NULL;
 		}

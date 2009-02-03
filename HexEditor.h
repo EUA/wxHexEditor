@@ -60,6 +60,8 @@ class HexEditor: public HexEditorCtrl {
 		bool FileUndo( void );
 		bool FileRedo( void );
 		void Goto( int64_t goto_offset=-1 );
+		void RefreshCursor( int64_t goto_offset=-1 );
+
 		void OnResize( wxSizeEvent &event );
 
 
@@ -144,12 +146,12 @@ class scrollthread:wxThreadHelper{
 			if(speed == 0)
 				continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 			int64_t FileLenght = parent->FileLenght();
-			parent->page_offset += ( parent->hex_ctrl->BytePerLine() )*speed;
+			parent->page_offset += ( parent->BytePerLine() )*speed;
 			if( parent->page_offset < 0 )
 				parent->page_offset = 0;
-			else if( parent->page_offset + parent->hex_ctrl->ByteCapacity() >= FileLenght ){
+			else if( parent->page_offset + parent->ByteCapacity() >= FileLenght ){
 				parent->page_offset = FileLenght - parent->hex_ctrl->ByteCapacity();
-				parent->page_offset += parent->hex_ctrl->BytePerLine() - (parent->page_offset % parent->hex_ctrl->BytePerLine()) ; //cosmetic
+				parent->page_offset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 				}
 			wxMutexGuiEnter();
 		//	parent->MyFreeze();
@@ -160,15 +162,15 @@ class scrollthread:wxThreadHelper{
 				parent->PaintSelection();
 				parent->UpdateCursorLocation( true );
 
-			if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->hex_ctrl->ByteCapacity() )
-				parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->hex_ctrl->ByteCapacity() );
+			if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->ByteCapacity() )
+				parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->ByteCapacity() );
 		//	parent->MyThaw();
 
 		//	wxYieldIfNeeded();
 			wxMutexGuiLeave();
 			GetThread()->Sleep(sleeper);
 			if( parent->page_offset == 0 ||
-				parent->page_offset + parent->hex_ctrl->ByteCapacity() >= FileLenght )
+				parent->page_offset + parent->ByteCapacity() >= FileLenght )
 				GetThread()->Pause();
 			}
 		return NULL;

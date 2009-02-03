@@ -173,7 +173,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 		bool IsAllowedChar(const char& chr);
 		wxChar Filter(const char& chr);
-		int ByteCapacity( void ){ return m_Window.y*CharacterPerLine(); }
+		int BytePerLine( void ){return CharacterPerLine();};
 	};
 
 class wxHexOffsetCtrl : public wxHexCtrl{

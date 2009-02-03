@@ -880,7 +880,7 @@ void wxHexCtrl::OnTestCall( void ){
 
 
 
-//------HEXTEXTCTRL-----/
+///------HEXTEXTCTRL-----///
 inline bool wxHexTextCtrl::IsAllowedChar(const char& chr){
 	return ((chr !=173) && ( (chr>31 && chr<127) || chr>159));	//Visible Char filter
 	}
@@ -934,6 +934,8 @@ int wxHexTextCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 	return ( x + y * CharacterPerLine() );
 	}
 
+
+///------HEXOFFSETCTRL-----///
 void wxHexOffsetCtrl::SetValue( int64_t position ){
 	SetValue( position, BytePerLine );
 	}

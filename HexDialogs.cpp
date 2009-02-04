@@ -22,14 +22,13 @@
 *************************************************************************/
 
 #include "HexDialogs.h"
-
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize  ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
 	cursor_offset = _cursor_offset;
 	is_olddec =true;
 	filesize = _filesize;
 	m_textCtrlOffset->SetFocus();
-	};
+	}
 wxString GotoDialog::Filter( wxString text ){
 	for( unsigned i = 0 ; i < text.Length() ; i++ ){
 		if( m_dec->GetValue() ? isdigit( text.GetChar( i ) ) : isxdigit( text.GetChar( i ) ))
@@ -81,4 +80,65 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 		is_olddec = false;
 		}
 	event.Skip(false);
+	}
+
+
+FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile ):FindDialogGui(parent, wxID_ANY){
+	parent = static_cast< HexEditor* >(_parent);
+	findfile = _findfile;
+	}
+
+// TODO (death#1#):Paint 4 Find
+void FindDialog::OnFind( wxCommandEvent& event ){
+	if( m_searchtype->GetSelection() == 0 ){//text search
+		parent->Goto( FindText( m_textSearch->GetValue(), m_from->GetSelection() == 0 ? 0 : parent->CursorOffset() ) );
+		}
+	else{ //hex search
+		parent->Goto( FindBinary( wxHexCtrl::HexToChar( m_textSearch->GetValue() ), m_textSearch->GetValue().Length()/2 , m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1 ) );
+		}
+	}
+
+uint64_t FindDialog::FindText( wxString target, uint64_t start_from ){
+	wxBell();
+// TODO (death#1#): TextFind!
+	}
+
+uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t from ){
+	if(target == NULL) return -1;
+	int64_t offset=from;
+	int search_step = 10*MB;
+	int readed=0;
+	findfile->Seek( offset, wxFromStart );
+	// TODO (death#6#): insert error check message here
+
+	char* buffer = new char [search_step];
+	if(buffer == NULL) return -1;
+	// TODO (death#6#): insert error check message here
+	readed = findfile->Read( buffer, search_step );
+	int found = SearchAtBuffer( buffer, search_step, target, size );
+	if(found >= 0)
+		return offset+found;
+	else
+		offset +=readed;
+
+	while(readed != search_step){
+		memmove(buffer, buffer + search_step - size +1, size-1);// moving unprocessed buffer to begining.
+		readed = findfile->Read( buffer, search_step - size + 1 );	//refilling buffer with fresh data
+		found = SearchAtBuffer( buffer, search_step, target, size );
+		if(found >= 0)
+			return offset+found;
+		else
+			offset +=readed;
+		}
+	return -1;
+	}
+
+// TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL)
+uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
+	for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
+		if(! strncmp( bfr+i, search, search_size )){
+			return i;
+			}
+		}
+	return -1;
 	}

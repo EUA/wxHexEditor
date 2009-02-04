@@ -136,7 +136,7 @@ int64_t FileDifference::Undo( void ){
 		}
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
-			if( i - 1 >= 0 ){			//if it is not first node
+			if( i != 0 ){			//if it is not first node
 				DiffArray.Item( i-1 )->flag_undo = true;	//set previous node as undo node
 				return DiffArray.Item( i-1 )->start_offset;	//and return undo transaction start for screen focusing
 				}
@@ -146,15 +146,15 @@ int64_t FileDifference::Undo( void ){
 				}
 			}
 	DiffArray.Last()->flag_undo=true;
-	DiffArray.Last()->start_offset;
+	return DiffArray.Last()->start_offset;
 	}
-
-void FileDifference::ShowDebugState( void ){
-	std::cout << "\n\nNumber\t" << "Start\t" << "Size\t" << "DataN\t" << "DataO\t" << "writen\t" << "Undo\n";
-	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
-		std::cout << i << '\t' << DiffArray[i]->start_offset << '\t' << DiffArray[i]->size << '\t' << std::hex << (unsigned short)DiffArray[i]->new_data[0] << '\t'
-				<< (unsigned short)DiffArray[i]->old_data[0] << '\t' <<	DiffArray[i]->flag_commit << '\t' << DiffArray[i]->flag_undo  << std::dec << std::endl;
-		}
+bool FileDifference::IsAvailable_Undo( void ){
+	if( DiffArray.GetCount() == 0 )
+		return false;
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
+		if( !DiffArray.Item(i)->flag_undo )
+			return true;
+	return false;
 	}
 
 int64_t FileDifference::Redo( void ){
@@ -165,6 +165,22 @@ int64_t FileDifference::Redo( void ){
 			}
 	wxBell();	// No possible redo action
 	return -1;
+	}
+bool FileDifference::IsAvailable_Redo( void ){
+	if( DiffArray.GetCount() == 0 )
+		return false;
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
+		if( DiffArray.Item(i)->flag_undo )
+			return true;
+	return false;
+	}
+
+void FileDifference::ShowDebugState( void ){
+	std::cout << "\n\nNumber\t" << "Start\t" << "Size\t" << "DataN\t" << "DataO\t" << "writen\t" << "Undo\n";
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+		std::cout << i << '\t' << DiffArray[i]->start_offset << '\t' << DiffArray[i]->size << '\t' << std::hex << (unsigned short)DiffArray[i]->new_data[0] << '\t'
+				<< (unsigned short)DiffArray[i]->old_data[0] << '\t' <<	DiffArray[i]->flag_commit << '\t' << DiffArray[i]->flag_undo  << std::dec << std::endl;
+		}
 	}
 
 wxFileOffset FileDifference::Length( void ){

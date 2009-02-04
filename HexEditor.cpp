@@ -88,7 +88,10 @@ void HexEditor::Dynamic_Disconnector(){
 	}
 
 bool HexEditor::FileOpen(wxFileName& myfilename ){
-	if(myfile!=NULL) wxLogError(_("Critical Error. File pointer is not empty!"));
+	if(myfile!=NULL){
+		wxLogError(_("Critical Error. File pointer is not empty!"));
+		return false;
+		}
 	else if(myfilename.IsFileReadable()){ //IsFileReadable
 		if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 			myfile = new FileDifference( myfilename, FileDifference::ReadWrite );
@@ -144,6 +147,7 @@ bool HexEditor::FileSave( bool question ){
 			default: return false;
 			}
 		}
+	return false;
 	}
 
 bool HexEditor::FileSave( wxString savefilename ){
@@ -193,37 +197,44 @@ bool HexEditor::FileClose( void ){
 	return true;
 	}
 
-bool HexEditor::FileUndo( void ){
+bool HexEditor::Undo( void ){
 	Goto( myfile->Undo() );
 	}
-bool HexEditor::FileRedo( void ){
+bool HexEditor::Redo( void ){
 	Goto( myfile->Redo() );
 	}
 
-void HexEditor::Goto( int64_t goto_offset ){
-//	LoadFromOffset( goto_offset );
-//	SetLocalHexInsertionPoint( 0 );
-//	UpdateCursorLocation();
-	RefreshCursor( goto_offset );
-	}
-
-void HexEditor::RefreshCursor( int64_t cursor_offset ){
+void HexEditor::Goto( int64_t cursor_offset ){
+	if( cursor_offset == -1 ){
+		LoadFromOffset( page_offset, false, true );	//Refresh
+		return;
+		}
 	if(page_offset <= cursor_offset &&
-		page_offset+ByteCapacity() >= cursor_offset){ // cursor_offset is in visible area
+		page_offset+ByteCapacity() >= cursor_offset){	//cursor_offset is in visible area
+		LoadFromOffset( page_offset );					//Reload data needed for undo - redo
 		SetHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
 	else{// out of view
-		int bpl =  BytePerLine();
 		page_offset = cursor_offset;
 		page_offset -= static_cast<int64_t>( ByteCapacity() * 0.20 ); // load some bytes behind of request for make lines at top side
 		page_offset -= page_offset % BytePerLine();	//to allign offset
-		if(page_offset < 0) page_offset = 0;
+		if(page_offset < 0)
+			page_offset = 0;
+		else if(page_offset > FileLength() )
+			page_offset = FileLength() - ByteCapacity() + 2*BytePerLine();
 		LoadFromOffset( page_offset );
 		SetHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
 	UpdateCursorLocation();
+	UpdateOffsetScroll();
 	}
 
+void HexEditor::UpdateOffsetScroll( void ){
+	if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()))
+		offset_scroll->SetRange((FileLength() / ByteCapacity())+1);
+	if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
+		offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
+	}
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
     UpdateCursorLocation();
@@ -259,6 +270,14 @@ void HexEditor::OnResize( wxSizeEvent &event){
 		LoadFromOffset(page_offset, false);
 		}
     }
+
+bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension ){
+	myfile->Add( start_byte, data, size, extension );
+// TODO (death#1#): Disabling undo - redo buttons
+//	if(myfile->IsAvailable_Undo())
+//		Toolbar->EnableTool( wxID_UNDO, true);
+//		mbar->EnableTool( wxID_UNDO, true);
+	}
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 	if(! event.ShiftDown() ){
@@ -418,12 +437,12 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 
 				case( 26 ):		// 26 == CTRL+Z = UNDO
 					if(event.ShiftDown())
-						FileRedo();	// UNDO with shift = REDO
+						Redo();	// UNDO with shift = REDO
 					else
-						FileUndo();
+						Undo();
 					break;
 				case( 25 ):		// 25 == CTRL+Y = REDO
-					FileRedo();
+					Redo();
 					break;
 				case( 19 ):{	// 19 == CTRL+S = SAVE
 					FileSave();
@@ -452,13 +471,11 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					event.Skip();// ->OnKeyboardChar( event );
 					break;
 				}//switch end
-			if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()))
-				offset_scroll->SetRange((myfile->Length() / ByteCapacity())+1);
-			if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
-				offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
+			UpdateOffsetScroll();
 			OnKeyboardSelector(event);
 			PaintSelection( );
 		}
+	event.Skip();
 	}
 
 void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
@@ -483,7 +500,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 				HexCharReplace( GetLocalHexInsertionPoint(), chr);		// write to screen
 
 				char rdchr = hex_ctrl->ReadByte( GetLocalHexInsertionPoint()/2 );	// read from screen
-				myfile->Add( CursorOffset(), &rdchr ,1);				// add node to file
+				FileAddDiff( CursorOffset(), &rdchr ,1);				// add node to file
 
 				if( hex_ctrl->GetInsertionPoint() >= hex_ctrl->GetLastPosition() ){
 					if( CursorOffset() + ByteCapacity() <= myfile->Length() ){	//Checks if its EOF or not
@@ -516,7 +533,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 				int GLIP = GetLocalInsertionPoint();	//this required because TextCharReplace() calls HexCtrl->Replace that alters entering point
 				TextCharReplace(GLIP, event.GetKeyCode());
 				char rdchr = hex_ctrl->ReadByte( GLIP );	// read from screen
-				myfile->Add( GLIP + page_offset, &rdchr ,1);						// add node to file
+				FileAddDiff( GLIP + page_offset, &rdchr ,1);						// add node to file
 
 				if( text_ctrl->GetInsertionPoint() >= text_ctrl->GetLastPosition() ){
 					if( page_offset + ByteCapacity() <= myfile->Length() ){	//Checks if its EOF or not
@@ -602,8 +619,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 			wxBell();							//there is no line to slide bell
 			}
 		}
-	if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
-		offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
+	UpdateOffsetScroll();
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){
@@ -653,8 +669,8 @@ void HexEditor::UpdateCursorLocation( bool force ){
 	lastPoint = CursorOffset();
 
 	update.Lock();
-	if( GetLocalHexInsertionPoint()/2+page_offset > myfile->Length() ){
-		SetLocalHexInsertionPoint( (FileLenght() - page_offset)*2 - 1 );
+	if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ){
+		SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
 		}
 
 	if( interpreter != NULL ){
@@ -700,4 +716,8 @@ void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
 	}
 
-
+void HexEditor::FindDialog( void ){
+	class FindDialog *myfind = new FindDialog::FindDialog( this, myfile );
+	myfind->ShowModal();
+	myfind->Destroy();
+	}

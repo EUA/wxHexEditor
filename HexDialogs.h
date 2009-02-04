@@ -27,6 +27,11 @@
 #include "HexEditor.h"
 #include "HexEditorGui.h"
 
+#ifdef WX_GCH
+#include <wx_pch.h>
+#else
+#include <wx/wx.h>
+#endif
 class GotoDialog : public GotoDialogGui{
 	public:
 		GotoDialog( wxWindow* parent, uint64_t& offset, uint64_t cursor_offset, uint64_t filesize );
@@ -34,9 +39,26 @@ class GotoDialog : public GotoDialogGui{
 		void OnGo( wxCommandEvent& event );
 		void OnConvert( wxCommandEvent& event );
 		wxString Filter( wxString text );
+
+	protected:
 		uint64_t *offset;
 		uint64_t cursor_offset;
 		uint64_t filesize;
 		bool is_olddec;
 	};
+
+class FindDialog : public FindDialogGui{
+	public:
+		FindDialog( wxWindow* parent, FileDifference *find_file );
+		void OnFind( wxCommandEvent& event );
+	protected:
+		uint64_t FindBinary( const char *target, unsigned size, uint64_t start_from );
+		uint64_t FindText( wxString target, uint64_t start_from );
+		uint64_t SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size );
+	private:
+		class HexEditor* parent;
+		FileDifference *findfile;
+	};
+
+
 #endif //__HexEditorDialogs__

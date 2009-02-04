@@ -156,6 +156,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
+	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( HexEditorGui::OnKeyDown ) );
 	this->Connect( menuFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileOpen ) );
 	this->Connect( menuFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
 	this->Connect( menuFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSaveAs ) );
@@ -179,6 +180,7 @@ HexEditorGui::~HexEditorGui()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
+	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( HexEditorGui::OnKeyDown ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileOpen ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSave ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnFileSaveAs ) );
@@ -393,37 +395,37 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizerTop;
+	bSizerTop = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticTextOffset = new wxStaticText( this, wxID_ANY, wxT("Offset"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextOffset->Wrap( -1 );
-	bSizer1->Add( m_staticTextOffset, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizerTop->Add( m_staticTextOffset, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	m_textCtrlOffset = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_PROCESS_TAB|wxTE_RIGHT );
-	bSizer1->Add( m_textCtrlOffset, 1, wxALIGN_CENTER|wxALL, 5 );
+	bSizerTop->Add( m_textCtrlOffset, 1, wxALIGN_CENTER|wxALL, 5 );
 	
 	m_dec = new wxRadioButton( this, wxID_ANY, wxT("Decimal"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1->Add( m_dec, 0, wxALL, 5 );
+	bSizerTop->Add( m_dec, 0, wxALL, 5 );
 	
 	m_hex = new wxRadioButton( this, wxID_ANY, wxT("Hex"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1->Add( m_hex, 0, wxALL, 5 );
+	bSizerTop->Add( m_hex, 0, wxALL, 5 );
 	
-	mainSizer->Add( bSizer1, 0, wxEXPAND, 5 );
+	mainSizer->Add( bSizerTop, 0, wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizerBottom;
+	bSizerBottom = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxString m_branchChoices[] = { wxT("From beginning"), wxT("From here"), wxT("From end") };
 	int m_branchNChoices = sizeof( m_branchChoices ) / sizeof( wxString );
 	m_branch = new wxRadioBox( this, wxID_ANY, wxT("Type of branch"), wxDefaultPosition, wxDefaultSize, m_branchNChoices, m_branchChoices, 1, wxRA_SPECIFY_ROWS );
 	m_branch->SetSelection( 0 );
-	bSizer2->Add( m_branch, 0, wxALL, 5 );
+	bSizerBottom->Add( m_branch, 0, wxALL, 5 );
 	
 	m_button_go = new wxButton( this, wxID_ANY, wxT("Go!"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer2->Add( m_button_go, 1, wxALIGN_CENTER|wxTOP, 5 );
+	bSizerBottom->Add( m_button_go, 1, wxALIGN_CENTER|wxTOP, 5 );
 	
-	mainSizer->Add( bSizer2, 0, wxEXPAND, 5 );
+	mainSizer->Add( bSizerBottom, 0, wxEXPAND, 5 );
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
@@ -445,4 +447,73 @@ GotoDialogGui::~GotoDialogGui()
 	m_dec->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( GotoDialogGui::OnConvert ), NULL, this );
 	m_hex->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( GotoDialogGui::OnConvert ), NULL, this );
 	m_button_go->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GotoDialogGui::OnGo ), NULL, this );
+}
+
+FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* mainSizer;
+	mainSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizerTop;
+	fgSizerTop = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizerTop->AddGrowableCol( 1 );
+	fgSizerTop->SetFlexibleDirection( wxBOTH );
+	fgSizerTop->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_static_search = new wxStaticText( this, wxID_ANY, wxT("Search: "), wxDefaultPosition, wxDefaultSize, 0 );
+	m_static_search->Wrap( -1 );
+	fgSizerTop->Add( m_static_search, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_textSearch = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_PROCESS_TAB|wxTE_RIGHT );
+	fgSizerTop->Add( m_textSearch, 0, wxALIGN_CENTER|wxBOTTOM|wxEXPAND|wxTOP, 5 );
+	
+	m_static_replace = new wxStaticText( this, wxID_ANY, wxT("Replace: "), wxDefaultPosition, wxDefaultSize, 0 );
+	m_static_replace->Wrap( -1 );
+	m_static_replace->Hide();
+	
+	fgSizerTop->Add( m_static_replace, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_textReplace = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_PROCESS_TAB|wxTE_RIGHT );
+	m_textReplace->Hide();
+	
+	fgSizerTop->Add( m_textReplace, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	
+	mainSizer->Add( fgSizerTop, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerBottom;
+	bSizerBottom = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxString m_searchtypeChoices[] = { wxT("Text"), wxT("Hex") };
+	int m_searchtypeNChoices = sizeof( m_searchtypeChoices ) / sizeof( wxString );
+	m_searchtype = new wxRadioBox( this, wxID_ANY, wxT("Search as"), wxDefaultPosition, wxDefaultSize, m_searchtypeNChoices, m_searchtypeChoices, 1, wxRA_SPECIFY_COLS );
+	m_searchtype->SetSelection( 0 );
+	bSizerBottom->Add( m_searchtype, 0, wxALL, 5 );
+	
+	wxString m_fromChoices[] = { wxT("Beginning"), wxT("Cursor") };
+	int m_fromNChoices = sizeof( m_fromChoices ) / sizeof( wxString );
+	m_from = new wxRadioBox( this, wxID_ANY, wxT("Search from"), wxDefaultPosition, wxDefaultSize, m_fromNChoices, m_fromChoices, 1, wxRA_SPECIFY_COLS );
+	m_from->SetSelection( 1 );
+	bSizerBottom->Add( m_from, 0, wxALL, 5 );
+	
+	m_button_find = new wxButton( this, wxID_ANY, wxT("Find"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBottom->Add( m_button_find, 1, wxALIGN_CENTER|wxTOP, 5 );
+	
+	mainSizer->Add( bSizerBottom, 0, wxEXPAND, 5 );
+	
+	this->SetSizer( mainSizer );
+	this->Layout();
+	mainSizer->Fit( this );
+	
+	// Connect Events
+	m_textSearch->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::OnGo ), NULL, this );
+	m_button_find->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::OnFind ), NULL, this );
+}
+
+FindDialogGui::~FindDialogGui()
+{
+	// Disconnect Events
+	m_textSearch->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::OnGo ), NULL, this );
+	m_button_find->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::OnFind ), NULL, this );
 }

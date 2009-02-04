@@ -38,6 +38,8 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	MyAUI->Update();
 
+    this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
+
 	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Connect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
@@ -54,6 +56,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
+	this->Disconnect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 	}
@@ -145,9 +148,9 @@ void HexEditorFrame::ActionEnabler( void ){
 	mbar->Enable( idFileRW, true );
 //	mbar->Enable( idFileDW, true );
 	mbar->Enable( wxID_SAVE, true );
-//	mbar->Enable( wxID_SAVEAS, true );
+	mbar->Enable( wxID_SAVEAS, true );
 	mbar->Enable( idClose, true );
-//	mbar->Enable( wxID_FIND, true );
+	mbar->Enable( wxID_FIND, true );
 //	mbar->Enable( wxID_REPLACE, true );
 	mbar->Enable( idGotoOffset, true );
 	mbar->Enable( wxID_UNDO, true );
@@ -160,8 +163,8 @@ void HexEditorFrame::ActionEnabler( void ){
 	Toolbar->EnableTool( wxID_SAVE, true);
 	Toolbar->EnableTool( wxID_SAVEAS, true);
 	Toolbar->EnableTool( idClose, true);
-//	Toolbar->EnableTool( wxID_FIND, false);
-//	Toolbar->EnableTool( wxID_REPLACE, false);
+	Toolbar->EnableTool( wxID_FIND, true);
+//	Toolbar->EnableTool( wxID_REPLACE, true);
 	Toolbar->EnableTool( idGotoOffset, true);
 	Toolbar->EnableTool( wxID_UNDO, true);
 	Toolbar->EnableTool( wxID_REDO, true);
@@ -289,21 +292,21 @@ void HexEditorFrame::OnQuit( wxCommandEvent& event ){
 void HexEditorFrame::OnEditUndo( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		MyHexEditor->FileUndo();
+		MyHexEditor->Undo();
 	event.Skip();
 	}
 
 void HexEditorFrame::OnEditRedo( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		MyHexEditor->FileRedo();
+		MyHexEditor->Redo();
 	event.Skip();
 	}
 
 void HexEditorFrame::OnEditFind( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		//
+		MyHexEditor->FindDialog();
 	event.Skip();
 	}
 
@@ -318,7 +321,7 @@ void HexEditorFrame::OnEditGoto( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL ){
 		uint64_t newoffset;
-		GotoDialog *mydialog = new GotoDialog( this, newoffset, MyHexEditor->CursorOffset(), MyHexEditor->FileLenght() );
+		GotoDialog *mydialog = new GotoDialog( this, newoffset, MyHexEditor->CursorOffset(), MyHexEditor->FileLength() );
 		if( mydialog->ShowModal() == wxID_OK ){
 			MyHexEditor->Goto( newoffset );
 			}
@@ -398,7 +401,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 #endif
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
 		if( MyHexEditor != NULL )
-			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLenght(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 	event.Skip();
 	}
 
@@ -416,7 +419,6 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 				ActionDisabler();
 			}
 	}
-
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();

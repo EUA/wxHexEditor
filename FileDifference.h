@@ -28,7 +28,6 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 #include <wx/dynarray.h>
-
 #ifdef WX_GCH
 #include <wx_pch.h>
 #else
@@ -60,6 +59,7 @@ class FileDifference : public wxFile{
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
 	    FileDifference(wxFileName& myfilename, FileAccessMode FAM = ReadOnly);
 		~FileDifference();
+//		friend class FindDialog;
 
 		bool SetAccessMode( FileAccessMode fam );
 		int GetAccessMode( void );
@@ -75,6 +75,8 @@ class FileDifference : public wxFile{
 		wxFileOffset Length( void );
 		long Read( char* buffer, int size );
 		bool Add( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
+		bool IsAvailable_Undo( void );
+		bool IsAvailable_Redo( void );
 
 	protected:
 		void RemoveTail( DiffNode *remove_node );	//remove further tails.

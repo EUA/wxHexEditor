@@ -62,6 +62,7 @@ class HexEditorGui : public wxFrame
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ){ event.Skip(); }
+		virtual void OnKeyDown( wxKeyEvent& event ){ event.Skip(); }
 		virtual void OnFileOpen( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFileSave( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFileSaveAs( wxCommandEvent& event ){ event.Skip(); }
@@ -78,7 +79,7 @@ class HexEditorGui : public wxFrame
 		
 	
 	public:
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,444 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
 	
 };
@@ -165,6 +166,33 @@ class GotoDialogGui : public wxDialog
 	public:
 		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Goto Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~GotoDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class FindDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class FindDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_static_search;
+		wxTextCtrl* m_textSearch;
+		wxStaticText* m_static_replace;
+		wxTextCtrl* m_textReplace;
+		wxRadioBox* m_searchtype;
+		wxRadioBox* m_from;
+		wxButton* m_button_find;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnFind( wxCommandEvent& event ){ event.Skip(); }
+		
+	
+	public:
+		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		~FindDialogGui();
 	
 };
 

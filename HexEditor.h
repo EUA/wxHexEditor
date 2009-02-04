@@ -32,7 +32,7 @@
 #include "InfoPanel.h"
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
-
+#include "HexDialogs.h"
 #define MB 1024*1024	//this utility uses old ECS format.
 
 class scrollthread;
@@ -49,7 +49,9 @@ class HexEditor: public HexEditorCtrl {
 					long style=0);
 		~HexEditor( void );
 		friend class scrollthread;
+		//friend class FindDialog;
 
+		void Goto( int64_t goto_offset=-1 );
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 
@@ -57,41 +59,35 @@ class HexEditor: public HexEditorCtrl {
 		bool FileSave( bool question = true );
 		bool FileSave( wxString filename );
 		bool FileClose( void );
-		bool FileUndo( void );
-		bool FileRedo( void );
-		void Goto( int64_t goto_offset=-1 );
-		void RefreshCursor( int64_t goto_offset=-1 );
 
-		void OnResize( wxSizeEvent &event );
+		bool Undo( void );
+		bool Redo( void );
+		int64_t FileLength( void ){ return myfile->Length();};
+		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
 
-
-		int64_t FileLenght( void ){ return myfile->Length();};
 		wxFileName GetFileName( void ){ return myfile->GetFileName();};
 		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); };
 		int GetFileAccessMode( void ){ return myfile->GetAccessMode();};
 		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();};
 		int GetFD( void ){ return myfile->fd(); };
-//		void redo( void );
-//		void undo( void );
-//		void finddlg( void );
-//		int64_t findbin( const char *target, int size, int64_t start_from );
-//		int64_t find( wxString *target, int size, int64_t start_from, bool as_hex = false );
+		void FindDialog( void );
 		void SetHexInsertionPoint ( int local_hex_location );
 
 protected:
 		bool Selector( bool=true );
 		void UpdateCursorLocation( bool force=false );
+		void UpdateOffsetScroll( void );
 		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);
 		void OnKeyboardSelector( wxKeyEvent& event );
 		void OnKeyboardSelectionEnd( wxKeyEvent& event );
 		void OnMouseTest( wxMouseEvent& event );
-		//void RefreshCursor(int64_t cursor_location = -1 );
 		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseWhell( wxMouseEvent& event );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
+		void OnResize( wxSizeEvent &event );
 
 //=====================
 /*
@@ -105,7 +101,7 @@ private:
     void init_hex_editor( void );
     wxWindow* parent;
 	int id;
-	int search_at_buffer( const char *bfr, int bfr_size, const char* search, int search_size );
+
 
 protected:
    	friend class FindDialog;
@@ -145,12 +141,12 @@ class scrollthread:wxThreadHelper{
 		while( !(GetThread()->TestDestroy()) ){
 			if(speed == 0)
 				continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
-			int64_t FileLenght = parent->FileLenght();
+			int64_t FileLength = parent->FileLength();
 			parent->page_offset += ( parent->BytePerLine() )*speed;
 			if( parent->page_offset < 0 )
 				parent->page_offset = 0;
-			else if( parent->page_offset + parent->ByteCapacity() >= FileLenght ){
-				parent->page_offset = FileLenght - parent->hex_ctrl->ByteCapacity();
+			else if( parent->page_offset + parent->ByteCapacity() >= FileLength ){
+				parent->page_offset = FileLength - parent->hex_ctrl->ByteCapacity();
 				parent->page_offset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 				}
 			wxMutexGuiEnter();
@@ -170,7 +166,7 @@ class scrollthread:wxThreadHelper{
 			wxMutexGuiLeave();
 			GetThread()->Sleep(sleeper);
 			if( parent->page_offset == 0 ||
-				parent->page_offset + parent->ByteCapacity() >= FileLenght )
+				parent->page_offset + parent->ByteCapacity() >= FileLength )
 				GetThread()->Pause();
 			}
 		return NULL;

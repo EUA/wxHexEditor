@@ -83,27 +83,42 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 	}
 
 
-FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile ):FindDialogGui(parent, wxID_ANY){
+FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile ):FindDialogGui( _parent, wxID_ANY){
 	parent = static_cast< HexEditor* >(_parent);
 	findfile = _findfile;
 	}
 
 // TODO (death#1#):Paint 4 Find
 void FindDialog::OnFind( wxCommandEvent& event ){
+	uint64_t found = -1;
 	if( m_searchtype->GetSelection() == 0 ){//text search
-		parent->Goto( FindText( m_textSearch->GetValue(), m_from->GetSelection() == 0 ? 0 : parent->CursorOffset() ) );
+		found = FindText( m_textSearch->GetValue(),
+						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset(),
+						text );
 		}
 	else{ //hex search
-		parent->Goto( FindBinary( wxHexCtrl::HexToChar( m_textSearch->GetValue() ), m_textSearch->GetValue().Length()/2 , m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1 ) );
+		found =  FindBinary( wxHexCtrl::HexToChar( m_textSearch->GetValue() ),
+						m_textSearch->GetValue().Length()/2 ,
+						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
+						hex );
+		}
+	if( found != -1 )
+			parent->Goto( found );
+	else{
+		wxMessageDialog mms( this, _("Not Found"), _("Nothing found!") );
+		mms.ShowModal();
+		mms.Destroy();
 		}
 	}
 
-uint64_t FindDialog::FindText( wxString target, uint64_t start_from ){
-	wxBell();
-// TODO (death#1#): TextFind!
+uint64_t FindDialog::FindText( wxString target, uint64_t start_from, search_type_ type ){
+	if( target.IsAscii() ){
+		return FindBinary( target.ToAscii(), target.Length(), start_from, type );
+		}
+// TODO (death#1#): Find in UTF?
 	}
 
-uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t from ){
+uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t from, search_type_ type ){
 	if(target == NULL) return -1;
 	int64_t offset=from;
 	int search_step = 10*MB;
@@ -115,16 +130,16 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 	if(buffer == NULL) return -1;
 	// TODO (death#6#): insert error check message here
 	readed = findfile->Read( buffer, search_step );
-	int found = SearchAtBuffer( buffer, search_step, target, size );
+	int found = SearchAtBuffer( buffer, search_step, target, size, type );
 	if(found >= 0)
 		return offset+found;
 	else
 		offset +=readed;
-
-	while(readed != search_step){
+// TODO (death#1#): DO wHILE here
+	while(readed == search_step){
 		memmove(buffer, buffer + search_step - size +1, size-1);// moving unprocessed buffer to begining.
 		readed = findfile->Read( buffer, search_step - size + 1 );	//refilling buffer with fresh data
-		found = SearchAtBuffer( buffer, search_step, target, size );
+		found = SearchAtBuffer( buffer, search_step, target, size, type );
 		if(found >= 0)
 			return offset+found;
 		else
@@ -134,11 +149,25 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 	}
 
 // TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL)
-uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
-	for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
-		if(! strncmp( bfr+i, search, search_size )){
-			return i;
-			}
+uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ type ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
+	switch( type ){
+		case hex:text_match_case:
+			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
+				if(! memcmp( bfr+i, search, search_size ))
+					return i;
+			break;
+
+		case text:
+			char *bfrx = new char [bfr_size];
+			for( int i = 0 ; i < bfr_size; i++)
+				bfrx[i]=tolower(bfr[i]);
+			char *searchx = new char [search_size];
+			for( int i = 0 ; i < search_size; i++)
+				searchx[i]=tolower(search[i]);
+			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
+				if(! memcmp( bfr+i, search, search_size ))
+					return i;
+			break;
 		}
 	return -1;
 	}

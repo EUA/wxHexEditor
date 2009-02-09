@@ -3,7 +3,7 @@ CPP = `$(WXCONFIG) --cxx`
 CXXFLAGS= `$(WXCONFIG) --cxxflags` -c -Os
 LDFLAGS = `$(WXCONFIG) --libs`
 
-SOURCES= HexEditorGui.cpp FileDifference.cpp HexEditorApp.cpp HexEditor.cpp HexEditorCtrl/HexEditorCtrl.cpp HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp HexEditorCtrl/wxHexCtrl/Tag.cpp HexEditorCtrl/HexEditorCtrlGui.cpp HexEditorFrame.cpp
+SOURCES= HexEditorGui.cpp FileDifference.cpp HexDialogs.cpp HexEditorApp.cpp HexEditor.cpp HexEditorCtrl/HexEditorCtrl.cpp HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp HexEditorCtrl/wxHexCtrl/Tag.cpp HexEditorCtrl/HexEditorCtrlGui.cpp HexEditorFrame.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=wxHexEditor
 

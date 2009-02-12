@@ -25,7 +25,7 @@
 #include "InfoPanel.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
-				HexEditorGui( parent, id, wxT("wxHexEditor v0.05 Alpha") ){
+				HexEditorGui( parent, id, wxT("wxHexEditor v0.05 Alpha-svn") ){
 
 	PrepareAUI();
 

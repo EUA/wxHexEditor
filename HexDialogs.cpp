@@ -97,7 +97,7 @@ void FindDialog::OnFind( wxCommandEvent& event ){
 						text );
 		}
 	else{ //hex search
-		found =  FindBinary( wxHexCtrl::HexToChar( m_textSearch->GetValue() ),
+		found = FindBinary( wxHexCtrl::HexToChar( m_textSearch->GetValue() ),
 						m_textSearch->GetValue().Length()/2 ,
 						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
 						hex );
@@ -122,29 +122,24 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 	if(target == NULL) return -1;
 	int64_t offset=from;
 	int search_step = 10*MB;
-	int readed=0;
 	findfile->Seek( offset, wxFromStart );
 	// TODO (death#6#): insert error check message here
-
 	char* buffer = new char [search_step];
 	if(buffer == NULL) return -1;
 	// TODO (death#6#): insert error check message here
-	readed = findfile->Read( buffer, search_step );
-	int found = SearchAtBuffer( buffer, search_step, target, size, type );
-	if(found >= 0)
-		return offset+found;
-	else
-		offset +=readed;
-// TODO (death#1#): DO wHILE here
-	while(readed == search_step){
-		memmove(buffer, buffer + search_step - size +1, size-1);// moving unprocessed buffer to begining.
-		readed = findfile->Read( buffer, search_step - size + 1 );	//refilling buffer with fresh data
+	int unprocessed_bytes = 0;
+	int found = -1;
+	int readed=0;
+	do{
+		readed = findfile->Read( buffer + unprocessed_bytes, search_step - unprocessed_bytes );
 		found = SearchAtBuffer( buffer, search_step, target, size, type );
+		unprocessed_bytes = size - 1;
 		if(found >= 0)
 			return offset+found;
 		else
-			offset +=readed;
-		}
+			offset +=readed - unprocessed_bytes;
+		memmove(buffer, buffer + search_step - unprocessed_bytes, unprocessed_bytes);// moving unprocessed buffer to begining.
+		}while(readed + unprocessed_bytes >= search_step);
 	return -1;
 	}
 

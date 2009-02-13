@@ -24,6 +24,7 @@
 #ifndef __wxHexCtrl__
 #define __wxHexCtrl__
 
+#include <iostream>
 #include <wx/textctrl.h>
 #include <wx/caret.h>
 #include <wx/wx.h>
@@ -120,7 +121,7 @@ virtual	void TagPainter( wxMemoryDC& DC, TagElement& TG );
 		void OnTagHideAll( void );
 	protected:
 		// event handlers
-		wxPoint LastRightClickAt;
+		wxPoint LastRightClickAt;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );

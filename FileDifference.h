@@ -23,6 +23,7 @@
 
 #ifndef FILEDIFFERENCE_H
 #define FILEDIFFERENCE_H
+#include <iostream>	//for std::cout...
 #include <wx/wx.h>
 #include <wx/file.h>
 #include <wx/filename.h>

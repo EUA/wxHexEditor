@@ -131,6 +131,7 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 	int found = -1;
 	int readed=0;
 	do{
+// TODO (death#1#): Seach bar with gauge???
 		readed = findfile->Read( buffer + unprocessed_bytes, search_step - unprocessed_bytes );
 		found = SearchAtBuffer( buffer, search_step, target, size, type );
 		unprocessed_bytes = size - 1;

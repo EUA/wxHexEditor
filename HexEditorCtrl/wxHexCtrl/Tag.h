@@ -42,7 +42,9 @@ class TagElement{
 		bool visible;
 		void Show( const wxPoint& pos, wxWindow *parent );
 		void Hide( void );
+#ifndef __WXMAC__
 		wxPopupWindow *wxP;
+#endif	//wxPopupWindows is not implemented in MacOSX
 	};
 
 class TagDialog : public TagDialogGui{

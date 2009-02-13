@@ -62,6 +62,8 @@ void HexEditor::Dynamic_Connector(){
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
+	text_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl	->Connect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	text_ctrl	->Connect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	hex_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
@@ -81,6 +83,8 @@ void HexEditor::Dynamic_Disconnector(){
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
+	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
@@ -102,7 +106,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 			LoadFromOffset(0, true);
-			offset_scroll->SetRange((myfile->Length() / hex_ctrl->ByteCapacity())+1);//Adjusting slider to page size
+			//offset_scroll->SetScrollbar(offset_scroll->GetThumbPosition(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
 			SetHexInsertionPoint(0);
 			return true;
 			}
@@ -230,11 +234,10 @@ void HexEditor::Goto( int64_t cursor_offset ){
 	}
 
 void HexEditor::UpdateOffsetScroll( void ){
-	if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()))
-		offset_scroll->SetRange((FileLength() / ByteCapacity())+1);
-	if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
-		offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
-	}
+	if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()) ||
+		offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
+		offset_scroll->SetScrollbar(page_offset / ByteCapacity(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
+		}
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
     UpdateCursorLocation();
@@ -585,6 +588,16 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 		}
 	#endif // wxUSE_STATUSBAR
 	UpdateCursorLocation();
+	}
+
+void HexEditor::OnMouseRight( wxMouseEvent& event ){
+	if(event.GetEventObject() == hex_ctrl)
+		LastRightClickAt = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() )/2;
+	else if(event.GetEventObject() == text_ctrl)
+		LastRightClickAt = text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
+	else
+		std::cout << "Right click captured without ctrl!\n";
+	ShowContextMenu( event );
 	}
 
 void HexEditor::OnMouseWhell( wxMouseEvent& event ){

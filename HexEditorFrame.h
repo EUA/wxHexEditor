@@ -27,9 +27,11 @@
 #include "HexEditorGui.h"
 #include "HexEditor.h"
 #include "HexDialogs.h"
+#include "InfoPanel.h"
 
 #include <wx/filename.h>
 #include <wx/dnd.h>
+#include <wx/aboutdlg.h>
 #include <wx/artprov.h>
 #include <wx/aui/aui.h>
 #include <wx/aui/auibar.h>
@@ -55,7 +57,7 @@ class HexEditorFrame : public HexEditorGui {
 		void OnViewMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );
 		void OnQuit( wxCommandEvent& event );
-		void OnAbout( wxCommandEvent& event ){ event.Skip(); }
+		void OnAbout( wxCommandEvent& event );
 
 		void ActionEnabler( void );
 		void ActionDisabler( void );

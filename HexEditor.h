@@ -26,6 +26,7 @@
 
 #include <wx/filename.h>
 #include <wx/ffile.h>
+#include <wx/clipbrd.h>
 
 #include "FileDifference.h"
 #include "DataInterpreter.h"
@@ -83,16 +84,16 @@ protected:
 		void OnKeyboardSelectionEnd( wxKeyEvent& event );
 		void OnMouseTest( wxMouseEvent& event );
 		void OnMouseLeft( wxMouseEvent& event );
+		void OnMouseRight( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseWhell( wxMouseEvent& event );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
 
-//=====================
+//=======================
 /*
 
-	bool copy( bool as_hex = false );
 	bool paste( bool as_hex = false );
 	bool replace ( bool as_hex = false );
 
@@ -106,8 +107,6 @@ private:
 protected:
    	friend class FindDialog;
 	copy_maker *copy_mark;
-
-
 */
 //=======================
 	protected:

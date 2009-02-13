@@ -40,7 +40,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 		void Dynamic_Disconnector();
 		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
 		int BytePerLine( void )	{ return hex_ctrl->BytePerLine(); }
-		int ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
+		unsigned ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
 		int LineCount( void )	{ return hex_ctrl->LineCount(); }
 		int ActiveLine( void )	{ return hex_ctrl->ActiveLine(); }
 		int GetByteCount( void ){ return hex_ctrl->GetByteCount(); }
@@ -67,9 +67,11 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		struct selector{		//selection structure
 			enum states{ SELECTION_FALSE = 0, SELECTION_TRUE, SELECTION_END };
 			enum states state;
-			int64_t start_offset;	//real start position
-			int64_t end_offset;		//real end position, included to selection
+			uint64_t start_offset;	//real start position
+			uint64_t end_offset;		//real end position, included to selection
+			uint64_t size( void ){ return abs(end_offset - start_offset);};
 			} selection;
+
 		bool Selector( bool mode=true );
 		bool Select ( int64_t start_offset, int64_t end_offset );
 		void HexCharReplace( long char_location, const wxChar chr);

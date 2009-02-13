@@ -28,7 +28,9 @@ TagElement::TagElement(){
 	tag.Clear();
 	FontClrData.SetColour( *wxBLACK );//Default wxBlack
 	NoteClrData.SetColour( *wxRED );
+#ifndef __WXMAC__
 	wxP = NULL;
+#endif
 	}
 
 TagElement::TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
@@ -39,14 +41,17 @@ TagElement::TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourDat
 TagElement::~TagElement(){
 	if( visible )
 		Hide();
+#ifndef __WXMAC__
 	if(wxP != NULL)
 		wxP->Destroy();
+#endif
 	tag.Clear();
 	}
 
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 	if( !visible ){
 		visible = true;
+#ifndef __WXMAC__
 		wxP = new wxPopupWindow( parent );
 		wxP->SetBackgroundColour( NoteClrData.GetColour() );
 		wxStaticText *text = new wxStaticText( wxP, wxID_ANY, tag );
@@ -57,6 +62,7 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		topSizer->Fit(wxP);
 		wxP->Position( pos, topSizer->GetSize() );
 		wxP->Show();
+#endif
 		}
 	}
 
@@ -64,7 +70,9 @@ void TagElement::Hide( void ){
 	if( visible )
 		{
 		visible=false;
+#ifndef __WXMAC__
 		wxP->Hide();
+#endif
 		}
 	}
 

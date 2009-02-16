@@ -246,7 +246,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">CTRL+C</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnEditCopy</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
@@ -261,7 +261,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">CTRL+X</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnEditCut</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
@@ -276,7 +276,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">CTRL+V</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnEditPaste</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="separator" expanded="1">

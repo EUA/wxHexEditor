@@ -37,6 +37,7 @@
 #define MB 1024*1024	//this utility uses old ECS format.
 
 class scrollthread;
+class copy_maker;
 class HexEditor: public HexEditorCtrl {
 	public:
 	    HexEditor(wxWindow* parent,
@@ -63,6 +64,9 @@ class HexEditor: public HexEditorCtrl {
 
 		bool Undo( void );
 		bool Redo( void );
+
+		bool CopySelection( bool as_hex = false );
+
 		int64_t FileLength( void ){ return myfile->Length();};
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
 
@@ -91,35 +95,88 @@ protected:
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
 
-//=======================
-/*
+		void ShowContextMenu( const wxMouseEvent& event );
 
+/*/=======================
 	bool paste( bool as_hex = false );
 	bool replace ( bool as_hex = false );
-
 private:
-
     void init_hex_editor( void );
     wxWindow* parent;
 	int id;
-
-
 protected:
    	friend class FindDialog;
-	copy_maker *copy_mark;
-*/
-//=======================
+*///=======================
 	protected:
 		wxStatusBar* statusbar;
 		FileDifference *myfile;
 		scrollthread *myscroll;
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
+		copy_maker *copy_mark;
 
 	private:
 	    void Dynamic_Connector( void );
 	    void Dynamic_Disconnector( void );
 };
+
+class copy_maker{
+		public:
+			bool copied;		//copy in action or not
+			int64_t start;		//copy start position
+			int64_t size;		//size of copy
+			char* buffer;		//uses RAM, for small data
+			//wxFile *tempfile;	//uses Temp HDD File and delete after.
+			FileDifference *sourcefile;	//uses HDD File and NOT delete after.
+			copy_maker( ){
+				copied = false;
+				start = size = 0;
+				buffer = NULL;
+			//	tempfile = NULL;
+				sourcefile = NULL;
+				}
+			~copy_maker(){
+				if(buffer != NULL)
+				   delete buffer;
+				//if(tempfile != NULL)
+				//if(sourcefile != NULL)
+				}
+			bool SetClipboard( wxString& CopyString){
+				if(wxTheClipboard->Open()){
+					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+						wxTheClipboard->Clear();
+						int isok = wxTheClipboard->SetData( new wxTextDataObject( CopyString ));
+						wxTheClipboard->Flush();
+						wxTheClipboard->Close();
+						return isok;
+						}
+					else{
+						wxMessageDialog msg( NULL, _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+						msg.ShowModal();
+						msg.Destroy();
+						return false;
+						}
+					}
+				else{
+					wxMessageDialog msg( NULL, _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+					msg.ShowModal();
+					msg.Destroy();
+					return false;
+					}
+				}
+			wxString GetClipboard( void ){
+				}
+			bool allocate_buffer(int buffer_size){
+				delete buffer;
+				buffer = new char[buffer_size];
+				size = buffer_size;
+				return buffer;
+				}
+/*		protected:
+			int free_ram_size(){
+				}
+*/
+		};
 
 class scrollthread:wxThreadHelper{
 	private:

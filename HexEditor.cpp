@@ -35,16 +35,16 @@ HexEditor::HexEditor(	wxWindow* parent,
 			HexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL)
 			,statusbar(statbar_),
 			interpreter(interpreter_),
-			infopanel(infopanel_)
-			{
-		printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
-		myfile = NULL;
-		if( myfilename_ != NULL ){
-			if( !FileOpen( *myfilename_ ) ){
-				}
+			infopanel(infopanel_){
+	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
+	myfile = NULL;
+	if( myfilename_ != NULL ){
+		if( !FileOpen( *myfilename_ ) ){
 			}
-		offset_scroll->Enable( true );
-		Dynamic_Connector();
+		}
+	offset_scroll->Enable( true );
+	Dynamic_Connector();
+	copy_mark = new copy_maker( );
 	}
 	HexEditor::~HexEditor(){
 		//FileClose();
@@ -600,6 +600,40 @@ void HexEditor::OnMouseRight( wxMouseEvent& event ){
 	ShowContextMenu( event );
 	}
 
+
+void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
+	wxMenu menu;
+	unsigned TagPosition;
+	if( event.GetEventObject() == hex_ctrl )
+		TagPosition = page_offset + (hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) / 2);
+	if( event.GetEventObject() == text_ctrl )
+		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
+
+	TagElement *TAG;
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
+		TAG = MainTagArray.Item(i);
+		if( (TagPosition >= TAG->start ) && (TagPosition <= TAG->end ) ){	//end not included!
+			menu.Append(idTagEdit, _T("Tag Edit"));
+			break;
+			}
+		}
+
+	if( selection.state == selector::SELECTION_END ){
+		menu.Append(idTagSelect, _T("Tag Selection"));
+		menu.Append(wxID_COPY, _T("Copy Selection"));
+		}
+	menu.AppendSeparator();
+	wxPoint pos = event.GetPosition();
+	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
+	pos += scr->GetPosition();
+    PopupMenu(&menu, pos);
+    // test for destroying items in popup menus
+#if 0 // doesn't work in wxGTK!
+    menu.Destroy(Menu_Popup_Submenu);
+    PopupMenu( &menu, event.GetX(), event.GetY() );
+#endif // 0
+	}
+
 void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "MouseWhell Rotation = " << event.GetWheelRotation() << "\t Delta = " << event.GetWheelDelta()
@@ -733,4 +767,64 @@ void HexEditor::FindDialog( void ){
 	class FindDialog *myfind = new FindDialog::FindDialog( this, myfile );
 	myfind->ShowModal();
 	myfind->Destroy();
+	}
+
+bool HexEditor::CopySelection( bool as_hex ){
+	if(selection.state	!= selector::SELECTION_FALSE){
+		uint64_t start = selection.start_offset;
+		uint64_t size = selection.size();
+		uint64_t RAM_limit = 10*MB;
+		if(size < RAM_limit){								//copy to clipboard if < 10 MB
+			myfile->Seek( start, wxFromStart );
+			if(copy_mark->allocate_buffer(size)){
+				myfile->Read( copy_mark->buffer , size );
+				wxString CopyString;
+				if(as_hex){
+					for( int i=0 ; i<size ; i++ )
+						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->buffer[i]));
+					CopyString.Trim();	//remove last ' '
+					}
+				else
+					CopyString << wxString::FromAscii( copy_mark->buffer );
+
+				return copy_mark->SetClipboard( CopyString );
+				}
+			else{
+				wxMessageDialog *msg = new wxMessageDialog(this, _( "You have no RAM to copy this data.\n"\
+											"Operation cancelled!")
+										, _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+				msg->ShowModal();
+				msg->Destroy();
+				delete msg;
+				return false;
+				}
+			}
+		else{
+			wxMessageDialog msg(this, _( "You are tried to copy data more than 10 MB.\n"\
+									  "Copying above 1 MB to clipboard is not allowed.\n"\
+									  "Only internal copy buffer used!")
+							, _("Info"), wxOK|wxICON_INFORMATION, wxDefaultPosition);
+			msg.ShowModal();
+			msg.Destroy();
+
+			copy_mark->buffer = new char[size];
+			if(copy_mark->buffer){
+				myfile->Seek( start , wxFromStart );
+				myfile->Read( copy_mark->buffer, size);
+				return true;
+				}
+			else{
+// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageDialog msg(this, _( "You have no RAM to copy this data.\n"\
+											"Operation cancelled!")
+										, _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+				msg.ShowModal();
+				msg.Destroy();
+				return false;
+				}
+			}
+		}
+	else{
+		wxBell();
+		return false;
+		}
 	}

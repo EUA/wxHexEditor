@@ -69,7 +69,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			enum states state;
 			uint64_t start_offset;	//real start position
 			uint64_t end_offset;		//real end position, included to selection
-			uint64_t size( void ){ return abs(end_offset - start_offset);};
+			uint64_t size( void ){ return abs(end_offset - start_offset)+1;};	//for select byte 13 start=13, end=13
 			} selection;
 
 		bool Selector( bool mode=true );

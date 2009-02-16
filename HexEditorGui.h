@@ -70,6 +70,9 @@ class HexEditorGui : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditCopy( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditCut( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnEditPaste( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditFind( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditReplace( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditGoto( wxCommandEvent& event ){ event.Skip(); }

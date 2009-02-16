@@ -140,10 +140,10 @@ void HexEditorFrame::PrepareAUI( void ){
 	mbar->Check( idInterpreter, true );
 
 	ActionDisabler();
-	MyNotebook->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
-	MyInfoPanel->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
-	MyInterpreter->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
-	Toolbar->SetDropTarget( new DnDFile( MyNotebook, statusBar, MyInterpreter, MyInfoPanel) );
+	MyNotebook->SetDropTarget( new DnDFile( this ) );
+	MyInfoPanel->SetDropTarget( new DnDFile( this ) );
+	MyInterpreter->SetDropTarget( new DnDFile( this ) );
+	Toolbar->SetDropTarget( new DnDFile( this ) );
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
@@ -158,7 +158,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	mbar->Enable( idGotoOffset, true );
 	mbar->Enable( wxID_UNDO, true );
 	mbar->Enable( wxID_REDO, true );
-//	mbar->Enable( wxID_COPY, true );
+	mbar->Enable( wxID_COPY, true );
 //	mbar->Enable( wxID_PASTE, true );
 //	mbar->Enable( wxID_CUT, true );
 //	mbar->Enable( wxID_DELETE, true );
@@ -171,7 +171,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	Toolbar->EnableTool( idGotoOffset, true);
 	Toolbar->EnableTool( wxID_UNDO, true);
 	Toolbar->EnableTool( wxID_REDO, true);
-//	Toolbar->EnableTool( wxID_COPY, true);
+	Toolbar->EnableTool( wxID_COPY, true);
 //	Toolbar->EnableTool( wxID_PASTE, true);
 //	Toolbar->EnableTool( wxID_CUT, true);
 //	Toolbar->EnableTool( wxID_DELETE, true);
@@ -304,6 +304,27 @@ void HexEditorFrame::OnEditRedo( wxCommandEvent& event ){
 	if( MyHexEditor != NULL )
 		MyHexEditor->Redo();
 	event.Skip();
+	}
+
+void HexEditorFrame::OnEditCopy( wxCommandEvent& event ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		MyHexEditor->CopySelection();
+	event.Skip();
+	}
+
+void HexEditorFrame::OnEditCut( wxCommandEvent& event ){
+//	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+//	if( MyHexEditor != NULL )
+//		//MyHexEditor->Redo();
+//	event.Skip();
+	}
+
+void HexEditorFrame::OnEditPaste( wxCommandEvent& event ){
+//	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+//	if( MyHexEditor != NULL )
+//		//MyHexEditor->Redo();
+//	event.Skip();
 	}
 
 void HexEditorFrame::OnEditFind( wxCommandEvent& event ){
@@ -460,8 +481,15 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();
 	for ( size_t n = 0; n < nFiles; n++ ) {
 		wxFileName myfl( filenames[n] );
-		if ( myfl.FileExists() )
-			m_pOwner->AddPage( new HexEditor( m_pOwner, 1, statusbar, myinterpreter, myinfopanel, &myfl), myfl.GetFullName(), true);
+		if ( myfl.FileExists() ){
+			HexFramework->MyNotebook->AddPage( new HexEditor( HexFramework->MyNotebook, 1, HexFramework->statusBar, HexFramework->MyInterpreter, HexFramework->MyInfoPanel, &myfl), myfl.GetFullName(), true);
+			HexFramework->ActionEnabler();
+			}
+		else{
+			wxMessageDialog dlg(NULL,wxString(_("Dropped file:\n")).Append( myfl.GetPath() ).Append(_("\ncannot open!")),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+			dlg.ShowModal();dlg.Destroy();
+			}
+
 		}
 	return TRUE;
 	}

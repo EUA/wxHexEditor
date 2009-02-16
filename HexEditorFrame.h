@@ -36,6 +36,7 @@
 #include <wx/aui/aui.h>
 #include <wx/aui/auibar.h>
 #include <wx/aui/auibook.h>
+class DnDFile;
 
 class HexEditorFrame : public HexEditorGui {
 	public:
@@ -50,6 +51,9 @@ class HexEditorFrame : public HexEditorGui {
 		void OnFileClose( wxCommandEvent& event );
 		void OnEditUndo( wxCommandEvent& event );
 		void OnEditRedo( wxCommandEvent& event );
+		void OnEditCopy( wxCommandEvent& event );
+		void OnEditCut( wxCommandEvent& event );
+		void OnEditPaste( wxCommandEvent& event );
 		void OnEditFind( wxCommandEvent& event );
 		void OnEditReplace( wxCommandEvent& event );
 		void OnEditGoto( wxCommandEvent& event );
@@ -71,22 +75,18 @@ class HexEditorFrame : public HexEditorGui {
 		DataInterpreter *MyInterpreter;
 		InfoPanel *MyInfoPanel;
 		wxAuiToolBar* Toolbar;
+		friend class DnDFile;
 	};
 
 class DnDFile : public wxFileDropTarget{
 	public:
-		DnDFile(wxAuiNotebook *pOwner, wxStatusBar *statusbar_, DataInterpreter *interpreter_, InfoPanel *infopanel_) {
-			m_pOwner = pOwner;
-			statusbar = statusbar_;
-			myinterpreter = interpreter_;
-			myinfopanel = infopanel_;
+		DnDFile( HexEditorFrame* myHexFramework) {
+			HexFramework = myHexFramework;
 			}
 	virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
 	private:
 		wxAuiNotebook *m_pOwner;
-		wxStatusBar	*statusbar;
-		DataInterpreter *myinterpreter;
-		InfoPanel *myinfopanel;
+		HexEditorFrame *HexFramework;
 	};
 
 

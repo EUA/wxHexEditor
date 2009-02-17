@@ -65,7 +65,7 @@ class HexEditor: public HexEditorCtrl {
 		bool Undo( void );
 		bool Redo( void );
 
-		bool CopySelection( bool as_hex = false );
+		bool CopySelection( void );
 
 		int64_t FileLength( void ){ return myfile->Length();};
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
@@ -134,6 +134,7 @@ class copy_maker{
 				buffer = NULL;
 			//	tempfile = NULL;
 				sourcefile = NULL;
+				test();
 				}
 			~copy_maker(){
 				if(buffer != NULL)
@@ -151,16 +152,12 @@ class copy_maker{
 						return isok;
 						}
 					else{
-						wxMessageDialog msg( NULL, _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-						msg.ShowModal();
-						msg.Destroy();
+						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 						return false;
 						}
 					}
 				else{
-					wxMessageDialog msg( NULL, _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-					msg.ShowModal();
-					msg.Destroy();
+					wxMessageBox( _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 					return false;
 					}
 				}
@@ -172,10 +169,24 @@ class copy_maker{
 				size = buffer_size;
 				return buffer;
 				}
-/*		protected:
-			int free_ram_size(){
+
+		bool test( void ){
+			if (wxTheClipboard->Open()){
+				wxTheClipboard->SetData( new wxTextDataObject(wxT("Some text for test")) );
+				wxTheClipboard->Close();
 				}
-*/
+
+			if (wxTheClipboard->Open()){
+				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+					wxTextDataObject data;
+					wxTheClipboard->GetData( data );
+					if( data.GetText() != wxT("Some text for test") )
+						wxMessageBox( _("Clipboard read/write problem!") );
+					else
+					}
+				wxTheClipboard->Close();
+				}
+			}
 		};
 
 class scrollthread:wxThreadHelper{

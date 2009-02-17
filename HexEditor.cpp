@@ -111,14 +111,12 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 			return true;
 			}
 		else{
-			wxDialog *dlg = new wxMessageDialog(this,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-			dlg->ShowModal();dlg->Destroy();
+			wxMessageBox(_("File cannot open."),_("Error"), wxOK|wxICON_ERROR);
 			return false;
 			}
 		}
 	else{
-		wxMessageDialog *dlg = new wxMessageDialog(this,_("File isn't Readable.(Permissions?)"),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-		dlg->ShowModal();dlg->Destroy();
+		wxMessageBox(_("File isn't Readable.(Permissions?)"),_("Error"), wxOK|wxICON_ERROR);
 		return false;
 		}
 	}
@@ -129,20 +127,13 @@ bool HexEditor::FileSave( bool question ){
 		if ( !question )
 			selection = wxID_YES;
 		else{
-			wxMessageDialog *msg = new wxMessageDialog(
-					this, _( "Do you want to save this file?\n")
-					, _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-			selection=msg->ShowModal();
-			msg->Destroy();
+			wxMessageDialog msg( this, _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
+			selection=msg.ShowModal();
 			}
 		switch( selection ){
 			case(wxID_YES):
 				if( !myfile->Apply() ){
-					wxMessageDialog *msg = new wxMessageDialog(
-								this, _( "File cannot saved. Operation Cancelled\n")
-								, _("File Save Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-					msg->ShowModal();
-					msg->Destroy();
+					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR);
 					return false;
 					}
 			case(wxID_NO):
@@ -173,11 +164,8 @@ bool HexEditor::FileSave( wxString savefilename ){
 bool HexEditor::FileClose( void ){
 	if( myfile != NULL ){
 		if( myfile->IsChanged() ){
-			wxMessageDialog *msg = new wxMessageDialog(
-									this, _( "Do you want to save file?\n")
-								, _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-			int state = msg->ShowModal();
-			msg->Destroy();
+			wxMessageDialog msg( this, _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
+			int state = msg.ShowModal();
 			switch(state){
 				case(wxID_YES):
 					if( !FileSave( false ) )
@@ -769,7 +757,7 @@ void HexEditor::FindDialog( void ){
 	myfind->Destroy();
 	}
 
-bool HexEditor::CopySelection( bool as_hex ){
+bool HexEditor::CopySelection( void ){
 	if(selection.state	!= selector::SELECTION_FALSE){
 		uint64_t start = selection.start_offset;
 		uint64_t size = selection.size();
@@ -779,7 +767,7 @@ bool HexEditor::CopySelection( bool as_hex ){
 			if(copy_mark->allocate_buffer(size)){
 				myfile->Read( copy_mark->buffer , size );
 				wxString CopyString;
-				if(as_hex){
+				if( hex_ctrl == FindFocus() ){
 					for( int i=0 ; i<size ; i++ )
 						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->buffer[i]));
 					CopyString.Trim();	//remove last ' '
@@ -790,23 +778,15 @@ bool HexEditor::CopySelection( bool as_hex ){
 				return copy_mark->SetClipboard( CopyString );
 				}
 			else{
-				wxMessageDialog *msg = new wxMessageDialog(this, _( "You have no RAM to copy this data.\n"\
-											"Operation cancelled!")
-										, _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-				msg->ShowModal();
-				msg->Destroy();
-				delete msg;
+				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 				return false;
 				}
 			}
 		else{
-			wxMessageDialog msg(this, _( "You are tried to copy data more than 10 MB.\n"\
-									  "Copying above 1 MB to clipboard is not allowed.\n"\
-									  "Only internal copy buffer used!")
-							, _("Info"), wxOK|wxICON_INFORMATION, wxDefaultPosition);
-			msg.ShowModal();
-			msg.Destroy();
-
+			wxMessagBox(_( "You are tried to copy data more than 10 MB.\n"\
+							"Copying above 1 MB to clipboard is not allowed.\n"\
+							"Only internal copy buffer used!"),
+							_("Info"), wxOK|wxICON_INFORMATION);
 			copy_mark->buffer = new char[size];
 			if(copy_mark->buffer){
 				myfile->Seek( start , wxFromStart );
@@ -814,11 +794,7 @@ bool HexEditor::CopySelection( bool as_hex ){
 				return true;
 				}
 			else{
-// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageDialog msg(this, _( "You have no RAM to copy this data.\n"\
-											"Operation cancelled!")
-										, _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-				msg.ShowModal();
-				msg.Destroy();
+// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 				return false;
 				}
 			}
@@ -828,3 +804,70 @@ bool HexEditor::CopySelection( bool as_hex ){
 		return false;
 		}
 	}
+/*-----------------------------
+bool HexEditor::replace( bool as_hex ){
+	if(copy_mark->clipboard_use() ){
+		if(wxTheClipboard->Open()){
+			if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+				wxTextDataObject tdobj;
+				wxTheClipboard->GetData( tdobj );
+				wxTheClipboard->Close();
+				const wxString& txt = tdobj.GetText();
+				int64_t offset;
+				if( FindFocus() == hex_ctrl ){
+					offset = current_offset + hex_ctrl->GetInsertionPoint()/2;
+					}
+				else if( FindFocus() == text_ctrl ){
+					offset = current_offset + text_ctrl->GetInsertionPoint()
+								- (text_ctrl->GetInsertionPoint()+1)/hex_ctrl->CharPerLine();
+					}
+				else if( selection.state != selector::SELECTION_FALSE ){
+					offset = selection.start_hex/2;
+					}
+				else{
+					wxBell();
+					return false;
+					}
+				myTempFile->add( offset, txt.fn_str() , txt.Length() );
+				Refresh(offset + txt.Length());
+				return true;
+				}
+			else{
+				wxBell();
+				return false;
+				}
+			}
+		else{
+			wxMessageDialog *msg = new wxMessageDialog(
+								this, _( "Clipboard could not be opened\n"\
+								"Opreation cancelled!")
+							, _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+			msg->ShowModal();
+			msg->Destroy();
+			delete msg;
+			return false;
+			}
+		}
+	else{	//if clipboard not used
+		int64_t offset;
+		if( FindFocus() == hex_ctrl )
+			offset = current_offset + hex_ctrl->GetInsertionPoint()/2;
+		else if( FindFocus() == text_ctrl )
+			offset = current_offset + text_ctrl->GetInsertionPoint()
+					- (text_ctrl->GetInsertionPoint()+1)/hex_ctrl->CharPerLine();
+		else if( selection.state != selector::SELECTION_FALSE )
+			offset = selection.start_hex/2;
+		else{
+			wxBell();
+			return false;
+			}
+		myTempFile->add( offset, copy_mark->buffer , copy_mark->size );
+		Refresh( offset + copy_mark->size );
+		return true;
+		}
+	}
+
+bool HexEditor::paste( bool as_hex ){
+
+	}
+*/

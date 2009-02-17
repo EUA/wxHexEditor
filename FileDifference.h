@@ -20,7 +20,7 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
-
+// Journaling File Structure :)
 #ifndef FILEDIFFERENCE_H
 #define FILEDIFFERENCE_H
 #include <iostream>	//for std::cout...

@@ -23,10 +23,6 @@
 
 #include "wxHexCtrl.h"
 
-#include "wx/caret.h"
-#include "wx/numdlg.h"
-//#define X 0
-
 BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
 	EVT_SIZE( wxHexCtrl::OnResize )
@@ -639,30 +635,28 @@ void wxHexCtrl::Replace(unsigned from, unsigned to, const wxString& value){
 		wxBell();
 	}
 
-
-
 char wxHexCtrl::ReadByte( int byte_location ){
 	wxString hx;
 	hx << m_text[ byte_location*2 ] << m_text[ byte_location*2+1 ];
 	return *HexToChar(hx);
 	}
 
-//long wxHexCtrl::ReadBytes(unsigned char* buffer,long start_location, long byte_count){
-//	wxString hex_string = GetRange(start_location*3,(start_location+byte_count)*3);
-//ALPHA oglu APLHA CODE
-//	return i;
-//    }
+const char* wxHexCtrl::HexToChar( const wxString& HexValue ){
+	return static_cast<char*>(HexToBin( HexValue ).GetData());
+	}
 
-char* wxHexCtrl::HexToChar(const wxString& HexValue){
-	char *buffer = new char[HexValue.Length()/3+2];//+1 for "\0"
+wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
+	wxMemoryBuffer memodata;
+	memodata.SetBufSize(HexValue.Length()/3);
 
-	for(unsigned int i=0,j=0 ; j < HexValue.Length()/3+1 ; i+=2,j++){
+	char bfr;
+	for(unsigned int i=0 ; i < HexValue.Length() ; i+=2){
 		if(HexValue[i]>='0' && HexValue[i]<='9')
-			buffer[j] = HexValue[i] - '0';
+			bfr = HexValue[i] - '0';
 		else if(HexValue[i]>='A' && HexValue[i]<='F')
-			buffer[j] = HexValue[i] - 'A' + 10;
+			bfr = HexValue[i] - 'A' + 10;
 		else if(HexValue[i]>='a' && HexValue[i]<='f')
-			buffer[j] = HexValue[i] - 'a' + 10;
+			bfr = HexValue[i] - 'a' + 10;
 		else if(HexValue[i] == ' '){	//Removes space char
 			i--;
 			continue;
@@ -672,22 +666,22 @@ char* wxHexCtrl::HexToChar(const wxString& HexValue){
 			return NULL;
 			}
 
-		buffer[j] <<= 4;
+		bfr <<= 4;
 
 		if(HexValue[i+1]>='0' && HexValue[i+1]<='9')
-			buffer[j] |= HexValue[i+1] - '0';
+			bfr |= HexValue[i+1] - '0';
 		else if(HexValue[i+1]>='A' && HexValue[i+1]<='F')
-			buffer[j] |= HexValue[i+1] - 'A' + 10;
+			bfr |= HexValue[i+1] - 'A' + 10;
 		else if(HexValue[i+1]>='a' && HexValue[i+1]<='f')
-			buffer[j] |= HexValue[i+1] - 'a'+ 10;
+			bfr |= HexValue[i+1] - 'a'+ 10;
 		else		// There is no space char remove code here, Hex codes must be sticked together.
 			{
 			wxBell();
 			return NULL;
 			}
-		buffer[j+1]='\0';
+		memodata.AppendByte( bfr );
 		}
-	return buffer;
+	return memodata;
 	}
 //------------EVENT HANDLERS---------------//
 void wxHexCtrl::OnFocus(wxFocusEvent& event ){

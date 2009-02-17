@@ -51,10 +51,10 @@ class FindDialog : public FindDialogGui{
 	public:
 		FindDialog( wxWindow* parent, FileDifference *find_file );
 		void OnFind( wxCommandEvent& event );
-		enum search_type_{ hex, text, text_match_case } searchtype;
+		enum search_type_{ type_hex, type_text, type_text_match_case } searchtype;
 	protected:
-		uint64_t FindBinary( const char *target, unsigned size, uint64_t start_from, search_type_ st=hex );
-		uint64_t FindText( wxString target, uint64_t start_from, search_type_ st=text);
+		uint64_t FindBinary( const char *target, unsigned size, uint64_t start_from, search_type_ st=type_hex );
+		uint64_t FindText( wxString target, uint64_t start_from, search_type_ st=type_text);
 		uint64_t SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ st );
 	private:
 		class HexEditor* parent;

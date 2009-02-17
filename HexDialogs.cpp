@@ -86,29 +86,28 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile ):FindDialogGui( _parent, wxID_ANY){
 	parent = static_cast< HexEditor* >(_parent);
 	findfile = _findfile;
+	m_textSearch->SetFocus();
 	}
 
 // TODO (death#1#):Paint 4 Find
+// TODO (death#1#):HEX CHECK for input!
 void FindDialog::OnFind( wxCommandEvent& event ){
 	uint64_t found = -1;
 	if( m_searchtype->GetSelection() == 0 ){//text search
 		found = FindText( m_textSearch->GetValue(),
 						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset(),
-						text );
+						type_text );
 		}
 	else{ //hex search
-		found = FindBinary( wxHexCtrl::HexToChar( m_textSearch->GetValue() ),
-						m_textSearch->GetValue().Length()/2 ,
-						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
-						hex );
+		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_textSearch->GetValue());
+		found = FindBinary( static_cast<const char*>(mymem.GetData()),mymem.GetDataLen(),
+							m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
+							type_hex );
 		}
 	if( found != -1 )
 			parent->Goto( found );
-	else{
-		wxMessageDialog mms( this, _("Not Found"), _("Nothing found!") );
-		mms.ShowModal();
-		mms.Destroy();
-		}
+	else
+		wxMessageBox(_("Not Found"), _("Nothing found!") );
 	}
 
 uint64_t FindDialog::FindText( wxString target, uint64_t start_from, search_type_ type ){
@@ -147,13 +146,13 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 // TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL)
 uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ type ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
 	switch( type ){
-		case hex:text_match_case:
+		case type_hex:type_text_match_case:
 			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
 				if(! memcmp( bfr+i, search, search_size ))
 					return i;
 			break;
 
-		case text:
+		case type_text:
 			char *bfrx = new char [bfr_size];
 			for( int i = 0 ; i < bfr_size; i++)
 				bfrx[i]=tolower(bfr[i]);

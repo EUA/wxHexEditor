@@ -36,7 +36,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 			,statusbar(statbar_),
 			interpreter(interpreter_),
 			infopanel(infopanel_){
-	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD
+	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD neccessary
 	myfile = NULL;
 	if( myfilename_ != NULL ){
 		if( !FileOpen( *myfilename_ ) ){
@@ -272,8 +272,8 @@ bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size,
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 	if(! event.ShiftDown() ){
-		if( selection.state == selector::SELECTION_TRUE )
-			selection.state = selector::SELECTION_END;
+		if( selection.state == selector::S_TRUE )
+			selection.state = selector::S_END;
 			}
     else
 		Selector();
@@ -554,7 +554,7 @@ bool HexEditor::Selector(bool mode){
 			start = end;
 			end = temp;
 			}
-		if( selection.state == selector::SELECTION_FALSE ){
+		if( selection.state == selector::S_FALSE ){
 			statusbar->SetStatusText(_("Selected Block:N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
@@ -606,7 +606,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			}
 		}
 
-	if( selection.state == selector::SELECTION_END ){
+	if( selection.state == selector::S_END ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		menu.Append(wxID_COPY, _T("Copy Selection"));
 		}
@@ -734,7 +734,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 			start = end;
 			end = temp;
 			}
-		if( selection.state == selector::SELECTION_FALSE ){
+		if( selection.state == selector::S_FALSE ){
 			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
@@ -758,7 +758,7 @@ void HexEditor::FindDialog( void ){
 	}
 
 bool HexEditor::CopySelection( void ){
-	if(selection.state	!= selector::SELECTION_FALSE){
+	if(selection.state	!= selector::S_FALSE){
 		uint64_t start = selection.start_offset;
 		uint64_t size = selection.size();
 		uint64_t RAM_limit = 10*MB;
@@ -775,7 +775,7 @@ bool HexEditor::CopySelection( void ){
 				else
 					CopyString << wxString::FromAscii( copy_mark->buffer );
 
-				return copy_mark->SetClipboard( CopyString );
+				return copy_mark->SetClipboardData( CopyString );
 				}
 			else{
 				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
@@ -783,8 +783,8 @@ bool HexEditor::CopySelection( void ){
 				}
 			}
 		else{
-			wxMessagBox(_( "You are tried to copy data more than 10 MB.\n"\
-							"Copying above 1 MB to clipboard is not allowed.\n"\
+			wxMessageBox(_( "You are tried to copy data more than 10 MB.\n"\
+							"Copying above 10 MB to clipboard is not allowed.\n"\
 							"Only internal copy buffer used!"),
 							_("Info"), wxOK|wxICON_INFORMATION);
 			copy_mark->buffer = new char[size];
@@ -804,7 +804,32 @@ bool HexEditor::CopySelection( void ){
 		return false;
 		}
 	}
-/*-----------------------------
+bool HexEditor::PasteFromClipboard( void ){
+	if( hex_ctrl == FindFocus() ){
+		wxString str = copy_mark->GetClipboardData();
+		if( ! str.IsEmpty() ){
+			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
+			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
+			selection.state = selector::S_FALSE;
+			Goto( CursorOffset() + str.Len() );
+			}
+		}
+	else if ( text_ctrl == FindFocus() ){
+		wxString str = copy_mark->GetClipboardData();
+		if( ! str.IsEmpty() ){
+			char *ch = new char [str.Len()];
+			for( int i=0;i<str.Len();i++ )
+				ch[i] = str[i];
+			FileAddDiff( CursorOffset(), ch, str.Len() );
+			selection.state = selector::S_FALSE;
+			Goto( CursorOffset() + str.Len() );
+			}
+		}
+	else
+		wxMessageBox(_( "There is no focus!"), _("Paste Error"), wxOK|wxICON_ERROR);
+	}
+
+/* Old code could show the path
 bool HexEditor::replace( bool as_hex ){
 	if(copy_mark->clipboard_use() ){
 		if(wxTheClipboard->Open()){
@@ -821,7 +846,7 @@ bool HexEditor::replace( bool as_hex ){
 					offset = current_offset + text_ctrl->GetInsertionPoint()
 								- (text_ctrl->GetInsertionPoint()+1)/hex_ctrl->CharPerLine();
 					}
-				else if( selection.state != selector::SELECTION_FALSE ){
+				else if( selection.state != selector::S_FALSE ){
 					offset = selection.start_hex/2;
 					}
 				else{
@@ -855,7 +880,7 @@ bool HexEditor::replace( bool as_hex ){
 		else if( FindFocus() == text_ctrl )
 			offset = current_offset + text_ctrl->GetInsertionPoint()
 					- (text_ctrl->GetInsertionPoint()+1)/hex_ctrl->CharPerLine();
-		else if( selection.state != selector::SELECTION_FALSE )
+		else if( selection.state != selector::S_FALSE )
 			offset = selection.start_hex/2;
 		else{
 			wxBell();
@@ -865,9 +890,5 @@ bool HexEditor::replace( bool as_hex ){
 		Refresh( offset + copy_mark->size );
 		return true;
 		}
-	}
-
-bool HexEditor::paste( bool as_hex ){
-
 	}
 */

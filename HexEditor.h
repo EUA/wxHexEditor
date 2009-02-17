@@ -66,6 +66,7 @@ class HexEditor: public HexEditorCtrl {
 		bool Redo( void );
 
 		bool CopySelection( void );
+		bool PasteFromClipboard( void );
 
 		int64_t FileLength( void ){ return myfile->Length();};
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
@@ -97,16 +98,6 @@ protected:
 
 		void ShowContextMenu( const wxMouseEvent& event );
 
-/*/=======================
-	bool paste( bool as_hex = false );
-	bool replace ( bool as_hex = false );
-private:
-    void init_hex_editor( void );
-    wxWindow* parent;
-	int id;
-protected:
-   	friend class FindDialog;
-*///=======================
 	protected:
 		wxStatusBar* statusbar;
 		FileDifference *myfile;
@@ -142,7 +133,7 @@ class copy_maker{
 				//if(tempfile != NULL)
 				//if(sourcefile != NULL)
 				}
-			bool SetClipboard( wxString& CopyString){
+			bool SetClipboardData( wxString& CopyString){
 				if(wxTheClipboard->Open()){
 					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
 						wxTheClipboard->Clear();
@@ -161,8 +152,26 @@ class copy_maker{
 					return false;
 					}
 				}
-			wxString GetClipboard( void ){
+
+			wxString GetClipboardData( void ){
+				if(wxTheClipboard->Open()){
+					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+						wxTextDataObject data;
+						wxTheClipboard->GetData( data );
+						wxTheClipboard->Close();
+						return data.GetText();
+						}
+					else{
+						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+						return wxString();
+						}
+					}
+				else{
+					wxMessageBox( _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+					return wxString();
+					}
 				}
+
 			bool allocate_buffer(int buffer_size){
 				delete buffer;
 				buffer = new char[buffer_size];
@@ -182,7 +191,6 @@ class copy_maker{
 					wxTheClipboard->GetData( data );
 					if( data.GetText() != wxT("Some text for test") )
 						wxMessageBox( _("Clipboard read/write problem!") );
-					else
 					}
 				wxTheClipboard->Close();
 				}

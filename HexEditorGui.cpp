@@ -429,6 +429,7 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerBottom->Add( m_branch, 0, wxALL, 5 );
 	
 	m_button_go = new wxButton( this, wxID_ANY, wxT("Go!"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_go->SetDefault(); 
 	bSizerBottom->Add( m_button_go, 1, wxALIGN_CENTER|wxTOP, 5 );
 	
 	mainSizer->Add( bSizerBottom, 0, wxEXPAND, 5 );
@@ -504,6 +505,7 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerBottom->Add( m_from, 0, wxALL, 5 );
 	
 	m_button_find = new wxButton( this, wxID_ANY, wxT("Find"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_find->SetDefault(); 
 	bSizerBottom->Add( m_button_find, 1, wxALIGN_CENTER|wxTOP, 5 );
 	
 	mainSizer->Add( bSizerBottom, 0, wxEXPAND, 5 );

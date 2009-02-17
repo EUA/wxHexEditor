@@ -25,6 +25,7 @@
 #define __wxHexCtrl__
 
 #include <iostream>
+#include <wx/buffer.h>
 #include <wx/textctrl.h>
 #include <wx/caret.h>
 #include <wx/wx.h>
@@ -66,7 +67,8 @@ virtual void CreateCaret( void );
 		wxString GetValue( void );
 		long ReadBytes( char* buffer, int start_location, int byte_count, bool no_repaint = false );
 		char ReadByte(int byte_location);
-static char* HexToChar(const wxString& HexValue);
+static const char* HexToChar(const wxString& HexValue);
+static wxMemoryBuffer HexToBin(const wxString& HexValue);
 virtual void Replace(unsigned from, unsigned to, const wxString& value);
 virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true);
 		void WriteByte( const unsigned char& byte );
@@ -86,14 +88,14 @@ virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true
 		// Shaper Classes, All other classes has to be depended to this function for proper action!
 virtual bool IsDenied() { return IsDenied( m_Caret.x );}
 virtual bool IsDenied( int x );
-virtual	bool IsAllowedChar(const char& chr);
+virtual bool IsAllowedChar(const char& chr);
 //virtual	const char Filter(const char& ch);
 		int xCountDenied( int x );
 
 		// Movement Support
-virtual	int CharacterPerLine( void );
-		int BytePerLine( void )	{ return CharacterPerLine() / 2; }
-virtual	int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
+virtual int CharacterPerLine( void );
+virtual int BytePerLine( void )	{ return CharacterPerLine() / 2; }
+virtual int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
 		int LineCount( void )	{ return m_Window.y; }
 		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
 		int GetByteCount( void ){ return m_text.Length()/2;	}
@@ -113,7 +115,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		struct selector: public TagElement{		//selection
 			bool selected;		//selection available variable
 			} select;
-virtual	void TagPainter( wxMemoryDC& DC, TagElement& TG );
+virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
 		void RePaint(){
 			wxPaintEvent painter;
 			OnPaint( painter );
@@ -125,9 +127,9 @@ virtual	void TagPainter( wxMemoryDC& DC, TagElement& TG );
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );
-virtual	void OnMouseLeft( wxMouseEvent& event );
-virtual	void OnMouseRight( wxMouseEvent& event );
-virtual	void OnMouseMove( wxMouseEvent& event );
+virtual void OnMouseLeft( wxMouseEvent& event );
+virtual void OnMouseRight( wxMouseEvent& event );
+virtual void OnMouseMove( wxMouseEvent& event );
 		void OnFocus( wxFocusEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void OnResize( wxSizeEvent &event );

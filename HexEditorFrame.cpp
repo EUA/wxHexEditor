@@ -147,68 +147,21 @@ void HexEditorFrame::PrepareAUI( void ){
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
-	mbar->Enable( idFileRO, true );
-	mbar->Enable( idFileRW, true );
-//	mbar->Enable( idFileDW, true );
-	mbar->Enable( wxID_SAVE, true );
-	mbar->Enable( wxID_SAVEAS, true );
-	mbar->Enable( idClose, true );
-	mbar->Enable( wxID_FIND, true );
-//	mbar->Enable( wxID_REPLACE, true );
-	mbar->Enable( idGotoOffset, true );
-	mbar->Enable( wxID_UNDO, true );
-	mbar->Enable( wxID_REDO, true );
-	mbar->Enable( wxID_COPY, true );
-//	mbar->Enable( wxID_PASTE, true );
-//	mbar->Enable( wxID_CUT, true );
-//	mbar->Enable( wxID_DELETE, true );
-
-	Toolbar->EnableTool( wxID_SAVE, true);
-	Toolbar->EnableTool( wxID_SAVEAS, true);
-	Toolbar->EnableTool( idClose, true);
-	Toolbar->EnableTool( wxID_FIND, true);
-//	Toolbar->EnableTool( wxID_REPLACE, true);
-	Toolbar->EnableTool( idGotoOffset, true);
-	Toolbar->EnableTool( wxID_UNDO, true);
-	Toolbar->EnableTool( wxID_REDO, true);
-	Toolbar->EnableTool( wxID_COPY, true);
-//	Toolbar->EnableTool( wxID_PASTE, true);
-//	Toolbar->EnableTool( wxID_CUT, true);
-//	Toolbar->EnableTool( wxID_DELETE, true);
-
+	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE };
+	int arr2[] = { idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
+	for( int i=0 ; i<11 ; i++ ){
+		mbar->Enable( arr[i],true );
+		Toolbar->EnableTool( arr[i], true );
+		}
 	MyInterpreter->Enable();
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	mbar->Enable( idFileRO, false );
-	mbar->Enable( idFileRW, false );
-	mbar->Enable( idFileDW, false );
-	mbar->Enable( wxID_SAVE, false );
-	mbar->Enable( wxID_SAVEAS, false );
-	mbar->Enable( idClose, false );
-	mbar->Enable( wxID_FIND, false );
-	mbar->Enable( wxID_REPLACE, false );
-	mbar->Enable( idGotoOffset, false );
-	mbar->Enable( wxID_UNDO, false );
-	mbar->Enable( wxID_REDO, false );
-	mbar->Enable( wxID_COPY, false );
-	mbar->Enable( wxID_PASTE, false );
-	mbar->Enable( wxID_CUT, false );
-	mbar->Enable( wxID_DELETE, false );
-
-	Toolbar->EnableTool( wxID_SAVE, false);
-	Toolbar->EnableTool( wxID_SAVEAS, false);
-	Toolbar->EnableTool( idClose, false);
-	Toolbar->EnableTool( wxID_FIND, false);
-	Toolbar->EnableTool( wxID_REPLACE, false);
-	Toolbar->EnableTool( idGotoOffset, false);
-	Toolbar->EnableTool( wxID_UNDO, false);
-	Toolbar->EnableTool( wxID_REDO, false);
-	Toolbar->EnableTool( wxID_COPY, false);
-	Toolbar->EnableTool( wxID_PASTE, false);
-	Toolbar->EnableTool( wxID_CUT, false);
-	Toolbar->EnableTool( wxID_DELETE, false);
-
+	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE , idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
+	for( int i=0 ; i<15 ; i++ ){
+		mbar->Enable( arr[i],false );
+		Toolbar->EnableTool( arr[i], false );
+		}
 	MyInterpreter->Clear();
 	MyInterpreter->Disable();
 
@@ -321,10 +274,10 @@ void HexEditorFrame::OnEditCut( wxCommandEvent& event ){
 	}
 
 void HexEditorFrame::OnEditPaste( wxCommandEvent& event ){
-//	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
-//	if( MyHexEditor != NULL )
-//		//MyHexEditor->Redo();
-//	event.Skip();
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		MyHexEditor->PasteFromClipboard();
+	event.Skip();
 	}
 
 void HexEditorFrame::OnEditFind( wxCommandEvent& event ){

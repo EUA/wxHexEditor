@@ -65,7 +65,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void TagPaint( void );
 
 		struct selector{		//selection structure
-			enum states{ SELECTION_FALSE = 0, SELECTION_TRUE, SELECTION_END };
+			enum states{ S_TRUE, S_FALSE, S_END };
 			enum states state;
 			uint64_t start_offset;	//real start position
 			uint64_t end_offset;		//real end position, included to selection

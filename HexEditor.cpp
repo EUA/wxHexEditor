@@ -607,7 +607,6 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			break;
 			}
 		}
-
 	if( selection.state == selector::S_END ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		menu.Append(wxID_COPY, _T("Copy Selection"));
@@ -619,7 +618,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
     PopupMenu(&menu, pos);
     // test for destroying items in popup menus
 #if 0 // doesn't work in wxGTK!
-    menu.Destroy(Menu_Popup_Submenu);
+// TODO (death#1#): inspect here	menu.Destroy(Menu_Popup_Submenu);
     PopupMenu( &menu, event.GetX(), event.GetY() );
 #endif // 0
 	}

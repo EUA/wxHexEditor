@@ -24,7 +24,7 @@
 #ifndef __Tag_h__
 #define __Tag_h__
 
-#include <wx/colordlg.h>
+#include <wx/clrpicker.h>
 #include <wx/popupwin.h>
 #include <wx/dcmemory.h>
 #include "TagDialogGui.h"
@@ -50,13 +50,12 @@ class TagElement{
 class TagDialog : public TagDialogGui{
 	public:
 		TagDialog( TagElement& TE, wxWindow* parent );
-		void OnFontColor( wxCommandEvent& event );
-		void OnNoteColor( wxCommandEvent& event );
 		void OnSave( wxCommandEvent& event );
 		void OnDelete( wxCommandEvent& event );
-		void ChooseColor( wxColourData& tmpClrData );
+		void OnColorChange( wxCommandEvent& event );
 		TagElement& Tag;
 		TagElement TmpTag;
 	};
+
 
 #endif // __Tag_h__

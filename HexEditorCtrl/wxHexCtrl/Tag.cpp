@@ -86,68 +86,20 @@ void TagElement::Hide( void ){
 TagDialog::TagDialog(TagElement& TagE, wxWindow* parent):TagDialogGui( parent ),Tag(TagE){
 	TmpTag = Tag;
 	TagTextCtrl->SetValue( TmpTag.tag );
+	m_FontColourPicker->SetColour( TmpTag.FontClrData.GetColour() );
+	m_NoteColourPicker->SetColour( TmpTag.NoteClrData.GetColour() );
 //	TagTextCtrl->SetBinValue( TmpTag.tag );
 //	wxTextAttr attr;
 //	attr.SetTextColour( TmpTag.FontClrData.GetColour() );
 //	attr.SetBackgroundColour( TmpTag.NoteClrData.GetColour() );
 //	attr.SetBackgroundColour( *wxRED );
 //	TagTextCtrl->SetDefaultStyle( attr );
-
-	wxBitmap bitmap( 100, 25);
-    wxMemoryDC dc;
-    dc.SelectObject( bitmap );
-    dc.SetBackground( TmpTag.FontClrData.GetColour() );
-    dc.Clear();
-    dc.SelectObject( wxNullBitmap );
-    FontBitmapButton->SetBitmapLabel( bitmap );
-
-	dc.SelectObject( bitmap );
-    dc.SetBackground( TmpTag.NoteClrData.GetColour() );
-    dc.Clear();
-    dc.SelectObject( wxNullBitmap );
-    NoteBitmapButton->SetBitmapLabel( bitmap );
-	}
-
-void TagDialog::OnFontColor( wxCommandEvent& event ){
-	ChooseColor( TmpTag.FontClrData );
-	}
-void TagDialog::OnNoteColor( wxCommandEvent& event ){
-	ChooseColor( TmpTag.NoteClrData );
-	}
-void TagDialog::ChooseColor( wxColourData& tmpClrData ){
-#if wxUSE_COLOURDLG
-	wxColourDialog dialog(this, &tmpClrData);
-#elif USE_COLOURDLG_GENERIC
-	wxGenericColourDialog *dialog = new wxGenericColourDialog(this, &tmpClrData);
-#endif
-	if( &tmpClrData == &TmpTag.FontClrData )	//Cannot compare wxColourData, so I am comparing it's memory adresses :)
-		dialog.SetTitle(_T("Choose the font colour"));
-	else
-		dialog.SetTitle(_T("Choose the background colour"));
-
-    if (dialog.ShowModal() == wxID_OK)
-        tmpClrData = dialog.GetColourData();
-
-	wxBitmap bitmap( 100, 25);
-    wxMemoryDC dc;
-    dc.SelectObject( bitmap );
-    dc.SetBackground( tmpClrData.GetColour() );
-    dc.Clear();
-    dc.SelectObject( wxNullBitmap );
-
-	if( &tmpClrData == &TmpTag.FontClrData)
-		FontBitmapButton->SetBitmapLabel( bitmap );
-	else
-		NoteBitmapButton->SetBitmapLabel( bitmap );
-
-//	wxTextAttr attr;
-//	attr.SetTextColour( TmpTag.FontClrData.GetColour() );
-//	attr.SetBackgroundColour( TmpTag.NoteClrData.GetColour() );
-//	TagTextCtrl->SetDefaultStyle( attr );
 	}
 
 void TagDialog::OnSave( wxCommandEvent& event ){
 	TmpTag.tag = TagTextCtrl->GetValue();
+	TmpTag.FontClrData.SetColour( m_FontColourPicker->GetColour() );
+	TmpTag.NoteClrData.SetColour( m_NoteColourPicker->GetColour() );
 	Tag = TmpTag;
 	EndModal(wxID_SAVE);
 	}

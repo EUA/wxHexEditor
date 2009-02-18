@@ -429,6 +429,10 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
 	int64_t pos = LastRightClickAt;
+#ifdef _DEBUG_
+	std::cout << " Tag Edit on " << pos << std::endl;
+#endif
+	int zzz = MainTagArray.Count();
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TAG = MainTagArray.Item(i);
 		if( pos >= TAG->start && pos <= TAG->end ){
@@ -455,7 +459,6 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 					break;
 				}
 			}
-		break;
 		}
 	}
 
@@ -476,9 +479,9 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 
 				while (child) {
 					if (child->GetName() == wxT("TAG")) {
-						wxString propvalue = child->GetPropVal(wxT("ID"), wxT("default-value"));
+						wxString propvalue = child->GetPropVal(wxT("id"), wxT("default-value"));
 	#ifdef _DEBUG_
-						std::cout << "TAG ID:" << propvalue << " readed.\n";
+						std::cout << "TAG ID:" << propvalue.ToAscii() << " readed.\n";
 	#endif
 						TagElement *tmp = new TagElement();
 						long long unsigned xxl;

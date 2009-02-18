@@ -39,6 +39,9 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	Dynamic_Connector();
 	selection.start_offset = selection.end_offset = 0;
 	selection.state = selector::S_FALSE;
+	TAGMutex = false;
+	hex_ctrl->TagMutex = &TAGMutex;
+	text_ctrl->TagMutex = &TAGMutex;
     }
 HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
@@ -187,6 +190,7 @@ void inline HexEditorCtrl::ClearPaint( void ){
 void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagElement *TAG;
 	TagElement *TAX;
+	TagHideAll();
 	hex_ctrl->TagArray.Clear();
 	text_ctrl->TagArray.Clear();
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ ){
@@ -458,7 +462,86 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 void HexEditorCtrl::TagHideAll( void ){
 	hex_ctrl->OnTagHideAll();
 	text_ctrl->OnTagHideAll();
+	TAGMutex = false;
 	}
+
+void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
+	wxXmlDocument doc;
+	if( flnm.IsFileReadable() )
+		if( doc.Load( flnm.GetFullPath(), wxT("UTF-8")) )
+			if (doc.GetRoot()->GetName() == wxT("wxHexEditor_XML_TAG")){
+				wxXmlNode *child = doc.GetRoot()->GetChildren();
+
+				child = child->GetChildren();	//<filename> -> <TAG>
+
+				while (child) {
+					if (child->GetName() == wxT("TAG")) {
+						wxString propvalue = child->GetPropVal(wxT("ID"), wxT("default-value"));
+	#ifdef _DEBUG_
+						std::cout << "TAG ID:" << propvalue << " readed.\n";
+	#endif
+						TagElement *tmp = new TagElement();
+						long long unsigned xxl;
+						for( wxXmlNode *element = child->GetChildren() ; element != NULL ; element = element->GetNext() ){
+							if (element->GetName() == wxT("start_offset")){
+								element->GetNodeContent().ToULongLong( &xxl, 10 );;
+								tmp->start = xxl;
+								}
+							else if (element->GetName() == wxT("end_offset")){
+								element->GetNodeContent().ToULongLong( &xxl, 10 );;
+								tmp->end = xxl;
+								}
+							else if (element->GetName() == wxT("tag_text"))
+								tmp->tag = element->GetNodeContent();
+							else if (element->GetName() == wxT("font_colour"))
+								tmp->FontClrData.SetColour( wxColour(element->GetNodeContent()) );
+							else if (element->GetName() == wxT("note_colour"))
+								tmp->NoteClrData.SetColour( wxColour(element->GetNodeContent()) );
+							}
+						MainTagArray.Add(tmp);
+						}
+					child = child->GetNext();
+					}
+				PreparePaintTAGs();
+				ClearPaint();
+				text_ctrl->RePaint();
+				hex_ctrl ->RePaint();
+				}
+	}
+
+void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
+	wxXmlDocument doc;
+
+	wxXmlNode *node_Root = new wxXmlNode( NULL, wxXML_ELEMENT_NODE, wxT("wxHexEditor_XML_TAG"), wxEmptyString, NULL , NULL);
+
+	wxXmlProperty *prop_filename = new wxXmlProperty( wxT("path"), flnm.GetFullPath(), NULL);
+	wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), flnm.GetFullPath(), prop_filename , NULL);
+	for(int i = 0 ; i < MainTagArray.Count() ; i++ ){
+		TagElement *TAG = MainTagArray.Item(i);
+
+		wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
+		wxXmlNode *node_Tag = new wxXmlNode( node_File, wxXML_ELEMENT_NODE, wxT("TAG"), wxEmptyString, ID , NULL);
+
+		wxXmlNode *element_NoteColour		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("note_colour"), wxEmptyString, NULL, NULL);
+		new wxXmlNode( element_NoteColour, wxXML_TEXT_NODE, wxT("note_colour"), TAG->NoteClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX), NULL, NULL);
+
+		wxXmlNode *element_FontColour		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("font_colour"), TAG->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX), NULL, element_NoteColour);
+		new wxXmlNode( element_FontColour, wxXML_TEXT_NODE, wxT("font_colour"), TAG->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX), NULL, NULL);
+
+		wxXmlNode *element_TagText		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("tag_text"), TAG->tag, NULL, element_FontColour);
+		new wxXmlNode( element_TagText, wxXML_TEXT_NODE, wxT("tag_text"), TAG->tag, NULL, NULL);
+
+		wxXmlNode *element_End 			= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("end_offset"), wxString::Format(wxT("%ld"),TAG->end ) , NULL, element_TagText);
+		new wxXmlNode( element_End, wxXML_TEXT_NODE, wxT("end_offset"), wxString::Format(wxT("%ld"),TAG->end ) , NULL, NULL);
+
+		wxXmlNode *element_Start		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("start_offset"), wxString::Format(wxT("%ld"), TAG->start ), NULL, element_End);
+		new wxXmlNode( element_Start, wxXML_TEXT_NODE, wxT("start_offset"), wxString::Format(wxT("%ld"), TAG->start ), NULL, NULL);
+		}
+	doc.SetFileEncoding( wxT("UTF-8") );
+	doc.SetRoot( node_Root );
+	doc.Save(flnm.GetFullPath().Append(wxT(".tags")));
+	}
+
 
 //------ADAPTERS----------//
 int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor

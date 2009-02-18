@@ -50,6 +50,9 @@ TagElement::~TagElement(){
 
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 	if( !visible ){
+#ifdef _DEBUG_
+		std::cout << "Show tag element " << this << std::endl;
+#endif
 		visible = true;
 #ifndef __WXMAC__
 		wxP = new wxPopupWindow( parent );
@@ -69,6 +72,9 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 void TagElement::Hide( void ){
 	if( visible )
 		{
+#ifdef _DEBUG_
+		std::cout << "Hide tag element " << this << std::endl;
+#endif
 		visible=false;
 #ifndef __WXMAC__
 		wxP->Hide();
@@ -149,4 +155,3 @@ void TagDialog::OnSave( wxCommandEvent& event ){
 void TagDialog::OnDelete( wxCommandEvent& event ){
 	EndModal(wxID_DELETE);
 	}
-

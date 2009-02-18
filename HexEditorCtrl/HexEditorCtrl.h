@@ -1,20 +1,20 @@
 /***********************************(GPL)********************************
-*	wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*	Copyright (C) 2007  Erdem U. Altinyurt                              *
+*   wxHexEditor is a hex edit tool for editing massive files in Linux   *
+*   Copyright (C) 2006  Erdem U. Altinyurt                              *
 *                                                                       *
-*	This program is free software; you can redistribute it and/or       *
-*	modify it under the terms of the GNU General Public License         *
-*	as published by the Free Software Foundation; either version 2      *
-*	of the License, or any later version.                               *
+*   This program is free software; you can redistribute it and/or       *
+*   modify it under the terms of the GNU General Public License         *
+*   as published by the Free Software Foundation; either version 2      *
+*   of the License, or any later version.                               *
 *                                                                       *
-*	This program is distributed in the hope that it will be useful,     *
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of      *
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
-*	GNU General Public License for more details.                        *
+*   This program is distributed in the hope that it will be useful,     *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+*   GNU General Public License for more details.                        *
 *                                                                       *
-*	You should have received a copy of the GNU General Public License   *
-*	along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,               *
+*   You should have received a copy of the GNU General Public License   *
+*   along with this program;                                            *
+*   if not, write to the Free Software	Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -22,9 +22,11 @@
 *************************************************************************/
 #ifndef __wxHexEditorCtrl__
 #define __wxHexEditorCtrl__
+#include <wx/xml/xml.h>
+#include <wx/filename.h>
 
 #include "HexEditorCtrlGui.h"
-class HexEditorCtrl: public HexEditorCtrlGui {
+class HexEditorCtrl: public HexEditorCtrlGui{
 	public:
 		HexEditorCtrl(wxWindow* parent, int id,
 						const wxPoint& pos=wxDefaultPosition,
@@ -38,24 +40,6 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 		ArrayOfTAG MainTagArray;
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
-		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
-		int BytePerLine( void )	{ return hex_ctrl->BytePerLine(); }
-		unsigned ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
-		int LineCount( void )	{ return hex_ctrl->LineCount(); }
-		int ActiveLine( void )	{ return hex_ctrl->ActiveLine(); }
-		int GetByteCount( void ){ return hex_ctrl->GetByteCount(); }
-//		int GetInsertionPoint( void );
-//		void SetInsertionPoint( unsigned int pos );
-		int GetLastPosition( void ){ return hex_ctrl->GetLastPosition(); }
-/*
-virtual int ToExactPosition( int InternalPosition );
-virtual int ToInternalPosition( int ExactPosition );
-virtual int PixelCoordToInternalPosition( wxPoint mouse );
-		wxPoint InternalPositionToExactCoord( int position );
-		wxPoint PixelCoordToInternalCoord( wxPoint mouse );
-*/
-
-
 		void Clear( bool RePaint=false, bool cursor_reset=true );
 //		DECLARE_EVENT_TABLE()
 		virtual void OnResize( wxSizeEvent& event);
@@ -63,6 +47,9 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void PaintSelection( void );
 		void PreparePaintTAGs( void );
 		void TagPaint( void );
+		bool TAGMutex;
+		void LoadTAGS( wxFileName );
+		void SaveTAGS( wxFileName );
 
 		struct selector{		//selection structure
 			enum states{ S_TRUE, S_FALSE, S_END };
@@ -89,12 +76,27 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		void TagHideAll( void );
 		int64_t LastRightClickAt;
 		//----ADAPTERS----//
+	public:
+		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
+		int BytePerLine( void )	{ return hex_ctrl->BytePerLine(); }
+		unsigned ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
+		int LineCount( void )	{ return hex_ctrl->LineCount(); }
+		int ActiveLine( void )	{ return hex_ctrl->ActiveLine(); }
+		int GetByteCount( void ){ return hex_ctrl->GetByteCount(); }
+		int GetLastPosition( void ){ return hex_ctrl->GetLastPosition(); }
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );
-virtual	void SetLocalHexInsertionPoint( int hex_location );
+virtual void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
+	protected:
 		int64_t page_offset;	//holds current start offset of file
-
+/*
+virtual int ToExactPosition( int InternalPosition );
+virtual int ToInternalPosition( int ExactPosition );
+virtual int PixelCoordToInternalPosition( wxPoint mouse );
+		wxPoint InternalPositionToExactCoord( int position );
+		wxPoint PixelCoordToInternalCoord( wxPoint mouse );
+*/
 //		virtual void OnKeyboardChar( wxKeyEvent& event );
 //		virtual void OnKeyboardInput( wxKeyEvent& event );
 	};

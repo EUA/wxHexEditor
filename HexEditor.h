@@ -24,7 +24,6 @@
 #ifndef __wxHexEditor__
 #define __wxHexEditor__
 
-#include <wx/filename.h>
 #include <wx/ffile.h>
 #include <wx/clipbrd.h>
 
@@ -61,7 +60,6 @@ class HexEditor: public HexEditorCtrl {
 		bool FileSave( bool question = true );
 		bool FileSave( wxString filename );
 		bool FileClose( void );
-
 		bool Undo( void );
 		bool Redo( void );
 

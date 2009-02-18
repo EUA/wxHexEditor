@@ -50,7 +50,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 			: wxScrolledWindow( parent, id,
 								pos, size,
 								wxSUNKEN_BORDER )
-{
+	{
 	HexDefaultAttr = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
 								wxFont(
@@ -722,13 +722,17 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 		TagElement *TAX;
 		for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
 			TAX = TagArray.Item(i);
-			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) )	//end not included!
-				{
-				TAX->Show( event.GetPosition()+(static_cast<wxWindow*>( event.GetEventObject() ))->ClientToScreen(wxPoint(0,0)) , this );
+			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) ){	//end not included!
+				if( !(*TagMutex) ){
+					*TagMutex=true;
+					TAX->Show( event.GetPosition()+(static_cast<wxWindow*>( event.GetEventObject() ))->ClientToScreen(wxPoint(0,0)) , this );
+					}
 				break;
 				}
-			else if( TAX->visible == true )
+			else if( TAX->visible == true ){
 				TAX->Hide();
+				*TagMutex=false;
+				}
 			}
 		}
 	}

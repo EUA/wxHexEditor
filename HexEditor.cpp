@@ -105,6 +105,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
+			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
 			LoadFromOffset(0, true);
 			//offset_scroll->SetScrollbar(offset_scroll->GetThumbPosition(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
 			SetHexInsertionPoint(0);
@@ -177,6 +178,7 @@ bool HexEditor::FileClose( void ){
 					return false;
 				}
 			}
+		SaveTAGS( myfile->GetFileName() );
 		//myscroll->GetMyThread()->Delete();
 //		myscroll->GetMyThread()->Wait();
 //		delete myscroll;
@@ -749,6 +751,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
+	SaveTAGS( myfile->GetFileName() );
 	}
 
 void HexEditor::FindDialog( void ){
@@ -804,6 +807,7 @@ bool HexEditor::CopySelection( void ){
 		return false;
 		}
 	}
+
 bool HexEditor::PasteFromClipboard( void ){
 	if( hex_ctrl == FindFocus() ){
 		wxString str = copy_mark->GetClipboardData();

@@ -39,9 +39,9 @@ WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 
 class wxHexCtrl : public wxScrolledWindow{
 	public:
-		wxHexCtrl() { }
+//		wxHexCtrl() { }
 		wxHexCtrl( wxWindow *parent );
-		wxHexCtrl(wxWindow *parent,
+		wxHexCtrl( wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
 				const wxPoint &pos = wxDefaultPosition,
@@ -121,6 +121,8 @@ virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
 			OnPaint( painter );
 			}
 		void OnTagHideAll( void );
+		bool *TagMutex;
+
 	protected:
 		// event handlers
 		wxPoint LastRightClickAt;	//Holds last right click for TagEdit function
@@ -154,7 +156,7 @@ virtual void OnMouseMove( wxMouseEvent& event );
 
 class wxHexTextCtrl : public wxHexCtrl{
 	public:
-		wxHexTextCtrl():wxHexCtrl(){}
+//		wxHexTextCtrl():wxHexCtrl(){}
 		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){}
 		wxHexTextCtrl( wxWindow *parent,
 				wxWindowID id,
@@ -181,7 +183,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 
 class wxHexOffsetCtrl : public wxHexCtrl{
 	public:
-		wxHexOffsetCtrl():wxHexCtrl(){ hex_offset=false;offset_position=0; }
+//		wxHexOffsetCtrl():wxHexCtrl(){ hex_offset=false;offset_position=0; }
 		wxHexOffsetCtrl( wxWindow *parent ): wxHexCtrl( parent ){ hex_offset=false; offset_position=0;}
 		wxHexOffsetCtrl(wxWindow *parent,
 				wxWindowID id,

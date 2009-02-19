@@ -759,6 +759,12 @@ void HexEditor::FindDialog( void ){
 	myfind->Destroy();
 	}
 
+void HexEditor::ReplaceDialog( void ){
+	class ReplaceDialog *myfind = new ReplaceDialog::ReplaceDialog( this, myfile );
+	myfind->ShowModal();
+	myfind->Destroy();
+	}
+
 bool HexEditor::CopySelection( void ){
 	if(selection.state	!= selector::S_FALSE){
 		uint64_t start = selection.start_offset;

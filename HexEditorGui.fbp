@@ -2359,9 +2359,9 @@
             <property name="name">FindDialogGui</property>
             <property name="pos"></property>
             <property name="size">-1,-1</property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP</property>
+            <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP</property>
             <property name="subclass"></property>
-            <property name="title">Find</property>
+            <property name="title"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -2764,7 +2764,7 @@
                                 <property name="label">Find</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_button_find</property>
+                                <property name="name">m_button</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
@@ -2774,7 +2774,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnButtonClick">OnFind</event>
+                                <event name="OnButtonClick">OnButton</event>
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>

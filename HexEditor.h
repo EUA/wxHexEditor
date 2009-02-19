@@ -75,6 +75,7 @@ class HexEditor: public HexEditorCtrl {
 		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();};
 		int GetFD( void ){ return myfile->fd(); };
 		void FindDialog( void );
+		void ReplaceDialog( void );
 		void SetHexInsertionPoint ( int local_hex_location );
 
 protected:

@@ -186,15 +186,15 @@ class FindDialogGui : public wxDialog
 		wxTextCtrl* m_textReplace;
 		wxRadioBox* m_searchtype;
 		wxRadioBox* m_from;
-		wxButton* m_button_find;
+		wxButton* m_button;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnFind( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnButton( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:
-		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
 		~FindDialogGui();
 	
 };

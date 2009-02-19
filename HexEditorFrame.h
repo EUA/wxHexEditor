@@ -28,7 +28,7 @@
 #include "HexEditor.h"
 #include "HexDialogs.h"
 #include "InfoPanel.h"
-
+#include "mondrian.xpm"
 #include <wx/filename.h>
 #include <wx/dnd.h>
 #include <wx/aboutdlg.h>

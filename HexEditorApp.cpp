@@ -26,7 +26,7 @@
  * Author:    Death Knight
  * Created:   2008-05-12
  * Copyright: Death Knight (wxhexeditor.sourceforge.net)
- * License:
+ * License:...GPL
  **************************************************************/
 
 #ifdef WX_PRECOMP

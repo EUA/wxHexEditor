@@ -24,6 +24,8 @@
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxT("wxHexEditor v0.06 Alpha-svn") ){
+	wxIcon wxHexEditor_ICON ( mondrian_xpm );
+	this->SetIcon(wxHexEditor_ICON);
 
 	PrepareAUI();
 
@@ -147,9 +149,9 @@ void HexEditorFrame::PrepareAUI( void ){
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
-	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE };
-	int arr2[] = { idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
-	for( int i=0 ; i<11 ; i++ ){
+	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE };
+	int arr2[] = { idFileDW, wxID_CUT, wxID_DELETE };
+	for( int i=0 ; i<12 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
@@ -290,7 +292,7 @@ void HexEditorFrame::OnEditFind( wxCommandEvent& event ){
 void HexEditorFrame::OnEditReplace( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		//
+		MyHexEditor->ReplaceDialog();
 	event.Skip();
 	}
 

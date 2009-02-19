@@ -83,7 +83,7 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 	}
 
 
-FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile ):FindDialogGui( _parent, wxID_ANY){
+FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile, wxString title ):FindDialogGui( _parent, wxID_ANY, title){
 	parent = static_cast< HexEditor* >(_parent);
 	findfile = _findfile;
 	m_textSearch->SetFocus();
@@ -91,7 +91,7 @@ FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile ):FindDialo
 
 // TODO (death#1#):Paint 4 Find
 // TODO (death#1#):HEX CHECK for input!
-void FindDialog::OnFind( wxCommandEvent& event ){
+void FindDialog::OnButton( wxCommandEvent& event ){
 	uint64_t found = -1;
 	if( m_searchtype->GetSelection() == 0 ){//text search
 		found = FindText( m_textSearch->GetValue(),
@@ -165,4 +165,15 @@ uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* 
 			break;
 		}
 	return -1;
+	}
+
+ReplaceDialog::ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxString title ):FindDialog( parent, find_file, title ){
+	m_textReplace->Show();
+	m_static_replace->Show();
+	Fit();
+	m_button->SetLabel(_("Replace"));
+	}
+
+void ReplaceDialog::OnButton( wxCommandEvent& event ){
+	wxMessageBox(_("Not implemented yet"),_("Not implemented"));
 	}

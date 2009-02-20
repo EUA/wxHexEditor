@@ -81,6 +81,7 @@
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="HexEditorGui.h" />
 		<Unit filename="InfoPanel.h" />
+		<Unit filename="makefile" />
 		<Unit filename="wx_pch.h">
 			<Option compile="1" />
 			<Option weight="0" />

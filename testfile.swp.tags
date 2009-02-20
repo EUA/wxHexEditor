@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="./testfile.swp">
+    <TAG id="3">
+      <start_offset>454</start_offset>
+      <end_offset>466</end_offset>
+      <tag_text>Different Corruption type</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>353</start_offset>
+      <end_offset>388</end_offset>
+      <tag_text>Third Area that corrupted</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#01FF00</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>47</start_offset>
+      <end_offset>53</end_offset>
+      <tag_text>First corruption on file.</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFC600</note_colour>
+    </TAG>
+    <TAG id="0">
+      <start_offset>168</start_offset>
+      <end_offset>192</end_offset>
+      <tag_text>Sample: Here second corruption at file</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFE200</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

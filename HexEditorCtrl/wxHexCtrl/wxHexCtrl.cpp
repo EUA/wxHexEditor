@@ -125,7 +125,7 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 	}
 
 void wxHexCtrl::CreateCaret(){
-    wxCaret *caret = new wxCaret(this, m_Char.x, m_Char.y);
+    wxCaret *caret = new wxCaret(this, m_CharSize.x, m_CharSize.y);
     SetCaret(caret);
     caret->Move(m_Margin.x, m_Margin.x);
     caret->Show();
@@ -291,11 +291,11 @@ int wxHexCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 
 wxPoint wxHexCtrl::PixelCoordToInternalCoord( wxPoint mouse ){
 	mouse.x = ( mouse.x < 0 ? 0 : mouse.x);
-	mouse.x = ( mouse.x > m_Char.x*m_Window.x ? m_Char.x*m_Window.x-1 : mouse.x);
+	mouse.x = ( mouse.x > m_CharSize.x*m_Window.x ? m_CharSize.x*m_Window.x-1 : mouse.x);
 	mouse.y = ( mouse.y < 0 ? 0 : mouse.y);
-	mouse.y = ( mouse.y > m_Char.y*m_Window.y ? m_Char.y*m_Window.y-1 : mouse.y);
-	int x = (mouse.x - m_Margin.x) / m_Char.x;
-	int y = (mouse.y - m_Margin.y) / m_Char.y;
+	mouse.y = ( mouse.y > m_CharSize.y*m_Window.y ? m_CharSize.y*m_Window.y-1 : mouse.y);
+	int x = (mouse.x - m_Margin.x) / m_CharSize.x;
+	int y = (mouse.y - m_Margin.y) / m_CharSize.y;
 	return wxPoint(x,y);
 	}
 
@@ -305,12 +305,12 @@ void wxHexCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
     wxClientDC dc(this);
     dc.SetFont( HexDefaultAttr.GetFont() );
     SetFont( HexDefaultAttr.GetFont() );
-    m_Char.y = dc.GetCharHeight();
-    m_Char.x = dc.GetCharWidth();
+    m_CharSize.y = dc.GetCharHeight();
+    m_CharSize.x = dc.GetCharWidth();
 
     wxCaret *caret = GetCaret();
     if ( caret )
-		caret->SetSize(m_Char.x, m_Char.y);
+		caret->SetSize(m_CharSize.x, m_CharSize.y);
 	RePaint();
 }
 
@@ -354,8 +354,8 @@ void wxHexCtrl::MoveCaret(int x){
 void wxHexCtrl::DoMoveCaret(){
     wxCaret *caret = GetCaret();
     if ( caret )
-		caret->Move(m_Margin.x + m_Caret.x * m_Char.x,
-                    m_Margin.x + m_Caret.y * m_Char.y);
+		caret->Move(m_Margin.x + m_Caret.x * m_CharSize.x,
+                    m_Margin.x + m_Caret.y * m_CharSize.y);
 }
 
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
@@ -386,7 +386,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 				wxChar ch = CharAt(z++);
 				line += ch;
 				}
-			dcTemp.DrawText( line, m_Margin.x, m_Margin.x + y * m_Char.y );
+			dcTemp.DrawText( line, m_Margin.x, m_Margin.x + y * m_CharSize.y );
 			}
 
 		int TAC = TagArray.Count();
@@ -427,7 +427,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 				wxChar ch = CharAt(z++);
 				line += ch;
 			}
-			bdc.DrawText( line, m_Margin.x, m_Margin.x + y * m_Char.y );
+			bdc.DrawText( line, m_Margin.x, m_Margin.x + y * m_CharSize.y );
 			}
 		}
 
@@ -441,8 +441,8 @@ void wxHexCtrl::TagPainter( wxMemoryDC& DC, TagElement& TG ){
 		wxBrush sbrush( TG.NoteClrData.GetColour() );
 		DC.SetBackground( sbrush );
 		DC.SetBackgroundMode( wxSOLID ); // overwrite old value
-		m_Char.y = DC.GetCharHeight();
-		m_Char.x = DC.GetCharWidth();
+		m_CharSize.y = DC.GetCharHeight();
+		m_CharSize.x = DC.GetCharWidth();
 
 		int start = TG.start;
 		int end = TG.end;
@@ -474,8 +474,8 @@ void wxHexCtrl::TagPainter( wxMemoryDC& DC, TagElement& TG ){
 				wxChar ch = CharAt(start++);
 				line += ch;
 				}
-			DC.DrawText( line, m_Margin.x + _temp_.x * m_Char.x,	//Write prepared line
-								   m_Margin.x + _temp_.y * m_Char.y );
+			DC.DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
+								   m_Margin.x + _temp_.y * m_CharSize.y );
 			}
 		}
 	}
@@ -525,8 +525,8 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
                 wxClientDC dc(this);
                 dc.SetFont(m_font);
                 dc.SetBackgroundMode(wxSOLID); // overwrite old value
-                dc.DrawText(chr, m_Margin.x + m_Caret.x * m_Char.x,
-                                m_Margin.x + m_Caret.y * m_Char.y );
+                dc.DrawText(chr, m_Margin.x + m_Caret.x * m_CharSize.x,
+                                m_Margin.x + m_Caret.y * m_CharSize.y );
                 NextChar();
 */
 				}
@@ -545,8 +545,8 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
 void wxHexCtrl::ChangeSize(){
 	unsigned gip = GetInsertionPoint();
     wxSize size = GetClientSize();
-    m_Window.x = (size.x - 2*m_Margin.x) / m_Char.x;
-    m_Window.y = (size.y - 2*m_Margin.x) / m_Char.y;
+    m_Window.x = (size.x - 2*m_Margin.x) / m_CharSize.x;
+    m_Window.y = (size.y - 2*m_Margin.x) / m_CharSize.y;
     if ( m_Window.x < 1 )
 		m_Window.x = 1;
     if ( m_Window.y < 1 )
@@ -625,8 +625,8 @@ void wxHexCtrl::Replace(unsigned from, unsigned to, const wxString& value){
                 wxClientDC dc(this);
                 dc.SetFont(m_font);
                 dc.SetBackgroundMode(wxSOLID); // overwrite old value
-                dc.DrawText(chr, m_Margin.x + m_Caret.x * m_Char.x,
-                                m_Margin.x + m_Caret.y * m_Char.y );
+                dc.DrawText(chr, m_Margin.x + m_Caret.x * m_CharSize.x,
+                                m_Margin.x + m_Caret.y * m_CharSize.y );
                 NextChar();
 */
 		RePaint();
@@ -912,23 +912,23 @@ void wxHexTextCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
     wxClientDC dc(this);
     dc.SetFont( HexDefaultAttr.GetFont() );
     SetFont( HexDefaultAttr.GetFont() );
-    m_Char.y = dc.GetCharHeight();
-    m_Char.x = dc.GetCharWidth();
+    m_CharSize.y = dc.GetCharHeight();
+    m_CharSize.x = dc.GetCharWidth();
 
     wxCaret *caret = GetCaret();
     if ( caret )
-		caret->SetSize(1, m_Char.y);
+		caret->SetSize(1, m_CharSize.y);
 	RePaint();
 }
 
 int wxHexTextCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 	mouse.x = ( mouse.x < 0 ? 0 : mouse.x);
-	mouse.x = ( mouse.x > m_Char.x*m_Window.x ? m_Char.x*m_Window.x-1 : mouse.x);
+	mouse.x = ( mouse.x > m_CharSize.x*m_Window.x ? m_CharSize.x*m_Window.x-1 : mouse.x);
 	mouse.y = ( mouse.y < 0 ? 0 : mouse.y);
-	mouse.y = ( mouse.y > m_Char.y*m_Window.y ? m_Char.y*m_Window.y-1 : mouse.y);
+	mouse.y = ( mouse.y > m_CharSize.y*m_Window.y ? m_CharSize.y*m_Window.y-1 : mouse.y);
 
-	int x = (mouse.x - m_Margin.x) / m_Char.x;
-	int y = (mouse.y - m_Margin.y) / m_Char.y;
+	int x = (mouse.x - m_Margin.x) / m_CharSize.x;
+	int y = (mouse.y - m_Margin.y) / m_CharSize.y;
 	return ( x + y * CharacterPerLine() );
 	}
 

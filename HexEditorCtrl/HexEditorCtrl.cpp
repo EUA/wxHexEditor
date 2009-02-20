@@ -282,15 +282,13 @@ void HexEditorCtrl::Clear( bool RePaint, bool cursor_reset ){
 void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
-    x -= offset_ctrl->GetSize().GetX();			//Remove Offset Control box X because its changeable
+	int charx = hex_ctrl->GetCharSize().GetX();
+	int offset_x = offset_ctrl->GetCharSize().GetX()*12 + 4;
+    x -= offset_x;			//Remove Offset Control box X because its changeable
     x -= offset_scroll->GetSize().GetX();		//Remove Offset scroll size
-    x -= 4*3;									//+x 4 pixel external borders (dark ones, 2 pix each size)
+    x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
     y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
-    int charx = hex_ctrl->m_Char.x;
-	int i=2;	//character wide
-	while( ((charx*3*i +2 - charx )+(charx*i+2)) < x) //+2 for internal window border
-		i++;
-	i--;
+	int i = (x/(4*charx));	//2 hex + 1 whitespace & 1 byte view
 	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
 
@@ -309,13 +307,17 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 		adress << wxString::Format( wxT("%02X "), j );
 	adress.RemoveLast();	//Remove last ' ' for unwrap
  	m_static_adress->SetLabel(adress);
+
+	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
+	offset_ctrl->SetSize( wxSize( offset_x , y ) );
+
 	hex_ctrl->SetMinSize( wxSize(hex_x, y ));
 	hex_ctrl->SetSize( wxSize( hex_x, y ));
 
 	text_ctrl->SetMinSize( wxSize( text_x, y ));
 	text_ctrl->SetSize( wxSize( text_x, y ));
 
-	m_static_offset->SetMinSize( wxSize(offset_ctrl->GetSize().GetX(), m_static_offset->GetSize().GetY()) );
+	m_static_offset->SetMinSize( wxSize(offset_x, m_static_offset->GetSize().GetY()) );
 	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
 	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 

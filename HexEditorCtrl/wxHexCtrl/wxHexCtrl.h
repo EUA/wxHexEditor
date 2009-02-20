@@ -24,7 +24,7 @@
 #ifndef __wxHexCtrl__
 #define __wxHexCtrl__
 
-#include <iostream>
+#include <wx/defs.h>
 #include <wx/buffer.h>
 #include <wx/textctrl.h>
 #include <wx/caret.h>
@@ -54,7 +54,6 @@ class wxHexCtrl : public wxScrolledWindow{
 		wxChar& CharAt(int offset){ return m_text.GetWritableChar(offset); }
 
 		// Operations
-		//void SetStyle( unsigned from, unsigned to, wxTextAttr& new_attr );
 virtual void SetDefaultStyle( wxTextAttr& new_attr );
 		void SetSelectionStyle( wxTextAttr& new_attr );
 virtual void CreateCaret( void );
@@ -91,6 +90,7 @@ virtual bool IsDenied( int x );
 virtual bool IsAllowedChar(const char& chr);
 //virtual	const char Filter(const char& ch);
 		int xCountDenied( int x );
+		wxSize GetCharSize(){return m_CharSize;}
 
 		// Movement Support
 virtual int CharacterPerLine( void );
@@ -148,9 +148,8 @@ virtual void OnMouseMove( wxMouseEvent& event );
 		wxString  m_text;
 		wxTextAttr HexDefaultAttr;
 		//wxTextAttr HexSelectAttr;
-//		wxMutex frost;
-	public:
-		wxPoint   m_Char;	// size (in pixels) of one character
+
+		wxSize  m_CharSize;	// size (in pixels) of one character
 	   // DECLARE_DYNAMIC_CLASS(wxHexCtrl)
 	};
 

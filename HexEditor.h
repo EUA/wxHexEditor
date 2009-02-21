@@ -188,8 +188,12 @@ class copy_maker{
 				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
 					wxTextDataObject data;
 					wxTheClipboard->GetData( data );
-					if( data.GetText() != wxT("Some text for test") )
+					if( data.GetText() != wxT("Some text for test") ){
 						wxMessageBox( _("Clipboard read/write problem!") );
+						return false;
+						}
+					else
+						return true;
 					}
 				wxTheClipboard->Close();
 				}

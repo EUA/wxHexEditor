@@ -150,7 +150,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE };
-	int arr2[] = { idFileDW, wxID_CUT, wxID_DELETE };
+//	idFileDW, wxID_CUT, wxID_DELETE
 	for( int i=0 ; i<12 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );

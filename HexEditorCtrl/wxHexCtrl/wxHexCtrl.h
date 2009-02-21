@@ -125,7 +125,7 @@ virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
 
 	protected:
 		// event handlers
-		wxPoint LastRightClickAt;	//Holds last right click for TagEdit function
+		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );

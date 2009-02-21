@@ -82,7 +82,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;
     m_Margin.x = m_Margin.y = 0;
-	LastRightClickAt = wxPoint(0,0);
+	LastRightClickPosition = wxPoint(0,0);
     select.selected = false;
     CreateCaret();
 
@@ -744,8 +744,8 @@ void wxHexCtrl::OnMouseLeft( wxMouseEvent& event ){
 
 void wxHexCtrl::OnMouseRight( wxMouseEvent& event ){
 	event.Skip();
-	LastRightClickAt = event.GetPosition();
-	ShowContextMenu( LastRightClickAt );
+	LastRightClickPosition = event.GetPosition();
+	ShowContextMenu( LastRightClickPosition );
 	}
 
 void wxHexCtrl::ShowContextMenu( wxPoint pos ){
@@ -775,7 +775,7 @@ void wxHexCtrl::ShowContextMenu( wxPoint pos ){
 
 void wxHexCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
-	unsigned pos = PixelCoordToInternalPosition( LastRightClickAt );
+	unsigned pos = PixelCoordToInternalPosition( LastRightClickPosition );
 	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
 		TAG = TagArray.Item(i);
 		if( pos >= TAG->start && pos <= TAG->end ){

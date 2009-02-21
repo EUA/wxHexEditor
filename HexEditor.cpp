@@ -582,12 +582,13 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 
 void HexEditor::OnMouseRight( wxMouseEvent& event ){
 	if(event.GetEventObject() == hex_ctrl)
-		LastRightClickAt = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() )/2;
+		LastRightClickAt = page_offset + hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() )/2;
 	else if(event.GetEventObject() == text_ctrl)
-		LastRightClickAt = text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
+		LastRightClickAt = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 	else
 		std::cout << "Right click captured without ctrl!\n";
 	ShowContextMenu( event );
+	event.Skip(false);
 	}
 
 

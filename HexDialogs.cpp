@@ -116,7 +116,7 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, search_type
 		}
 // TODO (death#1#): Find in UTF?
 	}
-
+// TODO (death#1#): New Find as "bool FindText/Bin( &uint64_t )
 uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t from, search_type_ type ){
 	if(target == NULL) return -1;
 	int64_t offset=from;

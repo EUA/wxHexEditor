@@ -74,7 +74,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void OnTagSelection( wxCommandEvent& event );
 		void OnTagEdit( wxCommandEvent& event );
 		void TagHideAll( void );
-		int64_t LastRightClickAt;
+		uint64_t LastRightClickAt;
 		//----ADAPTERS----//
 	public:
 		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }

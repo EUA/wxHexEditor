@@ -33,9 +33,10 @@
 
 HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const wxSize& size, long style):
     HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
-	m_static_offset->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
-	m_static_adress->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
-	m_static_byteview->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
+	wxFont stdfont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
+	m_static_offset->SetFont( stdfont );
+	m_static_adress->SetFont( stdfont );
+	m_static_byteview->SetFont( stdfont );
 	Dynamic_Connector();
 	selection.start_offset = selection.end_offset = 0;
 	selection.state = selector::S_FALSE;
@@ -53,6 +54,7 @@ void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 
+	offset_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
@@ -67,6 +69,7 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 	this->Disconnect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 
+	offset_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
@@ -288,7 +291,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
     x -= offset_scroll->GetSize().GetX();		//Remove Offset scroll size
     x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
     y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
-	int i = (x/(4*charx));	//2 hex + 1 whitespace & 1 byte view
+	int i = x/(4*charx);	//2 hex + 1 whitespace & 1 byte view
 	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
 
@@ -302,11 +305,14 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 
 #endif
 
-	wxString adress;
-	for( int j = 0 ; j < i ; j++ )
+	wxString adress,byteview;
+	for( int j = 0 ; j < i ; j++ ){
 		adress << wxString::Format( wxT("%02X "), j );
+		byteview << wxString::Format( wxT("%01X"), j%16 );
+		}
 	adress.RemoveLast();	//Remove last ' ' for unwrap
  	m_static_adress->SetLabel(adress);
+ 	m_static_byteview->SetLabel( byteview );
 
 	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
 	offset_ctrl->SetSize( wxSize( offset_x , y ) );
@@ -321,34 +327,34 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
 	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 
-//	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
-//	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
-//	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
-//	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
-//	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
-//	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-//	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-//	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-//	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 0 );
-//	this->SetSizer( fgSizer1 );
+	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
+	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
+	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
+	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 0 );
+	this->SetSizer( fgSizer1 );
 
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
-	bSizer2->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
-	bSizer2->Add( m_static_adress, 0, wxLEFT, 3 );
-	bSizer2->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
-	bSizer2->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
-	bSizer3->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	bSizer3->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	bSizer3->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	bSizer3->Add( offset_scroll, 0, wxEXPAND, 5 );
-	bSizer1->Add( bSizer2, 0, wxEXPAND, 0 );
-	bSizer1->Add( bSizer3, 0, wxEXPAND, 0 );
-	this->SetSizer( bSizer1 );
+//	wxBoxSizer* bSizer1;
+//	bSizer1 = new wxBoxSizer( wxVERTICAL );
+//	wxBoxSizer* bSizer2;
+//	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+//	bSizer2->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
+//	bSizer2->Add( m_static_adress, 0, wxLEFT, 3 );
+//	bSizer2->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+//	bSizer2->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
+//	wxBoxSizer* bSizer3;
+//	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+//	bSizer3->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+//	bSizer3->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+//	bSizer3->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+//	bSizer3->Add( offset_scroll, 0, wxEXPAND, 5 );
+//	bSizer1->Add( bSizer2, 0, wxEXPAND, 0 );
+//	bSizer1->Add( bSizer3, 0, wxEXPAND, 0 );
+//	this->SetSizer( bSizer1 );
 	this->Layout();
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
 
@@ -371,6 +377,11 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	else if( event.GetEventObject() == text_ctrl ){
 		text_ctrl->SetFocus();
 		SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) + 1);
+		}
+	else// if( event.GetEventObject() == offset_ctrl)
+		{
+		m_static_offset->SetLabel( offset_ctrl->hex_offset==true ? _("Offset: DEC") : _("Offset: HEX"));
+		event.Skip(true);
 		}
 	}
 
@@ -430,11 +441,10 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 	}
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
-	int64_t pos = LastRightClickAt;
+	uint64_t pos = LastRightClickAt;
 #ifdef _DEBUG_
 	std::cout << " Tag Edit on " << pos << std::endl;
 #endif
-	int zzz = MainTagArray.Count();
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TAG = MainTagArray.Item(i);
 		if( pos >= TAG->start && pos <= TAG->end ){

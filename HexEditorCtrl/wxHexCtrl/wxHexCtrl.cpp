@@ -515,7 +515,7 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
 			wxChar chr = event.GetKeyCode();
 			if( IsAllowedChar(chr) && !event.AltDown() && !event.ShiftDown() && !IsDenied() ){
 		// TODO (death#1#): if text selected, enter from beggining!
-		// TODO (death#2#): If text Selected, than  remove selection first?
+		// TODO (death#2#): If text Selected, than  remove select first?
 				select.selected=false;
 				(chr>='a'&&chr<='z')?(chr-=('a'-'A')):(chr=chr);	//Upper() for Char
 				WriteHex(chr);
@@ -778,7 +778,7 @@ void wxHexCtrl::OnTagEdit( wxCommandEvent& event ){
 	unsigned pos = PixelCoordToInternalPosition( LastRightClickPosition );
 	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
 		TAG = TagArray.Item(i);
-		if( pos >= TAG->start && pos <= TAG->end ){
+		if( TAG->isCover( pos ) ){
 			TAG->Hide();	//Hide first, or BUG by double hide...
 			TagElement TAGtemp = *TAG;
 			TagDialog *x=new TagDialog( TAGtemp, this );
@@ -875,8 +875,6 @@ void wxHexCtrl::OnTestCall( void ){
 			}
 		}
 	}
-
-
 
 ///------HEXTEXTCTRL-----///
 inline bool wxHexTextCtrl::IsAllowedChar(const char& chr){

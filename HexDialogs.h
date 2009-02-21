@@ -50,7 +50,11 @@ class GotoDialog : public GotoDialogGui{
 class FindDialog : public FindDialogGui{
 	public:
 		FindDialog( wxWindow* parent, FileDifference *find_file, wxString title=_("Find") );
-		void OnButton( wxCommandEvent& event );
+		bool OnFind( void );
+		void OnFindPrev( wxCommandEvent& event );
+//		void OnFindAll( wxCommandEvent& event );
+virtual void EventHandler( wxCommandEvent& event );
+		bool OnFindEvents( wxCommandEvent& event );
 		enum search_type_{ type_hex, type_text, type_text_match_case } searchtype;
 	protected:
 		uint64_t FindBinary( const char *target, unsigned size, uint64_t start_from, search_type_ st=type_hex );
@@ -64,9 +68,11 @@ class FindDialog : public FindDialogGui{
 class ReplaceDialog : public FindDialog{
 	public:
 		ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxString title=_("Find & Replace") );
+			void EventHandler( wxCommandEvent& event );
 			bool ReplaceBinary();
 			bool ReplaceText();
-			void OnButton( wxCommandEvent& event );
+			bool OnReplace( void );
+			bool OnReplaceAll( void );
 	};
 
 #endif //__HexEditorDialogs__

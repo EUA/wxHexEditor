@@ -91,23 +91,41 @@ FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile, wxString t
 
 // TODO (death#1#):Paint 4 Find
 // TODO (death#1#):HEX CHECK for input!
-void FindDialog::OnButton( wxCommandEvent& event ){
+void FindDialog::EventHandler( wxCommandEvent& event ){
+	int id = event.GetId();
+	if( id == btnFind->GetId() )
+		OnFind();
+//	else if( id == btnFindAll->GetId() )
+//		OnFindAll();
+//	else if( id == btnFindPrev->GetId() )
+//		OnFindPrev();
+	else
+		wxBell();
+	}
+
+bool FindDialog::OnFind( void ){
 	uint64_t found = -1;
+	uint64_t size = -1;
 	if( m_searchtype->GetSelection() == 0 ){//text search
+		size = m_textSearch->GetValue().Len();
 		found = FindText( m_textSearch->GetValue(),
-						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset(),
+						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
 						type_text );
 		}
 	else{ //hex search
 		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_textSearch->GetValue());
+		size = mymem.GetDataLen();
 		found = FindBinary( static_cast<const char*>(mymem.GetData()),mymem.GetDataLen(),
 							m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
 							type_hex );
 		}
-	if( found != -1 )
-			parent->Goto( found );
+	if( found != -1 ){
+		parent->Goto( found );
+		parent->Select( found,  found+size-1 );
+		return true;
+		}
 	else
-		wxMessageBox(_("Not Found"), _("Nothing found!") );
+		wxMessageBox(_("Search value not found"), _("Nothing found!") );
 	}
 
 uint64_t FindDialog::FindText( wxString target, uint64_t start_from, search_type_ type ){
@@ -170,10 +188,55 @@ uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* 
 ReplaceDialog::ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxString title ):FindDialog( parent, find_file, title ){
 	m_textReplace->Show();
 	m_static_replace->Show();
+	btnReplace->Show();
+	btnReplaceAll->Show();
 	Fit();
-	m_button->SetLabel(_("Replace"));
 	}
 
-void ReplaceDialog::OnButton( wxCommandEvent& event ){
-	wxMessageBox(_("Not implemented yet"),_("Not implemented"));
+bool ReplaceDialog::OnReplace( void ){
+	if(parent->select.state == parent->select.S_FALSE)
+		OnFind();
+	else{
+		if( m_searchtype->GetSelection() == 0 ){//text search
+			if( parent->select.size() == m_textReplace->GetValue().Len() ){
+				parent->FileAddDiff( parent->CursorOffset(), m_textReplace->GetValue().ToAscii(), m_textReplace->GetValue().Len());
+				parent->select.state = parent->select.S_FALSE;
+				parent->Reload();
+				return true;
+				}
+			else{
+				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet sizez are avoided."), _("Error!"));
+				return false;
+				}
+			}
+		else{ //hex search
+			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_textReplace->GetValue());
+			if( parent->select.size() == mymem.GetDataLen() ){
+				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(mymem.GetData()) ,mymem.GetDataLen() );
+				parent->select.state = parent->select.S_FALSE;
+				parent->Reload();
+				return true;
+				}
+			else{
+				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet sizez are avoided."), _("Error!"));
+				return false;
+				}
+			}
+		}
+	}
+
+void ReplaceDialog::EventHandler( wxCommandEvent& event ){
+	int id = event.GetId();
+	if( id == btnFind->GetId() )
+		OnFind();
+//	else if( id == btnFindAll->GetId() )
+//		OnFindAll();
+//	else if( id == btnFindPrev->GetId() )
+//		OnFindPrev();
+	else if( id == btnReplace->GetId() )
+		OnReplace();
+//	else if( id == btnReplaceAll->GetId() )
+//		OnReplaceAll();
+	else
+		wxBell();
 	}

@@ -35,11 +35,12 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
     HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
 	wxFont stdfont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_offset->SetFont( stdfont );
+	m_static_offset->SetLabel( _("Offset: DEC") );
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
 	Dynamic_Connector();
-	selection.start_offset = selection.end_offset = 0;
-	selection.state = selector::S_FALSE;
+	select.start_offset = select.end_offset = 0;
+	select.state = xselect::S_FALSE;
 	TAGMutex = false;
 	hex_ctrl->TagMutex = &TAGMutex;
 	text_ctrl->TagMutex = &TAGMutex;
@@ -129,13 +130,13 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 	TagElement *TAG;
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TAG = MainTagArray.Item(i);
-		if( (TagPosition >= TAG->start ) && (TagPosition <= TAG->end ) ){	//end not included!
+		if( TAG->isCover( TagPosition ) ){	//end not included!
 			menu.Append(idTagEdit, _T("Tag Edit"));
 			break;
 			}
 		}
 
-	if( selection.state == selector::S_END ){
+	if( select.state == xselect::S_END ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		}
 //  menu.AppendSeparator();
@@ -152,35 +153,35 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 
 //-----VISUAL FUNCTIONS------//
 
-bool HexEditorCtrl::Selector( bool mode ){
+bool HexEditorCtrl::Selector(){
 	static bool polarity_possitive;
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
-		selection.end_offset = page_offset + GetLocalHexInsertionPoint()/2;
+		select.end_offset = page_offset + GetLocalHexInsertionPoint()/2;
 	else{
 		std::cout << "Selector without focuse captured" << std::endl;
 		return false;
 		}
 
 	bool first_selection = false;
-	if( selection.state != selector::S_TRUE ){			// If no selection available,
-		selection.state	= selector::S_TRUE;				// then selection start procedure code
-		selection.start_offset	= selection.end_offset;
+	if( select.state != xselect::S_TRUE ){			// If no select available,
+		select.state = xselect::S_TRUE;				// then select start procedure code
+		select.start_offset	= select.end_offset;
 		polarity_possitive		= false;
 		first_selection			= true;
 		}
 	return true;
 	}
 
-bool HexEditorCtrl::Select ( int64_t start_offset, int64_t end_offset ){
+bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){
 	if( start_offset < 0 || end_offset < 0
 //	|| start_offset > myfile->Length() ||  end_offset > myfile->Length() //??
 		){
 		wxBell();
 		return false;
 		}
-	selection.state	= selector::S_END;
-	selection.start_offset = page_offset;
-	selection.end_offset  = end_offset;
+	select.state = xselect::S_END;
+	select.start_offset = start_offset;
+	select.end_offset  = end_offset;
 	PaintSelection( );
 	return true;
 	}
@@ -230,9 +231,9 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 
 void HexEditorCtrl::PaintSelection( void ){
 	PreparePaintTAGs();
-	if(selection.state != selector::S_FALSE ){
-		int64_t start_byte = selection.start_offset;
-		int64_t end_byte = selection.end_offset;
+	if( select.state != xselect::S_FALSE ){
+		int64_t start_byte = select.start_offset;
+		int64_t end_byte = select.end_offset;
 
 		if(start_byte > end_byte){	// swap if start > end
 			int64_t temp = start_byte;
@@ -328,7 +329,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
-	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
 	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
 	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
 	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
@@ -337,24 +338,6 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 0 );
 	this->SetSizer( fgSizer1 );
-
-//	wxBoxSizer* bSizer1;
-//	bSizer1 = new wxBoxSizer( wxVERTICAL );
-//	wxBoxSizer* bSizer2;
-//	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
-//	bSizer2->Add( m_static_offset, 0, wxALIGN_CENTER|wxALL, 0 );
-//	bSizer2->Add( m_static_adress, 0, wxLEFT, 3 );
-//	bSizer2->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
-//	bSizer2->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
-//	wxBoxSizer* bSizer3;
-//	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
-//	bSizer3->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-//	bSizer3->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-//	bSizer3->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-//	bSizer3->Add( offset_scroll, 0, wxEXPAND, 5 );
-//	bSizer1->Add( bSizer2, 0, wxEXPAND, 0 );
-//	bSizer1->Add( bSizer3, 0, wxEXPAND, 0 );
-//	this->SetSizer( bSizer1 );
 	this->Layout();
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
 
@@ -368,7 +351,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
     }
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
-	selection.state=selector::S_FALSE;
+	select.state = xselect::S_FALSE;
 	ClearPaint();
 	if( event.GetEventObject() == hex_ctrl ){
 		hex_ctrl->SetFocus();
@@ -394,8 +377,8 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
 		int old_location = GetLocalHexInsertionPoint();
 		if( new_location != old_location ){
-			if(selection.state != selector::S_TRUE)		// At first selection
-				if( Selector() == false )						// selection without focus.
+			if( select.state != xselect::S_TRUE)		// At first select
+				if( Selector() == false )						// select without focus.
 					return;
 			SetLocalHexInsertionPoint( new_location );
 			Selector();
@@ -408,8 +391,8 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
-	if(selection.state == selector::S_TRUE)
-		selection.state = selector::S_END;
+	if(select.state == xselect::S_TRUE)
+		select.state = xselect::S_END;
 	event.Skip();
 	}
 
@@ -424,10 +407,11 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
-	if(selection.state == selector::S_END){
+	if( select.state == xselect::S_END){
 		TagElement *TE = new TagElement;
-		TE->start=selection.start_offset;
-		TE->end=selection.end_offset;
+		TE->start=select.start_offset;
+		TE->end=select.end_offset;
+
 		TagDialog *x=new TagDialog( *TE, this );
 		if( x->ShowModal() == wxID_SAVE ){
 			MainTagArray.Add( TE );
@@ -447,7 +431,7 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 #endif
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TAG = MainTagArray.Item(i);
-		if( pos >= TAG->start && pos <= TAG->end ){
+		if( TAG->isCover(pos) ){
 			TagHideAll();	//Hide first, or BUG by double hide...
 			TagElement TAGtemp = *TAG;
 			TagDialog *x=new TagDialog( TAGtemp, this );

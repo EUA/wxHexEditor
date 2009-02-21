@@ -112,8 +112,8 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		ArrayOfTAG TagArray;
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );
-		struct selector: public TagElement{		//selection
-			bool selected;		//selection available variable
+		struct selector: public TagElement{		//select
+			bool selected;		//select available variable
 			} select;
 virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
 		void RePaint(){

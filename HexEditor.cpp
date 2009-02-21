@@ -124,14 +124,14 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 
 bool HexEditor::FileSave( bool question ){
 	if( myfile->IsChanged() ){
-		int selection;
+		int select;
 		if ( !question )
-			selection = wxID_YES;
+			select = wxID_YES;
 		else{
 			wxMessageDialog msg( this, _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-			selection=msg.ShowModal();
+			select=msg.ShowModal();
 			}
-		switch( selection ){
+		switch( select ){
 			case(wxID_YES):
 				if( !myfile->Apply() ){
 					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR);
@@ -205,7 +205,7 @@ void HexEditor::Goto( int64_t cursor_offset ){
 		}
 	if(page_offset <= cursor_offset &&
 		page_offset+ByteCapacity() >= cursor_offset){	//cursor_offset is in visible area
-		LoadFromOffset( page_offset );					//Reload data needed for undo - redo
+		Reload();					//Reload data needed for undo - redo
 		SetHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
 	else{// out of view
@@ -216,7 +216,7 @@ void HexEditor::Goto( int64_t cursor_offset ){
 			page_offset = 0;
 		else if(page_offset > FileLength() )
 			page_offset = FileLength() - ByteCapacity() + 2*BytePerLine();
-		LoadFromOffset( page_offset );
+		Reload();
 		SetHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
 	UpdateCursorLocation();
@@ -239,16 +239,19 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
 	}
 
 void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
-	static wxMutex MyMutex;
-	MyMutex.Lock();
-
     myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
 	ReadFromBuffer( position, readedbytes, buffer, cursor_reset, paint );
 	delete buffer;
+	}
 
-	MyMutex.Unlock();
+void HexEditor::Reload( void ){
+    myfile->Seek(page_offset, wxFromStart);
+	char *buffer = new char[ ByteCapacity() ];
+	int readedbytes = myfile->Read(buffer, ByteCapacity());
+	ReadFromBuffer( page_offset, readedbytes, buffer, false, true );
+	delete buffer;
 	}
 
 void HexEditor::OnResize( wxSizeEvent &event){
@@ -260,7 +263,7 @@ void HexEditor::OnResize( wxSizeEvent &event){
 									1+(myfile->Length() / ByteCapacity()),
 									1,true
 									);
-		LoadFromOffset(page_offset, false);
+		Reload();
 		}
     }
 
@@ -274,8 +277,8 @@ bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size,
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 	if(! event.ShiftDown() ){
-		if( selection.state == selector::S_TRUE )
-			selection.state = selector::S_END;
+		if( select.state == xselect::S_TRUE )
+			select.state = xselect::S_END;
 			}
     else
 		Selector();
@@ -392,7 +395,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 							int temp = ( GetLocalHexInsertionPoint() %  HexPerLine() ) + ( LineCount()-1 ) * HexPerLine();
 							page_offset = myfile->Length() - ByteCapacity();
 							page_offset += BytePerLine() - page_offset % BytePerLine(); //cosmetic
-							LoadFromOffset( page_offset );
+							Reload();
 							SetHexInsertionPoint(temp);
 							wxBell();
 							}
@@ -546,17 +549,17 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 	}
 
 bool HexEditor::Selector(bool mode){
-	bool temp = HexEditorCtrl::Selector( mode );
+	bool temp = HexEditorCtrl::Selector();
 #if wxUSE_STATUSBAR
     if ( statusbar ){
-		int start = selection.start_offset;
-		int end = selection.end_offset;
+		int start = select.start_offset;
+		int end = select.end_offset;
 		if(start > end ){
 			int temp = start;
 			start = end;
 			end = temp;
 			}
-		if( selection.state == selector::S_FALSE ){
+		if( select.state == xselect::S_FALSE ){
 			statusbar->SetStatusText(_("Selected Block:N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
@@ -603,12 +606,12 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	TagElement *TAG;
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TAG = MainTagArray.Item(i);
-		if( (TagPosition >= TAG->start ) && (TagPosition <= TAG->end ) ){	//end not included!
+		if( TAG->isCover(TagPosition) ){
 			menu.Append(idTagEdit, _T("Tag Edit"));
 			break;
 			}
 		}
-	if( selection.state == selector::S_END ){
+	if( select.state ==xselect::S_END ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		menu.Append(wxID_COPY, _T("Copy Selection"));
 		}
@@ -636,7 +639,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 			page_offset = 0;
 			wxBell();					// there is no line over up!
 			}
-		LoadFromOffset( page_offset );	//update text with new location, makes screen slide illusion
+		Reload();	//update text with new location, makes screen slide illusion
 		if( page_offset != 0 ){
 			if( ActiveLine() + event.GetLinesPerAction() <= LineCount() )	//cursor at bottom
 				SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
@@ -729,14 +732,14 @@ void HexEditor::UpdateCursorLocation( bool force ){
 		myfile->Read( reinterpret_cast<char*>(&ch), 1);
 		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
 
-		int start = selection.start_offset;
-		int end = selection.end_offset;
+		int start = select.start_offset;
+		int end = select.end_offset;
 		if(start > end ){
 			int temp = start;
 			start = end;
 			end = temp;
 			}
-		if( selection.state == selector::S_FALSE ){
+		if( select.state == xselect::S_FALSE ){
 			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
@@ -767,9 +770,9 @@ void HexEditor::ReplaceDialog( void ){
 	}
 
 bool HexEditor::CopySelection( void ){
-	if(selection.state	!= selector::S_FALSE){
-		uint64_t start = selection.start_offset;
-		uint64_t size = selection.size();
+	if( select.state	!= xselect::S_FALSE){
+		uint64_t start = select.start_offset;
+		uint64_t size = select.size();
 		uint64_t RAM_limit = 10*MB;
 		if(size < RAM_limit){								//copy to clipboard if < 10 MB
 			myfile->Seek( start, wxFromStart );
@@ -820,7 +823,7 @@ bool HexEditor::PasteFromClipboard( void ){
 		if( ! str.IsEmpty() ){
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
-			selection.state = selector::S_FALSE;
+			select.state = select.S_FALSE;
 			Goto( CursorOffset() + str.Len() );
 			}
 		}
@@ -831,7 +834,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			for( int i=0;i<str.Len();i++ )
 				ch[i] = str[i];
 			FileAddDiff( CursorOffset(), ch, str.Len() );
-			selection.state = selector::S_FALSE;
+			select.state = xselect::S_FALSE;
 			Goto( CursorOffset() + str.Len() );
 			}
 		}

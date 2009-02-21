@@ -51,16 +51,16 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void LoadTAGS( wxFileName );
 		void SaveTAGS( wxFileName );
 
-		struct selector{		//selection structure
-			enum states{ S_TRUE, S_FALSE, S_END };
-			enum states state;
+		bool Selector( void );
+	public:
+		bool Select( uint64_t start_offset, uint64_t end_offset );
+		struct xselect{		//select structure
+			enum states{ S_FALSE, S_TRUE, S_END } state;
 			uint64_t start_offset;	//real start position
-			uint64_t end_offset;		//real end position, included to selection
+			uint64_t end_offset;		//real end position, included to select
 			uint64_t size( void ){ return abs(end_offset - start_offset)+1;};	//for select byte 13 start=13, end=13
-			} selection;
-
-		bool Selector( bool mode=true );
-		bool Select ( int64_t start_offset, int64_t end_offset );
+			} select;
+	protected:
 		void HexCharReplace( long char_location, const wxChar chr);
 		void TextCharReplace( long char_location, const wxChar chr);
 		void MyFreeze();

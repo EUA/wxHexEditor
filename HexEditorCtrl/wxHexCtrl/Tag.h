@@ -33,15 +33,16 @@ class TagElement{
 	public:
 		TagElement();
 		~TagElement();
-		TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr);
-		int64_t start;
-		int64_t end;
+		TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr);
+		uint64_t start;
+		uint64_t end;
 		wxString tag;
 		wxColourData FontClrData;
 		wxColourData NoteClrData;
 		bool visible;
 		void Show( const wxPoint& pos, wxWindow *parent );
 		void Hide( void );
+		bool isCover( uint64_t );
 #ifndef __WXMAC__
 		wxPopupWindow *wxP;
 #endif	//wxPopupWindows is not implemented in MacOSX

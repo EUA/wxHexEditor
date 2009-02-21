@@ -33,7 +33,7 @@ TagElement::TagElement(){
 #endif
 	}
 
-TagElement::TagElement( int64_t _start, int64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
+TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
 			start(_start), end(_end), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
 	visible = false;
 	}
@@ -80,6 +80,14 @@ void TagElement::Hide( void ){
 		wxP->Hide();
 #endif
 		}
+	}
+
+bool TagElement::isCover( uint64_t position ){
+	if(( start <= position && end >= position )
+		|| ( (start > end) && ( start >= position ) && ( end <= position )))	// for inversed start - end)
+		return true;
+	else
+		return false;
 	}
 
 //----------TAG DIALOG-----------//

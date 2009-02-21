@@ -184,13 +184,18 @@ class FindDialogGui : public wxDialog
 		wxTextCtrl* m_textSearch;
 		wxStaticText* m_static_replace;
 		wxTextCtrl* m_textReplace;
+		wxButton* btnReplace;
+		wxButton* btnReplaceAll;
 		wxRadioBox* m_searchtype;
 		wxRadioBox* m_from;
-		wxButton* m_button;
+		wxButton* btnFind;
+		wxButton* btnFindAll;
+		wxButton* btnFindPrev;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnButton( wxCommandEvent& event ){ event.Skip(); }
+		virtual void EventHandler( wxCommandEvent& event ){ event.Skip(); }
+		virtual void EventHanler( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:

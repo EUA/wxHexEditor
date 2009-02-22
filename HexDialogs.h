@@ -50,7 +50,7 @@ class GotoDialog : public GotoDialogGui{
 class FindDialog : public FindDialogGui{
 	public:
 		FindDialog( wxWindow* parent, FileDifference *find_file, wxString title=_("Find") );
-		bool OnFind( void );
+		bool OnFind( bool intenal=false );
 		void OnFindPrev( wxCommandEvent& event );
 //		void OnFindAll( wxCommandEvent& event );
 virtual void EventHandler( wxCommandEvent& event );
@@ -69,10 +69,8 @@ class ReplaceDialog : public FindDialog{
 	public:
 		ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxString title=_("Find & Replace") );
 			void EventHandler( wxCommandEvent& event );
-			bool ReplaceBinary();
-			bool ReplaceText();
-			bool OnReplace( void );
-			bool OnReplaceAll( void );
+			int OnReplace( bool internal = false );
+			int OnReplaceAll( void );
 	};
 
 #endif //__HexEditorDialogs__

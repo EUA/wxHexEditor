@@ -460,14 +460,14 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 {
 	this->SetSizeHints( wxSize( 350,-1 ), wxDefaultSize );
 	
-	wxBoxSizer* bSizer16;
-	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizerMain;
+	bSizerMain = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxFlexGridSizer* fgSizer3;
-	fgSizer3 = new wxFlexGridSizer( 1, 1, 0, 0 );
-	fgSizer3->AddGrowableCol( 0 );
-	fgSizer3->SetFlexibleDirection( wxBOTH );
-	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* fgSizerLeft;
+	fgSizerLeft = new wxFlexGridSizer( 1, 1, 0, 0 );
+	fgSizerLeft->AddGrowableCol( 0 );
+	fgSizerLeft->SetFlexibleDirection( wxBOTH );
+	fgSizerLeft->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxBoxSizer* bSizerBottom;
 	bSizerBottom = new wxBoxSizer( wxVERTICAL );
@@ -498,23 +498,23 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizerBottom->Add( fgSizerTop, 0, wxALL|wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer17;
-	bSizer17 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizerReplace;
+	bSizerReplace = new wxBoxSizer( wxHORIZONTAL );
 	
 	btnReplace = new wxButton( this, wxID_ANY, wxT("Replace"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnReplace->Hide();
 	
-	bSizer17->Add( btnReplace, 1, wxLEFT|wxRIGHT, 2 );
+	bSizerReplace->Add( btnReplace, 1, wxLEFT|wxRIGHT, 2 );
 	
 	btnReplaceAll = new wxButton( this, wxID_ANY, wxT("Replace All"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnReplaceAll->Enable( false );
 	btnReplaceAll->Hide();
 	
-	bSizer17->Add( btnReplaceAll, 1, wxLEFT|wxRIGHT, 0 );
+	bSizerReplace->Add( btnReplaceAll, 1, wxLEFT|wxRIGHT, 0 );
 	
-	bSizerBottom->Add( bSizer17, 1, wxALIGN_RIGHT|wxEXPAND|wxRIGHT, 5 );
+	bSizerBottom->Add( bSizerReplace, 1, wxALIGN_RIGHT|wxEXPAND|wxRIGHT, 5 );
 	
-	fgSizer3->Add( bSizerBottom, 0, wxEXPAND, 5 );
+	fgSizerLeft->Add( bSizerBottom, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerOptions;
 	bSizerOptions = new wxBoxSizer( wxHORIZONTAL );
@@ -531,9 +531,9 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_from->SetSelection( 1 );
 	bSizerOptions->Add( m_from, 1, wxALL, 3 );
 	
-	fgSizer3->Add( bSizerOptions, 0, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 2 );
+	fgSizerLeft->Add( bSizerOptions, 0, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 2 );
 	
-	bSizer16->Add( fgSizer3, 1, wxEXPAND, 5 );
+	bSizerMain->Add( fgSizerLeft, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerButtons;
 	bSizerButtons = new wxBoxSizer( wxVERTICAL );
@@ -552,11 +552,11 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizerButtons->Add( btnFindPrev, 0, wxEXPAND|wxTOP, 2 );
 	
-	bSizer16->Add( bSizerButtons, 0, wxEXPAND|wxRIGHT, 5 );
+	bSizerMain->Add( bSizerButtons, 0, wxEXPAND|wxRIGHT, 5 );
 	
-	this->SetSizer( bSizer16 );
+	this->SetSizer( bSizerMain );
 	this->Layout();
-	bSizer16->Fit( this );
+	bSizerMain->Fit( this );
 	
 	// Connect Events
 	m_textSearch->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::OnGo ), NULL, this );

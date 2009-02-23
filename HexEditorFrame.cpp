@@ -23,7 +23,7 @@
 #include "HexEditorFrame.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
-				HexEditorGui( parent, id, wxT("wxHexEditor v0.06 Alpha-svn") ){
+				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_ ) ){
 	wxIcon wxHexEditor_ICON ( mondrian_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 
@@ -50,12 +50,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	this->Connect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
-
-	// wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_DOWN
-	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED
-	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGING
-	// wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE
-
 	}
 
 HexEditorFrame::~HexEditorFrame(){
@@ -72,7 +66,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyNotebook = new wxAuiNotebook(this,-1);
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
 	MyNotebook->SetWindowStyleFlag(0);
-//				MyAUI->AddPane( MyNotebook, wxCENTER);
+//	MyAUI->AddPane( MyNotebook, wxCENTER);
 
 	MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().
 			CaptionVisible(false).
@@ -329,8 +323,8 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 
 void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	wxAboutDialogInfo AllAbout;
-    AllAbout.SetName(_("wxHexEditor"));
-    AllAbout.SetVersion(_("0.06 Alpha"));
+    AllAbout.SetName(_T("wxHexEditor"));
+    AllAbout.SetVersion( _T(_VERSION_) );
     AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
     AllAbout.SetCopyright(_T("(C) 2006 Erdem U. Altinyurt"));
 

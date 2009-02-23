@@ -10,6 +10,8 @@
 #ifndef WXHEXEDITORAPP_H
 #define WXHEXEDITORAPP_H
 
+#define _VERSION_ "v0.07-svn Alpha"
+
 #include <wx/app.h>
 
 class wxHexEditorApp : public wxApp

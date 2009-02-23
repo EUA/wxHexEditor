@@ -6,23 +6,8 @@
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
-				<Option object_output="Debug/obj/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="-D_DEBUG_" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg" />
-				</Linker>
-			</Target>
 			<Target title="Release">
+				<Option platforms="Unix;" />
 				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
@@ -37,22 +22,65 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="Debug">
+				<Option platforms="Unix;" />
+				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-D_DEBUG2_" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
+			</Target>
+			<Target title="MacOS-Release">
+				<Option platforms="Mac;" />
+				<Option output="Release/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-march=athlon64" />
+					<Add option="-O3" />
+					<Add option="-march=native -mtune=native" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lexpat" />
+				</Linker>
+			</Target>
+			<Target title="MacOS-Debug">
+				<Option platforms="Mac;" />
+				<Option output="Debug/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-D_DEBUG2_" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+					<Add option="-lexpat" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-I/home/compile/wxWidgets-2.8.9/lib/wx/include/gtk2-unicode-release-static-2.8" />
-			<Add option="-I/home/compile/wxWidgets-2.8.9/include" />
-			<Add option="-I/home/compile/wxWidgets-2.8.9/contrib/include" />
-			<Add option="-D_FILE_OFFSET_BITS=64" />
-			<Add option="-D_LARGE_FILES" />
-			<Add option="-D__WXGTK__" />
-			<Add option="-pthread" />
-			<Add option="-Winvalid-pch" />
-			<Add option="-include wx_pch.h" />
-			<Add option="-DWX_PRECOMP" />
+			<Add option="`/home/compile/wx/wx-config --cflags`" />
 		</Compiler>
 		<Linker>
-			<Add option="-L/home/compile/wxWidgets-2.8.9/lib -pthread   -L/usr/lib64   /home/compile/wxWidgets-2.8.9/lib/libwx_gtk2u-2.8.a -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lgthread-2.0 -lrt -lglib-2.0 -lXinerama -lXxf86vm -lSM -lpng -lz -ljpeg -ltiff -lwxregexu-2.8 -lz -ldl -lm" />
+			<Add option="`/home/compile/wx/wx-config --libs`" />
 		</Linker>
 		<Unit filename="DataInterpreter.h" />
 		<Unit filename="FileDifference.cpp" />

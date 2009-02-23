@@ -26,6 +26,7 @@
 
 #include "HexEditorGui.h"
 #include "HexEditor.h"
+#include "HexEditorApp.h"
 #include "HexDialogs.h"
 #include "InfoPanel.h"
 #include "mondrian.xpm"

@@ -15,7 +15,12 @@ $(EXECUTABLE): $(OBJECTS)
 .cpp.o:
 	$(CPP) $(CXXFLAGS) $< -o $@
 
-mac: all
+mac-all: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $@
+
+mac: mac-all
 	mkdir -p wxHexEditor.app/Contents
 	mkdir -p wxHexEditor.app/Contents/MacOS
 	mkdir -p wxHexEditor.app/Contents/Resources

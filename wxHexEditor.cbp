@@ -16,10 +16,11 @@
 				<Compiler>
 					<Add option="-march=athlon64" />
 					<Add option="-O3" />
-					<Add option="-march=native -mtune=native" />
+					<Add option="`/home/compile/wx/wx-config --cflags` -march=native -mtune=native" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="`/home/compile/wx/wx-config --libs`" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
@@ -33,10 +34,12 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="-D_DEBUG2_" />
+					<Add option="`/home/compile/wx/wx-config --cflags`" />
+					<Add option="-D_DEBUG_=2" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
+					<Add option="`/home/compile/wx/wx-config --libs`" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Release">
@@ -47,13 +50,11 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-march=athlon64" />
-					<Add option="-O3" />
-					<Add option="-march=native -mtune=native" />
+					<Add option="-Wall" />
+					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --cflags`" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
-					<Add option="-lexpat" />
+					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --libs` -lexpat" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Debug">
@@ -67,21 +68,21 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --cflags`" />
 					<Add option="-D_DEBUG2_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="-lexpat" />
+					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --libs` -lexpat" />
 				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/Users/deathknight/Desktop/wx/release-intel/wx-config" />
+				</Environment>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="`/home/compile/wx/wx-config --cflags`" />
 		</Compiler>
-		<Linker>
-			<Add option="`/home/compile/wx/wx-config --libs`" />
-		</Linker>
 		<Unit filename="DataInterpreter.h" />
 		<Unit filename="FileDifference.cpp" />
 		<Unit filename="FileDifference.h" />

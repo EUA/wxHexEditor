@@ -18,6 +18,7 @@ class wxHexEditorApp : public wxApp
 {
     public:
         virtual bool OnInit();
+//        int FilterEvent(wxEvent &evt);
 };
 
 #endif // WXHEXEDITORAPP_H

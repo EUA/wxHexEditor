@@ -108,7 +108,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
 			LoadFromOffset(0, true);
 			//offset_scroll->SetScrollbar(offset_scroll->GetThumbPosition(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
-			SetHexInsertionPoint(0);
+			SetLocalHexInsertionPoint(0);
 			return true;
 			}
 		else{
@@ -206,7 +206,7 @@ void HexEditor::Goto( int64_t cursor_offset ){
 	if(page_offset <= cursor_offset &&
 		page_offset+ByteCapacity() >= cursor_offset){	//cursor_offset is in visible area
 		Reload();					//Reload data needed for undo - redo
-		SetHexInsertionPoint( (cursor_offset - page_offset)*2 );
+		SetLocalHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
 	else{// out of view
 		page_offset = cursor_offset;
@@ -217,9 +217,9 @@ void HexEditor::Goto( int64_t cursor_offset ){
 		else if(page_offset > FileLength() )
 			page_offset = FileLength() - ByteCapacity() + 2*BytePerLine();
 		Reload();
-		SetHexInsertionPoint( (cursor_offset - page_offset)*2 );
+		SetLocalHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
-	UpdateCursorLocation();
+//	UpdateCursorLocation();
 	UpdateOffsetScroll();
 	}
 
@@ -233,7 +233,7 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
     UpdateCursorLocation();
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL )
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/hex_ctrl->ByteCapacity() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
 #endif
     wxYieldIfNeeded();
 	}
@@ -317,7 +317,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 						}
 					}
 					else
-						SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() );
+						SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() );
 					break;
 
 				case (WXK_DOWN):case (WXK_NUMPAD_DOWN):
@@ -325,7 +325,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 						if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
 							int temp = GetLocalHexInsertionPoint();	//preserving cursor location
 							LoadFromOffset( page_offset + BytePerLine() );	//offset increasing one line and update text with new location, makes screen slide illusion
-							SetHexInsertionPoint(temp);			//restoring cursor location
+							SetLocalHexInsertionPoint(temp);			//restoring cursor location
 							}
 						else{
 							wxBell();											//there is no line to slide bell
@@ -334,7 +334,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					else if( ActiveLine() * HexPerLine() > GetLastPosition() )
 						wxBell();	//If cursor at last line but not at bottom of screen
 					else
-						SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() );
+						SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() );
 					break;
 // TODO (death#1#): bug in left & text ctrl
 				case (WXK_LEFT):case (WXK_NUMPAD_LEFT):
@@ -343,31 +343,31 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 							wxBell();
 						else{
 							LoadFromOffset( page_offset - BytePerLine() );
-							SetHexInsertionPoint( HexPerLine() - 1 );
+							SetLocalHexInsertionPoint( HexPerLine() - 1 );
 							}
 						}
 					else
-						SetHexInsertionPoint( GetLocalHexInsertionPoint() - ((myctrl == hex_ctrl) ? 1 : 2) );
+						SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - ((myctrl == hex_ctrl) ? 1 : 2) );
 					break;
 				case (WXK_RIGHT):case (WXK_NUMPAD_RIGHT):
 					if( myctrl->GetInsertionPoint() >= myctrl->GetLastPosition() ){
 						if(page_offset + ByteCapacity() < myfile->Length() ){	//Checks if its EOF or not
 							LoadFromOffset( page_offset + BytePerLine() );
-							SetHexInsertionPoint( (LineCount() - 1) * HexPerLine() );
+							SetLocalHexInsertionPoint( (LineCount() - 1) * HexPerLine() );
 							}
 						else
 							wxBell();
 						}
 					else
-						SetHexInsertionPoint( GetLocalHexInsertionPoint() +  ((myctrl == hex_ctrl)? 1 : 2) );
+						SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() +  ((myctrl == hex_ctrl)? 1 : 2) );
 					break;
 
 				case (WXK_HOME):case(WXK_NUMPAD_HOME):{
-					SetHexInsertionPoint( GetLocalHexInsertionPoint() - GetLocalHexInsertionPoint() % HexPerLine() );
+					SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - GetLocalHexInsertionPoint() % HexPerLine() );
 					break;
 					}
 				case (WXK_END):case(WXK_NUMPAD_END):{
-					SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() - (GetLocalHexInsertionPoint() % HexPerLine()) - 1  );
+					SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() - (GetLocalHexInsertionPoint() % HexPerLine()) - 1  );
 					break;
 					}
 				case (WXK_PAGEUP):case (WXK_NUMPAD_PAGEUP):
@@ -375,12 +375,12 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 //							int temp = GetHexInsertionPoint();
 							LoadFromOffset(page_offset -  ByteCapacity());
 							UpdateCursorLocation();
-//							SetHexInsertionPoint(temp);
+//							SetLocalHexInsertionPoint(temp);
 							}
 						else{
 							int temp = GetLocalHexInsertionPoint() % HexPerLine();
 							LoadFromOffset( 0 );
-							SetHexInsertionPoint(temp);
+							SetLocalHexInsertionPoint(temp);
 							wxBell();
 							}
 					break;
@@ -389,14 +389,14 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 						if(page_offset + ByteCapacity()*2 < myfile->Length()){ //*2 for cosmetic
 							int temp = GetLocalHexInsertionPoint();
 							LoadFromOffset( page_offset +  ByteCapacity() );
-							SetHexInsertionPoint( temp );
+							SetLocalHexInsertionPoint( temp );
 							}
 						else{
 							int temp = ( GetLocalHexInsertionPoint() %  HexPerLine() ) + ( LineCount()-1 ) * HexPerLine();
 							page_offset = myfile->Length() - ByteCapacity();
 							page_offset += BytePerLine() - page_offset % BytePerLine(); //cosmetic
 							Reload();
-							SetHexInsertionPoint(temp);
+							SetLocalHexInsertionPoint(temp);
 							wxBell();
 							}
 					break;
@@ -471,7 +471,6 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 			OnKeyboardSelector(event);
 			PaintSelection( );
 		}
-	event.Skip();
 	}
 
 void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
@@ -548,6 +547,11 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 		}
 	}
 
+void HexEditor::SetLocalHexInsertionPoint( int hex_location ){
+	HexEditorCtrl::SetLocalHexInsertionPoint( hex_location );
+	UpdateCursorLocation();
+	}
+
 bool HexEditor::Selector(bool mode){
 	bool temp = HexEditorCtrl::Selector();
 #if wxUSE_STATUSBAR
@@ -581,6 +585,12 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 		}
 	#endif // wxUSE_STATUSBAR
 	UpdateCursorLocation();
+	std::cout << "CaptureMouse()\n" ;
+	if(FindFocus() == hex_ctrl )
+		hex_ctrl->CaptureMouse();
+	else if( FindFocus() == text_ctrl )
+		text_ctrl->CaptureMouse();
+	MouseCapture = true;
 	}
 
 void HexEditor::OnMouseRight( wxMouseEvent& event ){
@@ -642,18 +652,18 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 		Reload();	//update text with new location, makes screen slide illusion
 		if( page_offset != 0 ){
 			if( ActiveLine() + event.GetLinesPerAction() <= LineCount() )	//cursor at bottom
-				SetHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
+				SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() + HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
 			else
-				SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() + HexPerLine()*(LineCount()-1) );
+				SetLocalHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() + HexPerLine()*(LineCount()-1) );
 			}
 		}
 	else if(event.GetWheelRotation() < 0 ){	// Going to BOTTOM
 		if(page_offset + ByteCapacity() < myfile->Length() ){//detects if another line is present or not
 			LoadFromOffset( page_offset + BytePerLine() * event.GetLinesPerAction());	//offset increasing line as mouse whell rolls
 			if( ActiveLine() > event.GetLinesPerAction() )	//cursor at top GetLinesPerAction
-				SetHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
+				SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
 			else
-				SetHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() );
+				SetLocalHexInsertionPoint( GetLocalHexInsertionPoint()%HexPerLine() );
 			}
 		else{
 			wxBell();							//there is no line to slide bell
@@ -663,39 +673,72 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){
-#ifdef _DEBUG2_
-	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
-			<< "\tLeft mouse button:" << event.m_leftDown << std::endl;
+#if defined(_DEBUG_) && _DEBUG_ > 1
+	std::cout << "HexEditor::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+			<< "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
 #endif
-	if(event.m_leftDown){
+	if( event.LeftIsDown() ){
 		int spd=0;
 		if( event.m_y < 0 &&page_offset != 0){
 			spd = static_cast<int>(0 - pow(2, abs(event.GetY()) / 25));
 			(spd < -1024) ? (spd = -1024):(spd=spd);
 			}
-		else if(event.m_y > hex_ctrl->GetSize().GetHeight() && page_offset + hex_ctrl->ByteCapacity() < myfile->Length()){
+		else if(event.m_y > hex_ctrl->GetSize().GetHeight() && page_offset + ByteCapacity() < myfile->Length()){
 			int pointer_diff = event.GetY() - hex_ctrl->GetSize().GetHeight();
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-		myscroll->UpdateSpeed(spd);
-#ifdef _DEBUG2_
+#if defined(_DEBUG_) && _DEBUG_ > 1
 		std::cout << "Scroll Speed = " << spd << std::endl;
 #endif
+
+#ifdef __WXGTK__
+		ScrollNoThread( spd );	//MAC has problem with GuiMutex
+#else
+		myscroll->UpdateSpeed(spd);
+#endif
+
 		HexEditorCtrl::OnMouseMove( event );
 		UpdateCursorLocation();
 		}
-	event.Skip();
+	event.Skip(); //need for tag views
+	}
+
+void HexEditor::ScrollNoThread( int speed ){
+	while( (!wxTheApp->Pending() && speed != 0 )
+			&& ( speed > 0 && (page_offset + ByteCapacity() < FileLength())
+				|| ( speed < 0 && page_offset > 0)
+				)
+			){
+#if defined(_DEBUG_) && _DEBUG_ > 1
+		std::cout << "Loop Scroll speed  :" << speed << std::endl;
+		std::cout << "Loop Pending Event :" << wxTheApp->Pending() << std::endl;
+#endif
+		page_offset += BytePerLine() * speed;
+		if( page_offset < 0 )
+			page_offset = 0;
+		else if( page_offset + ByteCapacity() >= FileLength() ){
+			page_offset = FileLength() - ByteCapacity();
+			page_offset += BytePerLine() - (page_offset % BytePerLine()) ; //cosmetic
+			}
+		LoadFromOffset( page_offset, false, false );
+//		SetLocalHexInsertionPoint(cursor);
+		Selector();
+		PaintSelection();
+		UpdateCursorLocation( true );
+		if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
+			offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
+
+		if( page_offset == 0 || page_offset + ByteCapacity() >= FileLength() )
+			break;
+		}
 	}
 
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	HexEditorCtrl::OnMouseSelectionEnd( event );
 	myscroll->UpdateSpeed( 0 );
-	}
-
-void HexEditor::SetHexInsertionPoint( int local_hex_location){
-	SetLocalHexInsertionPoint( local_hex_location );
-	UpdateCursorLocation();
+	std::cout << "ReleaseMouse()\n" ; ReleaseMouse();
+	MouseCapture = false;
 	}
 
 void HexEditor::UpdateCursorLocation( bool force ){
@@ -722,7 +765,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 		}
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL ){
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/hex_ctrl->ByteCapacity() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
 		if( offset_ctrl->hex_offset )
 			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%llX"), CursorOffset() ), 1);
 		else

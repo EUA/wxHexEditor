@@ -29,7 +29,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	PrepareAUI();
 
-#if defined( _DEBUG_ )
+#ifdef _DEBUG_
 	wxFileName myname(_("./testfile.swp"));
 	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName() );
 
@@ -44,7 +44,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	MyAUI->Update();
 
     this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
-
 	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Connect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);

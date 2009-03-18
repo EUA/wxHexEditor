@@ -39,13 +39,20 @@
 
 #include "HexEditorApp.h"
 #include "HexEditorFrame.h"
-
 IMPLEMENT_APP(wxHexEditorApp);
 
 bool wxHexEditorApp::OnInit()
 {
     HexEditorFrame* frame = new HexEditorFrame(0L);
     frame->Show();
-
     return true;
 }
+//int wxHexEditorApp::FilterEvent(wxEvent &event){
+//#if defined(_DEBUG_) && _DEBUG_ > 1
+//	if( event.IsKindOf(CLASSINFO(wxMouseEvent)) )
+//		if( static_cast<wxMouseEvent*>(&event)->Dragging() )
+//			std::cout << "Got Mouse Event! " <<  std::endl;
+//			//return 1;
+//#endif
+//	return -1;
+//	}

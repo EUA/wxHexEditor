@@ -338,7 +338,7 @@ void wxHexCtrl::ClearSelection( bool repaint ){
 	}
 
 void wxHexCtrl::MoveCaret(wxPoint p){
-#ifdef _DEBUG2_
+#if defined(_DEBUG_) && _DEBUG_ > 1
 	std::cout << "MoveCaret(wxPoint) Coordinate X:Y = " << p.x	<< " " << p.y << std::endl;
 #endif
     m_Caret = p;
@@ -701,8 +701,8 @@ void wxHexCtrl::OnResize( wxSizeEvent &event ){
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
-#ifdef _DEBUG2_
-	std::cout << "MouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+#if defined(_DEBUG_) && _DEBUG_ > 1
+	std::cout << "wxHexCtrl::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLMR mouse button:" << event.m_leftDown << event.m_middleDown << event.m_rightDown << std::endl;
 #endif
 	if(event.m_leftDown){
@@ -713,7 +713,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 		else
 			select.selected = false;
 #ifdef _DEBUG_
-		std::cout << "Selection is " << (select.selected?"true":"false") << " from " << select.start << " to " << select.end << std::endl;
+		std::cout << "wxHexCtrl::Selection is " << (select.selected?"true":"false") << " from " << select.start << " to " << select.end << std::endl;
 #endif
 		RePaint();
 		}

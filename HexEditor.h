@@ -77,9 +77,9 @@ class HexEditor: public HexEditorCtrl {
 		int GetFD( void ){ return myfile->fd(); };
 		void FindDialog( void );
 		void ReplaceDialog( void );
-		void SetHexInsertionPoint ( int local_hex_location );
 
 protected:
+		void SetLocalHexInsertionPoint( int hex_location );
 		bool Selector( bool=true );
 		void UpdateCursorLocation( bool force=false );
 		void UpdateOffsetScroll( void );
@@ -97,8 +97,8 @@ protected:
 		void OnResize( wxSizeEvent &event );
 
 		void ShowContextMenu( const wxMouseEvent& event );
+		void ScrollNoThread( int speed );
 
-	protected:
 		wxStatusBar* statusbar;
 		FileDifference *myfile;
 		scrollthread *myscroll;
@@ -107,6 +107,7 @@ protected:
 		copy_maker *copy_mark;
 
 	private:
+		bool MouseCapture;
 	    void Dynamic_Connector( void );
 	    void Dynamic_Disconnector( void );
 };
@@ -225,21 +226,20 @@ class scrollthread:wxThreadHelper{
 			if( parent->page_offset < 0 )
 				parent->page_offset = 0;
 			else if( parent->page_offset + parent->ByteCapacity() >= FileLength ){
-				parent->page_offset = FileLength - parent->hex_ctrl->ByteCapacity();
+				parent->page_offset = FileLength - parent->ByteCapacity();
 				parent->page_offset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 				}
 			wxMutexGuiEnter();
-		//	parent->MyFreeze();
+
 			parent->LoadFromOffset( parent->page_offset, false, false );
 
-				parent->SetHexInsertionPoint(cursor);
-				parent->Selector();
+				parent->SetLocalHexInsertionPoint(cursor);	//KILLs MACOSX via Calling UpdateCursorLocation()
+				parent->Selector();						//KILLs MACOSX
 				parent->PaintSelection();
-				parent->UpdateCursorLocation( true );
+				parent->UpdateCursorLocation( true );	//KILLs MACOSX
 
 			if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->ByteCapacity() )
 				parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->ByteCapacity() );
-		//	parent->MyThaw();
 
 		//	wxYieldIfNeeded();
 			wxMutexGuiLeave();

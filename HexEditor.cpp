@@ -125,6 +125,10 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 bool HexEditor::FileSave( bool question ){
 	if( myfile->IsChanged() ){
 		int select;
+		if ( myfile->GetAccessMode() == FileDifference::ReadOnly){
+			wxMessageDialog msg( this, _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
+			msg.ShowModal();
+			}
 		if ( !question )
 			select = wxID_YES;
 		else{
@@ -142,6 +146,10 @@ bool HexEditor::FileSave( bool question ){
 			case(wxID_CANCEL):
 			default: return false;
 			}
+		}
+	else{
+		wxMessageDialog msg( this, _( "File is not changed. Nothing to save.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
+		msg.ShowModal();
 		}
 	return false;
 	}
@@ -692,12 +700,11 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 		std::cout << "Scroll Speed = " << spd << std::endl;
 #endif
 
-#ifdef __WXGTK__
-		ScrollNoThread( spd );	//MAC has problem with GuiMutex
+#ifdef __WXMAC__
+		myscroll->UpdateSpeed(spd);	//MAC has problem with GuiMutex
 #else
-		myscroll->UpdateSpeed(spd);
+		ScrollNoThread( spd );
 #endif
-
 		HexEditorCtrl::OnMouseMove( event );
 		UpdateCursorLocation();
 		}

@@ -45,8 +45,13 @@ HexEditor::HexEditor(	wxWindow* parent,
 	offset_scroll->Enable( true );
 	Dynamic_Connector();
 	copy_mark = new copy_maker( );
+	myDialogVector = new DialogVector;
+	myDialogVector->goto_hex=0;
+	myDialogVector->goto_branch=0;
+	myDialogVector->goto_input=0;
 	}
-	HexEditor::~HexEditor(){
+
+HexEditor::~HexEditor(){
 		//FileClose();
 		Dynamic_Disconnector();
 	}
@@ -202,6 +207,7 @@ bool HexEditor::FileClose( void ){
 bool HexEditor::Undo( void ){
 	Goto( myfile->Undo() );
 	}
+
 bool HexEditor::Redo( void ){
 	Goto( myfile->Redo() );
 	}
@@ -696,14 +702,18 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
+#ifdef __WXMAC__
+		ScrollNoThread( spd );
 #if defined(_DEBUG_) && _DEBUG_ > 1
-		std::cout << "Scroll Speed = " << spd << std::endl;
+		std::cout << "Scroll TH Speed = " << spd << std::endl;
 #endif
 
-#ifdef __WXMAC__
-		myscroll->UpdateSpeed(spd);	//MAC has problem with GuiMutex
 #else
-		ScrollNoThread( spd );
+		myscroll->UpdateSpeed(spd);	//MAC has problem with GuiMutex
+#if defined(_DEBUG_) && _DEBUG_ > 1
+		std::cout << "Scroll NT Speed = " << spd << std::endl;
+#endif
+
 #endif
 		HexEditorCtrl::OnMouseMove( event );
 		UpdateCursorLocation();
@@ -817,6 +827,14 @@ void HexEditor::ReplaceDialog( void ){
 	class ReplaceDialog *myfind = new ReplaceDialog::ReplaceDialog( this, myfile );
 	myfind->ShowModal();
 	myfind->Destroy();
+	}
+
+void HexEditor::GotoDialog( void ){
+	uint64_t newoffset;
+	class GotoDialog *mygoto = new GotoDialog::GotoDialog( this, newoffset, CursorOffset(), FileLength(), myDialogVector );
+	if( mygoto->ShowModal() == wxID_OK ){
+		Goto( newoffset );
+		}
 	}
 
 bool HexEditor::CopySelection( void ){

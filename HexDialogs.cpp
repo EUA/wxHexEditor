@@ -22,13 +22,23 @@
 *************************************************************************/
 
 #include "HexDialogs.h"
-GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize  ):GotoDialogGui(parent, wxID_ANY){
+GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
 	cursor_offset = _cursor_offset;
 	is_olddec =true;
 	filesize = _filesize;
 	m_textCtrlOffset->SetFocus();
+	myDialogVector = _myDialogVector;
+	if(myDialogVector != NULL ){
+		m_hex->SetValue( myDialogVector->goto_hex );
+		if( myDialogVector->goto_hex )
+			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%X"),myDialogVector->goto_input) );
+		else
+			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%ld"),myDialogVector->goto_input) );
+		m_branch->Select( myDialogVector->goto_branch );
+		}
 	}
+
 wxString GotoDialog::Filter( wxString text ){
 	for( unsigned i = 0 ; i < text.Length() ; i++ ){
 		if( m_dec->GetValue() ? isdigit( text.GetChar( i ) ) : isxdigit( text.GetChar( i ) ))
@@ -38,6 +48,7 @@ wxString GotoDialog::Filter( wxString text ){
 		}
 	return text;
 	}
+
 void GotoDialog::OnInput( wxCommandEvent& event ){
 	if(!m_textCtrlOffset->IsModified())
         return;
@@ -51,6 +62,13 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 	wxULongLong_t *wxul = new wxULongLong_t(0);
 	m_textCtrlOffset->GetValue().ToULongLong( wxul, m_dec->GetValue() ? 10 : 16 );
 	*offset = *wxul;
+
+	if(myDialogVector != NULL ){
+		myDialogVector->goto_hex = m_hex->GetValue();
+		myDialogVector->goto_branch = m_branch->GetSelection();
+		myDialogVector->goto_input = *wxul;
+		}
+
 	delete wxul;
 	if( m_branch->GetSelection() == 1)
 		*offset += cursor_offset;

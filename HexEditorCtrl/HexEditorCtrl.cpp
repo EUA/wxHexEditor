@@ -411,9 +411,13 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 		TagElement *TE = new TagElement;
 		TE->start=select.start_offset;
 		TE->end=select.end_offset;
+		static wxColour last_tag_color = *wxRED;
+		TE->NoteClrData.SetColour( last_tag_color );
 
 		TagDialog *x=new TagDialog( *TE, this );
+
 		if( x->ShowModal() == wxID_SAVE ){
+			last_tag_color = TE->NoteClrData.GetColour();
 			MainTagArray.Add( TE );
 			PreparePaintTAGs();
 			ClearPaint();

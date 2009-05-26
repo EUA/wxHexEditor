@@ -77,6 +77,8 @@ class HexEditor: public HexEditorCtrl {
 		int GetFD( void ){ return myfile->fd(); };
 		void FindDialog( void );
 		void ReplaceDialog( void );
+		void GotoDialog( void );
+		struct DialogVector *myDialogVector;
 
 protected:
 		void SetLocalHexInsertionPoint( int hex_location );

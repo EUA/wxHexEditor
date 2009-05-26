@@ -292,11 +292,7 @@ void HexEditorFrame::OnEditReplace( wxCommandEvent& event ){
 void HexEditorFrame::OnEditGoto( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL ){
-		uint64_t newoffset;
-		GotoDialog *mydialog = new GotoDialog( this, newoffset, MyHexEditor->CursorOffset(), MyHexEditor->FileLength() );
-		if( mydialog->ShowModal() == wxID_OK ){
-			MyHexEditor->Goto( newoffset );
-			}
+		MyHexEditor->GotoDialog();
 		}
 	event.Skip();
 	}

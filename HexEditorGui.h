@@ -97,6 +97,8 @@ class InterpreterGui : public wxPanel
 	protected:
 		wxCheckBox* m_check_unsigned;
 		wxCheckBox* m_check_bigendian;
+		wxStaticText* m_static_bin;
+		wxTextCtrl* m_textctrl_binary;
 		wxStaticText* m_static_8bit;
 		wxTextCtrl* m_textctrl_8bit;
 		wxStaticText* m_static_16bit;
@@ -115,7 +117,7 @@ class InterpreterGui : public wxPanel
 		
 	
 	public:
-		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,190 ), long style = wxTAB_TRAVERSAL );
+		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( 174,218 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
 	
 };

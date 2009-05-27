@@ -690,9 +690,17 @@ void wxHexCtrl::OnFocus(wxFocusEvent& event ){
 		caret->Show(true);
 	}
 void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
+#if defined(_DEBUG_) && _DEBUG_ > 1
+	std::cout << "wxHexCtrl::OnKillFocus()" << std::endl;
+#endif
 	wxCaret *caret = GetCaret();
     if ( caret )
 		caret->Show(false);
+//	if( *TagMutex ){
+//		for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
+//			TagArray.Item(i)->Hide();
+//		*TagMutex = false;
+//		}
 	}
 
 void wxHexCtrl::OnResize( wxSizeEvent &event ){

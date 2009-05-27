@@ -123,6 +123,8 @@ virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
 		void OnTagHideAll( void );
 		bool *TagMutex;
 
+
+
 	protected:
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function

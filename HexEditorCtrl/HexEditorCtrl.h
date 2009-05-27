@@ -46,7 +46,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void ClearPaint( void );
 		void PaintSelection( void );
 		void PreparePaintTAGs( void );
-		void TagPaint( void );
+//		void TagPaint( void );
 		bool TAGMutex;
 		void LoadTAGS( wxFileName );
 		void SaveTAGS( wxFileName );

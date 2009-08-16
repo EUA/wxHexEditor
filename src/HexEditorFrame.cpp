@@ -23,7 +23,11 @@
 #include "HexEditorFrame.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
+<<<<<<< .mine
+				HexEditorGui( parent, id, wxT("wxHexEditor v0.07 Alpha") ){
+=======
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_ ) ){
+>>>>>>> .r81
 	wxIcon wxHexEditor_ICON ( mondrian_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 

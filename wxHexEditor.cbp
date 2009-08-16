@@ -83,38 +83,32 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="DataInterpreter.h" />
-		<Unit filename="FileDifference.cpp" />
-		<Unit filename="FileDifference.h" />
-		<Unit filename="HexDialogs.cpp" />
-		<Unit filename="HexDialogs.h" />
-		<Unit filename="HexEditor.cpp" />
-		<Unit filename="HexEditor.h" />
-		<Unit filename="HexEditorApp.cpp" />
-		<Unit filename="HexEditorApp.h" />
-		<Unit filename="HexEditorCtrl/HexEditorCtrl.cpp" />
-		<Unit filename="HexEditorCtrl/HexEditorCtrl.fbp" />
-		<Unit filename="HexEditorCtrl/HexEditorCtrl.h" />
-		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.cpp" />
-		<Unit filename="HexEditorCtrl/HexEditorCtrlGui.h" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/Tag.cpp" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/Tag.h" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialog.fbp" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/TagDialogGui.h" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
-		<Unit filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
-		<Unit filename="HexEditorFrame.cpp" />
-		<Unit filename="HexEditorFrame.h" />
-		<Unit filename="HexEditorGui.cpp" />
-		<Unit filename="HexEditorGui.fbp" />
-		<Unit filename="HexEditorGui.h" />
-		<Unit filename="InfoPanel.h" />
-		<Unit filename="makefile" />
-		<Unit filename="wx_pch.h">
-			<Option compile="1" />
-			<Option weight="0" />
-		</Unit>
+		<Unit filename="src/DataInterpreter.h" />
+		<Unit filename="src/FileDifference.cpp" />
+		<Unit filename="src/FileDifference.h" />
+		<Unit filename="src/HexDialogs.cpp" />
+		<Unit filename="src/HexDialogs.h" />
+		<Unit filename="src/HexEditor.cpp" />
+		<Unit filename="src/HexEditor.h" />
+		<Unit filename="src/HexEditorApp.cpp" />
+		<Unit filename="src/HexEditorApp.h" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.cpp" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.fbp" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.h" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrlGui.cpp" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrlGui.h" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/Tag.cpp" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/Tag.h" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialog.fbp" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialogGui.h" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
+		<Unit filename="src/HexEditorFrame.cpp" />
+		<Unit filename="src/HexEditorFrame.h" />
+		<Unit filename="src/HexEditorGui.cpp" />
+		<Unit filename="src/HexEditorGui.h" />
+		<Unit filename="src/InfoPanel.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

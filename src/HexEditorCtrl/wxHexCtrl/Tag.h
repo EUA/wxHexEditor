@@ -24,6 +24,7 @@
 #ifndef __Tag_h__
 #define __Tag_h__
 #include <iostream>
+#include <stdint.h>
 #include <wx/clrpicker.h>
 #include <wx/popupwin.h>
 #include <wx/dcmemory.h>

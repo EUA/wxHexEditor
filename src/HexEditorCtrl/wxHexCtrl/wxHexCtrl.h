@@ -23,7 +23,7 @@
 
 #ifndef __wxHexCtrl__
 #define __wxHexCtrl__
-
+#include <stdint.h>
 #include <wx/defs.h>
 #include <wx/buffer.h>
 #include <wx/textctrl.h>

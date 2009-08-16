@@ -1,9 +1,10 @@
 WXCONFIG = wx-config
 CPP = `$(WXCONFIG) --cxx`
-CXXFLAGS= `$(WXCONFIG) --cxxflags` -c -O3
+CXXFLAGS= `$(WXCONFIG) --cxxflags` -c ${CFLAGS}
+
 LDFLAGS = `$(WXCONFIG) --libs`
 
-SOURCES= HexEditorGui.cpp FileDifference.cpp HexDialogs.cpp HexEditorApp.cpp HexEditor.cpp HexEditorCtrl/HexEditorCtrl.cpp HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp HexEditorCtrl/wxHexCtrl/Tag.cpp HexEditorCtrl/HexEditorCtrlGui.cpp HexEditorFrame.cpp
+SOURCES= src/HexEditorGui.cpp src/FileDifference.cpp src/HexDialogs.cpp src/HexEditorApp.cpp src/HexEditor.cpp src/HexEditorCtrl/HexEditorCtrl.cpp src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp src/HexEditorCtrl/wxHexCtrl/Tag.cpp src/HexEditorCtrl/HexEditorCtrlGui.cpp src/HexEditorFrame.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=wxHexEditor
 
@@ -80,15 +81,16 @@ mac: mac-all
 </plist>\n\n" > wxHexEditor.app/Contents/Info.plist
 
 install:
-	mkdir -p $(DESTDIR)/usr/bin
-	cp wxHexEditor $(DESTDIR)/usr/bin
-
+	install -D -m 755 wxHexEditor $(DESTDIR)/usr/bin/wxHexEditor
+	install -D -m 644 resources/wxHexEditor.png $(DESTDIR)/usr/share/pixmaps/wxHexEditor.png
+	install -D -m 644 resources/wxHexEditor.desktop $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
 
 uninstall:
 	rm $(DESTDIR)/usr/bin/wxHexEditor
-
+	rm $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
+	rm $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
 clean:
-	rm *.o HexEditorCtrl/*.o HexEditorCtrl/wxHexCtrl/*.o
+	rm src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o
 	rm wxHexEditor
 	rm -rf wxHexEditor.app
 

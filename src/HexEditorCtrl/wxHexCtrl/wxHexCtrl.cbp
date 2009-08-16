@@ -37,6 +37,7 @@
 			<Add option="`wx-config --cflags`" />
 			<Add option="-Winvalid-pch" />
 			<Add option="-include wx_pch.h" />
+			<Add option="-fopenmp" />
 			<Add option="-DUSE_PCH" />
 		</Compiler>
 		<Linker>

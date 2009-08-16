@@ -23,7 +23,7 @@
 #include "HexEditorFrame.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
-	HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_ ) ){
+				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_ ) ){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 

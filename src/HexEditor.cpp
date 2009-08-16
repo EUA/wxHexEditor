@@ -761,12 +761,11 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 void HexEditor::UpdateCursorLocation( bool force ){
 	static wxMutex update;
 
-	static int64_t lastPoint=-1;				//? Speed up Van goh
-	if( !force )
-		if( lastPoint == CursorOffset() )
-			return;
-
-	lastPoint = CursorOffset();
+//	static int64_t lastPoint=-1;				//? Speed up Van goh
+//	if( !force )
+//		if( lastPoint == CursorOffset() )
+//			return;
+//	lastPoint = CursorOffset();
 
 	update.Lock();
 	if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ){

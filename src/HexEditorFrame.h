@@ -29,7 +29,7 @@
 #include "HexEditorApp.h"
 #include "HexDialogs.h"
 #include "InfoPanel.h"
-#include "../resources/wxhex.xpm"// by Vlad Adrian
+#include "../resources/wxhex.xpm"
 #include <wx/filename.h>
 #include <wx/dnd.h>
 #include <wx/aboutdlg.h>

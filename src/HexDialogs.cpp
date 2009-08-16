@@ -87,9 +87,10 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 		*offset = *wxul;
 		delete wxul;
 		m_textCtrlOffset->SetValue( wxString::Format(_T("%ld"),*offset) );
+// TODO (death#1#): myDialogVector->goto_hex = 0;
 		is_olddec = true;
 		}
-	else if( event.GetId() == m_hex->GetId() && is_olddec ){	//old value is hex, new value is dec
+	else if( event.GetId() == m_hex->GetId() && is_olddec ){	//old value is dec, new value is hex
 		wxULongLong_t *wxul = new wxULongLong_t(0);
 		m_textCtrlOffset->GetValue().ToULongLong( wxul, 10 );
 		*offset = *wxul;
@@ -183,7 +184,7 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 	return -1;
 	}
 
-// TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL)
+// TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL) :)
 uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ type ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
 	switch( type ){
 		case type_hex:type_text_match_case:

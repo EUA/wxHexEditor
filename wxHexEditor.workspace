@@ -2,7 +2,7 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="wxHexEditor Workspace">
 		<Project filename="wxHexEditor.cbp" active="1" />
-		<Project filename="HexEditorCtrl/HexEditorCtrl.cbp" />
-		<Project filename="HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
+		<Project filename="src/HexEditorCtrl/HexEditorCtrl.cbp" />
+		<Project filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

@@ -2,28 +2,26 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="wxHexEditorCtrl" />
+		<Option title="HexEditorCtrl" />
+		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/test" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="-D_DEBUG_" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg" />
-				</Linker>
-			</Target>
-			<Target title="Release">
-				<Option output="bin/Release/test" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release/" />
+				<Option output="Debug/bin/HexEditorCtrl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="Release/bin/HexEditorCtrl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -33,17 +31,13 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Wall" />
 			<Add option="`wx-config --cflags`" />
-			<Add option="-Winvalid-pch" />
-			<Add option="-include wx_pch.h" />
-			<Add option="-DUSE_PCH" />
+			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
 		<Unit filename="HexEditorCtrl.cpp" />
-		<Unit filename="HexEditorCtrl.fbp" />
 		<Unit filename="HexEditorCtrl.h" />
 		<Unit filename="HexEditorCtrlGui.cpp" />
 		<Unit filename="HexEditorCtrlGui.h" />
@@ -53,15 +47,15 @@
 		<Unit filename="main.h" />
 		<Unit filename="wxHexCtrl/Tag.cpp" />
 		<Unit filename="wxHexCtrl/Tag.h" />
-		<Unit filename="wxHexCtrl/TagDialog.fbp" />
 		<Unit filename="wxHexCtrl/TagDialogGui.cpp" />
 		<Unit filename="wxHexCtrl/TagDialogGui.h" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.cpp" />
 		<Unit filename="wxHexCtrl/wxHexCtrl.h" />
 		<Extensions>
-			<code_completion />
 			<envvars />
+			<code_completion />
 			<debugger />
+			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

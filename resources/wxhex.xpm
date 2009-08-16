@@ -1,5 +1,5 @@
 /* XPM */
-static char * wxhex_xpm[] = {
+static const char * wxhex_xpm[] = {
 "32 32 825 2",
 "  	c None",
 ". 	c #BFE4F2",

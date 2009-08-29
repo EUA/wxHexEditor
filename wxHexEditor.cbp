@@ -83,6 +83,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="HexEditorGui.fbp" />
+		<Unit filename="makefile" />
+		<Unit filename="resources/wxHexEditor.desktop" />
+		<Unit filename="resources/wxHexEditor.png" />
+		<Unit filename="resources/wxhex.xpm" />
 		<Unit filename="src/DataInterpreter.h" />
 		<Unit filename="src/FileDifference.cpp" />
 		<Unit filename="src/FileDifference.h" />

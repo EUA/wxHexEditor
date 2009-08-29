@@ -86,9 +86,9 @@ install:
 	install -D -m 644 resources/wxHexEditor.desktop $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
 
 uninstall:
-	rm $(DESTDIR)/usr/bin/wxHexEditor
-	rm $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
-	rm $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
+	rm -f $(DESTDIR)/usr/bin/wxHexEditor
+	rm -f $(DESTDIR)/usr/share/pixmaps/wxHexEditor.png
+	rm -f $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
 clean:
 	rm src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o
 	rm wxHexEditor

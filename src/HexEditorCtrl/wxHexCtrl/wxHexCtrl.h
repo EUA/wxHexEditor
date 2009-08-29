@@ -66,7 +66,6 @@ virtual void CreateCaret( void );
 		wxString GetValue( void );
 		long ReadBytes( char* buffer, int start_location, int byte_count, bool no_repaint = false );
 		char ReadByte(int byte_location);
-static const char* HexToChar(const wxString& HexValue);
 static wxMemoryBuffer HexToBin(const wxString& HexValue);
 virtual void Replace(unsigned from, unsigned to, const wxString& value);
 virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true);

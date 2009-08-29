@@ -638,17 +638,12 @@ void wxHexCtrl::Replace(unsigned from, unsigned to, const wxString& value){
 char wxHexCtrl::ReadByte( int byte_location ){
 	wxString hx;
 	hx << m_text[ byte_location*2 ] << m_text[ byte_location*2+1 ];
-	return *HexToChar(hx);
-	}
-
-const char* wxHexCtrl::HexToChar( const wxString& HexValue ){
-	return static_cast<char*>(HexToBin( HexValue ).GetData());
+	return static_cast<char*>(HexToBin(hx).GetData())[0];
 	}
 
 wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	wxMemoryBuffer memodata;
-	memodata.SetBufSize(HexValue.Length()/3);
-
+	memodata.SetBufSize(HexValue.Length()/3+1);
 	char bfr;
 	for(unsigned int i=0 ; i < HexValue.Length() ; i+=2){
 		if(HexValue[i]>='0' && HexValue[i]<='9')

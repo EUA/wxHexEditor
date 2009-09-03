@@ -82,7 +82,7 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 	}
 //-----READ/WRITE FUNCTIONS-------//
 
-void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset, bool paint ){
+void HexEditorCtrl::ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset, bool paint ){
 	static wxMutex MyBufferMutex;
 	MyBufferMutex.Lock();
 	page_offset = position;
@@ -92,7 +92,7 @@ void HexEditorCtrl::ReadFromBuffer( int64_t position, int lenght, char *buffer, 
 	Clear( false, cursor_reset );
 	wxString text_string;
 // Optimized Code
-	for( int i=0 ; i<lenght ; i++ ){
+	for( unsigned i=0 ; i<lenght ; i++ ){
 		text_string << text_ctrl->Filter(buffer[i]);
 		}
 	hex_ctrl->SetBinValue(buffer, lenght, false );
@@ -386,6 +386,11 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 			}
 		}
 	else{
+		if( event.GetEventObject() == hex_ctrl or
+			event.GetEventObject() == text_ctrl or
+			event.GetEventObject() == offset_ctrl )
+			if( static_cast<wxHexCtrl*>(event.GetEventObject())->GetTagByPix( event.GetPosition() ) == NULL && TAGMutex==true)
+				TagHideAll();
 		event.Skip(); //enable tags but problems with paint?
 		}
 	}
@@ -525,7 +530,7 @@ void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 		wxXmlProperty *prop_filename = new wxXmlProperty( wxT("path"), flnm.GetFullPath(), NULL);
 		wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), flnm.GetFullPath(), prop_filename , NULL);
 
-		for(int i = 0 ; i < MainTagArray.Count() ; i++ ){
+		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 			TagElement *TAG = MainTagArray.Item(i);
 
 			wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );

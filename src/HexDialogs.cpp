@@ -187,7 +187,7 @@ uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t fro
 // TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL) :)
 uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ type ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
 	switch( type ){
-		case type_hex:type_text_match_case:
+		case type_hex:
 			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
 				if(! memcmp( bfr+i, search, search_size ))
 					return i;

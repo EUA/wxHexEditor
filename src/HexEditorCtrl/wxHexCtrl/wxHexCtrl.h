@@ -109,6 +109,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 
 		// TAG Support and Selection
 		ArrayOfTAG TagArray;
+		TagElement* GetTagByPix( wxPoint PixelCoord );
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );
 		struct selector: public TagElement{		//select
@@ -121,8 +122,6 @@ virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
 			}
 		void OnTagHideAll( void );
 		bool *TagMutex;
-
-
 
 	protected:
 		// event handlers

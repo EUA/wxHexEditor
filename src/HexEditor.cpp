@@ -722,10 +722,9 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 	}
 
 void HexEditor::ScrollNoThread( int speed ){
-	while( (!wxTheApp->Pending() && speed != 0 )
-			&& ( speed > 0 && (page_offset + ByteCapacity() < FileLength())
-				|| ( speed < 0 && page_offset > 0)
-				)
+	while( (!wxTheApp->Pending() and speed != 0 )
+			and ( ((speed > 0) and (page_offset + ByteCapacity() < FileLength()))
+				or ( (speed < 0) and (page_offset > 0) ))
 			){
 #if defined(_DEBUG_) && _DEBUG_ > 1
 		std::cout << "Loop Scroll speed  :" << speed << std::endl;
@@ -847,7 +846,7 @@ bool HexEditor::CopySelection( void ){
 				myfile->Read( copy_mark->buffer , size );
 				wxString CopyString;
 				if( hex_ctrl == FindFocus() ){
-					for( int i=0 ; i<size ; i++ )
+					for( unsigned i=0 ; i<size ; i++ )
 						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->buffer[i]));
 					CopyString.Trim();	//remove last ' '
 					}
@@ -898,7 +897,7 @@ bool HexEditor::PasteFromClipboard( void ){
 		wxString str = copy_mark->GetClipboardData();
 		if( ! str.IsEmpty() ){
 			char *ch = new char [str.Len()];
-			for( int i=0;i<str.Len();i++ )
+			for( unsigned i=0;i<str.Len();i++ )
 				ch[i] = str[i];
 			FileAddDiff( CursorOffset(), ch, str.Len() );
 			select.state = xselect::S_FALSE;

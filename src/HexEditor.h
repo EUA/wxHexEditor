@@ -120,6 +120,7 @@ class copy_maker{
 			int64_t start;		//copy start position
 			int64_t size;		//size of copy
 			char* buffer;		//uses RAM, for small data
+			wxMemoryBuffer m_buffer;
 			//wxFile *tempfile;	//uses Temp HDD File and delete after.
 			FileDifference *sourcefile;	//uses HDD File and NOT delete after.
 			copy_maker( ){
@@ -128,7 +129,7 @@ class copy_maker{
 				buffer = NULL;
 			//	tempfile = NULL;
 				sourcefile = NULL;
-				test();
+				//test();
 				}
 			~copy_maker(){
 				if(buffer != NULL)
@@ -138,18 +139,19 @@ class copy_maker{
 				}
 			bool SetClipboardData( wxString& CopyString){
 				if(wxTheClipboard->Open()){
-					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+//					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
 						wxTheClipboard->Clear();
 						int isok = wxTheClipboard->SetData( new wxTextDataObject( CopyString ));
 						wxTheClipboard->Flush();
 						wxTheClipboard->Close();
 						return isok;
 						}
-					else{
-						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
-						return false;
-						}
-					}
+//					else{
+//						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+//						wxTheClipboard->Close();
+//						return false;
+//						}
+//					}
 				else{
 					wxMessageBox( _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 					return false;
@@ -182,26 +184,6 @@ class copy_maker{
 				return buffer;
 				}
 
-		bool test( void ){
-			if (wxTheClipboard->Open()){
-				wxTheClipboard->SetData( new wxTextDataObject(wxT("Some text for test")) );
-				wxTheClipboard->Close();
-				}
-
-			if (wxTheClipboard->Open()){
-				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
-					wxTextDataObject data;
-					wxTheClipboard->GetData( data );
-					if( data.GetText() != wxT("Some text for test") ){
-						wxMessageBox( _("Clipboard read/write problem!") );
-						return false;
-						}
-					else
-						return true;
-					}
-				wxTheClipboard->Close();
-				}
-			}
 		};
 
 class scrollthread:wxThreadHelper{

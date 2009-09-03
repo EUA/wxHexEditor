@@ -732,12 +732,22 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 					}
 				break;
 				}
-			else if( TAX->visible == true ){
-				TAX->Hide();
-				*TagMutex=false;
-				}
+//			else if( TAX->visible == true ){
+//				TAX->Hide();
+//				*TagMutex=false;
+//				}
 			}
 		}
+	}
+TagElement* wxHexCtrl::GetTagByPix( wxPoint PixPos ){
+	unsigned TagDetect = PixelCoordToInternalPosition( PixPos );
+	TagElement *TAX;
+	for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
+		TAX = TagArray.Item(i);
+		if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) )
+			return TagArray.Item(i);
+		}
+	return NULL;
 	}
 
 void wxHexCtrl::OnMouseLeft( wxMouseEvent& event ){

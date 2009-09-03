@@ -31,7 +31,7 @@
 
 #ifndef DATAINTERPRETER_H
 #define DATAINTERPRETER_H
-
+#include <stdint.h>
 class DataInterpreter : public InterpreterGui{
 	protected:
 		struct unidata{
@@ -102,7 +102,7 @@ class DataInterpreter : public InterpreterGui{
 		int number = *X->ubit8;
 		wxString bn;
 		for(int i = 8 ; i > 0 ; i-- ){
-			bn << (number>>(i-1) & 0x01) ? "1" : "0";
+			(((number>>(i-1)) & 0x01)==1) ? bn << wxT("1") : bn << wxT("0");
 			if( i == 5 )
 				bn.append(wxT(" "));
 			}
@@ -139,7 +139,7 @@ class DataInterpreter : public InterpreterGui{
 		int number = *X->ubit8;
 		wxString bn;
 		for(int i = 8 ; i > 0 ; i-- ){
-			bn << (number>>(i-1) & 0x01) ? "1" : "0";
+			(number>>(i-1) & 0x01) ? bn << wxT("1") : bn << wxT("0");
 			}
 		m_textctrl_binary ->ChangeValue( bn );
 		if( m_check_unsigned->GetValue() ){

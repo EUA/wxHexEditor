@@ -34,7 +34,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 						long style=0);
 		~HexEditorCtrl( void );
 		enum IDS{ idTagSelect=1001,idTagEdit };
-		void ReadFromBuffer( int64_t position, int lenght, char *buffer, bool cursor_reset = true, bool paint = true );
+		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:
 		ArrayOfTAG MainTagArray;

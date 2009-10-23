@@ -16,11 +16,11 @@
 				<Compiler>
 					<Add option="-march=athlon64" />
 					<Add option="-O3" />
-					<Add option="`/home/compile/wx/wx-config --cflags` -march=native -mtune=native" />
+					<Add option="`wx-config --cflags` -march=native -mtune=native" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="`/home/compile/wx/wx-config --libs`" />
+					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
@@ -34,12 +34,12 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`/home/compile/wx/wx-config --cflags`" />
+					<Add option="`wx-config --cflags`" />
 					<Add option="-D_DEBUG_=2" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`/home/compile/wx/wx-config --libs`" />
+					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Release">

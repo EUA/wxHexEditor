@@ -97,30 +97,8 @@ class DataInterpreter : public InterpreterGui{
 		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
 		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
 
-		unidata::endian *X = m_check_bigendian->GetValue() ?  &unidata.big : &unidata.little;
-
-		int number = *X->ubit8;
-		wxString bn;
-		for(int i = 8 ; i > 0 ; i-- ){
-			(((number>>(i-1)) & 0x01)==1) ? bn << wxT("1") : bn << wxT("0");
-			if( i == 5 )
-				bn.append(wxT(" "));
-			}
-		m_textctrl_binary ->ChangeValue( bn );
-		if( m_check_unsigned->GetValue() ){
-			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit8 ));
-			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit16 ));
-			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit32 ));
-			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%llu"),*X->ubit64 ));
-			}
-		else {
-			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%i"),  *X->bit8 ));
-			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit16 ));
-			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit32 ));
-			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%lld"),*X->bit64 ));
-			}
-		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
-		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
+		wxCommandEvent event;
+		OnUpdate( event );
 
 		mutexset.Unlock();
 		}
@@ -139,7 +117,9 @@ class DataInterpreter : public InterpreterGui{
 		int number = *X->ubit8;
 		wxString bn;
 		for(int i = 8 ; i > 0 ; i-- ){
-			(number>>(i-1) & 0x01) ? bn << wxT("1") : bn << wxT("0");
+			(((number>>(i-1)) & 0x01)==1) ? bn << wxT("1") : bn << wxT("0");
+			if( i == 5 )
+				bn.append(wxT(" "));
 			}
 		m_textctrl_binary ->ChangeValue( bn );
 		if( m_check_unsigned->GetValue() ){

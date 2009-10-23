@@ -13,12 +13,14 @@
 #define _VERSION_ "v0.07-svn Alpha"
 
 #include <wx/app.h>
-
+#include "HexEditorFrame.h"
 class wxHexEditorApp : public wxApp
 {
     public:
         virtual bool OnInit();
-//        int FilterEvent(wxEvent &evt);
+        int FilterEvent(wxEvent &evt);
+	private:
+		class HexEditorFrame* frame;
 };
 
 #endif // WXHEXEDITORAPP_H

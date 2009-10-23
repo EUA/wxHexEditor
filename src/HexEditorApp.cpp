@@ -38,21 +38,41 @@
 #endif //__BORLANDC__
 
 #include "HexEditorApp.h"
-#include "HexEditorFrame.h"
 IMPLEMENT_APP(wxHexEditorApp);
 
 bool wxHexEditorApp::OnInit()
 {
-    HexEditorFrame* frame = new HexEditorFrame(0L);
+    frame = new HexEditorFrame(0L);
+//    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
     frame->Show();
     return true;
 }
-//int wxHexEditorApp::FilterEvent(wxEvent &event){
+int wxHexEditorApp::FilterEvent(wxEvent &event){
+#if defined(_DEBUG_) && _DEBUG_ > 1
+	if( event.IsKindOf(CLASSINFO(wxMouseEvent)) )
+//		if( static_cast<wxMouseEvent*>(&event)->Moving() )
+//			std::cout << "Got Mouse Moving Event! " <<  std::endl;
+		if(static_cast<wxMouseEvent*>(&event)->Entering())
+			std::cout << "HexEditorApp::Filter Entering() Event" << std::endl;
+		else if(static_cast<wxMouseEvent*>(&event)->Leaving()){
+			std::cout << "HexEditorApp::Filter Leaving() Event" << std::endl;
+			frame->TagHideAll();
+			}
+		else
+			std::cout << "HexEditorApp::OnMouseMove Strange Event" << std::endl;
+#endif
+	event.Skip( );
+	return -1;
+	}
+//
+//void wxHexEditorApp::OnMouseMove(wxMouseEvent &event){
 //#if defined(_DEBUG_) && _DEBUG_ > 1
-//	if( event.IsKindOf(CLASSINFO(wxMouseEvent)) )
-//		if( static_cast<wxMouseEvent*>(&event)->Dragging() )
-//			std::cout << "Got Mouse Event! " <<  std::endl;
-//			//return 1;
+//	if( event.Moving() )
+//		std::cout << "HexEditorApp::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+//				  << "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
+//	else
+//		std::cout << "HexEditorApp::OnMouseMove Strange Event" << std::endl;
 //#endif
-//	return -1;
+//	event.Skip();
+//	return;
 //	}

@@ -1,7 +1,6 @@
 WXCONFIG = wx-config
 CPP = `$(WXCONFIG) --cxx`
 CXXFLAGS= `$(WXCONFIG) --cxxflags` -c ${CFLAGS}
-
 LDFLAGS = `$(WXCONFIG) --libs`
 
 SOURCES= src/HexEditorGui.cpp src/FileDifference.cpp src/HexDialogs.cpp src/HexEditorApp.cpp src/HexEditor.cpp src/HexEditorCtrl/HexEditorCtrl.cpp src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp src/HexEditorCtrl/wxHexCtrl/Tag.cpp src/HexEditorCtrl/HexEditorCtrlGui.cpp src/HexEditorFrame.cpp
@@ -18,14 +17,15 @@ $(EXECUTABLE): $(OBJECTS)
 
 mac-all: $(SOURCES) maclink
 
-maclink: $(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
+maclink:
+	$(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
 
 mac: mac-all
 	mkdir -p wxHexEditor.app/Contents
 	mkdir -p wxHexEditor.app/Contents/MacOS
 	mkdir -p wxHexEditor.app/Contents/Resources
 	mv wxHexEditor wxHexEditor.app/Contents/MacOS/
-	cp mondrian.icns wxHexEditor.app/Contents/Resources/
+	cp resources/wxHexEditor.icns wxHexEditor.app/Contents/Resources/
 	echo "APPLHexE" > wxHexEditor.app/Contents/PkgInfo
 	echo "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -39,16 +39,16 @@ mac: mac-all
  	\t<string>wxHexEditor</string>\n\
 \
 	\t<key>CFBundleGetInfoString</key>\n\
-	\t<string>wxHexEditor v0.06-svn Alpha</string>\n\
+	\t<string>wxHexEditor v0.07-svn Alpha</string>\n\
 \
 	\t<key>CFBundleIconFile</key>\n\
-	\t<string>mondrian.icns</string>\n\
+	\t<string>wxHexEditor.icns</string>\n\
 \
   	\t<key>CFBundleIdentifier</key>\n\
  	\t<string>net.sourceforge.wxhexeditor</string>\n\
 \
   	\t<key>CFBundleShortVersionString</key>\n\
- 	\t<string>v0.06-svn Alpha</string>\n\
+ 	\t<string>v0.07-svn Alpha</string>\n\
 \
   	\t<key>CFBundleInfoDictionaryVersion</key>\n\
  	\t<string>6.0</string>\n\
@@ -90,7 +90,7 @@ uninstall:
 	rm -f $(DESTDIR)/usr/share/pixmaps/wxHexEditor.png
 	rm -f $(DESTDIR)/usr/share/applications/wxHexEditor.desktop
 clean:
-	rm src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o
-	rm wxHexEditor
+	rm -f src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o
+	rm -f wxHexEditor
 	rm -rf wxHexEditor.app
 

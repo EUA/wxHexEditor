@@ -641,40 +641,30 @@ char wxHexCtrl::ReadByte( int byte_location ){
 	return static_cast<char*>(HexToBin(hx).GetData())[0];
 	}
 
+int atoh(const char hex){
+	return ( hex >= '0' and hex <= '9' ) ? hex -'0' :
+			( hex >= 'a' and hex <= 'f' ) ? hex -'a' + 10:
+			( hex >= 'A' and hex <= 'F' ) ? hex -'A' + 10:
+			-1;
+			}
+
 wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	wxMemoryBuffer memodata;
 	memodata.SetBufSize(HexValue.Length()/3+1);
-	char bfr;
+	char bfrL, bfrH;
 	for(unsigned int i=0 ; i < HexValue.Length() ; i+=2){
-		if(HexValue[i]>='0' && HexValue[i]<='9')
-			bfr = HexValue[i] - '0';
-		else if(HexValue[i]>='A' && HexValue[i]<='F')
-			bfr = HexValue[i] - 'A' + 10;
-		else if(HexValue[i]>='a' && HexValue[i]<='f')
-			bfr = HexValue[i] - 'a' + 10;
-		else if(HexValue[i] == ' '){	//Removes space char
+		if(HexValue[i] == ' '){	//Removes space char
 			i--;
 			continue;
 			}
-		else{
+		bfrH = atoh( HexValue[i] );
+		bfrL = atoh( HexValue[i+1] );
+		if( not (bfrH < 16 and bfrL < 16 and bfrH >= 0 and bfrL >= 0 )){
 			wxBell();
 			return NULL;
 			}
-
-		bfr <<= 4;
-
-		if(HexValue[i+1]>='0' && HexValue[i+1]<='9')
-			bfr |= HexValue[i+1] - '0';
-		else if(HexValue[i+1]>='A' && HexValue[i+1]<='F')
-			bfr |= HexValue[i+1] - 'A' + 10;
-		else if(HexValue[i+1]>='a' && HexValue[i+1]<='f')
-			bfr |= HexValue[i+1] - 'a'+ 10;
-		else		// There is no space char remove code here, Hex codes must be sticked together.
-			{
-			wxBell();
-			return NULL;
-			}
-		memodata.AppendByte( bfr );
+		bfrL = bfrH << 4 | bfrL;
+		memodata.AppendByte( bfrL );
 		}
 	return memodata;
 	}

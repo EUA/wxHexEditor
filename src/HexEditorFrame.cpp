@@ -52,6 +52,8 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	}
 
 HexEditorFrame::~HexEditorFrame(){
+
+    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
 	this->Disconnect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
@@ -419,6 +421,11 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 			if( MyNotebook->GetPageCount() == 0 )
 				ActionDisabler();
 			}
+	}
+void HexEditorFrame::TagHideAll( void ){
+	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+	if( MyHexEditor != NULL )
+		MyHexEditor->TagHideAll();
 	}
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){

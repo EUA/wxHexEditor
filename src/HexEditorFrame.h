@@ -44,6 +44,7 @@ class HexEditorFrame : public HexEditorGui {
 		HexEditorFrame();
 		HexEditorFrame(	wxWindow* parent, wxWindowID id = wxID_ANY );
 		~HexEditorFrame();
+		void TagHideAll();
 
 	protected:
 		void OnFileOpen( wxCommandEvent& event );

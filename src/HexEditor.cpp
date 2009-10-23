@@ -253,6 +253,9 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
 	}
 
 void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
+	#ifdef _DEBUG_ > 1
+	std::cout << "LoadFromOffset() : " << position << std::endl;
+	#endif
     myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
@@ -704,21 +707,20 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 			}
 #ifdef __WXMAC__
 		ScrollNoThread( spd );
-#if defined(_DEBUG_) && _DEBUG_ > 1
+	#if defined(_DEBUG_) && _DEBUG_ > 1
 		std::cout << "Scroll TH Speed = " << spd << std::endl;
-#endif
-
+	#endif
 #else
 		myscroll->UpdateSpeed(spd);	//MAC has problem with GuiMutex
-#if defined(_DEBUG_) && _DEBUG_ > 1
+	#if defined(_DEBUG_) && _DEBUG_ > 1
 		std::cout << "Scroll NT Speed = " << spd << std::endl;
-#endif
-
+	#endif
 #endif
 		HexEditorCtrl::OnMouseMove( event );
 		UpdateCursorLocation();
 		}
-	event.Skip(); //need for tag views
+	else
+		event.Skip(); //need for tag views
 	}
 
 void HexEditor::ScrollNoThread( int speed ){

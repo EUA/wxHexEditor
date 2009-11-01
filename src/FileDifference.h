@@ -29,6 +29,7 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 #include <wx/dynarray.h>
+#include <stdint.h>
 #ifdef WX_GCH
 #include <wx_pch.h>
 #else

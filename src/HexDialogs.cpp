@@ -223,7 +223,7 @@ ReplaceDialog::ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxStr
 	}
 
 int ReplaceDialog::OnReplace( bool internal ){
-	if(parent->select.state == parent->select.S_FALSE){
+	if(parent->select.state == parent->select.SELECT_FALSE){
 		if( OnFind( internal ) == false )
 			return 0;
 		else
@@ -234,7 +234,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 		if( m_searchtype->GetSelection() == 0 ){//text search
 			if( parent->select.size() == m_textReplace->GetValue().Len() ){
 				parent->FileAddDiff( parent->CursorOffset(), m_textReplace->GetValue().ToAscii(), m_textReplace->GetValue().Len());
-				parent->select.state = parent->select.S_FALSE;
+				parent->select.state = parent->select.SELECT_FALSE;
 				parent->Reload();
 				return 1;
 				}
@@ -247,7 +247,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_textReplace->GetValue());
 			if( parent->select.size() == mymem.GetDataLen() ){
 				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(mymem.GetData()) ,mymem.GetDataLen() );
-				parent->select.state = parent->select.S_FALSE;
+				parent->select.state = parent->select.SELECT_FALSE;
 				parent->Reload();
 				return 1;
 				}

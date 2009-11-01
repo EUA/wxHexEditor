@@ -15,6 +15,7 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-march=athlon64" />
+					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
 					<Add option="`wx-config --cflags` -march=native -mtune=native" />
 				</Compiler>
@@ -78,6 +79,24 @@
 				<Environment>
 					<Variable name="WXCONFIG" value="/Users/deathknight/Desktop/wx/release-intel/wx-config" />
 				</Environment>
+			</Target>
+			<Target title="Release Cross-Win32">
+				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="mingw32_gcc_compiler" />
+				<Option projectCompilerOptionsRelation="1" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-march=athlon64" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw32/wx-config --cflags`" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw32/wx-config --libs`" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

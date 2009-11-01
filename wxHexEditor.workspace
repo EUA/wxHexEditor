@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="wxHexEditor Workspace">
-		<Project filename="wxHexEditor.cbp" active="1" />
+		<Project filename="wxHexEditor.cbp" active="1">
+			<Depends filename="src/HexEditorCtrl/HexEditorCtrl.cbp" />
+			<Depends filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
+		</Project>
 		<Project filename="src/HexEditorCtrl/HexEditorCtrl.cbp" />
 		<Project filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
 	</Workspace>

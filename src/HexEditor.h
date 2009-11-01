@@ -21,8 +21,8 @@
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 
-#ifndef __wxHexEditor__
-#define __wxHexEditor__
+#ifndef _wxHexEditor_h_
+#define _wxHexEditor_h_
 
 #include <wx/ffile.h>
 #include <wx/clipbrd.h>

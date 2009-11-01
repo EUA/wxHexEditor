@@ -294,8 +294,8 @@ bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size,
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 	if(! event.ShiftDown() ){
-		if( select.state == xselect::S_TRUE )
-			select.state = xselect::S_END;
+		if( select.state == xselect::SELECT_TRUE )
+			select.state = xselect::SELECT_END;
 			}
     else
 		Selector();
@@ -580,7 +580,7 @@ bool HexEditor::Selector(bool mode){
 			start = end;
 			end = temp;
 			}
-		if( select.state == xselect::S_FALSE ){
+		if( select.state == xselect::SELECT_FALSE ){
 			statusbar->SetStatusText(_("Selected Block:N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
@@ -638,7 +638,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			break;
 			}
 		}
-	if( select.state ==xselect::S_END ){
+	if( select.state ==xselect::SELECT_END ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		menu.Append(wxID_COPY, _T("Copy Selection"));
 		}
@@ -799,7 +799,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 			start = end;
 			end = temp;
 			}
-		if( select.state == xselect::S_FALSE ){
+		if( select.state == xselect::SELECT_FALSE ){
 			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
@@ -838,7 +838,7 @@ void HexEditor::GotoDialog( void ){
 	}
 
 bool HexEditor::CopySelection( void ){
-	if( select.state	!= xselect::S_FALSE){
+	if( select.state	!= xselect::SELECT_FALSE){
 		uint64_t start = select.start_offset;
 		uint64_t size = select.size();
 		uint64_t RAM_limit = 10*MB;
@@ -891,7 +891,7 @@ bool HexEditor::PasteFromClipboard( void ){
 		if( ! str.IsEmpty() ){
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
-			select.state = select.S_FALSE;
+			select.state = select.SELECT_FALSE;
 			Goto( CursorOffset() + str.Len() );
 			}
 		}
@@ -902,7 +902,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			for( unsigned i=0;i<str.Len();i++ )
 				ch[i] = str[i];
 			FileAddDiff( CursorOffset(), ch, str.Len() );
-			select.state = xselect::S_FALSE;
+			select.state = xselect::SELECT_FALSE;
 			Goto( CursorOffset() + str.Len() );
 			}
 		}

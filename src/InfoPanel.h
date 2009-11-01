@@ -42,7 +42,7 @@ class InfoPanel : public InfoPanelGui{
 	:InfoPanelGui( parent, id, pos, size, style){
 		};
 
-	void Set( wxFileName flnm, int64_t lenght, wxString AccessMode, int FD ){
+	void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD ){
 		static wxMutex mutexinfo;
 		mutexinfo.Lock();
 
@@ -56,35 +56,39 @@ class InfoPanel : public InfoPanelGui{
 
 		if( S_ISREG( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("FILE"));
-		if( S_ISDIR( sbufptr->st_mode ))
+		else if( S_ISDIR( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("DIRECTORY"));
-		if( S_ISCHR( sbufptr->st_mode ))
+		else if( S_ISCHR( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("CHARACTER"));
-		if( S_ISBLK( sbufptr->st_mode ))
+		else if( S_ISBLK( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("BLOCK"));
-		if( S_ISFIFO( sbufptr->st_mode ))
+		else if( S_ISFIFO( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("FIFO"));
-		if( S_ISLNK( sbufptr->st_mode ))
+	#ifndef __WXMSW__ //Windows has no link and socket files
+		else if( S_ISLNK( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("LINK"));
-		if( S_ISSOCK( sbufptr->st_mode ))
+		else if( S_ISSOCK( sbufptr->st_mode ))
 			m_device->SetLabel(wxT("SOCKET"));
+	#endif
 
 #ifdef _DEBUG_
 		std::cout << flnm.GetPath().ToAscii() << ' ';
 		if( S_ISREG( sbufptr->st_mode ))
 			printf("regular file");
-		if( S_ISDIR( sbufptr->st_mode ))
+		else if( S_ISDIR( sbufptr->st_mode ))
 			printf("directory");
-		if( S_ISCHR( sbufptr->st_mode ))
+		else if( S_ISCHR( sbufptr->st_mode ))
 			printf("character device");
-		if( S_ISBLK( sbufptr->st_mode ))
+		else if( S_ISBLK( sbufptr->st_mode ))
 			printf("block device");
-		if( S_ISFIFO( sbufptr->st_mode ))
+		else if( S_ISFIFO( sbufptr->st_mode ))
 			printf("FIFO");
-		if( S_ISLNK( sbufptr->st_mode ))
+	#ifndef __WXMSW__
+		else if( S_ISLNK( sbufptr->st_mode ))
 			printf("symbolic link");
-		if( S_ISSOCK( sbufptr->st_mode ))
+		else if( S_ISSOCK( sbufptr->st_mode ))
 			printf("socket");
+	#endif
 		printf("\n");
 #endif
 //		S_IFMT 	0170000 	bitmask for the file type bitfields

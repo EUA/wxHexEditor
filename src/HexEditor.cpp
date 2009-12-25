@@ -705,7 +705,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#ifdef __WXMAC__
+#if defined( __WXMAC__ ) || defined ( __WXMSW__ )
 		ScrollNoThread( spd );
 	#if defined(_DEBUG_) && _DEBUG_ > 1
 		std::cout << "Scroll TH Speed = " << spd << std::endl;

@@ -388,9 +388,12 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	else{
 		if( event.GetEventObject() == hex_ctrl or
 			event.GetEventObject() == text_ctrl or
-			event.GetEventObject() == offset_ctrl )
-			if( static_cast<wxHexCtrl*>(event.GetEventObject())->GetTagByPix( event.GetPosition() ) == NULL && TAGMutex==true)
+			event.GetEventObject() == offset_ctrl ){
+			TagElement* tg = static_cast<wxHexCtrl*>(event.GetEventObject())->GetTagByPix( event.GetPosition() );
+			if( (tg == NULL and TAGMutex==true) or 	 //If there is no Tag at under and tag mutex available
+				(tg != NULL and not tg->visible) )		// or Changed to new tag
 				TagHideAll();
+			}
 		event.Skip(); //enable tags but problems with paint?
 		}
 	}

@@ -49,9 +49,7 @@ class wxHexCtrl : public wxScrolledWindow{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator);
 		~wxHexCtrl();
-		//wxChar& CharAt(int x, int y) { return m_text.GetWritableChar(x + m_Chars.x * y); }
-		//wxChar& CharAt(int x, int y) { return m_text.GetWritableChar(x + byte_per_line * y); }
-		wxChar& CharAt(int offset){ return m_text.GetWritableChar(offset); }
+		wxChar CharAt(int offset){ return m_text.GetChar(offset); }
 
 		// Operations
 virtual void SetDefaultStyle( wxTextAttr& new_attr );

@@ -65,11 +65,11 @@ class FindDialog : public FindDialogGui{
 //		void OnFindAll( wxCommandEvent& event );
 virtual void EventHandler( wxCommandEvent& event );
 		bool OnFindEvents( wxCommandEvent& event );
-		enum search_type_{ type_hex, type_text, type_text_match_case } searchtype;
+		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2, SEARCH_MATCHCASE=0x4, SEARCH_BACKWARDS=0x8, SEARCH_WRAPAROUND=0x10 } searchtype;
 	protected:
-		uint64_t FindBinary( const char *target, unsigned size, uint64_t start_from, search_type_ st=type_hex );
-		uint64_t FindText( wxString target, uint64_t start_from, search_type_ st=type_text);
-		uint64_t SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ st );
+		uint64_t FindBinary( wxMemoryBuffer target, uint64_t start_from, unsigned oper=SEARCH_HEX );
+		uint64_t FindText( wxString target, uint64_t start_from, unsigned oper=SEARCH_TEXT);
+		int SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
 
 		class HexEditor* parent;
 		FileDifference *findfile;

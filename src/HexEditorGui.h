@@ -28,6 +28,8 @@
 #include <wx/radiobox.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/combobox.h>
+#include <wx/statbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -183,21 +185,21 @@ class FindDialogGui : public wxDialog
 	
 	protected:
 		wxStaticText* m_static_search;
-		wxTextCtrl* m_textSearch;
+		wxComboBox* m_comboBoxSearch;
 		wxStaticText* m_static_replace;
-		wxTextCtrl* m_textReplace;
+		wxComboBox* m_comboBoxReplace;
 		wxButton* btnReplace;
 		wxButton* btnReplaceAll;
 		wxRadioBox* m_searchtype;
-		wxRadioBox* m_from;
+		wxCheckBox* chkMatchCase;
+		wxCheckBox* chkSearchBackwards;
+		wxCheckBox* chkWrapAround;
 		wxButton* btnFind;
 		wxButton* btnFindAll;
 		wxButton* btnFindPrev;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void EventHandler( wxCommandEvent& event ){ event.Skip(); }
-		virtual void EventHanler( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:

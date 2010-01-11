@@ -101,22 +101,24 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 	event.Skip(false);
 	}
 
-
+// TODO (death#1#):Paint 4 Find All
+// TODO (death#1#):Make ComboBox remember old values
+// TODO (death#1#):Remember options last state
 FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile, wxString title ):FindDialogGui( _parent, wxID_ANY, title){
 	parent = static_cast< HexEditor* >(_parent);
 	findfile = _findfile;
-	m_textSearch->SetFocus();
+	m_comboBoxSearch->SetFocus();
 	}
 
-// TODO (death#1#):Paint 4 Find
-// TODO (death#1#):HEX CHECK for input!
 void FindDialog::EventHandler( wxCommandEvent& event ){
-	int id = event.GetId();
-	if( id == btnFind->GetId() )
+	if( event.GetId() == btnFind->GetId() or event.GetId() == m_comboBoxSearch->GetId())
 		OnFind();
-//	else if( id == btnFindAll->GetId() )
+	else if( event.GetId() == m_searchtype->GetId()){
+		m_searchtype->GetSelection() == 1 ? chkMatchCase->Enable(false) : chkMatchCase->Enable(true) ;
+		}
+//	else if( event.GetId() == btnFindAll->GetId() )
 //		OnFindAll();
-//	else if( id == btnFindPrev->GetId() )
+//	else if( event.GetId() == btnFindPrev->GetId() )
 //		OnFindPrev();
 	else
 		wxBell();
@@ -124,98 +126,138 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 
 bool FindDialog::OnFind( bool internal ){
 	uint64_t found = -1;
-	uint64_t size = -1;
-	if( m_searchtype->GetSelection() == 0 ){//text search
-		size = m_textSearch->GetValue().Len();
-		found = FindText( m_textSearch->GetValue(),
-						m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
-						type_text );
+	uint64_t search_size = 0;
+	//prepare Operator
+	unsigned options = 0;
+	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
+	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
+	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
+	if(options & SEARCH_TEXT){
+		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
+		search_size = m_comboBoxSearch->GetValue().Len();
+		found = FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1, options );
 		}
-	else{ //hex search
-		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_textSearch->GetValue());
-		size = mymem.GetDataLen();
-		found = FindBinary( static_cast<const char*>(mymem.GetData()),mymem.GetDataLen(),
-							m_from->GetSelection() == 0 ? 0 : parent->CursorOffset()+1,
-							type_hex );
+	else{ //SEARCH_HEX
+		wxString hexval = m_comboBoxSearch->GetValue();
+
+		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+			if( !isxdigit( hexval[i] ) or hexval == ' ' ){//Not hexadecimal!
+				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!") );
+				wxBell();
+				return false;
+				}
+		//Remove all space chars and update the Search value
+		while( hexval.find(' ')!=-1)
+			hexval.Remove( hexval.find(' '),1);
+		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
+			hexval = '0'+hexval;
+		m_comboBoxSearch->SetValue(hexval);
+
+		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
+		search_size = mymem.GetDataLen();
+		found = FindBinary( mymem, parent->CursorOffset()+1, options );
 		}
+
+
 	if( found != -1 ){
 		parent->Goto( found );
-		parent->Select( found,  found+size-1 );
+		parent->Select( found,  found+search_size-1 );
 		return true;
 		}
+
 	else
 		if( !internal )
 			wxMessageBox(_("Search value not found"), _("Nothing found!") );
+	return false;
 	}
 
-uint64_t FindDialog::FindText( wxString target, uint64_t start_from, search_type_ type ){
+uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned options ){
 	if( target.IsAscii() ){
-		return FindBinary( target.ToAscii(), target.Length(), start_from, type );
+		wxMemoryBuffer textsrc;
+		textsrc.AppendData( target.ToAscii() , target.Length() );
+		return FindBinary( textsrc, start_from, options );
 		}
+	else
+		wxBell();
 // TODO (death#1#): Find in UTF?
 	}
 // TODO (death#1#): New Find as "bool FindText/Bin( &uint64_t )
-uint64_t FindDialog::FindBinary( const char *target, unsigned size, uint64_t from, search_type_ type ){
-	if(target == NULL) return -1;
-	int64_t offset=from;
+// TODO (death#1#): Implement Search_Backwards
+uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
+	if( target.GetDataLen() == 0 )
+		return -1;
+
+	uint64_t current_offset = from;
 	int search_step = parent->FileLength() < MB ? parent->FileLength() : MB ;
-	findfile->Seek( offset, wxFromStart );
-	// TODO (death#6#): insert error check message here
+	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
 	if(buffer == NULL) return -1;
 	// TODO (death#6#): insert error check message here
-	int unprocessed_bytes = 0;
 	int found = -1;
-	int readed=0;
-	do{
+	int readed = 0;
 // TODO (death#1#): Seach bar with gauge???
-		readed = findfile->Read( buffer + unprocessed_bytes, search_step - unprocessed_bytes );
-		found = SearchAtBuffer( buffer, search_step, target, size, type );
-		unprocessed_bytes = size - 1;
+	//Search step 1: From cursor to file end.
+	do{
+		findfile->Seek( current_offset, wxFromStart );
+		readed = findfile->Read( buffer , search_step );
+		found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 		if(found >= 0){
 			delete buffer;
-			return offset+found;
+			return current_offset+found;
 			}
 		else
-			offset +=readed - unprocessed_bytes;
-		memmove(buffer, buffer + search_step - unprocessed_bytes, unprocessed_bytes);// moving unprocessed buffer to begining.
-		}while(readed + unprocessed_bytes >= search_step);
+			current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
+		}while(readed >= search_step); //indicate also file end.
+
+	//Search step 2: From start to file end.
+	if( options & SEARCH_WRAPAROUND ){
+		current_offset = 0;
+		do{
+			findfile->Seek(current_offset, wxFromStart );
+			readed = findfile->Read( buffer , search_step );
+			if( readed + current_offset > from )
+				search_step = readed + current_offset - from - 1;
+			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+			if(found >= 0){
+				delete buffer;
+				return current_offset+found;
+				}
+			else
+				current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
+			}while(current_offset + readed < from); //Search until cursor
+
+		}
+
 	delete buffer;
 	return -1;
 	}
 
-// TODO (death#9#): Implement better search algorithm. (Like GPGPU one using OpenCL) :)
-uint64_t FindDialog::SearchAtBuffer( const char *bfr, int bfr_size, const char* search, int search_size, search_type_ type ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
-	switch( type ){
-		case type_hex:
-			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
-				if(! memcmp( bfr+i, search, search_size ))
-					return i;
-			break;
+// TODO (death#9#): Implement better search algorithm. (Like one using OpenCL and one using OpenMP) :)
+//WARNING! THIS FUNCTION WILL CHANGE BFR and/or SEARCH strings if SEARCH_MATCHCASE not selected as an option!
+int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned options ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
+	if( bfr_size < search_size )
+		return -1;
 
-		case type_text:
-			char *bfrx = new char [bfr_size];
-
-			for( int i = 0 ; i < bfr_size; i++)
-				bfrx[i]=tolower(bfr[i]);
-
-			char *searchx = new char [search_size];
-			for( int i = 0 ; i < search_size; i++)
-				searchx[i]=tolower(search[i]);
-
-			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
-				if(! memcmp( bfrx+i, searchx, search_size )){
-					delete bfrx;
-					delete searchx;
-					return i;
-					}
-			break;
+	if( options & SEARCH_HEX or (options & SEARCH_TEXT and options & SEARCH_MATCHCASE) ){
+		for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
+			if(! memcmp( bfr+i, search, search_size ))
+				return i;
+		}
+	else // if( options & SEARCH_TEXT ) and not ( options & SEARCH_MATCHCASE )
+		{
+		for( int i = 0 ; i < bfr_size; i++)
+			bfr[i]=tolower(bfr[i]);
+		for( int i = 0 ; i < search_size; i++)
+			search[i]=tolower(search[i]);
+		for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
+			if(! memcmp( bfr+i, search, search_size ))
+				return i;
 		}
 	return -1;
 	}
 
 ReplaceDialog::ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxString title ):FindDialog( parent, find_file, title ){
-	m_textReplace->Show();
+	m_comboBoxReplace->Show();
 	m_static_replace->Show();
 	btnReplace->Show();
 	btnReplaceAll->Show();
@@ -232,8 +274,8 @@ int ReplaceDialog::OnReplace( bool internal ){
 
 	else{
 		if( m_searchtype->GetSelection() == 0 ){//text search
-			if( parent->select.size() == m_textReplace->GetValue().Len() ){
-				parent->FileAddDiff( parent->CursorOffset(), m_textReplace->GetValue().ToAscii(), m_textReplace->GetValue().Len());
+			if( parent->select.size() == m_comboBoxReplace->GetValue().Len() ){
+				parent->FileAddDiff( parent->CursorOffset(), m_comboBoxReplace->GetValue().ToAscii(), m_comboBoxReplace->GetValue().Len());
 				parent->select.state = parent->select.SELECT_FALSE;
 				parent->Reload();
 				return 1;
@@ -244,7 +286,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				}
 			}
 		else{ //hex search
-			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_textReplace->GetValue());
+			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
 			if( parent->select.size() == mymem.GetDataLen() ){
 				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(mymem.GetData()) ,mymem.GetDataLen() );
 				parent->select.state = parent->select.SELECT_FALSE;

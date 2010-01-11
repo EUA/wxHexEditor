@@ -493,8 +493,8 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_static_search->Wrap( -1 );
 	fgSizerTop->Add( m_static_search, 0, wxALIGN_CENTER, 5 );
 	
-	m_textSearch = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_PROCESS_TAB|wxTE_RIGHT );
-	fgSizerTop->Add( m_textSearch, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	m_comboBoxSearch = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN ); 
+	fgSizerTop->Add( m_comboBoxSearch, 0, wxALL|wxEXPAND, 5 );
 	
 	m_static_replace = new wxStaticText( this, wxID_ANY, wxT("Replace: "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_static_replace->Wrap( -1 );
@@ -502,10 +502,10 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizerTop->Add( m_static_replace, 0, wxALIGN_CENTER, 5 );
 	
-	m_textReplace = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_PROCESS_TAB|wxTE_RIGHT );
-	m_textReplace->Hide();
+	m_comboBoxReplace = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN ); 
+	m_comboBoxReplace->Hide();
 	
-	fgSizerTop->Add( m_textReplace, 0, wxALIGN_CENTER|wxBOTTOM|wxEXPAND, 5 );
+	fgSizerTop->Add( m_comboBoxReplace, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizerBottom->Add( fgSizerTop, 0, wxALL|wxEXPAND, 5 );
 	
@@ -536,11 +536,24 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_searchtype->SetSelection( 0 );
 	bSizerOptions->Add( m_searchtype, 1, wxALL, 3 );
 	
-	wxString m_fromChoices[] = { wxT("Beginning"), wxT("Cursor") };
-	int m_fromNChoices = sizeof( m_fromChoices ) / sizeof( wxString );
-	m_from = new wxRadioBox( this, wxID_ANY, wxT("Search from"), wxDefaultPosition, wxDefaultSize, m_fromNChoices, m_fromChoices, 1, wxRA_SPECIFY_COLS );
-	m_from->SetSelection( 1 );
-	bSizerOptions->Add( m_from, 1, wxALL, 3 );
+	wxStaticBoxSizer* sbSizerSearchOptions;
+	sbSizerSearchOptions = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Options") ), wxVERTICAL );
+	
+	chkMatchCase = new wxCheckBox( this, wxID_ANY, wxT("Match Case"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	sbSizerSearchOptions->Add( chkMatchCase, 0, wxALL, 5 );
+	
+	chkSearchBackwards = new wxCheckBox( this, wxID_ANY, wxT("Search backwards"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	chkSearchBackwards->Enable( false );
+	
+	sbSizerSearchOptions->Add( chkSearchBackwards, 0, wxALL, 5 );
+	
+	chkWrapAround = new wxCheckBox( this, wxID_ANY, wxT("Wrap around"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	sbSizerSearchOptions->Add( chkWrapAround, 0, wxALL, 5 );
+	
+	bSizerOptions->Add( sbSizerSearchOptions, 1, wxEXPAND, 5 );
 	
 	fgSizerLeft->Add( bSizerOptions, 0, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 2 );
 	
@@ -570,21 +583,23 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerMain->Fit( this );
 	
 	// Connect Events
-	m_textSearch->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::OnGo ), NULL, this );
+	m_comboBoxSearch->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnReplace->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnReplaceAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
+	m_searchtype->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnFind->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
-	btnFindAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHanler ), NULL, this );
+	btnFindAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnFindPrev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 }
 
 FindDialogGui::~FindDialogGui()
 {
 	// Disconnect Events
-	m_textSearch->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::OnGo ), NULL, this );
+	m_comboBoxSearch->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnReplace->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnReplaceAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
+	m_searchtype->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnFind->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
-	btnFindAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHanler ), NULL, this );
+	btnFindAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnFindPrev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 }

@@ -767,49 +767,58 @@ void HexEditor::UpdateCursorLocation( bool force ){
 //		if( lastPoint == CursorOffset() )
 //			return;
 //	lastPoint = CursorOffset();
-
-	update.Lock();
-	if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ){
-		SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
-		}
-
-	if( interpreter != NULL ){
-		myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
-		char *bfr = new char [8];
-		int size=myfile->Read( bfr, 8);
-		interpreter->Set( bfr, size);
-		delete bfr;
-		}
-#if wxUSE_STATUSBAR
-	if( statusbar != NULL ){
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
-		if( offset_ctrl->hex_offset )
-			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%llX"), CursorOffset() ), 1);
-		else
-			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %lld"), CursorOffset() ), 1);
-		uint8_t ch;
-		myfile->Seek( CursorOffset() );
-		myfile->Read( reinterpret_cast<char*>(&ch), 1);
-		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
-
-		int start = select.start_offset;
-		int end = select.end_offset;
-		if(start > end ){
-			int temp = start;
-			start = end;
-			end = temp;
+#if defined(_DEBUG_) && _DEBUG_ > 0
+	std::cout << "mutex Update Locking..." << std::endl;
+#endif
+	if( update.TryLock()==wxMUTEX_NO_ERROR ){
+		if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ){
+			SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
 			}
-		if( select.state == xselect::SELECT_FALSE ){
-			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
-			statusbar->SetStatusText(_("Block Size: N/A") ,4);
+
+		if( interpreter != NULL ){
+			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
+			char *bfr = new char [8];
+			int size=myfile->Read( bfr, 8);
+			interpreter->Set( bfr, size);
+			delete bfr;
 			}
-		else{
-			statusbar->SetStatusText(wxString::Format(_("Selected Block: %d -> %d"),start,end), 3);
-			statusbar->SetStatusText(wxString::Format(_("Block Size: %d"), abs(start-end)+1), 4);
+	#if wxUSE_STATUSBAR
+		if( statusbar != NULL ){
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
+			if( offset_ctrl->hex_offset )
+				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%llX"), CursorOffset() ), 1);
+			else
+				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %lld"), CursorOffset() ), 1);
+			uint8_t ch;
+			myfile->Seek( CursorOffset() );
+			myfile->Read( reinterpret_cast<char*>(&ch), 1);
+			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
+
+			int start = select.start_offset;
+			int end = select.end_offset;
+			if(start > end ){
+				int temp = start;
+				start = end;
+				end = temp;
+				}
+			if( select.state == xselect::SELECT_FALSE ){
+				statusbar->SetStatusText(_("Selected Block: N/A"), 3);
+				statusbar->SetStatusText(_("Block Size: N/A") ,4);
+				}
+			else{
+				statusbar->SetStatusText(wxString::Format(_("Selected Block: %d -> %d"),start,end), 3);
+				statusbar->SetStatusText(wxString::Format(_("Block Size: %d"), abs(start-end)+1), 4);
+				}
 			}
+	#endif // wxUSE_STATUSBAR
+	#if defined(_DEBUG_) && _DEBUG_ > 0
+		std::cout << "mutex Update UnLocking..." << std::endl;
+	#endif
+		update.Unlock();
 		}
-#endif // wxUSE_STATUSBAR
-	update.Unlock();
+	else
+		std::cout << "mutex update cannot lock..." << std::endl;
+
 	}
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){

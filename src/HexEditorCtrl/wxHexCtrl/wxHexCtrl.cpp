@@ -26,7 +26,7 @@
 BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
 	EVT_SIZE( wxHexCtrl::OnResize )
-    EVT_PAINT(wxHexCtrl::OnPaint )
+    EVT_PAINT( wxHexCtrl::OnPaint )
     EVT_LEFT_DOWN( wxHexCtrl::OnMouseLeft )
     EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
     //EVT_MOUSE( wxHexCtrl::OnResize)
@@ -357,52 +357,8 @@ void wxHexCtrl::DoMoveCaret(){
 		caret->Move(m_Margin.x + m_Caret.x * m_CharSize.x,
                     m_Margin.x + m_Caret.y * m_CharSize.y);
 }
-
-void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
-    wxCaretSuspend cs(this);
-
-	if(1){	//Hand made buffer code - check performance with alternative
-		wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
-		wxMemoryDC dcTemp;
-		dcTemp.SelectObject(bmp);
-		dcTemp.SetFont( HexDefaultAttr.GetFont() );
-		dcTemp.SetTextForeground( HexDefaultAttr.GetTextColour() );
-		dcTemp.SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
-		wxBrush dbrush( HexDefaultAttr.GetBackgroundColour() );
-		dcTemp.SetBackground(dbrush );
-		dcTemp.Clear();
-
-		wxString line;
-		unsigned int z = 0;
-		for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
-			line.Empty();
-			for ( int x = 0 ; x < m_Window.x; x++ ){
-				if( IsDenied(x)){
-					line += wxT(' ');
-					continue;
-					}
-				if(z > m_text.Length())
-					break;
-				wxChar ch = CharAt(z++);
-				line += ch;
-				}
-			dcTemp.DrawText( line, m_Margin.x, m_Margin.x + y * m_CharSize.y );
-			}
-
-		int TAC = TagArray.Count();
-		if( TAC != 0 ){
-			TagElement *TAX;
-			for(int i = 0 ; i < TAC ; i++){
-				TAX = TagArray.Item(i);
-				TagPainter( dcTemp, *TAX );
-				}
-			}
-		if(select.selected)
-			TagPainter( dcTemp, select );
-		wxPaintDC dc( this );
-		PrepareDC( dc );
-		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), &dcTemp, 0, 0, wxCOPY);
-		}
+inline wxMemoryDC* wxHexCtrl::CreateDC(){
+	wxCaretSuspend cs(this);
 /*
 	if(0){	//Alternate code
 		wxBufferedPaintDC bdc(this);
@@ -432,17 +388,77 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 		}
 
 */
+	if(1){	//Hand made buffer code - check performance with alternative
+		wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
+		wxMemoryDC *dcTemp = new wxMemoryDC();
+		dcTemp->SelectObject(bmp);
+		dcTemp->SetFont( HexDefaultAttr.GetFont() );
+		dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
+		dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
+		wxBrush dbrush( HexDefaultAttr.GetBackgroundColour() );
+		dcTemp->SetBackground(dbrush );
+		dcTemp->Clear();
+
+		wxString line;
+		unsigned int z = 0;
+		for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
+			line.Empty();
+			for ( int x = 0 ; x < m_Window.x; x++ ){
+				if( IsDenied(x)){
+					line += wxT(' ');
+					continue;
+					}
+				if(z > m_text.Length())
+					break;
+				wxChar ch = CharAt(z++);
+				line += ch;
+				}
+			dcTemp->DrawText( line, m_Margin.x, m_Margin.x + y * m_CharSize.y );
+			}
+
+		int TAC = TagArray.Count();
+		if( TAC != 0 ){
+			TagElement *TAX;
+			for(int i = 0 ; i < TAC ; i++){
+				TAX = TagArray.Item(i);
+				TagPainter( dcTemp, *TAX );
+				}
+			}
+		if(select.selected)
+			TagPainter( dcTemp, select );
+		return dcTemp;
+		}
+	return NULL;
+}
+void wxHexCtrl::RePaint( void ){
+	wxMemoryDC* dcTemp = CreateDC();
+	if( dcTemp != NULL ){
+		wxClientDC dc( this );
+		PrepareDC( dc );
+		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+		delete dcTemp;
+		}
 	}
-void wxHexCtrl::TagPainter( wxMemoryDC& DC, TagElement& TG ){
+
+void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
+	wxMemoryDC* dcTemp = CreateDC();
+	if( dcTemp != NULL ){
+		wxPaintDC dc( this );
+		PrepareDC( dc );
+		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+		delete dcTemp;
+		}
+	}
+void wxHexCtrl::TagPainter( wxMemoryDC* DC, TagElement& TG ){
 	{	//Selection Painter
-		DC.SetFont( HexDefaultAttr.GetFont() );
-		DC.SetTextForeground( TG.FontClrData.GetColour() );
-		DC.SetTextBackground( TG.NoteClrData.GetColour() );
+		DC->SetFont( HexDefaultAttr.GetFont() );
+		DC->SetTextForeground( TG.FontClrData.GetColour() );
+		DC->SetTextBackground( TG.NoteClrData.GetColour() );
 		wxBrush sbrush( TG.NoteClrData.GetColour() );
-		DC.SetBackground( sbrush );
-		DC.SetBackgroundMode( wxSOLID ); // overwrite old value
-		m_CharSize.y = DC.GetCharHeight();
-		m_CharSize.x = DC.GetCharWidth();
+		DC->SetBackground( sbrush );
+		DC->SetBackgroundMode( wxSOLID ); // overwrite old value
+		m_CharSize.y = DC->GetCharHeight();
+		m_CharSize.x = DC->GetCharWidth();
 
 		int start = TG.start;
 		int end = TG.end;
@@ -474,7 +490,7 @@ void wxHexCtrl::TagPainter( wxMemoryDC& DC, TagElement& TG ){
 				wxChar ch = CharAt(start++);
 				line += ch;
 				}
-			DC.DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
+			DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								   m_Margin.x + _temp_.y * m_CharSize.y );
 			}
 		}

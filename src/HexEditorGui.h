@@ -24,6 +24,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/panel.h>
+#include <wx/listbox.h>
 #include <wx/radiobut.h>
 #include <wx/radiobox.h>
 #include <wx/button.h>
@@ -125,6 +126,22 @@ class InterpreterGui : public wxPanel
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+/// Class TagPanelGui
+///////////////////////////////////////////////////////////////////////////////
+class TagPanelGui : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxListBox* listTag;
+	
+	public:
+		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		~TagPanelGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
 /// Class InfoPanelGui
 ///////////////////////////////////////////////////////////////////////////////
 class InfoPanelGui : public wxPanel 
@@ -196,7 +213,6 @@ class FindDialogGui : public wxDialog
 		wxCheckBox* chkWrapAround;
 		wxButton* btnFind;
 		wxButton* btnFindAll;
-		wxButton* btnFindPrev;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ){ event.Skip(); }

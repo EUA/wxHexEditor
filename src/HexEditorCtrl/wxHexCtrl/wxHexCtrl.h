@@ -113,11 +113,9 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		struct selector: public TagElement{		//select
 			bool selected;		//select available variable
 			} select;
-virtual void TagPainter( wxMemoryDC& DC, TagElement& TG );
-		void RePaint(){
-			wxPaintEvent painter;
-			OnPaint( painter );
-			}
+virtual void TagPainter( wxMemoryDC* DC, TagElement& TG );
+		void RePaint( void );
+		wxMemoryDC* CreateDC( void );
 		void OnTagHideAll( void );
 		bool *TagMutex;
 

@@ -243,18 +243,21 @@ void HexEditor::UpdateOffsetScroll( void ){
 		offset_scroll->SetScrollbar(page_offset / ByteCapacity(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
 		}
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
-    LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
-    UpdateCursorLocation();
-#if wxUSE_STATUSBAR
-	if( statusbar != NULL )
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
-#endif
-    wxYieldIfNeeded();
+	std::cout << event.GetEventType() << std::endl;
+	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)){
+		LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
+		UpdateCursorLocation();
+	#if wxUSE_STATUSBAR
+		if( statusbar != NULL )
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
+	#endif
+		wxYieldIfNeeded();
+		}
 	}
 
 void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
-	#ifdef _DEBUG_ > 1
-	std::cout << "LoadFromOffset() : " << position << std::endl;
+	#ifdef _DEBUG_
+		std::cout << "LoadFromOffset() : " << position << std::endl;
 	#endif
     myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
@@ -624,10 +627,10 @@ void HexEditor::OnMouseRight( wxMouseEvent& event ){
 
 void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	wxMenu menu;
-	unsigned TagPosition;
+	unsigned TagPosition=0;
 	if( event.GetEventObject() == hex_ctrl )
 		TagPosition = page_offset + (hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) / 2);
-	if( event.GetEventObject() == text_ctrl )
+	else if( event.GetEventObject() == text_ctrl )
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
 	TagElement *TAG;

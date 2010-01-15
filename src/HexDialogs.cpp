@@ -147,11 +147,11 @@ bool FindDialog::OnFind( bool internal ){
 				return false;
 				}
 		//Remove all space chars and update the Search value
-		while( hexval.find(' ')!=-1)
+		while( hexval.find(' ') != -1 )
 			hexval.Remove( hexval.find(' '),1);
 		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
-			hexval = '0'+hexval;
-		m_comboBoxSearch->SetValue(hexval);
+			hexval = wxChar('0')+hexval;
+		m_comboBoxSearch->SetValue(hexval.Upper());
 
 		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
 		search_size = mymem.GetDataLen();

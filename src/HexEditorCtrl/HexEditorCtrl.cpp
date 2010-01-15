@@ -121,7 +121,7 @@ void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 
 void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 	wxMenu menu;
-	unsigned TagPosition;
+	unsigned TagPosition=0;
 	if( event.GetEventObject() == hex_ctrl )
 		TagPosition = page_offset + (hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) / 2);
 	if( event.GetEventObject() == text_ctrl )
@@ -370,7 +370,7 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	if(event.m_leftDown){
-		int new_location;
+		int new_location=0;
 		if( event.GetEventObject() == hex_ctrl )
 			new_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 		else if ( FindFocus() == text_ctrl )

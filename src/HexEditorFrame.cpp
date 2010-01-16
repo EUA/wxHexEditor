@@ -173,11 +173,11 @@ void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
 											wxFD_FILE_MUST_EXIST|wxFD_OPEN,
 											wxDefaultPosition);
 	if(wxID_OK == filediag->ShowModal()){
-		wxFileName myname(filediag->GetPath());
+		wxFileName flname(filediag->GetPath());
 
 		HexEditor *x = new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel );
-		if(x->FileOpen( myname )){
-			MyNotebook->AddPage( x, myname.GetFullName(), true );
+		if(x->FileOpen( flname )){
+			MyNotebook->AddPage( x, flname.GetFullName(), true );
 			ActionEnabler();
 			}
 		else

@@ -275,6 +275,10 @@ void HexEditor::Reload( void ){
 	}
 
 void HexEditor::OnResize( wxSizeEvent &event){
+	std::cout << "HexEditor::OnResize() Event Type:" << event.GetEventType() << std::endl ;
+	#ifdef _DEBUG_
+		std::cout << "ByteCapacity() Before:" << ByteCapacity() << std::endl;
+	#endif
 	HexEditorCtrl::OnResize( event );
 	//event.Skip( true );
 	if(myfile != NULL && 0 < ByteCapacity()){
@@ -693,7 +697,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#if defined(_DEBUG_) && _DEBUG_ > 2
 	std::cout << "HexEditor::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
 #endif
@@ -710,12 +714,12 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 			}
 #if defined( __WXMAC__ ) || defined ( __WXMSW__ )
 		ScrollNoThread( spd );
-	#if defined(_DEBUG_) && _DEBUG_ > 1
+	#if defined(_DEBUG_) && _DEBUG_ > 2
 		std::cout << "Scroll TH Speed = " << spd << std::endl;
 	#endif
 #else
 		myscroll->UpdateSpeed(spd);	//MAC has problem with GuiMutex
-	#if defined(_DEBUG_) && _DEBUG_ > 1
+	#if defined(_DEBUG_) && _DEBUG_ > 2
 		std::cout << "Scroll NT Speed = " << spd << std::endl;
 	#endif
 #endif
@@ -731,7 +735,7 @@ void HexEditor::ScrollNoThread( int speed ){
 			and ( ((speed > 0) and (page_offset + ByteCapacity() < FileLength()))
 				or ( (speed < 0) and (page_offset > 0) ))
 			){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#if defined(_DEBUG_) && _DEBUG_ > 2
 		std::cout << "Loop Scroll speed  :" << speed << std::endl;
 		std::cout << "Loop Pending Event :" << wxTheApp->Pending() << std::endl;
 #endif

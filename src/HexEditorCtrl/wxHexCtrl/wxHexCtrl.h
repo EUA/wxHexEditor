@@ -130,19 +130,21 @@ virtual void OnMouseRight( wxMouseEvent& event );
 virtual void OnMouseMove( wxMouseEvent& event );
 		void OnFocus( wxFocusEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
-		void OnResize( wxSizeEvent &event );
 		void OnTagSelection( wxCommandEvent &event );
 		void OnTagEdit( wxCommandEvent &event );
 		void ShowContextMenu( wxPoint pos );
 		DECLARE_EVENT_TABLE();
 
 		void OnTestCall(void); // 4 Test
+	public:
 		void ChangeSize();	// update the geometry
+	protected:
 		wxPoint   m_Margin;	// the margin around the text (looks nicer)
 		wxPoint   m_Caret;	// position (in text coords) of the caret
-		wxPoint	  m_Window;	// the size (in text coords) of the window
+		wxPoint   m_Window;	// the size (in text coords) of the window
 		wxString  m_text;
 		wxTextAttr HexDefaultAttr;
+		wxMutex MutexResize;
 		//wxTextAttr HexSelectAttr;
 
 		wxSize  m_CharSize;	// size (in pixels) of one character

@@ -25,7 +25,7 @@
 
 BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
-	EVT_SIZE( wxHexCtrl::OnResize )
+	EVT_SIZE( wxHexCtrl::OnSize )
     EVT_PAINT( wxHexCtrl::OnPaint )
     EVT_LEFT_DOWN( wxHexCtrl::OnMouseLeft )
     EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
@@ -79,11 +79,14 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 
     ClearSelection( false );
     SetDefaultStyle( HexDefaultAttr );
+
     m_Caret.x = m_Caret.y =
     m_Window.x = m_Window.y = 1;
     m_Margin.x = m_Margin.y = 0;
 	LastRightClickPosition = wxPoint(0,0);
     select.selected = false;
+
+    MutexResize.Unlock();
     CreateCaret();
 
   //  ChangeSize();
@@ -704,13 +707,16 @@ void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 //		}
 	}
 
-void wxHexCtrl::OnResize( wxSizeEvent &event ){
+void wxHexCtrl::OnSize( wxSizeEvent &event ){
+#ifdef _DEBUG_
+		std::cout << "wxHexCtrl::OnSize X,Y" << event.GetSize().GetX() <<',' << event.GetSize().GetY() << std::endl;
+#endif
 	ChangeSize();
     event.Skip();
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#if defined(_DEBUG_) && _DEBUG_ > 2
 	std::cout << "wxHexCtrl::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLMR mouse button:" << event.m_leftDown << event.m_middleDown << event.m_rightDown << std::endl;
 #endif

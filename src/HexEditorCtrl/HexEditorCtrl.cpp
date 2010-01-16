@@ -297,15 +297,14 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
 
 #if defined(_DEBUG_) && _DEBUG_ > 1
-	std::cout<< "HexEditorCtrl SizeEvent Size(X,Y)=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
+	std::cout<< "HexEditorCtrl::OnResize()" << std::endl
+			<< "HexEditorCtrl SizeEvent ReSize Command=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
 			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
 			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
 			<< "Hex Ctrl: \t(" << hex_x << ',' << event.GetSize().GetY() << ")\n"
 			<< "Text Ctrl: \t(" << text_x << ',' << event.GetSize().GetY() << ")\n"
 			<< "Hex Char: " << charx << std::endl;
-
 #endif
-
 	wxString adress,byteview;
 	for( int j = 0 ; j < i ; j++ ){
 		adress << wxString::Format( wxT("%02X "), j );
@@ -316,13 +315,13 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
  	m_static_byteview->SetLabel( byteview );
 
 	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
-	offset_ctrl->SetSize( wxSize( offset_x , y ) );
+//	offset_ctrl->SetSize( wxSize( offset_x , y ) ); //Not needed, Layout() Makes the job well.
 
 	hex_ctrl->SetMinSize( wxSize(hex_x, y ));
-	hex_ctrl->SetSize( wxSize( hex_x, y ));
+//	hex_ctrl->SetSize( wxSize( hex_x, y ));
 
 	text_ctrl->SetMinSize( wxSize( text_x, y ));
-	text_ctrl->SetSize( wxSize( text_x, y ));
+//	text_ctrl->SetSize( wxSize( text_x, y ));
 
 	m_static_offset->SetMinSize( wxSize(offset_x, m_static_offset->GetSize().GetY()) );
 	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
@@ -337,18 +336,27 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 0 );
+
 	this->SetSizer( fgSizer1 );
 	this->Layout();
+
+#ifdef __WXMSW__
+///At windows, OnResize cannot update required things immeditialy, this hack fixes this behaviour.
+	hex_ctrl->ChangeSize();
+	text_ctrl->ChangeSize();
+	offset_ctrl->ChangeSize();
+#endif
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
 
 #if defined(_DEBUG_) && _DEBUG_ > 1
-	std::cout<< "HexEditorCtrl After Size(X,Y)=(" << x << ',' << y << ")\n"
+	std::cout<< "HexEditorCtrl After ReSize=(" << x << ',' << y << ")\n"
 			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << offset_scroll->GetSize().GetY()<<")\n"
 			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << offset_ctrl->GetSize().GetY()<<")\n"
 			<< "Hex Ctrl: \t(" << hex_ctrl->GetSize().GetX() << ',' << hex_ctrl->GetSize().GetY()<<")\n"
 			<< "Text Ctrl: \t(" << text_ctrl->GetSize().GetX() << ',' << text_ctrl->GetSize().GetY()<<")\n";
 #endif
-    }
+}
+
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	select.state = xselect::SELECT_FALSE;

@@ -48,7 +48,7 @@ bool wxHexEditorApp::OnInit()
     return true;
 }
 int wxHexEditorApp::FilterEvent(wxEvent &event){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#if defined(_DEBUG_) && _DEBUG_ > 2
 	if( event.IsKindOf(CLASSINFO(wxMouseEvent)) )
 //		if( static_cast<wxMouseEvent*>(&event)->Moving() )
 //			std::cout << "Got Mouse Moving Event! " <<  std::endl;

@@ -774,7 +774,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 //		if( lastPoint == CursorOffset() )
 //			return;
 //	lastPoint = CursorOffset();
-#if defined(_DEBUG_) && _DEBUG_ > 0
+#if defined(_DEBUG_) && _DEBUG_ > 2
 	std::cout << "mutex Update Locking..." << std::endl;
 #endif
 	if( update.TryLock()==wxMUTEX_NO_ERROR ){
@@ -818,7 +818,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 				}
 			}
 	#endif // wxUSE_STATUSBAR
-	#if defined(_DEBUG_) && _DEBUG_ > 0
+	#if defined(_DEBUG_) && _DEBUG_ > 2
 		std::cout << "mutex Update UnLocking..." << std::endl;
 	#endif
 		update.Unlock();

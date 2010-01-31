@@ -44,9 +44,10 @@ class TagElement{
 		void Show( const wxPoint& pos, wxWindow *parent );
 		void Hide( void );
 		bool isCover( uint64_t );
+		void print(void);
 #ifndef __WXMAC__
 		wxPopupWindow *wxP;
-#endif	//wxPopupWindows is not implemented in MacOSX
+#endif	//wxPopupWindows is not yet implemented in MacOSX
 	};
 
 class TagDialog : public TagDialogGui{

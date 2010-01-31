@@ -90,6 +90,10 @@ bool TagElement::isCover( uint64_t position ){
 		return false;
 	}
 
+void TagElement::print( void ){
+	std::cout << "TAD start:" << start << " end: "<< end << " Tag:" << tag.ToAscii() << std::endl;
+	}
+
 //----------TAG DIALOG-----------//
 TagDialog::TagDialog(TagElement& TagE, wxWindow* parent):TagDialogGui( parent ),Tag(TagE){
 	TmpTag = Tag;

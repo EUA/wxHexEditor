@@ -500,14 +500,22 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 						std::cout << "TAG ID:" << propvalue.ToAscii() << " readed.\n";
 	#endif
 						TagElement *tmp = new TagElement();
-						long long unsigned xxl;
+						long long unsigned xxl=0;
 						for( wxXmlNode *element = child->GetChildren() ; element != NULL ; element = element->GetNext() ){
 							if (element->GetName() == wxT("start_offset")){
-								element->GetNodeContent().ToULongLong( &xxl, 10 );;
+							#ifdef __WXMSW__	//I don't knwo why but ToULongLong dowen't work on windows by mingw.
+								xxl = atoll( element->GetNodeContent().ToAscii() );
+							#else
+								element->GetNodeContent().ToULongLong( &xxl, 10 );
+							#endif
 								tmp->start = xxl;
 								}
 							else if (element->GetName() == wxT("end_offset")){
-								element->GetNodeContent().ToULongLong( &xxl, 10 );;
+							#ifdef __WXMSW__
+								xxl = atoll( element->GetNodeContent().ToAscii() );
+							#else
+								element->GetNodeContent().ToULongLong( &xxl, 10 );
+							#endif
 								tmp->end = xxl;
 								}
 							else if (element->GetName() == wxT("tag_text"))
@@ -517,6 +525,9 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 							else if (element->GetName() == wxT("note_colour"))
 								tmp->NoteClrData.SetColour( wxColour(element->GetNodeContent()) );
 							}
+					#ifdef _DEBUG_
+						tmp->print();
+					#endif
 						MainTagArray.Add(tmp);
 						}
 					child = child->GetNext();

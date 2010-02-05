@@ -78,6 +78,8 @@ void TagElement::Hide( void ){
 		visible=false;
 #ifndef __WXMAC__
 		wxP->Hide();
+		wxP->Destroy();
+
 #endif
 		}
 	}

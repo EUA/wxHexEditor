@@ -79,7 +79,6 @@ void TagElement::Hide( void ){
 #ifndef __WXMAC__
 		wxP->Hide();
 		wxP->Destroy();
-
 #endif
 		}
 	}

@@ -860,17 +860,21 @@ bool HexEditor::CopySelection( void ){
 		uint64_t RAM_limit = 10*MB;
 		if(size < RAM_limit){								//copy to clipboard if < 10 MB
 			myfile->Seek( start, wxFromStart );
-			if(copy_mark->allocate_buffer(size)){
-				myfile->Read( copy_mark->buffer , size );
+			void* buff=NULL;
+			buff = copy_mark->m_buffer.GetWriteBuf( size );
+			if( buff != NULL ){
+				myfile->Read( static_cast< char*>( buff ), size );
+				copy_mark->m_buffer.UngetWriteBuf( size );
 				wxString CopyString;
 				if( hex_ctrl == FindFocus() ){
 					for( unsigned i=0 ; i<size ; i++ )
-						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->buffer[i]));
+						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->m_buffer[i]));
 					CopyString.Trim();	//remove last ' '
 					}
-				else
-					CopyString << wxString::FromAscii( copy_mark->buffer );
-
+				else{
+					copy_mark->m_buffer.AppendByte('\0');
+					CopyString << wxString::FromAscii( static_cast<const char*>(copy_mark->m_buffer.GetData()) );
+					}
 				return copy_mark->SetClipboardData( CopyString );
 				}
 			else{
@@ -883,10 +887,13 @@ bool HexEditor::CopySelection( void ){
 							"Copying above 10 MB to clipboard is not allowed.\n"\
 							"Only internal copy buffer used!"),
 							_("Info"), wxOK|wxICON_INFORMATION);
-			copy_mark->buffer = new char[size];
-			if(copy_mark->buffer){
+
+			void* buff=NULL;
+			buff = copy_mark->m_buffer.GetWriteBuf( size );
+			if( buff != NULL ){
 				myfile->Seek( start , wxFromStart );
-				myfile->Read( copy_mark->buffer, size);
+				myfile->Read( static_cast<char*>(buff), size);
+				copy_mark->m_buffer.UngetWriteBuf( size );
 				return true;
 				}
 			else{

@@ -119,21 +119,16 @@ class copy_maker{
 			bool copied;		//copy in action or not
 			int64_t start;		//copy start position
 			int64_t size;		//size of copy
-			char* buffer;		//uses RAM, for small data
-			wxMemoryBuffer m_buffer;
+			wxMemoryBuffer m_buffer; //uses RAM, for small data
 			//wxFile *tempfile;	//uses Temp HDD File and delete after.
 			FileDifference *sourcefile;	//uses HDD File and NOT delete after.
 			copy_maker( ){
 				copied = false;
 				start = size = 0;
-				buffer = NULL;
 			//	tempfile = NULL;
 				sourcefile = NULL;
-				//test();
 				}
-			~copy_maker(){
-				if(buffer != NULL)
-				   delete buffer;
+			~copy_maker( ){
 				//if(tempfile != NULL)
 				//if(sourcefile != NULL)
 				}
@@ -176,14 +171,6 @@ class copy_maker{
 					return wxString();
 					}
 				}
-
-			bool allocate_buffer(int buffer_size){
-				delete buffer;
-				buffer = new char[buffer_size];
-				size = buffer_size;
-				return buffer;
-				}
-
 		};
 
 class scrollthread:wxThreadHelper{

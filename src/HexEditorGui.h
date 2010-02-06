@@ -80,6 +80,7 @@ class HexEditorGui : public wxFrame
 		virtual void OnEditReplace( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnEditGoto( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnUpdateUI( wxUpdateUIEvent& event ){ event.Skip(); }
 		virtual void OnOptionsFileMode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		

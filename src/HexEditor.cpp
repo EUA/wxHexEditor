@@ -576,28 +576,8 @@ void HexEditor::SetLocalHexInsertionPoint( int hex_location ){
 	UpdateCursorLocation();
 	}
 
-bool HexEditor::Selector(bool mode){
-	bool temp = HexEditorCtrl::Selector();
-#if wxUSE_STATUSBAR
-    if ( statusbar ){
-		int start = select.start_offset;
-		int end = select.end_offset;
-		if(start > end ){
-			int temp = start;
-			start = end;
-			end = temp;
-			}
-		if( select.state == xselect::SELECT_FALSE ){
-			statusbar->SetStatusText(_("Selected Block:N/A"), 3);
-			statusbar->SetStatusText(_("Block Size: N/A") ,4);
-			}
-		else{
-			statusbar->SetStatusText(wxString::Format(_("Selected Block: %d -> %d"),start,end), 3);
-			statusbar->SetStatusText(wxString::Format(_("Block Size: %d"), abs(start-end)+1), 4);
-			}
-		}
-#endif // wxUSE_STATUSBAR
-	return temp;
+bool HexEditor::Selector(){
+	return HexEditorCtrl::Selector();
 	}
 
 void HexEditor::OnMouseLeft(wxMouseEvent& event){
@@ -724,7 +704,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 		std::cout << "Scroll NT Speed = " << spd << std::endl;
 	#endif
 #endif
-		HexEditorCtrl::OnMouseMove( event );
+		HexEditorCtrl::OnMouseMove( event );//Also makes selection in it
 		UpdateCursorLocation();
 		}
 	else
@@ -832,6 +812,14 @@ void HexEditor::UpdateCursorLocation( bool force ){
 void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
 	SaveTAGS( myfile->GetFileName() );
+
+	std::cout << "Send UpdateUI Event" << std::endl;
+	wxUpdateUIEvent xevent;
+	xevent.SetEventObject( this );
+	xevent.SetId( 1005 );//idFileRO
+//	xevent.ResumePropagation( 10 );
+//		event.SetEventType( EVT_UPDATE_UI );
+	GetEventHandler()->ProcessEvent( xevent );
 	}
 
 void HexEditor::FindDialog( void ){

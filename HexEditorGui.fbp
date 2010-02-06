@@ -70,7 +70,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxMenuBar" expanded="0">
+            <object class="wxMenuBar" expanded="1">
                 <property name="bg"></property>
                 <property name="context_help"></property>
                 <property name="enabled">1</property>
@@ -345,7 +345,7 @@
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnViewMenu</event>
-                        <event name="OnUpdateUI"></event>
+                        <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
@@ -360,7 +360,7 @@
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnViewMenu</event>
-                        <event name="OnUpdateUI"></event>
+                        <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
@@ -375,7 +375,7 @@
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnViewMenu</event>
-                        <event name="OnUpdateUI"></event>
+                        <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                 </object>
                 <object class="wxMenu" expanded="1">
@@ -399,7 +399,7 @@
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
                             <event name="OnMenuSelection">OnOptionsFileMode</event>
-                            <event name="OnUpdateUI"></event>
+                            <event name="OnUpdateUI">OnUpdateUI</event>
                         </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
@@ -414,7 +414,7 @@
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
                             <event name="OnMenuSelection">OnOptionsFileMode</event>
-                            <event name="OnUpdateUI"></event>
+                            <event name="OnUpdateUI">OnUpdateUI</event>
                         </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
@@ -429,7 +429,7 @@
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
                             <event name="OnMenuSelection">OnOptionsFileMode</event>
-                            <event name="OnUpdateUI"></event>
+                            <event name="OnUpdateUI">OnUpdateUI</event>
                         </object>
                     </object>
                     <object class="wxMenuItem" expanded="1">

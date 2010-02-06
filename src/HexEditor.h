@@ -82,7 +82,7 @@ class HexEditor: public HexEditorCtrl {
 
 protected:
 		void SetLocalHexInsertionPoint( int hex_location );
-		bool Selector( bool=true );
+		bool Selector();
 		void UpdateCursorLocation( bool force=false );
 		void UpdateOffsetScroll( void );
 		void OnKeyboardChar(wxKeyEvent& event);
@@ -162,7 +162,8 @@ class copy_maker{
 						return data.GetText();
 						}
 					else{
-						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+						wxBell();
+						wxTheClipboard->Close();
 						return wxString();
 						}
 					}

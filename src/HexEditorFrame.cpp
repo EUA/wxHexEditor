@@ -44,9 +44,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	MyAUI->Update();
 
     this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
-	this->Connect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	this->Connect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	this->Connect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 	}
@@ -54,9 +51,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 HexEditorFrame::~HexEditorFrame(){
 
     this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
-	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ),NULL,this);
-	this->Disconnect( idGotoOffset, wxCommandEventHandler(  HexEditorFrame::OnEditGoto ),NULL,this);
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 	}
@@ -161,7 +155,6 @@ void HexEditorFrame::ActionDisabler( void ){
 		}
 	MyInterpreter->Clear();
 	MyInterpreter->Disable();
-
 	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
@@ -282,6 +275,7 @@ void HexEditorFrame::OnEditFind( wxCommandEvent& event ){
 	if( MyHexEditor != NULL )
 		MyHexEditor->FindDialog();
 	event.Skip();
+	event.Skip();
 	}
 
 void HexEditorFrame::OnEditReplace( wxCommandEvent& event ){
@@ -384,18 +378,19 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
-		if( MyHexEditor != NULL )
-			switch( MyHexEditor->GetFileAccessMode() ){
-				case FileDifference::ReadOnly :
-					mbar->Check(idFileRO, true);
-					break;
-				case FileDifference::ReadWrite :
-					mbar->Check(idFileRW, true);
-					break;
-				case FileDifference::DirectWrite :
-					mbar->Check(idFileDW, true);
-					break;
-				}
+	if( MyHexEditor != NULL ){
+		switch( MyHexEditor->GetFileAccessMode() ){
+			case FileDifference::ReadOnly :
+				mbar->Check(idFileRO, true);
+				break;
+			case FileDifference::ReadWrite :
+				mbar->Check(idFileRW, true);
+				break;
+			case FileDifference::DirectWrite :
+				mbar->Check(idFileDW, true);
+				break;
+			}
+		}
 	}
 
 void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){

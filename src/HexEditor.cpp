@@ -645,10 +645,11 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			break;
 			}
 		}
-	if( select.state ==xselect::SELECT_END ){
+	if( select.state == xselect::SELECT_END ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		menu.Append(wxID_COPY, _T("Copy Selection"));
 		}
+	menu.Append(wxID_PASTE, _T("Paste Selection"));
 	menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
@@ -853,8 +854,8 @@ void HexEditor::GotoDialog( void ){
 		}
 	}
 
-bool HexEditor::CopySelection( void ){
-	if( select.state	!= xselect::SELECT_FALSE){
+bool HexEditor::CopySelection( ){
+	if( select.state != xselect::SELECT_FALSE){
 		uint64_t start = select.start_offset;
 		uint64_t size = select.size();
 		uint64_t RAM_limit = 10*MB;
@@ -866,12 +867,13 @@ bool HexEditor::CopySelection( void ){
 				myfile->Read( static_cast< char*>( buff ), size );
 				copy_mark->m_buffer.UngetWriteBuf( size );
 				wxString CopyString;
-				if( hex_ctrl == FindFocus() ){
+				if( focus==HEX_CTRL ){
 					for( unsigned i=0 ; i<size ; i++ )
 						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->m_buffer[i]));
 					CopyString.Trim();	//remove last ' '
 					}
-				else{
+				else if( focus == TEXT_CTRL )
+					{
 					copy_mark->m_buffer.AppendByte('\0');
 					CopyString << wxString::FromAscii( static_cast<const char*>(copy_mark->m_buffer.GetData()) );
 					}
@@ -909,7 +911,7 @@ bool HexEditor::CopySelection( void ){
 	}
 
 bool HexEditor::PasteFromClipboard( void ){
-	if( hex_ctrl == FindFocus() ){
+	if( focus==HEX_CTRL ){
 		wxString str = copy_mark->GetClipboardData();
 		if( ! str.IsEmpty() ){
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
@@ -918,7 +920,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			Goto( CursorOffset() + str.Len() );
 			}
 		}
-	else if ( text_ctrl == FindFocus() ){
+	else if ( focus==TEXT_CTRL ){
 		wxString str = copy_mark->GetClipboardData();
 		if( ! str.IsEmpty() ){
 			char *ch = new char [str.Len()];

@@ -381,7 +381,7 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 		int new_location=0;
 		if( event.GetEventObject() == hex_ctrl )
 			new_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
-		else if ( FindFocus() == text_ctrl )
+		else if ( event.GetEventObject() == text_ctrl )
 			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
 		int old_location = GetLocalHexInsertionPoint();
 		if( new_location != old_location ){

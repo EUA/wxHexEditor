@@ -73,7 +73,7 @@ void HexEditorFrame::PrepareAUI( void ){
 			CaptionVisible(false).
 			MinSize(wxSize(400,100)).
 			CloseButton(false).
-			Center().Layer(1)	);
+			Center().Layer(1) );
 
     wxAuiToolBarItemArray prepend_items;
 /*

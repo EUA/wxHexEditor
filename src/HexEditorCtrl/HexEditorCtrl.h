@@ -25,8 +25,44 @@
 
 #include <wx/xml/xml.h>
 #include <wx/filename.h>
+#include <wx/event.h>
 
 #include "HexEditorCtrlGui.h"
+#define SELECT_EVENT 5005
+class Select{	//for using EventHandler
+	public:
+		Select( wxEvtHandler* evth_ ){
+			StartOffset = EndOffset = 0;
+			state = SELECT_FALSE;
+			evth = evth_;
+			}
+		enum state_ { SELECT_FALSE, SELECT_TRUE, SELECT_END };
+		uint64_t GetSize( void ){
+			return abs( EndOffset - StartOffset)+1;};	//for select byte 13 start=13, end=13
+		void SetState( state_ new_state ){
+			state = new_state;
+
+			std::cout << "Send UpdateUI Event" << std::endl;
+			wxUpdateUIEvent event;
+			if(new_state == SELECT_FALSE )
+				event.SetString( wxT("NotSelected") );
+			else
+				event.SetString( wxT("Selected") );
+//			event.SetEventObject( this );
+			event.SetId( SELECT_EVENT );//idFileRO
+			evth->ProcessEvent( event );
+			}
+		bool IsState( state_  query_state){
+			return (state==query_state);
+			}
+		uint64_t StartOffset;	//real start position
+		uint64_t EndOffset;		//real end position, included to select
+	private:
+		enum state_  state;
+		wxEvtHandler* evth;
+			//for select byte 13 start=13, end=13
+	};
+
 class HexEditorCtrl: public HexEditorCtrlGui{
 	public:
 		HexEditorCtrl(wxWindow* parent, int id,
@@ -34,6 +70,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 						const wxSize& size=wxDefaultSize,
 						long style=0);
 		~HexEditorCtrl( void );
+		class Select *select;
 		enum IDS{ idTagSelect=1001,idTagEdit };
 		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
@@ -52,15 +89,15 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void LoadTAGS( wxFileName );
 		void SaveTAGS( wxFileName );
 
-		bool Selector( void );
 	public:
+		bool Selector( void );
 		bool Select( uint64_t start_offset, uint64_t end_offset );
-		struct xselect{		//select structure
-			enum states { SELECT_FALSE, SELECT_TRUE, SELECT_END } state;
-			uint64_t start_offset;	//real start position
-			uint64_t end_offset;		//real end position, included to select
-			uint64_t size( void ){ return abs(end_offset - start_offset)+1;};	//for select byte 13 start=13, end=13
-			} select;
+//		struct xselect{		//select structure
+//			enum states { SELECT_FALSE, SELECT_TRUE, SELECT_END } state;
+//			uint64_t start_offset;	//real start position
+//			uint64_t end_offset;		//real end position, included to select
+//			uint64_t size( void ){ return abs(end_offset - start_offset)+1;};	//for select byte 13 start=13, end=13
+//			} select;
 	protected:
 		void HexCharReplace( long char_location, const wxChar chr);
 		void TextCharReplace( long char_location, const wxChar chr);
@@ -101,5 +138,4 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 //		virtual void OnKeyboardChar( wxKeyEvent& event );
 //		virtual void OnKeyboardInput( wxKeyEvent& event );
 	};
-
 #endif

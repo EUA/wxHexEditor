@@ -42,14 +42,14 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 #endif
 
 	MyAUI->Update();
-
+	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
     this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 	}
 
 HexEditorFrame::~HexEditorFrame(){
-
+	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
     this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
@@ -138,13 +138,14 @@ void HexEditorFrame::PrepareAUI( void ){
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
-	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE };
-//	idFileDW, wxID_CUT, wxID_DELETE
+	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_UNDO, wxID_REDO, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
+//	idFileDW, wxID_CUT, wxID_DELETE, wxIC_COPY,
 	for( int i=0 ; i<12 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
 	MyInterpreter->Enable();
+	Toolbar->Refresh();
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
@@ -155,6 +156,7 @@ void HexEditorFrame::ActionDisabler( void ){
 		}
 	MyInterpreter->Clear();
 	MyInterpreter->Disable();
+	Toolbar->Refresh();
 	}
 
 void HexEditorFrame::OnFileOpen( wxCommandEvent& event ){
@@ -391,6 +393,18 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				break;
 			}
 		}
+	if(event.GetId() == SELECT_EVENT ){
+		#ifdef _DEBUG_
+			std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
+		#endif
+		Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
+		mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+// TODO (death#1#): Enable Toolbar CUT
+//			Toolbar->EnableTool( wxID_CUT, true );
+//			Toolbar->EnableTool( wxID_CUT, false );
+		Toolbar->Refresh();
+		}
+	event.Skip();
 	}
 
 void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
@@ -398,8 +412,13 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 	std::cout << "HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ) \n" ;
 #endif
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
-		if( MyHexEditor != NULL )
+		if( MyHexEditor != NULL ){
 			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+
+			Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
+			mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
+			Toolbar->Refresh();
+			}
 	event.Skip();
 	}
 

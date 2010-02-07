@@ -33,14 +33,13 @@
 
 HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const wxSize& size, long style):
     HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
+	select = new class Select( GetEventHandler() );
 	wxFont stdfont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_offset->SetFont( stdfont );
 	m_static_offset->SetLabel( _("Offset: DEC") );
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
 	Dynamic_Connector();
-	select.start_offset = select.end_offset = 0;
-	select.state = xselect::SELECT_FALSE;
 	TAGMutex = false;
 	hex_ctrl->TagMutex = &TAGMutex;
 	text_ctrl->TagMutex = &TAGMutex;
@@ -49,6 +48,7 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
 	Clear();
 	MainTagArray.Clear();
+	delete select;
 	}
 
 void HexEditorCtrl::Dynamic_Connector(){
@@ -136,7 +136,7 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 			}
 		}
 
-	if( select.state == xselect::SELECT_END ){
+	if( select->IsState( select->SELECT_END ) ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		}
 //  menu.AppendSeparator();
@@ -156,16 +156,16 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 bool HexEditorCtrl::Selector(){
 	static bool polarity_possitive;
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
-		select.end_offset = page_offset + GetLocalHexInsertionPoint()/2;
+		select->EndOffset = page_offset + GetLocalHexInsertionPoint()/2;
 	else{
 		std::cout << "Selector without focuse captured" << std::endl;
 		return false;
 		}
 
 	bool first_selection = false;
-	if( select.state != xselect::SELECT_TRUE ){			// If no select available,
-		select.state = xselect::SELECT_TRUE;				// then select start procedure code
-		select.start_offset	= select.end_offset;
+	if( not select->IsState( select->SELECT_TRUE ) ){	// If no select available,
+		select->SetState( select->SELECT_TRUE );		// then select start procedure code
+		select->StartOffset = select->EndOffset;
 		polarity_possitive		= false;
 		first_selection			= true;
 		}
@@ -179,9 +179,9 @@ bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){
 		wxBell();
 		return false;
 		}
-	select.state = xselect::SELECT_END;
-	select.start_offset = start_offset;
-	select.end_offset  = end_offset;
+	select->SetState( select->SELECT_END );
+	select->StartOffset = start_offset;
+	select->EndOffset  = end_offset;
 	PaintSelection( );
 	return true;
 	}
@@ -231,9 +231,9 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 
 void HexEditorCtrl::PaintSelection( void ){
 	PreparePaintTAGs();
-	if( select.state != xselect::SELECT_FALSE ){
-		int64_t start_byte = select.start_offset;
-		int64_t end_byte = select.end_offset;
+	if( !select->IsState( select->SELECT_FALSE ) ){
+		int64_t start_byte = select->StartOffset;
+		int64_t end_byte = select->EndOffset;
 
 		if(start_byte > end_byte){	// swap if start > end
 			int64_t temp = start_byte;
@@ -359,7 +359,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
-	select.state = xselect::SELECT_FALSE;
+	select->SetState( select->SELECT_FALSE );
 	ClearPaint();
 	if( event.GetEventObject() == hex_ctrl ){
 		hex_ctrl->SetFocus();
@@ -385,7 +385,7 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
 		int old_location = GetLocalHexInsertionPoint();
 		if( new_location != old_location ){
-			if( select.state != xselect::SELECT_TRUE)		// At first select
+			if( not select->IsState( select->SELECT_TRUE) )		// At first select
 				if( Selector() == false )						// select without focus.
 					return;
 			SetLocalHexInsertionPoint( new_location );
@@ -407,8 +407,8 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
-	if(select.state == xselect::SELECT_TRUE)
-		select.state = xselect::SELECT_END;
+	if(select->IsState( select->SELECT_TRUE ) )
+		select->SetState( select->SELECT_END );
 	event.Skip();
 	}
 
@@ -423,10 +423,10 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
-	if( select.state == xselect::SELECT_END){
+	if( select->IsState(select->SELECT_END) ){
 		TagElement *TE = new TagElement;
-		TE->start=select.start_offset;
-		TE->end=select.end_offset;
+		TE->start=select->StartOffset;
+		TE->end=select->EndOffset;
 		static wxColour last_tag_color = *wxRED;
 		TE->NoteClrData.SetColour( last_tag_color );
 

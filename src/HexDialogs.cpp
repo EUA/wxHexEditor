@@ -265,7 +265,7 @@ ReplaceDialog::ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxStr
 	}
 
 int ReplaceDialog::OnReplace( bool internal ){
-	if(parent->select.state == parent->select.SELECT_FALSE){
+	if( parent->select->IsState( parent->select->SELECT_FALSE ) ) {
 		if( OnFind( internal ) == false )
 			return 0;
 		else
@@ -274,9 +274,9 @@ int ReplaceDialog::OnReplace( bool internal ){
 
 	else{
 		if( m_searchtype->GetSelection() == 0 ){//text search
-			if( parent->select.size() == m_comboBoxReplace->GetValue().Len() ){
+			if( parent->select->GetSize() == m_comboBoxReplace->GetValue().Len() ){
 				parent->FileAddDiff( parent->CursorOffset(), m_comboBoxReplace->GetValue().ToAscii(), m_comboBoxReplace->GetValue().Len());
-				parent->select.state = parent->select.SELECT_FALSE;
+				parent->select->SetState( parent->select->SELECT_FALSE );
 				parent->Reload();
 				return 1;
 				}
@@ -287,9 +287,9 @@ int ReplaceDialog::OnReplace( bool internal ){
 			}
 		else{ //hex search
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
-			if( parent->select.size() == mymem.GetDataLen() ){
+			if( parent->select->GetSize() == mymem.GetDataLen() ){
 				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(mymem.GetData()) ,mymem.GetDataLen() );
-				parent->select.state = parent->select.SELECT_FALSE;
+				parent->select->IsState( parent->select->SELECT_FALSE );
 				parent->Reload();
 				return 1;
 				}

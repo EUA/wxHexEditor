@@ -206,10 +206,12 @@ bool HexEditor::FileClose( void ){
 
 bool HexEditor::Undo( void ){
 	Goto( myfile->Undo() );
+
 	}
 
 bool HexEditor::Redo( void ){
 	Goto( myfile->Redo() );
+
 	}
 
 void HexEditor::Goto( int64_t cursor_offset ){
@@ -301,9 +303,9 @@ bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size,
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 	if(! event.ShiftDown() ){
-		if( select.state == xselect::SELECT_TRUE )
-			select.state = xselect::SELECT_END;
-			}
+		if( select->IsState( select->SELECT_TRUE ) )
+			select->SetState( select->SELECT_END );
+		}
     else
 		Selector();
 	}
@@ -576,10 +578,6 @@ void HexEditor::SetLocalHexInsertionPoint( int hex_location ){
 	UpdateCursorLocation();
 	}
 
-bool HexEditor::Selector(){
-	return HexEditorCtrl::Selector();
-	}
-
 void HexEditor::OnMouseLeft(wxMouseEvent& event){
 	HexEditorCtrl::OnMouseLeft( event );
 	#if wxUSE_STATUSBAR
@@ -625,7 +623,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			break;
 			}
 		}
-	if( select.state == xselect::SELECT_END ){
+	if( select->IsState( select->SELECT_END) ){
 		menu.Append(idTagSelect, _T("Tag Selection"));
 		menu.Append(wxID_COPY, _T("Copy Selection"));
 		}
@@ -782,14 +780,14 @@ void HexEditor::UpdateCursorLocation( bool force ){
 			myfile->Read( reinterpret_cast<char*>(&ch), 1);
 			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
 
-			int start = select.start_offset;
-			int end = select.end_offset;
+			int start = select->StartOffset;
+			int end = select->EndOffset;
 			if(start > end ){
 				int temp = start;
 				start = end;
 				end = temp;
 				}
-			if( select.state == xselect::SELECT_FALSE ){
+			if( select->IsState( select->SELECT_FALSE ) ){
 				statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 				statusbar->SetStatusText(_("Block Size: N/A") ,4);
 				}
@@ -813,13 +811,11 @@ void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
 	SaveTAGS( myfile->GetFileName() );
 
-	std::cout << "Send UpdateUI Event" << std::endl;
-	wxUpdateUIEvent xevent;
-	xevent.SetEventObject( this );
-	xevent.SetId( 1005 );//idFileRO
-//	xevent.ResumePropagation( 10 );
-//		event.SetEventType( EVT_UPDATE_UI );
-	GetEventHandler()->ProcessEvent( xevent );
+			std::cout << "Send UpdateUI Event" << std::endl;
+			wxUpdateUIEvent eventx;
+//			event.SetEventObject( this );
+			eventx.SetId( SELECT_EVENT );//idFileRO
+			GetEventHandler()->ProcessEvent( eventx );
 	}
 
 void HexEditor::FindDialog( void ){
@@ -843,9 +839,9 @@ void HexEditor::GotoDialog( void ){
 	}
 
 bool HexEditor::CopySelection( ){
-	if( select.state != xselect::SELECT_FALSE){
-		uint64_t start = select.start_offset;
-		uint64_t size = select.size();
+	if( not select->IsState( select->SELECT_FALSE )){
+		uint64_t start = select->StartOffset;
+		uint64_t size = select->GetSize();
 		uint64_t RAM_limit = 10*MB;
 		if(size < RAM_limit){								//copy to clipboard if < 10 MB
 			myfile->Seek( start, wxFromStart );
@@ -904,7 +900,7 @@ bool HexEditor::PasteFromClipboard( void ){
 		if( ! str.IsEmpty() ){
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
-			select.state = select.SELECT_FALSE;
+			select->SetState( select->SELECT_FALSE );
 			Goto( CursorOffset() + str.Len() );
 			}
 		}
@@ -915,7 +911,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			for( unsigned i=0;i<str.Len();i++ )
 				ch[i] = str[i];
 			FileAddDiff( CursorOffset(), ch, str.Len() );
-			select.state = xselect::SELECT_FALSE;
+			select->SetState( select->SELECT_FALSE );
 			Goto( CursorOffset() + str.Len() );
 			}
 		}

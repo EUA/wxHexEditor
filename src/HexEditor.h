@@ -82,7 +82,6 @@ class HexEditor: public HexEditorCtrl {
 
 protected:
 		void SetLocalHexInsertionPoint( int hex_location );
-		bool Selector();
 		void UpdateCursorLocation( bool force=false );
 		void UpdateOffsetScroll( void );
 		void OnKeyboardChar(wxKeyEvent& event);

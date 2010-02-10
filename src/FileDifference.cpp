@@ -248,7 +248,10 @@ bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bo
 				DiffArray[i]->new_data = temp_buffer;
 				}
 			else{									// non committed undo node
-				while( i <= DiffArray.GetCount()-1 ){	// delete beyond here
+				while( i < (DiffArray.GetCount()) ){	// delete beyond here
+					#if defined(_DEBUG_) && _DEBUG_ > 3
+						std::cout << "DiffArray.GetCount() : " << DiffArray.GetCount() << " while i = " << i<< std::endl;
+					#endif
 					DiffNode *temp;
 					temp = *(DiffArray.Detach( i ));
 					delete temp;

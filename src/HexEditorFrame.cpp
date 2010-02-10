@@ -43,6 +43,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	MyAUI->Update();
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
     this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -52,8 +53,10 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
     this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
+
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 	}
@@ -141,8 +144,8 @@ void HexEditorFrame::PrepareAUI( void ){
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
-	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_UNDO, wxID_REDO, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-//	idFileDW, wxID_CUT, wxID_DELETE, wxIC_COPY,
+	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
+//	idFileDW, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO,
 	for( int i=0 ; i<12 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
@@ -152,8 +155,8 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE , idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
-	for( int i=0 ; i<15 ; i++ ){
+	int arr[] = { wxID_NEW, idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE , idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
+	for( int i=0 ; i<16 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
 		}
@@ -243,14 +246,14 @@ void HexEditorFrame::OnQuit( wxCommandEvent& event ){
 void HexEditorFrame::OnEditUndo( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		MyHexEditor->Undo();
+		MyHexEditor->DoUndo();
 	event.Skip();
 	}
 
 void HexEditorFrame::OnEditRedo( wxCommandEvent& event ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
-		MyHexEditor->Redo();
+		MyHexEditor->DoRedo();
 	event.Skip();
 	}
 
@@ -402,9 +405,18 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		#endif
 		Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 		mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
-// TODO (death#1#): Enable Toolbar CUT
-//			Toolbar->EnableTool( wxID_CUT, true );
-//			Toolbar->EnableTool( wxID_CUT, false );
+		//Toolbar->EnableTool( wxID_CUT, true );
+		Toolbar->Refresh();
+		}
+
+	if(event.GetId() == UNREDO_EVENT ){
+		#ifdef _DEBUG_
+			std::cout << "HexEditorFrame::UNREDO event :" << event.GetString().ToAscii() << std::endl ;
+		#endif
+		Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+		Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+		mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+		mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
 		Toolbar->Refresh();
 		}
 	event.Skip();
@@ -420,6 +432,12 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 
 			Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 			mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
+
+			Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+			Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+			mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+			mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+
 			Toolbar->Refresh();
 			}
 	event.Skip();

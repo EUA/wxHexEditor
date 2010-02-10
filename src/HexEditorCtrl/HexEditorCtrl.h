@@ -29,6 +29,7 @@
 
 #include "HexEditorCtrlGui.h"
 #define SELECT_EVENT 5005
+#define UNREDO_EVENT 5006
 class Select{	//for using EventHandler
 	public:
 		Select( wxEvtHandler* evth_ ){
@@ -48,7 +49,6 @@ class Select{	//for using EventHandler
 				event.SetString( wxT("NotSelected") );
 			else
 				event.SetString( wxT("Selected") );
-//			event.SetEventObject( this );
 			event.SetId( SELECT_EVENT );//idFileRO
 			evth->ProcessEvent( event );
 			}
@@ -71,7 +71,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 						long style=0);
 		~HexEditorCtrl( void );
 		class Select *select;
-		enum IDS{ idTagSelect=1001,idTagEdit };
+		enum IDS{ idTagSelection=1001,idTagEdit };
 		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 	protected:

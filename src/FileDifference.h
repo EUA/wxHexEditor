@@ -88,7 +88,7 @@ class FileDifference : public wxFile{
 
 	private:
 		FileAccessMode file_access_mode;
-		ArrayOfNode	DiffArray;
+		ArrayOfNode DiffArray;
 		wxFileName the_file;
 //		DiffNode *head,*tail;	//linked list holds modification record
 

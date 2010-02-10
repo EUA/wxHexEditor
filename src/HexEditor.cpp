@@ -204,14 +204,24 @@ bool HexEditor::FileClose( void ){
 	return true;
 	}
 
-bool HexEditor::Undo( void ){
+bool HexEditor::DoUndo( void ){
 	Goto( myfile->Undo() );
-
+#if defined(_DEBUG_) && _DEBUG_ > 3
+	std::cout << "Send UnReDo Event" << std::endl;
+#endif
+	wxUpdateUIEvent eventx;
+	eventx.SetId( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-bool HexEditor::Redo( void ){
+bool HexEditor::DoRedo( void ){
 	Goto( myfile->Redo() );
-
+#if defined(_DEBUG_) && _DEBUG_ > 3
+	std::cout << "Send UnReDo Event" << std::endl;
+#endif
+	wxUpdateUIEvent eventx;
+	eventx.SetId( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}
 
 void HexEditor::Goto( int64_t cursor_offset ){
@@ -331,6 +341,10 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 			event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
 			)
 			OnKeyboardSelector(event);	//Selection Starter call
+
+	#ifdef _DEBUG_
+		std::cout << "Received KeyCode : " << std::hex << event.GetKeyCode() << std::endl;
+	#endif
 
 		switch (event.GetKeyCode()){
 			case (WXK_UP):case (WXK_NUMPAD_UP):
@@ -457,44 +471,53 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 					*/
 					break;
 
-				case( 26 ):		// 26 == CTRL+Z = UNDO
-					if(event.ShiftDown())
-						Redo();	// UNDO with shift = REDO
-					else
-						Undo();
-					break;
-				case( 25 ):		// 25 == CTRL+Y = REDO
-					Redo();
-					break;
-				case( 19 ):{	// 19 == CTRL+S = SAVE
-					FileSave();
-					// TODO (death#1#): File Name star'in * when file changed & saved
+				default:{
+						if( event.ControlDown() )
+							switch( event.GetKeyCode() ){
+								case( 0x5a ):		// CTRL+Z = UNDO
+									if(event.ShiftDown())
+										DoRedo();	// UNDO with shift = REDO
+									else
+										DoUndo();
+									break;
+								case( 0x59 ):		// CTRL+Y = REDO
+									DoRedo();
+									break;
+								case( 0x53 ):{	// CTRL+S = SAVE
+									FileSave();
+									// TODO (death#1#): File Name star'in * when file changed & saved
+									}
+									break;
+								case( 0x41 ):		// CTRL+A = ALL
+									Select(0, FileLength());
+									break;
+								case( 0x58 ):		// CTRL+X = CUT
+									wxBell();
+									break;
+								case( 0x43 ):		// CTRL+C = COPY
+									CopySelection();
+									break;
+								case( 0x56 ):		// CTRL+V = PASTE
+									PasteFromClipboard();
+									break;
+								case( 0x46 ):		// CTRL+F = FIND
+									//finddlg();
+									break;
+								case( 0x4f ):		// CTRL+O = OPEN
+									wxBell();
+									break;
+								default:
+									event.Skip();// ->OnKeyboardChar( event );
+									break;
+								}
+						else
+							event.Skip();// ->OnKeyboardChar( event );
 					}
-					break;
-				case(  1 ):		//  1 == CTRL+A = ALL
-					//select(0, myTempFile->Length());
-					break;
-				case( 24 ):		// 24 == CTRL+X = CUT
-					wxBell();
-					break;
-				case(  3 ):		//  3 == CTRL+C = COPY
-					//copy( true );
-					break;
-				case( 22 ):		// 22 == CTRL+V = PASTE
-					//replace();
-					break;
-				case(  6 ):		//  6 == CTRL+F = FIND
-					//finddlg();
-					break;
-				case( 15 ):		// 15 == CTRL+O = OPEN
-					wxBell();
-					break;
-				default:
-					event.Skip();// ->OnKeyboardChar( event );
-					break;
+
+
 				}//switch end
 			UpdateOffsetScroll();
-			OnKeyboardSelector(event);
+			//OnKeyboardSelector(event);
 			PaintSelection( );
 		}
 	}
@@ -571,6 +594,12 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 				wxBell();
 			}
 		}
+#if defined(_DEBUG_) && _DEBUG_ > 3
+	std::cout << "Send UnReDo Event" << std::endl;
+#endif
+	wxUpdateUIEvent eventx;
+	eventx.SetId( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}
 
 void HexEditor::SetLocalHexInsertionPoint( int hex_location ){
@@ -615,20 +644,24 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	else if( event.GetEventObject() == text_ctrl )
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
-	TagElement *TAG;
+	menu.Append(idTagEdit, _T("Tag Edit"));
+	menu.Append(idTagSelection, _T("New Tag"));
+	menu.Append(wxID_COPY, _T("Copy"));
+	menu.Append(wxID_CUT, _T("Cut"));
+	menu.Append(wxID_PASTE, _T("Paste"));
+
+	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
-		TAG = MainTagArray.Item(i);
+		TagElement *TAG = MainTagArray.Item(i);
 		if( TAG->isCover(TagPosition) ){
-			menu.Append(idTagEdit, _T("Tag Edit"));
+			menu.Enable( idTagEdit, true );
 			break;
 			}
 		}
-	if( select->IsState( select->SELECT_END) ){
-		menu.Append(idTagSelect, _T("Tag Selection"));
-		menu.Append(wxID_COPY, _T("Copy Selection"));
-		}
-	menu.Append(wxID_PASTE, _T("Paste Selection"));
-	menu.AppendSeparator();
+	menu.Enable( idTagSelection, select->IsState( select->SELECT_END) );
+	menu.Enable( wxID_CUT, false );
+	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
+	//menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
@@ -917,4 +950,11 @@ bool HexEditor::PasteFromClipboard( void ){
 		}
 	else
 		wxMessageBox(_( "There is no focus!"), _("Paste Error"), wxOK|wxICON_ERROR);
+
+	#if defined(_DEBUG_) && _DEBUG_ > 3
+		std::cout << "Send UnReDo Event" << std::endl;
+	#endif
+	wxUpdateUIEvent eventx;
+	eventx.SetId( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}

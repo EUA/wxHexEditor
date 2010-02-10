@@ -37,7 +37,7 @@
 
 class scrollthread;
 class copy_maker;
-class HexEditor: public HexEditorCtrl {
+class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 	public:
 	    HexEditor(wxWindow* parent,
 					int id,
@@ -61,20 +61,22 @@ class HexEditor: public HexEditorCtrl {
 		bool FileSave( bool question = true );
 		bool FileSave( wxString filename );
 		bool FileClose( void );
-		bool Undo( void );
-		bool Redo( void );
+		bool DoUndo( void );
+		bool DoRedo( void );
 
 		bool CopySelection( void );
 		bool PasteFromClipboard( void );
 
-		int64_t FileLength( void ){ return myfile->Length();};
+		//----File Functions----//
+		int64_t FileLength( void ){ return myfile->Length();}
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
-
-		wxFileName GetFileName( void ){ return myfile->GetFileName();};
-		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); };
-		int GetFileAccessMode( void ){ return myfile->GetAccessMode();};
-		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();};
-		int GetFD( void ){ return myfile->fd(); };
+		wxFileName GetFileName( void ){ return myfile->GetFileName();}
+		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); }
+		int GetFileAccessMode( void ){ return myfile->GetAccessMode();}
+		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();}
+		int GetFD( void ){ return myfile->fd(); }
+		bool IsAvailable_Undo( void ){ myfile->IsAvailable_Undo(); }
+		bool IsAvailable_Redo( void ){ myfile->IsAvailable_Redo(); }
 		void FindDialog( void );
 		void ReplaceDialog( void );
 		void GotoDialog( void );

@@ -52,7 +52,7 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 	}
 
 void HexEditorCtrl::Dynamic_Connector(){
-	this->Connect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Connect( idTagSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
     this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
     hex_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
@@ -70,7 +70,7 @@ void HexEditorCtrl::Dynamic_Connector(){
 	}
 
 void HexEditorCtrl::Dynamic_Disconnector(){
-	this->Disconnect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Disconnect( idTagSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
     hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
     text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
@@ -142,18 +142,13 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 		}
 
 	if( select->IsState( select->SELECT_END ) ){
-		menu.Append(idTagSelect, _T("Tag Selection"));
+		menu.Append(idTagSelection, _T("Tag Selection"));
 		}
 //  menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
     PopupMenu(&menu, pos);
-    // test for destroying items in popup menus
-#if 0 // doesn't work in wxGTK!
-    menu.Destroy(Menu_Popup_Submenu);
-    PopupMenu( &menu, event.GetX(), event.GetY() );
-#endif // 0
 	}
 
 //-----VISUAL FUNCTIONS------//

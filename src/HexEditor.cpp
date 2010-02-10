@@ -676,30 +676,30 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 2
-	std::cout << "HexEditor::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+#if defined(_DEBUG_) && _DEBUG_ > 7
+	std::cout << "HexEditor::OnMouseMove Coordinate X:Y = " << event.GetX()	<< " " << event.GetY()
 			<< "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
 #endif
 	if( event.LeftIsDown() ){
 		int spd=0;
-		if( event.m_y < 0 &&page_offset != 0){
+		if( event.GetY() < 0 and page_offset != 0){
 			spd = static_cast<int>(0 - pow(2, abs(event.GetY()) / 25));
 			(spd < -1024) ? (spd = -1024):(spd=spd);
 			}
-		else if(event.m_y > hex_ctrl->GetSize().GetHeight() && page_offset + ByteCapacity() < myfile->Length()){
+		else if(event.GetY()> hex_ctrl->GetSize().GetHeight() and page_offset + ByteCapacity() < myfile->Length()){
 			int pointer_diff = event.GetY() - hex_ctrl->GetSize().GetHeight();
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
 #if defined( __WXMAC__ ) || defined ( __WXMSW__ )
-		ScrollNoThread( spd );
-	#if defined(_DEBUG_) && _DEBUG_ > 2
-		std::cout << "Scroll TH Speed = " << spd << std::endl;
+		ScrollNoThread( spd );			//MAC has problem with GuiMutex so useing safe scroll funtion
+	#if defined(_DEBUG_) && _DEBUG_ > 4
+		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
 	#endif
 #else
-		myscroll->UpdateSpeed(spd);	//MAC has problem with GuiMutex
-	#if defined(_DEBUG_) && _DEBUG_ > 2
-		std::cout << "Scroll NT Speed = " << spd << std::endl;
+		myscroll->UpdateSpeed(spd);
+	#if defined(_DEBUG_) && _DEBUG_ > 4
+		std::cout << "Scroll (Thread) Speed = " << spd << std::endl;
 	#endif
 #endif
 		HexEditorCtrl::OnMouseMove( event );//Also makes selection in it
@@ -753,7 +753,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 //		if( lastPoint == CursorOffset() )
 //			return;
 //	lastPoint = CursorOffset();
-#if defined(_DEBUG_) && _DEBUG_ > 2
+#if defined(_DEBUG_) && _DEBUG_ > 5
 	std::cout << "mutex Update Locking..." << std::endl;
 #endif
 	if( update.TryLock()==wxMUTEX_NO_ERROR ){
@@ -797,7 +797,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 				}
 			}
 	#endif // wxUSE_STATUSBAR
-	#if defined(_DEBUG_) && _DEBUG_ > 2
+	#if defined(_DEBUG_) && _DEBUG_ > 5
 		std::cout << "mutex Update UnLocking..." << std::endl;
 	#endif
 		update.Unlock();

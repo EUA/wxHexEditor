@@ -127,9 +127,10 @@ virtual void TagPainter( wxMemoryDC* DC, TagElement& TG );
 		void OnChar( wxKeyEvent &event );
 virtual void OnMouseLeft( wxMouseEvent& event );
 virtual void OnMouseRight( wxMouseEvent& event );
-virtual void OnMouseMove( wxMouseEvent& event );
+		virtual void OnMouseMove( wxMouseEvent& event );
+		void OnKillFocus( wxFocusEvent& event ); //tempotarily publicized
 		void OnFocus( wxFocusEvent& event );
-		void OnKillFocus( wxFocusEvent& event );
+
 		void OnTagSelection( wxCommandEvent &event );
 		void OnTagEdit( wxCommandEvent &event );
 		void ShowContextMenu( wxPoint pos );

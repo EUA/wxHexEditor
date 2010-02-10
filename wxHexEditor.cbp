@@ -35,7 +35,7 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="-D_DEBUG_=2" />
+					<Add option="-D_DEBUG_=9" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

@@ -19,6 +19,7 @@ class wxHexEditorApp : public wxApp
     public:
         virtual bool OnInit();
         int FilterEvent(wxEvent &evt);
+//        void OnMouseMove(wxMouseEvent &event);
 	private:
 		class HexEditorFrame* frame;
 };

@@ -30,6 +30,7 @@
 #include <wx/dcmemory.h>
 #include "TagDialogGui.h"
 
+//class TagElement:public wxPopupWindow{
 class TagElement{
 	public:
 		TagElement();
@@ -45,6 +46,7 @@ class TagElement{
 		void Hide( void );
 		bool isCover( uint64_t );
 		void print(void);
+//		void OnKillFocus( wxFocusEvent& event );
 #ifndef __WXMAC__
 		wxPopupWindow *wxP;
 #endif	//wxPopupWindows is not yet implemented in MacOSX

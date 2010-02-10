@@ -54,6 +54,9 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
+    this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+    hex_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+    text_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 
 	offset_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
@@ -69,6 +72,8 @@ void HexEditorCtrl::Dynamic_Connector(){
 void HexEditorCtrl::Dynamic_Disconnector(){
 	this->Disconnect( idTagSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
+    hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+    text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 
 	offset_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
@@ -420,6 +425,14 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 	else
 		std::cout << "Right click captured without ctrl!\n";
 	ShowContextMenu( event );
+	}
+
+void HexEditorCtrl::OnKillFocus( wxFocusEvent& event){
+#ifdef _DEBUG_
+	std::cout << "HexEditorCtrl::OnKillFocus( wxMouseEvent& event ) \n" ;
+#endif
+	TagHideAll();
+	event.Skip();
 	}
 
 void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){

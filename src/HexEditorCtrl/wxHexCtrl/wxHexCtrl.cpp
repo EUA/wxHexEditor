@@ -705,6 +705,7 @@ void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 //			TagArray.Item(i)->Hide();
 //		*TagMutex = false;
 //		}
+	event.Skip();
 	}
 
 void wxHexCtrl::OnSize( wxSizeEvent &event ){
@@ -716,7 +717,7 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 2
+#if defined(_DEBUG_) && _DEBUG_ > 8
 	std::cout << "wxHexCtrl::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLMR mouse button:" << event.m_leftDown << event.m_middleDown << event.m_rightDown << std::endl;
 #endif
@@ -727,7 +728,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 			select.selected = true;
 		else
 			select.selected = false;
-#ifdef _DEBUG_
+#if defined(_DEBUG_) && _DEBUG_ > 2
 		std::cout << "wxHexCtrl::Selection is " << (select.selected?"true":"false") << " from " << select.start << " to " << select.end << std::endl;
 #endif
 		RePaint();
@@ -738,16 +739,12 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 		for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
 			TAX = TagArray.Item(i);
 			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) ){	//end not included!
-				if( !(*TagMutex) ){
+				if( not (*TagMutex) and  wxTheApp->IsActive() ) {
 					*TagMutex=true;
 					TAX->Show( event.GetPosition()+(static_cast<wxWindow*>( event.GetEventObject() ))->ClientToScreen(wxPoint(0,0)) , this );
 					}
 				break;
 				}
-//			else if( TAX->visible == true ){
-//				TAX->Hide();
-//				*TagMutex=false;
-//				}
 			}
 		}
 	}

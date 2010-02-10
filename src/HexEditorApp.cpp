@@ -42,29 +42,37 @@ IMPLEMENT_APP(wxHexEditorApp);
 
 bool wxHexEditorApp::OnInit()
 {
-    frame = new HexEditorFrame(0L);
+    frame = new HexEditorFrame( 0L );
 //    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
     frame->Show();
     return true;
 }
-int wxHexEditorApp::FilterEvent(wxEvent &event){
+int wxHexEditorApp::FilterEvent(wxEvent &mevent){
 #if defined(_DEBUG_) && _DEBUG_ > 2
-	if( event.IsKindOf(CLASSINFO(wxMouseEvent)) )
-//		if( static_cast<wxMouseEvent*>(&event)->Moving() )
-//			std::cout << "Got Mouse Moving Event! " <<  std::endl;
-		if(static_cast<wxMouseEvent*>(&event)->Entering())
-			std::cout << "HexEditorApp::Filter Entering() Event" << std::endl;
-		else if(static_cast<wxMouseEvent*>(&event)->Leaving()){
-			std::cout << "HexEditorApp::Filter Leaving() Event" << std::endl;
-			frame->TagHideAll();
-			}
-		else
-			std::cout << "HexEditorApp::OnMouseMove Strange Event" << std::endl;
-#endif
-	event.Skip( );
+//	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
+//		{
+//		wxFocusEvent* event = static_cast<wxFocusEvent*>(&mevent);
+//		std::cout << "Frame : " << frame << std::endl;
+//		std::cout << "event.GetEventType(): " << event->GetEventType() << std::endl;
+//		std::cout << "event.GetEventObject(): " << event->GetEventObject() << std::endl;
+//		}
+//	if( mevent.IsKindOf(CLASSINFO(wxMouseEvent)) ){
+//		wxMouseEvent* event = static_cast<wxMouseEvent*>(&mevent);
+//		{
+//		std::cout << "Frame : " << frame << std::endl;
+//		std::cout << "event.GetEventType(): " << event->GetEventType() << std::endl;
+//		std::cout << "event.GetEventObject(): " << event->GetEventObject() << std::endl;
+//
+//		if(event->GetEventType() == wxEVT_MOUSE_CAPTURE_LOST)
+//			std::cout << "event.wxEVT_MOUSE_CAPTURE_LOSTwxEVT_MOUSE_CAPTURE_LOSTwxEVT_MOUSE_CAPTURE_LOST(): " << std::endl;
+//		}
+//	}
+	#endif
+
+	mevent.Skip( );
 	return -1;
 	}
-//
+
 //void wxHexEditorApp::OnMouseMove(wxMouseEvent &event){
 //#if defined(_DEBUG_) && _DEBUG_ > 1
 //	if( event.Moving() )

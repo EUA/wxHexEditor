@@ -111,6 +111,8 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void OnMouseRight( wxMouseEvent& event );
 		void OnTagSelection( wxCommandEvent& event );
 		void OnTagEdit( wxCommandEvent& event );
+		void OnKillFocus( wxFocusEvent& event );
+
 		uint64_t LastRightClickAt;
 		//----ADAPTERS----//
 	public:

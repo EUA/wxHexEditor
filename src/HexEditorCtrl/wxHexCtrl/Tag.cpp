@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "Tag.h"
+#include "wxHexCtrl.h"
 TagElement::TagElement(){
 	visible = false;
 	start = end = 0;
@@ -65,6 +66,9 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		topSizer->Fit(wxP);
 		wxP->Position( pos, topSizer->GetSize() );
 		wxP->Show();
+		//wxP->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexCtrl::OnMouseMove),NULL, parent);
+		//parent->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(wxHexCtrl::OnKillFocus),NULL, parent );
+// TODO (death#1#): Auto hide on popup menus. Modularized!
 #endif
 		}
 	}

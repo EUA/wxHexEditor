@@ -49,10 +49,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
 ///////////////////////////////////////////////////////////////////////////////
-class HexEditorGui : public wxFrame 
+class HexEditorGui : public wxFrame
 {
 	private:
-	
+
 	protected:
 		wxMenuBar* mbar;
 		wxMenu* fileMenu;
@@ -62,7 +62,7 @@ class HexEditorGui : public wxFrame
 		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ){ event.Skip(); }
 		virtual void OnKeyDown( wxKeyEvent& event ){ event.Skip(); }
@@ -83,21 +83,21 @@ class HexEditorGui : public wxFrame
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ){ event.Skip(); }
 		virtual void OnOptionsFileMode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class InterpreterGui
 ///////////////////////////////////////////////////////////////////////////////
-class InterpreterGui : public wxPanel 
+class InterpreterGui : public wxPanel
 {
 	private:
-	
+
 	protected:
 		wxCheckBox* m_check_unsigned;
 		wxCheckBox* m_check_bigendian;
@@ -115,40 +115,40 @@ class InterpreterGui : public wxPanel
 		wxTextCtrl* m_textctrl_float;
 		wxStaticText* m_static_double;
 		wxTextCtrl* m_textctrl_double;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnUpdate( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( 174,218 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class TagPanelGui
 ///////////////////////////////////////////////////////////////////////////////
-class TagPanelGui : public wxPanel 
+class TagPanelGui : public wxPanel
 {
 	private:
-	
+
 	protected:
 		wxListBox* listTag;
-	
+
 	public:
 		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~TagPanelGui();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class InfoPanelGui
 ///////////////////////////////////////////////////////////////////////////////
-class InfoPanelGui : public wxPanel 
+class InfoPanelGui : public wxPanel
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_static_name;
 		wxStaticText* m_name;
@@ -160,20 +160,20 @@ class InfoPanelGui : public wxPanel
 		wxStaticText* m_access;
 		wxStaticText* m_static_device;
 		wxStaticText* m_device;
-	
+
 	public:
 		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );
 		~InfoPanelGui();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class GotoDialogGui
 ///////////////////////////////////////////////////////////////////////////////
-class GotoDialogGui : public wxDialog 
+class GotoDialogGui : public wxDialog
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_staticTextOffset;
 		wxTextCtrl* m_textCtrlOffset;
@@ -181,26 +181,26 @@ class GotoDialogGui : public wxDialog
 		wxRadioButton* m_hex;
 		wxRadioBox* m_branch;
 		wxButton* m_button_go;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnInput( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnConvert( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Goto Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~GotoDialogGui();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class FindDialogGui
 ///////////////////////////////////////////////////////////////////////////////
-class FindDialogGui : public wxDialog 
+class FindDialogGui : public wxDialog
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_static_search;
 		wxComboBox* m_comboBoxSearch;
@@ -214,15 +214,15 @@ class FindDialogGui : public wxDialog
 		wxCheckBox* chkWrapAround;
 		wxButton* btnFind;
 		wxButton* btnFindAll;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
 		~FindDialogGui();
-	
+
 };
 
 #endif //__HexEditorGui__

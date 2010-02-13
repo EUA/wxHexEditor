@@ -32,6 +32,8 @@
 #ifndef DATAINTERPRETER_H
 #define DATAINTERPRETER_H
 #include <stdint.h>
+#include <wx/memory.h>
+
 class DataInterpreter : public InterpreterGui{
 	protected:
 		struct unidata{
@@ -57,20 +59,24 @@ class DataInterpreter : public InterpreterGui{
 	:InterpreterGui( parent, id, pos, size, style){
 		unidata.raw = unidata.mraw = NULL;
 		};
-	void Set( const char* buffer, int size ){
+	void Set( wxMemoryBuffer buffer ){
 // TODO (death#1#): Add exception if size smaller than expected
 		static wxMutex mutexset;
 		mutexset.Lock();
-		if( buffer == NULL )
+		int size = buffer.GetDataLen();
+		if( size == 0 ){
+			wxBell();
+			Clear();
 			return;
+			}
 		if( unidata.raw != NULL )
 			delete unidata.raw;
 		if( unidata.mraw != NULL )
 			delete unidata.mraw;
 		unidata.raw = new char[ size ];
 		unidata.mraw = new char[ size ];
-		memcpy( unidata.raw, buffer, size );
-		memcpy( unidata.mraw, buffer, size );
+		memcpy( unidata.raw, buffer.GetData(), size );
+		memcpy( unidata.mraw, buffer.GetData(), size );
 		unidata.size = size;
 		for(int i = 0 ; i < unidata.size ; i++)	// make mirror image of mydata
 			unidata.mraw[i]=unidata.raw[unidata.size-i-1];

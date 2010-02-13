@@ -82,9 +82,9 @@ class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 		void GotoDialog( void );
 		struct DialogVector *myDialogVector;
 
+		void UpdateCursorLocation( bool force=false );
 protected:
 		void SetLocalHexInsertionPoint( int hex_location );
-		void UpdateCursorLocation( bool force=false );
 		void UpdateOffsetScroll( void );
 		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);

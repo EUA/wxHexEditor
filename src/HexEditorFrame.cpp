@@ -428,6 +428,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 #endif
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
 		if( MyHexEditor != NULL ){
+			MyHexEditor->UpdateCursorLocation();
 			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 
 			Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );

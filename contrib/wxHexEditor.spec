@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009 Erdem U. Altinyurt
+# Copyright (c) 2006-2010 Erdem U. Altinyurt
 # Thanks for oc2pus
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
@@ -11,20 +11,19 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.07svn
+Version:		0.07svn106
 Release:		1
 License:		GPL
 Group:			Editors
 URL:				http://wxhexeditor.sourceforge.net/
-Source0:		%{name}-v%{version}-src.tar.bz2
+Source0:		%{name}_v%{version}-src.tar.bz2
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
-BuildRequires:	dos2unix
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-%if %{defined suse_version}
-BuildRequires:	update-desktop-files
-%endif
-BuildRequires:	wxGTK-devel >= 2.8
+BuildRequires:  wxGTK-devel >= 2.8.9  
+%if 0%{?suse_version}  
+BuildRequires:  fdupes update-desktop-files
+%endif  
 
 %description
 wxHexEditor is another GUI hex editor for open HUGE files and devices
@@ -36,7 +35,10 @@ This programs supports tagging parts of the file for taking notes and make it ea
 wxHexEditor program code supports lots of operating system, because
 it's writen by cross-platform API, wxWidgets.
 
+%if %{defined mdkversion}
+%else
 %debug_package
+%endif
 
 %prep
 %setup -q -n %{name}_v%{version}
@@ -53,9 +55,7 @@ it's writen by cross-platform API, wxWidgets.
 %install
 %__install -dm 755 %{buildroot}%{_datadir}/pixmaps
 %__install -dm 755 %{buildroot}%{_datadir}/applications
-#%makeinstall
 %__rm -f %{buildroot}%{_datadir}/applications/%{name}.desktop
-#%__rm -f resources/%{name}.desktop
 %__install -D -s -m 755 %{name} %{buildroot}%{_bindir}/%{name}
 %__install -D -m 644 resources/%{name}.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
 %if %{defined suse_version}

@@ -122,6 +122,10 @@
 		</Compiler>
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="makefile" />
+		<Unit filename="resources/resource.rc">
+			<Option target="Release Cross-Win32" />
+			<Option target="Debug Cross-Win32" />
+		</Unit>
 		<Unit filename="resources/wxHexEditor.desktop" />
 		<Unit filename="resources/wxHexEditor.png" />
 		<Unit filename="resources/wxhex.xpm" />

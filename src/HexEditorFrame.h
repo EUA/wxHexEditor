@@ -37,6 +37,9 @@
 #include <wx/aui/aui.h>
 #include <wx/aui/auibar.h>
 #include <wx/aui/auibook.h>
+#include <wx/config.h>
+#include <wx/url.h>
+
 class DnDFile;
 
 class HexEditorFrame : public HexEditorGui {
@@ -92,5 +95,10 @@ class DnDFile : public wxFileDropTarget{
 		HexEditorFrame *HexFramework;
 	};
 
+class VersionChecker : public UpdateDialog_Gui {
+	public:
+		VersionChecker( wxString _url, wxString current_version, wxWindow *parent = NULL, wxWindowID id = 1  );
+		void OnChkDisplay( wxCommandEvent& event );
+	};
 
 #endif

@@ -23,7 +23,7 @@
 #include "HexEditorFrame.h"
 
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
-				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_ ) ){
+				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 
@@ -49,6 +49,24 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
+
+	bool update_enable = true;
+	if ( ! wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
+		update_enable = true;
+		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
+		}
+	if( update_enable ){
+		//time_t last_chk=0;
+		double last_chk=0;
+		wxConfigBase::Get()->Read(_T("LastUpdateCheckTime"), (&last_chk));
+#ifndef _DEBUG_
+		if( wxDateTime::Now() - wxDateSpan::Week() > wxDateTime( last_chk ) )	//One check for a week enough
+#endif
+			{
+			wxConfigBase::Get()->Write(_T("LastUpdateCheckTime"), static_cast< double >( wxDateTime::Now().GetTicks()) );
+			VersionChecker vc( wxT("http://wxhexeditor.sourceforge.net/version.php"), wxT(_VERSION_) );
+			}
+		}
 	}
 
 HexEditorFrame::~HexEditorFrame(){
@@ -323,7 +341,7 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	wxAboutDialogInfo AllAbout;
     AllAbout.SetName(_T("wxHexEditor"));
-    AllAbout.SetVersion( _T(_VERSION_) );
+    AllAbout.SetVersion( _T(_VERSION_STR_) );
     AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
     AllAbout.SetCopyright(_T("(C) 2006 Erdem U. Altinyurt"));
 
@@ -466,8 +484,6 @@ void HexEditorFrame::OnActivate( wxActivateEvent& event ){
 	TagHideAll();
 	}
 
-
-
 void HexEditorFrame::TagHideAll( void ){
 	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	if( MyHexEditor != NULL )
@@ -489,4 +505,33 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 
 		}
 	return TRUE;
+	}
+
+VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *parent, wxWindowID id )
+:UpdateDialog_Gui( parent, id ){
+	wxURL url( _url );
+	if (url.IsOk()){
+		url.GetProtocol().SetTimeout(3);
+		wxInputStream *in_stream = url.GetInputStream();
+		if( in_stream == NULL || in_stream->GetSize() > 10 ){
+			return;	//need for keep safe
+			}
+		char *bfr = new char[in_stream->GetSize()+1];
+		for(unsigned i = 0 ; i < in_stream->GetSize()+1 ; i++ )
+			bfr[i]=0;
+		in_stream->Read(bfr, in_stream->GetSize());
+		if( strcmp( bfr, _version.To8BitData() ) > 0 ){
+			wxString newver = wxString::FromAscii( bfr );
+			version_text->SetLabel(wxString::Format( _("New wxHexEditor version %s is available!"), newver.c_str() ));
+			wxbtmp_icon->SetBitmap(  wxArtProvider::GetBitmap( wxART_TIP, wxART_MESSAGE_BOX ) );
+			Centre();
+			Fit();
+			wxBell();
+			ShowModal();
+			}
+		}
+	}
+
+void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
+	wxConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
 	}

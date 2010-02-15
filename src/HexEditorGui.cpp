@@ -624,3 +624,43 @@ FindDialogGui::~FindDialogGui()
 	btnFind->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 	btnFindAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindDialogGui::EventHandler ), NULL, this );
 }
+
+UpdateDialog_Gui::UpdateDialog_Gui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* MainBoxSizer;
+	MainBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxbtmp_icon = new wxStaticBitmap( this, wxID_OPEN, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	MainBoxSizer->Add( wxbtmp_icon, 0, wxALIGN_CENTER|wxALL, 10 );
+	
+	wxBoxSizer* VerticalBoxSizer;
+	VerticalBoxSizer = new wxBoxSizer( wxVERTICAL );
+	
+	version_text = new wxStaticText( this, wxID_ANY, wxT("New wxHexEditor version %s is available!"), wxDefaultPosition, wxDefaultSize, 0 );
+	version_text->Wrap( -1 );
+	VerticalBoxSizer->Add( version_text, 0, wxALIGN_CENTER|wxALL, 10 );
+	
+	m_hyperlink = new wxHyperlinkCtrl( this, wxID_ANY, wxT("Download new wxHexEditor"), wxT("http://wxhexeditor.sourceforge.net"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
+	VerticalBoxSizer->Add( m_hyperlink, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	wxchk_display = new wxCheckBox( this, wxID_ANY, wxT("Do not show this again."), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	VerticalBoxSizer->Add( wxchk_display, 0, wxALIGN_CENTER|wxALL, 10 );
+	
+	MainBoxSizer->Add( VerticalBoxSizer, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( MainBoxSizer );
+	this->Layout();
+	MainBoxSizer->Fit( this );
+	
+	// Connect Events
+	wxchk_display->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( UpdateDialog_Gui::OnChkDisplay ), NULL, this );
+}
+
+UpdateDialog_Gui::~UpdateDialog_Gui()
+{
+	// Disconnect Events
+	wxchk_display->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( UpdateDialog_Gui::OnChkDisplay ), NULL, this );
+}

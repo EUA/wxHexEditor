@@ -10,7 +10,8 @@
 #ifndef WXHEXEDITORAPP_H
 #define WXHEXEDITORAPP_H
 
-#define _VERSION_ "v0.07-svn Alpha"
+#define _VERSION_ "0.07"
+#define _VERSION_STR_ "v0.07-svn Alpha"
 
 #include <wx/app.h>
 #include "HexEditorFrame.h"

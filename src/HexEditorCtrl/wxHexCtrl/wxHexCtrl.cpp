@@ -86,7 +86,6 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	LastRightClickPosition = wxPoint(0,0);
     select.selected = false;
 
-    MutexResize.Unlock();
     CreateCaret();
 
   //  ChangeSize();

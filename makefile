@@ -55,8 +55,8 @@ mac: $(SOURCES) maclink
 	mkdir -p wxHexEditor.app/Contents
 	mkdir -p wxHexEditor.app/Contents/MacOS
 	mkdir -p wxHexEditor.app/Contents/Resources
-	install -D -m 755 wxHexEditor wxHexEditor.app/Contents/MacOS/
-	install -D -m 644 resources/wxHexEditor.icns wxHexEditor.app/Contents/Resources/
+	install -m 755 wxHexEditor wxHexEditor.app/Contents/MacOS/
+	install -m 644 resources/wxHexEditor.icns wxHexEditor.app/Contents/Resources/
 	printf "APPLHexE" > wxHexEditor.app/Contents/PkgInfo
 	printf "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\

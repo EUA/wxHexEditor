@@ -50,21 +50,11 @@ class HexEditorFrame : public HexEditorGui {
 		void TagHideAll();
 
 	protected:
-		void OnFileOpen( wxCommandEvent& event );
-		void OnFileSave( wxCommandEvent& event );
-		void OnFileSaveAs( wxCommandEvent& event );
-		void OnFileClose( wxCommandEvent& event );
-		void OnEditUndo( wxCommandEvent& event );
-		void OnEditRedo( wxCommandEvent& event );
-		void OnEditCopy( wxCommandEvent& event );
-		void OnEditCut( wxCommandEvent& event );
-		void OnEditPaste( wxCommandEvent& event );
-		void OnEditFind( wxCommandEvent& event );
-		void OnEditReplace( wxCommandEvent& event );
-		void OnEditGoto( wxCommandEvent& event );
+		void OnMenuEvent( wxCommandEvent& event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 		void OnViewMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );
+		void OnClose( wxCloseEvent& event );
 		void OnQuit( wxCommandEvent& event );
 		void OnAbout( wxCommandEvent& event );
 		void OnActivate( wxActivateEvent& event );

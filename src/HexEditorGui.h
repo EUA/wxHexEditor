@@ -68,22 +68,10 @@ class HexEditorGui : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ){ event.Skip(); }
 		virtual void OnKeyDown( wxKeyEvent& event ){ event.Skip(); }
-		virtual void OnFileOpen( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnFileSave( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnFileSaveAs( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnFileClose( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnMenuEvent( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditUndo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditRedo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditCopy( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditCut( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditPaste( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditFind( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditReplace( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnEditGoto( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ){ event.Skip(); }
-		virtual void OnOptionsFileMode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		
 	

@@ -11,7 +11,7 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.07svn106
+Version:		0.08_alpha
 Release:		1
 License:		GPL
 Group:			Editors
@@ -41,7 +41,7 @@ it's writen by cross-platform API, wxWidgets.
 %endif
 
 %prep
-%setup -q -n %{name}_v%{version}
+%setup -q -n %{name}
 
 %build
 %if %{defined suse_version} && 0%{?suse_version} < 1030
@@ -75,5 +75,5 @@ mv resources/%{name}.desktop ./
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
-* Tue Feb 9 2009 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.07svn-0
+* Tue Feb 9 2009 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.08-0
 - initial release of rpm

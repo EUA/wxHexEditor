@@ -1,6 +1,6 @@
 /***********************************(GPL)********************************
 *   wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*   Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   Copyright (C) 2010  Erdem U. Altinyurt                              *
 *                                                                       *
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
@@ -39,7 +39,7 @@
 #include <wx/aui/auibook.h>
 #include <wx/config.h>
 #include <wx/url.h>
-
+#include <wx/textdlg.h>
 class DnDFile;
 
 class HexEditorFrame : public HexEditorGui {

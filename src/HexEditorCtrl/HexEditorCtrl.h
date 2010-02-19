@@ -1,6 +1,6 @@
 /***********************************(GPL)********************************
 *   wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*   Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   Copyright (C) 2010  Erdem U. Altinyurt                              *
 *                                                                       *
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
@@ -70,6 +70,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 						const wxSize& size=wxDefaultSize,
 						long style=0);
 		~HexEditorCtrl( void );
+		enum focus_ { HEX_CTRL, TEXT_CTRL } focus;
 		class Select *select;
 		enum IDS{ idTagSelection=1001,idTagEdit };
 		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );

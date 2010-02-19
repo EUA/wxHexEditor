@@ -1,6 +1,6 @@
 /***********************************(GPL)********************************
 *   wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*   Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   Copyright (C) 2010  Erdem U. Altinyurt                              *
 *                                                                       *
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
@@ -62,11 +62,15 @@ class DataInterpreter : public InterpreterGui{
 	void Set( wxMemoryBuffer buffer ){
 // TODO (death#1#): Add exception if size smaller than expected
 		static wxMutex mutexset;
+#ifdef _DEBUG_ && (_DEBUG_>5)
+		std::cout << "DataInterpeter Set() Mutex Locked" << std::endl;
+#endif
 		mutexset.Lock();
 		int size = buffer.GetDataLen();
 		if( size == 0 ){
 			wxBell();
 			Clear();
+			mutexset.Unlock();
 			return;
 			}
 		if( unidata.raw != NULL )
@@ -107,6 +111,9 @@ class DataInterpreter : public InterpreterGui{
 		OnUpdate( event );
 
 		mutexset.Unlock();
+#ifdef _DEBUG_ && (_DEBUG_>5)
+		std::cout << "DataInterpeter Set() Mutex UnLocked" << std::endl;
+	#endif
 		}
 	void Clear( void ){
 		m_textctrl_binary->Clear();

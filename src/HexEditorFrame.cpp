@@ -1,6 +1,6 @@
 /***********************************(GPL)********************************
 *   wxHexEditor is a hex edit tool for editing massive files in Linux   *
-*   Copyright (C) 2006  Erdem U. Altinyurt                              *
+*   Copyright (C) 2010  Erdem U. Altinyurt                              *
 *                                                                       *
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
@@ -161,7 +161,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-//	idFileDW, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO,
+//	idFileDW, wxID_CUT, wxID_DELETE
 	for( int i=0 ; i<12 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
@@ -171,7 +171,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { wxID_NEW, idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE , idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
+	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE , idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
 	for( int i=0 ; i<16 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
@@ -182,7 +182,55 @@ void HexEditorFrame::ActionDisabler( void ){
 	}
 
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
-	if( event.GetId() == wxID_OPEN ){
+	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
+		wxString lngt;
+		long long size=0;
+		while(1){
+			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."),
+                                    _("Enter File Size:"));
+			if(lngt.IsEmpty()){
+				return;
+			}
+			else if( lngt.ToLongLong( &size, 10 ) and (size > 0) )//1 Exabyte is enought for everyone for now, 2010
+				break;
+			wxMessageBox( _("Wrong input, please retry...") ,_T("Error!"), wxICON_ERROR );
+			}
+		//Save file
+		wxFileDialog* filediag = new wxFileDialog(this,
+									_("Choose a file for save as"),
+									_(""),
+									_(""),
+									_("*"),
+									wxFD_SAVE|wxFD_OVERWRITE_PROMPT,
+									wxDefaultPosition);
+
+		if(wxID_OK == filediag->ShowModal()){
+			wxFileName flname(filediag->GetPath());
+			//create file
+			wxFile crt;
+			if( not crt.Create( flname.GetFullPath(), true ) ){
+				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR );
+				return;
+				}
+			if( not crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
+				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR );
+				return;
+				}
+			crt.Seek( size-1 );
+			crt.Write("\0x00", 1);
+			crt.Close();
+			//Openning the file with text editor.
+			HexEditor *x = new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel );
+			if(x->FileOpen( flname )){
+				MyNotebook->AddPage( x, flname.GetFullName(), true );
+				ActionEnabler();
+				}
+			else
+				x->Destroy();
+			filediag->Destroy();
+			}
+		}
+	else if( event.GetId() == wxID_OPEN ){
 		wxFileDialog* filediag = new wxFileDialog(this,
 									_("Choose a file for editing"),
 									_(""),
@@ -198,8 +246,10 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 				MyNotebook->AddPage( x, flname.GetFullName(), true );
 				ActionEnabler();
 				}
-			else
+			else{
 				x->Destroy();
+				wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR );
+				}
 			filediag->Destroy();
 			}
 		}
@@ -207,7 +257,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 		if( MyHexEditor != NULL ){
 			switch( event.GetId() ){
-				//case wxID_OPEN: Couldnot handled here!
+				//case wxID_OPEN: not handled here!
 				case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
 				case wxID_SAVEAS:{
 					wxFileDialog* filediag = new wxFileDialog(this,
@@ -215,7 +265,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 														_(""),
 														_(""),
 														_("*"),
-														wxFD_SAVE,
+														wxFD_SAVE|wxFD_OVERWRITE_PROMPT,
 														wxDefaultPosition);
 					if(wxID_OK == filediag->ShowModal()){
 						if( !MyHexEditor->FileSave( filediag->GetPath() )){
@@ -310,12 +360,13 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
     AllAbout.SetName(_T("wxHexEditor"));
     AllAbout.SetVersion( _T(_VERSION_STR_) );
     AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
-    AllAbout.SetCopyright(_T("(C) 2006 Erdem U. Altinyurt"));
-
+    AllAbout.SetCopyright(_T("(C) 2006-2010 Erdem U. Altinyurt"));
+	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
+	AllAbout.AddArtist( _T("Vlad Adrian") );
     AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
 
 	AllAbout.SetLicense( _T("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland.\n"
-             "Copyright (C) 2006  Erdem U. Altinyurt\n"
+             "Copyright (C) 2010  Erdem U. Altinyurt\n"
              "\n"
              "This program is free software; you can redistribute it and/or\n"
              "modify it under the terms of the GNU General Public License\n"
@@ -334,6 +385,7 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
              "home:  wxhexeditor.sourceforge.net\n"
              "email: death_knight@gamebox.net\n")
              );
+
     wxAboutBox(AllAbout);
 	}
 

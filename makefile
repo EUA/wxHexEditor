@@ -1,5 +1,5 @@
 WXCONFIG = wx-config
-CPP = `$(WXCONFIG) --cxx` -O2
+CPP = `$(WXCONFIG) --cxx`
 CXXFLAGS= `$(WXCONFIG) --cxxflags` -c ${CFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`

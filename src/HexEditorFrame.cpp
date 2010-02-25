@@ -56,7 +56,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
 		}
 	if( update_enable ){
-		//time_t last_chk=0;
 		double last_chk=0;
 		wxConfigBase::Get()->Read(_T("LastUpdateCheckTime"), (&last_chk));
 		if( wxDateTime::Now() - wxDateSpan::Week() > wxDateTime( last_chk ) )	//One check for a week enough
@@ -91,7 +90,7 @@ void HexEditorFrame::PrepareAUI( void ){
 			CloseButton(false).
 			Center().Layer(1) );
 
-    wxAuiToolBarItemArray prepend_items;
+//    wxAuiToolBarItemArray prepend_items;
 /*
     wxAuiToolBarItemArray append_items;
     wxAuiToolBarItem item;
@@ -102,9 +101,13 @@ void HexEditorFrame::PrepareAUI( void ){
     item.SetLabel(_("Customize..."));
     append_items.Add(item);
 */
-	Toolbar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                         wxAUI_TB_DEFAULT_STYLE );// wxAUI_TB_OVERFLOW);
+#ifdef _WX_AUIBAR_H_
+	Toolbar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE );// wxAUI_TB_OVERFLOW);
+#else
+	Toolbar = new wxToolBar( this,  wxID_ANY, wxDefaultPosition, wxDefaultSize );
+#endif
 	Toolbar->SetToolBitmapSize(wxSize(48,48));
+
     Toolbar->AddTool(wxID_NEW, _T("New File"), wxArtProvider::GetBitmap(wxART_NEW));
     Toolbar->AddTool(wxID_OPEN, _T("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN));
     Toolbar->AddTool(wxID_SAVE, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE));
@@ -181,6 +184,18 @@ void HexEditorFrame::ActionDisabler( void ){
 	Toolbar->Refresh();
 	}
 
+void HexEditorFrame::OpenFile(wxFileName flname){
+	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel );
+	if(x->FileOpen( flname )){
+		MyNotebook->AddPage( x, flname.GetFullName(), true );
+		ActionEnabler();
+		}
+	else{
+		x->Destroy();
+		wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR );
+		}
+	}
+
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
 		wxString lngt;
@@ -240,16 +255,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									wxDefaultPosition);
 		if(wxID_OK == filediag->ShowModal()){
 			wxFileName flname(filediag->GetPath());
-
-			HexEditor *x = new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel );
-			if(x->FileOpen( flname )){
-				MyNotebook->AddPage( x, flname.GetFullName(), true );
-				ActionEnabler();
-				}
-			else{
-				x->Destroy();
-				wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR );
-				}
+			OpenFile( flname );
 			filediag->Destroy();
 			}
 		}
@@ -513,7 +519,7 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 		for(unsigned i = 0 ; i < in_stream->GetSize()+1 ; i++ )
 			bfr[i]=0;
 		in_stream->Read(bfr, in_stream->GetSize());
-		if( strcmp( bfr, _version.To8BitData() ) > 0 ){
+		if( strncmp( bfr, _version.To8BitData(),  _version.Len() ) > 0 ){
 			wxString newver = wxString::FromAscii( bfr );
 			version_text->SetLabel(wxString::Format( _("New wxHexEditor version %s is available!"), newver.c_str() ));
 			wxbtmp_icon->SetBitmap(  wxArtProvider::GetBitmap( wxART_TIP, wxART_MESSAGE_BOX ) );

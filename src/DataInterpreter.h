@@ -62,7 +62,7 @@ class DataInterpreter : public InterpreterGui{
 	void Set( wxMemoryBuffer buffer ){
 // TODO (death#1#): Add exception if size smaller than expected
 		static wxMutex mutexset;
-#ifdef _DEBUG_ && (_DEBUG_>5)
+#if defined( _DEBUG_ ) && _DEBUG_ > 5
 		std::cout << "DataInterpeter Set() Mutex Locked" << std::endl;
 #endif
 		mutexset.Lock();
@@ -111,9 +111,9 @@ class DataInterpreter : public InterpreterGui{
 		OnUpdate( event );
 
 		mutexset.Unlock();
-#ifdef _DEBUG_ && (_DEBUG_>5)
+#if defined( _DEBUG_ ) && _DEBUG_ > 5
 		std::cout << "DataInterpeter Set() Mutex UnLocked" << std::endl;
-	#endif
+#endif
 		}
 	void Clear( void ){
 		m_textctrl_binary->Clear();

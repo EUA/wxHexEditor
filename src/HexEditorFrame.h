@@ -41,13 +41,13 @@
 #include <wx/url.h>
 #include <wx/textdlg.h>
 class DnDFile;
-
 class HexEditorFrame : public HexEditorGui {
 	public:
 		HexEditorFrame();
 		HexEditorFrame(	wxWindow* parent, wxWindowID id = wxID_ANY );
 		~HexEditorFrame();
 		void TagHideAll();
+		void OpenFile(wxFileName flname);
 
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
@@ -70,7 +70,11 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
 		InfoPanel *MyInfoPanel;
+#ifdef	_WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
+#else
+		wxToolBar* Toolbar;
+#endif
 		friend class DnDFile;
 	};
 

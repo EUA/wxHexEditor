@@ -11,7 +11,7 @@
 #define WXHEXEDITORAPP_H
 
 #define _VERSION_ "0.08"
-#define _VERSION_STR_ "v0.08 Alpha"
+#define _VERSION_STR_ "v0.08 Alpha svn"
 
 #include <wx/app.h>
 #include "HexEditorFrame.h"

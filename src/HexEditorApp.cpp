@@ -45,6 +45,8 @@ bool wxHexEditorApp::OnInit()
     frame = new HexEditorFrame( 0L );
 //    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
     frame->Show();
+	if (argc > 1)
+        frame->OpenFile(wxString(argv[1]));
     return true;
 }
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){

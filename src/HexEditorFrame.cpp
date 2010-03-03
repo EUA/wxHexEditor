@@ -21,7 +21,7 @@
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 #include "HexEditorFrame.h"
-
+#define idDiskDevice 10000
 HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
@@ -319,6 +319,16 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	event.Skip();
 	}
 
+void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
+	if( event.GetId() >= idDiskDevice ){
+		int i=event.GetId() - idDiskDevice;
+		wxArrayString disks;
+		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+		disks.Sort();
+		OpenFile( wxFileName(disks.Item(i)) );
+		}
+	}
+
 void HexEditorFrame::OnClose( wxCloseEvent& event ){
 	wxCommandEvent evt;
 	OnQuit( evt );
@@ -435,6 +445,24 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
 		mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
 		Toolbar->Refresh();
+		}
+	if(event.GetId() == idDeviceRam){
+		//when updateUI received by Ram Device open, thna needed to update Device List.
+		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
+		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
+			menuDeviceDisk->Remove( *it );
+		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+		///ls -l /dev/disk/by-id
+		wxArrayString disks;
+		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+		disks.Sort();
+		for( int i =0 ; i < disks.Count() ; i++){
+			#ifdef _DEBUG_
+			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
+			#endif
+			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
+			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+			}
 		}
 	event.Skip();
 	}

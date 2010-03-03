@@ -394,6 +394,81 @@
                     </object>
                 </object>
                 <object class="wxMenu" expanded="1">
+                    <property name="label">Tool</property>
+                    <property name="name">toolMenu</property>
+                    <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Calculate Checksum</property>
+                        <property name="name">menuToolChecksum</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnToolMenu</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Compare Files</property>
+                        <property name="name">menuToolCompare</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnToolMenu</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                </object>
+                <object class="wxMenu" expanded="1">
+                    <property name="label">Device</property>
+                    <property name="name">deviceMenu</property>
+                    <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help"></property>
+                        <property name="id">idDeviceRam</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Open RAM Device</property>
+                        <property name="name">menuDeviceRam</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnDeviceMenu</event>
+                        <event name="OnUpdateUI">OnUpdateUI</event>
+                    </object>
+                    <object class="submenu" expanded="1">
+                        <property name="label">Open Disk Device</property>
+                        <property name="name">menuDeviceDisk</property>
+                        <property name="permission">protected</property>
+                        <object class="wxMenuItem" expanded="1">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">0</property>
+                            <property name="help"></property>
+                            <property name="id">wxID_ANY</property>
+                            <property name="kind">wxITEM_NORMAL</property>
+                            <property name="label">N/A (yet)</property>
+                            <property name="name">menuDeviceDiskItem1</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">OnDeviceMenu</event>
+                            <event name="OnUpdateUI"></event>
+                        </object>
+                    </object>
+                </object>
+                <object class="wxMenu" expanded="1">
                     <property name="label">Options</property>
                     <property name="name">optionsMenu</property>
                     <property name="permission">protected</property>

@@ -31,6 +31,7 @@
 #include "InfoPanel.h"
 #include "../resources/wxhex.xpm"
 #include <wx/filename.h>
+#include <wx/dir.h>
 #include <wx/dnd.h>
 #include <wx/aboutdlg.h>
 #include <wx/artprov.h>
@@ -51,6 +52,7 @@ class HexEditorFrame : public HexEditorGui {
 
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
+		void OnDeviceMenu( wxCommandEvent& event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 		void OnViewMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );

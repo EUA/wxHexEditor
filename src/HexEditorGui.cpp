@@ -118,6 +118,35 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	mbar->Append( viewMenu, wxT("&View") );
 	
+	toolMenu = new wxMenu();
+	wxMenuItem* menuToolChecksum;
+	menuToolChecksum = new wxMenuItem( toolMenu, wxID_ANY, wxString( wxT("Calculate Checksum") ) , wxEmptyString, wxITEM_NORMAL );
+	toolMenu->Append( menuToolChecksum );
+	menuToolChecksum->Enable( false );
+	
+	wxMenuItem* menuToolCompare;
+	menuToolCompare = new wxMenuItem( toolMenu, wxID_ANY, wxString( wxT("Compare Files") ) , wxEmptyString, wxITEM_NORMAL );
+	toolMenu->Append( menuToolCompare );
+	menuToolCompare->Enable( false );
+	
+	mbar->Append( toolMenu, wxT("Tool") );
+	
+	deviceMenu = new wxMenu();
+	wxMenuItem* menuDeviceRam;
+	menuDeviceRam = new wxMenuItem( deviceMenu, idDeviceRam, wxString( wxT("Open RAM Device") ) , wxEmptyString, wxITEM_NORMAL );
+	deviceMenu->Append( menuDeviceRam );
+	menuDeviceRam->Enable( false );
+	
+	menuDeviceDisk = new wxMenu();
+	wxMenuItem* menuDeviceDiskItem1;
+	menuDeviceDiskItem1 = new wxMenuItem( menuDeviceDisk, wxID_ANY, wxString( wxT("N/A (yet)") ) , wxEmptyString, wxITEM_NORMAL );
+	menuDeviceDisk->Append( menuDeviceDiskItem1 );
+	menuDeviceDiskItem1->Enable( false );
+	
+	deviceMenu->Append( -1, wxT("Open Disk Device"), menuDeviceDisk );
+	
+	mbar->Append( deviceMenu, wxT("Device") );
+	
 	optionsMenu = new wxMenu();
 	menuOptionsFileMode = new wxMenu();
 	wxMenuItem* menuOptionsFileModeRO;
@@ -181,6 +210,11 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuViewToolbar->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuViewInfopanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Connect( menuViewInfopanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Connect( menuToolChecksum->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
+	this->Connect( menuToolCompare->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
+	this->Connect( menuDeviceRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
+	this->Connect( menuDeviceRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Connect( menuDeviceDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -215,6 +249,11 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_ANY, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
+	this->Disconnect( wxID_ANY, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_ANY, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );

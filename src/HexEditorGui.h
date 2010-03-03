@@ -42,11 +42,12 @@
 #define idInterpreter 1002
 #define idToolbar 1003
 #define idInfoPanel 1004
-#define idFileRO 1005
-#define idFileRW 1006
-#define idFileDW 1007
-#define ID_CHK_UNSIGNED 1008
-#define ID_CHK_BIGENDIAN 1009
+#define idDeviceRam 1005
+#define idFileRO 1006
+#define idFileRW 1007
+#define idFileDW 1008
+#define ID_CHK_UNSIGNED 1009
+#define ID_CHK_BIGENDIAN 1010
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -60,6 +61,9 @@ class HexEditorGui : public wxFrame
 		wxMenu* fileMenu;
 		wxMenu* editMenu;
 		wxMenu* viewMenu;
+		wxMenu* toolMenu;
+		wxMenu* deviceMenu;
+		wxMenu* menuDeviceDisk;
 		wxMenu* optionsMenu;
 		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
@@ -72,6 +76,8 @@ class HexEditorGui : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ){ event.Skip(); }
+		virtual void OnToolMenu( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnDeviceMenu( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		
 	

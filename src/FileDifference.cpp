@@ -138,7 +138,9 @@ int64_t FileDifference::Undo( void ){
 		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
 			if( i != 0 ){			//if it is not first node
 				DiffArray.Item( i-1 )->flag_undo = true;	//set previous node as undo node
-				return DiffArray.Item( i-1 )->start_offset;	//and return undo transaction start for screen focusing
+				if( file_access_mode == DirectWrite )		//Direct Write mode is always applies directly.
+					Apply();
+				return DiffArray.Item( i-1 )->start_offset;//and return undo transaction start for screen focusing
 				}
 			else{						//if first node is undo
 				wxBell();				//ring the bell
@@ -161,6 +163,8 @@ int64_t FileDifference::Redo( void ){
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
 			DiffArray.Item(i)->flag_undo = false;
+			if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
+				Apply();
 			return DiffArray.Item(i)->start_offset;
 			}
 	wxBell();	// No possible redo action
@@ -263,6 +267,8 @@ bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bo
 	DiffNode *rtn = NewNode( start_byte, data, size );
 		if( rtn != NULL ){
 			DiffArray.Add( rtn );					//Add new node to tail
+			if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
+				Apply();
 			return true;
 			}
 		else

@@ -163,8 +163,8 @@ void HexEditorFrame::PrepareAUI( void ){
 	}
 
 void HexEditorFrame::ActionEnabler( void ){
-	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-//	idFileDW, wxID_CUT, wxID_DELETE
+	int arr[] = { idFileRO, idFileRW, idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
+//	wxID_CUT, wxID_DELETE
 	for( int i=0 ; i<12 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
@@ -174,7 +174,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { idFileRO, idFileRW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE , idFileDW, wxID_REPLACE, wxID_CUT, wxID_DELETE };
+	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE, wxID_REPLACE, wxID_CUT, wxID_DELETE };
 	for( int i=0 ; i<16 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
@@ -297,21 +297,20 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 				case wxID_REPLACE:	MyHexEditor->ReplaceDialog();		break;
 				case idGotoOffset:	MyHexEditor->GotoDialog();			break;
 				case idFileRO:{
-					if( MyHexEditor->GetFileAccessMode() != FileDifference::ReadOnly )
-						MyHexEditor->SetFileAccessMode( FileDifference::ReadOnly );
+					MyHexEditor->SetFileAccessMode( FileDifference::ReadOnly );
 					MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 					break;
 					}
 				case idFileRW:{
-					if( MyHexEditor->GetFileAccessMode() == FileDifference::ReadOnly )	//if its not RW or DW
-						MyHexEditor->SetFileAccessMode( FileDifference::ReadWrite );
+					MyHexEditor->SetFileAccessMode( FileDifference::ReadWrite );
 					MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 					break;
 					}
-//				case idFileDW:
-//					wxBell();
-//MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
-//					break;
+				case idFileDW:
+					if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY directly."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
+						MyHexEditor->SetFileAccessMode( FileDifference::DirectWrite );
+					MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+					break;
 				default: wxBell();
 				}
 			}
@@ -326,6 +325,9 @@ void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
 		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
 		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
+		}
+	else if( event.GetId() == idDeviceRam ){
+// TODO (death#1#): RAM access with mmap and need DirectWrite Mode
 		}
 	}
 
@@ -448,6 +450,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		}
 	if(event.GetId() == idDeviceRam){
 		//when updateUI received by Ram Device open, thna needed to update Device List.
+		#ifndef __WXMSW__
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
 			menuDeviceDisk->Remove( *it );
@@ -463,6 +466,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 			}
+		#endif
 		}
 	event.Skip();
 	}

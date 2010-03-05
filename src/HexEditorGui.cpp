@@ -139,7 +139,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	menuDeviceDisk = new wxMenu();
 	wxMenuItem* menuDeviceDiskItem1;
-	menuDeviceDiskItem1 = new wxMenuItem( menuDeviceDisk, wxID_ANY, wxString( wxT("N/A (yet)") ) , wxEmptyString, wxITEM_NORMAL );
+	menuDeviceDiskItem1 = new wxMenuItem( menuDeviceDisk, wxID_ANY, wxString( wxT("N/A on this OS (yet)") ) , wxEmptyString, wxITEM_NORMAL );
 	menuDeviceDisk->Append( menuDeviceDiskItem1 );
 	menuDeviceDiskItem1->Enable( false );
 	

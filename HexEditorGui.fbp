@@ -458,7 +458,7 @@
                             <property name="help"></property>
                             <property name="id">wxID_ANY</property>
                             <property name="kind">wxITEM_NORMAL</property>
-                            <property name="label">N/A (yet)</property>
+                            <property name="label">N/A on this OS (yet)</property>
                             <property name="name">menuDeviceDiskItem1</property>
                             <property name="permission">none</property>
                             <property name="shortcut"></property>

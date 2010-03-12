@@ -36,7 +36,6 @@
 #include <wx/wx.h>
 #endif
 
-
 class DiffNode{
 	public:
 		bool flag_undo;			//For undo

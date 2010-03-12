@@ -28,15 +28,21 @@ FileDifference::FileDifference(wxFileName& myfilename, FileAccessMode FAM ){
 	file_access_mode = FAM;
 	the_file = myfilename;
 	if(myfilename.IsFileReadable()){//FileExists()){
-		if( FAM == ReadOnly)
-			Open(myfilename.GetFullPath(), wxFile::read);
-		else
-			Open(myfilename.GetFullPath(), wxFile::read_write);
+//		if( myfilename.GetFullPath() == wxT("/dev/mem") ){
+//			//Ram device in Unix has need special treatment.
+//			}
+//		else
+			{
+			if( FAM == ReadOnly)
+				Open(myfilename.GetFullPath(), wxFile::read);
+			else
+				Open(myfilename.GetFullPath(), wxFile::read_write);
 
-		if(! IsOpened()){
-			file_access_mode = AccessInvalid;
-			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-			dlg->ShowModal();dlg->Destroy();
+			if(! IsOpened()){
+				file_access_mode = AccessInvalid;
+				wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+				dlg->ShowModal();dlg->Destroy();
+				}
 			}
 		}
 	}
@@ -188,6 +194,11 @@ void FileDifference::ShowDebugState( void ){
 	}
 
 wxFileOffset FileDifference::Length( void ){
+	#ifdef __WXGTK__
+		if( the_file.GetFullPath() == wxT("/dev/mem") ){
+			return 512*1024*1024;
+			}
+	#endif
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();

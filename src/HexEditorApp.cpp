@@ -45,8 +45,13 @@ bool wxHexEditorApp::OnInit()
     frame = new HexEditorFrame( 0L );
 //    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
     frame->Show();
-	if (argc > 1)
-        frame->OpenFile(wxString(argv[1]));
+    // Open all of the files specified on the command line (assumes no flags)
+    for(int ii = 1; ii < argc; ++ii){
+        wxFileName fn = wxFileName(argv[ii]);
+
+        if(fn.FileExists() and fn.IsFileReadable())
+            frame->OpenFile(fn.GetFullPath());
+        }
     return true;
 }
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){

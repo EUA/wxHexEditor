@@ -668,7 +668,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
     PopupMenu(&menu, pos);
     // test for destroying items in popup menus
 #if 0 // doesn't work in wxGTK!
-// TODO (death#1#): inspect here	menu.Destroy(Menu_Popup_Submenu);
+// TODO (death#1#): inspect here	menu.Destroy(Menu_Popup_Submenu);
     PopupMenu( &menu, event.GetX(), event.GetY() );
 #endif // 0
 	}
@@ -920,7 +920,7 @@ bool HexEditor::CopySelection( ){
 				return true;
 				}
 			else{
-// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 				return false;
 				}
 			}

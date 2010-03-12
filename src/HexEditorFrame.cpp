@@ -29,18 +29,6 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 
 	PrepareAUI();
 
-#ifdef _DEBUG_
-	wxFileName myname(_("./testfile.swp"));
-	MyNotebook->AddPage( new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel, &myname ), myname.GetFullName() );
-
-	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( 0 ) );
-	if( MyHexEditor != NULL )
-		MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
-
-	ActionEnabler();
-	MyNotebook->SetSelection( 0 );
-#endif
-
 	MyAUI->Update();
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );

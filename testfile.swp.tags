@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wxHexEditor_XML_TAG>
-  <filename path="./testfile.swp">
+  <filename path="testfile.swp">
     <TAG id="5">
-      <start_offset>388</start_offset>
-      <end_offset>352</end_offset>
-      <tag_text>Third corruption</tag_text>
+      <start_offset>454</start_offset>
+      <end_offset>466</end_offset>
+      <tag_text>Different Corruption type</tag_text>
       <font_colour>#000000</font_colour>
-      <note_colour>#00FF07</note_colour>
+      <note_colour>#FF0000</note_colour>
     </TAG>
     <TAG id="4">
-      <start_offset>625</start_offset>
-      <end_offset>643</end_offset>
-      <tag_text>C type corruption</tag_text>
-      <font_colour>#000000</font_colour>
-      <note_colour>#0036FF</note_colour>
-    </TAG>
-    <TAG id="3">
-      <start_offset>795</start_offset>
-      <end_offset>802</end_offset>
-      <tag_text>D type corruption</tag_text>
-      <font_colour>#000000</font_colour>
-      <note_colour>#FF00F9</note_colour>
-    </TAG>
-    <TAG id="2">
-      <start_offset>168</start_offset>
-      <end_offset>192</end_offset>
-      <tag_text>Sample: Here second corruption at file</tag_text>
-      <font_colour>#000000</font_colour>
-      <note_colour>#FFE200</note_colour>
-    </TAG>
-    <TAG id="1">
       <start_offset>47</start_offset>
       <end_offset>53</end_offset>
       <tag_text>Sample: First corruption on file.</tag_text>
       <font_colour>#000000</font_colour>
       <note_colour>#FFC600</note_colour>
     </TAG>
-    <TAG id="0">
-      <start_offset>454</start_offset>
-      <end_offset>466</end_offset>
-      <tag_text>Different Corruption type</tag_text>
+    <TAG id="3">
+      <start_offset>168</start_offset>
+      <end_offset>192</end_offset>
+      <tag_text>Sample: Here second corruption at file</tag_text>
       <font_colour>#000000</font_colour>
-      <note_colour>#FF0000</note_colour>
+      <note_colour>#FFE200</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>795</start_offset>
+      <end_offset>802</end_offset>
+      <tag_text>D type corruption</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FF00F9</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>625</start_offset>
+      <end_offset>643</end_offset>
+      <tag_text>C type corruption</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#0036FF</note_colour>
+    </TAG>
+    <TAG id="0">
+      <start_offset>388</start_offset>
+      <end_offset>352</end_offset>
+      <tag_text>Third corruption</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FF07</note_colour>
     </TAG>
   </filename>
 </wxHexEditor_XML_TAG>

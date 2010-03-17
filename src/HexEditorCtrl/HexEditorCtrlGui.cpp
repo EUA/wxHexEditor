@@ -69,10 +69,10 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	
 	fgSizerMain->Add( text_ctrl, 1, wxEXPAND|wxRIGHT, 2 );
 	
-	offset_scroll = new wxScrollBar( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL );
-	offset_scroll->Enable( false );
+	offset_scroll_real = new wxScrollBar( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL );
+	offset_scroll_real->Enable( false );
 	
-	fgSizerMain->Add( offset_scroll, 0, wxALIGN_RIGHT|wxEXPAND, 0 );
+	fgSizerMain->Add( offset_scroll_real, 0, wxALIGN_RIGHT|wxEXPAND, 0 );
 	
 	this->SetSizer( fgSizerMain );
 	this->Layout();
@@ -80,32 +80,30 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	
 	// Connect Events
 	this->Connect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ) );
-	this->Connect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( HexEditorCtrlGui::OnMouseLeave ) );
 	this->Connect( wxEVT_SIZE, wxSizeEventHandler( HexEditorCtrlGui::OnResize ) );
-	offset_scroll->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
 }
 
 HexEditorCtrlGui::~HexEditorCtrlGui()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CHAR, wxKeyEventHandler( HexEditorCtrlGui::OnKeyboardChar ) );
-	this->Disconnect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( HexEditorCtrlGui::OnMouseLeave ) );
 	this->Disconnect( wxEVT_SIZE, wxSizeEventHandler( HexEditorCtrlGui::OnResize ) );
-	offset_scroll->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
-	offset_scroll->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
+	offset_scroll_real->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( HexEditorCtrlGui::OnOffsetScroll ), NULL, this );
 }

@@ -32,7 +32,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 	MyAUI->Update();
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
-    this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
+	this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
@@ -153,7 +153,7 @@ void HexEditorFrame::PrepareAUI( void ){
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
 //	wxID_CUT, wxID_DELETE
-	for( int i=0 ; i<12 ; i++ ){
+	for( int i=0 ; i<10 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
@@ -163,7 +163,7 @@ void HexEditorFrame::ActionEnabler( void ){
 
 void HexEditorFrame::ActionDisabler( void ){
 	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE, wxID_REPLACE, wxID_CUT, wxID_DELETE };
-	for( int i=0 ; i<16 ; i++ ){
+	for( int i=0 ; i<15 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
 		}

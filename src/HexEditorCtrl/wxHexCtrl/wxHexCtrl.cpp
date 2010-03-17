@@ -26,16 +26,16 @@
 BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
 	EVT_SIZE( wxHexCtrl::OnSize )
-    EVT_PAINT( wxHexCtrl::OnPaint )
-    EVT_LEFT_DOWN( wxHexCtrl::OnMouseLeft )
-    EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
-    //EVT_MOUSE( wxHexCtrl::OnResize)
-    EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
-    EVT_MENU( __idTagSelect__, wxHexCtrl::OnTagSelection )
+	EVT_PAINT( wxHexCtrl::OnPaint )
+	EVT_LEFT_DOWN( wxHexCtrl::OnMouseLeft )
+	EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
+	//EVT_MOUSE( wxHexCtrl::OnResize)
+	EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
+	EVT_MENU( __idTagSelect__, wxHexCtrl::OnTagSelection )
 	EVT_MENU( __idTagEdit__, wxHexCtrl::OnTagEdit )
 	EVT_MOTION( wxHexCtrl::OnMouseMove )
-    EVT_SET_FOCUS( wxHexCtrl::OnFocus )
-    EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
+	EVT_SET_FOCUS( wxHexCtrl::OnFocus )
+	EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
 END_EVENT_TABLE()
 
 //IMPLEMENT_DYNAMIC_CLASS(wxHexCtrl, wxScrolledWindow)
@@ -961,6 +961,13 @@ void wxHexOffsetCtrl::SetValue( int64_t position, int byteperline ){
 	int64_t temp_offset_position = offset_position = position;
 	BytePerLine = byteperline;
 	m_text.Clear();
+	if( position + LineCount()*BytePerLine > 999999999999 and hex_offset == false ){
+		hex_offset = true;
+		wxUpdateUIEvent new_event;
+		new_event.SetId( __idOffsetHex__ );
+		GetEventHandler()->ProcessEvent( new_event );
+		wxBell();
+		}
 	for( int i=0 ; i<LineCount() ; i++ ){
 		if (hex_offset)
 			m_text << ( wxString::Format( wxT("%012lX"), temp_offset_position ) );

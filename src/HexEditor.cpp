@@ -113,6 +113,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
 			LoadFromOffset(0, true);
 			//offset_scroll->SetScrollbar(offset_scroll->GetThumbPosition(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
+			//std::cout << "FileLength() / ByteCapacity() :" << FileLength() << " - " << ByteCapacity() << " : " << (FileLength() / ByteCapacity())+1 << "\n";
 			SetLocalHexInsertionPoint(0);
 			return true;
 			}
@@ -254,14 +255,14 @@ void HexEditor::UpdateOffsetScroll( void ){
 		offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
 		offset_scroll->SetScrollbar(page_offset / ByteCapacity(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
 		}
+
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
-	std::cout << event.GetEventType() << std::endl;
 	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)){
 		LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
 		UpdateCursorLocation();
 	#if wxUSE_STATUSBAR
 		if( statusbar != NULL )
-			statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %llu"), page_offset/ByteCapacity() ), 0);
 	#endif
 		wxYieldIfNeeded();
 		}
@@ -616,7 +617,9 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 		}
 	#endif // wxUSE_STATUSBAR
 	UpdateCursorLocation();
+#if defined(_DEBUG_) && _DEBUG_ > 3
 	std::cout << "CaptureMouse()\n" ;
+#endif
 	if(FindFocus() == hex_ctrl )
 		hex_ctrl->CaptureMouse();
 	else if( FindFocus() == text_ctrl )
@@ -807,18 +810,18 @@ void HexEditor::UpdateCursorLocation( bool force ){
 			}
 	#if wxUSE_STATUSBAR
 		if( statusbar != NULL ){
-			statusbar->SetStatusText(wxString::Format(_("Showing Page: %d"), page_offset/ByteCapacity() ), 0);
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %llu"), page_offset/ByteCapacity() ), 0);
 			if( offset_ctrl->hex_offset )
 				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%llX"), CursorOffset() ), 1);
 			else
-				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %lld"), CursorOffset() ), 1);
+				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %llu"), CursorOffset() ), 1);
 			uint8_t ch;
 			myfile->Seek( CursorOffset() );
 			myfile->Read( reinterpret_cast<char*>(&ch), 1);
 			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
 
-			int start = select->StartOffset;
-			int end = select->EndOffset;
+			int64_t start = select->StartOffset;
+			int64_t end = select->EndOffset;
 			if(start > end ){
 				int temp = start;
 				start = end;
@@ -829,8 +832,8 @@ void HexEditor::UpdateCursorLocation( bool force ){
 				statusbar->SetStatusText(_("Block Size: N/A") ,4);
 				}
 			else{
-				statusbar->SetStatusText(wxString::Format(_("Selected Block: %d -> %d"),start,end), 3);
-				statusbar->SetStatusText(wxString::Format(_("Block Size: %d"), abs(start-end)+1), 4);
+				statusbar->SetStatusText(wxString::Format(_("Selected Block: %llu -> %llu"),start,end), 3);
+				statusbar->SetStatusText(wxString::Format(_("Block Size: %llu"), abs(start-end)+1), 4);
 				}
 			}
 	#endif // wxUSE_STATUSBAR

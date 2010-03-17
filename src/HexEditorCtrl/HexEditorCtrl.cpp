@@ -32,7 +32,7 @@
 //END_EVENT_TABLE()
 
 HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const wxSize& size, long style):
-    HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
+	HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
 	select = new class Select( GetEventHandler() );
 	wxFont stdfont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
 	m_static_offset->SetFont( stdfont );
@@ -40,23 +40,26 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
 	Dynamic_Connector();
+	offset_scroll = new wxHugeScrollBar( offset_scroll_real );
 	TAGMutex = false;
 	hex_ctrl->TagMutex = &TAGMutex;
 	text_ctrl->TagMutex = &TAGMutex;
-    }
+   }
 HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
 	Clear();
 	MainTagArray.Clear();
 	delete select;
+	delete offset_scroll;
 	}
 
 void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( idTagSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
-    this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-    hex_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-    text_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	this->Connect( __idOffsetHex__, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorCtrl::UpdateUI ) );
+	this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	hex_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	text_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 	offset_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
@@ -71,9 +74,10 @@ void HexEditorCtrl::Dynamic_Connector(){
 void HexEditorCtrl::Dynamic_Disconnector(){
 	this->Disconnect( idTagSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
-    this->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-    hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-    text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	this->Disconnect( __idOffsetHex__, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorCtrl::UpdateUI ) );
+   this->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+   hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+   text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 
 	offset_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
 	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
@@ -289,7 +293,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int charx = hex_ctrl->GetCharSize().GetX();
 	int offset_x = offset_ctrl->GetCharSize().GetX()*12 + 4;
     x -= offset_x;			//Remove Offset Control box X because its changeable
-    x -= offset_scroll->GetSize().GetX();		//Remove Offset scroll size
+    x -= offset_scroll_real->GetSize().GetX();		//Remove Offset scroll size
     x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
     y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
 	int i = x/(4*charx);	//2 hex + 1 whitespace & 1 byte view
@@ -335,7 +339,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( offset_scroll, 0, wxEXPAND, 0 );
+	fgSizer1->Add( offset_scroll_real, 0, wxEXPAND, 0 );
 
 	this->SetSizer( fgSizer1 );
 	this->Layout();
@@ -587,6 +591,10 @@ void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 		}
 	}
 
+void HexEditorCtrl::UpdateUI(wxUpdateUIEvent& event){
+	std::cout << "wxHexEditorCtrl::OnUpdateUI()" << std::endl;
+	m_static_offset->SetLabel( offset_ctrl->hex_offset==false ? _("Offset: DEC") : _("Offset: HEX"));
+	}
 
 //------ADAPTERS----------//
 int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor
@@ -601,4 +609,78 @@ void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets positi
 	}
 int64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalHexInsertionPoint()/2 + page_offset;
+	}
+
+wxHugeScrollBar::wxHugeScrollBar( wxScrollBar* m_scrollbar_ ){
+         m_range = m_thumb = 0;
+         multipler = 1;
+         m_scrollbar = m_scrollbar_;
+
+			m_scrollbar->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+         }
+
+wxHugeScrollBar::~wxHugeScrollBar(){
+			m_scrollbar->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			m_scrollbar->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
+			}
+
+bool wxHugeScrollBar::SetThumbPosition(int64_t setpos){
+	std::cout << "SetThumbPosition()" << setpos << std::endl;
+	m_thumb = setpos;
+	if( m_range < 2147483648){
+		m_scrollbar->SetThumbPosition( setpos );
+		}
+	else{
+		std::cout << "m_Range" << m_range << std::endl;
+		std::cout << "SetThumbPositionx()" << static_cast<int>(setpos*(2147483648.0/m_range)) << std::endl;
+		m_scrollbar->SetThumbPosition(  static_cast<int>(setpos*(2147483648.0/m_range)) );
+		}
+	}
+
+bool wxHugeScrollBar::SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint ){
+	m_range = new_range;
+	if(new_range < 2147483648){//if representable with 32 bit
+		multipler = 1;
+		m_scrollbar->SetScrollbar( Current_Position, page_x, new_range, pagesize, repaint );
+		}
+	else{
+		multipler = rint(ceil( new_range/2147483647.0 ));
+		std::cout << "new_range " << new_range << std::endl;
+		std::cout << "multipler X" << multipler << std::endl;
+		std::cout << "Current_Position :" << (Current_Position*(2147483647.0/new_range)) << std::endl;
+		m_scrollbar->SetScrollbar( (Current_Position*(2147483647.0/new_range)), page_x, 2147483647, pagesize, repaint );
+		}
+	SetThumbPosition( Current_Position );
+	}
+
+void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
+	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)){
+		if( m_range < 2147483648){
+			m_thumb = event.GetPosition();
+			}
+		else{	//64bit mode
+			int64_t here =event.GetPosition();
+			if(here == 2147483646)	//if maximum set
+				m_thumb = m_range-1;	//than give maximum m_thumb which is -1 from range
+			else
+				m_thumb = here*(m_range/2147483647.0);
+			}
+		wxYieldIfNeeded();
+		}
+	event.Skip();
 	}

@@ -63,6 +63,27 @@ class Select{	//for using EventHandler
 			//for select byte 13 start=13, end=13
 	};
 
+class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar
+   friend class wxHexEditorCtrl;
+   public:
+      wxHugeScrollBar( wxScrollBar* m_scrollbar_ );
+		~wxHugeScrollBar();
+
+      void Enable( bool en ){ m_scrollbar->Enable(en); }
+      wxSize GetSize( void ){ return m_scrollbar->GetSize(); }
+      int64_t GetRange( void ){ return m_range; };
+      int64_t GetThumbPosition( void ){ return m_thumb; }
+      bool SetThumbPosition(int64_t setpos);
+      bool SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint=true );
+		void OnOffsetScroll( wxScrollEvent& event );
+
+   private:
+      int64_t m_range;
+      int64_t m_thumb;
+      int64_t multipler;
+      wxScrollBar *m_scrollbar;
+   };
+
 class HexEditorCtrl: public HexEditorCtrlGui{
 	public:
 		HexEditorCtrl(wxWindow* parent, int id,
@@ -75,6 +96,9 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		enum IDS{ idTagSelection=1001,idTagEdit };
 		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
+
+      //void OnOffsetScroll( wxScrollEvent& event );
+		wxHugeScrollBar* offset_scroll;
 	protected:
 		ArrayOfTAG MainTagArray;
 		void Dynamic_Connector();
@@ -113,6 +137,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void OnTagSelection( wxCommandEvent& event );
 		void OnTagEdit( wxCommandEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
+		void UpdateUI(wxUpdateUIEvent& event);
 
 		uint64_t LastRightClickAt;
 		//----ADAPTERS----//

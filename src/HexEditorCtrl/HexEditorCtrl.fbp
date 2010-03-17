@@ -455,9 +455,9 @@
                         <property name="id">wxID_ANY</property>
                         <property name="maximum_size"></property>
                         <property name="minimum_size"></property>
-                        <property name="name">offset_scroll</property>
+                        <property name="name">offset_scroll_real</property>
                         <property name="pagesize">1</property>
-                        <property name="permission">protected</property>
+                        <property name="permission">public</property>
                         <property name="pos"></property>
                         <property name="range">100</property>
                         <property name="size"></property>

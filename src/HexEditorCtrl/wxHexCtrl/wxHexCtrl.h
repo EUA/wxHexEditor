@@ -34,6 +34,7 @@
 
 #define __idTagSelect__ 1500
 #define __idTagEdit__ 1501
+#define __idOffsetHex__ 1502
 
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 

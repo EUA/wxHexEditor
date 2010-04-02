@@ -433,6 +433,7 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 	return NULL;
 }
 void wxHexCtrl::RePaint( void ){
+	wxCaretSuspend cs(this);
 	wxMemoryDC* dcTemp = CreateDC();
 	if( dcTemp != NULL ){
 		wxClientDC dc( this );
@@ -615,14 +616,15 @@ wxString wxHexCtrl::GetValue( void ){
 	return m_text;
 	}
 
-void wxHexCtrl::Replace(unsigned hex_location, const wxChar& value, bool paint){
+void wxHexCtrl::Replace(unsigned hex_location, const wxChar& value, bool repaint){
 	if( hex_location < m_text.Length() )
 		m_text[hex_location] = value;
 	else{
 		m_text << value;
 		m_text << wxT("0");
 		}
-	RePaint();
+	if(repaint)
+		RePaint();
 	}
 
 void wxHexCtrl::Replace(unsigned from, unsigned to, const wxString& value){

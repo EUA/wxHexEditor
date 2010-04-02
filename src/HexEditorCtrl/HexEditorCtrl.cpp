@@ -14,7 +14,7 @@
 *                                                                       *
 *   You should have received a copy of the GNU General Public License   *
 *   along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,                *
+*   if not, write to the Free Software	Foundation, Inc.,               *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -60,15 +60,15 @@ void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 	hex_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 	text_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-	offset_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
-	hex_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
-	text_ctrl	->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
-	hex_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
-	text_ctrl	->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
-	hex_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
-	text_ctrl	->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
-	hex_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
-	text_ctrl	->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	offset_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	hex_ctrl ->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	text_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	hex_ctrl ->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	text_ctrl->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
+	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
+	hex_ctrl ->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	text_ctrl->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	}
 
 void HexEditorCtrl::Dynamic_Disconnector(){
@@ -79,15 +79,15 @@ void HexEditorCtrl::Dynamic_Disconnector(){
    hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
    text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 
-	offset_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
-	hex_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
-	text_ctrl	->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
-	hex_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
-	text_ctrl	->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
-	hex_ctrl	->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
-	text_ctrl	->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
-	hex_ctrl	->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
-	text_ctrl	->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	offset_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditorCtrl::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
+	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
+	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	}
 //-----READ/WRITE FUNCTIONS-------//
 
@@ -117,11 +117,11 @@ void HexEditorCtrl::TextCharReplace( long char_location, const wxChar chr){
 	text_ctrl->Replace( char_location, chr, true );
 	char_location *= 2; //Converting Byte location to Hex Location;
 	wxString temp = wxString::Format(wxT("%02X"),chr);
-	hex_ctrl->Replace(char_location,char_location+2, temp);
+	hex_ctrl->Replace(char_location, char_location+2, temp);
 	}
 
 void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
-	hex_ctrl->Replace( hex_location, chr );
+	hex_ctrl->Replace( hex_location, chr, true );
 	hex_location /=2;	// Hex location is now Byte location
 	char rdchr = hex_ctrl->ReadByte(hex_location);
 	text_ctrl->Replace(	hex_location, rdchr, true );
@@ -259,8 +259,8 @@ void HexEditorCtrl::PaintSelection( void ){
 		else if( end_byte >= page_offset + GetByteCount() )	//...[..T]AG...
 			end_byte = GetByteCount() + page_offset;
 
-		start_byte	-= page_offset;
-		end_byte	-= page_offset;
+		start_byte -= page_offset;
+		end_byte   -= page_offset;
 
 		text_ctrl->SetSelection(start_byte, end_byte+1);
 		hex_ctrl ->SetSelection(start_byte*2, (end_byte+1)*2);

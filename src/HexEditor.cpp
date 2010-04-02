@@ -526,20 +526,8 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ){
 void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 	if(myfile != NULL){
 		wxChar chr = event.GetKeyCode();
-		/*
-		void *myctrl = FindFocus();		//avoid reinterpret_cast for speed
-		if( myctrl == text_ctrl )
-			myctrl = text_ctrl;
-		else if ( myctrl == hex_ctrl )
-			myctrl = hex_ctrl;
-		else
-			{
-			wxBell();
-			return;
-			}
-		*/
 
-		if( event.GetEventObject() == hex_ctrl )
+		if( event.GetEventObject() == hex_ctrl ){
 			if( isxdigit(chr) ){
 				(chr>='a'&&chr<='f')?(chr-=('a'-'A')):(chr=chr);		// Upper() for Char
 				HexCharReplace( GetLocalHexInsertionPoint(), chr);		// write to screen
@@ -560,6 +548,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 				}
 			else
 				wxBell();
+			}
 		else if( event.GetEventObject() == text_ctrl ){
 			if( wxString((wxChar)event.GetKeyCode()).IsAscii() &&
 				event.GetKeyCode()!=WXK_BACK &&

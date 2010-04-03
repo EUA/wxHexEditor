@@ -17,9 +17,11 @@
 					<Add option="-march=athlon64" />
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
+					<Add option="-pg" />
 					<Add option="`wx-config --cflags` -march=native -mtune=native" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>

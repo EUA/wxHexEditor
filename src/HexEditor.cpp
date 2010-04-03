@@ -728,7 +728,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 	#endif
 #endif
 		HexEditorCtrl::OnMouseMove( event );//Also makes selection in it
-		UpdateCursorLocation();
+		//UpdateCursorLocation();//Dont remember why did I put this here?
 		}
 	else
 		event.Skip(); //need for tag views

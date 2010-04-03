@@ -83,16 +83,19 @@ virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true
 		void DoMoveCaret();		// move the caret to m_Caret.x, m_Caret.y
 
 		// Shaper Classes, All other classes has to be depended to this function for proper action!
+		bool IsDeniedCache[1024];//cache, Enought for this days...
+		int CPL;
 virtual bool IsDenied() { return IsDenied( m_Caret.x );}
 virtual bool IsDenied( int x );
+virtual bool IsDenied_NoCache( int x );
 virtual bool IsAllowedChar(const char& chr);
 //virtual	const char Filter(const char& ch);
 		int xCountDenied( int x );
 		wxSize GetCharSize(){return m_CharSize;}
 
 		// Movement Support
-virtual int CharacterPerLine( void );
-virtual int BytePerLine( void )	{ return CharacterPerLine() / 2; }
+virtual int CharacterPerLine( bool NoCache=false );
+virtual int BytePerLine( void ){ return CharacterPerLine() / 2; }
 virtual int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
 		int LineCount( void )	{ return m_Window.y; }
 		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
@@ -114,9 +117,10 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		struct selector: public TagElement{		//select
 			bool selected;		//select available variable
 			} select;
-virtual void TagPainter( wxMemoryDC* DC, TagElement& TG );
+virtual void TagPainter( wxDC* DC, TagElement& TG );
 		void RePaint( void );
 		wxMemoryDC* CreateDC( void );
+		void DCPainter( wxDC* );
 		void OnTagHideAll( void );
 		bool *TagMutex;
 
@@ -167,8 +171,8 @@ class wxHexTextCtrl : public wxHexCtrl{
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				wxWindow::SetCursor( wxCURSOR_CHAR );
 				};
-		bool IsDenied(){ return false; }
-		bool IsDenied( int x ){ return false; }
+inline bool IsDenied(){ return false; }
+inline bool IsDenied( int x ){ return false; }
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
@@ -197,8 +201,8 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				hex_offset=false;
 				offset_position=0;
 				};
-		bool IsDenied(){ return false; }
-		bool IsDenied( int x ){ return false; }
+inline bool IsDenied(){ return false; }
+inline bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 		void SetValue( int64_t position );

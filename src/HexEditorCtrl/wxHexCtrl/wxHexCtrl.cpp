@@ -22,7 +22,6 @@
 *************************************************************************/
 
 #include "wxHexCtrl.h"
-
 BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
 	EVT_SIZE( wxHexCtrl::OnSize )
@@ -77,35 +76,35 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 									wxT(""),			// facename
 									wxFONTENCODING_CP437) );// msdos encoding
 
-    ClearSelection( false );
-    SetDefaultStyle( HexDefaultAttr );
+   ClearSelection( false );
+   SetDefaultStyle( HexDefaultAttr );
 
-    m_Caret.x = m_Caret.y =
-    m_Window.x = m_Window.y = 1;
-    m_Margin.x = m_Margin.y = 0;
+   m_Caret.x = m_Caret.y =
+   m_Window.x = m_Window.y = 1;
+   m_Margin.x = m_Margin.y = 0;
 	LastRightClickPosition = wxPoint(0,0);
-    select.selected = false;
+   select.selected = false;
 
-    CreateCaret();
+	CreateCaret();
 
   //  ChangeSize();
 
-    wxCaret *caret = GetCaret();
-    if ( caret )
+   wxCaret *caret = GetCaret();
+   if ( caret )
 		caret->Show(false);
 }
 wxHexCtrl::~wxHexCtrl()
 {
-    m_text.Clear();
-    wxCaretSuspend cs(this);
-    wxBufferedPaintDC dc( this );
-    PrepareDC( dc );
-    dc.SetFont( HexDefaultAttr.GetFont() );
+   m_text.Clear();
+   wxCaretSuspend cs(this);
+   wxBufferedPaintDC dc( this );
+   PrepareDC( dc );
+   dc.SetFont( HexDefaultAttr.GetFont() );
 	dc.SetTextForeground( HexDefaultAttr.GetTextColour() );
-    dc.SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
+   dc.SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
 	wxBrush bbrush( HexDefaultAttr.GetBackgroundColour() );
-    dc.SetBackground(bbrush );
-    dc.Clear();
+   dc.SetBackground(bbrush );
+   dc.Clear();
 	TagArray.Clear();
 }
 
@@ -219,7 +218,11 @@ void wxHexCtrl::NextLine( bool MoveCaret ){
 		DoMoveCaret();
 	}
 
-bool inline wxHexCtrl::IsDenied( int x ){	// State Of The Art :) Hex plotter function by idents avoiding some X axes :)
+inline bool wxHexCtrl::IsDenied( int x ){	// State Of The Art :) Hex plotter function by idents avoiding some X axes :)
+	return IsDeniedCache[x];
+	}
+
+inline bool wxHexCtrl::IsDenied_NoCache( int x ){	// State Of The Art :) Hex plotter function by idents avoiding some X axes :)
 //		x%=m_Window.x;						// Discarding y axis noise
 	if( ( ( m_Window.x - 1 ) % 3 == 0 )		// For avoid hex divorcings
 		&& ( x == m_Window.x - 1 ))
@@ -239,12 +242,15 @@ int wxHexCtrl::xCountDenied( int x ){		//Counts denied character locations (spac
 	return -1;
 	}
 
-int wxHexCtrl::CharacterPerLine( void ){	//Without spaces
+int wxHexCtrl::CharacterPerLine( bool NoCache ){	//Without spaces
+	if( not NoCache )
+		return CPL;
 	int avoid=0;
 	for ( int x = 0 ; x < m_Window.x ; x++)
-		if ( IsDenied(x) )
-			avoid++;
-	return  ( m_Window.x - avoid );
+		avoid += IsDeniedCache[x];
+	CPL=m_Window.x - avoid;
+	std::cout << "CPL: " << CPL << std::endl;
+	return ( m_Window.x - avoid );
 	}
 
 int wxHexCtrl::GetInsertionPoint( void ){
@@ -360,78 +366,51 @@ void wxHexCtrl::DoMoveCaret(){
                     m_Margin.x + m_Caret.y * m_CharSize.y);
 }
 inline wxMemoryDC* wxHexCtrl::CreateDC(){
-	wxCaretSuspend cs(this);
-/*
-	if(0){	//Alternate code
-		wxBufferedPaintDC bdc(this);
-		bdc.SetFont( HexDefaultAttr.GetFont() );
-		bdc.SetTextForeground( HexSelectAttr.GetTextColour() );
-		bdc.SetTextBackground( HexSelectAttr.GetBackgroundColour() );
-		wxBrush bbrush( HexSelectAttr.GetBackgroundColour() );
-		bdc.SetBackground(bbrush );
-		bdc.Clear();
+	wxBufferedPaintDC *dcTemp= new wxBufferedPaintDC(this);
 
-		wxString line;
-		unsigned int z = 0;
-		for ( int y = 0 ; y < m_Window.y; y++ ){
-			line.Empty();
-			for ( int x = 0 ; x < m_Window.x; x++ ){
-				if( IsDenied(x)){
-					line += wxT(' ');
-					continue;
-					}
-				if(z > m_text.Length())
-					break;
-				wxChar ch = CharAt(z++);
-				line += ch;
+//	wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
+//	wxMemoryDC *dcTemp = new wxMemoryDC();
+//	dcTemp->SelectObject(bmp);
+
+	dcTemp->SetFont( HexDefaultAttr.GetFont() );
+	dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
+	dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
+	wxBrush dbrush( HexDefaultAttr.GetBackgroundColour() );
+	dcTemp->SetBackground(dbrush );
+	dcTemp->Clear();
+
+	wxString line;
+	line.Alloc( m_Window.x+1 );
+
+	unsigned int z = 0;
+	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
+		line.Empty();
+		for ( int x = 0 ; x < m_Window.x; x++ ){
+			if( IsDenied(x)){
+				line += wxT(' ');
+				continue;
+				}
+			if(z > m_text.Length())
+				break;
+			wxChar ch = CharAt(z++);
+			line += ch;
 			}
-			bdc.DrawText( line, m_Margin.x, m_Margin.x + y * m_CharSize.y );
-			}
+		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
 		}
 
-*/
-	if(1){	//Hand made buffer code - check performance with alternative
-		wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
-		wxMemoryDC *dcTemp = new wxMemoryDC();
-		dcTemp->SelectObject(bmp);
-		dcTemp->SetFont( HexDefaultAttr.GetFont() );
-		dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
-		dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
-		wxBrush dbrush( HexDefaultAttr.GetBackgroundColour() );
-		dcTemp->SetBackground(dbrush );
-		dcTemp->Clear();
-
-		wxString line;
-		unsigned int z = 0;
-		for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
-			line.Empty();
-			for ( int x = 0 ; x < m_Window.x; x++ ){
-				if( IsDenied(x)){
-					line += wxT(' ');
-					continue;
-					}
-				if(z > m_text.Length())
-					break;
-				wxChar ch = CharAt(z++);
-				line += ch;
-				}
-			dcTemp->DrawText( line, m_Margin.x, m_Margin.x + y * m_CharSize.y );
+	int TAC = TagArray.Count();
+	if( TAC != 0 ){
+		TagElement *TAX;
+		for(int i = 0 ; i < TAC ; i++){
+			TAX = TagArray.Item(i);
+			TagPainter( dcTemp, *TAX );
 			}
-
-		int TAC = TagArray.Count();
-		if( TAC != 0 ){
-			TagElement *TAX;
-			for(int i = 0 ; i < TAC ; i++){
-				TAX = TagArray.Item(i);
-				TagPainter( dcTemp, *TAX );
-				}
-			}
-		if(select.selected)
-			TagPainter( dcTemp, select );
-		return dcTemp;
 		}
-	return NULL;
+	if(select.selected)
+		TagPainter( dcTemp, select );
+	return dcTemp;
 }
+
 void wxHexCtrl::RePaint( void ){
 	wxCaretSuspend cs(this);
 	wxMemoryDC* dcTemp = CreateDC();
@@ -452,7 +431,9 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 		delete dcTemp;
 		}
 	}
-void wxHexCtrl::TagPainter( wxMemoryDC* DC, TagElement& TG ){
+
+
+void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	{	//Selection Painter
 		DC->SetFont( HexDefaultAttr.GetFont() );
 		DC->SetTextForeground( TG.FontClrData.GetColour() );
@@ -563,15 +544,20 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
 
 void wxHexCtrl::ChangeSize(){
 	unsigned gip = GetInsertionPoint();
-    wxSize size = GetClientSize();
-    m_Window.x = (size.x - 2*m_Margin.x) / m_CharSize.x;
-    m_Window.y = (size.y - 2*m_Margin.x) / m_CharSize.y;
-    if ( m_Window.x < 1 )
+	wxSize size = GetClientSize();
+	m_Window.x = (size.x - 2*m_Margin.x) / m_CharSize.x;
+	m_Window.y = (size.y - 2*m_Margin.x) / m_CharSize.y;
+	if ( m_Window.x < 1 )
 		m_Window.x = 1;
-    if ( m_Window.y < 1 )
+	if ( m_Window.y < 1 )
 		m_Window.y = 1;
+
+	for(int i=0 ; i < m_Window.x+1 ; i++)
+		IsDeniedCache[i]=IsDenied_NoCache(i);
+	CharacterPerLine( true );//Updates CPL static int
+
 	RePaint();
-    SetInsertionPoint( gip );
+	SetInsertionPoint( gip );
 
 #if wxUSE_STATUSBAR
     wxFrame *frame = wxDynamicCast(GetParent(), wxFrame);
@@ -714,7 +700,7 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 		std::cout << "wxHexCtrl::OnSize X,Y" << event.GetSize().GetX() <<',' << event.GetSize().GetY() << std::endl;
 #endif
 	ChangeSize();
-    event.Skip();
+   event.Skip();
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
@@ -963,7 +949,7 @@ void wxHexOffsetCtrl::SetValue( int64_t position, int byteperline ){
 	int64_t temp_offset_position = offset_position = position;
 	BytePerLine = byteperline;
 	m_text.Clear();
-	if( position + LineCount()*BytePerLine > 999999999999 and hex_offset == false ){
+	if( position + LineCount()*BytePerLine > 999999999999LL and hex_offset == false ){
 		hex_offset = true;
 		wxUpdateUIEvent new_event;
 		new_event.SetId( __idOffsetHex__ );

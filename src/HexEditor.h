@@ -224,7 +224,10 @@ class scrollthread:wxThreadHelper{
 		return NULL;
 		}
 	void UpdateSpeed(int new_speed, int sleeptime = 25){
-		if(new_speed == 0)
+		if (new_speed == 0 and speed == 0 )
+			return;
+
+		else if(new_speed == 0)
 			GetThread()->Pause();
 		else
 			GetThread()->Resume();

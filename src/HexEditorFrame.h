@@ -41,6 +41,18 @@
 #include <wx/config.h>
 #include <wx/url.h>
 #include <wx/textdlg.h>
+#include <wx/mstream.h>
+
+#ifdef __WXMAC__
+#include "../resources/osx/png2c.h"
+#endif
+
+#define wxGetBitmapFromMemory(name) _wxGetBitmapFromMemory(name ## _png, sizeof(name ## _png))
+inline wxBitmap _wxGetBitmapFromMemory(const unsigned char *data, int length) {
+   wxMemoryInputStream is(data, length);
+   return wxBitmap(wxImage(is, wxBITMAP_TYPE_ANY, -1), -1);
+ }
+
 class DnDFile;
 class HexEditorFrame : public HexEditorGui {
 	public:
@@ -79,6 +91,13 @@ class HexEditorFrame : public HexEditorGui {
 #endif
 		friend class DnDFile;
 	};
+
+class HexEditorArtProvider : public wxArtProvider{
+protected:
+    virtual wxBitmap CreateBitmap(const wxArtID& id, const wxArtClient& client,
+                                  const wxSize& size);
+	};
+
 
 class DnDFile : public wxFileDropTarget{
 	public:

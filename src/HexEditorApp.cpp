@@ -42,6 +42,8 @@ IMPLEMENT_APP(wxHexEditorApp);
 
 bool wxHexEditorApp::OnInit()
 {
+	 wxImage::AddHandler(new wxPNGHandler);
+
     frame = new HexEditorFrame( 0L );
 //    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
     frame->Show();

@@ -125,6 +125,7 @@
 		</Compiler>
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="makefile" />
+		<Unit filename="resources/osx/png2c.h" />
 		<Unit filename="resources/resource.rc">
 			<Option target="Release Cross-Win32" />
 			<Option target="Debug Cross-Win32" />

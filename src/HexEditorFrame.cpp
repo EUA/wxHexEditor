@@ -21,12 +21,16 @@
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 #include "HexEditorFrame.h"
+
 #define idDiskDevice 10000
-HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
+HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 
+//#ifdef __WXMAC__
+	wxArtProvider::Push(new HexEditorArtProvider); //Using similar MacOSX icons. Much more better than wx ones...
+//#endif
 	PrepareAUI();
 
 	MyAUI->Update();
@@ -57,7 +61,7 @@ HexEditorFrame::HexEditorFrame(	wxWindow* parent,int id ):
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
-    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
+   this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
@@ -94,29 +98,29 @@ void HexEditorFrame::PrepareAUI( void ){
 #else
 	Toolbar = new wxToolBar( this,  wxID_ANY, wxDefaultPosition, wxDefaultSize );
 #endif
-	Toolbar->SetToolBitmapSize(wxSize(48,48));
+//	Toolbar->SetToolBitmapSize(wxSize(48,48));
 
-    Toolbar->AddTool(wxID_NEW, _T("New File"), wxArtProvider::GetBitmap(wxART_NEW));
-    Toolbar->AddTool(wxID_OPEN, _T("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN));
-    Toolbar->AddTool(wxID_SAVE, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE));
-    Toolbar->AddTool(wxID_SAVEAS, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS));
-    Toolbar->AddTool(idClose, _T("Close File"), wxArtProvider::GetBitmap(wxART_CROSS_MARK));
+	Toolbar->AddTool(wxID_NEW, _T("New File"), wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_OPEN, _T("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_SAVE, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_SAVEAS, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS, wxART_TOOLBAR));
+	Toolbar->AddTool(idClose, _T("Close File"), wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_TOOLBAR));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_FIND, _T("Find"), wxArtProvider::GetBitmap(wxART_FIND));
-	Toolbar->AddTool(wxID_REPLACE, _T("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE));
-	Toolbar->AddTool(idGotoOffset, _T("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD));
+	Toolbar->AddTool(wxID_FIND, _T("Find"), wxArtProvider::GetBitmap(wxART_FIND, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_REPLACE, _T("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE, wxART_TOOLBAR));
+	Toolbar->AddTool(idGotoOffset, _T("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_TOOLBAR));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_UNDO, _T("Undo"), wxArtProvider::GetBitmap(wxART_UNDO));
-	Toolbar->AddTool(wxID_REDO, _T("Redo"), wxArtProvider::GetBitmap(wxART_REDO));
+	Toolbar->AddTool(wxID_UNDO, _T("Undo"), wxArtProvider::GetBitmap(wxART_UNDO, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_REDO, _T("Redo"), wxArtProvider::GetBitmap(wxART_REDO, wxART_TOOLBAR));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_COPY, _T("Copy Block"), wxArtProvider::GetBitmap(wxART_COPY));
-	Toolbar->AddTool(wxID_PASTE, _T("Paste Block"), wxArtProvider::GetBitmap(wxART_PASTE));
+	Toolbar->AddTool(wxID_COPY, _T("Copy Block"), wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_PASTE, _T("Paste Block"), wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT));
-	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE));
+	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR));
+	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR));
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
-    Toolbar->Realize();
+   Toolbar->Realize();
 	mbar->Check( idToolbar, true );
 
     MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
@@ -508,6 +512,30 @@ void HexEditorFrame::TagHideAll( void ){
 	if( MyHexEditor != NULL )
 		MyHexEditor->TagHideAll();
 	}
+
+wxBitmap HexEditorArtProvider::CreateBitmap(const wxArtID& id, const wxArtClient& client, const wxSize& WXUNUSED(size)){
+	if ( client == wxART_TOOLBAR ){
+#ifdef __WXMAC__
+
+		if ( id == wxART_NEW )					return wxGetBitmapFromMemory(osx_stock_new);
+		if ( id == wxART_FILE_OPEN )			return wxGetBitmapFromMemory(osx_stock_open);
+		if ( id == wxART_FILE_SAVE )			return wxGetBitmapFromMemory(osx_stock_save);
+		if ( id == wxART_FILE_SAVE_AS )		return wxGetBitmapFromMemory(osx_stock_save);
+		if ( id == wxART_CROSS_MARK )			return wxGetBitmapFromMemory(osx_stock_cancel);
+		if ( id == wxART_FIND )					return wxGetBitmapFromMemory(osx_stock_find);
+		if ( id == wxART_FIND_AND_REPLACE )	return wxGetBitmapFromMemory(osx_stock_find_and_replace);
+		if ( id == wxART_GO_FORWARD )			return wxGetBitmapFromMemory(osx_stock_forward);
+		if ( id == wxART_UNDO )					return wxGetBitmapFromMemory(osx_stock_undo);
+		if ( id == wxART_REDO )					return wxGetBitmapFromMemory(osx_stock_redo);
+		if ( id == wxART_COPY )					return wxGetBitmapFromMemory(osx_stock_copy);
+		if ( id == wxART_PASTE )				return wxGetBitmapFromMemory(osx_stock_paste);
+		if ( id == wxART_CUT )					return wxGetBitmapFromMemory(osx_stock_cut);
+		if ( id == wxART_DELETE )				return wxGetBitmapFromMemory(osx_stock_delete);
+#endif
+		}
+	return wxNullBitmap;
+	}
+
 
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();

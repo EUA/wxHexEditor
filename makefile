@@ -4,7 +4,7 @@ CXXFLAGS= `$(WXCONFIG) --cxxflags` -c ${CFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
-#RCFLAGS = `$(WXCONFIG) --cxxflags`
+RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
 
 SOURCES= src/HexEditorGui.cpp \
 			src/FileDifference.cpp\
@@ -121,7 +121,7 @@ uninstall:
 	rm -f $(DATADIR)/pixmaps/wxHexEditor.png
 	rm -f $(DATADIR)/applications/wxHexEditor.desktop
 clean:
-	rm -f src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o
+	rm -f src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o resources/resource.o
 	rm -f wxHexEditor
 	rm -f wxHexEditor.exe
 	rm -rf wxHexEditor.app

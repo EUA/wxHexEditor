@@ -61,8 +61,8 @@ class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 		bool FileSave( bool question = true );
 		bool FileSave( wxString filename );
 		bool FileClose( void );
-		bool DoUndo( void );
-		bool DoRedo( void );
+		void DoUndo( void );
+		void DoRedo( void );
 
 		bool CopySelection( void );
 		bool PasteFromClipboard( void );
@@ -75,8 +75,8 @@ class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 		int GetFileAccessMode( void ){ return myfile->GetAccessMode();}
 		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();}
 		int GetFD( void ){ return myfile->fd(); }
-		bool IsAvailable_Undo( void ){ myfile->IsAvailable_Undo(); }
-		bool IsAvailable_Redo( void ){ myfile->IsAvailable_Redo(); }
+		bool IsAvailable_Undo( void ){ return myfile->IsAvailable_Undo(); }
+		bool IsAvailable_Redo( void ){ return myfile->IsAvailable_Redo(); }
 		void FindDialog( void );
 		void ReplaceDialog( void );
 		void GotoDialog( void );

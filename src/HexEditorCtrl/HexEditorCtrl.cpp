@@ -639,7 +639,7 @@ wxHugeScrollBar::~wxHugeScrollBar(){
 			m_scrollbar->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
 			}
 
-bool wxHugeScrollBar::SetThumbPosition(int64_t setpos){
+void wxHugeScrollBar::SetThumbPosition(int64_t setpos){
 	std::cout << "SetThumbPosition()" << setpos << std::endl;
 	m_thumb = setpos;
 	if( m_range < 2147483648){
@@ -652,7 +652,7 @@ bool wxHugeScrollBar::SetThumbPosition(int64_t setpos){
 		}
 	}
 
-bool wxHugeScrollBar::SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint ){
+void wxHugeScrollBar::SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint ){
 	m_range = new_range;
 	if(new_range < 2147483648){//if representable with 32 bit
 		multipler = 1;

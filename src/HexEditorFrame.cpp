@@ -21,16 +21,16 @@
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 #include "HexEditorFrame.h"
-
 #define idDiskDevice 10000
+
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 
-//#ifdef __WXMAC__
+#if defined __WXMAC__ || defined __WXMSW__
 	wxArtProvider::Push(new HexEditorArtProvider); //Using similar MacOSX icons. Much more better than wx ones...
-//#endif
+#endif
 	PrepareAUI();
 
 	MyAUI->Update();
@@ -451,7 +451,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		wxArrayString disks;
 		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
 		disks.Sort();
-		for( int i =0 ; i < disks.Count() ; i++){
+		for( unsigned i =0 ; i < disks.Count() ; i++){
 			#ifdef _DEBUG_
 			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
 			#endif
@@ -515,22 +515,36 @@ void HexEditorFrame::TagHideAll( void ){
 
 wxBitmap HexEditorArtProvider::CreateBitmap(const wxArtID& id, const wxArtClient& client, const wxSize& WXUNUSED(size)){
 	if ( client == wxART_TOOLBAR ){
-#ifdef __WXMAC__
-
-		if ( id == wxART_NEW )					return wxGetBitmapFromMemory(osx_stock_new);
-		if ( id == wxART_FILE_OPEN )			return wxGetBitmapFromMemory(osx_stock_open);
-		if ( id == wxART_FILE_SAVE )			return wxGetBitmapFromMemory(osx_stock_save);
-		if ( id == wxART_FILE_SAVE_AS )		return wxGetBitmapFromMemory(osx_stock_save);
-		if ( id == wxART_CROSS_MARK )			return wxGetBitmapFromMemory(osx_stock_cancel);
-		if ( id == wxART_FIND )					return wxGetBitmapFromMemory(osx_stock_find);
-		if ( id == wxART_FIND_AND_REPLACE )	return wxGetBitmapFromMemory(osx_stock_find_and_replace);
-		if ( id == wxART_GO_FORWARD )			return wxGetBitmapFromMemory(osx_stock_forward);
-		if ( id == wxART_UNDO )					return wxGetBitmapFromMemory(osx_stock_undo);
-		if ( id == wxART_REDO )					return wxGetBitmapFromMemory(osx_stock_redo);
-		if ( id == wxART_COPY )					return wxGetBitmapFromMemory(osx_stock_copy);
-		if ( id == wxART_PASTE )				return wxGetBitmapFromMemory(osx_stock_paste);
-		if ( id == wxART_CUT )					return wxGetBitmapFromMemory(osx_stock_cut);
-		if ( id == wxART_DELETE )				return wxGetBitmapFromMemory(osx_stock_delete);
+#if defined __WXMAC__
+		if ( id == wxART_NEW )					return wxGetBitmapFromMemory(osx_new);
+		if ( id == wxART_FILE_OPEN )			return wxGetBitmapFromMemory(osx_open);
+		if ( id == wxART_FILE_SAVE )			return wxGetBitmapFromMemory(osx_save);
+		if ( id == wxART_FILE_SAVE_AS )		return wxGetBitmapFromMemory(osx_save);
+		if ( id == wxART_CROSS_MARK )			return wxGetBitmapFromMemory(osx_cancel);
+		if ( id == wxART_FIND )					return wxGetBitmapFromMemory(osx_find);
+		if ( id == wxART_FIND_AND_REPLACE )	return wxGetBitmapFromMemory(osx_find_and_replace);
+		if ( id == wxART_GO_FORWARD )			return wxGetBitmapFromMemory(osx_jump_to);
+		if ( id == wxART_UNDO )					return wxGetBitmapFromMemory(osx_undo);
+		if ( id == wxART_REDO )					return wxGetBitmapFromMemory(osx_redo);
+		if ( id == wxART_COPY )					return wxGetBitmapFromMemory(osx_copy);
+		if ( id == wxART_PASTE )				return wxGetBitmapFromMemory(osx_paste);
+		if ( id == wxART_CUT )					return wxGetBitmapFromMemory(osx_cut);
+		if ( id == wxART_DELETE )				return wxGetBitmapFromMemory(osx_delete);
+#elif defined __WXMSW__
+		if ( id == wxART_NEW )					return wxGetBitmapFromMemory(win_new);
+		if ( id == wxART_FILE_OPEN )			return wxGetBitmapFromMemory(win_open);
+		if ( id == wxART_FILE_SAVE )			return wxGetBitmapFromMemory(win_save);
+		if ( id == wxART_FILE_SAVE_AS )		return wxGetBitmapFromMemory(win_saveas);
+		if ( id == wxART_CROSS_MARK )			return wxGetBitmapFromMemory(win_cancel);
+		if ( id == wxART_FIND )					return wxGetBitmapFromMemory(win_find);
+		if ( id == wxART_FIND_AND_REPLACE )	return wxGetBitmapFromMemory(win_find_and_replace);
+		if ( id == wxART_GO_FORWARD )			return wxGetBitmapFromMemory(win_jump_to);
+		if ( id == wxART_UNDO )					return wxGetBitmapFromMemory(win_undo);
+		if ( id == wxART_REDO )					return wxGetBitmapFromMemory(win_redo);
+		if ( id == wxART_COPY )					return wxGetBitmapFromMemory(win_copy);
+		if ( id == wxART_PASTE )				return wxGetBitmapFromMemory(win_paste);
+		if ( id == wxART_CUT )					return wxGetBitmapFromMemory(win_cut);
+		if ( id == wxART_DELETE )				return wxGetBitmapFromMemory(win_delete);
 #endif
 		}
 	return wxNullBitmap;

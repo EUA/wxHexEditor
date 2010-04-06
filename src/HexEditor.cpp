@@ -205,7 +205,7 @@ bool HexEditor::FileClose( void ){
 	return true;
 	}
 
-bool HexEditor::DoUndo( void ){
+void HexEditor::DoUndo( void ){
 	Goto( myfile->Undo() );
 #if defined(_DEBUG_) && _DEBUG_ > 3
 	std::cout << "Send UnReDo Event" << std::endl;
@@ -215,7 +215,7 @@ bool HexEditor::DoUndo( void ){
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-bool HexEditor::DoRedo( void ){
+void HexEditor::DoRedo( void ){
 	Goto( myfile->Redo() );
 #if defined(_DEBUG_) && _DEBUG_ > 3
 	std::cout << "Send UnReDo Event" << std::endl;
@@ -924,6 +924,7 @@ bool HexEditor::CopySelection( ){
 	}
 
 bool HexEditor::PasteFromClipboard( void ){
+	bool ret = false;
 	if( focus==HEX_CTRL ){
 		wxString str = copy_mark->GetClipboardData();
 		if( ! str.IsEmpty() ){
@@ -931,6 +932,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
 			select->SetState( select->SELECT_FALSE );
 			Goto( CursorOffset() + str.Len() );
+			ret = true;
 			}
 		}
 	else if ( focus==TEXT_CTRL ){
@@ -942,6 +944,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			FileAddDiff( CursorOffset(), ch, str.Len() );
 			select->SetState( select->SELECT_FALSE );
 			Goto( CursorOffset() + str.Len() );
+			ret = true;
 			}
 		}
 	else
@@ -953,4 +956,5 @@ bool HexEditor::PasteFromClipboard( void ){
 	wxUpdateUIEvent eventx;
 	eventx.SetId( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
+	return ret;
 	}

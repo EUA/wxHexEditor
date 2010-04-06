@@ -73,8 +73,8 @@ class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar
       wxSize GetSize( void ){ return m_scrollbar->GetSize(); }
       int64_t GetRange( void ){ return m_range; };
       int64_t GetThumbPosition( void ){ return m_thumb; }
-      bool SetThumbPosition(int64_t setpos);
-      bool SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint=true );
+      void SetThumbPosition(int64_t setpos);
+      void SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint=true );
 		void OnOffsetScroll( wxScrollEvent& event );
 
    private:

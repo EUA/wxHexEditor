@@ -43,8 +43,10 @@
 #include <wx/textdlg.h>
 #include <wx/mstream.h>
 
-#ifdef __WXMAC__
+#if defined __WXMAC__
 #include "../resources/osx/png2c.h"
+#elif defined __WXMSW__
+#include "../resources/win/png2c.h"
 #endif
 
 #define wxGetBitmapFromMemory(name) _wxGetBitmapFromMemory(name ## _png, sizeof(name ## _png))

@@ -125,7 +125,7 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 bool FindDialog::OnFind( bool internal ){
-	uint64_t found = -1;
+	uint64_t found = 0xFFFFFFFFFFFFFFFF;
 	uint64_t search_size = 0;
 	//prepare Operator
 	unsigned options = 0;
@@ -159,7 +159,7 @@ bool FindDialog::OnFind( bool internal ){
 		}
 
 
-	if( found != -1 ){
+	if( found != 0xFFFFFFFFFFFFFFFF ){
 		parent->Goto( found );
 		parent->Select( found,  found+search_size-1 );
 		return true;
@@ -177,8 +177,10 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		textsrc.AppendData( target.ToAscii() , target.Length() );
 		return FindBinary( textsrc, start_from, options );
 		}
-	else
+	else{
 		wxBell();
+		return -1;
+		}
 // TODO (death#1#): Find in UTF?
 	}
 // TODO (death#1#): New Find as "bool FindText/Bin( &uint64_t )

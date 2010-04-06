@@ -80,7 +80,6 @@ class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar
    private:
       int64_t m_range;
       int64_t m_thumb;
-      int64_t multipler;
       wxScrollBar *m_scrollbar;
    };
 

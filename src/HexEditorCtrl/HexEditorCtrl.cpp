@@ -613,7 +613,6 @@ int64_t HexEditorCtrl::CursorOffset( void ){
 
 wxHugeScrollBar::wxHugeScrollBar( wxScrollBar* m_scrollbar_ ){
          m_range = m_thumb = 0;
-         multipler = 1;
          m_scrollbar = m_scrollbar_;
 
 			m_scrollbar->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( wxHugeScrollBar::OnOffsetScroll ), NULL, this );
@@ -642,7 +641,7 @@ wxHugeScrollBar::~wxHugeScrollBar(){
 void wxHugeScrollBar::SetThumbPosition(int64_t setpos){
 	std::cout << "SetThumbPosition()" << setpos << std::endl;
 	m_thumb = setpos;
-	if( m_range < 2147483648){
+	if( m_range <= 2147483647){
 		m_scrollbar->SetThumbPosition( setpos );
 		}
 	else{
@@ -654,23 +653,20 @@ void wxHugeScrollBar::SetThumbPosition(int64_t setpos){
 
 void wxHugeScrollBar::SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint ){
 	m_range = new_range;
-	if(new_range < 2147483648){//if representable with 32 bit
-		multipler = 1;
+	if(new_range <= 2147483647){//if representable with 32 bit
 		m_scrollbar->SetScrollbar( Current_Position, page_x, new_range, pagesize, repaint );
 		}
 	else{
-		multipler = rint(ceil( new_range/2147483647.0 ));
 		std::cout << "new_range " << new_range << std::endl;
-		std::cout << "multipler X" << multipler << std::endl;
-		std::cout << "Current_Position :" << (Current_Position*(2147483647.0/new_range)) << std::endl;
-		m_scrollbar->SetScrollbar( (Current_Position*(2147483647.0/new_range)), page_x, 2147483647, pagesize, repaint );
+		std::cout << "Current_Position :" << (Current_Position*(2147483647/new_range)) << std::endl;
+		m_scrollbar->SetScrollbar( (Current_Position*(2147483647/new_range)), page_x, 2147483647, pagesize, repaint );
 		}
 	SetThumbPosition( Current_Position );
 	}
 
 void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
 	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)){
-		if( m_range < 2147483648){
+		if( m_range <= 2147483647){
 			m_thumb = event.GetPosition();
 			}
 		else{	//64bit mode
@@ -678,7 +674,7 @@ void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
 			if(here == 2147483646)	//if maximum set
 				m_thumb = m_range-1;	//than give maximum m_thumb which is -1 from range
 			else
-				m_thumb = here*(m_range/2147483647.0);
+				m_thumb = static_cast<int64_t>(here*(m_range/2147483647.0));
 			}
 		wxYieldIfNeeded();
 		}

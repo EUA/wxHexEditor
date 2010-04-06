@@ -657,7 +657,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
-    PopupMenu(&menu, pos);
+   PopupMenu(&menu, pos);
     // test for destroying items in popup menus
 #if 0 // doesn't work in wxGTK!
 // TODO (death#1#): inspect here	menu.Destroy(Menu_Popup_Submenu);

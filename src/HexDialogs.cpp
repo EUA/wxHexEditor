@@ -20,7 +20,7 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
-
+#define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
@@ -125,7 +125,7 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 bool FindDialog::OnFind( bool internal ){
-	uint64_t found = 0xFFFFFFFFFFFFFFFF;
+	uint64_t found = 0xFFFFFFFFFFFFFFFFLL;
 	uint64_t search_size = 0;
 	//prepare Operator
 	unsigned options = 0;
@@ -159,7 +159,7 @@ bool FindDialog::OnFind( bool internal ){
 		}
 
 
-	if( found != 0xFFFFFFFFFFFFFFFF ){
+	if( found != 0xFFFFFFFFFFFFFFFFLL ){
 		parent->Goto( found );
 		parent->Select( found,  found+search_size-1 );
 		return true;
@@ -179,7 +179,7 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		}
 	else{
 		wxBell();
-		return -1;
+		return NANINT;
 		}
 // TODO (death#1#): Find in UTF?
 	}
@@ -187,15 +187,15 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 // TODO (death#1#): Implement Search_Backwards
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
 	if( target.GetDataLen() == 0 )
-		return -1;
+		return NANINT;
 
 	uint64_t current_offset = from;
 	int search_step = parent->FileLength() < MB ? parent->FileLength() : MB ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
-	if(buffer == NULL) return -1;
+	if(buffer == NULL) return NANINT;
 	// TODO (death#6#): insert error check message here
-	int found = -1;
+	int found = NANINT;
 	int readed = 0;
 // TODO (death#1#): Seach bar with gauge???
 	//Search step 1: From cursor to file end.
@@ -231,7 +231,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		}
 
 	delete buffer;
-	return -1;
+	return NANINT;
 	}
 
 // TODO (death#9#): Implement better search algorithm. (Like one using OpenCL and one using OpenMP) :)

@@ -195,7 +195,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	char* buffer = new char [search_step];
 	if(buffer == NULL) return NANINT;
 	// TODO (death#6#): insert error check message here
-	int found = NANINT;
+	int found = -1;
 	int readed = 0;
 // TODO (death#1#): Seach bar with gauge???
 	//Search step 1: From cursor to file end.

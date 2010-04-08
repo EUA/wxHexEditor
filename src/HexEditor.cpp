@@ -57,12 +57,12 @@ HexEditor::~HexEditor(){
 	}
 
 void HexEditor::Dynamic_Connector(){
-    hex_ctrl ->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
-    text_ctrl->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	hex_ctrl ->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	text_ctrl->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 //	hex_ctrl ->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 //	text_ctrl->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-    hex_ctrl ->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
-    text_ctrl->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+	hex_ctrl ->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+	text_ctrl->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
 	hex_ctrl ->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	text_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
@@ -78,12 +78,12 @@ void HexEditor::Dynamic_Connector(){
 	}
 
 void HexEditor::Dynamic_Disconnector(){
-    hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 //	hex_ctrl ->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 //	text_ctrl->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-    hex_ctrl ->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
-    text_ctrl->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+	hex_ctrl ->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+	text_ctrl->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
@@ -304,8 +304,8 @@ void HexEditor::OnResize( wxSizeEvent &event){
 		}
     }
 
-bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension ){
-	myfile->Add( start_byte, data, size, extension );
+bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool injection ){
+	myfile->Add( start_byte, data, size, injection );
 // TODO (death#1#): Disabling undo - redo buttons
 //	if(myfile->IsAvailable_Undo())
 //		Toolbar->EnableTool( wxID_UNDO, true);
@@ -627,7 +627,6 @@ void HexEditor::OnMouseRight( wxMouseEvent& event ){
 	event.Skip(false);
 	}
 
-
 void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	wxMenu menu;
 	unsigned TagPosition=0;
@@ -639,8 +638,9 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	menu.Append(idTagEdit, _T("Tag Edit"));
 	menu.Append(idTagSelection, _T("New Tag"));
 	menu.Append(wxID_COPY, _T("Copy"));
-	menu.Append(wxID_CUT, _T("Cut"));
+	menu.Append(wxID_CUT, _T("Cut (Alpha)"));
 	menu.Append(wxID_PASTE, _T("Paste"));
+	menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
 
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
@@ -652,16 +652,19 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 		}
 	menu.Enable( idTagSelection, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_CUT, false );
+	menu.Enable( wxID_DELETE, false );
+	//menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
+	//menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
 	//menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
    PopupMenu(&menu, pos);
-    // test for destroying items in popup menus
+   // test for destroying items in popup menus
 #if 0 // doesn't work in wxGTK!
 // TODO (death#1#): inspect here	menu.Destroy(Menu_Popup_Submenu);
-    PopupMenu( &menu, event.GetX(), event.GetY() );
+   PopupMenu( &menu, event.GetX(), event.GetY() );
 #endif // 0
 	}
 
@@ -867,7 +870,29 @@ void HexEditor::GotoDialog( void ){
 		}
 	}
 
-bool HexEditor::CopySelection( ){
+bool HexEditor::DeleteSelection( void ){
+#ifdef _DEBUG_
+	std::cout << "DeleteSelection!" << std::endl;
+#endif
+	if( not select->IsState( select->SELECT_FALSE )){
+		uint64_t start = select->StartOffset;
+		int64_t size = -select->GetSize();
+		myfile->Add( start, NULL, size );
+		}
+	else{
+		wxBell();
+		return false;
+		}
+
+	}
+
+bool HexEditor::CutSelection( void ){
+#ifdef _DEBUG_
+	std::cout << "CutSelection!" << std::endl;
+#endif
+	}
+
+bool HexEditor::CopySelection( void ){
 	if( not select->IsState( select->SELECT_FALSE )){
 		uint64_t start = select->StartOffset;
 		uint64_t size = select->GetSize();

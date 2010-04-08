@@ -39,14 +39,20 @@
 class DiffNode{
 	public:
 		bool flag_undo;			//For undo
-		bool flag_commit;		//For undo
-	//	bool flag_sizechange;			//this is for file size extension. If this flag is true, that means a new data inserted to file
-		int64_t start_offset;	//start byte of node
-		int64_t size;			//size of node
+		bool flag_commit;			//For undo
+		bool flag_inject;			//this is for file size extension. If this flag is true, that means a new data inserted to file
+		uint64_t start_offset;	//start byte of node
+		int64_t size;				//size of node
 		char *old_data;			//old data buffer
 		char *new_data;			//new data buffer
 //	DiffNode *prev, *next;
-
+	DiffNode( uint64_t start, int64_t size_, bool inject){
+		start_offset = start;
+		flag_inject = inject;
+		size = size_;
+		flag_commit = flag_undo = false;
+		old_data = new_data = NULL;
+		}
 	~DiffNode( void ){
 		delete new_data;
 		delete old_data;
@@ -75,15 +81,16 @@ class FileDifference : public wxFile{
 		void ShowDebugState( void );
 		wxFileOffset Length( void );
 		long Read( char* buffer, int size );
-		bool Add( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
+		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node
 		bool IsAvailable_Undo( void );
 		bool IsAvailable_Redo( void );
 
 	protected:
 		void RemoveTail( DiffNode *remove_node );	//remove further tails.
-		DiffNode* NewNode( int64_t start_byte, const char* data, int64_t size, bool extension = false );
+		DiffNode* NewNode( uint64_t start_byte, const char* data, int64_t size, bool extension = false );
 		DiffNode* GetFirstUndoNode( void );
-		void FileIRQ(int64_t location, char* data, int size);
+		void FileIRQ( uint64_t location, char* data, int size);
+		int64_t GetByteMovements( uint64_t before_than );
 
 	private:
 		FileAccessMode file_access_mode;

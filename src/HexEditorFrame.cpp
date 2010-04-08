@@ -156,7 +156,6 @@ void HexEditorFrame::PrepareAUI( void ){
 
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-//	wxID_CUT, wxID_DELETE
 	for( int i=0 ; i<10 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
@@ -166,7 +165,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, idGotoOffset, wxID_UNDO, wxID_REDO, wxID_COPY, wxID_PASTE, wxID_REPLACE, wxID_CUT, wxID_DELETE };
+	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
 	for( int i=0 ; i<15 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
@@ -283,8 +282,9 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 				case wxID_UNDO:		MyHexEditor->DoUndo();				break;
 				case wxID_REDO:		MyHexEditor->DoRedo();				break;
 				case wxID_COPY:		MyHexEditor->CopySelection();		break;
-				//case wxID_CUT:		MyHexEditor->Cut?();		break;
-				case wxID_PASTE:	MyHexEditor->PasteFromClipboard();	break;
+				case wxID_CUT:			MyHexEditor->CutSelection();		break;
+				case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
+				case wxID_DELETE:		MyHexEditor->DeleteSelection();	break;
 				case wxID_FIND:		MyHexEditor->FindDialog();			break;
 				case wxID_REPLACE:	MyHexEditor->ReplaceDialog();		break;
 				case idGotoOffset:	MyHexEditor->GotoDialog();			break;
@@ -332,17 +332,24 @@ void HexEditorFrame::OnClose( wxCloseEvent& event ){
 void HexEditorFrame::OnQuit( wxCommandEvent& event ){
 	HexEditor *MyHexEditor;
 	for(;;){
-		MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( 0 ) );
-		if( MyHexEditor == NULL ){
+		if( MyNotebook->GetPageCount() ){
+			MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( 0 ) );
+			if( MyHexEditor != NULL ){
+				if( MyHexEditor->FileClose() ){
+					MyNotebook->DeletePage( 0 );
+					MyHexEditor = NULL;
+					}
+				else
+					break;
+				}
+			else
+				wxLogError(_("Error on quit!"));
+			}
+		else{
 			Destroy();
 			event.Skip();
 			return;
 			}
-		else if( MyHexEditor->FileClose() ){
-			MyNotebook->DeletePage( 0 );
-			MyHexEditor = NULL;
-			}
-		else break;
 		}
 	}
 
@@ -426,7 +433,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		#endif
 		Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 		mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
-		//Toolbar->EnableTool( wxID_CUT, true );
+		Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
+		mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
+		Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
+		mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
 		Toolbar->Refresh();
 		}
 
@@ -508,9 +518,11 @@ void HexEditorFrame::OnActivate( wxActivateEvent& event ){
 	}
 
 void HexEditorFrame::TagHideAll( void ){
-	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
-	if( MyHexEditor != NULL )
-		MyHexEditor->TagHideAll();
+	if( MyNotebook->GetPageCount() ){
+		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		if( MyHexEditor != NULL )
+			MyHexEditor->TagHideAll();
+		}
 	}
 
 wxBitmap HexEditorArtProvider::CreateBitmap(const wxArtID& id, const wxArtClient& client, const wxSize& WXUNUSED(size)){

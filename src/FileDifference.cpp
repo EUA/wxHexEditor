@@ -89,30 +89,44 @@ wxFileName FileDifference::GetFileName( void ){
 	return the_file;
 	}
 
-DiffNode* FileDifference::NewNode( int64_t start_byte, const char* data, int64_t size, bool sizechange ){
-	DiffNode* newnode = new struct DiffNode;
-	newnode->size = size;
-	newnode->start_offset = start_byte;
-	newnode->old_data = new char[size];
-	newnode->new_data = new char[size];
-	newnode->flag_commit = false;
-	newnode->flag_undo = false;
-//	newnode->flag_sizechange = sizechange;
-//	newnode->next = NULL;
-//	newnode->prev = prev;
-
-	if( newnode->old_data == NULL || newnode->new_data == NULL){
-		wxLogError( _("Not Enought RAM") );
-		delete newnode->old_data;
-		delete newnode->new_data;
-		return NULL;
+DiffNode* FileDifference::NewNode( uint64_t start_byte, const char* data, int64_t size, bool inject ){
+	DiffNode* newnode = new struct DiffNode( start_byte, size, inject );
+	if( size < 0 ){//Deletion!
+		newnode->old_data = new char[-size];
+		if( newnode->old_data == NULL )
+			wxLogError( _("Not Enought RAM") );
+		else{
+			Seek( start_byte, wxFromStart );
+			Read( newnode->old_data, -size );
+			return newnode;
+			}
 		}
-	else{
-		memcpy( newnode->new_data, data, size);
-		Seek( start_byte, wxFromStart );
-		Read( newnode->old_data, size );
-		return newnode;
+	else if( inject ){
+		newnode->new_data = new char[size];
+		if( newnode->new_data == NULL )
+			wxLogError( _("Not Enought RAM") );
+		else{
+			memcpy( newnode->new_data, data, size);
+			return newnode;
+			}
 		}
+	else{// Normal opeariton
+		newnode->old_data = new char[size];
+		newnode->new_data = new char[size];
+		if( newnode->old_data == NULL || newnode->new_data == NULL){
+			wxLogError( _("Not Enought RAM") );
+			delete newnode->old_data;
+			delete newnode->new_data;
+			return NULL;
+			}
+		else{
+			memcpy( newnode->new_data, data, size);
+			Seek( start_byte, wxFromStart );
+			Read( newnode->old_data, size );
+			return newnode;
+			}
+		}
+	return NULL;
 	}
 
 bool FileDifference::IsChanged( void ){
@@ -188,8 +202,12 @@ bool FileDifference::IsAvailable_Redo( void ){
 void FileDifference::ShowDebugState( void ){
 	std::cout << "\n\nNumber\t" << "Start\t" << "Size\t" << "DataN\t" << "DataO\t" << "writen\t" << "Undo\n";
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
-		std::cout << i << '\t' << DiffArray[i]->start_offset << '\t' << DiffArray[i]->size << '\t' << std::hex << (unsigned short)DiffArray[i]->new_data[0] << '\t'
+		std::cout << i << '\t' << DiffArray[i]->start_offset << '\t' << DiffArray[i]->size << '\t';
+		if (DiffArray[i]->size > 0 )
+			std::cout << std::hex <<  (unsigned short)DiffArray[i]->new_data[0] << '\t'
 				<< (unsigned short)DiffArray[i]->old_data[0] << '\t' <<	DiffArray[i]->flag_commit << '\t' << DiffArray[i]->flag_undo  << std::dec << std::endl;
+		else
+			std::cout << std::hex <<  0 << '\t' << (unsigned short)DiffArray[i]->old_data[0] << '\t' <<	DiffArray[i]->flag_commit << '\t' << DiffArray[i]->flag_undo  << std::dec << std::endl;
 		}
 	}
 
@@ -204,19 +222,46 @@ wxFileOffset FileDifference::Length( void ){
 	wxFileOffset max_size=wxFile::Length();
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		max_size = (( DiffArray[i]->start_offset + DiffArray[i]->size ) > max_size ) ? ( DiffArray[i]->start_offset + DiffArray[i]->size ):( max_size );
-	return max_size;
+
+	return max_size + GetByteMovements( max_size );
 	}
 
-long FileDifference::Read( char* buffer, int size ){
-	int64_t loc = Tell();
+int64_t FileDifference::GetByteMovements( uint64_t before_than ){
+	int64_t cnt = 0;
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+		if( DiffArray[i]->start_offset < before_than ){
+			if( DiffArray[i]->size < 0 ){
+				cnt += DiffArray[i]->size;
+				}
+
+			if( DiffArray[i]->flag_inject ){
+				cnt += DiffArray[i]->size;
+				}
+			}
+		}
+	return cnt;
+	}
+
+long FileDifference::Read( char* buffer, int size){
+	int64_t current_location = Tell();
+	int64_t move_start = GetByteMovements( current_location );
+	int64_t move_end = GetByteMovements( current_location+size );
+	int64_t real_read_location = current_location - move_start;
+	int64_t real_read_size = size + (move_start - move_end);
+#ifdef _DEBUG_
+	std::cout << "Current loc:" << std::dec << current_location
+				<< " Size  " << size
+				<< " Move Start:" << move_start
+				<< " Move End " << move_end
+				<< " Real Read Loc:" << real_read_location
+				<< " Real Read Size: " << real_read_size << std::endl;
+#endif
+	real_read_location = real_read_location < 0 ? 0 : real_read_location;
+	wxFile::Seek( real_read_location );
 	int readsize = wxFile::Read(buffer,size);	//Reads file as wxFile::Lenght
-	if(size != readsize)				//If there is free chars
-		readsize = (Length() - loc > size) ? (size):(Length() - loc);	//check for buffer overflow
-	FileIRQ( loc, buffer, size);
-	return readsize;
-	}
-
-void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
+//	if(real_read_location != readsize)				//If there is free chars
+//		readsize = (Length() - current_location > size) ? (size):(Length() - current_location);	//check for buffer overflow
+	char *data=buffer;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 		/** MANUAL of Code understanding**
 		current_location 						= [
@@ -226,8 +271,11 @@ void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
 		data									= ...
 		changed data							= xxx
 		**/
+
 		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 			continue;
+
+		int64_t movement = GetByteMovements( current_location );
 
 		///State: ...[...(xxx]xxx)...
 		if(current_location <= DiffArray[i]->start_offset && current_location+size >= DiffArray[i]->start_offset){
@@ -250,9 +298,12 @@ void FileDifference::FileIRQ(int64_t current_location, char* data, int size){
 			memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, size );
 			}
 		}
+
+	return readsize;
 	}
 
-bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bool extension ){
+bool FileDifference::Add( uint64_t start_byte, const char* data, int64_t size, bool injection ){
+	//Check for undos first
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 		if( DiffArray[i]->flag_undo ){
 			if(DiffArray.Item(i)->flag_commit ){	// commited undo node
@@ -275,13 +326,14 @@ bool FileDifference::Add( int64_t start_byte, const char* data, int64_t size, bo
 				}
 			}
 		}
-	DiffNode *rtn = NewNode( start_byte, data, size );
+	//Adding node here
+	DiffNode *rtn = NewNode( start_byte, data, size, injection );
 		if( rtn != NULL ){
-			DiffArray.Add( rtn );					//Add new node to tail
+			DiffArray.Add( rtn );						//Add new node to tail
 			if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
 				Apply();
 			return true;
 			}
 		else
-			return false;							//if created successfuly
+			return false;							//if not created successfuly
 	}

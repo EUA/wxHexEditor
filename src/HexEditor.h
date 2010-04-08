@@ -64,6 +64,8 @@ class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 		void DoUndo( void );
 		void DoRedo( void );
 
+		bool CutSelection( void );
+		bool DeleteSelection( void );
 		bool CopySelection( void );
 		bool PasteFromClipboard( void );
 

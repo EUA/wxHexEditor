@@ -769,7 +769,10 @@ void HexEditor::ScrollNoThread( int speed ){
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	HexEditorCtrl::OnMouseSelectionEnd( event );
 	myscroll->UpdateSpeed( 0 );
-	std::cout << "ReleaseMouse()\n" ; ReleaseMouse();
+#if defined(_DEBUG_) && _DEBUG_ > 2
+	std::cout << "ReleaseMouse()\n" ;
+#endif
+	GetCapture()->ReleaseMouse();
 	MouseCapture = false;
 	}
 

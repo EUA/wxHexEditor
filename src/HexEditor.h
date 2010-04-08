@@ -113,8 +113,8 @@ protected:
 
 	private:
 		bool MouseCapture;
-	    void Dynamic_Connector( void );
-	    void Dynamic_Disconnector( void );
+	   void Dynamic_Connector( void );
+	   void Dynamic_Disconnector( void );
 };
 
 class copy_maker{

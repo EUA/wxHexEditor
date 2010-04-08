@@ -173,6 +173,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 				};
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
+		int CharacterPerLine( void ){ return m_Window.x; }
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)

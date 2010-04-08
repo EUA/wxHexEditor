@@ -609,11 +609,16 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 #if defined(_DEBUG_) && _DEBUG_ > 3
 	std::cout << "CaptureMouse()\n" ;
 #endif
-	if(FindFocus() == hex_ctrl )
-		hex_ctrl->CaptureMouse();
-	else if( FindFocus() == text_ctrl )
-		text_ctrl->CaptureMouse();
-	MouseCapture = true;
+	if( MouseCapture == false ){
+		if(FindFocus() == hex_ctrl ){
+			hex_ctrl->CaptureMouse();
+			MouseCapture = true;
+			}
+		else if( FindFocus() == text_ctrl ){
+			text_ctrl->CaptureMouse();
+			MouseCapture = true;
+			}
+		}
 	}
 
 void HexEditor::OnMouseRight( wxMouseEvent& event ){
@@ -769,11 +774,13 @@ void HexEditor::ScrollNoThread( int speed ){
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	HexEditorCtrl::OnMouseSelectionEnd( event );
 	myscroll->UpdateSpeed( 0 );
+	if( MouseCapture ){
 #if defined(_DEBUG_) && _DEBUG_ > 2
-	std::cout << "ReleaseMouse()\n" ;
+		std::cout << "ReleaseMouse()\n" ;
 #endif
-	GetCapture()->ReleaseMouse();
-	MouseCapture = false;
+		GetCapture()->ReleaseMouse();
+		MouseCapture = false;
+		}
 	}
 
 void HexEditor::UpdateCursorLocation( bool force ){
@@ -878,9 +885,7 @@ bool HexEditor::DeleteSelection( void ){
 	std::cout << "DeleteSelection!" << std::endl;
 #endif
 	if( not select->IsState( select->SELECT_FALSE )){
-		uint64_t start = select->StartOffset;
-		int64_t size = -select->GetSize();
-		myfile->Add( start, NULL, size );
+		myfile->Add( select->StartOffset, NULL, -select->GetSize(), true );
 		}
 	else{
 		wxBell();

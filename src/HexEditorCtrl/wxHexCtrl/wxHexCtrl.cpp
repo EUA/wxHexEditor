@@ -14,7 +14,7 @@
 *                                                                       *
 *   You should have received a copy of the GNU General Public License   *
 *   along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,                *
+*   if not, write to the Free Software	Foundation, Inc.,               *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -349,19 +349,22 @@ void wxHexCtrl::MoveCaret(wxPoint p){
 #if defined(_DEBUG_) && _DEBUG_ > 1
 	std::cout << "MoveCaret(wxPoint) Coordinate X:Y = " << p.x	<< " " << p.y << std::endl;
 #endif
-    m_Caret = p;
-    DoMoveCaret();
+   m_Caret = p;
+   DoMoveCaret();
 }
 
 void wxHexCtrl::MoveCaret(int x){
+#if defined(_DEBUG_) && _DEBUG_ > 1
+	std::cout << "MoveCaret(ınt) = " << x << std::endl;
+#endif
 	m_Caret.y = x/CharacterPerLine();
-    m_Caret.x = x - m_Caret.y*CharacterPerLine();
-    DoMoveCaret();
+   m_Caret.x = x - m_Caret.y*CharacterPerLine();
+   DoMoveCaret();
 }
 
 void wxHexCtrl::DoMoveCaret(){
-    wxCaret *caret = GetCaret();
-    if ( caret )
+   wxCaret *caret = GetCaret();
+   if ( caret )
 		caret->Move(m_Margin.x + m_Caret.x * m_CharSize.x,
                     m_Margin.x + m_Caret.y * m_CharSize.y);
 }

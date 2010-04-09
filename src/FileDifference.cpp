@@ -226,19 +226,50 @@ wxFileOffset FileDifference::Length( void ){
 	return max_size + GetByteMovements( max_size );
 	}
 
-int64_t FileDifference::GetByteMovements( uint64_t before_than ){
+int64_t FileDifference::GetByteMovements( uint64_t current_location ){
+		/** MANUAL of Code understanding**
+	current_location 												= [
+	current_location + size 									= ]
+	DiffArray[i]'s delete start_offset						= (
+	DiffArray[i]'s delete start_offset + it's size	= )
+	DiffArray[i]'s inject start_offset						= {
+	DiffArray[i]'s inject start_offset + it's size	= }
+	data																	= ......
+	important data													= ,,,
+	**/
 	int64_t cnt = 0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
-		if( DiffArray[i]->start_offset < before_than ){
-			if( DiffArray[i]->size < 0 ){
-				cnt += DiffArray[i]->size;
+		///For Deletion First:
+		if( DiffArray[i]->size < 0 ){
+			DiffNode *Delete_Node = DiffArray[i];	//For easy reading of code
+			///State ...(...)...[...],,,. -> ...()......[,,,].
+			///State ...(..[..).].,,,.... -> ...()..[,,,]....
+			///State ...(..[...].)..,,,.. -> ...()..[,,,]..
+			if( Delete_Node->start_offset <= current_location ){
+				cnt += Delete_Node->size;	//returns minus movements
 				}
-			else if( DiffArray[i]->flag_inject ){
-				cnt += DiffArray[i]->size;
+			///State ...[...(...)...]... and  ...[...(...]...) will not handled here.
+			}
+		///Than injections:
+		else if( DiffArray[i]->flag_inject ){
+			DiffNode *Injection_Node = DiffArray[i];
+			///State ...{},,,[...]... -> ...{...}[...]......
+			if( Injection_Node->start_offset + Injection_Node->size <= current_location ){
+				cnt += Injection_Node->size;//returns plus movements
 				}
+			///State ...{},,,[...]... -> ...{....[.},,],....
+			///State ...{},,,[...]... -> ...{....[...]..},,,
+			///State ...[.{},],,..... -> ...[.{..].},,,.....
+			///State ...[.{}..]...... -> ...[.{..}.]........ will not handled here.
 			}
 		}
 	return cnt;
+	}
+
+bool FileDifference::ReadByte( char *chr, uint64_t location ){
+	int64_t BM = GetByteMovements( location );
+	wxFile::Seek( location-BM );
+	return wxFile::Read( chr, 1);	//Returns 1 if not error or 0 on error
 	}
 
 long FileDifference::Read( char* buffer, int size){
@@ -258,20 +289,59 @@ long FileDifference::Read( char* buffer, int size){
 				<< " File Length: " << Length() << std::endl;
 #endif
 
+#if 1
 	wxFile::Seek( real_read_location );
 	int readsize = wxFile::Read(buffer,size);	//Reads file as wxFile::Lenght
+#else
+	//This code is proper and working but not works with coriginal diff engine. Needed to make another one which understands deletions.
+	int readsize=0;
+	char chr;
+	///Since we hanled other states and:
+	///State ...[...(...)...]... and  ...[...(...]...)
+	///Are invulranable for 1 byte reading, there is no problem about this approach.
+	///But this will slow down reading projecs significantly.
+	///Anyway it's already superfeast process...
+	for( int i = 0 ; i < size ; i++ ){
+		if( ReadByte( &chr, current_location+i) ){
+			buffer[i]=chr;
+			readsize++;
+			}
+		else
+			break;
+		}
+#endif
 //	if(real_read_location != readsize)				//If there is free chars
 //		readsize = (Length() - current_location > size) ? (size):(Length() - current_location);	//check for buffer overflow
 	char *data=buffer;
+
+//	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+//		///State ...[...(...)...]... and  ...[...(...]...) will handled here.
+//		if( DiffArray[i]->size > 0
+//			and Delete_Node->start_offset > current_location
+//			and Delete_Node->start_offset <= current_location+size )
+//			TempDiffArray.Add( DiffArray[i] );
+//
+//
+//		if( DiffArray[i]->size < 0 ){
+//			DiffNode *Delete_Node = DiffArray[i];	//For easy reading of code
+//			///State ...(...)...[...],,,. -> ...()......[,,,].
+//			///State ...(..[..).].,,,.... -> ...()..[,,,]....
+//			///State ...(..[...].)..,,,.. -> ...()..[,,,]..
+//			if( Delete_Node->start_offset <= current_location ){
+//				cnt += Delete_Node->size;	//returns minus movements
+//				}
+//			}
+//		}
+
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
-		/** MANUAL of Code understanding**
-		current_location 						= [
-		current_location + size 				= ]
-		DiffArray[i]'s start_offset				= (
-		DiffArray[i]'s start_offset + it's size	= )
-		data									= ...
-		changed data							= xxx
-		**/
+		/// MANUAL of Code understanding
+		///current_location 						= [
+		///current_location + size 				= ]
+		///DiffArray[i]'s start_offset				= (
+		///DiffArray[i]'s start_offset + it's size	= )
+		///data									= ...
+		///changed data							= xxx
+
 		if( not DiffArray[i]->flag_inject ){
 			if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 				continue;

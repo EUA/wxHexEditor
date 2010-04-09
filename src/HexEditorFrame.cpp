@@ -433,10 +433,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		#endif
 		Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 		mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
-		Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
-		mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
-		Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
-		mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
+//		Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
+//		mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
+//		Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
+//		mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
 		Toolbar->Refresh();
 		}
 

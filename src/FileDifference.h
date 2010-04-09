@@ -81,6 +81,7 @@ class FileDifference : public wxFile{
 		void ShowDebugState( void );
 		wxFileOffset Length( void );
 		long Read( char* buffer, int size );
+		bool ReadByte( char* buffer, uint64_t location );
 		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node
 		bool IsAvailable_Undo( void );
 		bool IsAvailable_Redo( void );
@@ -95,6 +96,7 @@ class FileDifference : public wxFile{
 	private:
 		FileAccessMode file_access_mode;
 		ArrayOfNode DiffArray;
+		ArrayOfNode TempDiffArray;
 		wxFileName the_file;
 //		DiffNode *head,*tail;	//linked list holds modification record
 

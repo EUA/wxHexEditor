@@ -942,6 +942,15 @@ int wxHexTextCtrl::PixelCoordToInternalPosition( wxPoint mouse ){
 	return ( x + y * CharacterPerLine() );
 	}
 
+int wxHexTextCtrl::GetInsertionPoint( void ){
+	return m_Caret.x  + CharacterPerLine() * m_Caret.y;
+	}
+
+void wxHexTextCtrl::SetInsertionPoint( unsigned int pos ){
+	if(pos > m_text.Length())
+		pos = m_text.Length();
+	MoveCaret( wxPoint(pos%m_Window.x , pos/m_Window.x) );
+	}
 
 ///------HEXOFFSETCTRL-----///
 void wxHexOffsetCtrl::SetValue( int64_t position ){

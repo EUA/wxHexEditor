@@ -174,6 +174,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
 		int CharacterPerLine( void ){ return m_Window.x; }
+		int BytePerLine( void ){ CharacterPerLine(); }
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
@@ -181,8 +182,9 @@ inline bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 		bool IsAllowedChar(const char& chr);
+		int GetInsertionPoint( void );
+		void SetInsertionPoint( unsigned int pos );
 		wxChar Filter(const char& chr);
-		int BytePerLine( void ){return CharacterPerLine();};
 	};
 
 class wxHexOffsetCtrl : public wxHexCtrl{

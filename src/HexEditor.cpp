@@ -646,6 +646,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	menu.Append(wxID_CUT, _T("Cut (Alpha)"));
 	menu.Append(wxID_PASTE, _T("Paste"));
 	menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
+	menu.Append(idInjection, _T("Inject (Alpha)"));
 
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
@@ -655,9 +656,11 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			break;
 			}
 		}
+
 	menu.Enable( idTagSelection, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_CUT, false );
 	menu.Enable( wxID_DELETE, false );
+	menu.Enable( idInjection, false );
 	//menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
 	//menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
@@ -778,7 +781,8 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 #if defined(_DEBUG_) && _DEBUG_ > 2
 		std::cout << "ReleaseMouse()\n" ;
 #endif
-		GetCapture()->ReleaseMouse();
+		ReleaseMouse();
+		//GetCapture()->ReleaseMouse(); //this is proper one but breaks optimizations!
 		MouseCapture = false;
 		}
 	}
@@ -885,13 +889,13 @@ bool HexEditor::DeleteSelection( void ){
 	std::cout << "DeleteSelection!" << std::endl;
 #endif
 	if( not select->IsState( select->SELECT_FALSE )){
-		myfile->Add( select->StartOffset, NULL, -select->GetSize(), true );
+		myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
 		}
 	else{
 		wxBell();
 		return false;
 		}
-
+	Reload();
 	}
 
 bool HexEditor::CutSelection( void ){

@@ -180,7 +180,7 @@ class copy_maker{
 class scrollthread:wxThreadHelper{
 	private:
 		HexEditor *parent;
-		int speed, sleeper,cursor;
+		int speed, sleeper, cursor;
 	public:
 	scrollthread(int initial_speed, HexEditor *parent ):parent(parent){
 		sleeper = 25;
@@ -209,8 +209,8 @@ class scrollthread:wxThreadHelper{
 			parent->LoadFromOffset( parent->page_offset, false, false );
 
 				parent->SetLocalHexInsertionPoint(cursor);	//KILLs MACOSX via Calling UpdateCursorLocation()
-				parent->Selector();						//KILLs MACOSX
-				parent->PaintSelection();
+				parent->Selector();							//KILLs MACOSX
+				parent->PaintSelection();					//Assets time because of Caret suspending from thread
 				parent->UpdateCursorLocation( true );	//KILLs MACOSX
 
 			if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->ByteCapacity() )
@@ -228,10 +228,9 @@ class scrollthread:wxThreadHelper{
 	void UpdateSpeed(int new_speed, int sleeptime = 25){
 		if (new_speed == 0 and speed == 0 )
 			return;
-
-		else if(new_speed == 0)
+		else if(new_speed == 0 and GetThread()->IsRunning() )
 			GetThread()->Pause();
-		else
+		else if( GetThread()->IsPaused() )
 			GetThread()->Resume();
 		speed = new_speed;
 		sleeper = sleeptime;

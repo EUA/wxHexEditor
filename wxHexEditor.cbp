@@ -37,12 +37,12 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/debug-static/wx-config --cflags`" />
+					<Add option="`wx-config --cflags`" />
 					<Add option="-D_DEBUG_=6" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/debug-static/wx-config --libs`" />
+					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Release">
@@ -117,6 +117,26 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw/wx-config --libs`" />
+				</Linker>
+			</Target>
+			<Target title="Custom Debug">
+				<Option platforms="Unix;" />
+				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option parameters="testfile.swp" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="`/home/compile/wxWidgets-2.8.10/debug-static/wx-config --cflags`" />
+					<Add option="-D_DEBUG_=6" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+					<Add option="`/home/compile/wxWidgets-2.8.10/debug-static/wx-config --libs`" />
 				</Linker>
 			</Target>
 		</Build>

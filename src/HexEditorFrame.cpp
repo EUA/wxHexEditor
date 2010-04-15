@@ -14,7 +14,7 @@
 *                                                                       *
 *   You should have received a copy of the GNU General Public License   *
 *   along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,                *
+*   if not, write to the Free Software	Foundation, Inc.,               *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
@@ -207,7 +207,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									_(""),
 									_(""),
 									_("*"),
-									wxFD_SAVE|wxFD_OVERWRITE_PROMPT,
+									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxCHANGE_DIR,
 									wxDefaultPosition);
 
 		if(wxID_OK == filediag->ShowModal()){
@@ -242,7 +242,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									_(""),
 									_(""),
 									_("*"),
-									wxFD_FILE_MUST_EXIST|wxFD_OPEN,
+									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxCHANGE_DIR,
 									wxDefaultPosition);
 		if(wxID_OK == filediag->ShowModal()){
 			wxFileName flname(filediag->GetPath());
@@ -251,59 +251,61 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			}
 		}
 	else{
-		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
-		if( MyHexEditor != NULL ){
-			switch( event.GetId() ){
-				//case wxID_OPEN: not handled here!
-				case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
-				case wxID_SAVEAS:{
-					wxFileDialog* filediag = new wxFileDialog(this,
-														_("Choose a file for save as"),
-														_(""),
-														_(""),
-														_("*"),
-														wxFD_SAVE|wxFD_OVERWRITE_PROMPT,
-														wxDefaultPosition);
-					if(wxID_OK == filediag->ShowModal()){
-						if( !MyHexEditor->FileSave( filediag->GetPath() )){
-							wxMessageDialog *dlg = new wxMessageDialog(NULL,wxString(_("File cannot save as ")).Append( filediag->GetPath() ),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-							dlg->ShowModal();dlg->Destroy();
+		if( MyNotebook->GetPageCount() ){
+			HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+			if( MyHexEditor != NULL ){
+				switch( event.GetId() ){
+					//case wxID_OPEN: not handled here!
+					case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
+					case wxID_SAVEAS:{
+						wxFileDialog* filediag = new wxFileDialog(this,
+															_("Choose a file for save as"),
+															_(""),
+															_(""),
+															_("*"),
+															wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxCHANGE_DIR,
+															wxDefaultPosition);
+						if(wxID_OK == filediag->ShowModal()){
+							if( !MyHexEditor->FileSave( filediag->GetPath() )){
+								wxMessageDialog *dlg = new wxMessageDialog(NULL,wxString(_("File cannot save as ")).Append( filediag->GetPath() ),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+								dlg->ShowModal();dlg->Destroy();
+								}
 							}
+						break;
 						}
-					break;
+					case idClose:{
+						MyNotebook->DeletePage( MyNotebook->GetSelection() );
+						// delete MyHexEditor; not neccessery, DeletePage also delete this
+						if( MyNotebook->GetPageCount() == 0 )
+							ActionDisabler();
+						break;
+						}
+					case wxID_UNDO:		MyHexEditor->DoUndo();					break;
+					case wxID_REDO:		MyHexEditor->DoRedo();					break;
+					case wxID_COPY:		MyHexEditor->CopySelection();			break;
+					case wxID_CUT:			MyHexEditor->CutSelection();			break;
+					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
+					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
+					case wxID_FIND:		MyHexEditor->FindDialog();				break;
+					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
+					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
+					case idFileRO:{
+						MyHexEditor->SetFileAccessMode( FileDifference::ReadOnly );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+						break;
+						}
+					case idFileRW:{
+						MyHexEditor->SetFileAccessMode( FileDifference::ReadWrite );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+						break;
+						}
+					case idFileDW:
+						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY directly."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
+							MyHexEditor->SetFileAccessMode( FileDifference::DirectWrite );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+						break;
+					default: wxBell();
 					}
-				case idClose:{
-					MyNotebook->DeletePage( MyNotebook->GetSelection() );
-					// delete MyHexEditor; not neccessery, DeletePage also delete this
-					if( MyNotebook->GetPageCount() == 0 )
-						ActionDisabler();
-					break;
-					}
-				case wxID_UNDO:		MyHexEditor->DoUndo();				break;
-				case wxID_REDO:		MyHexEditor->DoRedo();				break;
-				case wxID_COPY:		MyHexEditor->CopySelection();		break;
-				case wxID_CUT:			MyHexEditor->CutSelection();		break;
-				case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
-				case wxID_DELETE:		MyHexEditor->DeleteSelection();	break;
-				case wxID_FIND:		MyHexEditor->FindDialog();			break;
-				case wxID_REPLACE:	MyHexEditor->ReplaceDialog();		break;
-				case idGotoOffset:	MyHexEditor->GotoDialog();			break;
-				case idFileRO:{
-					MyHexEditor->SetFileAccessMode( FileDifference::ReadOnly );
-					MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
-					break;
-					}
-				case idFileRW:{
-					MyHexEditor->SetFileAccessMode( FileDifference::ReadWrite );
-					MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
-					break;
-					}
-				case idFileDW:
-					if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY directly."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
-						MyHexEditor->SetFileAccessMode( FileDifference::DirectWrite );
-					MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
-					break;
-				default: wxBell();
 				}
 			}
 		}
@@ -413,62 +415,65 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
-	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
-	if( MyHexEditor != NULL ){
-		switch( MyHexEditor->GetFileAccessMode() ){
-			case FileDifference::ReadOnly :
-				mbar->Check(idFileRO, true);
-				break;
-			case FileDifference::ReadWrite :
-				mbar->Check(idFileRW, true);
-				break;
-			case FileDifference::DirectWrite :
-				mbar->Check(idFileDW, true);
-				break;
+	if( MyNotebook->GetPageCount() ){
+		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		if( MyHexEditor != NULL ){
+			switch( MyHexEditor->GetFileAccessMode() ){
+				case FileDifference::ReadOnly :
+					mbar->Check(idFileRO, true);
+					break;
+				case FileDifference::ReadWrite :
+					mbar->Check(idFileRW, true);
+					break;
+				case FileDifference::DirectWrite :
+					mbar->Check(idFileDW, true);
+					break;
+				}
 			}
-		}
-	if(event.GetId() == SELECT_EVENT ){
-		#ifdef _DEBUG_
-			std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
-		#endif
-		Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
-		mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
-//		Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
-//		mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
-//		Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
-//		mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
-		Toolbar->Refresh();
-		}
 
-	if(event.GetId() == UNREDO_EVENT ){
-		#ifdef _DEBUG_
-			std::cout << "HexEditorFrame::UNREDO event :" << event.GetString().ToAscii() << std::endl ;
-		#endif
-		Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
-		Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
-		mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
-		mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
-		Toolbar->Refresh();
-		}
-	if(event.GetId() == idDeviceRam){
-		//when updateUI received by Ram Device open, thna needed to update Device List.
-		#ifndef __WXMSW__
-		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
-		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
-			menuDeviceDisk->Remove( *it );
-		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
-		///ls -l /dev/disk/by-id
-		wxArrayString disks;
-		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
-		disks.Sort();
-		for( unsigned i =0 ; i < disks.Count() ; i++){
+		if(event.GetId() == SELECT_EVENT ){
 			#ifdef _DEBUG_
-			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
+				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
-			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
-			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
+			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+	//		Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
+	//		mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
+	//		Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
+	//		mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
+			Toolbar->Refresh();
 			}
-		#endif
+
+		if(event.GetId() == UNREDO_EVENT ){
+			#ifdef _DEBUG_
+				std::cout << "HexEditorFrame::UNREDO event :" << event.GetString().ToAscii() << std::endl ;
+			#endif
+			Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+			Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+			mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+			mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+			Toolbar->Refresh();
+			}
+		if(event.GetId() == idDeviceRam){
+			//when updateUI received by Ram Device open, thna needed to update Device List.
+			#ifndef __WXMSW__
+			wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
+			for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
+				menuDeviceDisk->Remove( *it );
+			this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+			///ls -l /dev/disk/by-id
+			wxArrayString disks;
+			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+			disks.Sort();
+			for( unsigned i =0 ; i < disks.Count() ; i++){
+				#ifdef _DEBUG_
+				std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
+				#endif
+				menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
+				this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+				}
+			#endif
+			}
 		}
 	event.Skip();
 	}
@@ -477,21 +482,23 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ) \n" ;
 #endif
-	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
-		if( MyHexEditor != NULL ){
-			MyHexEditor->UpdateCursorLocation();
-			MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+	if( MyNotebook->GetPageCount() ){
+		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
+			if( MyHexEditor != NULL ){
+				MyHexEditor->UpdateCursorLocation();
+				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 
-			Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
-			mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
+				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
+				mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 
-			Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
-			Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
-			mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
-			mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+				Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+				Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+				mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
+				mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
 
-			Toolbar->Refresh();
-			}
+				Toolbar->Refresh();
+				}
+		}
 	event.Skip();
 	}
 
@@ -499,15 +506,17 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ) \n" ;
 #endif
-	HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( event.GetSelection() ) );
-		if( MyHexEditor != NULL ){
-			if( MyHexEditor->FileClose() ){
-				MyNotebook->DeletePage( event.GetSelection() );
-				// delete MyHexEditor; not neccessery, DeletePage also delete this
+	if( MyNotebook->GetPageCount() ){
+		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( event.GetSelection() ) );
+			if( MyHexEditor != NULL ){
+				if( MyHexEditor->FileClose() ){
+					MyNotebook->DeletePage( event.GetSelection() );
+					// delete MyHexEditor; not neccessery, DeletePage also delete this
+					}
+				if( MyNotebook->GetPageCount() == 0 )
+					ActionDisabler();
 				}
-			if( MyNotebook->GetPageCount() == 0 )
-				ActionDisabler();
-			}
+		}
 	}
 
 void HexEditorFrame::OnActivate( wxActivateEvent& event ){

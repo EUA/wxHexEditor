@@ -289,7 +289,7 @@ long FileDifference::Read( char* buffer, int size){
 				<< " File Length: " << Length() << std::endl;
 #endif
 
-#if 1
+#if 0
 	wxFile::Seek( real_read_location );
 	int readsize = wxFile::Read(buffer,size);	//Reads file as wxFile::Lenght
 #else
@@ -346,26 +346,33 @@ long FileDifference::Read( char* buffer, int size){
 			if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 				continue;
 
-			int64_t movement = GetByteMovements( current_location );
+			//Makes correction on reading file. (NOT COMPLEX SOLVING! Patches could also be deleted later!)
+			int64_t movement=0;
+
+			for( int j=i ; j< DiffArray.GetCount() ; j++){
+				if( DiffArray[j]->flag_inject and DiffArray[j]->start_offset <=  DiffArray[i]->start_offset )
+					movement += DiffArray[j]->size;
+				}
+			std::cout << "Movement detected for patch i:" << i << " movement size:" << movement << std::endl;
 
 			///State: ...[...(xxx]xxx)...
-			if(current_location <= DiffArray[i]->start_offset && current_location+size >= DiffArray[i]->start_offset){
-				int irq_loc = DiffArray[i]->start_offset - current_location;
+			if(current_location <= DiffArray[i]->start_offset+movement && current_location+size >= DiffArray[i]->start_offset+movement){
+				int irq_loc = DiffArray[i]->start_offset +movement - current_location;
 				//...[...(xxx)...]... //not neccessery, this line includes this state
 				int irq_size = (size - irq_loc > DiffArray[i]->size) ? (DiffArray[i]->size) : (size - irq_loc);
 				memcpy(data+irq_loc , DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data, irq_size );
 				}
 
 			///State: ...(xxx[xxx)...]...
-			else if (current_location <= DiffArray[i]->start_offset + DiffArray[i]->size && current_location+size >= DiffArray[i]->start_offset + DiffArray[i]->size){
-				int irq_skipper = current_location - DiffArray[i]->start_offset;	//skip this bytes from start
+			else if (current_location <= DiffArray[i]->start_offset +movement + DiffArray[i]->size && current_location+size >= DiffArray[i]->start_offset -movement + DiffArray[i]->size){
+				int irq_skipper = current_location - DiffArray[i]->start_offset +movement;	//skip this bytes from start
 				int irq_size = DiffArray[i]->size - irq_skipper;
 				memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, irq_size );
 				}
 
 			///State: ...(xxx[xxx]xxx)...
-			else if(DiffArray[i]->start_offset <= current_location && DiffArray[i]->start_offset + DiffArray[i]->size >= current_location+size){
-				int irq_skipper = current_location - DiffArray[i]->start_offset;	//skip this bytes from start
+			else if(DiffArray[i]->start_offset +movement <= current_location && DiffArray[i]->start_offset+movement + DiffArray[i]->size >= current_location+size){
+				int irq_skipper = current_location - DiffArray[i]->start_offset+movement;	//skip this bytes from start
 				memcpy(data, DiffArray[i]->flag_undo ? DiffArray[i]->old_data : DiffArray[i]->new_data + irq_skipper, size );
 				}
 			}

@@ -86,6 +86,7 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
 		InfoPanel *MyInfoPanel;
+		wxDir LastOpenDir;
 #ifdef	_WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
 #else

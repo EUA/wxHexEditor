@@ -782,7 +782,7 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 		std::cout << "ReleaseMouse()\n" ;
 #endif
 		ReleaseMouse();
-		//GetCapture()->ReleaseMouse(); //this is proper one but breaks optimizations!
+		//GetCapture()->ReleaseMouse();//this is proper one but breaks optimizations!
 		MouseCapture = false;
 		}
 	}

@@ -239,6 +239,9 @@ int64_t FileDifference::GetByteMovements( uint64_t current_location ){
 	**/
 	int64_t cnt = 0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+		if( DiffArray[i]->flag_inject and DiffArray[i]->flag_undo and !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
+			continue;
+
 		///For Deletion First:
 		if( DiffArray[i]->size < 0 ){
 			DiffNode *Delete_Node = DiffArray[i];	//For easy reading of code
@@ -279,7 +282,7 @@ long FileDifference::Read( char* buffer, int size){
 	int64_t real_read_location = current_location - move_start;
 	int64_t real_read_size = size + (move_start - move_end);
 	real_read_location = real_read_location < 0 ? 0 : real_read_location;
-#ifdef _DEBUG_
+#ifdef _DEBUG_FILE_
 	std::cout << "Current loc:" << std::dec << current_location
 				<< " Size  " << size
 				<< " Move Start:" << move_start
@@ -314,25 +317,6 @@ long FileDifference::Read( char* buffer, int size){
 //		readsize = (Length() - current_location > size) ? (size):(Length() - current_location);	//check for buffer overflow
 	char *data=buffer;
 
-//	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
-//		///State ...[...(...)...]... and  ...[...(...]...) will handled here.
-//		if( DiffArray[i]->size > 0
-//			and Delete_Node->start_offset > current_location
-//			and Delete_Node->start_offset <= current_location+size )
-//			TempDiffArray.Add( DiffArray[i] );
-//
-//
-//		if( DiffArray[i]->size < 0 ){
-//			DiffNode *Delete_Node = DiffArray[i];	//For easy reading of code
-//			///State ...(...)...[...],,,. -> ...()......[,,,].
-//			///State ...(..[..).].,,,.... -> ...()..[,,,]....
-//			///State ...(..[...].)..,,,.. -> ...()..[,,,]..
-//			if( Delete_Node->start_offset <= current_location ){
-//				cnt += Delete_Node->size;	//returns minus movements
-//				}
-//			}
-//		}
-
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 		/// MANUAL of Code understanding
 		///current_location 						= [
@@ -346,12 +330,16 @@ long FileDifference::Read( char* buffer, int size){
 			if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 				continue;
 
-			//Makes correction on reading file. (NOT COMPLEX SOLVING! Patches could also be deleted later!)
+			//Makes correction on reading file.
 			int64_t movement=0;
 
 			for( int j=i ; j< DiffArray.GetCount() ; j++){
-				if( DiffArray[j]->flag_inject and DiffArray[j]->start_offset <=  DiffArray[i]->start_offset )
+				if( DiffArray[j]->flag_inject
+						 and DiffArray[j]->start_offset - movement <=  DiffArray[i]->start_offset //Delete node j + movement ıs smaller than start offset?
+						 and not DiffArray[j]->flag_undo ){
+					std::cout << "Move for patch i:" << i << " DiffArray[i]->start_offset::" << DiffArray[i]->start_offset << " DiffArray[j]->start_offset + movement:" << DiffArray[j]->start_offset + movement << std::endl;
 					movement += DiffArray[j]->size;
+					}
 				}
 			std::cout << "Movement detected for patch i:" << i << " movement size:" << movement << std::endl;
 
@@ -394,7 +382,7 @@ bool FileDifference::Add( uint64_t start_byte, const char* data, int64_t size, b
 				}
 			else{									// non committed undo node
 				while( i < (DiffArray.GetCount()) ){	// delete beyond here
-					#if defined(_DEBUG_) && _DEBUG_ > 3
+					#ifdef _DEBUG_FILE_
 						std::cout << "DiffArray.GetCount() : " << DiffArray.GetCount() << " while i = " << i<< std::endl;
 					#endif
 					DiffNode *temp;

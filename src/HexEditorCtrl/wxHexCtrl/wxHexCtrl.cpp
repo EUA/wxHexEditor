@@ -249,7 +249,7 @@ int wxHexCtrl::CharacterPerLine( bool NoCache ){	//Without spaces
 	for ( int x = 0 ; x < m_Window.x ; x++)
 		avoid += IsDeniedCache[x];
 	CPL=m_Window.x - avoid;
-	std::cout << "CPL: " << CPL << std::endl;
+	//std::cout << "CPL: " << CPL << std::endl;
 	return ( m_Window.x - avoid );
 	}
 
@@ -346,7 +346,7 @@ void wxHexCtrl::ClearSelection( bool repaint ){
 	}
 
 void wxHexCtrl::MoveCaret(wxPoint p){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#ifdef _DEBUG_CARET_
 	std::cout << "MoveCaret(wxPoint) Coordinate X:Y = " << p.x	<< " " << p.y << std::endl;
 #endif
    m_Caret = p;
@@ -354,7 +354,7 @@ void wxHexCtrl::MoveCaret(wxPoint p){
 }
 
 void wxHexCtrl::MoveCaret(int x){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#ifdef _DEBUG_CARET_
 	std::cout << "MoveCaret(ınt) = " << x << std::endl;
 #endif
 	m_Caret.y = x/CharacterPerLine();
@@ -684,7 +684,7 @@ void wxHexCtrl::OnFocus(wxFocusEvent& event ){
 		caret->Show(true);
 	}
 void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#ifdef _DEBUG_MOUSE_
 	std::cout << "wxHexCtrl::OnKillFocus()" << std::endl;
 #endif
 	wxCaret *caret = GetCaret();
@@ -699,7 +699,7 @@ void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 	}
 
 void wxHexCtrl::OnSize( wxSizeEvent &event ){
-#ifdef _DEBUG_
+#ifdef _DEBUG_SIZE_
 		std::cout << "wxHexCtrl::OnSize X,Y" << event.GetSize().GetX() <<',' << event.GetSize().GetY() << std::endl;
 #endif
 	ChangeSize();
@@ -707,7 +707,7 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 8
+#ifdef _DEBUG_CARET_
 	std::cout << "wxHexCtrl::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLMR mouse button:" << event.m_leftDown << event.m_middleDown << event.m_rightDown << std::endl;
 #endif
@@ -718,7 +718,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 			select.selected = true;
 		else
 			select.selected = false;
-#if defined(_DEBUG_) && _DEBUG_ > 2
+#ifdef _DEBUG_SELECT_
 		std::cout << "wxHexCtrl::Selection is " << (select.selected?"true":"false") << " from " << select.start << " to " << select.end << std::endl;
 #endif
 		RePaint();

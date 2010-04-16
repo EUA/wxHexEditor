@@ -51,7 +51,7 @@ TagElement::~TagElement(){
 
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 	if( !visible ){
-#ifdef _DEBUG_
+#ifdef _DEBUG_TAG_
 		std::cout << "Show tag element " << this << std::endl;
 #endif
 		visible = true;
@@ -76,7 +76,7 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 void TagElement::Hide( void ){
 	if( visible )
 		{
-#ifdef _DEBUG_
+#ifdef _DEBUG_TAG_
 		std::cout << "Hide tag element " << this << std::endl;
 #endif
 		visible=false;

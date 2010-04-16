@@ -57,7 +57,7 @@ bool wxHexEditorApp::OnInit()
     return true;
 }
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){
-#if defined(_DEBUG_) && _DEBUG_ > 2
+#if defined(_DEBUG_)
 //	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
 //		{
 //		wxFocusEvent* event = static_cast<wxFocusEvent*>(&mevent);

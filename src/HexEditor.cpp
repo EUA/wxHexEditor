@@ -207,7 +207,7 @@ bool HexEditor::FileClose( void ){
 
 void HexEditor::DoUndo( void ){
 	Goto( myfile->Undo() );
-#if defined(_DEBUG_) && _DEBUG_ > 3
+#ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
 	wxUpdateUIEvent eventx;
@@ -217,7 +217,7 @@ void HexEditor::DoUndo( void ){
 
 void HexEditor::DoRedo( void ){
 	Goto( myfile->Redo() );
-#if defined(_DEBUG_) && _DEBUG_ > 3
+#ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
 	wxUpdateUIEvent eventx;
@@ -269,7 +269,7 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ){
 	}
 
 void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
-	#ifdef _DEBUG_
+	#ifdef _DEBUG_FILE_
 		std::cout << "LoadFromOffset() : " << position << std::endl;
 	#endif
     myfile->Seek(position, wxFromStart);
@@ -288,9 +288,9 @@ void HexEditor::Reload( void ){
 	}
 
 void HexEditor::OnResize( wxSizeEvent &event){
+	#ifdef _DEBUG_SIZE_
 	std::cout << "HexEditor::OnResize() Event Type:" << event.GetEventType() << std::endl ;
-	#ifdef _DEBUG_
-		std::cout << "ByteCapacity() Before:" << ByteCapacity() << std::endl;
+	std::cout << "ByteCapacity() Before:" << ByteCapacity() << std::endl;
 	#endif
 	HexEditorCtrl::OnResize( event );
 	//event.Skip( true );
@@ -584,7 +584,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ){
 				wxBell();
 			}
 		}
-#if defined(_DEBUG_) && _DEBUG_ > 3
+#ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
 	wxUpdateUIEvent eventx;
@@ -606,7 +606,7 @@ void HexEditor::OnMouseLeft(wxMouseEvent& event){
 		}
 	#endif // wxUSE_STATUSBAR
 	UpdateCursorLocation();
-#if defined(_DEBUG_) && _DEBUG_ > 3
+#ifdef _DEBUG_MOUSE_
 	std::cout << "CaptureMouse()\n" ;
 #endif
 	if( MouseCapture == false ){
@@ -677,7 +677,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	}
 
 void HexEditor::OnMouseWhell( wxMouseEvent& event ){
-#ifdef _DEBUG_
+#ifdef _DEBUG_MOUSE_
 	std::cout << "MouseWhell Rotation = " << event.GetWheelRotation() << "\t Delta = " << event.GetWheelDelta()
 			<< "\tLinesPerAction: " << event.GetLinesPerAction() << std::endl;
 
@@ -712,7 +712,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ){
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ){
-#if defined(_DEBUG_) && _DEBUG_ > 7
+#ifdef _DEBUG_MOUSE_
 	std::cout << "HexEditor::OnMouseMove Coordinate X:Y = " << event.GetX()	<< " " << event.GetY()
 			<< "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
 #endif
@@ -729,12 +729,12 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ){
 			}
 #if defined( __WXMAC__ ) || defined ( __WXMSW__ )
 		ScrollNoThread( spd );			//MAC has problem with GuiMutex so useing safe scroll funtion
-	#if defined(_DEBUG_) && _DEBUG_ > 4
+	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
 	#endif
 #else
 		myscroll->UpdateSpeed(spd);
-	#if defined(_DEBUG_) && _DEBUG_ > 4
+	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Thread) Speed = " << spd << std::endl;
 	#endif
 #endif
@@ -750,7 +750,7 @@ void HexEditor::ScrollNoThread( int speed ){
 			and ( ((speed > 0) and (page_offset + ByteCapacity() < FileLength()))
 				or ( (speed < 0) and (page_offset > 0) ))
 			){
-#if defined(_DEBUG_) && _DEBUG_ > 2
+#ifdef _DEBUG_MOUSE_
 		std::cout << "Loop Scroll speed  :" << speed << std::endl;
 		std::cout << "Loop Pending Event :" << wxTheApp->Pending() << std::endl;
 #endif
@@ -778,7 +778,7 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ){
 	HexEditorCtrl::OnMouseSelectionEnd( event );
 	myscroll->UpdateSpeed( 0 );
 	if( MouseCapture ){
-#if defined(_DEBUG_) && _DEBUG_ > 2
+#ifdef _DEBUG_MOUSE_
 		std::cout << "ReleaseMouse()\n" ;
 #endif
 		ReleaseMouse();
@@ -795,7 +795,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 //		if( lastPoint == CursorOffset() )
 //			return;
 //	lastPoint = CursorOffset();
-#if defined(_DEBUG_) && _DEBUG_ > 5
+#ifdef _DEBUG_MUTEX_
 	std::cout << "mutex Update Locking..." << std::endl;
 #endif
 	if( update.TryLock()==wxMUTEX_NO_ERROR ){
@@ -843,7 +843,7 @@ void HexEditor::UpdateCursorLocation( bool force ){
 				}
 			}
 	#endif // wxUSE_STATUSBAR
-	#if defined(_DEBUG_) && _DEBUG_ > 5
+	#ifdef _DEBUG_MUTEX_
 		std::cout << "mutex Update UnLocking..." << std::endl;
 	#endif
 		update.Unlock();
@@ -987,7 +987,7 @@ bool HexEditor::PasteFromClipboard( void ){
 	else
 		wxMessageBox(_( "There is no focus!"), _("Paste Error"), wxOK|wxICON_ERROR);
 
-	#if defined(_DEBUG_) && _DEBUG_ > 3
+	#ifdef _DEBUG_FILE_
 		std::cout << "Send UnReDo Event" << std::endl;
 	#endif
 	wxUpdateUIEvent eventx;

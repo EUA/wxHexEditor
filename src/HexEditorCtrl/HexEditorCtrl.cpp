@@ -300,7 +300,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
 
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#ifdef _DEBUG_SIZE_
 	std::cout<< "HexEditorCtrl::OnResize()" << std::endl
 			<< "HexEditorCtrl SizeEvent ReSize Command=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
 			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
@@ -352,7 +352,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 #endif
 //	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
 
-#if defined(_DEBUG_) && _DEBUG_ > 1
+#ifdef _DEBUG_SIZE_
 	std::cout<< "HexEditorCtrl After ReSize=(" << x << ',' << y << ")\n"
 			<< "Offset Scrll: \t(" << offset_scroll->GetSize().GetX() << ',' << offset_scroll->GetSize().GetY()<<")\n"
 			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << offset_ctrl->GetSize().GetY()<<")\n"
@@ -427,7 +427,7 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnKillFocus( wxFocusEvent& event){
-#ifdef _DEBUG_
+#ifdef _DEBUG_MOUSE_
 	std::cout << "HexEditorCtrl::OnKillFocus( wxMouseEvent& event ) \n" ;
 #endif
 	TagHideAll();
@@ -458,7 +458,7 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
 	uint64_t pos = LastRightClickAt;
-#ifdef _DEBUG_
+#ifdef _DEBUG_TAG_
 	std::cout << " Tag Edit on " << pos << std::endl;
 #endif
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
@@ -508,7 +508,7 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 				while (child) {
 					if (child->GetName() == wxT("TAG")) {
 						wxString propvalue = child->GetPropVal(wxT("id"), wxT("default-value"));
-	#ifdef _DEBUG_
+	#ifdef _DEBUG_TAG_
 						std::cout << "TAG ID:" << propvalue.ToAscii() << " readed.\n";
 	#endif
 						TagElement *tmp = new TagElement();
@@ -537,7 +537,7 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 							else if (element->GetName() == wxT("note_colour"))
 								tmp->NoteClrData.SetColour( wxColour(element->GetNodeContent()) );
 							}
-					#ifdef _DEBUG_
+					#ifdef _DEBUG_TAG_
 						tmp->print();
 					#endif
 						MainTagArray.Add(tmp);

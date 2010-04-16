@@ -432,20 +432,20 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			}
 
 		if(event.GetId() == SELECT_EVENT ){
-			#ifdef _DEBUG_
+			#ifdef _DEBUG_SELECT_
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
 	//		Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
 	//		mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
-	//		Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
-	//		mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
+			Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
+			mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
 			Toolbar->Refresh();
 			}
 
 		if(event.GetId() == UNREDO_EVENT ){
-			#ifdef _DEBUG_
+			#ifdef _DEBUG_FILE_
 				std::cout << "HexEditorFrame::UNREDO event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
 			Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
@@ -520,7 +520,7 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 	}
 
 void HexEditorFrame::OnActivate( wxActivateEvent& event ){
-#ifdef _DEBUG_
+#ifdef _DEBUG_MOUSE_
 	std::cout << "HexEditorFrame::OnActivate( wxActivateEvent& event ) \n" ;
 #endif
 	TagHideAll();

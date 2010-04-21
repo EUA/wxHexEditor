@@ -5,7 +5,7 @@
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
 *   as published by the Free Software Foundation; either version 2      *
-*   of the License, or any later version.                               *
+*   of the License.                                                     *
 *                                                                       *
 *   This program is distributed in the hope that it will be useful,     *
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
@@ -14,18 +14,20 @@
 *                                                                       *
 *   You should have received a copy of the GNU General Public License   *
 *   along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,                *
+*   if not, write to the Free Software Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
 
+
 #ifndef _wxHexEditor_h_
 #define _wxHexEditor_h_
 
 #include <wx/ffile.h>
 #include <wx/clipbrd.h>
+#include <wx/numdlg.h>
 
 #include "FileDifference.h"
 #include "DataInterpreter.h"
@@ -33,6 +35,9 @@
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
+
+#define idInjection 2000
+
 #define MB 1024*1024	//this utility uses old ECS format.
 
 class scrollthread;
@@ -66,6 +71,7 @@ class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 
 		bool CutSelection( void );
 		bool DeleteSelection( void );
+		bool InsertBytes( void );
 		bool CopySelection( void );
 		bool PasteFromClipboard( void );
 

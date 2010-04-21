@@ -5,7 +5,7 @@
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
 *   as published by the Free Software Foundation; either version 2      *
-*   of the License, or any later version.                               *
+*   of the License.                                                     *
 *                                                                       *
 *   This program is distributed in the hope that it will be useful,     *
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
@@ -14,12 +14,13 @@
 *                                                                       *
 *   You should have received a copy of the GNU General Public License   *
 *   along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,                *
+*   if not, write to the Free Software Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
+
 
 #include "HexEditor.h"
 
@@ -280,7 +281,7 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
 	}
 
 void HexEditor::Reload( void ){
-    myfile->Seek(page_offset, wxFromStart);
+   myfile->Seek(page_offset, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
 	ReadFromBuffer( page_offset, readedbytes, buffer, false, true );
@@ -643,10 +644,13 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	menu.Append(idTagEdit, _T("Tag Edit"));
 	menu.Append(idTagSelection, _T("New Tag"));
 	menu.Append(wxID_COPY, _T("Copy"));
-	menu.Append(wxID_CUT, _T("Cut (Alpha)"));
 	menu.Append(wxID_PASTE, _T("Paste"));
+#ifdef Enable_Injections
+	menu.AppendSeparator();
 	menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
 	menu.Append(idInjection, _T("Inject (Alpha)"));
+	menu.Append(wxID_CUT, _T("Cut (Alpha)"));
+#endif
 
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
@@ -660,11 +664,11 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 	menu.Enable( idTagSelection, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_CUT, false );
 	menu.Enable( wxID_DELETE, false );
-	menu.Enable( idInjection, false );
+	menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
 	//menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
-	//menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
+	menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
-	//menu.AppendSeparator();
+
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
@@ -888,20 +892,54 @@ bool HexEditor::DeleteSelection( void ){
 #ifdef _DEBUG_
 	std::cout << "DeleteSelection!" << std::endl;
 #endif
+	bool success=false;
 	if( not select->IsState( select->SELECT_FALSE )){
-		myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
+		success = myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
 		}
 	else{
 		wxBell();
 		return false;
 		}
 	Reload();
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+	wxUpdateUIEvent eventx;
+	eventx.SetId( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+	return success;
 	}
+
+bool HexEditor::InsertBytes( void ){
+#ifdef _DEBUG_
+	std::cout << "Insert Bytes!" << std::endl;
+#endif
+	long injection_size = wxGetNumberFromUser( wxString::Format(_("Notice!: This command will increase the file size and will generate too much overhead on file save.\n" \
+																"How many bytes do you want to inject to location to offset location %lld?"), CursorOffset()), _("Bytes"), _("Injection!"), 0, 0, 0x7fffffff ); //Max long up to 2 GB insertion.
+	std::cout << "insert " << injection_size << " bytes " << std::endl;
+	if( injection_size == -1 )
+		return false;
+
+	char* zerostream = new char[injection_size];
+	if( zerostream == NULL)
+		return false;
+	for(int i=0; i < injection_size ; i++) zerostream[i]=0; //Fill stream with 0
+	bool success=myfile->Add( CursorOffset(), zerostream, injection_size, true );
+	delete zerostream;
+
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+
+	Reload();
+	wxUpdateUIEvent eventx;
+	eventx.SetId( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+	return success;
+	}
+
 
 bool HexEditor::CutSelection( void ){
 #ifdef _DEBUG_
 	std::cout << "CutSelection!" << std::endl;
 #endif
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
 	}
 
 bool HexEditor::CopySelection( void ){

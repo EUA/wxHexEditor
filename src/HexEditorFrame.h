@@ -5,7 +5,7 @@
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
 *   as published by the Free Software Foundation; either version 2      *
-*   of the License, or any later version.                               *
+*   of the License.                                                     *
 *                                                                       *
 *   This program is distributed in the hope that it will be useful,     *
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
@@ -14,12 +14,13 @@
 *                                                                       *
 *   You should have received a copy of the GNU General Public License   *
 *   along with this program;                                            *
-*   if not, write to the Free Software	Foundation, Inc.,                *
+*   if not, write to the Free Software Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
+
 
 #ifndef __HexEditorFrame__
 #define __HexEditorFrame__
@@ -86,7 +87,7 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
 		InfoPanel *MyInfoPanel;
-#ifdef	_WX_AUIBAR_H_
+#ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
 #else
 		wxToolBar* Toolbar;

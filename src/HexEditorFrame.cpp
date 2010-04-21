@@ -280,10 +280,12 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 						break;
 						}
 					case idClose:{
-						MyNotebook->DeletePage( MyNotebook->GetSelection() );
-						// delete MyHexEditor; not neccessery, DeletePage also delete this
-						if( MyNotebook->GetPageCount() == 0 )
-							ActionDisabler();
+						if( MyHexEditor->FileClose() ){
+							MyNotebook->DeletePage( MyNotebook->GetSelection() );// delete MyHexEditor; not neccessery, DeletePage also delete this
+							if( MyNotebook->GetPageCount() == 0 )
+								ActionDisabler();
+							return;
+							}
 						break;
 						}
 					case wxID_UNDO:		MyHexEditor->DoUndo();					break;

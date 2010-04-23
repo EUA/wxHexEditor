@@ -248,7 +248,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									_(""),
 									_(""),
 									_("*"),
-									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxFD_CHANGE_DIR
+									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 		if(wxID_OK == filediag->ShowModal()){
 			wxFileName flname(filediag->GetPath());

@@ -11,7 +11,7 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.08_alpha
+Version:		0.09_alpha
 Release:		1
 License:		GPL
 Group:			Editors
@@ -75,5 +75,6 @@ mv resources/%{name}.desktop ./
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Fri Apr 23 2010 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.09-0
 * Tue Feb 9 2009 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.08-0
 - initial release of rpm

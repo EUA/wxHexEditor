@@ -368,10 +368,12 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	ClearPaint();
 	if( event.GetEventObject() == hex_ctrl ){
 		hex_ctrl->SetFocus();
+		focus=HEX_CTRL;
 		SetLocalHexInsertionPoint( hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
 		}
 	else if( event.GetEventObject() == text_ctrl ){
 		text_ctrl->SetFocus();
+		focus=TEXT_CTRL;
 		SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) + 1);
 		}
 	else// if( event.GetEventObject() == offset_ctrl)

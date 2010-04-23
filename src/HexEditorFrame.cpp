@@ -385,36 +385,36 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 
 void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	wxAboutDialogInfo AllAbout;
-    AllAbout.SetName(_T("wxHexEditor"));
-    AllAbout.SetVersion( _T(_VERSION_STR_) );
-    AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
-    AllAbout.SetCopyright(_T("(C) 2006-2010 Erdem U. Altinyurt"));
+	AllAbout.SetName(_T("wxHexEditor"));
+	AllAbout.SetVersion( _T(_VERSION_STR_) );
+	AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
+	AllAbout.SetCopyright(_T("(C) 2006-2010 Erdem U. Altinyurt"));
 	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
 	AllAbout.AddArtist( _T("Vlad Adrian") );
-    AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
+	AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
 
 	AllAbout.SetLicense( _T("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland.\n"
-             "Copyright (C) 2010  Erdem U. Altinyurt\n"
-             "\n"
-             "This program is free software; you can redistribute it and/or\n"
-             "modify it under the terms of the GNU General Public License\n"
-             "as published by the Free Software Foundation version 2 "
-             "of the License."
-             "\n"
-             "This program is distributed in the hope that it will be useful,\n"
-             "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-             "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-             "GNU General Public License for more details.\n"
-             "\n"
-             "You should have received a copy of the GNU General Public License\n"
-             "along with this program; if not, write to the Free Software\n"
-             "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
-             "\n"
-             "home:  wxhexeditor.sourceforge.net\n"
-             "email: death_knight@gamebox.net\n")
-             );
+			 "Copyright (C) 2010  Erdem U. Altinyurt\n"
+			 "\n"
+			 "This program is free software; you can redistribute it and/or\n"
+			 "modify it under the terms of the GNU General Public License\n"
+			 "as published by the Free Software Foundation version 2 "
+			 "of the License."
+			 "\n"
+			 "This program is distributed in the hope that it will be useful,\n"
+			 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+			 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+			 "GNU General Public License for more details.\n"
+			 "\n"
+			 "You should have received a copy of the GNU General Public License\n"
+			 "along with this program; if not, write to the Free Software\n"
+			 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
+			 "\n"
+			 "home:  wxhexeditor.sourceforge.net\n"
+			 "email: death_knight@gamebox.net\n")
+			 );
 
-    wxAboutBox(AllAbout);
+	wxAboutBox(AllAbout);
 	}
 
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){

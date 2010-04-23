@@ -30,7 +30,7 @@ BINDIR	    = $(PREFIX)/bin
 DATADIR	    = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.08 Alpha
+VERSION = 0.09 Alpha
 
 all: $(SOURCES) $(EXECUTABLE)
 

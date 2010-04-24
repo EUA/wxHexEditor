@@ -146,16 +146,7 @@ class InfoPanelGui : public wxPanel
 	private:
 	
 	protected:
-		wxStaticText* m_static_name;
-		wxStaticText* m_name;
-		wxStaticText* m_static_path;
-		wxStaticText* m_path;
-		wxStaticText* m_static_size;
-		wxStaticText* m_size;
-		wxStaticText* m_static_access;
-		wxStaticText* m_access;
-		wxStaticText* m_static_device;
-		wxStaticText* m_device;
+		wxStaticText* m_InfoPanelText;
 	
 	public:
 		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );

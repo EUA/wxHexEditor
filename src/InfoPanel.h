@@ -33,6 +33,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <stdio.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+//#include <dev/disk.h>
+#include <linux/fs.h>
+
 #ifndef INFOPANEL_H
 #define INFOPANEL_H
 
@@ -46,30 +54,43 @@ class InfoPanel : public InfoPanelGui{
 		static wxMutex mutexinfo;
 		mutexinfo.Lock();
 
-		m_name->SetLabel( flnm.GetFullName() );
-		m_path->SetLabel( flnm.GetPath() );
-		m_access->SetLabel( AccessMode );
-
 		struct stat *sbufptr = new struct stat;
-        fstat( FD, sbufptr );
-		m_size->SetLabel( wxFileName::GetHumanReadableSize( wxULongLong(lenght) ) );
+      fstat( FD, sbufptr );
 
-		if( S_ISREG( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("FILE"));
-		else if( S_ISDIR( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("DIRECTORY"));
-		else if( S_ISCHR( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("CHARACTER"));
-		else if( S_ISBLK( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("BLOCK"));
-		else if( S_ISFIFO( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("FIFO"));
-	#ifndef __WXMSW__ //Windows has no link and socket files
-		else if( S_ISLNK( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("LINK"));
-		else if( S_ISSOCK( sbufptr->st_mode ))
-			m_device->SetLabel(wxT("SOCKET"));
-	#endif
+		wxString info_string;
+		info_string =	_("Name:\t")+flnm.GetFullName()+wxT("\n")+
+							_("Path:\t")+flnm.GetPath()+wxT("\n")+
+							_("Size:\t")+ wxFileName::GetHumanReadableSize( wxULongLong(lenght) ) +wxT("\n")+
+							_("Access:\t")+ AccessMode +wxT("\n")+
+							_("Device:\t")+ (S_ISREG( sbufptr->st_mode ) ? _("FILE") :
+												 S_ISDIR( sbufptr->st_mode ) ? _("DIRECTORY") :
+												 S_ISCHR( sbufptr->st_mode ) ? _("CHARACTER") :
+												 S_ISBLK( sbufptr->st_mode ) ? _("BLOCK") :
+												 S_ISFIFO( sbufptr->st_mode ) ? _("FIFO") :
+												#ifndef __WXMSW__ //Windows has no link and socket files
+												 S_ISLNK( sbufptr->st_mode ) ? _("LINK") :
+												 S_ISSOCK( sbufptr->st_mode ) ? _("SOCKET") :
+												#endif
+												 wxT("?")
+												 )+wxT("\n");
+
+		if(S_ISBLK( sbufptr->st_mode )){
+			int block_size=0;
+			int64_t block_count=0;
+			//int error = ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
+			int error = ioctl(FD, BLKSSZGET, &block_size);
+				if(error)
+					std::cerr << "Can't get block size of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
+				else
+					info_string += _("Sector Size: ") + wxString::Format(wxT("%d\n"), block_size);
+				error  = ioctl(FD, BLKGETSIZE64, &block_count);
+				if (error)
+					std::cerr << "Can't get block count of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
+				else
+					info_string += _("Sector Count: ") + wxString::Format(wxT("%d"), block_count/block_size);
+			}
+
+		m_InfoPanelText->SetLabel( info_string );
 
 #ifdef _DEBUG_
 		std::cout << flnm.GetPath().ToAscii() << ' ';
@@ -79,8 +100,9 @@ class InfoPanel : public InfoPanelGui{
 			printf("directory");
 		else if( S_ISCHR( sbufptr->st_mode ))
 			printf("character device");
-		else if( S_ISBLK( sbufptr->st_mode ))
+		else if( S_ISBLK( sbufptr->st_mode )){
 			printf("block device");
+			}
 		else if( S_ISFIFO( sbufptr->st_mode ))
 			printf("FIFO");
 	#ifndef __WXMSW__

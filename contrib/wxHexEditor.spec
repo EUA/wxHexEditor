@@ -11,12 +11,12 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.09_alpha
+Version:		0.09
 Release:		1
 License:		GPL
 Group:			Editors
 URL:				http://wxhexeditor.sourceforge.net/
-Source0:		%{name}_v%{version}-src.tar.bz2
+Source0:		%{name}-v%{version}-src.tar.bz2
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
@@ -76,5 +76,6 @@ mv resources/%{name}.desktop ./
 
 %changelog
 * Fri Apr 23 2010 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.09-0
+- closing to final
 * Tue Feb 9 2009 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.08-0
 - initial release of rpm

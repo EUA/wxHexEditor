@@ -419,11 +419,39 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 #ifdef _DEBUG_
-	std::cout << "HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event) \n" ;
+	std::cout << "HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event) ID " << event.GetId() << "\n" ;
 #endif
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
+	if(event.GetId() == idDeviceRam){
+		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
+		#ifndef __WXMSW__
+		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
+		#ifdef _DEBUG_
+			std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
+		#endif
+		int i=0;
+		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
+			menuDeviceDisk->Remove( *it );
+		//	this->Disconnect( idDiskDevice+i++, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+			}
+
+		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+		///ls -l /dev/disk/by-id
+		wxArrayString disks;
+		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+		disks.Sort();
+		for( unsigned i =0 ; i < disks.Count() ; i++){
+			#ifdef _DEBUG_
+			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
+			#endif
+			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
+			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+			}
+		#endif
+		}
+
 	if( MyNotebook->GetPageCount() ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 		if( MyHexEditor != NULL ){
@@ -466,26 +494,6 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
 			mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
 			Toolbar->Refresh();
-			}
-		if(event.GetId() == idDeviceRam){
-			//when updateUI received by Ram Device open, thna needed to update Device List.
-			#ifndef __WXMSW__
-			wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
-			for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
-				menuDeviceDisk->Remove( *it );
-			this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
-			///ls -l /dev/disk/by-id
-			wxArrayString disks;
-			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
-			disks.Sort();
-			for( unsigned i =0 ; i < disks.Count() ; i++){
-				#ifdef _DEBUG_
-				std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
-				#endif
-				menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
-				this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
-				}
-			#endif
 			}
 		}
 	event.Skip();

@@ -37,9 +37,12 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <sys/ioctl.h>
-//#include <dev/disk.h>
-#include <linux/fs.h>
+
+#ifndef __WXMSW__
+	#include <sys/ioctl.h>
+	//#include <dev/disk.h>
+	#include <linux/fs.h>
+#endif
 
 #ifndef INFOPANEL_H
 #define INFOPANEL_H
@@ -75,6 +78,7 @@ class InfoPanel : public InfoPanelGui{
 												 )+wxT("\n");
 
 		if(S_ISBLK( sbufptr->st_mode )){
+			#ifndef __WXMSW__ //Windows follows different pattern
 			int block_size=0;
 			int64_t block_count=0;
 			//int error = ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
@@ -88,6 +92,7 @@ class InfoPanel : public InfoPanelGui{
 					std::cerr << "Can't get block count of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
 				else
 					info_string += _("Sector Count: ") + wxString::Format(wxT("%d"), block_count/block_size);
+			#endif
 			}
 
 		m_InfoPanelText->SetLabel( info_string );

@@ -330,6 +330,7 @@ void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
 		OpenFile( wxFileName(disks.Item(i)) );
 		}
 	else if( event.GetId() == idDeviceRam ){
+		//OpenFile( wxFileName( wxT("\\\\.\\PhysicalDrive0") ) );//Just testing
 // TODO (death#1#): RAM access with mmap and need DirectWrite Mode
 		}
 	}

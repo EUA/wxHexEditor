@@ -102,7 +102,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 		wxLogError(_("Critical Error. File pointer is not empty!"));
 		return false;
 		}
-	else if(myfilename.IsFileReadable()){ //IsFileReadable
+	else if( myfilename.IsFileReadable() ){ //IsFileReadable
 		if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 			myfile = new FileDifference( myfilename, FileDifference::ReadWrite );
 		else
@@ -869,20 +869,20 @@ void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	}
 
 void HexEditor::FindDialog( void ){
-	class FindDialog *myfind = new FindDialog::FindDialog( this, myfile );
+	::FindDialog *myfind = new ::FindDialog( this, myfile );
 	myfind->ShowModal();
 	myfind->Destroy();
 	}
 
 void HexEditor::ReplaceDialog( void ){
-	class ReplaceDialog *myfind = new ReplaceDialog::ReplaceDialog( this, myfile );
+	::ReplaceDialog *myfind = new ::ReplaceDialog( this, myfile );
 	myfind->ShowModal();
 	myfind->Destroy();
 	}
 
 void HexEditor::GotoDialog( void ){
 	uint64_t newoffset;
-	class GotoDialog *mygoto = new GotoDialog::GotoDialog( this, newoffset, CursorOffset(), FileLength(), myDialogVector );
+	::GotoDialog *mygoto = new ::GotoDialog( this, newoffset, CursorOffset(), FileLength(), myDialogVector );
 	if( mygoto->ShowModal() == wxID_OK ){
 		Goto( newoffset );
 		}

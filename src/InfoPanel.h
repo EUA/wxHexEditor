@@ -38,7 +38,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#ifndef __WXMSW__
+#ifdef __WXGTK__
 	#include <sys/ioctl.h>
 	//#include <dev/disk.h>
 	#include <linux/fs.h>
@@ -78,7 +78,7 @@ class InfoPanel : public InfoPanelGui{
 												 )+wxT("\n");
 
 		if(S_ISBLK( sbufptr->st_mode )){
-			#ifndef __WXMSW__ //Windows follows different pattern
+			#ifdef __WXGTK__//Windows follows different pattern
 			int block_size=0;
 			int64_t block_count=0;
 			//int error = ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);

@@ -443,12 +443,16 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 		TE->start=select->StartOffset;
 		TE->end=select->EndOffset;
 		static wxColour last_tag_color = *wxRED;
+		static wxColour last_font_color = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
 		TE->NoteClrData.SetColour( last_tag_color );
+		TE->FontClrData.SetColour( last_font_color );
+
 
 		TagDialog *x=new TagDialog( *TE, this );
 
 		if( x->ShowModal() == wxID_SAVE ){
 			last_tag_color = TE->NoteClrData.GetColour();
+			last_font_color = TE->FontClrData.GetColour();
 			MainTagArray.Add( TE );
 			PreparePaintTAGs();
 			ClearPaint();

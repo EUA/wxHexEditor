@@ -78,7 +78,8 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyNotebook = new wxAuiNotebook(this,-1);
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
-	MyNotebook->SetWindowStyleFlag(0);
+	MyNotebook->SetWindowStyleFlag(wxAUI_NB_TOP|wxAUI_NB_TAB_MOVE|wxAUI_NB_MIDDLE_CLICK_CLOSE);
+	//MyNotebook->SetWindowStyleFlag(wxAUI_NB_DEFAULT_STYLE);
 //	MyAUI->AddPane( MyNotebook, wxCENTER);
 
 	MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().

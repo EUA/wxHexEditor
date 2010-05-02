@@ -65,8 +65,11 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 
 	SetSelectionStyle( HexDefaultAttr );
 
-	HexDefaultAttr = wxTextAttr( *wxBLACK,
-								*wxWHITE,
+	HexDefaultAttr = wxTextAttr(
+								//*wxBLACK, //Deprecated :p
+								wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ),
+								wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ),
+								//*wxWHITE, //Deprecated :p
 								//wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(
 									10,					// point size

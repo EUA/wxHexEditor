@@ -58,6 +58,7 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 #ifndef __WXMAC__
 		wxP = new wxPopupWindow( parent );
 		wxP->SetBackgroundColour( NoteClrData.GetColour() );
+		wxP->SetForegroundColour( FontClrData.GetColour() );
 		wxStaticText *text = new wxStaticText( wxP, wxID_ANY, tag );
 		wxBoxSizer *topSizer = new wxBoxSizer( wxVERTICAL );
 		topSizer->Add( text, 0, wxALL, 5 );

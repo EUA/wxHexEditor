@@ -132,12 +132,12 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/debug-static/wx-config --cflags`" />
+					<Add option="`/home/compile/wxWidgets-trunk/debug-static/wx-config --cflags`" />
 					<Add option="-D_DEBUG_=6" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/debug-static/wx-config --libs`" />
+					<Add option="`/home/compile/wxWidgets-trunk/debug-static/wx-config --libs`" />
 				</Linker>
 			</Target>
 		</Build>

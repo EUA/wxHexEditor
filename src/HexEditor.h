@@ -28,6 +28,7 @@
 #include <wx/ffile.h>
 #include <wx/clipbrd.h>
 #include <wx/numdlg.h>
+#include <wx/version.h>
 
 #include "FileDifference.h"
 #include "DataInterpreter.h"
@@ -192,7 +193,11 @@ class scrollthread:wxThreadHelper{
 		sleeper = 25;
 		cursor = 0;
 		speed = initial_speed;
+	#if wxCHECK_VERSION(2,9,0)
+		CreateThread();
+	#else
 		Create();
+	#endif
 		GetThread()->Run();
 		if(speed == 0)
 			GetThread()->Pause();

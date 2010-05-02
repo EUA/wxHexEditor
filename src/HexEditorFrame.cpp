@@ -432,10 +432,9 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		#ifdef _DEBUG_
 			std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 		#endif
-		int i=0;
+
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
 			menuDeviceDisk->Remove( *it );
-		//	this->Disconnect( idDiskDevice+i++, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 			}
 
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );

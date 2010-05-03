@@ -55,6 +55,11 @@ HexEditor::HexEditor(	wxWindow* parent,
 HexEditor::~HexEditor(){
 		//FileClose();
 		Dynamic_Disconnector();
+
+		// Free resources
+		delete myDialogVector;
+		delete copy_mark;
+
 	}
 
 void HexEditor::Dynamic_Connector(){
@@ -277,7 +282,7 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint){
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
 	ReadFromBuffer( position, readedbytes, buffer, cursor_reset, paint );
-	delete buffer;
+	delete [] buffer;
 	}
 
 void HexEditor::Reload( void ){
@@ -285,7 +290,7 @@ void HexEditor::Reload( void ){
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
 	ReadFromBuffer( page_offset, readedbytes, buffer, false, true );
-	delete buffer;
+	delete [] buffer;
 	}
 
 void HexEditor::OnResize( wxSizeEvent &event){

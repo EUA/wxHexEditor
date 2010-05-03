@@ -74,9 +74,9 @@ class DataInterpreter : public InterpreterGui{
 			return;
 			}
 		if( unidata.raw != NULL )
-			delete unidata.raw;
+			delete [] unidata.raw;
 		if( unidata.mraw != NULL )
-			delete unidata.mraw;
+			delete [] unidata.mraw;
 		unidata.raw = new char[ size ];
 		unidata.mraw = new char[ size ];
 		memcpy( unidata.raw, buffer.GetData(), size );

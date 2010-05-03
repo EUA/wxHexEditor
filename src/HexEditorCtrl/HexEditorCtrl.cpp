@@ -460,6 +460,8 @@ void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
 			hex_ctrl ->RePaint();
 			}
 		x->Destroy();
+		delete TE;
+		delete x;
 		}
 	}
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){

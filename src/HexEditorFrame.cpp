@@ -71,10 +71,12 @@ HexEditorFrame::~HexEditorFrame(){
 
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
+
+	MyNotebook->Destroy();
 	}
 
 void HexEditorFrame::PrepareAUI( void ){
-		MyAUI = new wxAuiManager( this );
+	MyAUI = new wxAuiManager( this );
 
 	MyNotebook = new wxAuiNotebook(this,-1);
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
@@ -249,17 +251,17 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			}
 		}
 	else if( event.GetId() == wxID_OPEN ){
-		wxFileDialog* filediag = new wxFileDialog(this,
+		wxFileDialog filediag(this,
 									_("Choose a file for editing"),
 									_(""),
 									_(""),
 									_("*"),
 									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
-		if(wxID_OK == filediag->ShowModal()){
-			wxFileName flname(filediag->GetPath());
+		if(wxID_OK == filediag.ShowModal()){
+			wxFileName flname(filediag.GetPath());
 			OpenFile( flname );
-			filediag->Destroy();
+			filediag.Destroy();
 			}
 		}
 	else{
@@ -270,17 +272,17 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					//case wxID_OPEN: not handled here!
 					case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
 					case wxID_SAVEAS:{
-						wxFileDialog* filediag = new wxFileDialog(this,
+						wxFileDialog filediag(this,
 															_("Choose a file for save as"),
 															_(""),
 															_(""),
 															_("*"),
 															wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 															wxDefaultPosition);
-						if(wxID_OK == filediag->ShowModal()){
-							if( !MyHexEditor->FileSave( filediag->GetPath() )){
-								wxMessageDialog *dlg = new wxMessageDialog(NULL,wxString(_("File cannot save as ")).Append( filediag->GetPath() ),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-								dlg->ShowModal();dlg->Destroy();
+						if(wxID_OK == filediag.ShowModal()){
+							if( !MyHexEditor->FileSave( filediag.GetPath() )){
+								wxMessageDialog dlg(NULL,wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+								dlg.ShowModal();dlg.Destroy();
 								}
 							}
 						break;
@@ -626,8 +628,7 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 			return;	//need for keep safe
 			}
 		char *bfr = new char[in_stream->GetSize()+1];
-		for(unsigned i = 0 ; i < in_stream->GetSize()+1 ; i++ )
-			bfr[i]=0;
+		memset(bfr, 0, in_stream->GetSize()+1);
 		in_stream->Read(bfr, in_stream->GetSize());
 		if( strncmp( bfr, _version.To8BitData(),  _version.Len() ) > 0 ){
 			wxString newver = wxString::FromAscii( bfr );
@@ -638,6 +639,8 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 			wxBell();
 			ShowModal();
 			}
+		delete [] bfr;
+		delete in_stream;
 		}
 	}
 

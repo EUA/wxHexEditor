@@ -202,6 +202,7 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 	}
 
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
+	std::cout << "OnMenuEvent: "  << event.GetId() << std::endl;
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
 		wxString lngt;
 		long long size=0;
@@ -487,8 +488,8 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
 			Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
 			mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
-	//		Toolbar->EnableTool( idInjection, event.GetString() == wxT("notselected") );
-	//		mbar->Enable( idInjection, event.GetString() == wxT("notselected") );
+			Toolbar->EnableTool( idInjection, event.GetString() == wxT("NotSelected") );
+			mbar->Enable( idInjection, event.GetString() == wxT("NotSelected") );
 			Toolbar->Refresh();
 	#endif
 			}

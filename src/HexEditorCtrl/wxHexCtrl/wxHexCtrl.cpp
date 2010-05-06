@@ -51,7 +51,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								pos, size,
 								wxSUNKEN_BORDER )
 	{
-	HexDefaultAttr = wxTextAttr(wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
+	HexDefaultAttr = wxTextAttr(
+								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
 								wxFont(
 									10,					// point size
@@ -466,8 +467,8 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 			 end = ByteCapacity()*2;
 // TODO (death#1#): Here problem with Text Ctrl.Use smart pointer...?
 		wxPoint _start_ = InternalPositionToVisibleCoord( start );
-		wxPoint _end_	= InternalPositionToVisibleCoord( end );
-		wxPoint _temp_	= _start_;
+		wxPoint _end_   = InternalPositionToVisibleCoord( end );
+		wxPoint _temp_  = _start_;
 		for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
 			wxString line;
 			_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start

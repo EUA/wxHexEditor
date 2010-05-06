@@ -216,6 +216,7 @@ void HexEditor::DoUndo( void ){
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
+	//TODO: Tag Movement
 	wxUpdateUIEvent eventx;
 	eventx.SetId( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
@@ -226,6 +227,7 @@ void HexEditor::DoRedo( void ){
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
+	//TODO: Tag Movement
 	wxUpdateUIEvent eventx;
 	eventx.SetId( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
@@ -867,13 +869,6 @@ void HexEditor::UpdateCursorLocation( bool force ){
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){
 	myfile->ShowDebugState();
-	SaveTAGS( myfile->GetFileName() );
-
-			std::cout << "Send UpdateUI Event" << std::endl;
-			wxUpdateUIEvent eventx;
-//			event.SetEventObject( this );
-			eventx.SetId( SELECT_EVENT );//idFileRO
-			GetEventHandler()->ProcessEvent( eventx );
 	}
 
 void HexEditor::FindDialog( void ){
@@ -903,6 +898,9 @@ bool HexEditor::DeleteSelection( void ){
 	bool success=false;
 	if( not select->IsState( select->SELECT_FALSE )){
 		success = myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
+		if(success)
+			MoveTAGS( std::min(select->StartOffset , select->EndOffset), -select->GetSize() );
+			select->SetState( select->SELECT_FALSE );
 		}
 	else{
 		wxBell();
@@ -931,6 +929,11 @@ bool HexEditor::InsertBytes( void ){
 		return false;
 	for(int i=0; i < injection_size ; i++) zerostream[i]=0; //Fill stream with 0
 	bool success=myfile->Add( CursorOffset(), zerostream, injection_size, true );
+
+	if(success)
+			MoveTAGS( CursorOffset(), injection_size );
+			select->SetState( select->SELECT_FALSE );
+
 	delete zerostream;
 
 	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );

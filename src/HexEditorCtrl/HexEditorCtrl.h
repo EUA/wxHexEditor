@@ -113,6 +113,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		bool TAGMutex;
 		void LoadTAGS( wxFileName );
 		void SaveTAGS( wxFileName );
+		void MoveTAGS( uint64_t location, int64_t size );
 
 	public:
 		bool Selector( void );

@@ -560,6 +560,21 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 				}
 	}
 
+//Moves tags for deletion & insertions
+void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
+		TagElement *TAG = MainTagArray.Item(i);
+		if( size < 0 and TAG->start >= location and TAG->start <= location+(-size) ){//Deletion, (-size) double negation indicates deletion range.
+			MainTagArray.RemoveAt(i); //Deletion of code if start inside deletion selection.
+			continue;
+			}
+		if( TAG->start >= location ){
+			TAG->start += size;
+			TAG->end += size;
+			}
+		}
+	}
+
 void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 	if( MainTagArray.Count() ==  0){
 		if( flnm.FileExists() )

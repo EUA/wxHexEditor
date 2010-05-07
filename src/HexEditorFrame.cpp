@@ -264,6 +264,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			OpenFile( flname );
 			filediag.Destroy();
 			}
+		return; // Without this, wxID_OPEN retriggers this function again under wxMSW
 		}
 	else{
 		if( MyNotebook->GetPageCount() ){

@@ -1,6 +1,6 @@
 WXCONFIG = wx-config
 CPP = `$(WXCONFIG) --cxx`
-CXXFLAGS= `$(WXCONFIG) --cxxflags` -c ${CFLAGS}
+CXXFLAGS= `$(WXCONFIG) --cxxflags` -MMD -c ${CFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
@@ -19,15 +19,17 @@ SOURCES= src/HexEditorGui.cpp \
 			src/HexEditorFrame.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)
+DEPENDS=$(OBJECTS:.o=.d)
 RESOURCES= resources/resource.rc
 RESOURCE_OBJ=$(RESOURCES:.rc=.o)
 EXECUTABLE=wxHexEditor
-EXECUTABLE_WIN=wxHexEditor.exe
+EXECUTABLE_WIN=$(EXECUTABLE).exe
+EXECUTABLE_DIR_MAC=$(EXECUTABLE).app
 
-DESTDIR		=
-PREFIX		= $(DESTDIR)/usr
-BINDIR	    = $(PREFIX)/bin
-DATADIR	    = $(PREFIX)/share
+DESTDIR     =
+PREFIX      = $(DESTDIR)/usr
+BINDI       = $(PREFIX)/bin
+DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
 VERSION = 0.09 Alpha
@@ -52,12 +54,12 @@ maclink: $(OBJECTS)
 	$(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
 
 mac: $(SOURCES) maclink
-	mkdir -p wxHexEditor.app/Contents
-	mkdir -p wxHexEditor.app/Contents/MacOS
-	mkdir -p wxHexEditor.app/Contents/Resources
-	install -m 755 wxHexEditor wxHexEditor.app/Contents/MacOS/
-	install -m 644 resources/wxHexEditor.icns wxHexEditor.app/Contents/Resources/
-	printf "APPLHexE" > wxHexEditor.app/Contents/PkgInfo
+	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents
+	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/MacOS
+	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources
+	install -m 755 wxHexEditor $(EXECUTABLE_DIR_MAC)/Contents/MacOS/
+	install -m 644 resources/wxHexEditor.icns $(EXECUTABLE_DIR_MAC)/Contents/Resources/
+	printf "APPLHexE" > $(EXECUTABLE_DIR_MAC)/Contents/PkgInfo
 	printf "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n\
@@ -109,7 +111,7 @@ mac: $(SOURCES) maclink
 \t<string> (c) 2006-2010, Erdem U. Altinyurt</string>\n\
 \
 </dict>\n\
-</plist>\n\n" > wxHexEditor.app/Contents/Info.plist
+</plist>\n\n" > $(EXECUTABLE_DIR_MAC)/Contents/Info.plist
 
 install:
 	install -D -m 755 wxHexEditor $(BINDIR)/wxHexEditor
@@ -121,8 +123,12 @@ uninstall:
 	rm -f $(DATADIR)/pixmaps/wxHexEditor.png
 	rm -f $(DATADIR)/applications/wxHexEditor.desktop
 clean:
-	rm -f src/*.o src/HexEditorCtrl/*.o src/HexEditorCtrl/wxHexCtrl/*.o resources/resource.o
-	rm -f wxHexEditor
-	rm -f wxHexEditor.exe
-	rm -rf wxHexEditor.app
+	rm -f $(OBJECTS)
+	rm -f $(RESOURCE_OBJ)
+	rm -f $(DEPENDS)
+	rm -f $(EXECUTABLE)
+	rm -f $(EXECUTABLE_WIN)
+	rm -rf $(EXECUTABLE_DIR_MAC)
 
+# include the auto-generated dependency files
+-include $(DEPENDS)

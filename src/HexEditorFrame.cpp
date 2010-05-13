@@ -309,18 +309,18 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
 					case idFileRO:{
-						MyHexEditor->SetFileAccessMode( FileDifference::ReadOnly );
+						MyHexEditor->SetFileAccessMode( FAL::ReadOnly );
 						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 						break;
 						}
 					case idFileRW:{
-						MyHexEditor->SetFileAccessMode( FileDifference::ReadWrite );
+						MyHexEditor->SetFileAccessMode( FAL::ReadWrite );
 						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 						break;
 						}
 					case idFileDW:
 						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY directly."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
-							MyHexEditor->SetFileAccessMode( FileDifference::DirectWrite );
+							MyHexEditor->SetFileAccessMode( FAL::DirectWrite );
 						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
 						break;
 					default: wxBell();
@@ -466,13 +466,13 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 		if( MyHexEditor != NULL ){
 			switch( MyHexEditor->GetFileAccessMode() ){
-				case FileDifference::ReadOnly :
+				case FAL::ReadOnly :
 					mbar->Check(idFileRO, true);
 					break;
-				case FileDifference::ReadWrite :
+				case FAL::ReadWrite :
 					mbar->Check(idFileRW, true);
 					break;
-				case FileDifference::DirectWrite :
+				case FAL::DirectWrite :
 					mbar->Check(idFileDW, true);
 					break;
 				}

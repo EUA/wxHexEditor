@@ -1,5 +1,6 @@
 /***********************************(GPL)********************************
 *   wxHexEditor is a hex edit tool for editing massive files in Linux   *
+*   This file is File Abraction Layer for wxHexEditor                   *
 *   Copyright (C) 2010  Erdem U. Altinyurt                              *
 *                                                                       *
 *   This program is free software; you can redistribute it and/or       *
@@ -20,9 +21,13 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : death_knight at gamebox.net                     *
 *************************************************************************/
+
+///This file also available under propertieary license.
+///Contact admin for licensing it.
+
 // Journaling File Structure :)
-#ifndef FILEDIFFERENCE_H
-#define FILEDIFFERENCE_H
+#ifndef FAL_H
+#define FAL_H
 #include <iostream>	//for std::cout...
 #include <wx/wx.h>
 #include <wx/file.h>
@@ -45,6 +50,7 @@ class DiffNode{
 		int64_t size;				//size of node
 		char *old_data;			//old data buffer
 		char *new_data;			//new data buffer
+		inline uint64_t end_offset( void ){ return start_offset + abs(size); }
 //	DiffNode *prev, *next;
 	DiffNode( uint64_t start, int64_t size_, bool inject){
 		start_offset = start;
@@ -61,11 +67,11 @@ class DiffNode{
 
 WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
-class FileDifference : public wxFile{
+class FAL : private wxFile{
 	public:
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
-	    FileDifference(wxFileName& myfilename, FileAccessMode FAM = ReadOnly);
-		~FileDifference();
+	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly);
+		~FAL();
 //		friend class FindDialog;
 
 		bool SetAccessMode( FileAccessMode fam );
@@ -80,26 +86,36 @@ class FileDifference : public wxFile{
 		int64_t Redo( void );	//redo last undo
 		void ShowDebugState( void );
 		wxFileOffset Length( void );
+
+		wxFileOffset Seek(wxFileOffset ofs, wxSeekMode mode = wxFromStart);
+		bool Close(){ return wxFile::Close();};
+		bool IsOpened(){ return wxFile::IsOpened(); };
+		int  fd() const { return wxFile::fd(); };
 		long Read( char* buffer, int size );
-		bool ReadByte( char* buffer, uint64_t location );
+
 		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node
 		bool IsAvailable_Undo( void );
 		bool IsAvailable_Redo( void );
+		bool IsInjected( void );
 
 	protected:
+		long ReadR( char* buffer, int size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );
+
 		void RemoveTail( DiffNode *remove_node );	//remove further tails.
 		DiffNode* NewNode( uint64_t start_byte, const char* data, int64_t size, bool extension = false );
 		DiffNode* GetFirstUndoNode( void );
-		void FileIRQ( uint64_t location, char* data, int size);
-		int64_t GetByteMovements( uint64_t before_than );
+		long DeletionPatcher( uint64_t location, char* data, int size, ArrayOfNode *Patches, int PatchIndice);
+		long InjectionPatcher( uint64_t location, char* data, int size, ArrayOfNode *Patches, int PatchIndice);
+		void ModificationPatcher( uint64_t location, char* data, int size, DiffNode* Patch);
 
 	private:
 		FileAccessMode file_access_mode;
 		ArrayOfNode DiffArray;
 		ArrayOfNode TempDiffArray;
 		wxFileName the_file;
+		int put_ptr,get_ptr;
 //		DiffNode *head,*tail;	//linked list holds modification record
 
 };
 
-#endif // FILEDIFFERENCE_H
+#endif // FAL_H

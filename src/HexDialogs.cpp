@@ -105,7 +105,7 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 // TODO (death#1#):Paint 4 Find All
 // TODO (death#1#):Make ComboBox remember old values
 // TODO (death#1#):Remember options last state
-FindDialog::FindDialog( wxWindow* _parent, FileDifference *_findfile, wxString title ):FindDialogGui( _parent, wxID_ANY, title){
+FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):FindDialogGui( _parent, wxID_ANY, title){
 	parent = static_cast< HexEditor* >(_parent);
 	findfile = _findfile;
 	m_comboBoxSearch->SetFocus();
@@ -259,7 +259,7 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 	return -1;
 	}
 
-ReplaceDialog::ReplaceDialog( wxWindow* parent, FileDifference *find_file, wxString title ):FindDialog( parent, find_file, title ){
+ReplaceDialog::ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title ):FindDialog( parent, find_file, title ){
 	m_comboBoxReplace->Show();
 	m_static_replace->Show();
 	btnReplace->Show();

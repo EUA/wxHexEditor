@@ -40,6 +40,7 @@
 					<Add option="`wx-config --cflags`" />
 					<Add option="-D_DEBUG_" />
 					<Add option="-D_DEBUG_FILE_" />
+					<Add option="-DEnable_Injections" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -155,8 +156,8 @@
 		<Unit filename="resources/wxHexEditor.png" />
 		<Unit filename="resources/wxhex.xpm" />
 		<Unit filename="src/DataInterpreter.h" />
-		<Unit filename="src/FileDifference.cpp" />
-		<Unit filename="src/FileDifference.h" />
+		<Unit filename="src/FAL.cpp" />
+		<Unit filename="src/FAL.h" />
 		<Unit filename="src/HexDialogs.cpp" />
 		<Unit filename="src/HexDialogs.h" />
 		<Unit filename="src/HexEditor.cpp" />

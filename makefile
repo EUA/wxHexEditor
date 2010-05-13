@@ -7,7 +7,7 @@ RC = `$(WXCONFIG) --rescomp`
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
 
 SOURCES= src/HexEditorGui.cpp \
-			src/FileDifference.cpp\
+			src/FAL.cpp\
 			src/HexDialogs.cpp\
 			src/HexEditorApp.cpp\
 			src/HexEditor.cpp\

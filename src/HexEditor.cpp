@@ -109,9 +109,9 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 		}
 	else if( myfilename.IsFileReadable() ){ //IsFileReadable
 		if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
-			myfile = new FileDifference( myfilename, FileDifference::ReadWrite );
+			myfile = new FAL( myfilename, FAL::ReadWrite );
 		else
-			myfile = new FileDifference( myfilename );
+			myfile = new FAL( myfilename );
 
 		if(myfile->IsOpened()){
 			myscroll = new scrollthread(0,this);
@@ -137,20 +137,29 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 bool HexEditor::FileSave( bool question ){
 	if( myfile->IsChanged() ){
 		int select;
-		if ( myfile->GetAccessMode() == FileDifference::ReadOnly){
+		if ( myfile->GetAccessMode() == FAL::ReadOnly){
 			wxMessageDialog msg( this, _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
 			msg.ShowModal();
+			return false;
 			}
+		if ( myfile->IsInjected() ){
+			wxMessageDialog msg( this, _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs.\n"), _("File Save Error."), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
+			msg.ShowModal();
+			return false;
+			}
+
 		if ( !question )
 			select = wxID_YES;
 		else{
 			wxMessageDialog msg( this, _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
 			select=msg.ShowModal();
 			}
+
 		switch( select ){
 			case(wxID_YES):
 				if( !myfile->Apply() ){
-					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR);
+					wxMessageDialog msg( this, _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
+					msg.ShowModal();
 					return false;
 					}
 			case(wxID_NO):
@@ -313,11 +322,7 @@ void HexEditor::OnResize( wxSizeEvent &event){
     }
 
 bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool injection ){
-	myfile->Add( start_byte, data, size, injection );
-// TODO (death#1#): Disabling undo - redo buttons
-//	if(myfile->IsAvailable_Undo())
-//		Toolbar->EnableTool( wxID_UNDO, true);
-//		mbar->EnableTool( wxID_UNDO, true);
+	return myfile->Add( start_byte, data, size, injection );
 	}
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
@@ -329,9 +334,7 @@ void HexEditor::OnKeyboardSelector(wxKeyEvent& event){
 		Selector();
 	}
 
-// TODO (death#1#): BUG: Remove Text Selection when UNDO (CTRL+SHIFT)
-// TODO (death#1#): BUG: Hex-Text Selection at release shift action
-// TODO (death#5#): File Name star'in * when file changed & saved
+
 // TODO (death#1#): BUG: Remove Text Selection when UNDO (CTRL+SHIFT)
 // TODO (death#1#): BUG: Hex-Text Selection at release shift action
 // TODO (death#5#): File Name star'in * when file changed & saved
@@ -951,6 +954,7 @@ bool HexEditor::CutSelection( void ){
 	std::cout << "CutSelection!" << std::endl;
 #endif
 	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+// TODO (death#1#): CutSelection
 	}
 
 bool HexEditor::CopySelection( void ){

@@ -30,7 +30,7 @@
 #include <wx/numdlg.h>
 #include <wx/version.h>
 
-#include "FileDifference.h"
+#include "FAL.h"
 #include "DataInterpreter.h"
 #include "InfoPanel.h"
 #include "HexEditorGui.h"
@@ -43,7 +43,7 @@
 
 class scrollthread;
 class copy_maker;
-class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
+class HexEditor: public HexEditorCtrl/*, protected FAL*/ {
 	public:
 	    HexEditor(wxWindow* parent,
 					int id,
@@ -80,7 +80,7 @@ class HexEditor: public HexEditorCtrl/*, protected FileDifference*/ {
 		int64_t FileLength( void ){ return myfile->Length();}
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
 		wxFileName GetFileName( void ){ return myfile->GetFileName();}
-		bool SetFileAccessMode( FileDifference::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); }
+		bool SetFileAccessMode( FAL::FileAccessMode fam ){ return myfile->SetAccessMode( fam ); }
 		int GetFileAccessMode( void ){ return myfile->GetAccessMode();}
 		wxString GetFileAccessModeString( void ){ return myfile->GetAccessModeString();}
 		int GetFD( void ){ return myfile->fd(); }
@@ -112,7 +112,7 @@ protected:
 		void ScrollNoThread( int speed );
 
 		wxStatusBar* statusbar;
-		FileDifference *myfile;
+		FAL *myfile;
 		scrollthread *myscroll;
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
@@ -131,7 +131,7 @@ class copy_maker{
 			int64_t size;		//size of copy
 			wxMemoryBuffer m_buffer; //uses RAM, for small data
 			//wxFile *tempfile;	//uses Temp HDD File and delete after.
-			FileDifference *sourcefile;	//uses HDD File and NOT delete after.
+			FAL *sourcefile;	//uses HDD File and NOT delete after.
 			copy_maker( ){
 				copied = false;
 				start = size = 0;

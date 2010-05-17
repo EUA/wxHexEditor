@@ -283,8 +283,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 															wxDefaultPosition);
 						if(wxID_OK == filediag.ShowModal()){
 							if( !MyHexEditor->FileSave( filediag.GetPath() )){
-								wxMessageDialog dlg(NULL,wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-								dlg.ShowModal();dlg.Destroy();
+								wxMessageBox( wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR );
 								}
 							}
 						break;
@@ -612,10 +611,8 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 			HexFramework->ActionEnabler();
 			}
 		else{
-			wxMessageDialog dlg(NULL,wxString(_("Dropped file:\n")).Append( myfl.GetPath() ).Append(_("\ncannot open!")),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-			dlg.ShowModal();dlg.Destroy();
+			wxMessageBox( wxString(_("Dropped file:\n")).Append( myfl.GetPath() ).Append(_("\ncannot open!")),_("Error"), wxOK|wxICON_ERROR );
 			}
-
 		}
 	return TRUE;
 	}

@@ -136,30 +136,22 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 
 bool HexEditor::FileSave( bool question ){
 	if( myfile->IsChanged() ){
-		int select;
 		if ( myfile->GetAccessMode() == FAL::ReadOnly){
-			wxMessageDialog msg( this, _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
-			msg.ShowModal();
+			wxMessageBox( _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION );
 			return false;
 			}
 		if ( myfile->IsInjected() ){
-			wxMessageDialog msg( this, _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs.\n"), _("File Save Error."), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
-			msg.ShowModal();
+			wxMessageBox( _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs.\n"), _("File Save Error."), wxOK|wxICON_EXCLAMATION );
 			return false;
 			}
-
-		if ( !question )
-			select = wxID_YES;
-		else{
-			wxMessageDialog msg( this, _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-			select=msg.ShowModal();
-			}
+		int select = wxID_YES;
+		if ( question )
+			select=wxMessageBox( _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
 
 		switch( select ){
 			case(wxID_YES):
 				if( !myfile->Apply() ){
-					wxMessageDialog msg( this, _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-					msg.ShowModal();
+					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR );
 					return false;
 					}
 			case(wxID_NO):
@@ -169,8 +161,7 @@ bool HexEditor::FileSave( bool question ){
 			}
 		}
 	else{
-		wxMessageDialog msg( this, _( "File is not changed. Nothing to save.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, wxDefaultPosition);
-		msg.ShowModal();
+		wxMessageBox( _( "File is not changed. Nothing to save.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION );
 		}
 	return false;
 	}
@@ -194,8 +185,7 @@ bool HexEditor::FileSave( wxString savefilename ){
 bool HexEditor::FileClose( void ){
 	if( myfile != NULL ){
 		if( myfile->IsChanged() ){
-			wxMessageDialog msg( this, _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, wxDefaultPosition);
-			int state = msg.ShowModal();
+			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
 			switch(state){
 				case(wxID_YES):
 					if( !FileSave( false ) )
@@ -221,22 +211,34 @@ bool HexEditor::FileClose( void ){
 	}
 
 void HexEditor::DoUndo( void ){
+	//TODO: Tag Movement
+	const DiffNode* x = myfile->GetFirstUndoNode();
+	if( x != NULL )
+		if( x->flag_inject ){
+			//wxMessageBox( _( "Do you want move tags too with this undo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
+			}
+
 	Goto( myfile->Undo() );
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
-	//TODO: Tag Movement
 	wxUpdateUIEvent eventx;
 	eventx.SetId( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
 void HexEditor::DoRedo( void ){
+
 	Goto( myfile->Redo() );
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
-	//TODO: Tag Movement
+	const DiffNode* x = myfile->GetFirstUndoNode();
+	if( x != NULL )
+		if( x->flag_inject ){
+			//TODO: Tag Movement
+			//wxMessageBox( _( "Do you want move tags too with this redo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
+			}
 	wxUpdateUIEvent eventx;
 	eventx.SetId( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );

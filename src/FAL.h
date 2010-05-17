@@ -97,13 +97,13 @@ class FAL : private wxFile{
 		bool IsAvailable_Undo( void );
 		bool IsAvailable_Redo( void );
 		bool IsInjected( void );
+		const DiffNode* GetFirstUndoNode( void );
 
 	protected:
 		long ReadR( char* buffer, int size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );
 
 		void RemoveTail( DiffNode *remove_node );	//remove further tails.
 		DiffNode* NewNode( uint64_t start_byte, const char* data, int64_t size, bool extension = false );
-		DiffNode* GetFirstUndoNode( void );
 		long DeletionPatcher( uint64_t location, char* data, int size, ArrayOfNode *Patches, int PatchIndice);
 		long InjectionPatcher( uint64_t location, char* data, int size, ArrayOfNode *Patches, int PatchIndice);
 		void ModificationPatcher( uint64_t location, char* data, int size, DiffNode* Patch);

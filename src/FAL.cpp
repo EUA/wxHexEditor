@@ -45,8 +45,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM ){
 
 			if(! IsOpened()){
 				file_access_mode = AccessInvalid;
-				wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-				dlg->ShowModal();dlg->Destroy();
+				wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 				}
 			}
 		}
@@ -62,8 +61,7 @@ bool FAL::SetAccessMode( FileAccessMode fam ){
 		Open( the_file.GetFullPath(), (fam == ReadOnly ? wxFile::read : wxFile::read_write) );
 		if(! IsOpened()){
 			wxBell();wxBell();wxBell();
-			wxMessageDialog *dlg = new wxMessageDialog(NULL,_("File load error!.\nFile closed but not opened while access change. For avoid corruption close the program"),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-			dlg->ShowModal();dlg->Destroy();
+			wxMessageBox( _("File load error!.\nFile closed but not opened while access change. For avoid corruption close the program"),_("Error"), wxOK|wxICON_ERROR );
 			file_access_mode = AccessInvalid;
 			return false;
 			}
@@ -71,8 +69,7 @@ bool FAL::SetAccessMode( FileAccessMode fam ){
 		return true;
 		}
 	wxBell();
-	wxMessageDialog *dlg = new wxMessageDialog(NULL,wxString(_("File cannot open in ")).Append( FAMtoString( fam) ).Append(_(" mode.")),_("Error"), wxOK|wxICON_ERROR, wxDefaultPosition);
-	dlg->ShowModal();dlg->Destroy();
+	wxMessageBox( wxString(_("File cannot open in ")).Append( FAMtoString( fam) ).Append(_(" mode.")),_("Error"), wxOK|wxICON_ERROR );
 	return false;
 	}
 
@@ -469,3 +466,11 @@ wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 	}
 
 
+const DiffNode* FAL::GetFirstUndoNode( void ){
+	if( DiffArray.GetCount() == 0 )
+		return false;
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
+		if( !DiffArray.Item(i)->flag_undo )
+			return DiffArray.Item(i);
+	return NULL;
+	}

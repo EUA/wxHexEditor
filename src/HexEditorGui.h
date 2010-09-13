@@ -199,6 +199,7 @@ class FindDialogGui : public wxDialog
 		wxCheckBox* chkMatchCase;
 		wxCheckBox* chkSearchBackwards;
 		wxCheckBox* chkWrapAround;
+		wxCheckBox* chkUTF8;
 		wxButton* btnFind;
 		wxButton* btnFindAll;
 		

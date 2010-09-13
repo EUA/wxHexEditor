@@ -134,6 +134,7 @@ bool FindDialog::OnFind( bool internal ){
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 	if(options & SEARCH_TEXT){
+		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
 		search_size = m_comboBoxSearch->GetValue().Len();
 		found = FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1, options );

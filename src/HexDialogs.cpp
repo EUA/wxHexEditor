@@ -144,7 +144,7 @@ bool FindDialog::OnFind( bool internal ){
 
 		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
 			if( !isxdigit( hexval[i] ) or hexval == ' ' ){//Not hexadecimal!
-				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!") );
+				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
 				wxBell();
 				return false;
 				}
@@ -169,7 +169,7 @@ bool FindDialog::OnFind( bool internal ){
 
 	else
 		if( !internal )
-			wxMessageBox(_("Search value not found"), _("Nothing found!") );
+			wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 	return false;
 	}
 
@@ -229,8 +229,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			else
 				current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
 			}while(current_offset + readed < from); //Search until cursor
-
 		}
+
 
 	delete buffer;
 	return NANINT;
@@ -285,7 +285,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				return 1;
 				}
 			else{
-				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet sizez are avoided."), _("Error!"));
+				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet sizez are avoided."), _("Error!"), wxOK, this);
 				return 0;
 				}
 			}
@@ -298,7 +298,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				return 1;
 				}
 			else{
-				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet sizez are avoided."), _("Error!"));
+				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet sizez are avoided."), _("Error!"), wxOK, this);
 				return 0;
 				}
 			}
@@ -318,7 +318,7 @@ int ReplaceDialog::OnReplaceAll( void ){
 			continue;
 		}
 	if( counter > 0)
-		wxMessageBox(wxString::Format(_("%d records changed."), counter ), _("Info!"));
+		wxMessageBox(wxString::Format(_("%d records changed."), counter ), _("Info!"), wxOK, this);
 	return counter;
 	}
 

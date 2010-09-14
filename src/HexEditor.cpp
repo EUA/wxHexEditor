@@ -124,12 +124,12 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 			return true;
 			}
 		else{
-			wxMessageBox(_("File cannot open."),_("Error"), wxOK|wxICON_ERROR);
+			wxMessageBox(_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, this);
 			return false;
 			}
 		}
 	else{
-		wxMessageBox(_("File isn't Readable.(Permissions?)"),_("Error"), wxOK|wxICON_ERROR);
+		wxMessageBox(_("File isn't Readable.(Permissions?)"),_("Error"), wxOK|wxICON_ERROR, this);
 		return false;
 		}
 	}
@@ -137,31 +137,31 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 bool HexEditor::FileSave( bool question ){
 	if( myfile->IsChanged() ){
 		if ( myfile->GetAccessMode() == FAL::ReadOnly){
-			wxMessageBox( _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION );
+			wxMessageBox( _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, this );
 			return false;
 			}
 		if ( myfile->IsInjected() ){
-			wxMessageBox( _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs.\n"), _("File Save Error."), wxOK|wxICON_EXCLAMATION );
+			wxMessageBox( _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs.\n"), _("File Save Error."), wxOK|wxICON_EXCLAMATION, this );
 			return false;
 			}
-		int select = wxID_YES;
+		int select = wxYES;
 		if ( question )
-			select=wxMessageBox( _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
+			select=wxMessageBox( _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 
 		switch( select ){
 			case(wxID_YES):
 				if( !myfile->Apply() ){
-					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR );
+					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR, this );
 					return false;
 					}
-			case(wxID_NO):
+			case(wxNO):
 				return true;
-			case(wxID_CANCEL):
+			case(wxCANCEL):
 			default: return false;
 			}
 		}
 	else{
-		wxMessageBox( _( "File is not changed. Nothing to save.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION );
+		wxMessageBox( _( "File is not changed. Nothing to save.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, this );
 		}
 	return false;
 	}
@@ -185,16 +185,17 @@ bool HexEditor::FileSave( wxString savefilename ){
 bool HexEditor::FileClose( void ){
 	if( myfile != NULL ){
 		if( myfile->IsChanged() ){
-			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
+			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 			switch(state){
-				case(wxID_YES):
+				case(wxYES):
 					if( !FileSave( false ) )
 						return false;
 					break;
-				case(wxID_NO):
+				case(wxNO):
 					break;
-				case(wxID_CANCEL):
+				case(wxCANCEL):
 					return false;
+				default: wxBell();
 				}
 			}
 		SaveTAGS( myfile->GetFileName() );
@@ -215,7 +216,7 @@ void HexEditor::DoUndo( void ){
 	const DiffNode* x = myfile->GetFirstUndoNode();
 	if( x != NULL )
 		if( x->flag_inject ){
-			//wxMessageBox( _( "Do you want move tags too with this undo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
+			//wxMessageBox( _( "Do you want move tags too with this undo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 			}
 
 	Goto( myfile->Undo() );
@@ -674,11 +675,13 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 		}
 
 	menu.Enable( idTagSelection, select->IsState( select->SELECT_END) );
-	menu.Enable( wxID_CUT, false );
-	menu.Enable( wxID_DELETE, false );
+
+#ifdef Enable_Injections
 	menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
-	//menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
+	menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
+#endif
+
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
 
 	wxPoint pos = event.GetPosition();
@@ -955,8 +958,10 @@ bool HexEditor::CutSelection( void ){
 #ifdef _DEBUG_
 	std::cout << "CutSelection!" << std::endl;
 #endif
-	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
-// TODO (death#1#): CutSelection
+   if( CopySelection() ){
+		DeleteSelection();
+  		infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+      }
 	}
 
 bool HexEditor::CopySelection( void ){
@@ -985,7 +990,7 @@ bool HexEditor::CopySelection( void ){
 				return copy_mark->SetClipboardData( CopyString );
 				}
 			else{
-				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
 				return false;
 				}
 			}
@@ -993,7 +998,7 @@ bool HexEditor::CopySelection( void ){
 			wxMessageBox(_( "You are tried to copy data more than 10 MB.\n"\
 							"Copying above 10 MB to clipboard is not allowed.\n"\
 							"Only internal copy buffer used!"),
-							_("Info"), wxOK|wxICON_INFORMATION);
+							_("Info"), wxOK|wxICON_INFORMATION, this);
 
 			void* buff=NULL;
 			buff = copy_mark->m_buffer.GetWriteBuf( size );
@@ -1004,7 +1009,7 @@ bool HexEditor::CopySelection( void ){
 				return true;
 				}
 			else{
-// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
 				return false;
 				}
 			}
@@ -1040,7 +1045,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			}
 		}
 	else
-		wxMessageBox(_( "There is no focus!"), _("Paste Error"), wxOK|wxICON_ERROR);
+		wxMessageBox(_( "There is no focus!"), _("Paste Error"), wxOK|wxICON_ERROR, this);
 
 	#ifdef _DEBUG_FILE_
 		std::cout << "Send UnReDo Event" << std::endl;

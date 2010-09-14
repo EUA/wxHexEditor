@@ -152,7 +152,7 @@ class copy_maker{
 						return isok;
 						}
 //					else{
-//						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+//						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
 //						wxTheClipboard->Close();
 //						return false;
 //						}

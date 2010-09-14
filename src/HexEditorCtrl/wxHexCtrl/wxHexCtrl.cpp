@@ -674,7 +674,6 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 		bfrH = atoh( HexValue[i] );
 		bfrL = atoh( HexValue[i+1] );
 		if( not (bfrH < 16 and bfrL < 16 and bfrH >= 0 and bfrL >= 0 )){
-			wxBell();
 			return NULL;
 			}
 		bfrL = bfrH << 4 | bfrL;

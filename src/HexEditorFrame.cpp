@@ -131,7 +131,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddSeparator();
 	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR), _T("Cuts selected block and copies to clipboard"));
 	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR), _T("Deletes selected block"));
-//	Toolbar->AddTool(idInjection, _T("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _T("Insert"));
+	Toolbar->AddTool(idInjection, _T("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _T("Insert"));
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
    Toolbar->Realize();
@@ -197,7 +197,7 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 		}
 	else{
 		x->Destroy();
-		wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR );
+		wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR, this );
 		}
 	}
 
@@ -214,7 +214,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			}
 			else if( lngt.ToLongLong( &size, 10 ) and (size > 0) )//1 Exabyte is enought for everyone for now, 2010
 				break;
-			wxMessageBox( _("Wrong input, please retry...") ,_T("Error!"), wxICON_ERROR );
+			wxMessageBox( _("Wrong input, please retry...") ,_T("Error!"), wxICON_ERROR, this );
 			}
 		//Save file
 		wxFileDialog* filediag = new wxFileDialog(this,
@@ -230,11 +230,11 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			//create file
 			wxFile crt;
 			if( not crt.Create( flname.GetFullPath(), true ) ){
-				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR );
+				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR, this );
 				return;
 				}
 			if( not crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
-				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR );
+				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR, this );
 				return;
 				}
 			crt.Seek( size-1 );
@@ -283,7 +283,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 															wxDefaultPosition);
 						if(wxID_OK == filediag.ShowModal()){
 							if( !MyHexEditor->FileSave( filediag.GetPath() )){
-								wxMessageBox( wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR );
+								wxMessageBox( wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 								}
 							}
 						break;

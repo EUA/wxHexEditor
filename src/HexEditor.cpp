@@ -1026,7 +1026,7 @@ bool HexEditor::PasteFromClipboard( void ){
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
 			select->SetState( select->SELECT_FALSE );
-			Goto( CursorOffset() + str.Len() );
+			Goto( CursorOffset() + str.Len()/3 + 1);
 			ret = true;
 			}
 		}

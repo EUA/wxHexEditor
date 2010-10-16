@@ -149,7 +149,7 @@ bool HexEditor::FileSave( bool question ){
 			select=wxMessageBox( _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 
 		switch( select ){
-			case(wxID_YES):
+			case(wxYES):
 				if( !myfile->Apply() ){
 					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR, this );
 					return false;

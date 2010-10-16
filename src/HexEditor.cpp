@@ -18,7 +18,7 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
-*               email : death_knight at gamebox.net                     *
+*               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
 
 
@@ -966,19 +966,17 @@ bool HexEditor::CutSelection( void ){
 
 bool HexEditor::CopySelection( void ){
 	if( not select->IsState( select->SELECT_FALSE )){
-		uint64_t start = select->StartOffset;
-		uint64_t size = select->GetSize();
 		uint64_t RAM_limit = 10*MB;
-		if(size < RAM_limit){								//copy to clipboard if < 10 MB
-			myfile->Seek( start, wxFromStart );
+		if(select->GetSize() < RAM_limit){								//copy to clipboard if < 10 MB
+			myfile->Seek( select->GetStart(), wxFromStart );
 			void* buff=NULL;
-			buff = copy_mark->m_buffer.GetWriteBuf( size );
+			buff = copy_mark->m_buffer.GetWriteBuf( select->GetSize() );
 			if( buff != NULL ){
-				myfile->Read( static_cast< char*>( buff ), size );
-				copy_mark->m_buffer.UngetWriteBuf( size );
+				myfile->Read( static_cast< char*>( buff ), select->GetSize() );
+				copy_mark->m_buffer.UngetWriteBuf( select->GetSize() );
 				wxString CopyString;
 				if( focus == HEX_CTRL ){
-					for( unsigned i=0 ; i<size ; i++ )
+					for( unsigned i=0 ; i<select->GetSize() ; i++ )
 						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->m_buffer[i]));
 					CopyString.Trim();	//remove last ' '
 					}
@@ -1001,11 +999,11 @@ bool HexEditor::CopySelection( void ){
 							_("Info"), wxOK|wxICON_INFORMATION, this);
 
 			void* buff=NULL;
-			buff = copy_mark->m_buffer.GetWriteBuf( size );
+			buff = copy_mark->m_buffer.GetWriteBuf( select->GetSize() );
 			if( buff != NULL ){
-				myfile->Seek( start , wxFromStart );
-				myfile->Read( static_cast<char*>(buff), size);
-				copy_mark->m_buffer.UngetWriteBuf( size );
+				myfile->Seek( select->GetStart() , wxFromStart );
+				myfile->Read( static_cast<char*>(buff), select->GetSize());
+				copy_mark->m_buffer.UngetWriteBuf( select->GetSize() );
 				return true;
 				}
 			else{

@@ -18,7 +18,7 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
-*               email : death_knight at gamebox.net                     *
+*               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
 
 #define NANINT 0xFFFFFFFFFFFFFFFFLL

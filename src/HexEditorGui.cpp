@@ -573,6 +573,8 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	chkUTF8 = new wxCheckBox( this, wxID_ANY, wxT("As UTF-8"), wxDefaultPosition, wxDefaultSize, 0 );
 	
+	chkUTF8->Enable( false );
+	
 	sbSizerSearchOptions->Add( chkUTF8, 0, wxALL, 5 );
 	
 	bSizerOptions->Add( sbSizerSearchOptions, 1, wxEXPAND, 5 );

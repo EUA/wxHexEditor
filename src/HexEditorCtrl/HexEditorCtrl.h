@@ -18,7 +18,7 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
 *               home  : wxhexeditor.sourceforge.net                     *
-*               email : death_knight at gamebox.net                     *
+*               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
 
 #ifndef __wxHexEditorCtrl__
@@ -56,6 +56,13 @@ class Select{	//for using EventHandler
 		bool IsState( state_  query_state){
 			return (state==query_state);
 			}
+		uint64_t GetStart( void ){
+			return StartOffset < EndOffset ? StartOffset : EndOffset;
+			}
+		uint64_t GetEnd( void ){
+			return StartOffset > EndOffset ? EndOffset : StartOffset;
+			}
+
 		uint64_t StartOffset;	//real start position
 		uint64_t EndOffset;		//real end position, included to select
 	private:

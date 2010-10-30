@@ -443,23 +443,31 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 		#endif
 
+      #ifdef __LINUX__
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
 			menuDeviceDisk->Remove( *it );
 			}
 
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 		///ls -l /dev/disk/by-id
-		wxArrayString disks;
-		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
-		disks.Sort();
-		for( unsigned i =0 ; i < disks.Count() ; i++){
-			#ifdef _DEBUG_
-			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
+		if(wxDir::Exists(wxT("/dev/disk/by-id"))){
+			wxArrayString disks;
+			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+			disks.Sort();
+			for( unsigned i =0 ; i < disks.Count() ; i++){
+				#ifdef _DEBUG_
+				std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
+				#endif
+				menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
+				this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+				}
 			#endif
-			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
-			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 			}
-		#endif
+		else
+			menuDeviceDisk->Append( 0, _T("There is no /dev/disk/by-id/ directory on your linux distribution.\n"\
+														"Please check your kernel configuration to have it.\n"\
+														"Tip:You could also open your device by using it's device file."), wxT(""), wxITEM_NORMAL );
+		#endif //__LINUX__
 		}
 
 	if( MyNotebook->GetPageCount() ){

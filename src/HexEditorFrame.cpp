@@ -251,6 +251,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 				x->Destroy();
 			filediag->Destroy();
 			}
+		return; // Without this, wxID_NEW retriggers this function again under wxMSW
 		}
 	else if( event.GetId() == wxID_OPEN ){
 		wxFileDialog filediag(this,
@@ -327,6 +328,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					}
 				}
 			}
+		return; // Without this, the event retriggers this function again under wxMSW
 		}
 	event.Skip();
 	}

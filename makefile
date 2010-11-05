@@ -28,7 +28,7 @@ EXECUTABLE_DIR_MAC=$(EXECUTABLE).app
 
 DESTDIR     =
 PREFIX      = $(DESTDIR)/usr
-BINDI       = $(PREFIX)/bin
+BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 

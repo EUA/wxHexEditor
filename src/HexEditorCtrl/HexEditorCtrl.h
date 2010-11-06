@@ -60,7 +60,7 @@ class Select{	//for using EventHandler
 			return StartOffset < EndOffset ? StartOffset : EndOffset;
 			}
 		uint64_t GetEnd( void ){
-			return StartOffset > EndOffset ? EndOffset : StartOffset;
+			return StartOffset > EndOffset ? StartOffset : EndOffset;
 			}
 
 		uint64_t StartOffset;	//real start position

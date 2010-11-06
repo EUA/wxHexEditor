@@ -848,20 +848,13 @@ void HexEditor::UpdateCursorLocation( bool force ){
 			myfile->Read( reinterpret_cast<char*>(&ch), 1);
 			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
 
-			int64_t start = select->StartOffset;
-			int64_t end = select->EndOffset;
-			if(start > end ){
-				int temp = start;
-				start = end;
-				end = temp;
-				}
 			if( select->IsState( select->SELECT_FALSE ) ){
 				statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 				statusbar->SetStatusText(_("Block Size: N/A") ,4);
 				}
 			else{
-				statusbar->SetStatusText(wxString::Format(_("Selected Block: %llu -> %llu"),start,end), 3);
-				statusbar->SetStatusText(wxString::Format(_("Block Size: %llu"), abs(start-end)+1), 4);
+				statusbar->SetStatusText(wxString::Format(_("Selected Block: %llu -> %llu"),select->GetStart(),select->GetEnd()), 3);
+				statusbar->SetStatusText(wxString::Format(_("Block Size: %llu"), select->GetSize()), 4);
 				}
 			}
 	#endif // wxUSE_STATUSBAR

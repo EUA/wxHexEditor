@@ -159,20 +159,14 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 //-----VISUAL FUNCTIONS------//
 
 bool HexEditorCtrl::Selector(){
-	static bool polarity_possitive;
-	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )
-		select->EndOffset = page_offset + GetLocalHexInsertionPoint()/2;
-	else{
-		std::cout << "Selector without focuse captured" << std::endl;
+	if( (FindFocus() != hex_ctrl) && (FindFocus() != text_ctrl) ) {
+		std::cout << "Selector without focus captured" << std::endl;
 		return false;
 		}
 
-	bool first_selection = false;
 	if( not select->IsState( select->SELECT_TRUE ) ){	// If no select available,
 		select->SetState( select->SELECT_TRUE );		// then select start procedure code
 		select->StartOffset = select->EndOffset;
-		polarity_possitive		= false;
-		first_selection			= true;
 		}
 	return true;
 	}
@@ -392,6 +386,7 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
 		int old_location = GetLocalHexInsertionPoint();
 		if( new_location != old_location ){
+			select->EndOffset = page_offset + new_location/2;
 			if( not select->IsState( select->SELECT_TRUE) )		// At first select
 				if( Selector() == false )						// select without focus.
 					return;

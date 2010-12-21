@@ -157,15 +157,16 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 	}
 
 //-----VISUAL FUNCTIONS------//
-
 bool HexEditorCtrl::Selector(){
-	if( (FindFocus() != hex_ctrl) && (FindFocus() != text_ctrl) ) {
-		std::cout << "Selector without focus captured" << std::endl;
+	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )				//If selecton from hex or text control
+		select->EndOffset = page_offset + GetLocalHexInsertionPoint()/2;	//Than make selection
+	else{
+		std::cout << "Selector without focuse captured" << std::endl;
 		return false;
 		}
 
 	if( not select->IsState( select->SELECT_TRUE ) ){	// If no select available,
-		select->SetState( select->SELECT_TRUE );		// then select start procedure code
+		select->SetState( select->SELECT_TRUE );			// then set start selection procedure
 		select->StartOffset = select->EndOffset;
 		}
 	return true;
@@ -378,20 +379,20 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	}
 
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
-	if(event.m_leftDown){
-		int new_location=0;
-		if( event.GetEventObject() == hex_ctrl )
-			new_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
-		else if ( event.GetEventObject() == text_ctrl )
-			new_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ));
-		int old_location = GetLocalHexInsertionPoint();
-		if( new_location != old_location ){
-			select->EndOffset = page_offset + new_location/2;
-			if( not select->IsState( select->SELECT_TRUE) )		// At first select
-				if( Selector() == false )						// select without focus.
-					return;
-			SetLocalHexInsertionPoint( new_location );
-			Selector();
+	if(event.m_leftDown){									//if left button is pressed
+		int new_hex_location;										// initialize new_hex_location variable
+		if( event.GetEventObject() == hex_ctrl ) 		// if this event from hex_ctrl area
+			new_hex_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ); //than take it's location on hex chars
+		else if ( event.GetEventObject() == text_ctrl ) //if we got this event from text area
+			new_hex_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() )); //Than we needed to multiply with 2 for take it's hex location.
+		int old_hex_location = GetLocalHexInsertionPoint();	//requesting old hex location
+		if( new_hex_location != old_hex_location ){				//if hex selection addresses are different, start selection routine
+
+			if( not select->IsState( select->SELECT_TRUE) )	//if this is new selection start
+				if( Selector() == false )								//and  select without focus
+					return;													//don't make anything.
+			SetLocalHexInsertionPoint( new_hex_location );		//Moving cursor to new location.
+			Selector();														//Making actual selection.
 			PaintSelection();
 			}
 		}

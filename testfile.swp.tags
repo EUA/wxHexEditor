@@ -2,8 +2,8 @@
 <wxHexEditor_XML_TAG>
   <filename path="testfile.swp">
     <TAG id="0">
-      <start_offset>168</start_offset>
-      <end_offset>192</end_offset>
+      <start_offset>158</start_offset>
+      <end_offset>182</end_offset>
       <tag_text></tag_text>
       <font_colour>#000000</font_colour>
       <note_colour>#FF0000</note_colour>

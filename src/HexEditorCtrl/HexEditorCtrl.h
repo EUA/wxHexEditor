@@ -63,12 +63,11 @@ class Select{	//for using EventHandler
 			return StartOffset > EndOffset ? StartOffset : EndOffset;
 			}
 
-		uint64_t StartOffset;	//real start position
-		uint64_t EndOffset;		//real end position, included to select
+		uint64_t StartOffset;	//real selection start position
+		uint64_t EndOffset;		//real selection end position, included to select
 	private:
 		enum state_  state;
 		wxEvtHandler* evth;
-			//for select byte 13 start=13, end=13
 	};
 
 class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar

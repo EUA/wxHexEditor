@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wxHexEditor_XML_TAG>
   <filename path="testfile.swp">
+    <TAG id="1">
+      <start_offset>47</start_offset>
+      <end_offset>53</end_offset>
+      <tag_text>Broken section</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#F1D03B</note_colour>
+    </TAG>
     <TAG id="0">
       <start_offset>158</start_offset>
       <end_offset>182</end_offset>

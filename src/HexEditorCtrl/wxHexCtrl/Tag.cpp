@@ -50,7 +50,7 @@ TagElement::~TagElement(){
 	}
 
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
-	if( !visible ){
+	if( !visible and not tag.IsEmpty() ){
 #ifdef _DEBUG_TAG_
 		std::cout << "Show tag element " << this << std::endl;
 #endif

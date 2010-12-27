@@ -192,41 +192,51 @@ void inline HexEditorCtrl::ClearPaint( void ){
 	}
 
 void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
-	TagElement *TAG;
-	TagElement *TAX;
 	TagHideAll();
 	hex_ctrl->TagArray.Clear();
 	text_ctrl->TagArray.Clear();
-	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ ){
-		TAG = MainTagArray.Item(i);
-		int64_t start_byte = TAG->start;
-		int64_t end_byte = TAG->end;
 
-		if(start_byte > end_byte){							// swap if start > end
-			int64_t temp = start_byte;
-			start_byte = end_byte;
-			end_byte = temp;
-			}
-
-		if( start_byte >= page_offset + GetByteCount() )	// ...[..].TAG...
-			continue;
-		else if( end_byte < page_offset )					// ..TAG..[...]...
-			continue;
-
-		if( start_byte <= page_offset )						// ...TA[G..]....
-			start_byte = page_offset;
-
-		if( end_byte >= page_offset + GetByteCount() )		//...[..T]AG...
-			end_byte = GetByteCount() + page_offset;
-
-		start_byte	-= page_offset;
-		end_byte	-= page_offset;
-
-		TAX = new TagElement( start_byte, end_byte+1, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
-		text_ctrl->TagArray.Add( TAX );
-		TAX = new TagElement( start_byte*2, (end_byte+1)*2, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
-		hex_ctrl->TagArray.Add( TAX );
+	TagElement *TAG;
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ ){	//Painting all TAGs here.
+		TAG = MainTagArray.Item(i);// For debugging
+		PushTAGToControls(TAG);
 		}
+
+	for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ ){	//Just highlighting required sections.
+		TAG = HighlightArray.Item(i);// For debugging
+		PushTAGToControls(TAG);
+		}
+	}
+
+void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
+	int64_t start_byte = TAG->start;
+	int64_t end_byte = TAG->end;
+
+	if(start_byte > end_byte){							// swap if start > end
+		int64_t temp = start_byte;
+		start_byte = end_byte;
+		end_byte = temp;
+		}
+
+	if( start_byte >= page_offset + GetByteCount() )	// ...[..].TAG...
+		return;
+	else if( end_byte < page_offset )					// ..TAG..[...]...
+		return;
+
+	if( start_byte <= page_offset )						// ...TA[G..]....
+		start_byte = page_offset;
+
+	if( end_byte >= page_offset + GetByteCount() )		//...[..T]AG...
+		end_byte = GetByteCount() + page_offset;
+
+	start_byte	-= page_offset;
+	end_byte		-= page_offset;
+
+	TagElement *TAX;//For debugging
+	TAX = new TagElement( start_byte, end_byte+1, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
+	text_ctrl->TagArray.Add( TAX );
+	TAX = new TagElement( start_byte*2, (end_byte+1)*2, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
+	hex_ctrl->TagArray.Add( TAX );
 	}
 
 void HexEditorCtrl::PaintSelection( void ){

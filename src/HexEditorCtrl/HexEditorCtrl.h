@@ -107,6 +107,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		wxHugeScrollBar* offset_scroll;
 	protected:
 		ArrayOfTAG MainTagArray;
+		ArrayOfTAG HighlightArray;
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
 		void Clear( bool RePaint=false, bool cursor_reset=true );
@@ -115,6 +116,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void ClearPaint( void );
 		void PaintSelection( void );
 		void PreparePaintTAGs( void );
+		void PushTAGToControls( TagElement* TAG);
 //		void TagPaint( void );
 		bool TAGMutex;
 		void LoadTAGS( wxFileName );

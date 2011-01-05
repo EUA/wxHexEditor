@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 17 2008)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -70,18 +70,19 @@ class HexEditorGui : public wxFrame
 		wxStatusBar* statusBar;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnClose( wxCloseEvent& event ){ event.Skip(); }
-		virtual void OnKeyDown( wxKeyEvent& event ){ event.Skip(); }
-		virtual void OnMenuEvent( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnQuit( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnViewMenu( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnUpdateUI( wxUpdateUIEvent& event ){ event.Skip(); }
-		virtual void OnToolMenu( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnDeviceMenu( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnMenuEvent( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnQuit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnViewMenu( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
+		virtual void OnToolMenu( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnDeviceMenu( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		
 		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
 	
@@ -113,10 +114,11 @@ class InterpreterGui : public wxPanel
 		wxTextCtrl* m_textctrl_double;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnUpdate( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnUpdate( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		
 		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( 174,218 ), long style = wxTAB_TRAVERSAL );
 		~InterpreterGui();
 	
@@ -133,6 +135,7 @@ class TagPanelGui : public wxPanel
 		wxListBox* listTag;
 	
 	public:
+		
 		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~TagPanelGui();
 	
@@ -149,6 +152,7 @@ class InfoPanelGui : public wxPanel
 		wxStaticText* m_InfoPanelText;
 	
 	public:
+		
 		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );
 		~InfoPanelGui();
 	
@@ -170,12 +174,13 @@ class GotoDialogGui : public wxDialog
 		wxButton* m_button_go;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnInput( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnGo( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnConvert( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnInput( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnGo( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnConvert( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		
 		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Goto Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~GotoDialogGui();
 	
@@ -204,10 +209,11 @@ class FindDialogGui : public wxDialog
 		wxButton* btnFindAll;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void EventHandler( wxCommandEvent& event ){ event.Skip(); }
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		
 		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
 		~FindDialogGui();
 	
@@ -227,10 +233,11 @@ class UpdateDialog_Gui : public wxDialog
 		wxCheckBox* wxchk_display;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChkDisplay( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChkDisplay( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		
 		UpdateDialog_Gui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("New wxHexEditor Version!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~UpdateDialog_Gui();
 	

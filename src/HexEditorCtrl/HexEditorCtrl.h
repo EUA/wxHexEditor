@@ -105,9 +105,9 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;
+		ArrayOfTAG HighlightArray;
 	protected:
 		ArrayOfTAG MainTagArray;
-		ArrayOfTAG HighlightArray;
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
 		void Clear( bool RePaint=false, bool cursor_reset=true );

@@ -20,7 +20,8 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
-
+//#include <vector>
+//using namespace std;
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
@@ -112,13 +113,14 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 	}
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
+	parent->HighlightArray.Clear();
 	if( event.GetId() == btnFind->GetId() or event.GetId() == m_comboBoxSearch->GetId())
 		OnFind();
 	else if( event.GetId() == m_searchtype->GetId()){
 		m_searchtype->GetSelection() == 1 ? chkMatchCase->Enable(false) : chkMatchCase->Enable(true) ;
 		}
-//	else if( event.GetId() == btnFindAll->GetId() )
-//		OnFindAll();
+	else if( event.GetId() == btnFindAll->GetId() )
+		OnFindAll();
 //	else if( event.GetId() == btnFindPrev->GetId() )
 //		OnFindPrev();
 	else
@@ -235,6 +237,79 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	delete buffer;
 	return NANINT;
 	}
+// TODO (death#1#): Needed to be checked.
+void FindDialog::OnFindAll(){
+	parent->HighlightArray.Clear();
+	uint64_t found = 0xFFFFFFFFFFFFFFFFLL;
+	uint64_t search_size = 0;
+	uint64_t  lastfound=0;
+	//prepare Operator
+	unsigned options = 0;
+	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
+	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
+	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
+
+	if(options & SEARCH_TEXT){
+		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
+		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
+		search_size = m_comboBoxSearch->GetValue().Len();
+		parent->Goto(0);
+		for(int64_t i=0;i<parent->FileLength();i=i+search_size){
+			uint64_t temp=found;
+			found = FindText( m_comboBoxSearch->GetValue(), i+1, options );
+			wxString mystring = wxString::Format(wxT("%d"),found);//Debug
+			if(found!=-1&& temp!=found){
+				lastfound=found;
+				wxColourData col1,col2;
+				wxColour a(255, 0, 0, 0);
+				col1.SetColour(a);
+				col2.SetColour(10);
+				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,col2,col1);
+				parent->HighlightArray.Add(mytag);
+				}
+			}
+		}
+	else{ //SEARCH_HEX
+		wxString hexval = m_comboBoxSearch->GetValue();
+		parent->Goto(0);
+		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+			if( !isxdigit( hexval[i] ) or hexval == ' ' ){//Not hexadecimal!
+				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
+				wxBell();
+				}
+		//Remove all space chars and update the Search value
+		while( hexval.find(' ') != -1 )
+			hexval.Remove( hexval.find(' '),1);
+		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
+			hexval = wxChar('0')+hexval;
+		m_comboBoxSearch->SetValue(hexval.Upper());
+
+		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
+		search_size = mymem.GetDataLen();
+		for(int64_t i=0;i<parent->FileLength();i=i+search_size){
+			uint64_t temp=found;
+			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
+			search_size = mymem.GetDataLen();
+			found = FindBinary( mymem, i+1, options );
+			wxString mystring = wxString::Format(wxT("%d"),found);
+			if(found!=-1&& temp!=found){
+				wxColourData col1,col2;
+				wxColour a(255, 0, 0, 0);
+				col1.SetColour(a);
+				//col2.SetColour(10);
+				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,col2,col1);
+				parent->HighlightArray.Add(mytag);
+				}
+			}
+		}
+	if(parent->HighlightArray.GetCount()<0){
+		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
+      }
+   else{
+		parent->Select(found,found+search_size);
+		wxMessageBox(_("Done"), _("Find All Done!"), wxOK, this );
+		}
+	}
 
 // TODO (death#9#): Implement better search algorithm. (Like one using OpenCL and one using OpenMP) :)
 //WARNING! THIS FUNCTION WILL CHANGE BFR and/or SEARCH strings if SEARCH_MATCHCASE not selected as an option!
@@ -326,8 +401,8 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 	int id = event.GetId();
 	if( id == btnFind->GetId() )
 		OnFind();
-//	else if( id == btnFindAll->GetId() )
-//		OnFindAll();
+	else if( id == btnFindAll->GetId() )
+		OnFindAll();
 //	else if( id == btnFindPrev->GetId() )
 //		OnFindPrev();
 	else if( id == btnReplace->GetId() )

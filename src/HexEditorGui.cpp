@@ -124,6 +124,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuViewInfopanel = new wxMenuItem( viewMenu, idInfoPanel, wxString( wxT("InfoPanel") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewInfopanel );
 	
+	wxMenuItem* menuViewTagPanel;
+	menuViewTagPanel = new wxMenuItem( viewMenu, idTagPanel, wxString( wxT("TAG Panel") ) , wxEmptyString, wxITEM_CHECK );
+	viewMenu->Append( menuViewTagPanel );
+	
 	mbar->Append( viewMenu, wxT("&View") ); 
 	
 	toolMenu = new wxMenu();
@@ -218,6 +222,8 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuViewToolbar->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuViewInfopanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Connect( menuViewInfopanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Connect( menuViewTagPanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Connect( menuViewTagPanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuToolChecksum->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
 	this->Connect( menuToolCompare->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
 	this->Connect( menuDeviceRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
@@ -258,6 +264,8 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idToolbar, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idInfoPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idInfoPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( idTagPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Disconnect( idTagPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
@@ -398,15 +406,22 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	wxBoxSizer* mainSize;
 	mainSize = new wxBoxSizer( wxVERTICAL );
 	
-	listTag = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	mainSize->Add( listTag, 1, wxALL|wxEXPAND, 5 );
+	TagPanelList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	mainSize->Add( TagPanelList, 1, wxALL|wxEXPAND, 5 );
 	
 	this->SetSizer( mainSize );
 	this->Layout();
+	mainSize->Fit( this );
+	
+	// Connect Events
+	TagPanelList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( TagPanelGui::OnTagSelect ), NULL, this );
 }
 
 TagPanelGui::~TagPanelGui()
 {
+	// Disconnect Events
+	TagPanelList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( TagPanelGui::OnTagSelect ), NULL, this );
+	
 }
 
 InfoPanelGui::InfoPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )

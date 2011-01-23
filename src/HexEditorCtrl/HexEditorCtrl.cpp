@@ -55,7 +55,7 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 	}
 
 void HexEditorCtrl::Dynamic_Connector(){
-	this->Connect( idTagSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Connect( idTagAddSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagAddSelection ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 	this->Connect( __idOffsetHex__, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorCtrl::UpdateUI ) );
 	this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
@@ -73,7 +73,7 @@ void HexEditorCtrl::Dynamic_Connector(){
 	}
 
 void HexEditorCtrl::Dynamic_Disconnector(){
-	this->Disconnect( idTagSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagSelection ), NULL, this );
+	this->Disconnect( idTagAddSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagAddSelection ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 	this->Disconnect( __idOffsetHex__, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorCtrl::UpdateUI ) );
    this->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
@@ -147,7 +147,7 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 		}
 
 	if( select->IsState( select->SELECT_END ) ){
-		menu.Append(idTagSelection, _T("Tag Selection"));
+		menu.Append(idTagAddSelection, _T("Tag Selection"));
 		}
 //  menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
@@ -208,6 +208,7 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 		}
 	}
 
+//This functions move tags to local hex and text ctrls.
 void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 	int64_t start_byte = TAG->start;
 	int64_t end_byte = TAG->end;
@@ -443,7 +444,7 @@ void HexEditorCtrl::OnKillFocus( wxFocusEvent& event){
 	event.Skip();
 	}
 
-void HexEditorCtrl::OnTagSelection( wxCommandEvent& event ){
+void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ){
 	if( select->IsState(select->SELECT_END) ){
 		TagElement *TE = new TagElement;
 		TE->start=select->StartOffset;

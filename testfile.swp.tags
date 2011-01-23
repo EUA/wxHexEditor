@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wxHexEditor_XML_TAG>
   <filename path="testfile.swp">
-    <TAG id="1">
+    <TAG id="4">
       <start_offset>47</start_offset>
       <end_offset>53</end_offset>
       <tag_text>Broken section</tag_text>
       <font_colour>#3D3D3D</font_colour>
       <note_colour>#F1D03B</note_colour>
     </TAG>
-    <TAG id="0">
+    <TAG id="3">
       <start_offset>158</start_offset>
       <end_offset>182</end_offset>
       <tag_text></tag_text>
       <font_colour>#000000</font_colour>
       <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>2711</start_offset>
+      <end_offset>2704</end_offset>
+      <tag_text>54</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#4CF06C</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>6664</start_offset>
+      <end_offset>6668</end_offset>
+      <tag_text>898</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#4C83F0</note_colour>
+    </TAG>
+    <TAG id="0">
+      <start_offset>1180</start_offset>
+      <end_offset>1237</end_offset>
+      <tag_text>Normal</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#FFBB00</note_colour>
     </TAG>
   </filename>
 </wxHexEditor_XML_TAG>

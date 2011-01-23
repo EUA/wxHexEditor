@@ -5,6 +5,7 @@
 		<Option title="wxHexEditor" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="src/HexEditorCtrl/;" />
 		<Build>
 			<Target title="Release">
 				<Option platforms="Unix;" />
@@ -176,11 +177,14 @@
 		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialogGui.h" />
 		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
 		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
-		<Unit filename="src/HexEditorFrame.cpp" />
+		<Unit filename="src/HexEditorFrame.cpp">
+			<Option virtualFolder="src/HexEditorCtrl/" />
+		</Unit>
 		<Unit filename="src/HexEditorFrame.h" />
 		<Unit filename="src/HexEditorGui.cpp" />
 		<Unit filename="src/HexEditorGui.h" />
 		<Unit filename="src/InfoPanel.h" />
+		<Unit filename="src/TagPanel.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

@@ -138,7 +138,16 @@ void HexEditorFrame::PrepareAUI( void ){
    Toolbar->Realize();
 	mbar->Check( idToolbar, true );
 
-    MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
+	MyTagPanel = new TagPanel( this, -1 );
+	MyAUI -> AddPane( MyTagPanel, wxAuiPaneInfo().
+					Caption(wxT("TagPanel")).
+					TopDockable(false).
+					BottomDockable(false).
+					MinSize(wxSize(170,100)).
+					Right().Layer(1) );
+	mbar->Check( idTagPanel, true );
+
+   MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(wxT("ToolBar")).Caption(wxT("Big Toolbar")).
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
@@ -148,23 +157,25 @@ void HexEditorFrame::PrepareAUI( void ){
 					Caption(wxT("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).
-					MinSize(wxSize(170,111)).
+					BestSize(wxSize(140,111)).
+					Resizable(false).
 					Left().Layer(1) );
 	mbar->Check( idInfoPanel, true );
 
 	MyInterpreter = new DataInterpreter( this, -1 );
-
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
 					Caption(wxT("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
-					MinSize(wxSize(170,190)).
+					BestSize(wxSize(174,218)).
+					Resizable(false).
 					Left().Layer(1) );
 	mbar->Check( idInterpreter, true );
 
 	ActionDisabler();
 	MyNotebook->SetDropTarget( new DnDFile( this ) );
 	MyInfoPanel->SetDropTarget( new DnDFile( this ) );
+	MyTagPanel->SetDropTarget( new DnDFile( this ) );
 	MyInterpreter->SetDropTarget( new DnDFile( this ) );
 	Toolbar->SetDropTarget( new DnDFile( this ) );
 	}
@@ -191,7 +202,7 @@ void HexEditorFrame::ActionDisabler( void ){
 	}
 
 void HexEditorFrame::OpenFile(wxFileName flname){
-	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel );
+	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel );
 	if(x->FileOpen( flname )){
 		MyNotebook->AddPage( x, flname.GetFullName(), true );
 		ActionEnabler();
@@ -200,6 +211,10 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 		x->Destroy();
 		wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR, this );
 		}
+	}
+
+HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
+	return static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
 	}
 
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
@@ -270,7 +285,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 		}
 	else{
 		if( MyNotebook->GetPageCount() ){
-			HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+			HexEditor *MyHexEditor = GetActiveHexEditor();
 			if( MyHexEditor != NULL ){
 				switch( event.GetId() ){
 					//case wxID_OPEN: not handled here!
@@ -381,19 +396,20 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 	switch( event.GetId() ){
 		case idInterpreter:
 			MyAUI->GetPane(MyInterpreter).Show(event.IsChecked());
-			MyAUI->Update();
 			break;
 		case idInfoPanel:
 			MyAUI->GetPane(MyInfoPanel).Show(event.IsChecked());
-			MyAUI->Update();
 			break;
 		case idToolbar:
 			MyAUI->GetPane(Toolbar).Show(event.IsChecked());
-			MyAUI->Update();
+			break;
+		case idTagPanel:
+			MyAUI->GetPane(MyTagPanel).Show(event.IsChecked());
 			break;
 		default:
 			wxBell();
 		}
+	MyAUI->Update();
 	}
 
 void HexEditorFrame::OnAbout( wxCommandEvent& event ){
@@ -436,7 +452,9 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 #endif
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
+	mbar->Check(idTagPanel, MyTagPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
+
 	if(event.GetId() == idDeviceRam){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
 		#ifndef __WXMSW__
@@ -476,7 +494,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		}
 
 	if( MyNotebook->GetPageCount() ){
-		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		HexEditor *MyHexEditor = GetActiveHexEditor();
 		if( MyHexEditor != NULL ){
 			switch( MyHexEditor->GetFileAccessMode() ){
 				case FAL::ReadOnly :
@@ -572,7 +590,7 @@ void HexEditorFrame::OnActivate( wxActivateEvent& event ){
 
 void HexEditorFrame::TagHideAll( void ){
 	if( MyNotebook->GetPageCount() ){
-		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+		HexEditor *MyHexEditor = GetActiveHexEditor();
 		if( MyHexEditor != NULL )
 			MyHexEditor->TagHideAll();
 		}
@@ -621,7 +639,7 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	for ( size_t n = 0; n < nFiles; n++ ) {
 		wxFileName myfl( filenames[n] );
 		if ( myfl.FileExists() ){
-			HexFramework->MyNotebook->AddPage( new HexEditor( HexFramework->MyNotebook, 1, HexFramework->statusBar, HexFramework->MyInterpreter, HexFramework->MyInfoPanel, &myfl), myfl.GetFullName(), true);
+			HexFramework->MyNotebook->AddPage( new HexEditor( HexFramework->MyNotebook, 1, HexFramework->statusBar, HexFramework->MyInterpreter, HexFramework->MyInfoPanel, HexFramework->MyTagPanel, &myfl), myfl.GetFullName(), true);
 			HexFramework->ActionEnabler();
 			}
 		else{
@@ -659,4 +677,9 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 
 void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
 	wxConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
+	}
+
+void TagPanel::OnTagSelect(wxCommandEvent& event){
+	HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor();
+	MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( TagPanelList->GetSelection() )->start );
 	}

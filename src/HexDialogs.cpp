@@ -20,8 +20,7 @@
 *               home  : wxhexeditor.sourceforge.net                     *
 *               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
-//#include <vector>
-//using namespace std;
+
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
@@ -307,7 +306,7 @@ void FindDialog::OnFindAll(){
       }
    else{
 		parent->Select(found,found+search_size);
-		wxMessageBox(_("Done"), _("Find All Done!"), wxOK, this );
+		wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
 		}
 	}
 

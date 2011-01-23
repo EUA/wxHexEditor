@@ -42,12 +42,13 @@
 #define idInterpreter 1002
 #define idToolbar 1003
 #define idInfoPanel 1004
-#define idDeviceRam 1005
-#define idFileRO 1006
-#define idFileRW 1007
-#define idFileDW 1008
-#define ID_CHK_UNSIGNED 1009
-#define ID_CHK_BIGENDIAN 1010
+#define idTagPanel 1005
+#define idDeviceRam 1006
+#define idFileRO 1007
+#define idFileRW 1008
+#define idFileDW 1009
+#define ID_CHK_UNSIGNED 1010
+#define ID_CHK_BIGENDIAN 1011
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -132,11 +133,15 @@ class TagPanelGui : public wxPanel
 	private:
 	
 	protected:
-		wxListBox* listTag;
+		wxListBox* TagPanelList;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnTagSelect( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~TagPanelGui();
 	
 };

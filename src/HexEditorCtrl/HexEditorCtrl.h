@@ -99,15 +99,15 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		~HexEditorCtrl( void );
 		enum focus_ { HEX_CTRL, TEXT_CTRL } focus;
 		class Select *select;
-		enum IDS{ idTagSelection=1001,idTagEdit, idInjection };
+		enum IDS{ idTagAddSelection=1001,idTagEdit, idInjection };
 		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;
 		ArrayOfTAG HighlightArray;
-	protected:
 		ArrayOfTAG MainTagArray;
+	protected:
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
 		void Clear( bool RePaint=false, bool cursor_reset=true );
@@ -143,7 +143,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseRight( wxMouseEvent& event );
-		void OnTagSelection( wxCommandEvent& event );
+		void OnTagAddSelection( wxCommandEvent& event );
 		void OnTagEdit( wxCommandEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void UpdateUI(wxUpdateUIEvent& event);

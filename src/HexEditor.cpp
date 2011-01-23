@@ -29,14 +29,16 @@ HexEditor::HexEditor(	wxWindow* parent,
 							wxStatusBar *statbar_,
 							DataInterpreter *interpreter_,
 							InfoPanel *infopanel_,
+							TagPanel *tagpanel_,
 							wxFileName* myfilename_,
 							const wxPoint& pos,
 							const wxSize& size,
 							long style ):
-			HexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL)
-			,statusbar(statbar_),
+			HexEditorCtrl(parent, id, pos, size, wxTAB_TRAVERSAL),
+			statusbar(statbar_),
 			interpreter(interpreter_),
-			infopanel(infopanel_){
+			infopanel(infopanel_),
+			tagpanel(tagpanel_){
 	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD neccessary
 	myfile = NULL;
 	if( myfilename_ != NULL ){
@@ -117,6 +119,9 @@ bool HexEditor::FileOpen(wxFileName& myfilename ){
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
+			tagpanel->Set(MainTagArray);
+
+
 			LoadFromOffset(0, true);
 			//offset_scroll->SetScrollbar(offset_scroll->GetThumbPosition(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
 			//std::cout << "FileLength() / ByteCapacity() :" << FileLength() << " - " << ByteCapacity() << " : " << (FileLength() / ByteCapacity())+1 << "\n";
@@ -655,7 +660,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
 	menu.Append(idTagEdit, _T("Tag Edit"));
-	menu.Append(idTagSelection, _T("New Tag"));
+	menu.Append(idTagAddSelection, _T("New Tag"));
 	menu.Append(wxID_COPY, _T("Copy"));
 	menu.Append(wxID_PASTE, _T("Paste"));
 #ifdef Enable_Injections
@@ -674,7 +679,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ){
 			}
 		}
 
-	menu.Enable( idTagSelection, select->IsState( select->SELECT_END) );
+	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
 
 #ifdef Enable_Injections
 	menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
@@ -865,7 +870,6 @@ void HexEditor::UpdateCursorLocation( bool force ){
 		}
 	else
 		std::cout << "mutex update cannot lock..." << std::endl;
-
 	}
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ){
@@ -1055,3 +1059,4 @@ bool HexEditor::PasteFromClipboard( void ){
 	GetEventHandler()->ProcessEvent( eventx );
 	return ret;
 	}
+

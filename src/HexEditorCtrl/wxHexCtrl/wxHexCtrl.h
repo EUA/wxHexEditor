@@ -33,7 +33,7 @@
 #include <wx/dcbuffer.h>
 #include "Tag.h"
 
-#define __idTagSelect__ 1500
+#define __idTagAddSelect__ 1500
 #define __idTagEdit__ 1501
 #define __idOffsetHex__ 1502
 
@@ -137,7 +137,7 @@ virtual void OnMouseRight( wxMouseEvent& event );
 		void OnKillFocus( wxFocusEvent& event ); //tempotarily publicized
 		void OnFocus( wxFocusEvent& event );
 
-		void OnTagSelection( wxCommandEvent &event );
+		void OnTagAddSelection( wxCommandEvent &event );
 		void OnTagEdit( wxCommandEvent &event );
 		void ShowContextMenu( wxPoint pos );
 		DECLARE_EVENT_TABLE();

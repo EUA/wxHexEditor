@@ -33,6 +33,7 @@
 #include "FAL.h"
 #include "DataInterpreter.h"
 #include "InfoPanel.h"
+#include "TagPanel.h"
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
@@ -50,6 +51,7 @@ class HexEditor: public HexEditorCtrl/*, protected FAL*/ {
 					wxStatusBar *statusbar=NULL,
 					DataInterpreter *interpreter=NULL,
 					InfoPanel *infopanel=NULL,
+					TagPanel *tagpanel=NULL,
 					wxFileName* myfile=NULL,
 					const wxPoint& pos=wxDefaultPosition,
 					const wxSize& size=wxDefaultSize,
@@ -116,6 +118,8 @@ protected:
 		scrollthread *myscroll;
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
+		TagPanel *tagpanel;
+
 		copy_maker *copy_mark;
 
 	private:

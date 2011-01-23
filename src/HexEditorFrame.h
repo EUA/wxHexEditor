@@ -30,6 +30,7 @@
 #include "HexEditorApp.h"
 #include "HexDialogs.h"
 #include "InfoPanel.h"
+#include "TagPanel.h"
 #include "../resources/wxhex.xpm"
 #include <wx/filename.h>
 #include <wx/dir.h>
@@ -64,6 +65,7 @@ class HexEditorFrame : public HexEditorGui {
 		~HexEditorFrame();
 		void TagHideAll();
 		void OpenFile(wxFileName flname);
+		HexEditor* GetActiveHexEditor(void);
 
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
@@ -87,6 +89,7 @@ class HexEditorFrame : public HexEditorGui {
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
 		InfoPanel *MyInfoPanel;
+		TagPanel *MyTagPanel;
 #ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
 #else

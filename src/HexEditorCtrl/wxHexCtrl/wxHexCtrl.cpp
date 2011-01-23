@@ -31,7 +31,7 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
 	//EVT_MOUSE( wxHexCtrl::OnResize)
 	EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
-	EVT_MENU( __idTagSelect__, wxHexCtrl::OnTagSelection )
+	EVT_MENU( __idTagAddSelect__, wxHexCtrl::OnTagAddSelection )
 	EVT_MENU( __idTagEdit__, wxHexCtrl::OnTagEdit )
 	EVT_MOTION( wxHexCtrl::OnMouseMove )
 	EVT_SET_FOCUS( wxHexCtrl::OnFocus )
@@ -778,7 +778,7 @@ void wxHexCtrl::ShowContextMenu( wxPoint pos ){
 		}
 
 	if( select.selected ){
-		menu.Append(__idTagSelect__, _T("Tag Selection"));
+		menu.Append(__idTagAddSelect__, _T("Tag Selection"));
 		}
 //  menu.AppendSeparator();
     PopupMenu(&menu, pos);
@@ -816,7 +816,7 @@ void wxHexCtrl::OnTagEdit( wxCommandEvent& event ){
 		}
 	}
 
-void wxHexCtrl::OnTagSelection( wxCommandEvent& event ){
+void wxHexCtrl::OnTagAddSelection( wxCommandEvent& event ){
 	if(select.selected){
 		TagElement *TAG = new TagElement;
 		TAG->start=select.start;

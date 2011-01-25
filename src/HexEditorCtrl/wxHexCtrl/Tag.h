@@ -40,6 +40,7 @@ class TagElement{
 		TagElement();
 		~TagElement();
 		TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr);
+		TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour fntclr, wxColour noteclr);
 		uint64_t start;
 		uint64_t end;
 		wxString tag;

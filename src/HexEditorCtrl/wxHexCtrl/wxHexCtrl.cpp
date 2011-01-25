@@ -445,8 +445,25 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	{	//Selection Painter
 		DC->SetFont( HexDefaultAttr.GetFont() );
 		DC->SetTextForeground( TG.FontClrData.GetColour() );
-		DC->SetTextBackground( TG.NoteClrData.GetColour() );
+//		DC->SetTextBackground( TG.NoteClrData.GetColour() );
+
+		//fake alpha highlighting for tags.
+		unsigned char r,g,b;
+		wxColour back=TG.NoteClrData.GetColour();
+		r=back.Red();
+		g=back.Green();
+		b=back.Blue();
+
+		r +=  (0xff - r) / 2;
+		g +=  (0xff - g) / 2;
+		b +=  (0xff - b) / 2;
+		back.Set(r,g,b,0xff);
+
+		DC->SetTextBackground( back );
+
 		wxBrush sbrush( TG.NoteClrData.GetColour() );
+		//preparation for wxGCDC for semi transparent marking.
+		//wxBrush sbrush(wxBrush(wxColour(255,0,0,128),wxBRUSHSTYLE_TRANSPARENT ));
 		DC->SetBackground( sbrush );
 		DC->SetBackgroundMode( wxSOLID ); // overwrite old value
 		m_CharSize.y = DC->GetCharHeight();

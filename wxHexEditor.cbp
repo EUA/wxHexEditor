@@ -96,7 +96,7 @@
 					<Add option="-march=athlon64" />
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw/wx-config --cflags`" />
+					<Add option="`/home/compile/wxWidgets-2.8.11/release-mingw/wx-config --cflags`" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -115,7 +115,7 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
 					<Add option="-g" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw/wx-config --cflags`" />
+					<Add option="`/home/compile/wxWidgets-2.8.11/release-mingw/wx-config --cflags`" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -134,12 +134,12 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`/home/compile/wxWidgets-trunk/debug-static/wx-config --cflags`" />
+					<Add option="$(/home/compile/wxWidgets-trunk/release/wx-config --cflags)" />
 					<Add option="-D_DEBUG_=6" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`/home/compile/wxWidgets-trunk/debug-static/wx-config --libs`" />
+					<Add option="$(/home/compile/wxWidgets-trunk/release/wx-config --libs)" />
 				</Linker>
 			</Target>
 		</Build>

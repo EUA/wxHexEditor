@@ -241,7 +241,6 @@ void FindDialog::OnFindAll(){
 	parent->HighlightArray.Clear();
 	uint64_t found = 0xFFFFFFFFFFFFFFFFLL;
 	uint64_t search_size = 0;
-	uint64_t  lastfound=0;
 	//prepare Operator
 	unsigned options = 0;
 	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
@@ -258,12 +257,7 @@ void FindDialog::OnFindAll(){
 			found = FindText( m_comboBoxSearch->GetValue(), i+1, options );
 			wxString mystring = wxString::Format(wxT("%d"),found);//Debug
 			if(found!=-1&& temp!=found){
-				lastfound=found;
-				wxColourData col1,col2;
-				wxColour a(255, 0, 0, 0);
-				col1.SetColour(a);
-				col2.SetColour(10);
-				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,col2,col1);
+				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,*wxBLACK, wxColour(255,255,0,0) );
 				parent->HighlightArray.Add(mytag);
 				}
 			}
@@ -292,11 +286,7 @@ void FindDialog::OnFindAll(){
 			found = FindBinary( mymem, i+1, options );
 			wxString mystring = wxString::Format(wxT("%d"),found);
 			if(found!=-1&& temp!=found){
-				wxColourData col1,col2;
-				wxColour a(255, 0, 0, 0);
-				col1.SetColour(a);
-				//col2.SetColour(10);
-				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,col2,col1);
+				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,*wxBLACK, wxColour(255,255,0,0) );
 				parent->HighlightArray.Add(mytag);
 				}
 			}

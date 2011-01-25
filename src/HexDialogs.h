@@ -71,7 +71,6 @@ virtual void EventHandler( wxCommandEvent& event );
 		uint64_t FindBinary( wxMemoryBuffer target, uint64_t start_from, unsigned oper=SEARCH_HEX );
 		uint64_t FindText( wxString target, uint64_t start_from, unsigned oper=SEARCH_TEXT);
 		int SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
-
 		class HexEditor* parent;
 		FAL *findfile;
 	};

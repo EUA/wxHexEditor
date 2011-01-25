@@ -39,6 +39,13 @@ TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourD
 	visible = false;
 	}
 
+TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour fntclr, wxColour noteclr):
+			start(_start), end(_end), tag(_tag){
+	FontClrData.SetColour(fntclr);
+	NoteClrData.SetColour(noteclr);
+	visible = false;
+	}
+
 TagElement::~TagElement(){
 	if( visible )
 		Hide();

@@ -216,12 +216,22 @@ void TagPanel::Set( ArrayOfTAG& MainTagArray ){
 		wxArrayString str;
 		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++)
 			str.Add(MainTagArray.Item(i)->tag);
-
+		TagPanelList->Clear();
 		TagPanelList->InsertItems(str,0);
 		mutextag.Unlock();
-		}
+	}
 
-void TagPanel::OnTagSelect(wxCommandEvent& event){
+void TagPanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor();
-	MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( TagPanelList->GetSelection() )->start );
+	unsigned selection = TagPanelList->GetSelection();
+	if( MyHexEditor->MainTagArray.Count() >= selection ) {
+		TagElement *tg = MyHexEditor->MainTagArray.Item( selection );
+		if(tg == NULL) {
+#ifdef _DEBUG_
+			std::cerr << "TagPanel::OnTagSelect Selection of tag " << selection << " returns NULL TAG" << std::endl;
+#endif
+			return;
+			}
+		MyHexEditor->Goto( tg->start );
+		}
 	}

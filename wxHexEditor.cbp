@@ -195,6 +195,15 @@
 				<Changes_Log show_changes_editor="0" app_title="released version %M.%mm.%b of %p" changeslog_path="ChangesLog.txt" />
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

@@ -24,6 +24,7 @@
 
 #include "HexEditor.h"
 #include "HexEditorGui.h"
+#include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorCtrl/wxHexCtrl/wxHexCtrl.h"
 
 #ifdef WX_GCH
@@ -100,6 +101,7 @@ class TagPanel : public TagPanelGui{
 	TagPanel(wxWindow* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 	:TagPanelGui( parent_, id, pos, size, style){
 		};
+
 	void Set( ArrayOfTAG& MainTagArray );
 	void OnTagSelect( wxCommandEvent& event );
 	void OnUpdate( wxCommandEvent& event ){

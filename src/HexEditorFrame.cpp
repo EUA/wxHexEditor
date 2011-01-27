@@ -38,6 +38,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	MyAUI->Update();
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -65,6 +66,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+   this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -536,6 +538,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
 			Toolbar->Refresh();
 			}
+
+		if(event.GetId() == TAG_CHANGE_EVENT ){
+			MyTagPanel->Set( GetActiveHexEditor()->MainTagArray );
+			}
 		}
 	event.Skip();
 	}
@@ -547,8 +553,9 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 	if( MyNotebook->GetPageCount() ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
 			if( MyHexEditor != NULL ){
-				MyHexEditor->UpdateCursorLocation();
+				MyHexEditor->UpdateCursorLocation(); //Also updates DataInterpreter
 				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+				MyTagPanel->Set( MyHexEditor->MainTagArray );
 
 				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 				mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );

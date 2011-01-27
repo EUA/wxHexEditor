@@ -470,6 +470,10 @@ void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ){
 		delete x;
 		//delete TE; Don't delete this tags!
 		}
+	//event.Skip( true );
+	wxUpdateUIEvent eventx;
+	eventx.SetId( TAG_CHANGE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
@@ -504,6 +508,9 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 				}
 			}
 		}
+	wxUpdateUIEvent eventx;
+	eventx.SetId( TAG_CHANGE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}
 
 void HexEditorCtrl::TagHideAll( void ){

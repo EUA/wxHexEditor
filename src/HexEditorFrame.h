@@ -29,8 +29,7 @@
 #include "HexEditor.h"
 #include "HexEditorApp.h"
 #include "HexDialogs.h"
-#include "InfoPanel.h"
-#include "TagPanel.h"
+#include "HexPanels.h"
 #include "../resources/wxhex.xpm"
 #include <wx/filename.h>
 #include <wx/dir.h>

@@ -32,27 +32,76 @@
 #include <wx/wx.h>
 #endif
 
-#ifndef TAGPANEL_H
-#define TAGPANEL_H
+#ifndef HEXPANELS_H
+#define HEXPANELS_H
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdint.h>
+#include <unistd.h>
+
+#include <stdio.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#ifdef __WXGTK__
+	#include <sys/ioctl.h>
+	//#include <dev/disk.h>
+	#include <linux/fs.h>
+#endif
+
+#include <wx/filename.h>
+
+#include <stdint.h>
+#include <wx/memory.h>
+
+class DataInterpreter : public InterpreterGui{
+	public:
+		DataInterpreter(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+		:InterpreterGui( parent, id, pos, size, style){
+			unidata.raw = unidata.mraw = NULL;
+			};
+		void Set( wxMemoryBuffer buffer );
+		void Clear( void );
+		void OnUpdate( wxCommandEvent& event );
+	protected:
+		struct unidata{
+			char *raw, *mraw;	//big endian and little endian
+			struct endian{
+				int8_t *bit8;
+				int16_t *bit16;
+				int32_t *bit32;
+				int64_t *bit64;
+				uint8_t  *ubit8;
+				uint16_t *ubit16;
+				uint32_t *ubit32;
+				uint64_t *ubit64;
+				float  *bitfloat;
+				double *bitdouble;
+				} little, big;
+			short size;
+			char *mirrorbfr;
+			}unidata;
+	};
+
+class InfoPanel : public InfoPanelGui{
+	public:
+	InfoPanel(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+	:InfoPanelGui( parent, id, pos, size, style){
+	}
+
+	void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD );
+	void OnUpdate( wxCommandEvent& event ){
+	}
+};
 class TagPanel : public TagPanelGui{
 	public:
 	TagPanel(wxWindow* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 	:TagPanelGui( parent_, id, pos, size, style){
 		};
-	void Set( ArrayOfTAG& MainTagArray ){
-		static wxMutex mutextag;
-		mutextag.Lock();
-		wxArrayString str;
-		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++)
-			str.Add(MainTagArray.Item(i)->tag);
-
-		TagPanelList->InsertItems(str,0);
-		mutextag.Unlock();
-		}
-
+	void Set( ArrayOfTAG& MainTagArray );
 	void OnTagSelect( wxCommandEvent& event );
-
 	void OnUpdate( wxCommandEvent& event ){
 //		parent->
 	}

@@ -679,7 +679,4 @@ void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
 	wxConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
 	}
 
-void TagPanel::OnTagSelect(wxCommandEvent& event){
-	HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor();
-	MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( TagPanelList->GetSelection() )->start );
-	}
+

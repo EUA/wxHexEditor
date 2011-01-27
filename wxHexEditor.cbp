@@ -156,7 +156,6 @@
 		<Unit filename="resources/wxHexEditor.desktop" />
 		<Unit filename="resources/wxHexEditor.png" />
 		<Unit filename="resources/wxhex.xpm" />
-		<Unit filename="src/DataInterpreter.h" />
 		<Unit filename="src/FAL.cpp" />
 		<Unit filename="src/FAL.h" />
 		<Unit filename="src/HexDialogs.cpp" />
@@ -183,8 +182,8 @@
 		<Unit filename="src/HexEditorFrame.h" />
 		<Unit filename="src/HexEditorGui.cpp" />
 		<Unit filename="src/HexEditorGui.h" />
-		<Unit filename="src/InfoPanel.h" />
-		<Unit filename="src/TagPanel.h" />
+		<Unit filename="src/HexPanels.cpp" />
+		<Unit filename="src/HexPanels.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

@@ -5,7 +5,7 @@
 *   This program is free software; you can redistribute it and/or       *
 *   modify it under the terms of the GNU General Public License         *
 *   as published by the Free Software Foundation; either version 2      *
-*   of the License, or any later version.                               *
+*   of the License.                                                     *
 *                                                                       *
 *   This program is distributed in the hope that it will be useful,     *
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of      *
@@ -21,39 +21,103 @@
 *               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
 
-#include "HexEditorGui.h"
+#include "HexEditorFrame.h"
 
-#ifdef WX_GCH
-#include <wx_pch.h>
-#else
-#include <wx/wx.h>
+
+void DataInterpreter::Set( wxMemoryBuffer buffer ){
+// TODO (death#1#): Add exception if size smaller than expected
+		static wxMutex mutexset;
+#ifdef _DEBUG_MUTEX_
+		std::cout << "DataInterpeter Set() Mutex Locked" << std::endl;
 #endif
+		mutexset.Lock();
+		int size = buffer.GetDataLen();
+		if( size == 0 ){
+			wxBell();
+			Clear();
+			mutexset.Unlock();
+			return;
+			}
+		if( unidata.raw != NULL )
+			delete [] unidata.raw;
+		if( unidata.mraw != NULL )
+			delete [] unidata.mraw;
+		unidata.raw = new char[ size ];
+		unidata.mraw = new char[ size ];
+		memcpy( unidata.raw, buffer.GetData(), size );
+		memcpy( unidata.mraw, buffer.GetData(), size );
+		unidata.size = size;
+		for(int i = 0 ; i < unidata.size ; i++)	// make mirror image of mydata
+			unidata.mraw[i]=unidata.raw[unidata.size-i-1];
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+		unidata.little.bit8   = reinterpret_cast< int8_t*  >(unidata.raw);
+		unidata.little.ubit8  = reinterpret_cast< uint8_t* >(unidata.raw);
+		unidata.little.bit16  = reinterpret_cast< int16_t* >(unidata.raw);
+		unidata.little.ubit16 = reinterpret_cast< uint16_t*>(unidata.raw);
+		unidata.little.bit32  = reinterpret_cast< int32_t* >(unidata.raw);
+		unidata.little.ubit32 = reinterpret_cast< uint32_t*>(unidata.raw);
+		unidata.little.bit64  = reinterpret_cast< int64_t* >(unidata.raw);
+		unidata.little.ubit64 = reinterpret_cast< uint64_t*>(unidata.raw);
+		unidata.little.bitfloat = reinterpret_cast< float* >(unidata.raw);
+		unidata.little.bitdouble = reinterpret_cast< double* >(unidata.raw);
 
-#include <stdio.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+		unidata.big.bit8   = reinterpret_cast< int8_t*  >(unidata.mraw+(size - 1));
+		unidata.big.ubit8  = reinterpret_cast< uint8_t* >(unidata.mraw+(size - 1));
+		unidata.big.bit16  = reinterpret_cast< int16_t* >(unidata.mraw+(size - 2));
+		unidata.big.ubit16 = reinterpret_cast< uint16_t*>(unidata.mraw+(size - 2));
+		unidata.big.bit32  = reinterpret_cast< int32_t* >(unidata.mraw+(size - 4));
+		unidata.big.ubit32 = reinterpret_cast< uint32_t*>(unidata.mraw+(size - 4));
+		unidata.big.bit64  = reinterpret_cast< int64_t* >(unidata.mraw+(size - 8));
+		unidata.big.ubit64 = reinterpret_cast< uint64_t*>(unidata.mraw+(size - 8));
+		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
+		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
 
-#ifdef __WXGTK__
-	#include <sys/ioctl.h>
-	//#include <dev/disk.h>
-	#include <linux/fs.h>
+		wxCommandEvent event;
+		OnUpdate( event );
+
+		mutexset.Unlock();
+#ifdef _DEBUG_MUTEX_
+		std::cout << "DataInterpeter Set() Mutex UnLocked" << std::endl;
 #endif
+		}
 
-#ifndef INFOPANEL_H
-#define INFOPANEL_H
+void DataInterpreter::Clear( void ){
+		m_textctrl_binary->Clear();
+		m_textctrl_8bit ->Clear();
+		m_textctrl_16bit->Clear();
+		m_textctrl_32bit->Clear();
+		m_textctrl_64bit->Clear();
+		m_textctrl_float->Clear();
+		m_textctrl_double->Clear();
+		}
 
-class InfoPanel : public InfoPanelGui{
-	public:
-	InfoPanel(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:InfoPanelGui( parent, id, pos, size, style){
-		};
+void DataInterpreter::OnUpdate( wxCommandEvent& event ){
+		unidata::endian *X = m_check_bigendian->GetValue() ?  &unidata.big : &unidata.little;
+		int number = *X->ubit8;
+		wxString bn;
+		for(int i = 8 ; i > 0 ; i-- ){
+			(((number>>(i-1)) & 0x01)==1) ? bn << wxT("1") : bn << wxT("0");
+			if( i == 5 )
+				bn.append(wxT(" "));
+			}
+		m_textctrl_binary ->ChangeValue( bn );
+		if( m_check_unsigned->GetValue() ){
+			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit8 ));
+			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit16 ));
+			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit32 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%llu"),*X->ubit64 ));
+			}
+		else {
+			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%i"),  *X->bit8 ));
+			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit16 ));
+			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit32 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%lld"),*X->bit64 ));
+			}
+		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
+		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
+	}
 
-	void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD ){
+void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD ){
 		static wxMutex mutexinfo;
 		mutexinfo.Lock();
 
@@ -145,9 +209,19 @@ class InfoPanel : public InfoPanelGui{
 		mutexinfo.Unlock();
 		}
 
-	void OnUpdate( wxCommandEvent& event ){
+
+void TagPanel::Set( ArrayOfTAG& MainTagArray ){
+		static wxMutex mutextag;
+		mutextag.Lock();
+		wxArrayString str;
+		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++)
+			str.Add(MainTagArray.Item(i)->tag);
+
+		TagPanelList->InsertItems(str,0);
+		mutextag.Unlock();
+		}
+
+void TagPanel::OnTagSelect(wxCommandEvent& event){
+	HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor();
+	MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( TagPanelList->GetSelection() )->start );
 	}
-};
-
-#endif
-

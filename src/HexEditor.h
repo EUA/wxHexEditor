@@ -31,9 +31,7 @@
 #include <wx/version.h>
 
 #include "FAL.h"
-#include "DataInterpreter.h"
-#include "InfoPanel.h"
-#include "TagPanel.h"
+#include "HexPanels.h"
 #include "HexEditorGui.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"

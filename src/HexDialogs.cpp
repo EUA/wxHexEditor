@@ -23,6 +23,7 @@
 
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
+#include <wx/progdlg.h>
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
 	cursor_offset = _cursor_offset;
@@ -126,25 +127,25 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		wxBell();
 	}
 
-bool FindDialog::OnFind( bool internal ){
-	uint64_t found = 0xFFFFFFFFFFFFFFFFLL;
+bool FindDialog::OnFind( bool internal ) {
+	uint64_t found = NANINT;
 	uint64_t search_size = 0;
 	//prepare Operator
 	unsigned options = 0;
 	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
-	if(options & SEARCH_TEXT){
+	if(options & SEARCH_TEXT) {
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
 		search_size = m_comboBoxSearch->GetValue().Len();
 		found = FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1, options );
 		}
-	else{ //SEARCH_HEX
+	else { //SEARCH_HEX
 		wxString hexval = m_comboBoxSearch->GetValue();
 
 		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-			if( !isxdigit( hexval[i] ) or hexval == ' ' ){//Not hexadecimal!
+			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
 				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
 				wxBell();
 				return false;
@@ -156,21 +157,19 @@ bool FindDialog::OnFind( bool internal ){
 			hexval = wxChar('0')+hexval;
 		m_comboBoxSearch->SetValue(hexval.Upper());
 
-		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
-		search_size = mymem.GetDataLen();
-		found = FindBinary( mymem, parent->CursorOffset()+1, options );
+		wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
+		search_size = search_binary.GetDataLen();
+		found = FindBinary( search_binary, parent->CursorOffset()+1, options );
 		}
 
-
-	if( found != 0xFFFFFFFFFFFFFFFFLL ){
+	if( found != NANINT ) {
 		parent->Goto( found );
 		parent->Select( found,  found+search_size-1 );
 		return true;
 		}
 
-	else
-		if( !internal )
-			wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
+	else if( !internal )
+		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 	return false;
 	}
 
@@ -186,6 +185,7 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		}
 // TODO (death#1#): Find in UTF?
 	}
+
 // TODO (death#1#): New Find as "bool FindText/Bin( &uint64_t )
 // TODO (death#1#): Implement Search_Backwards
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
@@ -236,37 +236,42 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	delete buffer;
 	return NANINT;
 	}
-// TODO (death#1#): Needed to be checked.
-void FindDialog::OnFindAll(){
+
+// TODO (death#1#): Needed to be checked.
+void FindDialog::OnFindAll() {
 	parent->HighlightArray.Clear();
-	uint64_t found = 0xFFFFFFFFFFFFFFFFLL;
+	uint64_t found = NANINT;
 	uint64_t search_size = 0;
-	//prepare Operator
+
+	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , _("Finding matches... "), 100,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
+	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
+
+// TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
+	//progress_gauge.SetIcon(search_ICON);
+
 	unsigned options = 0;
 	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 
-	if(options & SEARCH_TEXT){
+	int mode = 0;
+	wxString search_string;
+	wxMemoryBuffer search_binary;
+	if(options & SEARCH_TEXT) {
+		mode = SEARCH_TEXT;
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
 		search_size = m_comboBoxSearch->GetValue().Len();
+		search_string = m_comboBoxSearch->GetValue();
 		parent->Goto(0);
-		for(int64_t i=0;i<parent->FileLength();i=i+search_size){
-			uint64_t temp=found;
-			found = FindText( m_comboBoxSearch->GetValue(), i+1, options );
-			wxString mystring = wxString::Format(wxT("%d"),found);//Debug
-			if(found!=-1&& temp!=found){
-				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,*wxBLACK, wxColour(255,255,0,0) );
-				parent->HighlightArray.Add(mytag);
-				}
-			}
 		}
-	else{ //SEARCH_HEX
+
+	else {
+		mode = SEARCH_HEX;
 		wxString hexval = m_comboBoxSearch->GetValue();
 		parent->Goto(0);
 		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-			if( !isxdigit( hexval[i] ) or hexval == ' ' ){//Not hexadecimal!
+			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
 				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
 				wxBell();
 				}
@@ -276,25 +281,40 @@ void FindDialog::OnFindAll(){
 		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
 			hexval = wxChar('0')+hexval;
 		m_comboBoxSearch->SetValue(hexval.Upper());
+		search_binary = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
+		search_size = search_binary.GetDataLen();
+		}
 
-		wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
-		search_size = mymem.GetDataLen();
-		for(int64_t i=0;i<parent->FileLength();i=i+search_size){
-			uint64_t temp=found;
-			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
-			search_size = mymem.GetDataLen();
-			found = FindBinary( mymem, i+1, options );
-			wxString mystring = wxString::Format(wxT("%d"),found);
-			if(found!=-1&& temp!=found){
-				TagElement *mytag=new TagElement(found,found+search_size-1,mystring,*wxBLACK, wxColour(255,255,0,0) );
-				parent->HighlightArray.Add(mytag);
-				}
+	//Merged Search loop!
+	for(int64_t i=0; i+search_size <parent->FileLength(); i=i+search_size) {
+		wxYield();
+		if( ! progress_gauge.Update(i*search_size*100/parent->FileLength()))		// update progress and break on abort
+			break;
+
+		uint64_t temp=found;
+		if( mode == SEARCH_TEXT )
+			found = FindText( search_string, i+1, options );
+		else  //mode == SEARCH_HEX
+			found = FindBinary( search_binary, i+1 ,options );
+
+#ifdef _DEBUG_
+		wxString mystring = wxString::Format(wxT("%d"),found);//Debug
+#else
+		wxString mystring = wxEmptyString;
+#endif
+
+		if(found!=-1&& temp!=found) {
+			TagElement *mytag=new TagElement(found,found+search_size-1,mystring,*wxBLACK, wxColour(255,255,0,0) );
+			parent->HighlightArray.Add(mytag);
 			}
 		}
-	if(parent->HighlightArray.GetCount()<0){
+
+	progress_gauge.Hide();
+
+	if(parent->HighlightArray.GetCount()<0) {
 		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
-      }
-   else{
+		}
+	else {
 		parent->Select(found,found+search_size);
 		wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
 		}
@@ -354,9 +374,9 @@ int ReplaceDialog::OnReplace( bool internal ){
 				}
 			}
 		else{ //hex search
-			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
-			if( parent->select->GetSize() == mymem.GetDataLen() ){
-				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(mymem.GetData()) ,mymem.GetDataLen() );
+			wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
+			if( parent->select->GetSize() == search_binary.GetDataLen() ){
+				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(search_binary.GetData()) ,search_binary.GetDataLen() );
 				parent->select->IsState( parent->select->SELECT_FALSE );
 				parent->Reload();
 				return 1;

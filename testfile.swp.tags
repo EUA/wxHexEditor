@@ -2,81 +2,81 @@
 <wxHexEditor_XML_TAG>
   <filename path="testfile.swp">
     <TAG id="10">
-      <start_offset>3132</start_offset>
-      <end_offset>3341</end_offset>
-      <tag_text>test area 51 :p</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#97FFFD</note_colour>
-    </TAG>
-    <TAG id="9">
-      <start_offset>986</start_offset>
-      <end_offset>1050</end_offset>
-      <tag_text>ok here too</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#0015FF</note_colour>
-    </TAG>
-    <TAG id="8">
-      <start_offset>353</start_offset>
-      <end_offset>388</end_offset>
+      <start_offset>161</start_offset>
+      <end_offset>185</end_offset>
       <tag_text>AAAA</tag_text>
       <font_colour>#3D3D3D</font_colour>
-      <note_colour>#40FF00</note_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>795</start_offset>
+      <end_offset>789</end_offset>
+      <tag_text>DDDD</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>619</start_offset>
+      <end_offset>635</end_offset>
+      <tag_text>cc zone</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#B25191</note_colour>
     </TAG>
     <TAG id="7">
-      <start_offset>42</start_offset>
-      <end_offset>48</end_offset>
-      <tag_text>Broken section</tag_text>
+      <start_offset>459</start_offset>
+      <end_offset>449</end_offset>
+      <tag_text>BBzone</tag_text>
       <font_colour>#3D3D3D</font_colour>
-      <note_colour>#F1D03B</note_colour>
+      <note_colour>#B2A951</note_colour>
     </TAG>
     <TAG id="6">
-      <start_offset>2706</start_offset>
-      <end_offset>2699</end_offset>
-      <tag_text>54</tag_text>
+      <start_offset>1168</start_offset>
+      <end_offset>1225</end_offset>
+      <tag_text>Normal</tag_text>
       <font_colour>#3D3D3D</font_colour>
-      <note_colour>#4CF06C</note_colour>
+      <note_colour>#FFBB00</note_colour>
     </TAG>
     <TAG id="5">
-      <start_offset>6659</start_offset>
-      <end_offset>6663</end_offset>
+      <start_offset>6652</start_offset>
+      <end_offset>6656</end_offset>
       <tag_text>898</tag_text>
       <font_colour>#3D3D3D</font_colour>
       <note_colour>#4C83F0</note_colour>
     </TAG>
     <TAG id="4">
-      <start_offset>1175</start_offset>
-      <end_offset>1232</end_offset>
-      <tag_text>Normal</tag_text>
+      <start_offset>2699</start_offset>
+      <end_offset>2692</end_offset>
+      <tag_text>54</tag_text>
       <font_colour>#3D3D3D</font_colour>
-      <note_colour>#FFBB00</note_colour>
+      <note_colour>#4CF06C</note_colour>
     </TAG>
     <TAG id="3">
-      <start_offset>466</start_offset>
-      <end_offset>456</end_offset>
-      <tag_text>BBzone</tag_text>
+      <start_offset>35</start_offset>
+      <end_offset>41</end_offset>
+      <tag_text>Broken section</tag_text>
       <font_colour>#3D3D3D</font_colour>
-      <note_colour>#B2A951</note_colour>
+      <note_colour>#F1D03B</note_colour>
     </TAG>
     <TAG id="2">
-      <start_offset>626</start_offset>
-      <end_offset>642</end_offset>
-      <tag_text>cc zone</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#B25191</note_colour>
-    </TAG>
-    <TAG id="1">
-      <start_offset>802</start_offset>
-      <end_offset>796</end_offset>
-      <tag_text>DDDD</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#FF0000</note_colour>
-    </TAG>
-    <TAG id="0">
-      <start_offset>168</start_offset>
-      <end_offset>192</end_offset>
+      <start_offset>346</start_offset>
+      <end_offset>381</end_offset>
       <tag_text>AAAA</tag_text>
       <font_colour>#3D3D3D</font_colour>
-      <note_colour>#FF0000</note_colour>
+      <note_colour>#40FF00</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>979</start_offset>
+      <end_offset>1043</end_offset>
+      <tag_text>ok here too</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#0015FF</note_colour>
+    </TAG>
+    <TAG id="0">
+      <start_offset>3125</start_offset>
+      <end_offset>3334</end_offset>
+      <tag_text>test area 51 :p</tag_text>
+      <font_colour>#3D3D3D</font_colour>
+      <note_colour>#97FFFD</note_colour>
     </TAG>
   </filename>
 </wxHexEditor_XML_TAG>

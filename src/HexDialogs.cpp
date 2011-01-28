@@ -192,6 +192,11 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	if( target.GetDataLen() == 0 )
 		return NANINT;
 
+	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , _("Finding matches... "), 100,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
+	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
+// TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
+	//progress_gauge.SetIcon(search_ICON);
+
 	uint64_t current_offset = from;
 	int search_step = parent->FileLength() < MB ? parent->FileLength() : MB ;
 	findfile->Seek( current_offset, wxFromStart );
@@ -204,11 +209,22 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	//Search step 1: From cursor to file end.
 	do{
 		findfile->Seek( current_offset, wxFromStart );
+
+		if( ! progress_gauge.Update(current_offset*100/parent->FileLength()))		// update progress and break on abort
+			break;
 		readed = findfile->Read( buffer , search_step );
 		found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 		if(found >= 0){
-			delete buffer;
-			return current_offset+found;
+			if( options & SEARCH_FINDALL ){
+				TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+				parent->HighlightArray.Add(mytag);
+				current_offset += found+target.GetDataLen(); //Unprocessed bytes
+				readed=search_step; //to stay in loop
+				}
+			else{
+				delete buffer;
+				return current_offset+found;
+				}
 			}
 		else
 			current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
@@ -237,39 +253,27 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	return NANINT;
 	}
 
-// TODO (death#1#): Needed to be checked.
 void FindDialog::OnFindAll() {
 	parent->HighlightArray.Clear();
 	uint64_t found = NANINT;
-	uint64_t search_size = 0;
 
-	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , _("Finding matches... "), 100,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
-	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
-
-// TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
-	//progress_gauge.SetIcon(search_ICON);
-
-	unsigned options = 0;
+	unsigned options = SEARCH_FINDALL; //fill continue search until file and with this option.
 	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 
 	int mode = 0;
-	wxString search_string;
-	wxMemoryBuffer search_binary;
 	if(options & SEARCH_TEXT) {
 		mode = SEARCH_TEXT;
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
-		search_size = m_comboBoxSearch->GetValue().Len();
-		search_string = m_comboBoxSearch->GetValue();
-		parent->Goto(0);
+		FindText( m_comboBoxSearch->GetValue(), 0, options );
 		}
 
 	else {
 		mode = SEARCH_HEX;
 		wxString hexval = m_comboBoxSearch->GetValue();
-		parent->Goto(0);
+		//parent->Goto(0);
 		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
 			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
 				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
@@ -281,44 +285,22 @@ void FindDialog::OnFindAll() {
 		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
 			hexval = wxChar('0')+hexval;
 		m_comboBoxSearch->SetValue(hexval.Upper());
-		search_binary = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
-		search_size = search_binary.GetDataLen();
+		FindBinary( wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue()), 0 ,options );
 		}
 
-	//Merged Search loop!
-	for(int64_t i=0; i+search_size <parent->FileLength(); i=i+search_size) {
-		wxYield();
-		if( ! progress_gauge.Update(i*search_size*100/parent->FileLength()))		// update progress and break on abort
-			break;
-
-		uint64_t temp=found;
-		if( mode == SEARCH_TEXT )
-			found = FindText( search_string, i+1, options );
-		else  //mode == SEARCH_HEX
-			found = FindBinary( search_binary, i+1 ,options );
-
-#ifdef _DEBUG_
-		wxString mystring = wxString::Format(wxT("%d"),found);//Debug
-#else
-		wxString mystring = wxEmptyString;
-#endif
-
-		if(found!=-1&& temp!=found) {
-			TagElement *mytag=new TagElement(found,found+search_size-1,mystring,*wxBLACK, wxColour(255,255,0,0) );
-			parent->HighlightArray.Add(mytag);
-			}
-		}
-
-	progress_gauge.Hide();
-
-	if(parent->HighlightArray.GetCount()<0) {
+	if(parent->HighlightArray.GetCount()==0) {
 		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 		}
 	else {
-		parent->Select(found,found+search_size);
+		//Is selection needed to show first tag?
+		parent->Reload(); //To highlighting current screen
+		parent->UpdateCursorLocation( parent->HighlightArray.Item(0)->start );
+
 		wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
 		}
+
 	}
+
 
 // TODO (death#9#): Implement better search algorithm. (Like one using OpenCL and one using OpenMP) :)
 //WARNING! THIS FUNCTION WILL CHANGE BFR and/or SEARCH strings if SEARCH_MATCHCASE not selected as an option!

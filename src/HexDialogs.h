@@ -66,7 +66,7 @@ class FindDialog : public FindDialogGui{
 		void OnFindAll( );
 virtual void EventHandler( wxCommandEvent& event );
 		bool OnFindEvents( wxCommandEvent& event );
-		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2,SEARCH_UTF8=0x4,SEARCH_UTF16=0x8, SEARCH_MATCHCASE=0x10, SEARCH_BACKWARDS=0x20, SEARCH_WRAPAROUND=0x40 } searchtype;
+		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2,SEARCH_UTF8=0x4,SEARCH_UTF16=0x8, SEARCH_MATCHCASE=0x10, SEARCH_BACKWARDS=0x20, SEARCH_WRAPAROUND=0x40, SEARCH_FINDALL=0x80 } searchtype;
 	protected:
 		uint64_t FindBinary( wxMemoryBuffer target, uint64_t start_from, unsigned oper=SEARCH_HEX );
 		uint64_t FindText( wxString target, uint64_t start_from, unsigned oper=SEARCH_TEXT);

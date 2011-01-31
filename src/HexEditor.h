@@ -58,7 +58,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		friend class scrollthread;
 		//friend class FindDialog;
 
-		void Goto( int64_t goto_offset=-1 );
+		void Goto( int64_t goto_offset=-1 , bool set_focus=false);
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 		void Reload();	//loads file from current page offset; refresh
@@ -123,6 +123,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		void OnMouseWhell( wxMouseEvent& event );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
+		void OnUpdateUI( wxUpdateUIEvent& event );
 
 		void ShowContextMenu( const wxMouseEvent& event );
 		void ScrollNoThread( int speed );

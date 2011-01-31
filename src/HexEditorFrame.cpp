@@ -39,6 +39,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Connect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -67,6 +68,7 @@ HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+   this->Disconnect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -81,14 +83,14 @@ HexEditorFrame::~HexEditorFrame(){
 void HexEditorFrame::PrepareAUI( void ){
 	MyAUI = new wxAuiManager( this );
 
-	MyNotebook = new wxAuiNotebook(this,-1);
+	//MyNotebook = new wxAuiNotebook(this,-1);//Creation moved to wxFormDialog
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
-	MyNotebook->SetWindowStyleFlag(wxAUI_NB_TOP|
-											wxAUI_NB_TAB_MOVE|
-											wxAUI_NB_TAB_SPLIT|
-											wxAUI_NB_MIDDLE_CLICK_CLOSE|
-											wxAUI_NB_SCROLL_BUTTONS|
-											wxAUI_NB_WINDOWLIST_BUTTON);
+//	MyNotebook->SetWindowStyleFlag(wxAUI_NB_TOP|
+//											wxAUI_NB_TAB_MOVE|
+//											wxAUI_NB_TAB_SPLIT|
+//											wxAUI_NB_MIDDLE_CLICK_CLOSE|
+//											wxAUI_NB_SCROLL_BUTTONS|
+//											wxAUI_NB_WINDOWLIST_BUTTON);
 
 //	MyAUI->AddPane( MyNotebook, wxCENTER);
 
@@ -145,9 +147,24 @@ void HexEditorFrame::PrepareAUI( void ){
 					Caption(wxT("TagPanel")).
 					TopDockable(false).
 					BottomDockable(false).
-					MinSize(wxSize(170,100)).
+					MinSize(wxSize(70,100)).
+					BestSize(wxSize(140,100)).
+					Floatable(false).//due bug. When floating cannot select that tag!
 					Right().Layer(1) );
 	mbar->Check( idTagPanel, true );
+
+	MySearchPanel = new SearchPanel( this, -1 );
+   //Created under OnUpdateUI
+   MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
+				Caption(wxT("Search Results")).
+				TopDockable(false).
+				BottomDockable(false).
+				MinSize(wxSize(70,100)).
+				BestSize(wxSize(140,100)).
+				Floatable(false).//due bug. When floating cannot select that tag!
+				Show(false).
+				Right().Layer(1) );
+
 
    MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(wxT("ToolBar")).Caption(wxT("Big Toolbar")).
@@ -178,6 +195,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyNotebook->SetDropTarget( new DnDFile( this ) );
 	MyInfoPanel->SetDropTarget( new DnDFile( this ) );
 	MyTagPanel->SetDropTarget( new DnDFile( this ) );
+	MySearchPanel->SetDropTarget( new DnDFile( this ) );
 	MyInterpreter->SetDropTarget( new DnDFile( this ) );
 	Toolbar->SetDropTarget( new DnDFile( this ) );
 	}
@@ -216,7 +234,8 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 	}
 
 HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
-	return static_cast<HexEditor*>( MyNotebook->GetPage( MyNotebook->GetSelection() ) );
+// TODO (death#1#): BUG : MyNotebook = warning RTTI symbol not found for class wxAuiFloatingFrame	int x = HexEditorFrame::MyNotebook->GetSelection();
+	return static_cast<HexEditor*>( MyNotebook->GetPage( x ) );
 	}
 
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
@@ -541,6 +560,12 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 		if(event.GetId() == TAG_CHANGE_EVENT ){
 			MyTagPanel->Set( GetActiveHexEditor()->MainTagArray );
+			}
+
+		if(event.GetId() == SEARCH_CHANGE_EVENT ){
+			MySearchPanel->Set( GetActiveHexEditor()->HighlightArray , true );
+			MyAUI->GetPane(MySearchPanel).Show(true);
+			MyAUI->Update();
 			}
 		}
 	event.Skip();

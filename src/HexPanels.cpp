@@ -210,12 +210,15 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 		}
 
 
-void TagPanel::Set( ArrayOfTAG& MainTagArray ){
+void TagPanel::Set( ArrayOfTAG& MainTagArray, bool Num_and_Offset ){
 		static wxMutex mutextag;
 		mutextag.Lock();
 		wxArrayString str;
 		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++)
-			str.Add(MainTagArray.Item(i)->tag);
+			str.Add( Num_and_Offset ?
+						 wxString::Format(wxT("%d. Offset %d"),i+1, MainTagArray.Item(i)->start )
+						: MainTagArray.Item(i)->tag );
+
 		TagPanelList->Clear();
 		TagPanelList->InsertItems(str,0);
 		mutextag.Unlock();
@@ -235,3 +238,19 @@ void TagPanel::OnTagSelect(wxCommandEvent& event) {
 		MyHexEditor->Goto( tg->start );
 		}
 	}
+
+void SearchPanel::OnTagSelect(wxCommandEvent& event) {
+	HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor();
+	unsigned selection = TagPanelList->GetSelection();
+	if( MyHexEditor->HighlightArray.Count() >= selection ) {
+		TagElement *tg = MyHexEditor->HighlightArray.Item( selection );
+		if(tg == NULL) {
+#ifdef _DEBUG_
+			std::cerr << "SearchPanel::OnTagSelect Selection of tag " << selection << " returns NULL TAG" << std::endl;
+#endif
+			return;
+			}
+		MyHexEditor->Goto( tg->start , true);
+		}
+	}
+

@@ -32,6 +32,7 @@
 #define SELECT_EVENT 50005
 #define UNREDO_EVENT 50006
 #define TAG_CHANGE_EVENT 50007
+#define SEARCH_CHANGE_EVENT 50008
 class Select{	//for using EventHandler
 	public:
 		Select( wxEvtHandler* evth_ ){

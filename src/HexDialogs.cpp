@@ -296,9 +296,11 @@ void FindDialog::OnFindAll() {
 		parent->Reload(); //To highlighting current screen
 		parent->UpdateCursorLocation( parent->HighlightArray.Item(0)->start );
 
+		wxUpdateUIEvent eventx( SEARCH_CHANGE_EVENT );
+		parent->GetEventHandler()->ProcessEvent( eventx );
+
 		wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
 		}
-
 	}
 
 

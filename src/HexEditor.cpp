@@ -67,6 +67,7 @@ HexEditor::~HexEditor() {
 void HexEditor::Dynamic_Connector() {
 	hex_ctrl ->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	//this is not up arrow key, just means release of key press.
 //	hex_ctrl ->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 //	text_ctrl->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 	hex_ctrl ->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
@@ -88,6 +89,7 @@ void HexEditor::Dynamic_Connector() {
 void HexEditor::Dynamic_Disconnector() {
 	hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	//this is not up arrow key, just means release of key press.
 //	hex_ctrl ->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 //	text_ctrl->Disconnect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
@@ -230,8 +232,7 @@ void HexEditor::DoUndo( void ) {
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
-	wxUpdateUIEvent eventx;
-	eventx.SetId( UNREDO_EVENT );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
@@ -247,12 +248,11 @@ void HexEditor::DoRedo( void ) {
 			//TODO: Tag Movement
 			//wxMessageBox( _( "Do you want move tags too with this redo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
 			}
-	wxUpdateUIEvent eventx;
-	eventx.SetId( UNREDO_EVENT );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-void HexEditor::Goto( int64_t cursor_offset ) {
+void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
 	if( cursor_offset == -1 ) {
 		LoadFromOffset( page_offset, false, true );	//Refresh
 		return;
@@ -275,6 +275,8 @@ void HexEditor::Goto( int64_t cursor_offset ) {
 		}
 //	UpdateCursorLocation();
 	UpdateOffsetScroll();
+	if( set_focus)
+		hex_ctrl->SetFocus();
 	}
 
 void HexEditor::UpdateOffsetScroll( void ) {
@@ -617,8 +619,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
-	wxUpdateUIEvent eventx;
-	eventx.SetId( UNREDO_EVENT );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
@@ -921,8 +922,7 @@ bool HexEditor::DeleteSelection( void ) {
 		}
 	Reload();
 	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
-	wxUpdateUIEvent eventx;
-	eventx.SetId( UNREDO_EVENT );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	return success;
 	}
@@ -952,8 +952,7 @@ bool HexEditor::InsertBytes( void ) {
 	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
 
 	Reload();
-	wxUpdateUIEvent eventx;
-	eventx.SetId( UNREDO_EVENT );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	return success;
 	}
@@ -1062,8 +1061,7 @@ bool HexEditor::PasteFromClipboard( void ) {
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
-	wxUpdateUIEvent eventx;
-	eventx.SetId( UNREDO_EVENT );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	return ret;
 	}

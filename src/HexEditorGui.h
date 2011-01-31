@@ -18,9 +18,10 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/aui/auibook.h>
+#include <wx/sizer.h>
 #include <wx/frame.h>
 #include <wx/checkbox.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/panel.h>
@@ -69,6 +70,7 @@ class HexEditorGui : public wxFrame
 		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
+		wxAuiNotebook* MyNotebook;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -84,7 +86,7 @@ class HexEditorGui : public wxFrame
 	
 	public:
 		
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
 	
 };

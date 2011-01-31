@@ -197,6 +197,15 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	statusBar = this->CreateStatusBar( 5, wxST_SIZEGRIP, wxID_ANY );
 	statusBar->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
+	wxBoxSizer* FrameSizer;
+	FrameSizer = new wxBoxSizer( wxVERTICAL );
+	
+	MyNotebook = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_SCROLL_BUTTONS|wxAUI_NB_TAB_MOVE|wxAUI_NB_TAB_SPLIT|wxAUI_NB_WINDOWLIST_BUTTON );
+	
+	FrameSizer->Add( MyNotebook, 1, wxEXPAND | wxALL, 5 );
+	
+	this->SetSizer( FrameSizer );
+	this->Layout();
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );

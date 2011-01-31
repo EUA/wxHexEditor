@@ -84,11 +84,12 @@ class HexEditorFrame : public HexEditorGui {
 
 	private:
 		void PrepareAUI( void );
-		wxAuiNotebook *MyNotebook;
+		//wxAuiNotebook *MyNotebook;
 		wxAuiManager *MyAUI;
 		DataInterpreter *MyInterpreter;
 		InfoPanel *MyInfoPanel;
 		TagPanel *MyTagPanel;
+		TagPanel *MySearchPanel;
 #ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
 #else

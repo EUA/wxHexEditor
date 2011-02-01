@@ -63,7 +63,7 @@ class FindDialog : public FindDialogGui{
 		FindDialog( wxWindow* parent, FAL *find_file, wxString title=_("Find") );
 		bool OnFind( bool intenal=false );
 		void OnFindPrev( wxCommandEvent& event );
-		void OnFindAll( );
+		void OnFindAll( bool internal=false );
 virtual void EventHandler( wxCommandEvent& event );
 		bool OnFindEvents( wxCommandEvent& event );
 		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2,SEARCH_UTF8=0x4,SEARCH_UTF16=0x8, SEARCH_MATCHCASE=0x10, SEARCH_BACKWARDS=0x20, SEARCH_WRAPAROUND=0x40, SEARCH_FINDALL=0x80 } searchtype;
@@ -80,7 +80,7 @@ class ReplaceDialog : public FindDialog{
 		ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title=_("Find & Replace") );
 			void EventHandler( wxCommandEvent& event );
 			int OnReplace( bool internal = false );
-			int OnReplaceAll( void );
+			void OnReplaceAll( void );
 	};
 
 #endif //__HexEditorDialogs__

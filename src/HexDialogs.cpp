@@ -121,8 +121,6 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		}
 	else if( event.GetId() == btnFindAll->GetId() )
 		OnFindAll();
-//	else if( event.GetId() == btnFindPrev->GetId() )
-//		OnFindPrev();
 	else
 		wxBell();
 	}
@@ -253,7 +251,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	return NANINT;
 	}
 
-void FindDialog::OnFindAll() {
+void FindDialog::OnFindAll( bool internal ) {
 	parent->HighlightArray.Clear();
 	uint64_t found = NANINT;
 
@@ -288,7 +286,7 @@ void FindDialog::OnFindAll() {
 		FindBinary( wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue()), 0 ,options );
 		}
 
-	if(parent->HighlightArray.GetCount()==0) {
+	if(parent->HighlightArray.GetCount()==0 and not internal) {
 		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 		}
 	else {
@@ -298,8 +296,8 @@ void FindDialog::OnFindAll() {
 
 		wxUpdateUIEvent eventx( SEARCH_CHANGE_EVENT );
 		parent->GetEventHandler()->ProcessEvent( eventx );
-
-		wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
+		if( not internal )
+			wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
 		}
 	}
 
@@ -373,21 +371,31 @@ int ReplaceDialog::OnReplace( bool internal ){
 		}
 	}
 
-int ReplaceDialog::OnReplaceAll( void ){
-	int counter=0;
-	int x;
-	while( true ){
-		x = OnReplace( true );
-		if( x == 1 )
-			counter++;
-		if( x == 0 )
-			break;
-		if( x == -1 )
-			continue;
+void ReplaceDialog::OnReplaceAll( void ){
+	//First search all file with find all to detect locations.
+	OnFindAll( true );
+	//Now Highlight array has matches. We could replace them with replace string.
+	for( uint32_t i=0 ; i < parent->HighlightArray.Count() ; i++ ){
+		if( m_searchtype->GetSelection() == 0 ) //text search
+				parent->FileAddDiff( parent->HighlightArray.Item(i)->start,
+											m_comboBoxReplace->GetValue().ToAscii(),
+											m_comboBoxReplace->GetValue().Len());
+		else{ //hex search
+			wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
+			parent->FileAddDiff( parent->HighlightArray.Item(i)->start,
+										static_cast<char*>(search_binary.GetData()),
+										search_binary.GetDataLen() );
+			}
+
+		if( parent->HighlightArray.Count() < 20 )						 //if there is too much matches,
+			parent->Goto( parent->HighlightArray.Item(i)->start ); // this make program unresponsive and slow.
 		}
-	if( counter > 0)
-		wxMessageBox(wxString::Format(_("%d records changed."), counter ), _("Info!"), wxOK, this);
-	return counter;
+
+	if( parent->HighlightArray.Count() > 0){
+		parent->Goto( parent->HighlightArray.Item(0)->start );
+		parent->Refresh();
+		wxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info!"), wxOK, this);
+		}
 	}
 
 void ReplaceDialog::EventHandler( wxCommandEvent& event ){
@@ -396,8 +404,6 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 		OnFind();
 	else if( id == btnFindAll->GetId() )
 		OnFindAll();
-//	else if( id == btnFindPrev->GetId() )
-//		OnFindPrev();
 	else if( id == btnReplace->GetId() )
 		OnReplace();
 	else if( id == btnReplaceAll->GetId() )

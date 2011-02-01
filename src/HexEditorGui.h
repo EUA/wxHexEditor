@@ -32,6 +32,7 @@
 #include <wx/dialog.h>
 #include <wx/combobox.h>
 #include <wx/statbox.h>
+#include <wx/statline.h>
 #include <wx/statbmp.h>
 #include <wx/hyperlink.h>
 
@@ -205,8 +206,6 @@ class FindDialogGui : public wxDialog
 		wxComboBox* m_comboBoxSearch;
 		wxStaticText* m_static_replace;
 		wxComboBox* m_comboBoxReplace;
-		wxButton* btnReplace;
-		wxButton* btnReplaceAll;
 		wxRadioBox* m_searchtype;
 		wxCheckBox* chkMatchCase;
 		wxCheckBox* chkSearchBackwards;
@@ -214,6 +213,9 @@ class FindDialogGui : public wxDialog
 		wxCheckBox* chkUTF8;
 		wxButton* btnFind;
 		wxButton* btnFindAll;
+		wxStaticLine* m_staticline1;
+		wxButton* btnReplace;
+		wxButton* btnReplaceAll;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }

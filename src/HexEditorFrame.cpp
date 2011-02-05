@@ -24,7 +24,9 @@
 
 #include "HexEditorFrame.h"
 #define idDiskDevice 10000
-
+#ifdef __WXMAC__
+	#include <dirent.h>	//for pre 2.9.0 wx releases
+#endif
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
@@ -373,7 +375,30 @@ void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){
 		int i=event.GetId() - idDiskDevice;
 		wxArrayString disks;
-		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+#ifdef __WXGTK__ //linux
+		if(wxDir::Exists(wxT("/dev/disk/by-id")) ){
+			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+			}
+		else{
+			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("sd*"), wxDIR_FILES );
+			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("hd*"), wxDIR_FILES );
+			}
+#elif defined( __WXMAC__ )
+	#if wxCHECK_VERSION(2, 9, 0) //Problem on wx 2.8.x, returns null.
+		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("disk*"), wxDIR_FILES );
+	#else
+		DIR *dirp;
+			struct dirent *entry;
+			if(dirp = opendir("/dev")){
+				while(entry = readdir(dirp))
+					if( !strncmp(entry->d_name, "disk", 4) )
+						disks.Add(wxT("/dev/") + wxString::FromAscii(entry->d_name));
+				closedir(dirp);
+				}
+	#endif
+#elif defined( __WXMSW__ )
+      wxBell();
+#endif
 		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
 		}
@@ -478,40 +503,57 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 	if(event.GetId() == idDeviceRam){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
-		#ifndef __WXMSW__
-		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
+#ifndef __WXMSW__
 		#ifdef _DEBUG_
 			std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 		#endif
 
-      #ifdef __LINUX__
+		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
 			menuDeviceDisk->Remove( *it );
 			}
-
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
-		///ls -l /dev/disk/by-id
-
 		wxArrayString disks;
-		if(wxDir::Exists(wxT("/dev/disk/by-id")) ){
+#ifdef __LINUX__
+		///ls -l /dev/disk/by-id
+		//wxExecute(wxT("ls \-1 \\dev\\sd*"), disks, disks);
+		if( wxDir::Exists(wxT("/dev/disk/by-id")) ){
 			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
 			}
 		else{
 			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("sd*"), wxDIR_FILES );
 			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("hd*"), wxDIR_FILES );
 			}
+#elif defined( __WXMAC__ )
+		//wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("rdisk*"), wxDIR_FILES ); those are "character files". Not eligible for opening in Hex Editor
+	#if wxCHECK_VERSION(2, 9, 0) //Problem on wx 2.8.x, returns null.
+		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("disk*"), wxDIR_FILES );
+	#else
+		DIR *dirp;
+			struct dirent *entry;
+			if(dirp = opendir("/dev")){
+				while(entry = readdir(dirp))
+					if( !strncmp(entry->d_name, "disk", 4) )
+						//Note, this /dev/ will drop on adding menu for cosmetic!
+						disks.Add(wxT("/dev/") )+ wxString::FromAscii(entry->d_name));
+				closedir(dirp);
+				}
+	#endif
+
+#endif //__LINUX__ & __MAC__
 		disks.Sort();
 
 		for( unsigned i =0 ; i < disks.Count() ; i++){
 			#ifdef _DEBUG_
 			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
 			#endif
+			//Note, this /dev/ will drop on adding menu for cosmetic!
 			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 			}
 
-		#endif //__LINUX__
-		#endif //__WXMSW__
+
+#endif //__WXMSW__
 		}
 
 	if( MyNotebook->GetPageCount() ){

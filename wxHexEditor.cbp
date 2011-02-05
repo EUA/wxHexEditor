@@ -5,7 +5,6 @@
 		<Option title="wxHexEditor" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="src/HexEditorCtrl/;src/;" />
 		<Build>
 			<Target title="Release">
 				<Option platforms="Unix;" />

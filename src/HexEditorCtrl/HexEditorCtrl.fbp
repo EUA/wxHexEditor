@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
-    <FileVersion major="1" minor="9" />
+    <FileVersion major="1" minor="10" />
     <object class="Project" expanded="1">
         <property name="class_decoration">; wxHexCtrl/wxHexCtrl.h</property>
         <property name="code_generation">C++</property>
         <property name="disconnect_events">1</property>
+        <property name="disconnect_mode">source_name</property>
+        <property name="disconnect_python_events">0</property>
         <property name="encoding">UTF-8</property>
         <property name="event_generation">connect</property>
         <property name="file">HexEditorCtrlGui</property>
@@ -16,12 +18,15 @@
         <property name="path">.</property>
         <property name="precompiled_header">#include &quot;wx/wxprec.h&quot;&#x0A;&#x0A;#ifdef __BORLANDC__&#x0A;#pragma hdrstop&#x0A;#endif //__BORLANDC__&#x0A;&#x0A;#ifndef WX_PRECOMP&#x0A;#include &lt;wx/wx.h&gt;&#x0A;#endif //WX_PRECOMP</property>
         <property name="relative_path">1</property>
+        <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
         <object class="Panel" expanded="1">
             <property name="bg"></property>
             <property name="context_help"></property>
+            <property name="context_menu">1</property>
             <property name="enabled">1</property>
+            <property name="event_handler">impl_virtual</property>
             <property name="fg"></property>
             <property name="font"></property>
             <property name="hidden">0</property>
@@ -33,6 +38,10 @@
             <property name="size">-1,-1</property>
             <property name="subclass">; </property>
             <property name="tooltip"></property>
+            <property name="validator_data_type"></property>
+            <property name="validator_style">wxFILTER_NONE</property>
+            <property name="validator_type">wxDefaultValidator</property>
+            <property name="validator_variable"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
             <property name="window_style">wxTAB_TRAVERSAL</property>
@@ -79,6 +88,7 @@
                     <object class="wxStaticText" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font">sans,90,90,10</property>
@@ -94,6 +104,10 @@
                         <property name="style">wxALIGN_CENTRE</property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
@@ -125,11 +139,12 @@
                 </object>
                 <object class="sizeritem" expanded="1">
                     <property name="border">3</property>
-                    <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxLEFT</property>
+                    <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxTOP|wxBOTTOM|wxLEFT</property>
                     <property name="proportion">1</property>
                     <object class="wxStaticText" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font">sans,90,90,10</property>
@@ -145,6 +160,10 @@
                         <property name="style">wxALIGN_LEFT</property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
@@ -181,6 +200,7 @@
                     <object class="wxStaticText" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font">sans,90,90,10</property>
@@ -196,6 +216,10 @@
                         <property name="style">wxALIGN_CENTRE</property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
@@ -232,6 +256,7 @@
                     <object class="wxStaticText" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font"></property>
@@ -247,6 +272,10 @@
                         <property name="style"></property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
@@ -283,6 +312,7 @@
                     <object class="wxTextCtrl" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font">sans,90,90,10</property>
@@ -298,6 +328,10 @@
                         <property name="style"></property>
                         <property name="subclass">wxHexOffsetCtrl; wxHexCtrl/wxHexCtrl.h</property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="value"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
@@ -338,6 +372,7 @@
                     <object class="wxTextCtrl" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font"></property>
@@ -353,6 +388,10 @@
                         <property name="style"></property>
                         <property name="subclass">wxHexCtrl; wxHexCtrl/wxHexCtrl.h</property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="value"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
@@ -393,6 +432,7 @@
                     <object class="wxTextCtrl" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font">sans,90,90,10</property>
@@ -408,6 +448,10 @@
                         <property name="style"></property>
                         <property name="subclass">wxHexTextCtrl; wxHexCtrl/wxHexCtrl.h</property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="value"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
@@ -448,6 +492,7 @@
                     <object class="wxScrollBar" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">0</property>
                         <property name="fg"></property>
                         <property name="font"></property>
@@ -465,6 +510,10 @@
                         <property name="subclass"></property>
                         <property name="thumbsize">1</property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="value">0</property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 17 2008)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -48,13 +48,14 @@ class HexEditorCtrlGui : public wxPanel
 		wxHexTextCtrl* text_ctrl;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnKeyboardChar( wxKeyEvent& event ){ event.Skip(); }
-		virtual void OnResize( wxSizeEvent& event ){ event.Skip(); }
-		virtual void OnOffsetScroll( wxScrollEvent& event ){ event.Skip(); }
+		virtual void OnKeyboardChar( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnResize( wxSizeEvent& event ) { event.Skip(); }
+		virtual void OnOffsetScroll( wxScrollEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		wxScrollBar* offset_scroll_real;
+		
 		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~HexEditorCtrlGui();
 	

@@ -340,7 +340,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
-	fgSizer1->Add( m_static_adress, 0, wxLEFT, 3 );
+	fgSizer1->Add( m_static_adress, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
 	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
 	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
 	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );

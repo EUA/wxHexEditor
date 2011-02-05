@@ -40,7 +40,7 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	m_static_adress->Wrap( -1 );
 	m_static_adress->SetFont( wxFont( 10, 70, 90, 90, false, wxT("sans") ) );
 	
-	fgSizerMain->Add( m_static_adress, 1, wxALIGN_CENTER_HORIZONTAL|wxTOP|wxBOTTOM|wxLEFT, 3 );
+	fgSizerMain->Add( m_static_adress, 1, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 2 );
 	
 	m_static_byteview = new wxStaticText( this, ID_DEFAULT, wxT("Byte View"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	m_static_byteview->Wrap( -1 );

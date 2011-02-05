@@ -28,7 +28,7 @@
 #include <stdint.h>
 #include <wx/clrpicker.h>
 #if wxCHECK_VERSION(2, 9, 0)
-	#include <wx/colourdata.h>
+	#include <wx/cmndata.h>
 #endif
 #include <wx/popupwin.h>
 #include <wx/dcmemory.h>

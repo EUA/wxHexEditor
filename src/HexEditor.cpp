@@ -816,9 +816,9 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ) {
 	if( MouseCapture ) {
 #ifdef _DEBUG_MOUSE_
 		std::cout << "ReleaseMouse()\n" ;
-#endif
 		GetCapture()->ReleaseMouse();//this is proper one but breaks optimizations! Also make problem on debug mode.
-//		ReleaseMouse();
+#endif
+		ReleaseMouse();
 		MouseCapture = false;
 		}
 	}

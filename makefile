@@ -49,7 +49,7 @@ $(EXECUTABLE): $(OBJECTS)
 win: $(SOURCES) $(RESOURCES) $(EXECUTABLE_WIN)
 
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LDFLAGS) -static-libgcc -o $@
+	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LDFLAGS) -static-libgcc -static-libstdc++ -o $@
 
 maclink: $(OBJECTS)
 	$(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)

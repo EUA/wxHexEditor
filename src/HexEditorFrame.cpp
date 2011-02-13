@@ -24,9 +24,12 @@
 
 #include "HexEditorFrame.h"
 #define idDiskDevice 10000
-#ifdef __WXMAC__
+#ifdef  __WXMAC__
 	#include <dirent.h>	//for pre 2.9.0 wx releases
+#elif defined( __WXMSW__ )
+	#include "HDwin.h"	//for
 #endif
+
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
@@ -397,7 +400,11 @@ void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
 				}
 	#endif
 #elif defined( __WXMSW__ )
-      wxBell();
+		windowsHDD windevs;
+		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
+		for(int i=0; i < DevVector.size();i++)
+			disks.Add(wxString(DevVector[i]));
+
 #endif
 		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
@@ -503,10 +510,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 	if(event.GetId() == idDeviceRam){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
-#ifndef __WXMSW__
-		#ifdef _DEBUG_
-			std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
-		#endif
+
+#ifdef _DEBUG_
+		std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
+#endif
 
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
@@ -514,7 +521,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			}
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 		wxArrayString disks;
-#ifdef __LINUX__
+#ifdef __WXGTK__
 		///ls -l /dev/disk/by-id
 		//wxExecute(wxT("ls \-1 \\dev\\sd*"), disks, disks);
 		if( wxDir::Exists(wxT("/dev/disk/by-id")) ){
@@ -540,9 +547,13 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				}
 	#endif
 
-#endif //__LINUX__ & __MAC__
+#elif defined( __WXMSW__ )
+		windowsHDD windevs;
+		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
+		for(int i=0; i < DevVector.size();i++)
+			disks.Add(wxString(DevVector[i]));
+#endif
 		disks.Sort();
-
 		for( unsigned i =0 ; i < disks.Count() ; i++){
 			#ifdef _DEBUG_
 			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
@@ -551,9 +562,6 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
 			}
-
-
-#endif //__WXMSW__
 		}
 
 	if( MyNotebook->GetPageCount() ){

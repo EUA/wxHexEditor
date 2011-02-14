@@ -974,12 +974,12 @@ void wxHexTextCtrl::SetInsertionPoint( unsigned int pos ){
 	}
 
 ///------HEXOFFSETCTRL-----///
-void wxHexOffsetCtrl::SetValue( int64_t position ){
+void wxHexOffsetCtrl::SetValue( uint64_t position ){
 	SetValue( position, BytePerLine );
 	}
 
-void wxHexOffsetCtrl::SetValue( int64_t position, int byteperline ){
-	int64_t temp_offset_position = offset_position = position;
+void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
+	uint64_t temp_offset_position = offset_position = position;
 	BytePerLine = byteperline;
 	m_text.Clear();
 	if( position + LineCount()*BytePerLine > 999999999999LL and hex_offset == false ){
@@ -991,9 +991,9 @@ void wxHexOffsetCtrl::SetValue( int64_t position, int byteperline ){
 		}
 	for( int i=0 ; i<LineCount() ; i++ ){
 		if (hex_offset)
-			m_text << ( wxString::Format( wxT("%012lX"), temp_offset_position ) );
+			m_text << ( wxString::Format( wxT("%012llX"), temp_offset_position ) );
 		else
-			m_text << ( wxString::Format( wxT("%012ld"), temp_offset_position ) );
+			m_text << ( wxString::Format( wxT("%012llu"), temp_offset_position ) );
 		temp_offset_position += BytePerLine;
 		}
 	RePaint();

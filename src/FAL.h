@@ -35,6 +35,11 @@
 #include <wx/msgdlg.h>
 #include <wx/dynarray.h>
 #include <stdint.h>
+
+#ifdef __WXMAC__
+	#include <sys/disk.h>
+#endif
+
 #ifdef WX_GCH
 #include <wx_pch.h>
 #else

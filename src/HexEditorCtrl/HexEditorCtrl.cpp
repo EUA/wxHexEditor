@@ -92,7 +92,7 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 	}
 //-----READ/WRITE FUNCTIONS-------//
 
-void HexEditorCtrl::ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset, bool paint ){
+void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset, bool paint ){
 	static wxMutex MyBufferMutex;
 	MyBufferMutex.Lock();
 	page_offset = position;

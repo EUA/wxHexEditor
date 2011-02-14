@@ -102,7 +102,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		enum focus_ { HEX_CTRL, TEXT_CTRL } focus;
 		class Select *select;
 		enum IDS{ idTagAddSelection=1001,idTagEdit, idInjection };
-		void ReadFromBuffer( int64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
+		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
 
       //void OnOffsetScroll( wxScrollEvent& event );

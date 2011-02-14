@@ -209,8 +209,8 @@ inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
-		void SetValue( int64_t position );
-		void SetValue( int64_t position, int byteperline );
+		void SetValue( uint64_t position );
+		void SetValue( uint64_t position, int byteperline );
 		void OnMouseRight( wxMouseEvent& event ){event.Skip(false);}
 		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}

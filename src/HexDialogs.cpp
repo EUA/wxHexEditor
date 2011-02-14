@@ -253,7 +253,6 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 void FindDialog::OnFindAll( bool internal ) {
 	parent->HighlightArray.Clear();
-	uint64_t found = NANINT;
 
 	unsigned options = SEARCH_FINDALL; //fill continue search until file and with this option.
 	options |= m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;

@@ -207,7 +207,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-	for( int i=0 ; i<10 ; i++ ){
+	for( int i=0 ; i < sizeof(arr) ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
@@ -217,7 +217,7 @@ void HexEditorFrame::ActionEnabler( void ){
 
 void HexEditorFrame::ActionDisabler( void ){
 	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInjection, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
-	for( int i=0 ; i<15 ; i++ ){
+	for( int i=0 ; i < sizeof(arr) ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
 		}

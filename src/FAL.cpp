@@ -230,10 +230,10 @@ wxFileOffset FAL::Length( void ){
 		if( the_file.GetFullPath().StartsWith(wxT("/dev/disk") ) ){
 			int block_size=0;
 			int64_t block_count=0;
-			if( ioctl(FD, DKIOCGETBLOCKSIZE, &block_size) and ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count) )
-				return block_size*block_count;
-			else
+			if( ioctl( fd(), DKIOCGETBLOCKSIZE, &block_size) || ioctl(fd(), DKIOCGETBLOCKCOUNT, &block_count) )
 				return -1;
+			else
+				return block_size*block_count;
 			}
 	#endif
 	if(! IsOpened() )

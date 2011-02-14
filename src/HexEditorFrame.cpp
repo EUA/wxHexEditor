@@ -216,7 +216,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
+	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInjection, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
 	for( int i=0 ; i<15 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
@@ -542,7 +542,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				while(entry = readdir(dirp))
 					if( !strncmp(entry->d_name, "disk", 4) )
 						//Note, this /dev/ will drop on adding menu for cosmetic!
-						disks.Add(wxT("/dev/") )+ wxString::FromAscii(entry->d_name));
+						disks.Add(wxT("/dev/") + wxString::FromAscii(entry->d_name));
 				closedir(dirp);
 				}
 	#endif
@@ -760,5 +760,3 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
 	wxConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
 	}
-
-

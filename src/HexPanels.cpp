@@ -142,21 +142,28 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 												 )+wxT("\n");
 
 		if(S_ISBLK( sbufptr->st_mode )){
-			#ifdef __WXGTK__//Windows follows different pattern
+	#ifndef __WXMSW__ //Windows follows different pattern
 			int block_size=0;
 			int64_t block_count=0;
-			//int error = ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
+		#ifdef __WXGTK__
 			int error = ioctl(FD, BLKSSZGET, &block_size);
+		#elif defined (__WXMAC__)
+			int error = ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
+		#endif
 				if(error)
 					std::cerr << "Can't get block size of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
 				else
 					info_string += _("Sector Size: ") + wxString::Format(wxT("%d\n"), block_size);
+		#ifdef __WXGTK__
 				error  = ioctl(FD, BLKGETSIZE64, &block_count);
+		#elif defined (__WXMAC__)
+				error = ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
+		#endif
 				if (error)
 					std::cerr << "Can't get block count of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
 				else
 					info_string += _("Sector Count: ") + wxString::Format(wxT("%d"), block_count/block_size);
-			#endif
+	#endif
 			}
 
 		m_InfoPanelText->SetLabel( info_string );

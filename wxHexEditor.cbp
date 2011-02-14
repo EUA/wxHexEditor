@@ -56,11 +56,14 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --cflags`" />
+					<Add option="$($(WXCONFIG) --cflags)" />
 				</Compiler>
 				<Linker>
-					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --libs` -lexpat" />
+					<Add option="$($(WXCONFIG) --libs) -lexpat" />
 				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
+				</Environment>
 			</Target>
 			<Target title="MacOS-Debug">
 				<Option platforms="Mac;" />
@@ -69,19 +72,20 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
+				<Option projectCompilerOptionsRelation="1" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --cflags`" />
+					<Add option="$($(WXCONFIG) --cflags)" />
 					<Add option="-D_DEBUG2_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`/Users/deathknight/Desktop/wx/release-intel/wx-config --libs` -lexpat" />
+					<Add option="$($(WXCONFIG) --libs) -lexpat" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/Users/deathknight/Desktop/wx/release-intel/wx-config" />
+					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Release Cross-Win32">

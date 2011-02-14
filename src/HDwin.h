@@ -31,45 +31,45 @@
 #include <vector>
 using namespace std;
 struct _opt {
-	bool			list;
-	bool			yes;
+	bool				list;
+	bool				yes;
 	unsigned int	quiet;
 	ULONGLONG		start;
 	ULONGLONG		end;
-	bool			read;
-	bool			kilobyte;
+	bool				read;
+	bool				kilobyte;
 	unsigned int	refresh;
-};
+	};
 typedef struct _opt t_opt;
 static t_opt opt = {
-	false,				/* list */
+	false,			/* list */
 	0,					/* quiet */
-	0,				    /* start */
-	0,				    /* end */
-	false,				/* read */
-	false,				/* kilobyte */
+	0,					/* start */
+	0,					/* end */
+	false,			/* read */
+	false,			/* kilobyte */
 	1,					/* refresh */
-};
+	};
 class windowsHDD
-{private:
-  vector<WCHAR*> devicenames;
+	{	private:
+		vector<WCHAR*> devicenames;
 
-   void list_device(WCHAR *format_str, WCHAR *szTmp, int n);
-   void GetSizeString (LONGLONG size, wchar_t *str);
-   bool RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice);
-   bool FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly);
-   void list_devices();
-  public:
+		void list_device(WCHAR *format_str, WCHAR *szTmp, int n);
+		void GetSizeString (LONGLONG size, wchar_t *str);
+		bool RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice);
+		bool FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly);
+		void list_devices();
+	public:
 
-  vector<WCHAR*> getdevicenamevector();
-};
+		vector<WCHAR*> getdevicenamevector();
+	};
 
 bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly)
-{
-if (wcsncmp(lpszDiskFile, L"\\\\", 2) == 0) {
+	{
+	if (wcsncmp(lpszDiskFile, L"\\\\", 2) == 0) {
 		wcscpy(lpszCFDevice, lpszDiskFile);
 		return 1;
-	}
+		}
 
 	BOOL bDosLinkCreated = TRUE;
 	_snwprintf(lpszDosDevice, MAX_PATH, L"dskwipe%lu", GetCurrentProcessId());
@@ -79,29 +79,22 @@ if (wcsncmp(lpszDiskFile, L"\\\\", 2) == 0) {
 
 	if (bDosLinkCreated == FALSE) {
 		return 1;
-	} else {
+		}
+	else {
 		_snwprintf(lpszCFDevice, MAX_PATH, L"\\\\.\\%s", lpszDosDevice);
-	}
-
+		}
 	return 0;
-
-
-
-
-
-}
+	}
 
 
 bool windowsHDD::RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice) {
 	BOOL bDosLinkRemoved = DefineDosDeviceW (DDD_RAW_TARGET_PATH | DDD_EXACT_MATCH_ON_REMOVE |
-			DDD_REMOVE_DEFINITION, lpszDosDevice, lpszDiskFile);
+	                       DDD_REMOVE_DEFINITION, lpszDosDevice, lpszDiskFile);
 	if (bDosLinkRemoved == FALSE) {
 		return 1;
-	}
-
+		}
 	return 0;
-}
-
+	}
 
 
 void windowsHDD::GetSizeString (LONGLONG size, wchar_t *str) {
@@ -114,15 +107,16 @@ void windowsHDD::GetSizeString (LONGLONG size, wchar_t *str) {
 			gb = L"GiB";
 			tb = L"TiB";
 			pb = L"PiB";
-		} else {
+			}
+		else {
 			kb = L"KB";
 			mb = L"MB";
 			gb = L"GB";
 			tb = L"TB";
 			pb = L"PB";
-		}
+			}
 		b = L"bytes";
-	}
+		}
 
 	DWORD kilo = opt.kilobyte ? 1024 : 1000;
 	LONGLONG kiloI64 = kilo;
@@ -148,7 +142,7 @@ void windowsHDD::GetSizeString (LONGLONG size, wchar_t *str) {
 		swprintf (str, L"%I64d %s", size/kilo, kb);
 	else
 		swprintf (str, L"%I64d %s", size, b);
-}
+	}
 
 void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	int nDosLinkCreated;
@@ -167,16 +161,16 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	drivePresent = TRUE;
 
 	nDosLinkCreated = FakeDosNameForDevice (szTmp, szDosDevice,
-		szCFDevice, FALSE);
+	                                        szCFDevice, FALSE);
 
 	dev = CreateFileW (szCFDevice, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 
 	bResult = DeviceIoControl (dev, IOCTL_DISK_GET_PARTITION_INFO, NULL, 0,
-		&diskInfo, sizeof (diskInfo), &dwResult, NULL);
+	                           &diskInfo, sizeof (diskInfo), &dwResult, NULL);
 
 	// Test if device is removable
 	if (/* n == 0 && */ DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0,
-		&driveInfo, sizeof (driveInfo), &dwResult, NULL))
+	                                     &driveInfo, sizeof (driveInfo), &dwResult, NULL))
 		removable = driveInfo.MediaType == RemovableMedia;
 
 	RemoveFakeDosName(szTmp, szDosDevice);
@@ -184,16 +178,16 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 
 	if (!bResult)
 		return;
-    WCHAR *buffer=new WCHAR[70];
+	WCHAR *buffer=new WCHAR[70];
 	swprintf(buffer,L"%-30s", szTmp);
 	devicenames.push_back(buffer);
 
 
 
-}
+	}
 
 
- void windowsHDD::list_devices() {
+void windowsHDD::list_devices() {
 
 
 	WCHAR *format_str = L"%-30s %9S %-9s %-20S\n";
@@ -204,28 +198,28 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	for (i = 0; i < 64; i++) {
 		_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\PhysicalDrive%d", i);
 		list_device(format_str, szTmp, 0);
-	}
+		}
 
 	for (i = 0; i < 64; i++) {
 		for (int n = 0; n <= 32; n++) {
 			_snwprintf(szTmp, sizeof(szTmp), L"\\Device\\Harddisk%d\\Partition%d", i, n);
 			list_device(format_str, szTmp, n);
+			}
 		}
-	}
 
 	for (i = 0; i < 8; i++) {
 		_snwprintf(szTmp, sizeof(szTmp), L"\\Device\\Floppy%d", i);
 		list_device(format_str, szTmp, 0);
-	}
+		}
 
 	list_device(format_str, L"\\Device\\Ramdisk", 0);
 
 	for (i = 0; i < 26; i++) {
 		_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
 		list_device(format_str, szTmp, 0);
+		}
 	}
-}
 vector<WCHAR*> windowsHDD::getdevicenamevector()
-{   list_devices();
-    return devicenames;
-}
+	{	list_devices();
+	return devicenames;
+	}

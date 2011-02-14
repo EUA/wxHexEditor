@@ -226,6 +226,16 @@ wxFileOffset FAL::Length( void ){
 			return 512*1024*1024;
 			}
 	#endif
+	#ifdef __WXMAC__
+		if( the_file.GetFullPath().StartsWith(wxT("/dev/disk") ) ){
+			int block_size=0;
+			int64_t block_count=0;
+			if( ioctl(FD, DKIOCGETBLOCKSIZE, &block_size) and ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count) )
+				return block_size*block_count;
+			else
+				return -1;
+			}
+	#endif
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();

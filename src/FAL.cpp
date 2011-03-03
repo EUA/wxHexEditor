@@ -29,9 +29,15 @@
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
-FAL::FAL(wxFileName& myfilename, FileAccessMode FAM ){
+FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, bool is_block_dev ){
 	file_access_mode = FAM;
 	the_file = myfilename;
+	#ifdef __WXMSW__
+		if( is_block_dev ){
+			BlockSize=512; //Detection routine for win :D
+			}
+	#endif
+
 	if(myfilename.IsFileReadable()){//FileExists()){
 //		if( myfilename.GetFullPath() == wxT("/dev/mem") ){
 //			//Ram device in Unix has need special treatment.
@@ -220,7 +226,15 @@ void FAL::ShowDebugState( void ){
 		}
 	}
 
+int FAL::GetBlockSize( void ){
+	return BlockSize;
+	}
+
 wxFileOffset FAL::Length( void ){
+	#ifdef __WXMSW__
+		if ( BlockSize > 0 )
+		return BlockSize*BlockCount;
+	#endif
 	#ifdef __WXGTK__
 		if( the_file.GetFullPath() == wxT("/dev/mem") ){
 			return 512*1024*1024;
@@ -278,6 +292,25 @@ long FAL::ReadR( char* buffer, int size, uint64_t from, ArrayOfNode* PatchArray,
 	///Getting Data from bellow layer.
 	if( PatchIndice == 0 )	//Deepest layer
 		{
+	//ugly hack
+	#ifdef __WXMSW__
+		if ( BlockSize > 0 ){
+			uint64_t StartSector = (get_ptr / BlockSize);
+			unsigned StartShift = get_ptr - (get_ptr / BlockSize)*BlockSize;
+			uint64_t EndSector = ((get_ptr + size)/BlockSize)+1;
+		   int rd_size = (StartSector-EndSector)*BlockSize;
+			char *bfr = new char[rd_size];
+			wxFile::Seek(StartSector*BlockSize);
+			int rd = wxFile::Read( bfr, rd_size);
+			memcpy(buffer, bfr+StartShift, size);
+			delete bfr;
+			if( rd != rd_size )
+				return -1;
+			else
+				return size;
+			}
+	#endif
+
 		wxFile::Seek( from );
 		return wxFile::Read( buffer, size ); //Ends recursion. here
 		}
@@ -472,6 +505,10 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 
 wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 	get_ptr = put_ptr = ofs;
+	#ifdef __WXMSW__
+		if( BlockSize > 0 )
+			return ofs;
+	#endif
 	return wxFile::Seek( ofs, mode );
 	}
 

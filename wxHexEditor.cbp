@@ -89,28 +89,35 @@
 				</Environment>
 			</Target>
 			<Target title="Release Cross-Win32">
-				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option output="Release/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
-				<Option compiler="cross_mingw_compiler" />
+				<Option compiler="mingw32_gcc_compiler" />
 				<Option projectCompilerOptionsRelation="1" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-march=athlon64" />
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
-					<Add option="`/home/compile/wxWidgets-2.8.11/release-mingw/wx-config --cflags`" />
+					<Add option="`/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config --cflags`" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="$($(WXCONFIG) --cppflags)" />
+				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw/wx-config --libs`" />
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
 				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
+				</Environment>
 			</Target>
 			<Target title="Debug Cross-Win32">
-				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option output="Debug/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
-				<Option compiler="cross_mingw_compiler" />
+				<Option compiler="mingw32_gcc_compiler" />
 				<Option projectCompilerOptionsRelation="1" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
@@ -118,12 +125,17 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
 					<Add option="-g" />
-					<Add option="`/home/compile/wxWidgets-2.8.11/release-mingw/wx-config --cflags`" />
+					<Add option="$($(WXCONFIG) --cflags)" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="`/home/compile/wxWidgets-2.8.10/release-mingw/wx-config --libs`" />
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
 				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
+				</Environment>
 			</Target>
 			<Target title="Custom Debug">
 				<Option platforms="Unix;" />
@@ -161,6 +173,7 @@
 		<Unit filename="resources/wxhex.xpm" />
 		<Unit filename="src/FAL.cpp" />
 		<Unit filename="src/FAL.h" />
+		<Unit filename="src/HDwin.h" />
 		<Unit filename="src/HexDialogs.cpp" />
 		<Unit filename="src/HexDialogs.h" />
 		<Unit filename="src/HexEditor.cpp" />

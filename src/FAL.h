@@ -75,7 +75,7 @@ WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 class FAL : private wxFile{
 	public:
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
-	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly);
+	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, bool is_block_dev=false);
 		~FAL();
 //		friend class FindDialog;
 
@@ -103,6 +103,7 @@ class FAL : private wxFile{
 		bool IsAvailable_Redo( void );
 		bool IsInjected( void );
 		const DiffNode* GetFirstUndoNode( void );
+		int GetBlockSize( void );
 
 	protected:
 		long ReadR( char* buffer, int size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );
@@ -114,11 +115,13 @@ class FAL : private wxFile{
 		void ModificationPatcher( uint64_t location, char* data, int size, DiffNode* Patch);
 
 	private:
+		int BlockSize;
+		uint64_t BlockCount;
 		FileAccessMode file_access_mode;
 		ArrayOfNode DiffArray;
 		ArrayOfNode TempDiffArray;
 		wxFileName the_file;
-		int put_ptr,get_ptr;
+		uint64_t put_ptr,get_ptr;
 //		DiffNode *head,*tail;	//linked list holds modification record
 
 };

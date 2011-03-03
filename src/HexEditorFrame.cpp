@@ -247,16 +247,17 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	std::cout << "OnMenuEvent: "  << event.GetId() << std::endl;
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
 		wxString lngt;
-		long long size=0;
+		long unsigned int size=0;
 		while(1){
 			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."),
                                     _("Enter File Size:"));
 			if(lngt.IsEmpty()){
 				return;
 			}
-			else if( lngt.ToLongLong( &size, 10 ) and (size > 0) )//1 Exabyte is enought for everyone for now, 2010
+			else if( lngt.ToULong( &size, 10 ) and (size > 0) )// ToULongLong has problems with Windows...
 				break;
-			wxMessageBox( _("Wrong input, please retry...") ,_T("Error!"), wxICON_ERROR, this );
+
+			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),lngt.ToULong( &size, 10 ) ) ,_T("Error!"), wxICON_ERROR, this );
 			}
 		//Save file
 		wxFileDialog* filediag = new wxFileDialog(this,
@@ -272,7 +273,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			//create file
 			wxFile crt;
 			if( not crt.Create( flname.GetFullPath(), true ) ){
-				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR, this );
+				wxMessageBox( _("File cannot create!") ,_T("Error!"), wxICON_ERROR, this );
 				return;
 				}
 			if( not crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
@@ -283,13 +284,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			crt.Write("\0x00", 1);
 			crt.Close();
 			//Openning the file with text editor.
-			HexEditor *x = new HexEditor(MyNotebook, -1, statusBar, MyInterpreter, MyInfoPanel );
-			if(x->FileOpen( flname )){
-				MyNotebook->AddPage( x, flname.GetFullName(), true );
-				ActionEnabler();
-				}
-			else
-				x->Destroy();
+			OpenFile( flname );
 			filediag->Destroy();
 			}
 		return; // Without this, wxID_NEW retriggers this function again under wxMSW

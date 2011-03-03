@@ -33,9 +33,10 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, bool is_block_dev ){
 	file_access_mode = FAM;
 	the_file = myfilename;
 	#ifdef __WXMSW__
-		if( is_block_dev ){
+		if( is_block_dev )
 			BlockSize=512; //Detection routine for win :D
-			}
+		else
+			BlockSize=0;
 	#endif
 
 	if(myfilename.IsFileReadable()){//FileExists()){

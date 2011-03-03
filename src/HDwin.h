@@ -181,9 +181,6 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	WCHAR *buffer=new WCHAR[70];
 	swprintf(buffer,L"%-30s", szTmp);
 	devicenames.push_back(buffer);
-
-
-
 	}
 
 

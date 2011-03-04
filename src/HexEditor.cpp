@@ -304,6 +304,11 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint) 
 	myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
+	if ( readedbytes == -1 ){
+		wxMessageBox( _("File cannot read!"),_("Error"), wxOK|wxICON_ERROR );
+		delete [] buffer;
+		return;
+		}
 	ReadFromBuffer( position, readedbytes, buffer, cursor_reset, paint );
 	delete [] buffer;
 	}
@@ -844,7 +849,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 //			char *bfr = new char [8];
 //			int size=myfile->Read( bfr, 8);
 //			interpreter->Set( bfr, size);
-//			delete bfr;
+//			delete [] bfr;
 			wxMemoryBuffer bfr;
 			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
 			bfr.UngetWriteBuf( size );
@@ -947,7 +952,7 @@ bool HexEditor::InsertBytes( void ) {
 		MoveTAGS( CursorOffset(), injection_size );
 	select->SetState( select->SELECT_FALSE );
 
-	delete zerostream;
+	delete [] zerostream;
 
 	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
 

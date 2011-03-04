@@ -220,7 +220,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				readed=search_step; //to stay in loop
 				}
 			else{
-				delete buffer;
+				delete [] buffer;
 				return current_offset+found;
 				}
 			}
@@ -238,7 +238,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				search_step = readed + current_offset - from - 1;
 			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 			if(found >= 0){
-				delete buffer;
+				delete [] buffer;
 				return current_offset+found;
 				}
 			else
@@ -247,7 +247,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		}
 
 
-	delete buffer;
+	delete [] buffer;
 	return NANINT;
 	}
 

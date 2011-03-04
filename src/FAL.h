@@ -65,8 +65,8 @@ class DiffNode{
 		old_data = new_data = NULL;
 		}
 	~DiffNode( void ){
-		delete new_data;
-		delete old_data;
+		delete [] new_data;
+		delete [] old_data;
 		}
 	};
 

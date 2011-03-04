@@ -32,12 +32,12 @@ WX_DEFINE_OBJARRAY(ArrayOfNode);
 FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, bool is_block_dev ){
 	file_access_mode = FAM;
 	the_file = myfilename;
-	#ifdef __WXMSW__
-		if( is_block_dev )
-			BlockSize=512; //Detection routine for win :D
+	if( is_block_dev ){
+// TODO (death#1#): Block size detection routine for win
+			BlockSize=512;
+			}
 		else
 			BlockSize=0;
-	#endif
 
 	if(myfilename.IsFileReadable()){//FileExists()){
 //		if( myfilename.GetFullPath() == wxT("/dev/mem") ){
@@ -49,6 +49,9 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, bool is_block_dev ){
 				Open(myfilename.GetFullPath(), wxFile::read);
 			else
 				Open(myfilename.GetFullPath(), wxFile::read_write);
+
+if( BlockSize )
+		BlockCount=wxFile::Length()/BlockSize;
 
 			if(! IsOpened()){
 				file_access_mode = AccessInvalid;
@@ -124,8 +127,8 @@ DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, boo
 		newnode->new_data = new char[size];
 		if( newnode->old_data == NULL || newnode->new_data == NULL){
 			wxLogError( _("Not Enought RAM") );
-			delete newnode->old_data;
-			delete newnode->new_data;
+			delete [] newnode->old_data;
+			delete [] newnode->new_data;
 			return NULL;
 			}
 		else{
@@ -151,8 +154,28 @@ bool FAL::Apply( void ){
 		for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 			if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
 				Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
-				success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
-				DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
+
+				if(BlockSize > 0){
+					uint64_t StartSector = put_ptr / BlockSize;
+					unsigned StartShift = put_ptr - StartSector*BlockSize;
+					uint64_t EndSector = (put_ptr + DiffArray[i]->size)/BlockSize;
+					int rd_size = (EndSector - StartSector + 1 )*BlockSize;// +1 for make read least one sector
+					char *bfr = new char[rd_size];
+					wxFile::Seek(StartSector*BlockSize);
+					int rd = wxFile::Read( bfr, rd_size);
+					if( rd != rd_size ){	//Crucial if  block read error.
+						delete [] bfr;
+						return false;
+						}
+					memcpy( bfr+StartShift, DiffArray[i]->new_data, DiffArray[i]->size);
+					success*=Write(bfr, rd_size);//*= to make update success true or false
+					delete [] bfr;
+					}
+				else//too pass next line on block access
+					success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
+
+				if( success )
+					DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
 				}
 		}
 	return success;
@@ -232,10 +255,9 @@ int FAL::GetBlockSize( void ){
 	}
 
 wxFileOffset FAL::Length( void ){
-	#ifdef __WXMSW__
-		if ( BlockSize > 0 )
+	if ( BlockSize > 0 )
 		return BlockSize*BlockCount;
-	#endif
+
 	#ifdef __WXGTK__
 		if( the_file.GetFullPath() == wxT("/dev/mem") ){
 			return 512*1024*1024;
@@ -251,6 +273,7 @@ wxFileOffset FAL::Length( void ){
 				return block_size*block_count;
 			}
 	#endif
+
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();
@@ -264,14 +287,25 @@ wxFileOffset FAL::Length( void ){
 	}
 
 long FAL::Read( char* buffer, int size){
-	uint64_t from = Tell();
+	uint64_t from;
+	if( BlockSize > 0 )
+		from = get_ptr;
+	else
+		from = Tell();
+
 	int j=0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++)
 		if( DiffArray[i]->flag_undo and not DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 			break;
 		else
 			j=i+1;
-	return ReadR( buffer, size, from, &DiffArray, j);
+
+	long ret = ReadR( buffer, size, from, &DiffArray, j);
+
+	if( BlockSize > 0 )
+		get_ptr += size; //for next read
+
+	return ret;
 	}
 
 //Returns information that if file has some deletions or injections.
@@ -294,23 +328,22 @@ long FAL::ReadR( char* buffer, int size, uint64_t from, ArrayOfNode* PatchArray,
 	if( PatchIndice == 0 )	//Deepest layer
 		{
 	//ugly hack
-	#ifdef __WXMSW__
 		if ( BlockSize > 0 ){
-			uint64_t StartSector = (get_ptr / BlockSize);
-			unsigned StartShift = get_ptr - (get_ptr / BlockSize)*BlockSize;
-			uint64_t EndSector = ((get_ptr + size)/BlockSize)+1;
-		   int rd_size = (StartSector-EndSector)*BlockSize;
+			uint64_t StartSector = from / BlockSize;
+			unsigned StartShift = from - (from / BlockSize)*BlockSize;
+			uint64_t EndSector = (from + size)/BlockSize;
+
+			if( EndSector > BlockCount-1 )
+				EndSector = BlockCount-1;
+
+		   int rd_size = (EndSector - StartSector + 1)*BlockSize; //+1 for read least one sector
 			char *bfr = new char[rd_size];
 			wxFile::Seek(StartSector*BlockSize);
 			int rd = wxFile::Read( bfr, rd_size);
-			memcpy(buffer, bfr+StartShift, size);
-			delete bfr;
-			if( rd != rd_size )
-				return -1;
-			else
-				return size;
+			memcpy(buffer, bfr+StartShift, wxMin(wxMin( rd, rd_size-StartShift) , size)); //wxMin protects file ends.
+			delete [] bfr;
+			return wxMin(wxMin( rd, rd_size-StartShift), size);
 			}
-	#endif
 
 		wxFile::Seek( from );
 		return wxFile::Read( buffer, size ); //Ends recursion. here
@@ -506,10 +539,9 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 
 wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 	get_ptr = put_ptr = ofs;
-	#ifdef __WXMSW__
-		if( BlockSize > 0 )
-			return ofs;
-	#endif
+	if( BlockSize > 0 )
+		return ofs;
+
 	return wxFile::Seek( ofs, mode );
 	}
 

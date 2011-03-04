@@ -66,6 +66,9 @@ class DataInterpreter : public InterpreterGui{
 		void Set( wxMemoryBuffer buffer );
 		void Clear( void );
 		void OnUpdate( wxCommandEvent& event );
+		void OnTextEdit( wxKeyEvent& event );
+		void OnTextMouse( wxMouseEvent& event );
+		void OnCheckEdit( wxCommandEvent& event );
 	protected:
 		struct unidata{
 			char *raw, *mraw;	//big endian and little endian

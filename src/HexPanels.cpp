@@ -81,6 +81,70 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 #endif
 		}
 
+void DataInterpreter::OnCheckEdit( wxCommandEvent& event ){
+	if( event.IsChecked() ){
+		m_textctrl_binary->SetFocus();
+		m_textctrl_binary->SetInsertionPoint(0);
+// TODO (death#1#): Needed to activate INSERT mode when pressed to Edit check
+//		wxKeyEvent emulate_insert(WXK_INSERT);
+//		OnTextEdit( emulate_insert );
+		}
+	}
+void DataInterpreter::OnTextMouse( wxMouseEvent& event ){
+	if( event.ButtonDown() ) //Just allowed left mouse, setted up by wxFormBuilder.
+		wxBell();
+	else
+		event.Skip();
+	}
+void DataInterpreter::OnTextEdit( wxKeyEvent& event ){
+	if( ( event.GetKeyCode() == '0'
+			or event.GetKeyCode() == '1'
+			or event.GetKeyCode() == WXK_INSERT
+			//or event.GetKeyCode() == WXK_DELETE
+			or event.GetKeyCode() == WXK_END
+			or event.GetKeyCode() == WXK_HOME
+			or event.GetKeyCode() == WXK_LEFT
+			or event.GetKeyCode() == WXK_RIGHT
+			//or event.GetKeyCode() == WXK_BACK
+			)
+		and m_check_edit->IsChecked() ){
+
+		event.Skip(); //make updates on binary text control
+
+		//if binary data filled properly, update other text controls
+		if(m_textctrl_binary->GetLineLength(0) == 8 and (event.GetKeyCode()=='1' or event.GetKeyCode()=='0')){
+			int cursorat = m_textctrl_binary->GetInsertionPoint();
+			if(event.GetKeyCode()=='1')
+				unidata.raw[0] |= (1 << (7-cursorat));
+			else
+				unidata.raw[0] &= ~(1 << (7-cursorat));
+
+			//unsigned long newlongbyte=0;
+			//char newbyte = static_cast<char>(newlongbyte & 0xFF);
+			wxMemoryBuffer buffer;
+			//buffer.AppendByte( newbyte );
+			buffer.AppendData( unidata.raw, unidata.size );
+			//if(unidata.size > 1)
+			//	buffer.AppendData( unidata.raw+1, unidata.size-1 );
+			Set( buffer );
+			m_textctrl_binary->SetInsertionPoint( cursorat );
+			}
+		}
+	else if( event.GetKeyCode() == WXK_RETURN and m_textctrl_binary->GetLineLength(0) == 8 ){
+		//Validation
+			unsigned long newlongbyte=0;
+			m_textctrl_binary->GetValue().ToULong( &newlongbyte, 2);
+			char newbyte = static_cast<char>(newlongbyte & 0xFF);
+
+			HexEditor *hx = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor();
+
+			hx->FileAddDiff( hx->CursorOffset(), &newbyte, 1);						// add write node to file
+			hx->Reload();	//Updates hex editor to show difference.
+			}
+	else
+		wxBell();
+	}
+
 void DataInterpreter::Clear( void ){
 		m_textctrl_binary->Clear();
 		m_textctrl_8bit ->Clear();
@@ -97,8 +161,9 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 		wxString bn;
 		for(int i = 8 ; i > 0 ; i-- ){
 			(((number>>(i-1)) & 0x01)==1) ? bn << wxT("1") : bn << wxT("0");
-			if( i == 5 )
-				bn.append(wxT(" "));
+//		Disabled shaping due edit function.
+//			if( i == 5 )
+//				bn.append(wxT(" "));
 			}
 		m_textctrl_binary ->ChangeValue( bn );
 		if( m_check_unsigned->GetValue() ){

@@ -321,10 +321,22 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	numSizer->Add( m_static_bin, 0, wxALIGN_CENTER, 2 );
 	
-	m_textctrl_binary = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
+	wxBoxSizer* binSizer;
+	binSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_textctrl_binary = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_textctrl_binary->SetMaxLength( 8 ); 
 	m_textctrl_binary->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_binary, 0, wxALL|wxEXPAND, 1 );
+	binSizer->Add( m_textctrl_binary, 0, wxALL|wxEXPAND, 1 );
+	
+	m_check_edit = new wxCheckBox( this, wxID_ANY, wxT("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_check_edit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_check_edit->SetToolTip( wxT("Allow editing by Data Interpreter Panel") );
+	
+	binSizer->Add( m_check_edit, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1 );
+	
+	numSizer->Add( binSizer, 1, wxEXPAND, 5 );
 	
 	m_static_8bit = new wxStaticText( this, ID_DEFAULT, wxT("8 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_8bit->Wrap( -1 );
@@ -400,6 +412,14 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	// Connect Events
 	m_check_unsigned->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
 	m_check_bigendian->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_CHAR, wxKeyEventHandler( InterpreterGui::OnTextEdit ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_MIDDLE_DCLICK, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_MIDDLE_UP, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_check_edit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnCheckEdit ), NULL, this );
 }
 
 InterpreterGui::~InterpreterGui()
@@ -407,6 +427,14 @@ InterpreterGui::~InterpreterGui()
 	// Disconnect Events
 	m_check_unsigned->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
 	m_check_bigendian->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_CHAR, wxKeyEventHandler( InterpreterGui::OnTextEdit ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_MIDDLE_DCLICK, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_MIDDLE_UP, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_textctrl_binary->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
+	m_check_edit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnCheckEdit ), NULL, this );
 	
 }
 

@@ -104,6 +104,7 @@ class InterpreterGui : public wxPanel
 		wxCheckBox* m_check_bigendian;
 		wxStaticText* m_static_bin;
 		wxTextCtrl* m_textctrl_binary;
+		wxCheckBox* m_check_edit;
 		wxStaticText* m_static_8bit;
 		wxTextCtrl* m_textctrl_8bit;
 		wxStaticText* m_static_16bit;
@@ -119,6 +120,9 @@ class InterpreterGui : public wxPanel
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnUpdate( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnTextEdit( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnTextMouse( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnCheckEdit( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

@@ -510,7 +510,8 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idTagPanel, MyTagPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
-	mbar->Check(idXORView, GetActiveHexEditor()->XORKey != wxEmptyString);
+	mbar->Check(idXORView, MyNotebook->GetPageCount() and (GetActiveHexEditor()->XORKey != wxEmptyString));
+	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 
 	if(event.GetId() == idDeviceRam){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.

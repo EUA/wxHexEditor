@@ -719,14 +719,14 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(idTagAddSelection, _T("New Tag"));
 	menu.Append(wxID_COPY, _T("Copy"));
 	menu.Append(wxID_PASTE, _T("Paste"));
-#ifdef Enable_Injections
+
 	if(XORKey == wxEmptyString){
 		menu.AppendSeparator();
 		menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
 		menu.Append(idInjection, _T("Inject (Alpha)"));
 		menu.Append(wxID_CUT, _T("Cut (Alpha)"));
 		}
-#endif
+
 
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ) {
@@ -739,13 +739,12 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
 
-#ifdef Enable_Injections
+
 	if(XORKey == wxEmptyString){
 		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
 		menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
 		menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
 		}
-#endif
 
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
 

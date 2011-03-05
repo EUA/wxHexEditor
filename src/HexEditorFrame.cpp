@@ -590,7 +590,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
-	#ifdef Enable_Injections
+
 			if(GetActiveHexEditor()->XORKey == wxEmptyString){
 				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
 				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
@@ -609,7 +609,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				}
 			Toolbar->Refresh();
 			}
-	#endif
+
 		if(event.GetId()==XORVIEW_EVENT){
 			int sel = MyNotebook->GetSelection();
 			wxString S = MyNotebook->GetPageText(sel);

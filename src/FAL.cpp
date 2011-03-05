@@ -286,6 +286,21 @@ wxFileOffset FAL::Length( void ){
 	return max_size;
 	}
 
+void FAL::SetXORKey( wxMemoryBuffer Key){
+	XORview=Key;
+	}
+
+void FAL::ApplyXOR( char* buffer, int size, uint64_t from ){
+	if( XORview.GetDataLen() ){
+		int Xi = from%XORview.GetDataLen(); //calculates keyshift
+		for(unsigned int i = 0; i < size; i++){
+			buffer[i] ^= XORview[Xi];
+			if(Xi++ == XORview.GetDataLen()-1)
+				Xi = 0;
+			}
+		}
+	}
+
 long FAL::Read( char* buffer, int size){
 	uint64_t from;
 	if( BlockSize > 0 )
@@ -301,6 +316,9 @@ long FAL::Read( char* buffer, int size){
 			j=i+1;
 
 	long ret = ReadR( buffer, size, from, &DiffArray, j);
+
+	//Encryption layer
+	ApplyXOR( buffer, size, from );
 
 	if( BlockSize > 0 )
 		get_ptr += size; //for next read
@@ -527,14 +545,15 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 		}
 	//Adding node here
 	DiffNode *rtn = NewNode( start_byte, data, size, injection );
-		if( rtn != NULL ){
-			DiffArray.Add( rtn );						//Add new node to tail
-			if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
-				Apply();
-			return true;
-			}
-		else
-			return false;							//if not created successfuly
+	ApplyXOR( rtn->new_data, size, start_byte );
+	if( rtn != NULL ){
+		DiffArray.Add( rtn );						//Add new node to tail
+		if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
+			Apply();
+		return true;
+		}
+	else
+		return false;							//if not created successfuly
 	}
 
 wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){

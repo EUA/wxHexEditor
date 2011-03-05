@@ -45,12 +45,13 @@
 #define idToolbar 1003
 #define idInfoPanel 1004
 #define idTagPanel 1005
-#define idDeviceRam 1006
-#define idFileRO 1007
-#define idFileRW 1008
-#define idFileDW 1009
-#define ID_CHK_UNSIGNED 1010
-#define ID_CHK_BIGENDIAN 1011
+#define idXORView 1006
+#define idDeviceRam 1007
+#define idFileRO 1008
+#define idFileRW 1009
+#define idFileDW 1010
+#define ID_CHK_UNSIGNED 1011
+#define ID_CHK_BIGENDIAN 1012
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -81,13 +82,14 @@ class HexEditorGui : public wxFrame
 		virtual void OnViewMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void OnToolMenu( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnToolsMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDeviceMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor AlPhA Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
 	
 };

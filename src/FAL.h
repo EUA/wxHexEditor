@@ -97,6 +97,8 @@ class FAL : private wxFile{
 		bool IsOpened(){ return wxFile::IsOpened(); };
 		int  fd() const { return wxFile::fd(); };
 		long Read( char* buffer, int size );
+		void SetXORKey( wxMemoryBuffer );
+		void ApplyXOR( char* buffer, int size, uint64_t from );
 
 		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node
 		bool IsAvailable_Undo( void );
@@ -122,6 +124,7 @@ class FAL : private wxFile{
 		ArrayOfNode TempDiffArray;
 		wxFileName the_file;
 		uint64_t put_ptr,get_ptr;
+		wxMemoryBuffer XORview;
 //		DiffNode *head,*tail;	//linked list holds modification record
 
 };

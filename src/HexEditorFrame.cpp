@@ -369,6 +369,12 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	event.Skip();
 	}
 
+void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
+	if( event.GetId() == mbar->FindMenuItem( wxT("Tool") , wxT("XORView Thru") ) )
+			GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
+	event.Skip();
+	}
+
 void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){
 		int i=event.GetId() - idDiskDevice;

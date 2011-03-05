@@ -141,6 +141,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	toolMenu->Append( menuToolCompare );
 	menuToolCompare->Enable( false );
 	
+	wxMenuItem* menuToolXORView;
+	menuToolXORView = new wxMenuItem( toolMenu, idXORView, wxString( wxT("XORView Thru") ) , wxT("View your XOR encrypted file without decrypting!"), wxITEM_CHECK );
+	toolMenu->Append( menuToolXORView );
+	
 	mbar->Append( toolMenu, wxT("Tool") ); 
 	
 	deviceMenu = new wxMenu();
@@ -235,6 +239,8 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuViewTagPanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuToolChecksum->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
 	this->Connect( menuToolCompare->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
+	this->Connect( menuToolXORView->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
+	this->Connect( menuToolXORView->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuDeviceRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
 	this->Connect( menuDeviceRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuDeviceDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
@@ -277,6 +283,8 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idTagPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
+	this->Disconnect( idXORView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
+	this->Disconnect( idXORView, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDeviceMenu ) );
@@ -327,6 +335,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_binary = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_textctrl_binary->SetMaxLength( 8 ); 
 	m_textctrl_binary->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_binary->SetToolTip( wxT("Press enter to make changes!") );
 	
 	binSizer->Add( m_textctrl_binary, 0, wxALL|wxEXPAND, 1 );
 	

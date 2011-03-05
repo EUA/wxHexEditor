@@ -141,6 +141,16 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	}
 
+void HexEditor::FileSetXORKey( bool enable ){
+	wxMemoryBuffer x;
+	if( enable ){
+		wxString key = wxGetTextFromUser( _("Please Enter XOR key"), _("XORView Thru") );
+		x.AppendData( key.ToAscii(), key.Len() );
+		}
+	myfile->SetXORKey( x );
+	Reload();
+	}
+
 bool HexEditor::FileSave( bool question ) {
 	if( myfile->IsChanged() ) {
 		if ( myfile->GetAccessMode() == FAL::ReadOnly) {

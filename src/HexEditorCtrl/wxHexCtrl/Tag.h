@@ -51,6 +51,10 @@ class TagElement{
 		void Hide( void );
 		bool isCover( uint64_t );
 		void print(void);
+		static int TagCompare(TagElement **first, TagElement **second);
+//		bool operator<( TagElement a, TagElement b){ return a.start < b.start }
+//		bool operator>( TagElement a, TagElement b){ return a.start > b.start }
+
 //		void OnKillFocus( wxFocusEvent& event );
 #ifndef __WXMAC__
 		wxPopupWindow *wxP;

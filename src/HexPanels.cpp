@@ -182,7 +182,7 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
 	}
 
-void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD ){
+void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey ){
 		static wxMutex mutexinfo;
 		mutexinfo.Lock();
 
@@ -218,7 +218,7 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 				if(error)
 					std::cerr << "Can't get block size of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
 				else
-					info_string += _("Sector Size: ") + wxString::Format(wxT("%d\n"), block_size);
+					info_string += _("Sector Size:\t") + wxString::Format(wxT("%d\n"), block_size);
 		#ifdef __WXGTK__
 				error  = ioctl(FD, BLKGETSIZE64, &block_count);
 		#elif defined (__WXMAC__)
@@ -227,9 +227,12 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 				if (error)
 					std::cerr << "Can't get block count of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
 				else
-					info_string += _("Sector Count: ") + wxString::Format(wxT("%d"), block_count/block_size);
+					info_string += _("Sector Count:\t") + wxString::Format(wxT("%d\n"), block_count/block_size);
 	#endif
 			}
+
+		if(XORKey != wxEmptyString)
+			info_string += _("XORKey:\t") + XORKey;
 
 		m_InfoPanelText->SetLabel( info_string );
 

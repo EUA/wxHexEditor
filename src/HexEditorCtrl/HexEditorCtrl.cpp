@@ -196,12 +196,14 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	hex_ctrl->TagArray.Clear();
 	text_ctrl->TagArray.Clear();
 
+	MainTagArray.Sort( TagElement::TagCompare );
 	TagElement *TAG;
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ ){	//Painting all TAGs here.
 		TAG = MainTagArray.Item(i);// For debugging
 		PushTAGToControls(TAG);
 		}
 
+	HighlightArray.Sort( TagElement::TagCompare );
 	for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ ){	//Just highlighting required sections.
 		TAG = HighlightArray.Item(i);// For debugging
 		PushTAGToControls(TAG);

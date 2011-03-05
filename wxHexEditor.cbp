@@ -40,6 +40,7 @@
 					<Add option="`wx-config --cflags`" />
 					<Add option="-D_DEBUG_" />
 					<Add option="-D_DEBUG_FILE_" />
+					<Add option="-D_DEBUG_SELECT_" />
 					<Add option="-DEnable_Injections" />
 				</Compiler>
 				<Linker>

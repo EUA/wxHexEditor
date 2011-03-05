@@ -41,6 +41,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	PrepareAUI();
 
 	MyAUI->Update();
+	this->Connect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
@@ -70,6 +71,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	}
 
 HexEditorFrame::~HexEditorFrame(){
+	this->Disconnect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
@@ -347,18 +349,18 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
 					case idFileRO:{
 						MyHexEditor->SetFileAccessMode( FAL::ReadOnly );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 						break;
 						}
 					case idFileRW:{
 						MyHexEditor->SetFileAccessMode( FAL::ReadWrite );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 						break;
 						}
 					case idFileDW:
 						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY directly."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
 							MyHexEditor->SetFileAccessMode( FAL::DirectWrite );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 						break;
 					default: wxBell();
 					}
@@ -508,6 +510,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idTagPanel, MyTagPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
+	mbar->Check(idXORView, GetActiveHexEditor()->XORKey != wxEmptyString);
 
 	if(event.GetId() == idDeviceRam){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
@@ -581,21 +584,44 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				}
 			}
 
-		if(event.GetId() == SELECT_EVENT ){
+		if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){
 			#ifdef _DEBUG_SELECT_
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
 	#ifdef Enable_Injections
-			Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
-			mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
-			Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
-			mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
-			Toolbar->EnableTool( idInjection, event.GetString() == wxT("NotSelected") );
-			mbar->Enable( idInjection, event.GetString() == wxT("NotSelected") );
+			if(GetActiveHexEditor()->XORKey == wxEmptyString){
+				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
+				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
+				Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
+				mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
+				Toolbar->EnableTool( idInjection, event.GetString() == wxT("NotSelected") );
+				mbar->Enable( idInjection, event.GetString() == wxT("NotSelected") );
+				}
+			else{
+				Toolbar->EnableTool( wxID_CUT, false );
+				mbar->Enable( wxID_CUT, false );
+				Toolbar->EnableTool( wxID_DELETE, false );
+				mbar->Enable( wxID_DELETE, false );
+				Toolbar->EnableTool( idInjection, false );
+				mbar->Enable( idInjection, false);
+				}
 			Toolbar->Refresh();
+			}
 	#endif
+		if(event.GetId()==XORVIEW_EVENT){
+			int sel = MyNotebook->GetSelection();
+			wxString S = MyNotebook->GetPageText(sel);
+			wxString XORViewStr = wxT(" (XORView)");
+			if( event.GetString()==wxT("Checked") )
+				if( not S.EndsWith(XORViewStr) )
+					S.Append( XORViewStr );
+			if( event.GetString()==wxT("UnChecked") )
+				if( S.EndsWith( XORViewStr ))
+					S.Remove( S.Len()-XORViewStr.Len() );
+
+			MyNotebook->SetPageText(sel, S);
 			}
 
 		if(event.GetId() == UNREDO_EVENT ){
@@ -630,7 +656,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
 			if( MyHexEditor != NULL ){
 				MyHexEditor->UpdateCursorLocation(); //Also updates DataInterpreter
-				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD() );
+				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 				MyTagPanel->Set( MyHexEditor->MainTagArray );
 
 				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );

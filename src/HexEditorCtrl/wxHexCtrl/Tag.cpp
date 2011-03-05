@@ -56,6 +56,10 @@ TagElement::~TagElement(){
 	tag.Clear();
 	}
 
+int TagElement::TagCompare(TagElement **a, TagElement **b){
+	return (*a)->start - (*b)->start;
+	}
+
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 	if( !visible and not tag.IsEmpty() ){
 #ifdef _DEBUG_TAG_
@@ -74,8 +78,6 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		topSizer->Fit(wxP);
 		wxP->Position( pos, topSizer->GetSize() );
 		wxP->Show();
-		//wxP->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexCtrl::OnMouseMove),NULL, parent);
-		//parent->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(wxHexCtrl::OnKillFocus),NULL, parent );
 // TODO (death#1#): Auto hide on popup menus. Modularized!
 #endif
 		}

@@ -95,7 +95,7 @@ class InfoPanel : public InfoPanelGui{
 	:InfoPanelGui( parent, id, pos, size, style){
 	}
 
-	void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD );
+	void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey );
 	void OnUpdate( wxCommandEvent& event ){
 	}
 };

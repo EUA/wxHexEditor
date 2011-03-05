@@ -144,11 +144,28 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 void HexEditor::FileSetXORKey( bool enable ){
 	wxMemoryBuffer x;
 	if( enable ){
-		wxString key = wxGetTextFromUser( _("Please Enter XOR key"), _("XORView Thru") );
-		x.AppendData( key.ToAscii(), key.Len() );
+		XORKey = wxGetTextFromUser( _("Note: For witching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"\
+												"Also you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled.\n\n"\
+												"Please Enter XOR key."), _("XORView Thru Warning!") );
+		x.AppendData( XORKey.ToAscii(), XORKey.Len() );
+		if(XORKey != wxEmptyString){
+ 			FileReOpen();
+			}
+		}
+	else{
+		if( wxMessageBox( _("For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"), _("XORView Thru Warning"), wxOK | wxCANCEL | wxICON_EXCLAMATION ) == wxCANCEL)
+			return;
+		XORKey=wxEmptyString;
+		FileReOpen();
 		}
 	myfile->SetXORKey( x );
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD(), XORKey );
+
 	Reload();
+	wxUpdateUIEvent new_event;
+	new_event.SetId( XORVIEW_EVENT );
+	new_event.SetString( ( x.GetDataLen() ? wxT("Checked") : wxT("UnChecked")) );
+	GetEventHandler()->ProcessEvent( new_event );
 	}
 
 bool HexEditor::FileSave( bool question ) {
@@ -200,9 +217,9 @@ bool HexEditor::FileSave( wxString savefilename ) {
 		return false;
 	}
 
-bool HexEditor::FileClose( void ) {
+bool HexEditor::FileClose( bool WithoutChange ) {
 	if( myfile != NULL ) {
-		if( myfile->IsChanged() ) {
+		if( myfile->IsChanged() and not WithoutChange) {
 			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 			switch(state) {
 				case(wxYES):
@@ -218,6 +235,7 @@ bool HexEditor::FileClose( void ) {
 				}
 			}
 		SaveTAGS( myfile->GetFileName() );
+		MainTagArray.Empty();
 		//myscroll->GetMyThread()->Delete();
 //		myscroll->GetMyThread()->Wait();
 //		delete myscroll;
@@ -229,6 +247,17 @@ bool HexEditor::FileClose( void ) {
 		}
 	return true;
 	}
+
+bool HexEditor::FileReOpen( void ){
+	wxFileName f = myfile->GetFileName();
+	uint64_t last_offset = page_offset;
+	unsigned last_cursor = GetLocalHexInsertionPoint();
+	FileClose( true );
+	bool success = FileOpen(f);
+	LoadFromOffset( last_offset );
+	SetLocalHexInsertionPoint(last_cursor);
+	return success;
+	};
 
 void HexEditor::DoUndo( void ) {
 	//TODO: Tag Movement
@@ -691,10 +720,12 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(wxID_COPY, _T("Copy"));
 	menu.Append(wxID_PASTE, _T("Paste"));
 #ifdef Enable_Injections
-	menu.AppendSeparator();
-	menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
-	menu.Append(idInjection, _T("Inject (Alpha)"));
-	menu.Append(wxID_CUT, _T("Cut (Alpha)"));
+	if(XORKey == wxEmptyString){
+		menu.AppendSeparator();
+		menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
+		menu.Append(idInjection, _T("Inject (Alpha)"));
+		menu.Append(wxID_CUT, _T("Cut (Alpha)"));
+		}
 #endif
 
 	menu.Enable( idTagEdit, false );
@@ -709,9 +740,11 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
 
 #ifdef Enable_Injections
-	menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
-	menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
-	menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
+	if(XORKey == wxEmptyString){
+		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
+		menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
+		menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
+		}
 #endif
 
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
@@ -936,7 +969,7 @@ bool HexEditor::DeleteSelection( void ) {
 		return false;
 		}
 	Reload();
-	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD(), XORKey );
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	return success;
@@ -964,7 +997,7 @@ bool HexEditor::InsertBytes( void ) {
 
 	delete [] zerostream;
 
-	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD(), XORKey );
 
 	Reload();
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
@@ -979,7 +1012,7 @@ bool HexEditor::CutSelection( void ) {
 #endif
 	if( CopySelection() ) {
 		DeleteSelection();
-		infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD() );
+		infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD(), XORKey );
 		}
 	}
 

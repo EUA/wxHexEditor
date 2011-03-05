@@ -57,7 +57,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		~HexEditor( void );
 		friend class scrollthread;
 		//friend class FindDialog;
-
+		wxString XORKey;
 		void Goto( int64_t goto_offset=-1 , bool set_focus=false);
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
@@ -65,9 +65,10 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 
 		void FileSetXORKey( bool enable );
 		bool FileOpen( wxFileName& filename  );
+		bool FileReOpen( void );
 		bool FileSave( bool question = true );
 		bool FileSave( wxString filename );
-		bool FileClose( void );
+		bool FileClose( bool WithoutChange = false );
 		void DoUndo( void );
 		void DoRedo( void );
 
@@ -135,7 +136,6 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
 		TagPanel *tagpanel;
-
 		copy_maker *copy_mark;
 
 	private:

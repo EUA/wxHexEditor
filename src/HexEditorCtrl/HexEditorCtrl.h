@@ -33,6 +33,7 @@
 #define UNREDO_EVENT 50006
 #define TAG_CHANGE_EVENT 50007
 #define SEARCH_CHANGE_EVENT 50008
+#define XORVIEW_EVENT 50009
 class Select{	//for using EventHandler
 	public:
 		Select( wxEvtHandler* evth_ ){
@@ -107,8 +108,10 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;
+
 		ArrayOfTAG HighlightArray;
 		ArrayOfTAG MainTagArray;
+
 	protected:
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();

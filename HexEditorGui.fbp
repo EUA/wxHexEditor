@@ -375,7 +375,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">&amp;View</property>
                     <property name="name">viewMenu</property>
                     <property name="permission">protected</property>
@@ -441,8 +441,8 @@
                     </object>
                 </object>
                 <object class="wxMenu" expanded="1">
-                    <property name="label">Tool</property>
-                    <property name="name">toolMenu</property>
+                    <property name="label">Tools</property>
+                    <property name="name">toolsMenu</property>
                     <property name="permission">protected</property>
                     <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
@@ -471,7 +471,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">OnToolMenu</event>
+                        <event name="OnMenuSelection">OnToolsMenu</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
@@ -482,17 +482,17 @@
                         <property name="id">idXORView</property>
                         <property name="kind">wxITEM_CHECK</property>
                         <property name="label">XORView Thru</property>
-                        <property name="name">menuToolXORView</property>
+                        <property name="name">menuToolsXORView</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnToolsMenu</event>
-                        <event name="OnUpdateUI">OnUpdateUI</event>
+                        <event name="OnUpdateUI"></event>
                     </object>
                 </object>
                 <object class="wxMenu" expanded="1">
-                    <property name="label">Device</property>
-                    <property name="name">deviceMenu</property>
+                    <property name="label">Devices</property>
+                    <property name="name">devicesMenu</property>
                     <property name="permission">protected</property>
                     <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
@@ -502,11 +502,11 @@
                         <property name="id">idDeviceRam</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Open RAM Device</property>
-                        <property name="name">menuDeviceRam</property>
+                        <property name="name">menuDevicesRam</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">OnDeviceMenu</event>
+                        <event name="OnMenuSelection">OnDevicesMenu</event>
                         <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                     <object class="submenu" expanded="1">
@@ -521,11 +521,11 @@
                             <property name="id">wxID_ANY</property>
                             <property name="kind">wxITEM_NORMAL</property>
                             <property name="label">N/A on this OS (yet)</property>
-                            <property name="name">menuDeviceDiskItem1</property>
+                            <property name="name">menuDevicesDiskItem1</property>
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
-                            <event name="OnMenuSelection">OnDeviceMenu</event>
+                            <event name="OnMenuSelection">OnDevicesMenu</event>
                             <event name="OnUpdateUI"></event>
                         </object>
                     </object>

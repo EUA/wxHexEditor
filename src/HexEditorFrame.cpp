@@ -377,7 +377,7 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	event.Skip();
 	}
 
-void HexEditorFrame::OnDeviceMenu( wxCommandEvent& event ){
+void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){
 		int i=event.GetId() - idDiskDevice;
 		wxArrayString disks;
@@ -524,7 +524,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
 			menuDeviceDisk->Remove( *it );
 			}
-		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 		wxArrayString disks;
 #ifdef __WXGTK__
 		///ls -l /dev/disk/by-id
@@ -565,7 +565,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			#endif
 			//Note, this /dev/ will drop on adding menu for cosmetic!
 			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
-			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDeviceMenu ) );
+			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 			}
 		}
 

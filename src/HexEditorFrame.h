@@ -69,7 +69,7 @@ class HexEditorFrame : public HexEditorGui {
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
 		void OnToolsMenu( wxCommandEvent& event );
-		void OnDeviceMenu( wxCommandEvent& event );
+		void OnDevicesMenu( wxCommandEvent& event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 		void OnViewMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );

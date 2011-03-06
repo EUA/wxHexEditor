@@ -65,8 +65,8 @@ class HexEditorGui : public wxFrame
 		wxMenu* fileMenu;
 		wxMenu* editMenu;
 		wxMenu* viewMenu;
-		wxMenu* toolMenu;
-		wxMenu* deviceMenu;
+		wxMenu* toolsMenu;
+		wxMenu* devicesMenu;
 		wxMenu* menuDeviceDisk;
 		wxMenu* optionsMenu;
 		wxMenu* menuOptionsFileMode;
@@ -83,7 +83,7 @@ class HexEditorGui : public wxFrame
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void OnToolMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnToolsMenu( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnDeviceMenu( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnDevicesMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		
 	

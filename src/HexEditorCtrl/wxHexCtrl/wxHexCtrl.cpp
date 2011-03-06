@@ -38,6 +38,9 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
 END_EVENT_TABLE()
 
+
+//#define _Use_Alternate_DrawText_ //For debugged drawtext for wx 2.9.x on Mac
+
 //IMPLEMENT_DYNAMIC_CLASS(wxHexCtrl, wxScrolledWindow)
 
 wxHexCtrl::wxHexCtrl(wxWindow *parent,
@@ -56,7 +59,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
 								wxFont(
 									10,					// point size
-									wxMODERN,			// family
+									wxFONTFAMILY_MODERN,	// family
 									wxFONTSTYLE_NORMAL,	// style
 									wxFONTWEIGHT_BOLD,// weight
 									true,				// underline
@@ -74,7 +77,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								//wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(
 									10,					// point size
-									wxMODERN,			// family
+									wxFONTFAMILY_MODERN,	// family
 									wxFONTSTYLE_NORMAL,	// style
 									wxFONTWEIGHT_NORMAL,// weight
 									false,				// underline
@@ -373,12 +376,16 @@ void wxHexCtrl::DoMoveCaret(){
 		caret->Move(m_Margin.x + m_Caret.x * m_CharSize.x,
                     m_Margin.x + m_Caret.y * m_CharSize.y);
 }
-inline wxMemoryDC* wxHexCtrl::CreateDC(){
-	wxBufferedPaintDC *dcTemp= new wxBufferedPaintDC(this);
 
-//	wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
-//	wxMemoryDC *dcTemp = new wxMemoryDC();
-//	dcTemp->SelectObject(bmp);
+inline wxMemoryDC* wxHexCtrl::CreateDC(){
+//	wxBufferedPaintDC *dcTemp= new wxBufferedPaintDC(this); //has problems with MacOSX
+
+#ifdef _DEBUG_SIZE_
+		std::cout << "wxHexCtrl::CreateDC Sizes: " << this->GetSize().GetWidth() << ":" << this->GetSize().GetHeight() << std::endl;
+#endif
+	wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
+	wxMemoryDC *dcTemp = new wxMemoryDC();
+	dcTemp->SelectObject(bmp);
 
 	dcTemp->SetFont( HexDefaultAttr.GetFont() );
 	dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
@@ -402,8 +409,13 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 				break;
 			wxChar ch = CharAt(z++);
 			line += ch;
+#ifdef _Use_Alternate_DrawText_
+			dcTemp->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+#endif
 			}
+#ifndef _Use_Alternate_DrawText_
 		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
+#endif
 		}
 
 	int TAC = TagArray.Count();
@@ -424,8 +436,14 @@ void wxHexCtrl::RePaint( void ){
 	wxMemoryDC* dcTemp = CreateDC();
 	if( dcTemp != NULL ){
 		wxClientDC dc( this );
-		PrepareDC( dc );
+//		PrepareDC( dc ); //For wxWindowScrooled ?
+#ifdef _Use_Graphics_Contex_
+		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
+		gc->DrawBitmap( dcTemp->GetSelectedBitmap(), 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+		delete gc;
+#else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+#endif
 		delete dcTemp;
 		}
 	}
@@ -433,13 +451,19 @@ void wxHexCtrl::RePaint( void ){
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 	wxMemoryDC* dcTemp = CreateDC();
 	if( dcTemp != NULL ){
-		wxPaintDC dc( this );
-		PrepareDC( dc );
+		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
+//		PrepareDC( dc ); //For wxWindowScrooled ?
+#ifdef _Use_Graphics_Contex_
+		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
+//		PrepareDC( dc );
+		gc->DrawBitmap( dcTemp->GetSelectedBitmap(), 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+		delete gc;
+#else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+#endif
 		delete dcTemp;
 		}
 	}
-
 
 void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	{	//Selection Painter
@@ -492,15 +516,24 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 			int z = ( _temp_.y == _end_.y ) ? _end_.x : m_Window.x;	// and end point
 			for ( int x = _temp_.x; x < z; x++ ){					//Prepare line to write process
 				if( IsDenied(x) ){
-					if(x+1 < z)
+					if(x+1 < z){
 						line += wxT(' ');
+#ifdef _Use_Alternate_DrawText_
+						DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
+#endif
+						}
 					continue;
 					}
 				wxChar ch = CharAt(start++);
 				line += ch;
+#ifdef _Use_Alternate_DrawText_
+				DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
+#endif
 				}
+#ifndef _Use_Alternate_DrawText_
 			DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								   m_Margin.x + _temp_.y * m_CharSize.y );
+#endif
 			}
 		}
 	}
@@ -570,6 +603,7 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
 void wxHexCtrl::ChangeSize(){
 	unsigned gip = GetInsertionPoint();
 	wxSize size = GetClientSize();
+
 	m_Window.x = (size.x - 2*m_Margin.x) / m_CharSize.x;
 	m_Window.y = (size.y - 2*m_Margin.x) / m_CharSize.y;
 	if ( m_Window.x < 1 )
@@ -724,6 +758,7 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 		std::cout << "wxHexCtrl::OnSize X,Y" << event.GetSize().GetX() <<',' << event.GetSize().GetY() << std::endl;
 #endif
 	ChangeSize();
+
    event.Skip();
 	}
 

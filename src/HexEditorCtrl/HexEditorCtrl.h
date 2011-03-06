@@ -105,12 +105,13 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		enum IDS{ idTagAddSelection=1001,idTagEdit, idInjection };
 		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		int64_t CursorOffset( void );
-
+		void SetFont( wxFont f );
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;
 
 		ArrayOfTAG HighlightArray;
 		ArrayOfTAG MainTagArray;
+		wxFont stdfont;
 
 	protected:
 		void Dynamic_Connector();

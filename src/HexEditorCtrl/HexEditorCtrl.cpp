@@ -35,17 +35,23 @@
 HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const wxSize& size, long style):
 	HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
 	select = new class Select( GetEventHandler() );
-	wxFont stdfont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL, 0, wxT("")));
-	m_static_offset->SetFont( stdfont );
+
 	m_static_offset->SetLabel( _("Offset: DEC") );
-	m_static_adress->SetFont( stdfont );
-	m_static_byteview->SetFont( stdfont );
+
+#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )
+	stdfont = wxFont(wxFont(13, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("")));// Fonts are too small on wxOSX 2.9.x series.
+#else
+	stdfont = wxFont(wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("")));
+#endif
+	SetFont( stdfont );
+
 	Dynamic_Connector();
 	offset_scroll = new wxHugeScrollBar( offset_scroll_real );
 	TAGMutex = false;
 	hex_ctrl->TagMutex = &TAGMutex;
 	text_ctrl->TagMutex = &TAGMutex;
    }
+
 HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
 	Clear();
@@ -90,6 +96,7 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditorCtrl::OnMouseMove),NULL, this);
 	}
+
 //-----READ/WRITE FUNCTIONS-------//
 
 void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset, bool paint ){
@@ -157,6 +164,30 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 	}
 
 //-----VISUAL FUNCTIONS------//
+void HexEditorCtrl::SetFont( wxFont f ){
+	stdfont = f;
+	m_static_offset->SetFont( f );
+	m_static_adress->SetFont( f );
+	m_static_byteview->SetFont( f );
+
+	wxTextAttr Style( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
+					wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
+					f);
+
+	offset_ctrl->SetSelectionStyle( Style );
+	hex_ctrl->SetSelectionStyle( Style );
+	text_ctrl->SetSelectionStyle( Style );
+
+	Style = wxTextAttr( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ),
+										wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ),
+										f);
+
+   offset_ctrl->SetDefaultStyle( Style );
+   hex_ctrl->SetDefaultStyle( Style );
+   text_ctrl->SetDefaultStyle( Style );
+
+	}
+
 bool HexEditorCtrl::Selector(){
 	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )				//If selecton from hex or text control
 		select->EndOffset = page_offset + GetLocalHexInsertionPoint()/2;	//Than make selection
@@ -476,6 +507,7 @@ void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ){
 	wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}
+
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 	TagElement *TAG;
 	uint64_t pos = LastRightClickAt;

@@ -1,82 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wxHexEditor_XML_TAG>
-  <filename path="testfile.swp">
-    <TAG id="10">
-      <start_offset>6609</start_offset>
-      <end_offset>6613</end_offset>
-      <tag_text>898</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#4C83F0</note_colour>
-    </TAG>
-    <TAG id="9">
-      <start_offset>3082</start_offset>
-      <end_offset>3291</end_offset>
-      <tag_text>test area 51 :p</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#97FFFD</note_colour>
-    </TAG>
-    <TAG id="8">
-      <start_offset>2656</start_offset>
-      <end_offset>2649</end_offset>
-      <tag_text>54</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#4CF06C</note_colour>
-    </TAG>
-    <TAG id="7">
-      <start_offset>1125</start_offset>
-      <end_offset>1182</end_offset>
-      <tag_text>Normal</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#FFBB00</note_colour>
-    </TAG>
-    <TAG id="6">
-      <start_offset>936</start_offset>
-      <end_offset>1000</end_offset>
-      <tag_text>ok here too</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#0015FF</note_colour>
-    </TAG>
+  <filename path="/home/development/wxHexEditor/testfile.swp">
     <TAG id="5">
-      <start_offset>752</start_offset>
-      <end_offset>746</end_offset>
-      <tag_text>DDDD</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#FF0000</note_colour>
+      <start_offset>795</start_offset>
+      <end_offset>802</end_offset>
+      <tag_text>D type corruption</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FF00F9</note_colour>
     </TAG>
     <TAG id="4">
-      <start_offset>576</start_offset>
-      <end_offset>592</end_offset>
-      <tag_text>cc zone</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#B25191</note_colour>
+      <start_offset>625</start_offset>
+      <end_offset>643</end_offset>
+      <tag_text>C type corruption</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#0036FF</note_colour>
     </TAG>
     <TAG id="3">
-      <start_offset>416</start_offset>
-      <end_offset>406</end_offset>
-      <tag_text>BBzone</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#B2A951</note_colour>
-    </TAG>
-    <TAG id="2">
-      <start_offset>299</start_offset>
-      <end_offset>334</end_offset>
-      <tag_text>AAAA</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#40FF00</note_colour>
-    </TAG>
-    <TAG id="1">
-      <start_offset>114</start_offset>
-      <end_offset>138</end_offset>
-      <tag_text>AAAA5</tag_text>
-      <font_colour>#3D3D3D</font_colour>
+      <start_offset>454</start_offset>
+      <end_offset>466</end_offset>
+      <tag_text>Different Corruption type</tag_text>
+      <font_colour>#000000</font_colour>
       <note_colour>#FF0000</note_colour>
     </TAG>
+    <TAG id="2">
+      <start_offset>388</start_offset>
+      <end_offset>352</end_offset>
+      <tag_text>Third corruption</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FF07</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>168</start_offset>
+      <end_offset>192</end_offset>
+      <tag_text>Sample: Here second corruption at file</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFE200</note_colour>
+    </TAG>
     <TAG id="0">
-      <start_offset>35</start_offset>
-      <end_offset>41</end_offset>
-      <tag_text>Broken section</tag_text>
-      <font_colour>#3D3D3D</font_colour>
-      <note_colour>#F1D03B</note_colour>
+      <start_offset>47</start_offset>
+      <end_offset>53</end_offset>
+      <tag_text>Sample: First corruption on file.</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFC600</note_colour>
     </TAG>
   </filename>
 </wxHexEditor_XML_TAG>

@@ -58,7 +58,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
 								wxFont(
-									10,					// point size
+									10,
 									wxFONTFAMILY_MODERN,	// family
 									wxFONTSTYLE_NORMAL,	// style
 									wxFONTWEIGHT_BOLD,// weight
@@ -76,7 +76,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 								//*wxWHITE, //Deprecated :p
 								//wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 								wxFont(
-									10,					// point size
+									10,
 									wxFONTFAMILY_MODERN,	// family
 									wxFONTSTYLE_NORMAL,	// style
 									wxFONTWEIGHT_NORMAL,// weight
@@ -409,11 +409,11 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 				break;
 			wxChar ch = CharAt(z++);
 			line += ch;
-#ifdef _Use_Alternate_DrawText_
+#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
 			dcTemp->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 #endif
 			}
-#ifndef _Use_Alternate_DrawText_
+#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
 		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
 #endif
 		}
@@ -518,7 +518,7 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 				if( IsDenied(x) ){
 					if(x+1 < z){
 						line += wxT(' ');
-#ifdef _Use_Alternate_DrawText_
+#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
 						DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 #endif
 						}
@@ -526,11 +526,11 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 					}
 				wxChar ch = CharAt(start++);
 				line += ch;
-#ifdef _Use_Alternate_DrawText_
+#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
 				DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 #endif
 				}
-#ifndef _Use_Alternate_DrawText_
+#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
 			DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								   m_Margin.x + _temp_.y * m_CharSize.y );
 #endif

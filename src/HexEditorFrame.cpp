@@ -372,7 +372,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	}
 
 void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
-	if( event.GetId() == mbar->FindMenuItem( wxT("Tool") , wxT("XORView Thru") ) )
+	if( event.GetId() == idXORView )
 			GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
 	event.Skip();
 	}

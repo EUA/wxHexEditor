@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wxHexEditor_XML_TAG>
-  <filename path="/home/development/wxHexEditor/testfile.swp">
+  <filename path="testfile.swp">
     <TAG id="5">
       <start_offset>795</start_offset>
       <end_offset>802</end_offset>

@@ -61,6 +61,17 @@ class DataInterpreter : public InterpreterGui{
 	public:
 		DataInterpreter(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 		:InterpreterGui( parent, id, pos, size, style){
+#if wxCHECK_VERSION( 2,9,0 ) and defined( __WXOSX__ )	//onOSX, 8 px too small.
+			wxFont f = GetFont();
+			f.SetPointSize(10);
+			m_textctrl_binary->SetFont(f);
+			m_textctrl_8bit->SetFont(f);
+			m_textctrl_16bit->SetFont(f);
+			m_textctrl_32bit->SetFont(f);
+			m_textctrl_64bit->SetFont(f);
+			m_textctrl_float->SetFont(f);
+			m_textctrl_double->SetFont(f);
+#endif
 			unidata.raw = unidata.mraw = NULL;
 			};
 		void Set( wxMemoryBuffer buffer );

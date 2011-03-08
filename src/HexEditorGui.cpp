@@ -33,6 +33,14 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuFileOpen = new wxMenuItem( fileMenu, wxID_OPEN, wxString( wxT("&Open") ) + wxT('\t') + wxT("CTRL+O"), wxT("Open a file"), wxITEM_NORMAL );
 	fileMenu->Append( menuFileOpen );
 	
+	menuFileOpenRecent = new wxMenu();
+	wxMenuItem* menuFileOpenRecentDummy;
+	menuFileOpenRecentDummy = new wxMenuItem( menuFileOpenRecent, wxID_ANY, wxString( wxT("No Recent File") ) , wxEmptyString, wxITEM_NORMAL );
+	menuFileOpenRecent->Append( menuFileOpenRecentDummy );
+	menuFileOpenRecentDummy->Enable( false );
+	
+	fileMenu->Append( -1, wxT("Open &Recent"), menuFileOpenRecent );
+	
 	wxMenuItem* menuFileSave;
 	menuFileSave = new wxMenuItem( fileMenu, wxID_SAVE, wxString( wxT("&Save") ) + wxT('\t') + wxT("CTRL+S"), wxT("Save modifications"), wxITEM_NORMAL );
 	fileMenu->Append( menuFileSave );

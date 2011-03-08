@@ -63,6 +63,7 @@ class HexEditorGui : public wxFrame
 	protected:
 		wxMenuBar* mbar;
 		wxMenu* fileMenu;
+		wxMenu* menuFileOpenRecent;
 		wxMenu* editMenu;
 		wxMenu* viewMenu;
 		wxMenu* toolsMenu;

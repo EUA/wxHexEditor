@@ -38,6 +38,11 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 #if defined __WXMAC__ || defined __WXMSW__
 	wxArtProvider::Push(new HexEditorArtProvider); //Using similar MacOSX icons. Much more better than wx ones...
 #endif
+	MyFileHistory = new wxFileHistory( );
+	MyFileHistory->UseMenu( menuFileOpenRecent );
+	menuFileOpenRecent->Remove( *menuFileOpenRecent->GetMenuItems().begin() ); //Removes "no recent file" message
+	MyFileHistory->Load( *wxConfigBase::Get() );
+
 	PrepareAUI();
 
 	MyAUI->Update();
@@ -50,6 +55,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	this->Connect( idInjection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
+	this->Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
@@ -80,6 +86,7 @@ HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	this->Disconnect( idInjection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
 
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
@@ -209,7 +216,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-	for( int i=0 ; i < sizeof(arr) ; i++ ){
+	for( unsigned i=0 ; i < sizeof(arr) ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
@@ -219,7 +226,7 @@ void HexEditorFrame::ActionEnabler( void ){
 
 void HexEditorFrame::ActionDisabler( void ){
 	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInjection, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
-	for( int i=0 ; i < sizeof(arr) ; i++ ){
+	for( unsigned i=0 ; i < sizeof(arr) ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
 		}
@@ -232,6 +239,17 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel );
 	if(x->FileOpen( flname )){
 		MyNotebook->AddPage( x, flname.GetFullName(), true );
+
+		//For loop updates Open Recent Menu properly.
+		int found = -1;
+		for( unsigned i=0; i < MyFileHistory->GetCount() ; i++)
+			if( MyFileHistory->GetHistoryFile( i ) == flname.GetFullPath() )
+				found = i;
+
+		if( found != -1 )
+				MyFileHistory->RemoveFileFromHistory( found );
+		MyFileHistory->AddFileToHistory( flname.GetFullPath() );
+		MyFileHistory->Save( *wxConfigBase::Get() );
 		ActionEnabler();
 		}
 	else{
@@ -305,6 +323,10 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			filediag.Destroy();
 			}
 		return; // Without this, wxID_OPEN retriggers this function again under wxMSW
+		}
+	else if( event.GetId() >= wxID_FILE1 and  event.GetId() <= wxID_FILE1+9){
+		wxFileName flnm( MyFileHistory->GetHistoryFile( wxID_FILE1 - event.GetId() ) );
+		OpenFile( flnm );
 		}
 	else{
 		if( MyNotebook->GetPageCount() ){

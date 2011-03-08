@@ -39,9 +39,9 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	m_static_offset->SetLabel( _("Offset: DEC") );
 
 #ifdef __WXOSX__
-	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"));// Fonts are too small on wxOSX 2.9.x series.
+	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"), wxFONTENCODING_CP437);// Fonts are too small on wxOSX 2.9.x series.
 #else
-	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT(""));
+	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT(""), wxFONTENCODING_CP437);
 #endif
 	SetFont( stdfont );
 
@@ -166,13 +166,15 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 //-----VISUAL FUNCTIONS------//
 void HexEditorCtrl::SetFont( wxFont f ){
 	stdfont = f;
-	m_static_offset->SetFont( f );
-	m_static_adress->SetFont( f );
-	m_static_byteview->SetFont( f );
+//	stdfont = wxFont t(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"));
+
+	m_static_offset->SetFont( stdfont );
+	m_static_adress->SetFont( stdfont );
+	m_static_byteview->SetFont( stdfont );
 
 	wxTextAttr Style( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
 					wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
-					f);
+					stdfont);
 
 	offset_ctrl->SetSelectionStyle( Style );
 	hex_ctrl->SetSelectionStyle( Style );
@@ -180,12 +182,11 @@ void HexEditorCtrl::SetFont( wxFont f ){
 
 	Style = wxTextAttr( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ),
 										wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ),
-										f);
+										stdfont);
 
    offset_ctrl->SetDefaultStyle( Style );
    hex_ctrl->SetDefaultStyle( Style );
    text_ctrl->SetDefaultStyle( Style );
-
 	}
 
 bool HexEditorCtrl::Selector(){

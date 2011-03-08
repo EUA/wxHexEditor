@@ -43,6 +43,7 @@
 #include <wx/url.h>
 #include <wx/textdlg.h>
 #include <wx/mstream.h>
+#include <wx/docview.h>
 
 #if defined __WXMAC__
 #include "../resources/osx/png2c.h"
@@ -91,6 +92,7 @@ class HexEditorFrame : public HexEditorGui {
 		InfoPanel *MyInfoPanel;
 		TagPanel *MyTagPanel;
 		TagPanel *MySearchPanel;
+		wxFileHistory *MyFileHistory;
 #ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
 #else

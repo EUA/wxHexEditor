@@ -324,9 +324,9 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			}
 		return; // Without this, wxID_OPEN retriggers this function again under wxMSW
 		}
-	else if( event.GetId() >= wxID_FILE1 and  event.GetId() <= wxID_FILE1+9){
-		wxFileName flnm( MyFileHistory->GetHistoryFile( wxID_FILE1 - event.GetId() ) );
-		OpenFile( flnm );
+	else if( event.GetId() >= MyFileHistory->GetBaseId() and event.GetId() <= MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1){
+		wxString filename = MyFileHistory->GetHistoryFile( event.GetId() - MyFileHistory->GetBaseId() );
+		OpenFile( filename );
 		}
 	else{
 		if( MyNotebook->GetPageCount() ){
@@ -425,11 +425,25 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 				}
 	#endif
 #elif defined( __WXMSW__ )
-		windowsHDD windevs;
-		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
-		for(int i=0; i < DevVector.size();i++)
+ 		windowsHDD windevs;
+ 		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
+ 		for(int i=0; i < DevVector.size();i++)
 			disks.Add(wxString(DevVector[i]));
+/*
+		wxMessageBox(disks.Item(i),wxT("Device to open"));
+		HANDLE hDevice;
+		hDevice = CreateFile(disks.Item(i),
+           GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+           NULL, OPEN_EXISTING, 0, NULL);
 
+		int fd = _open_osfhandle((long) hDevice, 0);
+      HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel );
+			if(x->FileOpenfd( fd,disks.Item(i) )){
+				MyNotebook->AddPage( x, disks.Item(i), true );
+				ActionEnabler();
+				}
+        return;
+*/
 #endif
 		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
@@ -770,13 +784,10 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();
 	for ( size_t n = 0; n < nFiles; n++ ) {
 		wxFileName myfl( filenames[n] );
-		if ( myfl.FileExists() ){
-			HexFramework->MyNotebook->AddPage( new HexEditor( HexFramework->MyNotebook, 1, HexFramework->statusBar, HexFramework->MyInterpreter, HexFramework->MyInfoPanel, HexFramework->MyTagPanel, &myfl), myfl.GetFullName(), true);
-			HexFramework->ActionEnabler();
-			}
-		else{
+		if ( myfl.FileExists() )
+			HexFramework->OpenFile( myfl );
+		else
 			wxMessageBox( wxString(_("Dropped file:\n")).Append( myfl.GetPath() ).Append(_("\ncannot open!")),_("Error"), wxOK|wxICON_ERROR );
-			}
 		}
 	return TRUE;
 	}

@@ -65,6 +65,7 @@ class HexEditorFrame : public HexEditorGui {
 		~HexEditorFrame();
 		void TagHideAll();
 		void OpenFile(wxFileName flname);
+
 		HexEditor* GetActiveHexEditor(void);
 
 	protected:

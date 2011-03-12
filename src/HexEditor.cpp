@@ -111,6 +111,25 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		wxLogError(_("Critical Error. File pointer is not empty!"));
 		return false;
 		}
+	//else if( myfilename.GetFullName()[0] == '\\' ){ //Windows device file! Let pass it and process under FAM
+	else if( 1 ){ //Windows device file! Let pass it and process under FAM
+		myfile = new FAL( myfilename ); //OpenDevice
+		if(myfile->IsOpened()) {
+			myscroll = new scrollthread(0,this);
+//			copy_mark = new copy_maker();
+//			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
+//			tagpanel->Set(MainTagArray);
+			LoadFromOffset(0, true);
+			//offset_scroll->SetScrollbar(offset_scroll->GetThumbPosition(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
+			//std::cout << "FileLength() / ByteCapacity() :" << FileLength() << " - " << ByteCapacity() << " : " << (FileLength() / ByteCapacity())+1 << "\n";
+			SetLocalHexInsertionPoint(0);
+			return true;
+			}
+		else {
+			wxMessageBox(_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, this);
+			return false;
+			}
+		}
 	else if( myfilename.IsFileReadable() ) { //IsFileReadable
 		if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 			myfile = new FAL( myfilename, FAL::ReadWrite );

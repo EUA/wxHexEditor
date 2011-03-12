@@ -75,7 +75,7 @@ WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 class FAL : private wxFile{
 	public:
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
-	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, bool is_block_dev=false);
+	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		~FAL();
 //		friend class FindDialog;
 

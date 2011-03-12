@@ -210,6 +210,7 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 	#ifndef __WXMSW__ //Windows follows different pattern
 			int block_size=0;
 			int64_t block_count=0;
+			int error = ioctl(FD, BLKSSZGET, &block_size);
 		#ifdef __WXGTK__
 			int error = ioctl(FD, BLKSSZGET, &block_size);
 		#elif defined (__WXMAC__)

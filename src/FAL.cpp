@@ -27,19 +27,75 @@
 
 #include "FAL.h"
 #include <wx/arrimpl.cpp>
+
+#ifdef __WXMSW__
+#include <windows.h>
+#include <winioctl.h>
+#endif
+
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
-FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, bool is_block_dev ){
+FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	file_access_mode = FAM;
 	the_file = myfilename;
-	if( is_block_dev ){
-// TODO (death#1#): Block size detection routine for win
-			BlockSize=512;
-			}
-		else
-			BlockSize=0;
+	BlockSize = ForceBlockRW;
+
+#ifdef __WXMSW__
+	//Windows special device opening
+	if(myfilename.GetFullPath().StartsWith( ".:")
+		or myfilename.GetFullPath().StartsWith( "\\Device\\Harddisk") ){
+
+		wxString devnm;
+		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
+		if(myfilename.GetFullPath().StartsWith( ".:"))
+			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
+		else devnm = myfilename.GetFullPath();
+
+		wxMessageBox( devnm, "Opening File" );
+
+		HANDLE hDevice;
+		hDevice = CreateFile( devnm,
+           GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+           NULL, OPEN_EXISTING, 0, NULL);
+
+		int fd = _open_osfhandle((long) hDevice, 0);
+
+		wxFile::Attach( fd );
+
+		HANDLE dev;
+		DWORD dwResult;
+		BOOL bResult;
+
+		DISK_GEOMETRY driveInfo;
+		char szCFDevice[MAX_PATH];
+		static LONGLONG deviceSize = 0;
+		wchar_t size[100] = {0}, partTypeStr[1024] = {0}, *partType = partTypeStr;
+
+		BOOL drivePresent = FALSE;
+		BOOL removable = FALSE;
+
+		drivePresent = TRUE;
+
+
+		dev = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+
+		DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0,
+			&driveInfo, sizeof (driveInfo), &dwResult, NULL);
+
+
+		BlockSize=driveInfo.BytesPerSector;
+		BlockCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
+		char buffer1[100],buffer2[100];
+		sprintf(buffer1,"Bytes per sector = %ul\n",driveInfo.BytesPerSector );
+		wxMessageBox(wxString(buffer1,wxConvUTF8),wxT("Bytes per sector"));
+		sprintf(buffer2,"total number of bytes = % llu\n",BlockCount*BlockSize);
+		wxMessageBox(wxString(buffer2,wxConvUTF8),wxT("Total Number of Bytes"));
+		return;
+		}
+#endif
 
 	if(myfilename.IsFileReadable()){//FileExists()){
+
 //		if( myfilename.GetFullPath() == wxT("/dev/mem") ){
 //			//Ram device in Unix has need special treatment.
 //			}

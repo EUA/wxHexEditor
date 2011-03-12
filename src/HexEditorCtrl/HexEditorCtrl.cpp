@@ -38,10 +38,12 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 
 	m_static_offset->SetLabel( _("Offset: DEC") );
 
-#ifdef __WXOSX__
+#if defined( __WXOSX__ )
 	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"), wxFONTENCODING_CP437);// Fonts are too small on wxOSX 2.9.x series.
+#elif defined( __WXMSW__ )
+	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Courier New"), wxFONTENCODING_CP437);
 #else
-	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT(""), wxFONTENCODING_CP437);
+	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_CP437);
 #endif
 	SetFont( stdfont );
 

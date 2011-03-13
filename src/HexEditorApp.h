@@ -33,17 +33,18 @@
 #ifndef WXHEXEDITORAPP_H
 #define WXHEXEDITORAPP_H
 
-#define _VERSION_ "0.09"
-#define _VERSION_STR_ "v0.09 Alpha SVN"
-
+#define _VERSION_ "0.10"
+#define _VERSION_STR_ "v0.10 Pre-Beta"
 #include <wx/app.h>
 #include "HexEditorFrame.h"
 class wxHexEditorApp : public wxApp
 {
     public:
         virtual bool OnInit();
+#ifdef _DEBUG_EVENTS_
         int FilterEvent(wxEvent &evt);
-//        void OnMouseMove(wxMouseEvent &event);
+        void OnMouseMove(wxMouseEvent &event);
+#endif
 	private:
 		class HexEditorFrame* frame;
 };

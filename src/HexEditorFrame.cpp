@@ -254,7 +254,6 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 		}
 	else{
 		x->Destroy();
-		wxMessageBox( _("File cannot open!"),_T("Error!"), wxICON_ERROR, this );
 		}
 	}
 

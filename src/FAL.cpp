@@ -51,45 +51,24 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
 		else devnm = myfilename.GetFullPath();
 
-		wxMessageBox( devnm, "Opening File" );
+		wxMessageBox( _T("Warning: Windows Disk access code is in Alpha state.\nPlease do not try to modify your partitions with it!"), "Opening File" );
 
 		HANDLE hDevice;
-		hDevice = CreateFile( devnm,
-           GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-           NULL, OPEN_EXISTING, 0, NULL);
+		hDevice = CreateFile( devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 
-		int fd = _open_osfhandle((long) hDevice, 0);
-
-		wxFile::Attach( fd );
-
-		HANDLE dev;
 		DWORD dwResult;
-		BOOL bResult;
-
 		DISK_GEOMETRY driveInfo;
-		char szCFDevice[MAX_PATH];
-		static LONGLONG deviceSize = 0;
-		wchar_t size[100] = {0}, partTypeStr[1024] = {0}, *partType = partTypeStr;
-
-		BOOL drivePresent = FALSE;
-		BOOL removable = FALSE;
-
-		drivePresent = TRUE;
-
-
-		dev = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
-
-		DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0,
-			&driveInfo, sizeof (driveInfo), &dwResult, NULL);
-
+		//dev = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+		DeviceIoControl (hDevice, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
 
 		BlockSize=driveInfo.BytesPerSector;
 		BlockCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
-		char buffer1[100],buffer2[100];
-		sprintf(buffer1,"Bytes per sector = %ul\n",driveInfo.BytesPerSector );
-		wxMessageBox(wxString(buffer1,wxConvUTF8),wxT("Bytes per sector"));
-		sprintf(buffer2,"total number of bytes = % llu\n",BlockCount*BlockSize);
-		wxMessageBox(wxString(buffer2,wxConvUTF8),wxT("Total Number of Bytes"));
+#ifdef _DEBUG_
+		wxMessageBox(wxString::Format( wxT("Bytes per sector = %ul\nTotal number of bytes = % llu\n"),BlockSize,BlockCount) ,wxT("File Info"));
+#endif
+		int fd = _open_osfhandle((long) hDevice, 0);
+		wxFile::Attach( fd );
+
 		return;
 		}
 #endif
@@ -106,12 +85,13 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			else
 				Open(myfilename.GetFullPath(), wxFile::read_write);
 
-if( BlockSize )
-		BlockCount=wxFile::Length()/BlockSize;
+			if( ForceBlockRW )
+				BlockCount=wxFile::Length()/ForceBlockRW;
 
 			if(! IsOpened()){
 				file_access_mode = AccessInvalid;
-				wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
+				///Upper level has error message box too.
+				//wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 				}
 			}
 		}
@@ -346,9 +326,9 @@ void FAL::SetXORKey( wxMemoryBuffer Key){
 	XORview=Key;
 	}
 
-void FAL::ApplyXOR( char* buffer, int size, uint64_t from ){
+void FAL::ApplyXOR( char* buffer, unsigned size, uint64_t from ){
 	if( XORview.GetDataLen() ){
-		int Xi = from%XORview.GetDataLen(); //calculates keyshift
+		unsigned Xi = from%XORview.GetDataLen(); //calculates keyshift
 		for(unsigned int i = 0; i < size; i++){
 			buffer[i] ^= XORview[Xi];
 			if(Xi++ == XORview.GetDataLen()-1)
@@ -394,7 +374,7 @@ bool FAL::IsInjected( void ){
 
 ///State of the Art Read Function
 //Only recursion could handle such a complex operation. Comes my mind while I am trying to sleep.
-long FAL::ReadR( char* buffer, int size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
+long FAL::ReadR( char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
 	uint64_t loc = from; //?
 	int readsize=0;
 

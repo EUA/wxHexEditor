@@ -203,33 +203,35 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 												 S_ISLNK( sbufptr->st_mode ) ? _("LINK") :
 												 S_ISSOCK( sbufptr->st_mode ) ? _("SOCKET") :
 												#endif
+												#ifdef __WXMSW__ //S_ISBLK doesn't work on windows.
+												 wxT("BLOCK")
+												#else
 												 wxT("?")
+												#endif
 												 )+wxT("\n");
 
-		if(S_ISBLK( sbufptr->st_mode )){
-	#ifndef __WXMSW__ //Windows follows different pattern
+		if(S_ISBLK( sbufptr->st_mode )
+#ifdef __WXMSW__
+			or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
+#endif
+			){
 			int block_size=0;
 			int64_t block_count=0;
-			int error = ioctl(FD, BLKSSZGET, &block_size);
 		#ifdef __WXGTK__
-			int error = ioctl(FD, BLKSSZGET, &block_size);
+			ioctl(FD, BLKSSZGET, &block_size);
+			ioctl(FD, BLKGETSIZE64, &block_count);
 		#elif defined (__WXMAC__)
-			int error = ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
+			ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
+			ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
+		#elif defined (__WXMSW__)
+			DWORD dwResult;
+			DISK_GEOMETRY driveInfo;
+			DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
+			block_size=driveInfo.BytesPerSector;
+			block_count=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 		#endif
-				if(error)
-					std::cerr << "Can't get block size of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
-				else
-					info_string += _("Sector Size:\t") + wxString::Format(wxT("%d\n"), block_size);
-		#ifdef __WXGTK__
-				error  = ioctl(FD, BLKGETSIZE64, &block_count);
-		#elif defined (__WXMAC__)
-				error = ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
-		#endif
-				if (error)
-					std::cerr << "Can't get block count of " << flnm.GetFullName().ToAscii() << strerror(errno) << errno << std::endl;
-				else
-					info_string += _("Sector Count:\t") + wxString::Format(wxT("%d\n"), block_count/block_size);
-	#endif
+			info_string += _("Sector Size: ") + wxString::Format(wxT("%d\n"), block_size);
+			info_string += _("Sector Count: ") + wxString::Format(wxT("%d"), block_count/block_size);
 			}
 
 		if(XORKey != wxEmptyString)

@@ -98,7 +98,7 @@ class FAL : private wxFile{
 		int  fd() const { return wxFile::fd(); };
 		long Read( char* buffer, int size );
 		void SetXORKey( wxMemoryBuffer );
-		void ApplyXOR( char* buffer, int size, uint64_t from );
+		void ApplyXOR( char* buffer, unsigned size, uint64_t from );
 
 		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node
 		bool IsAvailable_Undo( void );
@@ -108,7 +108,7 @@ class FAL : private wxFile{
 		int GetBlockSize( void );
 
 	protected:
-		long ReadR( char* buffer, int size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );
+		long ReadR( char* buffer, unsigned size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );
 
 		void RemoveTail( DiffNode *remove_node );	//remove further tails.
 		DiffNode* NewNode( uint64_t start_byte, const char* data, int64_t size, bool extension = false );

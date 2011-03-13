@@ -57,40 +57,38 @@ bool wxHexEditorApp::OnInit()
         }
     return true;
 }
+#ifdef _DEBUG__EVENTS_
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){
-#if defined(_DEBUG_)
-//	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
-//		{
-//		wxFocusEvent* event = static_cast<wxFocusEvent*>(&mevent);
-//		std::cout << "Frame : " << frame << std::endl;
-//		std::cout << "event.GetEventType(): " << event->GetEventType() << std::endl;
-//		std::cout << "event.GetEventObject(): " << event->GetEventObject() << std::endl;
-//		}
-//	if( mevent.IsKindOf(CLASSINFO(wxMouseEvent)) ){
-//		wxMouseEvent* event = static_cast<wxMouseEvent*>(&mevent);
-//		{
-//		std::cout << "Frame : " << frame << std::endl;
-//		std::cout << "event.GetEventType(): " << event->GetEventType() << std::endl;
-//		std::cout << "event.GetEventObject(): " << event->GetEventObject() << std::endl;
-//
-//		if(event->GetEventType() == wxEVT_MOUSE_CAPTURE_LOST)
-//			std::cout << "event.wxEVT_MOUSE_CAPTURE_LOSTwxEVT_MOUSE_CAPTURE_LOSTwxEVT_MOUSE_CAPTURE_LOST(): " << std::endl;
-//		}
-//	}
-	#endif
+	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
+		{
+		wxFocusEvent* event = static_cast<wxFocusEvent*>(&mevent);
+		std::cout << "Frame : " << frame << std::endl;
+		std::cout << "event.GetEventType(): " << event->GetEventType() << std::endl;
+		std::cout << "event.GetEventObject(): " << event->GetEventObject() << std::endl;
+		}
+	if( mevent.IsKindOf(CLASSINFO(wxMouseEvent)) ){
+		wxMouseEvent* event = static_cast<wxMouseEvent*>(&mevent);
+		{
+		std::cout << "Frame : " << frame << std::endl;
+		std::cout << "event.GetEventType(): " << event->GetEventType() << std::endl;
+		std::cout << "event.GetEventObject(): " << event->GetEventObject() << std::endl;
 
+		if(event->GetEventType() == wxEVT_MOUSE_CAPTURE_LOST)
+			std::cout << "event.wxEVT_MOUSE_CAPTURE_LOSTwxEVT_MOUSE_CAPTURE_LOSTwxEVT_MOUSE_CAPTURE_LOST(): " << std::endl;
+		}
+	}
 	mevent.Skip( );
 	return -1;
 	}
 
-//void wxHexEditorApp::OnMouseMove(wxMouseEvent &event){
-//#if defined(_DEBUG_) && _DEBUG_ > 1
-//	if( event.Moving() )
-//		std::cout << "HexEditorApp::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
-//				  << "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
-//	else
-//		std::cout << "HexEditorApp::OnMouseMove Strange Event" << std::endl;
-//#endif
-//	event.Skip();
-//	return;
-//	}
+
+void wxHexEditorApp::OnMouseMove(wxMouseEvent &event){
+	if( event.Moving() )
+		std::cout << "HexEditorApp::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
+				  << "\tLeft mouse button:" << event.LeftIsDown() << std::endl;
+	else
+		std::cout << "HexEditorApp::OnMouseMove Strange Event" << std::endl;
+	event.Skip();
+	return;
+	}
+#endif

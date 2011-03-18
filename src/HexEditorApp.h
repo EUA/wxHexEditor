@@ -24,7 +24,7 @@
 /***************************************************************
  * Name:      wxHexEditorApp.h
  * Purpose:   Defines Application Class
- * Author:    Death Knight (death_knight@gamebox.net)
+ * Author:    Death Knight (spamjunkeater@gmail.com)
  * Created:   2008-05-12
  * Copyright: Death Knight (wxhexeditor.sourceforge.net)
  * License:   GPL v2

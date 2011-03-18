@@ -113,7 +113,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 		//Windows Device Loader
 #ifdef __WXMSW__
-	if( myfilename.GetFullPath().StartsWith( ".:")
+	if( myfilename.GetFullPath().StartsWith( wxT(".:"))
 		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){ //Windows device file! Let pass it and process under FAM
 		myfile = new FAL( myfilename ); //OpenDevice
 		if(myfile->IsOpened()) {
@@ -163,7 +163,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 void HexEditor::FileSetXORKey( bool enable ){
 	wxMemoryBuffer x;
 	if( enable ){
-		XORKey = wxGetTextFromUser( _("Note: For witching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"\
+		XORKey = wxGetTextFromUser( _("Note: For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"\
 												"Also you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled.\n\n"\
 												"Please Enter XOR key."), _("XORView Thru Warning!") );
 		x.AppendData( XORKey.ToAscii(), XORKey.Len() );

@@ -42,16 +42,16 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 
 #ifdef __WXMSW__
 	//Windows special device opening
-	if(myfilename.GetFullPath().StartsWith( ".:")
-		or myfilename.GetFullPath().StartsWith( "\\Device\\Harddisk") ){
+	if(myfilename.GetFullPath().StartsWith( wxT(".:"))
+		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk")) ){
 
 		wxString devnm;
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
-		if(myfilename.GetFullPath().StartsWith( ".:"))
+		if(myfilename.GetFullPath().StartsWith( wxT(".:")))
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
 		else devnm = myfilename.GetFullPath();
 
-		wxMessageBox( _T("Warning: Windows Disk access code is in Alpha state.\nPlease do not try to modify your partitions with it!"), "Opening File" );
+		wxMessageBox( _("Warning: Windows Disk access code is in Alpha state.\nPlease do not try to modify your partitions with it!"), _("Opening File") );
 
 		HANDLE hDevice;
 		hDevice = CreateFile( devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);

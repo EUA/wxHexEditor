@@ -27,7 +27,7 @@
 #ifdef  __WXMAC__
 	#include <dirent.h>	//for pre 2.9.0 wx releases
 #elif defined( __WXMSW__ )
-	#include "HDwin.h"	//for
+	#include "HDwin.h"
 #endif
 
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
@@ -55,12 +55,12 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	this->Connect( idInjection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
-	this->Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
+//	this->Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 
-	bool update_enable = true;
+	bool update_enable = false;
 	if ( ! wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
 		update_enable = true;
 		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
@@ -68,7 +68,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	if( update_enable ){
 		double last_chk=0;
 		wxConfigBase::Get()->Read(_T("LastUpdateCheckTime"), (&last_chk));
-		//if( wxDateTime::Now() - wxDateSpan::Week() > wxDateTime( last_chk ) )	//One check for a week enough
+		if( wxDateTime::Now() - wxDateSpan::Week() > wxDateTime( last_chk ) )	//One check for a week enough
 			{
 			wxConfigBase::Get()->Write(_T("LastUpdateCheckTime"), static_cast< double >( wxDateTime::Now().GetTicks()) );
 			VersionChecker vc( wxT("http://wxhexeditor.sourceforge.net/version.php"), wxT(_VERSION_) );
@@ -86,7 +86,7 @@ HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	this->Disconnect( idInjection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
+//	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
 
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
@@ -428,21 +428,6 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
  		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
  		for(int i=0; i < DevVector.size();i++)
 			disks.Add(wxString(DevVector[i]));
-/*
-		wxMessageBox(disks.Item(i),wxT("Device to open"));
-		HANDLE hDevice;
-		hDevice = CreateFile(disks.Item(i),
-           GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-           NULL, OPEN_EXISTING, 0, NULL);
-
-		int fd = _open_osfhandle((long) hDevice, 0);
-      HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel );
-			if(x->FileOpenfd( fd,disks.Item(i) )){
-				MyNotebook->AddPage( x, disks.Item(i), true );
-				ActionEnabler();
-				}
-        return;
-*/
 #endif
 		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
@@ -508,13 +493,13 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	AllAbout.SetName(_T("wxHexEditor"));
 	AllAbout.SetVersion( _T(_VERSION_STR_) );
 	AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
-	AllAbout.SetCopyright(_T("(C) 2006-2010 Erdem U. Altinyurt"));
+	AllAbout.SetCopyright(_T("(C) 2006-2011 Erdem U. Altinyurt"));
 	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
 	AllAbout.AddArtist( _T("Vlad Adrian") );
 	AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
 
 	AllAbout.SetLicense( _T("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland.\n"
-			 "Copyright (C) 2010  Erdem U. Altinyurt\n"
+			 "Copyright (C) 2011  Erdem U. Altinyurt\n"
 			 "\n"
 			 "This program is free software; you can redistribute it and/or\n"
 			 "modify it under the terms of the GNU General Public License\n"
@@ -531,7 +516,7 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 			 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
 			 "\n"
 			 "home:  wxhexeditor.sourceforge.net\n"
-			 "email: death_knight@gamebox.net\n")
+			 "email: spamjunkeater@gmail.com\n")
 			 );
 
 	wxAboutBox(AllAbout);

@@ -88,7 +88,23 @@ void DataInterpreter::OnCheckEdit( wxCommandEvent& event ){
 // TODO (death#1#): Needed to activate INSERT mode when pressed to Edit check
 //		wxKeyEvent emulate_insert(WXK_INSERT);
 //		OnTextEdit( emulate_insert );
+//
+//		wxTextAttr at;
+//		m_textctrl_binary->GetStyle( 0, at );
+//		at.SetTextColour( *wxGREEN );
+//		//m_textctrl_binary->SetStyle( 0,8, at );
+//		m_textctrl_binary->SetDefaultStyle( at );
+//		m_textctrl_binary->SetValue(m_textctrl_binary->GetValue());
 		}
+	else{
+//		wxTextAttr at;
+//		m_textctrl_binary->GetStyle( 0, at );
+//		at.SetBackgroundColour( *wxBLACK );
+//		//m_textctrl_binary->SetStyle( 0,8, at );
+//		m_textctrl_binary->SetDefaultStyle( at );
+//		m_textctrl_binary->SetValue(m_textctrl_binary->GetValue());
+		}
+
 	}
 void DataInterpreter::OnTextMouse( wxMouseEvent& event ){
 	if( event.ButtonDown() ) //Just allowed left mouse, setted up by wxFormBuilder.

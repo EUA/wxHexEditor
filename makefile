@@ -1,6 +1,6 @@
 WXCONFIG = wx-config
 CPP = `$(WXCONFIG) --cxx`
-CXXFLAGS= `$(WXCONFIG) --cxxflags` -MMD -c ${CFLAGS}
+CXXFLAGS= `$(WXCONFIG) --cxxflags` -MMD -c ${OPTFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
@@ -33,7 +33,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.09 Alpha
+VERSION = 0.10 Pre-Beta
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -109,7 +109,7 @@ mac: $(SOURCES) maclink
 \t<string>NSApplication</string>\n\
 \
 \t<key>NSHumanReadableCopyright</key>\n\
-\t<string> (c) 2006-2010, Erdem U. Altinyurt</string>\n\
+\t<string> (c) 2006-2011, Erdem U. Altinyurt</string>\n\
 \
 </dict>\n\
 </plist>\n\n" > $(EXECUTABLE_DIR_MAC)/Contents/Info.plist

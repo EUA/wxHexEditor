@@ -48,6 +48,7 @@ bool wxHexEditorApp::OnInit()
     frame = new HexEditorFrame( 0L );
 //    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
     frame->Show();
+    wxYield();
     // Open all of the files specified on the command line (assumes no flags)
     for(int ii = 1; ii < argc; ++ii){
         wxFileName fn = wxFileName(argv[ii]);

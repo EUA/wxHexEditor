@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010 Erdem U. Altinyurt
+# Copyright (c) 2006-2011 Erdem U. Altinyurt
 # Thanks for oc2pus
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
@@ -11,7 +11,7 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.09
+Version:		0.10
 Release:		1
 License:		GPL
 Group:			Editors
@@ -20,7 +20,11 @@ Source0:		%{name}-v%{version}-src.tar.bz2
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-BuildRequires:  wxGTK-devel >= 2.8.9  
+%if 0%{?suse_version} >= 1140
+BuildRequires:  wxWidgets-devel
+%else
+BuildRequires:  wxGTK-devel >= 2.8.9 
+%endif
 %if 0%{?suse_version}  
 BuildRequires:  fdupes update-desktop-files
 %endif  
@@ -75,6 +79,8 @@ mv resources/%{name}.desktop ./
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Sat Mar 19 2011 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.10-
+- fixed OpenSUSE 11.4 compilation
 * Fri Apr 23 2010 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.09-0
 - closing to final
 * Tue Feb 9 2009 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.08-0

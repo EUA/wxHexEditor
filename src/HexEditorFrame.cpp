@@ -150,7 +150,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddSeparator();
 	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR), _T("Cuts selected block and copies to clipboard"));
 	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR), _T("Deletes selected block"));
-	Toolbar->AddTool(idInjection, _T("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _T("Insert"));
+	Toolbar->AddTool(idInsert, _T("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _T("Insert"));
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
    Toolbar->Realize();
@@ -216,7 +216,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 void HexEditorFrame::ActionEnabler( void ){
 	int arr[] = { idFileRO, idFileRW, idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idGotoOffset, wxID_PASTE };
-	for( unsigned i=0 ; i < sizeof(arr) ; i++ ){
+	for( unsigned i=0 ; i < sizeof(arr)/4 ; i++ ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
@@ -225,8 +225,8 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInjection, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
-	for( unsigned i=0 ; i < sizeof(arr) ; i++ ){
+	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInsert, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
+	for( unsigned i=0 ; i < sizeof(arr)/4 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
 		}
@@ -364,7 +364,9 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_CUT:			MyHexEditor->CutSelection();			break;
 					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
 					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
-					case idInjection:		MyHexEditor->InsertBytes();			break;
+					case idInsert:			MyHexEditor->InsertBytes();			break;
+					//idInjection for Right click Menu Insertion Event
+					case idInjection:			MyHexEditor->InsertBytes();			break;
 					case wxID_FIND:		MyHexEditor->FindDialog();				break;
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
@@ -394,7 +396,12 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 
 void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	if( event.GetId() == idXORView )
-			GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
+		GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
+	else if( event.GetId() == idCompare ){
+		::CompareDialog *mcd = new ::CompareDialog( this );
+		mcd->ShowModal();
+		mcd->Destroy();
+		}
 	event.Skip();
 	}
 
@@ -617,16 +624,16 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
 				Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
 				mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
-				Toolbar->EnableTool( idInjection, event.GetString() == wxT("NotSelected") );
-				mbar->Enable( idInjection, event.GetString() == wxT("NotSelected") );
+				Toolbar->EnableTool( idInsert, event.GetString() == wxT("NotSelected") );
+				mbar->Enable( idInsert, event.GetString() == wxT("NotSelected") );
 				}
 			else{
 				Toolbar->EnableTool( wxID_CUT, false );
 				mbar->Enable( wxID_CUT, false );
 				Toolbar->EnableTool( wxID_DELETE, false );
 				mbar->Enable( wxID_DELETE, false );
-				Toolbar->EnableTool( idInjection, false );
-				mbar->Enable( idInjection, false);
+				Toolbar->EnableTool( idInsert, false );
+				mbar->Enable( idInsert, false);
 				}
 			Toolbar->Refresh();
 			}
@@ -777,7 +784,7 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	}
 
 VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *parent, wxWindowID id )
-:UpdateDialog_Gui( parent, id ){
+:UpdateDialogGui( parent, id ){
 	wxURL url( _url );
 	if (url.IsOk()){
 		url.GetProtocol().SetTimeout(3);

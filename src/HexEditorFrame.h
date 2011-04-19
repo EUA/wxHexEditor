@@ -120,7 +120,7 @@ class DnDFile : public wxFileDropTarget{
 		HexEditorFrame *HexFramework;
 	};
 
-class VersionChecker : public UpdateDialog_Gui {
+class VersionChecker : public UpdateDialogGui {
 	public:
 		VersionChecker( wxString _url, wxString current_version, wxWindow *parent = NULL, wxWindowID id = 1  );
 		void OnChkDisplay( wxCommandEvent& event );

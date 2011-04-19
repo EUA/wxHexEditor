@@ -99,6 +99,11 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	editMenu->Append( menuEditDelete );
 	menuEditDelete->Enable( false );
 	
+	wxMenuItem* menuEditInsert;
+	menuEditInsert = new wxMenuItem( editMenu, idInsert, wxString( wxT("Insert") ) , wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditInsert );
+	menuEditInsert->Enable( false );
+	
 	wxMenuItem* m_separator3;
 	m_separator3 = editMenu->AppendSeparator();
 	
@@ -145,9 +150,8 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuToolChecksum->Enable( false );
 	
 	wxMenuItem* menuToolCompare;
-	menuToolCompare = new wxMenuItem( toolsMenu, wxID_ANY, wxString( wxT("Compare Files") ) , wxEmptyString, wxITEM_NORMAL );
+	menuToolCompare = new wxMenuItem( toolsMenu, idCompare, wxString( wxT("Compare Files") ) , wxEmptyString, wxITEM_NORMAL );
 	toolsMenu->Append( menuToolCompare );
-	menuToolCompare->Enable( false );
 	
 	wxMenuItem* menuToolsXORView;
 	menuToolsXORView = new wxMenuItem( toolsMenu, idXORView, wxString( wxT("XORView Thru") ) , wxT("View your XOR encrypted file without decrypting!"), wxITEM_CHECK );
@@ -234,6 +238,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuEditCut->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditPaste->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuEditInsert->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditFind->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditReplace->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditGotooffset->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -277,6 +282,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_CUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_PASTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_DELETE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idInsert, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_FIND, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_REPLACE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( idGotoOffset, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -289,7 +295,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idTagPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idTagPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolMenu ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
+	this->Disconnect( idCompare, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idXORView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
@@ -684,7 +690,7 @@ FindDialogGui::~FindDialogGui()
 	
 }
 
-UpdateDialog_Gui::UpdateDialog_Gui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+UpdateDialogGui::UpdateDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -714,12 +720,125 @@ UpdateDialog_Gui::UpdateDialog_Gui( wxWindow* parent, wxWindowID id, const wxStr
 	MainBoxSizer->Fit( this );
 	
 	// Connect Events
-	wxchk_display->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( UpdateDialog_Gui::OnChkDisplay ), NULL, this );
+	wxchk_display->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( UpdateDialogGui::OnChkDisplay ), NULL, this );
 }
 
-UpdateDialog_Gui::~UpdateDialog_Gui()
+UpdateDialogGui::~UpdateDialogGui()
 {
 	// Disconnect Events
-	wxchk_display->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( UpdateDialog_Gui::OnChkDisplay ), NULL, this );
+	wxchk_display->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( UpdateDialogGui::OnChkDisplay ), NULL, this );
+	
+}
+
+CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer5;
+	fgSizer5 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizer5->AddGrowableCol( 1 );
+	fgSizer5->SetFlexibleDirection( wxBOTH );
+	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_TextFile1 = new wxStaticText( this, wxID_ANY, wxT("File #1"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_TextFile1->Wrap( -1 );
+	fgSizer5->Add( m_TextFile1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	filePick1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN );
+	fgSizer5->Add( filePick1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	m_TextFile2 = new wxStaticText( this, wxID_ANY, wxT("File #2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_TextFile2->Wrap( -1 );
+	fgSizer5->Add( m_TextFile2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	filePick2 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN );
+	fgSizer5->Add( filePick2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer16->Add( fgSizer5, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer2;
+	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Search For") ), wxHORIZONTAL );
+	
+	m_radioDifferent = new wxRadioButton( this, wxID_ANY, wxT("Different bytes"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioDifferent->Enable( false );
+	
+	sbSizer2->Add( m_radioDifferent, 1, wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_radioSame = new wxRadioButton( this, wxID_ANY, wxT("Same bytes"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioSame->Enable( false );
+	
+	sbSizer2->Add( m_radioSame, 1, wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer16->Add( sbSizer2, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer25;
+	bSizer25 = new wxBoxSizer( wxHORIZONTAL );
+	
+	checkStopCompare = new wxCheckBox( this, wxID_ANY, wxT("Stop comparison after"), wxDefaultPosition, wxDefaultSize, 0 );
+	checkStopCompare->Enable( false );
+	
+	bSizer25->Add( checkStopCompare, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_spinCtrl2 = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000, 0 );
+	m_spinCtrl2->Enable( false );
+	
+	bSizer25->Add( m_spinCtrl2, 0, wxALL, 5 );
+	
+	m_staticText20 = new wxStaticText( this, wxID_ANY, wxT("hits."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText20->Wrap( -1 );
+	bSizer25->Add( m_staticText20, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer16->Add( bSizer25, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer17;
+	bSizer17 = new wxBoxSizer( wxHORIZONTAL );
+	
+	checkSaveResults = new wxCheckBox( this, wxID_ANY, wxT("Save Results to File"), wxDefaultPosition, wxDefaultSize, 0 );
+	checkSaveResults->Enable( false );
+	
+	bSizer17->Add( checkSaveResults, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	filePickSave = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.txt"), wxDefaultPosition, wxDefaultSize, wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE );
+	filePickSave->Enable( false );
+	
+	bSizer17->Add( filePickSave, 0, wxALL, 5 );
+	
+	bSizer16->Add( bSizer17, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer19;
+	bSizer19 = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnCancel = new wxButton( this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer19->Add( btnCancel, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnCompare = new wxButton( this, wxID_ANY, wxT("Compare"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnCompare->SetDefault(); 
+	bSizer19->Add( btnCompare, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer16->Add( bSizer19, 0, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer16 );
+	this->Layout();
+	bSizer16->Fit( this );
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	checkStopCompare->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	checkSaveResults->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	btnCompare->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+}
+
+CompareDialogGui::~CompareDialogGui()
+{
+	// Disconnect Events
+	checkStopCompare->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	checkSaveResults->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	btnCompare->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	
 }

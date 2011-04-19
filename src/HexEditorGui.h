@@ -35,23 +35,27 @@
 #include <wx/statline.h>
 #include <wx/statbmp.h>
 #include <wx/hyperlink.h>
+#include <wx/filepicker.h>
+#include <wx/spinctrl.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
 #define ID_DEFAULT wxID_ANY // Default
 #define idClose 1000
-#define idGotoOffset 1001
-#define idInterpreter 1002
-#define idToolbar 1003
-#define idInfoPanel 1004
-#define idTagPanel 1005
-#define idXORView 1006
-#define idDeviceRam 1007
-#define idFileRO 1008
-#define idFileRW 1009
-#define idFileDW 1010
-#define ID_CHK_UNSIGNED 1011
-#define ID_CHK_BIGENDIAN 1012
+#define idInsert 1001
+#define idGotoOffset 1002
+#define idInterpreter 1003
+#define idToolbar 1004
+#define idInfoPanel 1005
+#define idTagPanel 1006
+#define idCompare 1007
+#define idXORView 1008
+#define idDeviceRam 1009
+#define idFileRO 1010
+#define idFileRW 1011
+#define idFileDW 1012
+#define ID_CHK_UNSIGNED 1013
+#define ID_CHK_BIGENDIAN 1014
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -236,9 +240,9 @@ class FindDialogGui : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class UpdateDialog_Gui
+/// Class UpdateDialogGui
 ///////////////////////////////////////////////////////////////////////////////
-class UpdateDialog_Gui : public wxDialog 
+class UpdateDialogGui : public wxDialog 
 {
 	private:
 	
@@ -254,8 +258,41 @@ class UpdateDialog_Gui : public wxDialog
 	
 	public:
 		
-		UpdateDialog_Gui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("New wxHexEditor Version!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
-		~UpdateDialog_Gui();
+		UpdateDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("New wxHexEditor Version!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		~UpdateDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CompareDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class CompareDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_TextFile1;
+		wxFilePickerCtrl* filePick1;
+		wxStaticText* m_TextFile2;
+		wxFilePickerCtrl* filePick2;
+		wxRadioButton* m_radioDifferent;
+		wxRadioButton* m_radioSame;
+		wxCheckBox* checkStopCompare;
+		wxSpinCtrl* m_spinCtrl2;
+		wxStaticText* m_staticText20;
+		wxCheckBox* checkSaveResults;
+		wxFilePickerCtrl* filePickSave;
+		wxButton* btnCancel;
+		wxButton* btnCompare;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		CompareDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Compare Files"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~CompareDialogGui();
 	
 };
 

@@ -741,9 +741,9 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	if(XORKey == wxEmptyString){
 		menu.AppendSeparator();
-		menu.Append(wxID_DELETE, _T("Delete (Alpha)"));
-		menu.Append(idInjection, _T("Inject (Alpha)"));
-		menu.Append(wxID_CUT, _T("Cut (Alpha)"));
+		menu.Append(wxID_DELETE, _T("Delete"));
+		menu.Append(idInjection, _T("Insert"));
+		menu.Append(wxID_CUT, _T("Cut"));
 		}
 
 
@@ -758,8 +758,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
 
-
-	if(XORKey == wxEmptyString){
+	if(XORKey == wxEmptyString){//Disable injection on XORkey
 		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
 		menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
 		menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );

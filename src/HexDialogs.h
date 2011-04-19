@@ -83,4 +83,11 @@ class ReplaceDialog : public FindDialog{
 			void OnReplaceAll( void );
 	};
 
+class CompareDialog : public CompareDialogGui{
+	public:
+		CompareDialog( wxWindow* parent );
+	private:
+		void Compare( wxFileName f1, wxFileName f2);
+virtual void EventHandler( wxCommandEvent& event );
+	};
 #endif //__HexEditorDialogs__

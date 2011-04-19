@@ -24,6 +24,7 @@
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
+
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
 	cursor_offset = _cursor_offset;
@@ -409,4 +410,70 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 		OnReplaceAll();
 	else
 		wxBell();
+	}
+
+CompareDialog::CompareDialog( wxWindow* parent ):CompareDialogGui(parent, wxID_ANY){
+	}
+
+void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
+	if(not fl1.IsFileReadable()){
+		wxMessageBox( _("Error, File #1 is not readable.") );
+		return;
+		}
+	if(not fl2.IsFileReadable() ){
+		wxMessageBox( _("Error, File #2 is not readable.") );
+		return;
+		}
+
+	wxFFile f1,f2;
+
+	if( not f1.Open( fl1.GetFullPath() ) ){
+		wxMessageBox( _("Error, File #1 cannot open." ) );
+		return;
+		}
+	if( not f2.Open( fl2.GetFullPath() ) ){
+		wxMessageBox( _("Error, File #2 cannot open." ) );
+		return;
+		}
+
+	wxMemoryBuffer buff1,buff2;
+	int dbuff[1*MB];
+	int dhit = 0;
+	int dsz = 0;
+	bool diff=false;
+	for( int mb = 0 ; not f1.Eof() and not f2.Eof() ; mb++){
+		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
+		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
+		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
+			if(buff1[i] not_eq buff2[i]){
+				if(not diff){
+					diff=true;
+					dbuff[dhit++]=mb+i;
+					}
+				dsz++;
+				}
+			else{//bytes are eq.
+				if(diff){
+					diff=false;
+					dbuff[dhit++]=mb+i-1;
+					dsz = 0;
+					}
+				}
+			}
+		}
+	//DEBUG!
+	for(int i = 0 ; i < dhit/2 ; i+=2){
+		std::cout << "Diff found " << dbuff[i] << " - " << dbuff[i+1] << "      Total:" << dbuff[i+1]-dbuff[i]<< " bytes." << std::endl;
+		}
+	//delete [] dbuff;
+	}
+
+void CompareDialog::EventHandler( wxCommandEvent& event ){
+	if(event.GetId() == btnCancel->GetId())
+		Destroy();
+	else if(event.GetId() == btnCompare->GetId()){
+		if( not filePick1->GetPath().IsEmpty() and not filePick2->GetPath().IsEmpty() ){
+			Compare( filePick1->GetPath(), filePick2->GetPath() );
+			}
+		}
 	}

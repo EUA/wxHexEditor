@@ -263,6 +263,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 		myfile->Close();
 		delete myfile;
 		myfile = NULL;
+		tagpanel->Set(MainTagArray);
 		}
 	return true;
 	}

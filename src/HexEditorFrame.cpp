@@ -163,7 +163,6 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
-					Floatable(false).//due bug. When floating cannot select that tag!
 					Right().Layer(1) );
 	mbar->Check( idTagPanel, true );
 
@@ -175,7 +174,6 @@ void HexEditorFrame::PrepareAUI( void ){
 				BottomDockable(false).
 				MinSize(wxSize(70,100)).
 				BestSize(wxSize(140,100)).
-				Floatable(false).//due bug. When floating cannot select that tag!
 				Show(false).
 				Right().Layer(1) );
 

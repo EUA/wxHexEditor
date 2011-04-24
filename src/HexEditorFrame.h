@@ -66,7 +66,7 @@ class HexEditorFrame : public HexEditorGui {
 		void TagHideAll();
 		void OpenFile(wxFileName flname);
 
-		HexEditor* GetActiveHexEditor(void);
+		class HexEditor* GetActiveHexEditor(void);
 
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );

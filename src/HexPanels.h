@@ -24,6 +24,7 @@
 
 #include "HexEditor.h"
 #include "HexEditorGui.h"
+#include "HexEditorFrame.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorCtrl/wxHexCtrl/wxHexCtrl.h"
 
@@ -112,22 +113,24 @@ class InfoPanel : public InfoPanelGui{
 };
 class TagPanel : public TagPanelGui{
 	public:
-	TagPanel(wxWindow* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:TagPanelGui( parent_, id, pos, size, style){
+	TagPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+	:TagPanelGui( (wxWindow*) parent_, id, pos, size, style)
+		{
+		parent = parent_;
 		};
-
+	class HexEditorFrame *parent;
 	void Set( ArrayOfTAG& MainTagArray, bool WithNumbers=false );
 	void OnTagSelect( wxCommandEvent& event );
 	void OnUpdate( wxCommandEvent& event ){
-//		parent->
 	}
 };
 
 class SearchPanel : public TagPanel{
 	public:
-	SearchPanel(wxWindow* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+	SearchPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 	:TagPanel( parent_, id, pos, size, style){
 		};
+	class HexEditorFrame *parent;
 	void Set( ArrayOfTAG& MainTagArray, bool WithNumbers=true );
 	void OnTagSelect( wxCommandEvent& event );
 	};

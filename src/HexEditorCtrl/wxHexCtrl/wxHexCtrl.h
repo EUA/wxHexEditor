@@ -211,8 +211,8 @@ inline bool IsDenied( int x ){ return false; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
 		void SetValue( uint64_t position );
 		void SetValue( uint64_t position, int byteperline );
-		void OnMouseRight( wxMouseEvent& event ){event.Skip(false);}
-		void OnMouseLeft( wxMouseEvent& event );
+		void OnMouseRight( wxMouseEvent& event );
+		void OnMouseLeft( wxMouseEvent& event ){event.Skip(false);}
 		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
 		bool hex_offset;
 		int64_t offset_position;

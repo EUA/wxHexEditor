@@ -705,14 +705,14 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 #endif
 	if( MyNotebook->GetPageCount() ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( event.GetSelection() ) );
-			if( MyHexEditor != NULL ){
-				if( MyHexEditor->FileClose() ){
-					MyNotebook->DeletePage( event.GetSelection() );
-					// delete MyHexEditor; not neccessery, DeletePage also delete this
-					}
-				if( MyNotebook->GetPageCount() == 0 )
-					ActionDisabler();
+		if( MyHexEditor != NULL ){
+			if( MyHexEditor->FileClose() ){
+				MyNotebook->DeletePage( event.GetSelection() );
+				// delete MyHexEditor; not neccessery, DeletePage also delete this
 				}
+			if( MyNotebook->GetPageCount() == 0 )
+				ActionDisabler();
+			}
 		}
 	}
 

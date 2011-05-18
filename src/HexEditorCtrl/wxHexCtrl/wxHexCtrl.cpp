@@ -1034,7 +1034,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	RePaint();
 	}
 
-void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
+void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
 	hex_offset = hex_offset ? false : true;
 	SetValue( offset_position );
 	}

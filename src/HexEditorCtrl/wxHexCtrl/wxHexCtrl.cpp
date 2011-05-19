@@ -28,7 +28,7 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_SIZE( wxHexCtrl::OnSize )
 	EVT_PAINT( wxHexCtrl::OnPaint )
 	EVT_LEFT_DOWN( wxHexCtrl::OnMouseLeft )
-	EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
+	//EVT_LEFT_DOWN( wxHexOffsetCtrl::OnMouseLeft )
 	//EVT_MOUSE( wxHexCtrl::OnResize)
 	EVT_RIGHT_DOWN( wxHexCtrl::OnMouseRight )
 	EVT_MENU( __idTagAddSelect__, wxHexCtrl::OnTagAddSelection )
@@ -1037,4 +1037,17 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
 	hex_offset = hex_offset ? false : true;
 	SetValue( offset_position );
+	}
+
+void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
+	wxPoint p = PixelCoordToInternalCoord( event.GetPosition() );
+	uint64_t adress = offset_position + p.y*BytePerLine;
+	wxString adr = wxString::Format( (hex_offset ? wxT("%llx"): wxT("%llu")), adress);
+	if(wxTheClipboard->Open()) {
+		wxTheClipboard->Clear();
+		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) );
+			wxBell();
+		wxTheClipboard->Flush();
+		wxTheClipboard->Close();
+		}
 	}

@@ -31,6 +31,7 @@
 #include <wx/caret.h>
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
+#include <wx/clipbrd.h>
 #include "Tag.h"
 
 #define __idTagAddSelect__ 1500
@@ -212,7 +213,7 @@ inline bool IsDenied( int x ){ return false; }
 		void SetValue( uint64_t position );
 		void SetValue( uint64_t position, int byteperline );
 		void OnMouseRight( wxMouseEvent& event );
-		void OnMouseLeft( wxMouseEvent& event ){event.Skip(false);}
+		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
 		bool hex_offset;
 		int64_t offset_position;

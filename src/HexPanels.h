@@ -128,9 +128,7 @@ class TagPanel : public TagPanelGui{
 class SearchPanel : public TagPanel{
 	public:
 	SearchPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:TagPanel( parent_, id, pos, size, style){
-		};
-	class HexEditorFrame *parent;
+	:TagPanel( parent_, id, pos, size, style){};
 	void Set( ArrayOfTAG& MainTagArray, bool WithNumbers=true );
 	void OnTagSelect( wxCommandEvent& event );
 	};

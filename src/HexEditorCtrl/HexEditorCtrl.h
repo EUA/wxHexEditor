@@ -109,6 +109,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;
 
+		ArrayOfTAG CompareArray;
 		ArrayOfTAG HighlightArray;
 		ArrayOfTAG MainTagArray;
 		wxFont stdfont;

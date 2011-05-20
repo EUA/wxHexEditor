@@ -1042,7 +1042,7 @@ void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
 void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 	wxPoint p = PixelCoordToInternalCoord( event.GetPosition() );
 	uint64_t adress = offset_position + p.y*BytePerLine;
-	wxString adr = wxString::Format( (hex_offset ? wxT("%llx"): wxT("%llu")), adress);
+	wxString adr = wxString::Format( (hex_offset ? wxT("0x%llx"): wxT("%llu")), adress);
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();
 		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) );

@@ -256,7 +256,7 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 	}
 
 HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
-// TODO (death#1#): BUG : MyNotebook = warning RTTI symbol not found for class wxAuiFloatingFrame	int x = HexEditorFrame::MyNotebook->GetSelection();
+// TODO (death#1#): BUG : MyNotebook = warning RTTI symbol not found for class wxAuiFloatingFrame	int x = MyNotebook->GetSelection();
 	return static_cast<HexEditor*>( MyNotebook->GetPage( x ) );
 	}
 

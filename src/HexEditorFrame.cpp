@@ -51,6 +51,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Connect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -82,6 +83,7 @@ HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+   this->Disconnect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -177,6 +179,16 @@ void HexEditorFrame::PrepareAUI( void ){
 				Show(false).
 				Right().Layer(1) );
 
+	MyComparePanel = new ComparePanel( this, -1 );
+   //Created under OnUpdateUI
+   MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
+				Caption(wxT("Comparison Results")).
+				TopDockable(false).
+				BottomDockable(false).
+				MinSize(wxSize(70,100)).
+				BestSize(wxSize(140,100)).
+				Show(false).
+				Right().Layer(1) );
 
    MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(wxT("ToolBar")).Caption(wxT("Big Toolbar")).
@@ -208,6 +220,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyInfoPanel->SetDropTarget( new DnDFile( this ) );
 	MyTagPanel->SetDropTarget( new DnDFile( this ) );
 	MySearchPanel->SetDropTarget( new DnDFile( this ) );
+	MyComparePanel->SetDropTarget( new DnDFile( this ) );
 	MyInterpreter->SetDropTarget( new DnDFile( this ) );
 	Toolbar->SetDropTarget( new DnDFile( this ) );
 	}
@@ -233,7 +246,7 @@ void HexEditorFrame::ActionDisabler( void ){
 	Toolbar->Refresh();
 	}
 
-void HexEditorFrame::OpenFile(wxFileName flname){
+HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel );
 	if(x->FileOpen( flname )){
 		MyNotebook->AddPage( x, flname.GetFullName(), true );
@@ -249,9 +262,11 @@ void HexEditorFrame::OpenFile(wxFileName flname){
 		MyFileHistory->AddFileToHistory( flname.GetFullPath() );
 		MyFileHistory->Save( *wxConfigBase::Get() );
 		ActionEnabler();
+		return x;
 		}
 	else{
 		x->Destroy();
+		return NULL;
 		}
 	}
 
@@ -666,9 +681,15 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			}
 
 		if(event.GetId() == SEARCH_CHANGE_EVENT ){
-			MySearchPanel->Set( GetActiveHexEditor()->HighlightArray , true );
 			MyAUI->GetPane(MySearchPanel).Show(true);
 			MyAUI->Update();
+			MySearchPanel->Set( GetActiveHexEditor()->HighlightArray , true );
+			}
+
+		if(event.GetId() == COMPARE_CHANGE_EVENT ){
+			MyAUI->GetPane(MyComparePanel).Show(true);
+			MyAUI->Update();
+			MyComparePanel->Set( GetActiveHexEditor()->CompareArray , true );
 			}
 		}
 	event.Skip();
@@ -684,6 +705,8 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MyHexEditor->UpdateCursorLocation(); //Also updates DataInterpreter
 				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 				MyTagPanel->Set( MyHexEditor->MainTagArray );
+				MySearchPanel->Set( MyHexEditor->HighlightArray );
+				MyComparePanel->Set( MyHexEditor->CompareArray );
 
 				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 				mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );

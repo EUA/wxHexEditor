@@ -64,7 +64,7 @@ class HexEditorFrame : public HexEditorGui {
 		HexEditorFrame(	wxWindow* parent, wxWindowID id = wxID_ANY );
 		~HexEditorFrame();
 		void TagHideAll();
-		void OpenFile(wxFileName flname);
+		class HexEditor* OpenFile(wxFileName flname);
 
 		class HexEditor* GetActiveHexEditor(void);
 
@@ -93,6 +93,7 @@ class HexEditorFrame : public HexEditorGui {
 		InfoPanel *MyInfoPanel;
 		TagPanel *MyTagPanel;
 		TagPanel *MySearchPanel;
+		TagPanel *MyComparePanel;
 		wxFileHistory *MyFileHistory;
 #ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;

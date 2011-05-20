@@ -33,7 +33,8 @@
 #define UNREDO_EVENT 50006
 #define TAG_CHANGE_EVENT 50007
 #define SEARCH_CHANGE_EVENT 50008
-#define XORVIEW_EVENT 50009
+#define COMPARE_CHANGE_EVENT 50009
+#define XORVIEW_EVENT 500010
 class Select{	//for using EventHandler
 	public:
 		Select( wxEvtHandler* evth_ ){

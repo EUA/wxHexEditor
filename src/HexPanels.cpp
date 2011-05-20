@@ -349,3 +349,17 @@ void SearchPanel::OnTagSelect(wxCommandEvent& event) {
 		}
 	}
 
+void ComparePanel::OnTagSelect(wxCommandEvent& event) {
+	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+	unsigned selection = TagPanelList->GetSelection();
+	if( MyHexEditor->CompareArray.Count() >= selection ) {
+		TagElement *tg = MyHexEditor->CompareArray.Item( selection );
+		if(tg == NULL) {
+#ifdef _DEBUG_
+			std::cerr << "ComparePanel::OnTagSelect Selection of tag " << selection << " returns NULL TAG" << std::endl;
+#endif
+			return;
+			}
+		MyHexEditor->Goto( tg->start , true);
+		}
+	}

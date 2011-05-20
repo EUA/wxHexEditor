@@ -412,7 +412,8 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 		wxBell();
 	}
 
-CompareDialog::CompareDialog( wxWindow* parent ):CompareDialogGui(parent, wxID_ANY){
+CompareDialog::CompareDialog( wxWindow* parent_ ):CompareDialogGui(parent_, wxID_ANY){
+	parent = static_cast< HexEditorFrame* >(parent_);
 	}
 
 void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
@@ -437,35 +438,74 @@ void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
 		}
 
 	wxMemoryBuffer buff1,buff2;
-	int dbuff[1*MB];
-	int dhit = 0;
-	int dsz = 0;
+	int diffBuff[1*MB];
+	int diffHit = 0;
 	bool diff=false;
-	for( int mb = 0 ; not f1.Eof() and not f2.Eof() ; mb++){
+	for( int mb = 0 ; not (f1.Eof() or f2.Eof()) ; mb++){
 		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
 		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
 		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
 			if(buff1[i] not_eq buff2[i]){
 				if(not diff){
+#ifdef _DEBUG_
+			std::cout << "Diff Start " << mb+i << " to " ;
+#endif
 					diff=true;
-					dbuff[dhit++]=mb+i;
+					diffBuff[diffHit++]=mb+i;
 					}
-				dsz++;
+				//this adds latest diff stream to array
+				if(f1.Eof() or f2.Eof() )
+					if(i == wxMin( buff1.GetDataLen(), buff2.GetDataLen()))
+						diffBuff[diffHit++]=mb+i-1;
 				}
 			else{//bytes are eq.
 				if(diff){
+#ifdef _DEBUG_
+			std::cout << mb+i-1 << std::endl;
+#endif
 					diff=false;
-					dbuff[dhit++]=mb+i-1;
-					dsz = 0;
+					diffBuff[diffHit++]=mb+i-1;
 					}
 				}
 			}
 		}
-	//DEBUG!
-	for(int i = 0 ; i < dhit/2 ; i+=2){
-		std::cout << "Diff found " << dbuff[i] << " - " << dbuff[i+1] << "      Total:" << dbuff[i+1]-dbuff[i]<< " bytes." << std::endl;
+	f1.Close();
+	f2.Close();
+
+	HexEditor* hexeditor = parent->OpenFile( fl1 );
+	if(hexeditor != NULL){
+		for(int i = 0 ; i < diffHit/2 ; i+=2){
+	#ifdef _DEBUG_
+			std::cout << "Diff found " << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]<< " bytes." << std::endl;
+	#endif
+			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
+			hexeditor->CompareArray.Add(mytag);
 		}
-	//delete [] dbuff;
+	//Is selection needed to show first tag?
+		hexeditor->Reload(); //To highlighting current screen
+		if( hexeditor->CompareArray.Count() > 0 )
+			hexeditor->UpdateCursorLocation( hexeditor->CompareArray.Item(0)->start );
+		wxUpdateUIEvent eventx( COMPARE_CHANGE_EVENT );
+		hexeditor->GetEventHandler()->ProcessEvent( eventx );
+		}
+
+	hexeditor = parent->OpenFile( fl2 );
+	if(hexeditor != NULL){
+		for(int i = 0 ; i < diffHit-1 ; i+=2){
+	#ifdef _DEBUG_
+			std::cout << "Diff found " << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]<< " bytes." << std::endl;
+	#endif
+			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
+			hexeditor->CompareArray.Add(mytag);
+		}
+	//Is selection needed to show first tag?
+		hexeditor->Reload(); //To highlighting current screen
+		if( hexeditor->CompareArray.Count() > 0 )
+			hexeditor->UpdateCursorLocation( hexeditor->CompareArray.Item(0)->start );
+		wxUpdateUIEvent eventx( COMPARE_CHANGE_EVENT );
+		hexeditor->GetEventHandler()->ProcessEvent( eventx );
+		}
+
 	}
 
 void CompareDialog::EventHandler( wxCommandEvent& event ){
@@ -476,4 +516,5 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 			Compare( filePick1->GetPath(), filePick2->GetPath() );
 			}
 		}
+	Destroy();
 	}

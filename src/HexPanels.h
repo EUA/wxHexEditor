@@ -132,6 +132,13 @@ class SearchPanel : public TagPanel{
 	void Set( ArrayOfTAG& MainTagArray, bool WithNumbers=true );
 	void OnTagSelect( wxCommandEvent& event );
 	};
-#endif
 
+class ComparePanel : public TagPanel{
+	public:
+	ComparePanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+	:TagPanel( parent_, id, pos, size, style){};
+	void Set( ArrayOfTAG& MainTagArray, bool WithNumbers=true );
+	void OnTagSelect( wxCommandEvent& event );
+	};
+#endif
 

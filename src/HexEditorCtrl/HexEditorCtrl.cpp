@@ -247,11 +247,11 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 		PushTAGToControls(TAG);
 		}
 
-//	CompareArray.Sort( TagElement::TagCompare );
-//	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ ){	//Just highlighting required sections.
-//		TAG = CompareArray.Item(i);// For debugging
-//		PushTAGToControls(TAG);
-//		}
+	CompareArray.Sort( TagElement::TagCompare );
+	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ ){	//Just highlighting diff sections.
+		TAG = CompareArray.Item(i);// For debugging
+		PushTAGToControls(TAG);
+		}
 
 	}
 

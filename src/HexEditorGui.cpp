@@ -763,13 +763,9 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Search For") ), wxHORIZONTAL );
 	
 	m_radioDifferent = new wxRadioButton( this, wxID_ANY, wxT("Different bytes"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_radioDifferent->Enable( false );
-	
 	sbSizer2->Add( m_radioDifferent, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_radioSame = new wxRadioButton( this, wxID_ANY, wxT("Same bytes"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_radioSame->Enable( false );
-	
 	sbSizer2->Add( m_radioSame, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer16->Add( sbSizer2, 0, wxALIGN_CENTER|wxEXPAND, 5 );
@@ -778,14 +774,12 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer25 = new wxBoxSizer( wxHORIZONTAL );
 	
 	checkStopCompare = new wxCheckBox( this, wxID_ANY, wxT("Stop comparison after"), wxDefaultPosition, wxDefaultSize, 0 );
-	checkStopCompare->Enable( false );
-	
 	bSizer25->Add( checkStopCompare, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_spinCtrl2 = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000, 0 );
-	m_spinCtrl2->Enable( false );
+	spinStopCompare = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000, 0 );
+	spinStopCompare->Enable( false );
 	
-	bSizer25->Add( m_spinCtrl2, 0, wxALL, 5 );
+	bSizer25->Add( spinStopCompare, 0, wxALL, 5 );
 	
 	m_staticText20 = new wxStaticText( this, wxID_ANY, wxT("hits."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText20->Wrap( -1 );
@@ -797,8 +791,6 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer17 = new wxBoxSizer( wxHORIZONTAL );
 	
 	checkSaveResults = new wxCheckBox( this, wxID_ANY, wxT("Save Results to File"), wxDefaultPosition, wxDefaultSize, 0 );
-	checkSaveResults->Enable( false );
-	
 	bSizer17->Add( checkSaveResults, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	filePickSave = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.txt"), wxDefaultPosition, wxDefaultSize, wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE );

@@ -88,7 +88,7 @@ class CompareDialog : public CompareDialogGui{
 		CompareDialog( wxWindow* parent );
 	private:
 		class HexEditorFrame* parent;
-		void Compare( wxFileName f1, wxFileName f2);
+		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
 virtual void EventHandler( wxCommandEvent& event );
 	};
 #endif //__HexEditorDialogs__

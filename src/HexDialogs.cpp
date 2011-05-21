@@ -416,26 +416,37 @@ CompareDialog::CompareDialog( wxWindow* parent_ ):CompareDialogGui(parent_, wxID
 	parent = static_cast< HexEditorFrame* >(parent_);
 	}
 
-void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
+bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff, int StopAfterNMatch, wxFileName flsave ){
 	if(not fl1.IsFileReadable()){
 		wxMessageBox( _("Error, File #1 is not readable.") );
-		return;
+		return false;
 		}
 	if(not fl2.IsFileReadable() ){
 		wxMessageBox( _("Error, File #2 is not readable.") );
-		return;
+		return false;
 		}
+//	if( flsave not_eq wxEmptyString ){
+//		if(not flsave.IsFileWritable() )
+//			wxMessageBox( _("Error, Save File is not writeable.") );
+//			return false;
+//		}
 
-	wxFFile f1,f2;
+	wxFFile f1,f2,fs;
 
 	if( not f1.Open( fl1.GetFullPath() ) ){
 		wxMessageBox( _("Error, File #1 cannot open." ) );
-		return;
+		return false;
 		}
 	if( not f2.Open( fl2.GetFullPath() ) ){
 		wxMessageBox( _("Error, File #2 cannot open." ) );
-		return;
+		return false;
 		}
+
+	if( flsave not_eq wxEmptyString )
+		if( not fs.Open( flsave.GetFullPath(), wxT("w") ) ){
+			wxMessageBox( _("Error, Save File cannot open." ) );
+			return false;
+			}
 
 	wxMemoryBuffer buff1,buff2;
 	int diffBuff[1*MB];
@@ -445,7 +456,7 @@ void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
 		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
 		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
 		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
-			if(buff1[i] not_eq buff2[i]){
+			if((buff1[i] not_eq buff2[i]) == SearchForDiff){
 				if(not diff){
 #ifdef _DEBUG_
 			std::cout << "Diff Start " << mb+i << " to " ;
@@ -466,19 +477,36 @@ void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
 #endif
 					diff=false;
 					diffBuff[diffHit++]=mb+i-1;
+					//Some says we do not use goto in a good program.
+					//But I don't know better way to break double for loop
+					if( --StopAfterNMatch == 0 )
+						goto BreakDoubleFor;
 					}
 				}
 			}
 		}
+BreakDoubleFor:
+
 	f1.Close();
 	f2.Close();
 
 	HexEditor* hexeditor = parent->OpenFile( fl1 );
+	if( flsave not_eq wxEmptyString ){
+		wxString ln = _T("File #1 : ") + fl1.GetFullPath() + _T("\nFile #2 : ") + fl2.GetFullPath() + wxT("\n\n");
+		fs.Write( ln );
+		}
+
 	if(hexeditor != NULL){
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
+			if( flsave not_eq wxEmptyString ){
+				wxString line;
+				line = wxString::Format( _("%s found %llu - %llu \t Total : %u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], (diffBuff[i+1]-diffBuff[i]+1) );
+				fs.Write( line );
+				}
 	#ifdef _DEBUG_
-			std::cout << "Diff found " << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]<< " bytes." << std::endl;
+			std::cout << ( SearchForDiff ? "Diff" : "Match") << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]+1<< " bytes." << std::endl;
 	#endif
+
 			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
 			hexeditor->CompareArray.Add(mytag);
 		}
@@ -506,16 +534,35 @@ void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
 		wxUpdateUIEvent eventx( COMPARE_CHANGE_EVENT );
 		hexeditor->GetEventHandler()->ProcessEvent( eventx );
 		}
-
+	return true;
 	}
 
 void CompareDialog::EventHandler( wxCommandEvent& event ){
 	if(event.GetId() == btnCancel->GetId())
 		Destroy();
 	else if(event.GetId() == btnCompare->GetId()){
-		if( not filePick1->GetPath().IsEmpty() and not filePick2->GetPath().IsEmpty() ){
-			Compare( filePick1->GetPath(), filePick2->GetPath() );
+		if( not filePick1->GetPath().IsEmpty() and not filePick2->GetPath().IsEmpty()){
+			if( checkSaveResults->GetValue() and filePickSave->GetPath().IsEmpty() ){
+				wxMessageBox( _("Error, Save File is not selected.") );
+				return;
+				}
+
+			bool success = Compare( filePick1->GetPath(),			//First file.
+						filePick2->GetPath(),			//Second file to compare.
+						m_radioDifferent->GetValue(), //Compare diffs or same bytes option.
+						(checkStopCompare->GetValue() ? spinStopCompare->GetValue() : 0),	//Stop after N Matches. 0 means unlimited.
+						(checkSaveResults->GetValue() ? filePickSave->GetPath() : wxT("") ));		//comparison result save path.
+			if(success)
+				Destroy();
 			}
+		else
+			wxBell();
 		}
-	Destroy();
+	else if( event.GetId() == checkStopCompare->GetId() ){
+		spinStopCompare->Enable(event.IsChecked());
+		}
+
+	else if( event.GetId() == checkSaveResults->GetId() ){
+		filePickSave->Enable(event.IsChecked());
+		}
 	}

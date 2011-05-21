@@ -278,7 +278,7 @@ class CompareDialogGui : public wxDialog
 		wxRadioButton* m_radioDifferent;
 		wxRadioButton* m_radioSame;
 		wxCheckBox* checkStopCompare;
-		wxSpinCtrl* m_spinCtrl2;
+		wxSpinCtrl* spinStopCompare;
 		wxStaticText* m_staticText20;
 		wxCheckBox* checkSaveResults;
 		wxFilePickerCtrl* filePickSave;

@@ -453,10 +453,11 @@ void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
 					diff=true;
 					diffBuff[diffHit++]=mb+i;
 					}
-				//this adds latest diff stream to array
+
+				//this adds latest diff stream to array if one file ends
 				if(f1.Eof() or f2.Eof() )
-					if(i == wxMin( buff1.GetDataLen(), buff2.GetDataLen()))
-						diffBuff[diffHit++]=mb+i-1;
+					if(i+1 == wxMin( buff1.GetDataLen(), buff2.GetDataLen()))
+						diffBuff[diffHit++]=mb+i;
 				}
 			else{//bytes are eq.
 				if(diff){
@@ -474,7 +475,7 @@ void CompareDialog::Compare( wxFileName fl1, wxFileName fl2){
 
 	HexEditor* hexeditor = parent->OpenFile( fl1 );
 	if(hexeditor != NULL){
-		for(int i = 0 ; i < diffHit/2 ; i+=2){
+		for(int i = 0 ; i < diffHit-1 ; i+=2){
 	#ifdef _DEBUG_
 			std::cout << "Diff found " << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]<< " bytes." << std::endl;
 	#endif

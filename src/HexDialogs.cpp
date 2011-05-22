@@ -115,15 +115,29 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
 	parent->HighlightArray.Clear();
-	if( event.GetId() == btnFind->GetId() or event.GetId() == m_comboBoxSearch->GetId())
+	if( event.GetId() == btnFind->GetId())
 		OnFind();
+	else if(event.GetId() == m_comboBoxSearch->GetId()){
+		if( event.GetEventType() == 10041)
+			OnFind();
+		else
+			chkUTF8->SetValue( not m_comboBoxSearch->GetValue().IsAscii() );
+		}
 	else if( event.GetId() == m_searchtype->GetId()){
 		m_searchtype->GetSelection() == 1 ? chkMatchCase->Enable(false) : chkMatchCase->Enable(true) ;
 		}
 	else if( event.GetId() == btnFindAll->GetId() )
 		OnFindAll();
+
+	//Disables chkUTF8 setting by user.
+	else if( event.GetId() == chkUTF8->GetId() ){
+		chkUTF8->SetValue( not chkUTF8->GetValue( ));
+		wxBell();
+		}
 	else
 		wxBell();
+
+
 	}
 
 bool FindDialog::OnFind( bool internal ) {
@@ -137,7 +151,13 @@ bool FindDialog::OnFind( bool internal ) {
 	if(options & SEARCH_TEXT) {
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
-		search_size = m_comboBoxSearch->GetValue().Len();
+		if( m_comboBoxSearch->GetValue().IsAscii() )
+			search_size = m_comboBoxSearch->GetValue().Len();
+		else{
+			search_size=0;
+			while( m_comboBoxSearch->GetValue().ToUTF8()[search_size++]);
+			search_size--;
+			}
 		found = FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1, options );
 		}
 	else { //SEARCH_HEX
@@ -173,16 +193,21 @@ bool FindDialog::OnFind( bool internal ) {
 	}
 
 uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned options ){
-	if( target.IsAscii() ){
-		wxMemoryBuffer textsrc;
+	wxMemoryBuffer textsrc;
+	if(not (options & SEARCH_MATCHCASE))
+			target = target.Lower();
+
+	if( target.IsAscii() and 0){
 		textsrc.AppendData( target.ToAscii() , target.Length() );
 		return FindBinary( textsrc, start_from, options );
 		}
-	else{
-		wxBell();
-		return NANINT;
+	else{//Search as UTF string.
+		wxCharBuffer a = target.ToUTF8(); //Convert to UTF8 Binary
+		int i=0;
+		while(a[i++]!=0);					//Find stream size
+		textsrc.AppendData( a , i-1 );//-1 for discard null termination char
+		return FindBinary( textsrc, start_from, options|SEARCH_UTF8 );
 		}
-// TODO (death#1#): Find in UTF?
 	}
 
 // TODO (death#1#): New Find as "bool FindText/Bin( &uint64_t )
@@ -308,20 +333,32 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 	if( bfr_size < search_size )
 		return -1;
 
-	if( options & SEARCH_HEX or (options & SEARCH_TEXT and options & SEARCH_MATCHCASE) ){
-		for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
-			if(! memcmp( bfr+i, search, search_size ))
-				return i;
+	//UTF with no matched case handled here
+	if(options & SEARCH_UTF8 and options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
+			wxString ucode;
+			wxCharBuffer ubuf;
+			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
+				ucode = wxString::FromUTF8(bfr+i, search_size);
+				ubuf = ucode.Lower().ToUTF8();
+				if(! memcmp( ubuf, search, search_size ))	//if match found
+					return i;
+				}
+
+		return -1;
 		}
-	else // if( options & SEARCH_TEXT ) and not ( options & SEARCH_MATCHCASE )
-		{
+
+	//Make buffer lower if required.
+	else if(options & SEARCH_TEXT and not options & SEARCH_MATCHCASE){
+		///Search text already lowered at FindText()
+		//for( int i = 0 ; i < search_size; i++)
+		//	search[i]=tolower(search[i]);
 		for( int i = 0 ; i < bfr_size; i++)
 			bfr[i]=tolower(bfr[i]);
-		for( int i = 0 ; i < search_size; i++)
-			search[i]=tolower(search[i]);
-		for(int i=0 ; i < bfr_size - search_size + 1 ; i++ )
-			if(! memcmp( bfr+i, search, search_size ))
-				return i;
+		}
+	//Search at buffer
+	for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
+		if(! memcmp( bfr+i, search, search_size ))	//if match found
+			return i;
 		}
 	return -1;
 	}
@@ -565,4 +602,5 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 	else if( event.GetId() == checkSaveResults->GetId() ){
 		filePickSave->Enable(event.IsChecked());
 		}
+
 	}

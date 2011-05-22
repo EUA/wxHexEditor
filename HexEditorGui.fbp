@@ -2511,7 +2511,7 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>
@@ -2569,16 +2569,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizerMain</property>
                 <property name="orient">wxHORIZONTAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxFlexGridSizer" expanded="0">
+                    <object class="wxFlexGridSizer" expanded="1">
                         <property name="cols">1</property>
                         <property name="flexible_direction">wxBOTH</property>
                         <property name="growablecols">0</property>
@@ -2725,7 +2725,7 @@
                                                 <event name="OnRightUp"></event>
                                                 <event name="OnSetFocus"></event>
                                                 <event name="OnSize"></event>
-                                                <event name="OnText"></event>
+                                                <event name="OnText">EventHandler</event>
                                                 <event name="OnTextEnter">EventHandler</event>
                                                 <event name="OnUpdateUI"></event>
                                             </object>
@@ -2849,11 +2849,11 @@
                                 </object>
                             </object>
                         </object>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">2</property>
                             <property name="flag">wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT</property>
                             <property name="proportion">0</property>
-                            <object class="wxBoxSizer" expanded="0">
+                            <object class="wxBoxSizer" expanded="1">
                                 <property name="minimum_size"></property>
                                 <property name="name">bSizerOptions</property>
                                 <property name="orient">wxHORIZONTAL</property>
@@ -2917,11 +2917,11 @@
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
-                                <object class="sizeritem" expanded="0">
+                                <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
                                     <property name="proportion">1</property>
-                                    <object class="wxStaticBoxSizer" expanded="0">
+                                    <object class="wxStaticBoxSizer" expanded="1">
                                         <property name="id">wxID_ANY</property>
                                         <property name="label">Options</property>
                                         <property name="minimum_size"></property>
@@ -3109,7 +3109,7 @@
                                                 <property name="checked">0</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
-                                                <property name="enabled">0</property>
+                                                <property name="enabled">1</property>
                                                 <property name="fg"></property>
                                                 <property name="font"></property>
                                                 <property name="hidden">0</property>
@@ -3132,7 +3132,7 @@
                                                 <property name="window_name"></property>
                                                 <property name="window_style"></property>
                                                 <event name="OnChar"></event>
-                                                <event name="OnCheckBox"></event>
+                                                <event name="OnCheckBox">EventHandler</event>
                                                 <event name="OnEnterWindow"></event>
                                                 <event name="OnEraseBackground"></event>
                                                 <event name="OnKeyDown"></event>

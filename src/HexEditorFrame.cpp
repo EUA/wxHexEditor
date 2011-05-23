@@ -168,6 +168,16 @@ void HexEditorFrame::PrepareAUI( void ){
 					Right().Layer(1) );
 	mbar->Check( idTagPanel, true );
 
+	MyDisassemblerPanel = new DisassemblerPanel( this, -1 );
+	MyAUI -> AddPane( MyDisassemblerPanel, wxAuiPaneInfo().
+					Caption(wxT("Disassembler Panel")).
+					TopDockable(false).
+					BottomDockable(false).
+					MinSize(wxSize(70,100)).
+					BestSize(wxSize(140,100)).
+					Right().Layer(1) );
+	mbar->Check( idTagPanel, true );
+
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
@@ -502,6 +512,9 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 		case idTagPanel:
 			MyAUI->GetPane(MyTagPanel).Show(event.IsChecked());
 			break;
+		case idDisassemblerPanel:
+			MyAUI->GetPane(MyDisassemblerPanel).Show(event.IsChecked());
+			break;
 		default:
 			wxBell();
 		}
@@ -549,6 +562,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idTagPanel, MyTagPanel->IsShown());
+	mbar->Check(idDisassemblerPanel, MyDisassemblerPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
 	mbar->Check(idXORView, MyNotebook->GetPageCount() and (GetActiveHexEditor()->XORKey != wxEmptyString));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );

@@ -30,6 +30,7 @@ HexEditor::HexEditor(	wxWindow* parent,
                         DataInterpreter *interpreter_,
                         InfoPanel *infopanel_,
                         TagPanel *tagpanel_,
+                        DisassemblerPanel *dasmpanel_,
                         wxFileName* myfilename_,
                         const wxPoint& pos,
                         const wxSize& size,
@@ -38,7 +39,8 @@ HexEditor::HexEditor(	wxWindow* parent,
 	statusbar(statbar_),
 	interpreter(interpreter_),
 	infopanel(infopanel_),
-	tagpanel(tagpanel_) {
+	tagpanel(tagpanel_),
+	dasmpanel(dasmpanel_) {
 	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD neccessary
 	myfile = NULL;
 	if( myfilename_ != NULL ) {

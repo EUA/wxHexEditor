@@ -50,6 +50,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		          DataInterpreter *interpreter=NULL,
 		          InfoPanel *infopanel=NULL,
 		          TagPanel *tagpanel=NULL,
+		          DisassemblerPanel *dasmpanel=NULL,
 		          wxFileName* myfile=NULL,
 		          const wxPoint& pos=wxDefaultPosition,
 		          const wxSize& size=wxDefaultSize,
@@ -136,6 +137,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
 		TagPanel *tagpanel;
+		DisassemblerPanel *dasmpanel;
 		copy_maker *copy_mark;
 
 	private:

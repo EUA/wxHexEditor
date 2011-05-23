@@ -140,5 +140,12 @@ class ComparePanel : public TagPanel{
 	void Set( ArrayOfTAG& MainTagArray, bool WithNumbers=true );
 	void OnTagSelect( wxCommandEvent& event );
 	};
+
+class DisassemblerPanel : public DisassemblerPanelGUI{
+	public:
+	DisassemblerPanel( class HexEditorFrame* parent_, int id = -1 )
+	:DisassemblerPanelGUI( (wxWindow*) parent_, id ){};
+
+	};
 #endif
 

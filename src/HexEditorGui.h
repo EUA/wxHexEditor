@@ -48,14 +48,15 @@
 #define idToolbar 1004
 #define idInfoPanel 1005
 #define idTagPanel 1006
-#define idCompare 1007
-#define idXORView 1008
-#define idDeviceRam 1009
-#define idFileRO 1010
-#define idFileRW 1011
-#define idFileDW 1012
-#define ID_CHK_UNSIGNED 1013
-#define ID_CHK_BIGENDIAN 1014
+#define idDisassemblerPanel 1007
+#define idCompare 1008
+#define idXORView 1009
+#define idDeviceRam 1010
+#define idFileRO 1011
+#define idFileRW 1012
+#define idFileDW 1013
+#define ID_CHK_UNSIGNED 1014
+#define ID_CHK_BIGENDIAN 1015
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -174,6 +175,23 @@ class InfoPanelGui : public wxPanel
 		
 		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );
 		~InfoPanelGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class DisassemblerPanelGUI
+///////////////////////////////////////////////////////////////////////////////
+class DisassemblerPanelGUI : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxTextCtrl* m_asmCtrl;
+	
+	public:
+		
+		DisassemblerPanelGUI( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 273,310 ), long style = wxTAB_TRAVERSAL );
+		~DisassemblerPanelGUI();
 	
 };
 

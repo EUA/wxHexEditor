@@ -94,6 +94,7 @@ class HexEditorFrame : public HexEditorGui {
 		TagPanel *MyTagPanel;
 		TagPanel *MySearchPanel;
 		TagPanel *MyComparePanel;
+		DisassemblerPanel *MyDisassemblerPanel;
 		wxFileHistory *MyFileHistory;
 #ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;

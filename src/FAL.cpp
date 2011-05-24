@@ -28,11 +28,6 @@
 #include "FAL.h"
 #include <wx/arrimpl.cpp>
 
-#ifdef __WXMSW__
-#include <windows.h>
-#include <winioctl.h>
-#endif
-
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
 FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){

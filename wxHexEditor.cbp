@@ -23,6 +23,7 @@
 				<Linker>
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
+					<Add library="udis86" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
@@ -46,6 +47,7 @@
 				<Linker>
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
+					<Add library="udis86" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Release">

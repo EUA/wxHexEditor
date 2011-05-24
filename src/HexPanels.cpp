@@ -23,7 +23,6 @@
 
 #include "HexEditorFrame.h"
 
-
 void DataInterpreter::Set( wxMemoryBuffer buffer ){
 // TODO (death#1#): Add exception if size smaller than expected
 		static wxMutex mutexset;
@@ -31,6 +30,7 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 		std::cout << "DataInterpeter Set() Mutex Locked" << std::endl;
 #endif
 		mutexset.Lock();
+
 		int size = buffer.GetDataLen();
 		if( size == 0 ){
 			wxBell();
@@ -362,4 +362,20 @@ void ComparePanel::OnTagSelect(wxCommandEvent& event) {
 			}
 		MyHexEditor->Goto( tg->start , true);
 		}
+	}
+
+void DisassemblerPanel::Set( wxMemoryBuffer buff ){
+	ud_t ud_obj;
+   ud_init(&ud_obj);
+   ud_set_input_buffer(&ud_obj, reinterpret_cast<uint8_t*>(buff.GetData()), buff.GetDataLen() );
+   ud_set_mode(&ud_obj, 64);
+   ud_set_syntax(&ud_obj, UD_SYN_INTEL);
+	wxString mydasm;
+   while (ud_disassemble(&ud_obj))
+		mydasm << wxString::FromAscii( ud_insn_asm(&ud_obj) ) << wxT("\n");
+	m_dasmCtrl->ChangeValue( mydasm );
+	}
+
+void DisassemblerPanel::Clear(void){
+	m_dasmCtrl->Clear();
 	}

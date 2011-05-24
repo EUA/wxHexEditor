@@ -909,15 +909,20 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 
 		if( interpreter != NULL ) {
 			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
-//			char *bfr = new char [8];
-//			int size=myfile->Read( bfr, 8);
-//			interpreter->Set( bfr, size);
-//			delete [] bfr;
 			wxMemoryBuffer bfr;
 			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
 			bfr.UngetWriteBuf( size );
 			interpreter->Set( bfr );
 			}
+
+		if( dasmpanel != NULL ) {
+			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
+			wxMemoryBuffer bfr;
+			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 32 )), 32);
+			bfr.UngetWriteBuf( size );
+			dasmpanel->Set( bfr );
+			}
+
 #if wxUSE_STATUSBAR
 		if( statusbar != NULL ) {
 			statusbar->SetStatusText(wxString::Format(_("Showing Page: %llu"), page_offset/ByteCapacity() ), 0);

@@ -46,6 +46,12 @@
 #include <wx/wx.h>
 #endif
 
+#ifdef __WXMSW__
+#include <windows.h>
+#include <winioctl.h>
+#endif
+
+
 class DiffNode{
 	public:
 		bool flag_undo;			//For undo

@@ -232,6 +232,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MySearchPanel->SetDropTarget( new DnDFile( this ) );
 	MyComparePanel->SetDropTarget( new DnDFile( this ) );
 	MyInterpreter->SetDropTarget( new DnDFile( this ) );
+	MyDisassemblerPanel->SetDropTarget( new DnDFile( this ) );
 	Toolbar->SetDropTarget( new DnDFile( this ) );
 	}
 
@@ -253,11 +254,12 @@ void HexEditorFrame::ActionDisabler( void ){
 		}
 	MyInterpreter->Clear();
 	MyInterpreter->Disable();
+	MyDisassemblerPanel->Clear();
 	Toolbar->Refresh();
 	}
 
 HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
-	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel );
+	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	if(x->FileOpen( flname )){
 		MyNotebook->AddPage( x, flname.GetFullName(), true );
 

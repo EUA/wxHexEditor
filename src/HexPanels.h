@@ -27,6 +27,7 @@
 #include "HexEditorFrame.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorCtrl/wxHexCtrl/wxHexCtrl.h"
+#include <udis86.h>
 
 #ifdef WX_GCH
 #include <wx_pch.h>
@@ -145,7 +146,8 @@ class DisassemblerPanel : public DisassemblerPanelGUI{
 	public:
 	DisassemblerPanel( class HexEditorFrame* parent_, int id = -1 )
 	:DisassemblerPanelGUI( (wxWindow*) parent_, id ){};
-
+	void Set( wxMemoryBuffer buffer );
+	void Clear( void );
 	};
 #endif
 

@@ -186,7 +186,7 @@ class DisassemblerPanelGUI : public wxPanel
 	private:
 	
 	protected:
-		wxTextCtrl* m_asmCtrl;
+		wxTextCtrl* m_dasmCtrl;
 	
 	public:
 		

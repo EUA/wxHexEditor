@@ -365,17 +365,24 @@ void ComparePanel::OnTagSelect(wxCommandEvent& event) {
 	}
 
 void DisassemblerPanel::Set( wxMemoryBuffer buff ){
-	ud_t ud_obj;
-   ud_init(&ud_obj);
-   ud_set_input_buffer(&ud_obj, reinterpret_cast<uint8_t*>(buff.GetData()), buff.GetDataLen() );
-   ud_set_mode(&ud_obj, 64);
-   ud_set_syntax(&ud_obj, UD_SYN_INTEL);
-	wxString mydasm;
-   while (ud_disassemble(&ud_obj))
-		mydasm << wxString::FromAscii( ud_insn_asm(&ud_obj) ) << wxT("\n");
-	m_dasmCtrl->ChangeValue( mydasm );
+	mybuff = buff;
+	wxCommandEvent event;
+	OnUpdate( event );
 	}
 
 void DisassemblerPanel::Clear(void){
 	m_dasmCtrl->Clear();
+	}
+
+void DisassemblerPanel::OnUpdate( wxCommandEvent& event){
+	ud_t ud_obj;
+   ud_init(&ud_obj);
+   ud_set_input_buffer(&ud_obj, reinterpret_cast<uint8_t*>(mybuff.GetData()), mybuff.GetDataLen() );
+   ud_set_vendor(&ud_obj, (m_choiceVendor->GetSelection()) ? UD_VENDOR_AMD : UD_VENDOR_INTEL);
+   ud_set_mode(&ud_obj, (m_choiceBitMode->GetSelection()+1)*16);
+   ud_set_syntax(&ud_obj, (m_choiceASMType->GetSelection() ? UD_SYN_ATT : UD_SYN_INTEL ));
+	wxString mydasm;
+   while (ud_disassemble(&ud_obj))
+		mydasm << wxString::FromAscii( ud_insn_asm(&ud_obj) ) << wxT("\n");
+	m_dasmCtrl->ChangeValue( mydasm );
 	}

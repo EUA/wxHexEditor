@@ -26,6 +26,7 @@
 #include <wx/textctrl.h>
 #include <wx/panel.h>
 #include <wx/listbox.h>
+#include <wx/choice.h>
 #include <wx/radiobut.h>
 #include <wx/radiobox.h>
 #include <wx/button.h>
@@ -186,7 +187,14 @@ class DisassemblerPanelGUI : public wxPanel
 	private:
 	
 	protected:
+		wxChoice* m_choiceVendor;
+		wxChoice* m_choiceASMType;
+		wxChoice* m_choiceBitMode;
 		wxTextCtrl* m_dasmCtrl;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnUpdate( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

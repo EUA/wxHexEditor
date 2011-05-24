@@ -512,15 +512,55 @@ DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizerTop;
+	bSizerTop = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxString m_choiceVendorChoices[] = { wxT("INTEL"), wxT("AMD") };
+	int m_choiceVendorNChoices = sizeof( m_choiceVendorChoices ) / sizeof( wxString );
+	m_choiceVendor = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceVendorNChoices, m_choiceVendorChoices, 0 );
+	m_choiceVendor->SetSelection( 0 );
+	m_choiceVendor->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+	m_choiceVendor->SetToolTip( wxT("CPU Vendor") );
+	
+	bSizerTop->Add( m_choiceVendor, 1, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	wxString m_choiceASMTypeChoices[] = { wxT("INTEL"), wxT("AT&T") };
+	int m_choiceASMTypeNChoices = sizeof( m_choiceASMTypeChoices ) / sizeof( wxString );
+	m_choiceASMType = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceASMTypeNChoices, m_choiceASMTypeChoices, 0 );
+	m_choiceASMType->SetSelection( 0 );
+	m_choiceASMType->SetToolTip( wxT("Assembly Type") );
+	
+	bSizerTop->Add( m_choiceASMType, 1, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	wxString m_choiceBitModeChoices[] = { wxT("16Bit"), wxT("32Bit"), wxT("64Bit") };
+	int m_choiceBitModeNChoices = sizeof( m_choiceBitModeChoices ) / sizeof( wxString );
+	m_choiceBitMode = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBitModeNChoices, m_choiceBitModeChoices, 0 );
+	m_choiceBitMode->SetSelection( 1 );
+	m_choiceBitMode->SetToolTip( wxT("Disassembly Bit Mode") );
+	
+	bSizerTop->Add( m_choiceBitMode, 1, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	mainSizer->Add( bSizerTop, 0, wxEXPAND, 5 );
+	
 	m_dasmCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP|wxTE_MULTILINE|wxTE_READONLY );
-	mainSizer->Add( m_dasmCtrl, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	mainSizer->Add( m_dasmCtrl, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
+	
+	// Connect Events
+	m_choiceVendor->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DisassemblerPanelGUI::OnUpdate ), NULL, this );
+	m_choiceASMType->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DisassemblerPanelGUI::OnUpdate ), NULL, this );
+	m_choiceBitMode->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DisassemblerPanelGUI::OnUpdate ), NULL, this );
 }
 
 DisassemblerPanelGUI::~DisassemblerPanelGUI()
 {
+	// Disconnect Events
+	m_choiceVendor->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DisassemblerPanelGUI::OnUpdate ), NULL, this );
+	m_choiceASMType->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DisassemblerPanelGUI::OnUpdate ), NULL, this );
+	m_choiceBitMode->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DisassemblerPanelGUI::OnUpdate ), NULL, this );
+	
 }
 
 GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )

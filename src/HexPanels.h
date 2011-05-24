@@ -147,7 +147,9 @@ class DisassemblerPanel : public DisassemblerPanelGUI{
 	DisassemblerPanel( class HexEditorFrame* parent_, int id = -1 )
 	:DisassemblerPanelGUI( (wxWindow*) parent_, id ){};
 	void Set( wxMemoryBuffer buffer );
+	void OnUpdate(wxCommandEvent& event);
 	void Clear( void );
+	wxMemoryBuffer mybuff;
 	};
 #endif
 

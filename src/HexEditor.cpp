@@ -145,7 +145,10 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 //			copy_mark = new copy_maker();
 			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
 			tagpanel->Set(MainTagArray);
-
+			uint64_t sz = myfile->Length();
+			int i=0;
+			while(sz > pow(10,++i));
+			offset_ctrl->SetDigitCount( i );
 
 			LoadFromOffset(0, true);
 			SetLocalHexInsertionPoint(0);
@@ -1029,7 +1032,6 @@ bool HexEditor::InsertBytes( void ) {
 	GetEventHandler()->ProcessEvent( eventx );
 	return success;
 	}
-
 
 bool HexEditor::CutSelection( void ) {
 #ifdef _DEBUG_

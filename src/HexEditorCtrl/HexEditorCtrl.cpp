@@ -36,7 +36,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
 	select = new class Select( GetEventHandler() );
 
-	m_static_offset->SetLabel( _("Offset: DEC") );
+	m_static_offset->SetLabel( _("Offset") );
 
 #if defined( __WXOSX__ )
 	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"), wxFONTENCODING_CP437);// Fonts are too small on wxOSX 2.9.x series.
@@ -345,7 +345,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 	int charx = hex_ctrl->GetCharSize().GetX();
-	int offset_x = offset_ctrl->GetCharSize().GetX()*12 + 4;
+	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetDigitCount() + 4;
     x -= offset_x;			//Remove Offset Control box X because its changeable
     x -= offset_scroll_real->GetSize().GetX();		//Remove Offset scroll size
     x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
@@ -478,7 +478,7 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 		LastRightClickAt = text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 	else if( event.GetEventObject() == offset_ctrl)
 		{
-		m_static_offset->SetLabel( offset_ctrl->hex_offset==true ? _("Offset: DEC") : _("Offset: HEX"));
+		//m_static_offset->SetLabel( offset_ctrl->hex_offset==true ? _("Offset: DEC") : _("Offset: HEX"));
 		event.Skip(true);
 		return;//to avoid ShowContextMenu
 		}
@@ -681,7 +681,7 @@ void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 
 void HexEditorCtrl::UpdateUI(wxUpdateUIEvent& event){
 	std::cout << "wxHexEditorCtrl::OnUpdateUI()" << std::endl;
-	m_static_offset->SetLabel( offset_ctrl->hex_offset==false ? _("Offset: DEC") : _("Offset: HEX"));
+	//m_static_offset->SetLabel( offset_ctrl->hex_offset==false ? _("Offset: DEC") : _("Offset: HEX"));
 	}
 
 //------ADAPTERS----------//

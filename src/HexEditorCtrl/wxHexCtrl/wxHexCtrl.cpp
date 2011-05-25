@@ -1017,6 +1017,8 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	uint64_t temp_offset_position = offset_position = position;
 	BytePerLine = byteperline;
 	m_text.Clear();
+
+
 	if( position + LineCount()*BytePerLine > 999999999999LL and hex_offset == false ){
 		hex_offset = true;
 		wxUpdateUIEvent new_event;
@@ -1024,11 +1026,15 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 		GetEventHandler()->ProcessEvent( new_event );
 		wxBell();
 		}
+
+	wxString format;;
+	if (hex_offset)
+		format << wxT("%0") << digit_count << wxT("llX");
+	else
+		format << wxT("%0") << digit_count << wxT("llu");
+
 	for( int i=0 ; i<LineCount() ; i++ ){
-		if (hex_offset)
-			m_text << ( wxString::Format( wxT("%012llX"), temp_offset_position ) );
-		else
-			m_text << ( wxString::Format( wxT("%012llu"), temp_offset_position ) );
+		m_text << wxString::Format( format, temp_offset_position );
 		temp_offset_position += BytePerLine;
 		}
 	RePaint();

@@ -479,7 +479,12 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 	else if( event.GetEventObject() == offset_ctrl)
 		{
 		//m_static_offset->SetLabel( offset_ctrl->hex_offset==true ? _("Offset: DEC") : _("Offset: HEX"));
-		event.Skip(true);
+		//event.Skip(true);
+		offset_ctrl->OnMouseRight( event );
+		int x,y;
+		DoGetSize(&x,&y);
+		wxSizeEvent mevent(wxSize(x,y));
+		OnResize(mevent);
 		return;//to avoid ShowContextMenu
 		}
 	else

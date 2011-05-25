@@ -192,7 +192,11 @@ inline bool IsDenied( int x ){ return false; }
 class wxHexOffsetCtrl : public wxHexCtrl{
 	public:
 //		wxHexOffsetCtrl():wxHexCtrl(){ hex_offset=false;offset_position=0; }
-		wxHexOffsetCtrl(wxWindow *parent): wxHexCtrl( parent ){ hex_offset=false; offset_position=0; digit_count=6;}
+		wxHexOffsetCtrl(wxWindow *parent): wxHexCtrl( parent ){
+			hex_offset=false;
+			offset_position=0;
+			digit_count=6;
+			}
 		wxHexOffsetCtrl(wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
@@ -205,14 +209,10 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				SetCaret( NULL );
 				hex_offset=false;
 				offset_position=0;
-				digit_count = 6;
-				};
-		void SetDigitCount( unsigned set_digit ){
-			digit_count = set_digit;
-			if(digit_count < 6)
 				digit_count=6;
-			}
-		unsigned GetDigitCount( void ){ return digit_count;}
+				};
+		void SetOffsetLimit( uint64_t max_offset ){offset_limit = max_offset;}
+		unsigned GetDigitCount( void );
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
@@ -226,6 +226,7 @@ inline bool IsDenied( int x ){ return false; }
 		int64_t offset_position;
 		int BytePerLine;
 	private:
+		uint64_t offset_limit;
 		unsigned digit_count;
 	};
 #endif

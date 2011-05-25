@@ -1018,15 +1018,6 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	BytePerLine = byteperline;
 	m_text.Clear();
 
-
-	if( position + LineCount()*BytePerLine > 999999999999LL and hex_offset == false ){
-		hex_offset = true;
-		wxUpdateUIEvent new_event;
-		new_event.SetId( __idOffsetHex__ );
-		GetEventHandler()->ProcessEvent( new_event );
-		wxBell();
-		}
-
 	wxString format;;
 	if (hex_offset)
 		format << wxT("%0") << digit_count << wxT("llX");
@@ -1056,4 +1047,13 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 		wxTheClipboard->Flush();
 		wxTheClipboard->Close();
 		}
+	}
+
+unsigned wxHexOffsetCtrl::GetDigitCount( void ){
+	digit_count=0;
+	int base=hex_offset ? 16 : 10;
+	while(offset_limit > pow(base,++digit_count));
+	if( digit_count < 6)
+		digit_count=6;
+	return digit_count;
 	}

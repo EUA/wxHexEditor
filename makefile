@@ -115,12 +115,12 @@ mac: $(SOURCES) maclink
 </plist>\n\n" > $(EXECUTABLE_DIR_MAC)/Contents/Info.plist
 
 install:
-	install -D -m 755 wxHexEditor $(BINDIR)/wxHexEditor
+	install -D -m 755 $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
 	install -D -m 644 resources/wxHexEditor.png $(DATADIR)/pixmaps/wxHexEditor.png
 	install -D -m 644 resources/wxHexEditor.desktop $(DATADIR)/applications/wxHexEditor.desktop
 
 uninstall:
-	rm -f $(BINDIR)/wxHexEditor
+	rm -f $(BINDIR)/$(EXECUTABLE)
 	rm -f $(DATADIR)/pixmaps/wxHexEditor.png
 	rm -f $(DATADIR)/applications/wxHexEditor.desktop
 clean:

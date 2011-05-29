@@ -304,14 +304,14 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 		}
 
 
-void TagPanel::Set( ArrayOfTAG& MainTagArray, bool Num_and_Offset ){
+void TagPanel::Set( ArrayOfTAG& TagArray, bool Num_and_Offset ){
 		static wxMutex mutextag;
 		mutextag.Lock();
 		wxArrayString str;
-		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++)
+		for(unsigned i = 0 ; i < TagArray.Count() ; i++)
 			str.Add( Num_and_Offset ?
-						 wxString::Format(wxT("%d. Offset %d"),i+1, MainTagArray.Item(i)->start )
-						: MainTagArray.Item(i)->tag );
+						 wxString::Format(wxT("%d. Offset %d"),i+1, TagArray.Item(i)->start )
+						: TagArray.Item(i)->tag );
 
 		TagPanelList->Clear();
 		TagPanelList->InsertItems(str,0);

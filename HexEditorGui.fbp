@@ -410,7 +410,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
+                <object class="wxMenu" expanded="0">
                     <property name="label">&amp;View</property>
                     <property name="name">viewMenu</property>
                     <property name="permission">protected</property>
@@ -474,7 +474,7 @@
                         <event name="OnMenuSelection">OnViewMenu</event>
                         <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
-                    <object class="wxMenuItem" expanded="1">
+                    <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
@@ -490,7 +490,7 @@
                         <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">Tools</property>
                     <property name="name">toolsMenu</property>
                     <property name="permission">protected</property>
@@ -544,21 +544,6 @@
                     <property name="label">Devices</property>
                     <property name="name">devicesMenu</property>
                     <property name="permission">protected</property>
-                    <object class="wxMenuItem" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">0</property>
-                        <property name="help"></property>
-                        <property name="id">idDeviceRam</property>
-                        <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Open RAM Device</property>
-                        <property name="name">menuDevicesRam</property>
-                        <property name="permission">none</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">OnDevicesMenu</event>
-                        <event name="OnUpdateUI">OnUpdateUI</event>
-                    </object>
                     <object class="submenu" expanded="1">
                         <property name="label">Open Disk Device</property>
                         <property name="name">menuDeviceDisk</property>
@@ -577,6 +562,21 @@
                             <property name="unchecked_bitmap"></property>
                             <event name="OnMenuSelection">OnDevicesMenu</event>
                             <event name="OnUpdateUI"></event>
+                        </object>
+                        <object class="wxMenuItem" expanded="0">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">0</property>
+                            <property name="help"></property>
+                            <property name="id">idDeviceRam</property>
+                            <property name="kind">wxITEM_NORMAL</property>
+                            <property name="label">Open RAM Device</property>
+                            <property name="name">menuDevicesRam</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">OnDevicesMenu</event>
+                            <event name="OnUpdateUI">OnUpdateUI</event>
                         </object>
                     </object>
                 </object>

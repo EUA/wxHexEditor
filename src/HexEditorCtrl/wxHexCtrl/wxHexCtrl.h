@@ -21,7 +21,6 @@
 *               email : spamjunkeater at gmail dot com                  *
 *************************************************************************/
 
-
 #ifndef __wxHexCtrl__
 #define __wxHexCtrl__
 #include <stdint.h>

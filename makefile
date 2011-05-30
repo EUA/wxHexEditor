@@ -1,11 +1,10 @@
 WXCONFIG = wx-config
 CPP = `$(WXCONFIG) --cxx`
-CXXFLAGS= `$(WXCONFIG) --cxxflags` -MMD -c ${OPTFLAGS}
+CXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -MMD -c ${OPTFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
-
 SOURCES= src/HexEditorGui.cpp \
 			src/FAL.cpp\
 			src/HexDialogs.cpp\
@@ -18,7 +17,7 @@ SOURCES= src/HexEditorGui.cpp \
 			src/HexEditorCtrl/wxHexCtrl/Tag.cpp\
 			src/HexEditorCtrl/HexEditorCtrlGui.cpp\
 			src/HexEditorFrame.cpp
-
+LIBS = udis86/libudis86/.libs/libudis86.a
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
 RESOURCES= resources/resource.rc
@@ -35,10 +34,12 @@ LOCALEDIR   = $(DATADIR)/locale
 
 VERSION = 0.10 Pre-Beta
 
-all: $(SOURCES) $(EXECUTABLE)
+all: prepare $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
+prepare: $(LIBS) $(SOURCES)
+
+$(EXECUTABLE): $(OBJECTS) $(LIBS)
+	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -o $@
 
 .cpp.o:
 	$(CPP) $(CXXFLAGS) $< -o $@
@@ -46,7 +47,12 @@ $(EXECUTABLE): $(OBJECTS)
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@
 
-win: $(SOURCES) $(RESOURCES) $(EXECUTABLE_WIN)
+udis86/libudis86/.libs/libudis86.a:
+	cd udis86;./autogen.sh
+	cd udis86;./configure
+	cd udis86/libudis86; $(MAKE) $(MFLAGS)
+
+win: prepare $(RESOURCES) $(EXECUTABLE_WIN)
 
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LDFLAGS) -static-libgcc -static-libstdc++ -o $@
@@ -54,7 +60,7 @@ $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 maclink: $(OBJECTS)
 	$(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
 
-mac: $(SOURCES) maclink
+mac: prepare maclink
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/MacOS
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources
@@ -130,6 +136,8 @@ clean:
 	rm -f $(EXECUTABLE)
 	rm -f $(EXECUTABLE_WIN)
 	rm -rf $(EXECUTABLE_DIR_MAC)
+distclean: clean
+	cd udis86;$(MAKE) distclean
 
 # include the auto-generated dependency files
 -include $(DEPENDS)

@@ -917,11 +917,21 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 			}
 
 		if( dasmpanel != NULL ) {
-			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
 			wxMemoryBuffer bfr;
-			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 32 )), 32);
-			bfr.UngetWriteBuf( size );
-			dasmpanel->Set( bfr );
+			if( not select->IsState( select->SELECT_FALSE ) ){ //If there is a selection, use selection
+				myfile->Seek( select->GetStart(), wxFromStart );
+				//Take just first 100 bytes!
+				int sz = select->GetSize() > 100 ? 100 : select->GetSize();
+				int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
+				bfr.UngetWriteBuf( size );
+				dasmpanel->Set( bfr );
+				}
+			else{ //Take 8 bytes from cursor location
+				myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
+				int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
+				bfr.UngetWriteBuf( size );
+				dasmpanel->Set( bfr );
+				}
 			}
 
 #if wxUSE_STATUSBAR

@@ -122,16 +122,16 @@ void HexEditorFrame::PrepareAUI( void ){
 			Center().Layer(1) );
 
 //    wxAuiToolBarItemArray prepend_items;
-/*
-    wxAuiToolBarItemArray append_items;
-    wxAuiToolBarItem item;
-    item.SetKind(wxITEM_SEPARATOR);
-    append_items.Add(item);
-    item.SetKind(wxITEM_NORMAL);
-    item.SetId(wxID_ANY);
-    item.SetLabel(_("Customize..."));
-    append_items.Add(item);
-*/
+
+//    wxAuiToolBarItemArray append_items;
+//    wxAuiToolBarItem item;
+//    item.SetKind(wxITEM_SEPARATOR);
+//    append_items.Add(item);
+//    item.SetKind(wxITEM_NORMAL);
+//    item.SetId(wxID_ANY);
+//    item.SetLabel(_("Customize..."));
+//    append_items.Add(item);
+
 #ifdef _WX_AUIBAR_H_
 	Toolbar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE );// wxAUI_TB_OVERFLOW);
 #else

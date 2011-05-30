@@ -158,9 +158,10 @@
 				<Linker>
 					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --libs)" />
+					<Add library="udis86" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets/debug/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-trunk/release/wx-config" />
 				</Environment>
 			</Target>
 		</Build>

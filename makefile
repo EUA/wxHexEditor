@@ -54,11 +54,12 @@ udis86/libudis86/.libs/libudis86.a:
 
 win: prepare $(RESOURCES) $(EXECUTABLE_WIN)
 
+#Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LDFLAGS) -static-libgcc -static-libstdc++ -o $@
+	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) $(LDFLAGS) -static-libgcc -static-libstdc++ -Wl,--stack,5242880 -o $@
 
 maclink: $(OBJECTS)
-	$(CPP) $(OBJECTS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
+	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) $(LIBS) -lexpat -o $(EXECUTABLE)
 
 mac: prepare maclink
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents

@@ -428,6 +428,9 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	}
 
 void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "HexEditorFrame::OnToolsMenu() EventID=" << event.GetId() << std::endl;
+#endif
 	if( event.GetId() == idXORView )
 		GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
 	else if( event.GetId() == idCompare ){

@@ -514,8 +514,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 #endif
 					diff=false;
 					diffBuff[diffHit++]=mb+i-1;
+
 					//Some says we do not use goto in a good program.
-					//But I don't know better way to break double for loop
+					//But I don't know better way to break double for loop.
+					//Might be better to use f1.Seek() to end with break...
 					if( --StopAfterNMatch == 0 )
 						goto BreakDoubleFor;
 					}
@@ -575,6 +577,9 @@ BreakDoubleFor:
 	}
 
 void CompareDialog::EventHandler( wxCommandEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "CompareDialog::EventHandler()" << std::endl;
+#endif
 	if(event.GetId() == btnCancel->GetId())
 		Destroy();
 	else if(event.GetId() == btnCompare->GetId()){
@@ -583,13 +588,13 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 				wxMessageBox( _("Error, Save File is not selected.") );
 				return;
 				}
-
-			bool success = Compare( filePick1->GetPath(),			//First file.
+			///Note:Triggers stack Overflow on windows. Use bigger stack...
+			if( Compare( filePick1->GetPath(),			//First file.
 						filePick2->GetPath(),			//Second file to compare.
 						m_radioDifferent->GetValue(), //Compare diffs or same bytes option.
 						(checkStopCompare->GetValue() ? spinStopCompare->GetValue() : 0),	//Stop after N Matches. 0 means unlimited.
-						(checkSaveResults->GetValue() ? filePickSave->GetPath() : wxT("") ));		//comparison result save path.
-			if(success)
+						(checkSaveResults->GetValue() ? filePickSave->GetPath() : wxT("") ))		//comparison result save path.
+																												)
 				Destroy();
 			}
 		else
@@ -602,5 +607,4 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 	else if( event.GetId() == checkSaveResults->GetId() ){
 		filePickSave->Enable(event.IsChecked());
 		}
-
 	}

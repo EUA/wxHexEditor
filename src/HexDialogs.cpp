@@ -526,53 +526,59 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		}
 BreakDoubleFor:
 
+
+	if( flsave not_eq wxEmptyString ){
+		wxString ln = _("File #1 : ") + fl1.GetFullPath() + wxT("\n")+_("File #2 : ") + fl2.GetFullPath() + wxT("\n\n");
+		fs.Write( ln );
+		wxString line;
+		for(int i = 0 ; i < diffHit-1 ; i+=2){
+			line = wxString::Format( _("%s found %llu - %llu \t Total : %u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], (diffBuff[i+1]-diffBuff[i]+1) );
+			fs.Write( line );
+			}
+
+		if( f1.Length() not_eq f2.Length() ){
+			if( f1.Length() > f2.Length() )
+				line =  wxString::Format( _("\nFile #2 ends at offset %llu. File #1 has extra %llu bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
+
+			else
+				line =  wxString::Format( _("\nFile #1 ends at offset %llu. File #2 has extra %llu bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
+
+			fs.Write( line );
+			}
+		}
+	int file1size= f1.Length();
+	int file2size= f2.Length();
 	f1.Close();
 	f2.Close();
+	fs.Close();
 
-	HexEditor* hexeditor = parent->OpenFile( fl1 );
-	if( flsave not_eq wxEmptyString ){
-		wxString ln = _T("File #1 : ") + fl1.GetFullPath() + _T("\nFile #2 : ") + fl2.GetFullPath() + wxT("\n\n");
-		fs.Write( ln );
-		}
-
-	if(hexeditor != NULL){
+	HexEditor* hexeditor1 = parent->OpenFile( fl1 );
+	HexEditor* hexeditor2 = parent->OpenFile( fl2 );
+	if(hexeditor1 != NULL and hexeditor2 != NULL){
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
-			if( flsave not_eq wxEmptyString ){
-				wxString line;
-				line = wxString::Format( _("%s found %llu - %llu \t Total : %u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], (diffBuff[i+1]-diffBuff[i]+1) );
-				fs.Write( line );
+			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
+			hexeditor1->CompareArray.Add(mytag);
+			hexeditor2->CompareArray.Add(mytag);
+			}
+		if( file1size not_eq file2size ){
+			if( file1size > file2size ){
+				TagElement *mytag=new TagElement(file2size, file1size,_("This part doesn't exist at compared file"),*wxBLACK, *wxCYAN );
+				hexeditor1->CompareArray.Add(mytag);
 				}
-	#ifdef _DEBUG_
-			std::cout << ( SearchForDiff ? "Diff" : "Match") << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]+1<< " bytes." << std::endl;
-	#endif
-
-			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
-			hexeditor->CompareArray.Add(mytag);
-		}
-	//Is selection needed to show first tag?
-		hexeditor->Reload(); //To highlighting current screen
-		if( hexeditor->CompareArray.Count() > 0 )
-			hexeditor->UpdateCursorLocation( hexeditor->CompareArray.Item(0)->start );
+			else{
+				TagElement *mytag=new TagElement(file1size, file2size,_("This part doesn't exist at compared file"),*wxBLACK, *wxCYAN );
+				hexeditor2->CompareArray.Add(mytag);
+				}
+			}
+		//Is selection needed to show first tag?
+		hexeditor1->Reload(); //To highlighting current screen
+		hexeditor2->Reload(); //To highlighting current screen
+		if( hexeditor1->CompareArray.Count() > 0 )
+			hexeditor1->UpdateCursorLocation( hexeditor1->CompareArray.Item(0)->start );
 		wxUpdateUIEvent eventx( COMPARE_CHANGE_EVENT );
-		hexeditor->GetEventHandler()->ProcessEvent( eventx );
+		hexeditor1->GetEventHandler()->ProcessEvent( eventx );
 		}
 
-	hexeditor = parent->OpenFile( fl2 );
-	if(hexeditor != NULL){
-		for(int i = 0 ; i < diffHit-1 ; i+=2){
-	#ifdef _DEBUG_
-			std::cout << "Diff found " << diffBuff[i] << " - " << diffBuff[i+1] << "      Total:" << diffBuff[i+1]-diffBuff[i]<< " bytes." << std::endl;
-	#endif
-			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
-			hexeditor->CompareArray.Add(mytag);
-		}
-	//Is selection needed to show first tag?
-		hexeditor->Reload(); //To highlighting current screen
-		if( hexeditor->CompareArray.Count() > 0 )
-			hexeditor->UpdateCursorLocation( hexeditor->CompareArray.Item(0)->start );
-		wxUpdateUIEvent eventx( COMPARE_CHANGE_EVENT );
-		hexeditor->GetEventHandler()->ProcessEvent( eventx );
-		}
 	return true;
 	}
 

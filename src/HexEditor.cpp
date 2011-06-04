@@ -134,30 +134,24 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else
 #endif
-	if( myfilename.IsFileReadable() ) { //IsFileReadable
-		if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
-			myfile = new FAL( myfilename, FAL::ReadWrite );
-		else
-			myfile = new FAL( myfilename );
-
-		if(myfile->IsOpened()) {
-			myscroll = new scrollthread(0,this);
+	if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
+		myfile = new FAL( myfilename, FAL::ReadWrite );
+	else
+		myfile = new FAL( myfilename );
+	if(myfile->IsOpened()) {
+		myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
-			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
-			tagpanel->Set(MainTagArray);
-			offset_ctrl->SetOffsetLimit(  myfile->Length() );
+		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
+		tagpanel->Set(MainTagArray);
+		offset_ctrl->SetOffsetLimit(  myfile->Length() );
 
-			LoadFromOffset(0, true);
-			SetLocalHexInsertionPoint(0);
-			return true;
-			}
-		else {
-			wxMessageBox(_("File cannot open!"),_("Error"), wxOK|wxICON_ERROR, this);
-			return false;
-			}
+		LoadFromOffset(0, true);
+		SetLocalHexInsertionPoint(0);
+		return true;
 		}
 	else {
-		wxMessageBox(_("File isn't Readable.(Permissions?)"),_("Error"), wxOK|wxICON_ERROR, this);
+		///Handled on FAM...
+		//wxMessageBox(_("File cannot open!"),_("Error"), wxOK|wxICON_ERROR, this);
 		return false;
 		}
 	}

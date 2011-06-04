@@ -84,6 +84,7 @@ class FAL : private wxFile{
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		~FAL();
 //		friend class FindDialog;
+		wxString oldOwner;
 
 		bool SetAccessMode( FileAccessMode fam );
 		int GetAccessMode( void );

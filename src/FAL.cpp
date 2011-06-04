@@ -23,7 +23,7 @@
 *************************************************************************/
 
 ///This file also available under propertieary license.
-///Contact admin for licensing it.
+///Contact author for licensing.
 
 #include "FAL.h"
 #include <wx/arrimpl.cpp>
@@ -46,7 +46,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
 		else devnm = myfilename.GetFullPath();
 
-		wxMessageBox( _("Warning: Windows Disk access code is in Alpha state.\nPlease do not try to modify your partitions with it!"), _("Opening File") );
+		wxMessageBox( _("Warning: Windows Disk access code is in Beta state.\nPlease do not try to modify your partitions with it!"), _("Opening File") );
 
 		HANDLE hDevice;
 		hDevice = CreateFile( devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
@@ -68,31 +68,66 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 		}
 #endif
 
+#ifndef __WXMSW__
+	while( not myfilename.IsFileReadable() ) { //IsFileReadable
+		if( wxCANCEL == wxMessageBox(_("File is not readable by permissions.\n Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
+			break;
+
+		wxArrayString output,errors;
+
+		//Save old owner to update at file close...
+		wxExecute( wxT("stat -c %U ")+myfilename.GetFullPath(), output, errors, wxEXEC_SYNC );
+		if(output.Count()>0 and errors.Count()==0)
+			oldOwner = output[0];//this return root generally :D
+		else{
+			wxMessageBox(_("Unknown error on \"stat -c %U")+myfilename.GetFullPath()+wxT("\""),_("Error"), wxOK|wxCANCEL|wxICON_ERROR);
+			return;
+			}
+		//Changing owner of file...
+		//I think it's better than changing permissions directly. Doesn't it?
+		//Will restore owner on file close.
+		wxString cmd = wxT("gnomesu -c \"chown ") + wxGetUserId() + wxT(" ")+ myfilename.GetFullPath() +wxT("\"");
+#ifdef _DEBUG_
+		std::cout << "Changing permission of " << myfilename.GetFullPath().ToAscii() << std::endl;
+		std::cout << cmd.ToAscii() << std::endl;
+#endif
+		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
+		wxShell( cmd );
+		}
+#endif
+
 	if(myfilename.IsFileReadable()){//FileExists()){
+		if( FAM == ReadOnly)
+			Open(myfilename.GetFullPath(), wxFile::read);
+		else
+			Open(myfilename.GetFullPath(), wxFile::read_write);
 
-//		if( myfilename.GetFullPath() == wxT("/dev/mem") ){
-//			//Ram device in Unix has need special treatment.
-//			}
-//		else
-			{
-			if( FAM == ReadOnly)
-				Open(myfilename.GetFullPath(), wxFile::read);
-			else
-				Open(myfilename.GetFullPath(), wxFile::read_write);
+		if( ForceBlockRW )
+			BlockCount=wxFile::Length()/ForceBlockRW;
 
-			if( ForceBlockRW )
-				BlockCount=wxFile::Length()/ForceBlockRW;
-
-			if(! IsOpened()){
-				file_access_mode = AccessInvalid;
-				///Upper level has error message box too.
-				//wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
-				}
+		if(! IsOpened()){
+			file_access_mode = AccessInvalid;
+			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 			}
 		}
 	}
 
 FAL::~FAL(){
+	Close();
+#ifndef __WXMSW__
+	if(not oldOwner.IsEmpty() ){
+		//Will restore owner on file close.
+		wxString cmd = wxT("gnomesu -c \"chown ") + oldOwner + wxT(" ")+ the_file.GetFullPath() +wxT("\"");
+#ifdef _DEBUG_
+		std::cout << "Changing permission of " << the_file.GetFullPath().ToAscii() << std::endl;
+		std::cout << cmd.ToAscii() << std::endl;
+#endif
+		wxArrayString output,errors;
+		wxShell( cmd );
+		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
+		wxSleep(1);
+#endif
+		}
 	DiffArray.Clear();
 	}
 

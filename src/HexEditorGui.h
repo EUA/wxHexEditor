@@ -50,14 +50,15 @@
 #define idInfoPanel 1005
 #define idTagPanel 1006
 #define idDisassemblerPanel 1007
-#define idCompare 1008
-#define idXORView 1009
-#define idDeviceRam 1010
-#define idFileRO 1011
-#define idFileRW 1012
-#define idFileDW 1013
-#define ID_CHK_UNSIGNED 1014
-#define ID_CHK_BIGENDIAN 1015
+#define idChecksum 1008
+#define idCompare 1009
+#define idXORView 1010
+#define idDeviceRam 1011
+#define idFileRO 1012
+#define idFileRW 1013
+#define idFileDW 1014
+#define ID_CHK_UNSIGNED 1015
+#define ID_CHK_BIGENDIAN 1016
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -88,7 +89,6 @@ class HexEditorGui : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnViewMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
-		virtual void OnToolMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnToolsMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDevicesMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
@@ -319,6 +319,36 @@ class CompareDialogGui : public wxDialog
 		
 		CompareDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Compare Files"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~CompareDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ChecksumDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class ChecksumDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxCheckBox* chkFile;
+		wxFilePickerCtrl* filePick;
+		wxCheckBox* chkMD5;
+		wxCheckBox* chkSHA1;
+		wxCheckBox* chkSHA2;
+		wxCheckBox* chkSHA256;
+		wxCheckBox* chkSHA384;
+		wxCheckBox* chkSHA512;
+		wxButton* btnCancel;
+		wxButton* btnCalculate;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		ChecksumDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Calculate Checksum"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~ChecksumDialogGui();
 	
 };
 

@@ -1,0 +1,35 @@
+
+hashlib++ - a simple hash library for C++
+Copyright (c) 2007-2010 Benjamin Grüdelbach
+
+About this document:
+This document contains frequently asked questions
+You should read this stuff before asking for help.
+
+Apr 2010
+
+-------------------------------------------------------------------------------	
+
+Q1) 	What is hashlib++ ?
+A1)	hashlib++ is a simple and very easy to use library to create a 
+	cryptographic checksum (like MD5 or SHA1) called "hash" in C++. 
+
+-------------------------------------------------------------------------------	
+
+Q2)	What functions are supported?	
+A2)	By now hashlib++ supports the following functions:
+	* MD5		Message-Digest algorithm 5
+	* SHA1  	Secure Hash Algorithm 1
+	* SHA2-Family 	Secure Hash Algorithm 256, 384 and 512
+
+-------------------------------------------------------------------------------	
+
+Q3)	I'm getting a linker error like this: 
+	"undefined reference to md5wrapper::md5wrapper()". What can I do?
+A3)	If you are using hashlib++ as source code library you probably forgot 
+	to add the *.cpp files to your project.
+	If you are using hashlib++ as static library you need to link against
+	this library (Please refer to your compiler's manual).
+
+-------------------------------------------------------------------------------	
+EOF

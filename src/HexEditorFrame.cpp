@@ -438,6 +438,11 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 		mcd->ShowModal();
 		mcd->Destroy();
 		}
+	else if( event.GetId() == idChecksum){
+		::ChecksumDialog *mcd = new ::ChecksumDialog( this );
+		mcd->ShowModal();
+		mcd->Destroy();
+		}
 	event.Skip();
 	}
 
@@ -580,7 +585,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idXORView, MyNotebook->GetPageCount() and (GetActiveHexEditor()->XORKey != wxEmptyString));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 
-	if(event.GetId() == idDeviceRam){
+	if(event.GetId() == idDeviceRam ){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
 
 #ifdef _DEBUG_
@@ -589,7 +594,9 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
-			menuDeviceDisk->Remove( *it );
+				//This triggers segfault sometimes!!!
+				//Don't know why...
+				menuDeviceDisk->Remove( *it );
 			}
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 		wxArrayString disks;

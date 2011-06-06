@@ -586,7 +586,7 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "CompareDialog::EventHandler()" << std::endl;
 #endif
-	if(event.GetId() == btnCancel->GetId())
+	if(event.GetId() == wxID_CANCEL)
 		Destroy();
 	else if(event.GetId() == btnCompare->GetId()){
 		if( not filePick1->GetPath().IsEmpty() and not filePick2->GetPath().IsEmpty()){
@@ -612,5 +612,20 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 
 	else if( event.GetId() == checkSaveResults->GetId() ){
 		filePickSave->Enable(event.IsChecked());
+		}
+	}
+
+ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, wxID_ANY){
+	parent = static_cast< HexEditorFrame* >(parent_);
+	}
+
+void ChecksumDialog::EventHandler( wxCommandEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "ChecksumDialog::EventHandler()" << std::endl;
+#endif
+	if(event.GetId() == wxID_CANCEL)
+		Destroy();
+	else if(event.GetId() == btnCalculate->GetId()){
+
 		}
 	}

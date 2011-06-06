@@ -91,4 +91,14 @@ class CompareDialog : public CompareDialogGui{
 		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
 virtual void EventHandler( wxCommandEvent& event );
 	};
+
+class ChecksumDialog : public ChecksumDialogGui{
+	public:
+		ChecksumDialog( wxWindow* parent );
+	private:
+		class HexEditorFrame* parent;
+		bool Checksum( wxFileName f1, int options );
+		bool Checksum( HexEditor* h1, int options );
+virtual void EventHandler( wxCommandEvent& event );
+	};
 #endif //__HexEditorDialogs__

@@ -235,8 +235,8 @@ inline bool wxHexCtrl::IsDenied_NoCache( int x ){	// State Of The Art :) Hex plo
 	if( ( ( m_Window.x - 1 ) % 3 == 0 )		// For avoid hex divorcings
 		&& ( x == m_Window.x - 1 ))
 		return true;
-	//if( x == 3*8 )
-	//	return true;
+//	if( x == 3*8 )
+//		return true;
 	return !( ( x + 1 ) % 3 );				// Byte coupling
 	}
 

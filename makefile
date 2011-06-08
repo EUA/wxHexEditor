@@ -48,12 +48,14 @@ $(EXECUTABLE): $(OBJECTS) $(LIBS)
 	$(RC) $(RCFLAGS) $< -o $@
 
 udis86/libudis86/.libs/libudis86.a:
+	echo Please make sure if libudis86 build for your host to avoid link time errors!
 	cd udis86;./autogen.sh
 	cd udis86;./configure
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 hashlibpp/src/libhl++.a:
-	cd hashlibpp/src; $(MAKE) $(MFLAGS)
+	echo "Please make sure if libudis86 build for your host to avoid link time errors!"
+	cd hashlibpp/src;$(MAKE) $(MFLAGS)
 
 win: prepare $(RESOURCES) $(EXECUTABLE_WIN)
 

@@ -90,6 +90,7 @@ class CompareDialog : public CompareDialogGui{
 		class HexEditorFrame* parent;
 		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
 virtual void EventHandler( wxCommandEvent& event );
+virtual void EventHandler( wxFileDirPickerEvent& event );
 	};
 
 class ChecksumDialog : public ChecksumDialogGui{
@@ -102,5 +103,6 @@ class ChecksumDialog : public ChecksumDialogGui{
 		char *checksum_options_strings[5];
 		wxString CalculateChecksum( FAL& fl, unsigned options );
 virtual void EventHandler( wxCommandEvent& event );
+virtual void EventHandler( wxFileDirPickerEvent& event );
 	};
 #endif //__HexEditorDialogs__

@@ -205,7 +205,7 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 	else{//Search as UTF string.
 		wxCharBuffer a = target.ToUTF8(); //Convert to UTF8 Binary
 		int i=0;
-		while(a[i++]!=0);					//Find stream size
+		while(a[i++] not_eq 0);					//Find stream size
 		textsrc.AppendData( a , i-1 );//-1 for discard null termination char
 		return FindBinary( textsrc, start_from, options|SEARCH_UTF8 );
 		}
@@ -583,6 +583,12 @@ BreakDoubleFor:
 	return true;
 	}
 
+void CompareDialog::EventHandler( wxFileDirPickerEvent& event ){
+	if( filePick1->GetPath() not_eq wxEmptyString and filePick2->GetPath() not_eq wxEmptyString)
+		btnCompare->Enable(true);
+	else
+		btnCompare->Enable(false);
+	}
 void CompareDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "CompareDialog::EventHandler()" << std::endl;
@@ -618,27 +624,28 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 
 ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
-	checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 	bool active_hex = parent->GetActiveHexEditor() not_eq NULL;
 	chkFile->Enable(active_hex);
 	chkFile->SetValue(active_hex);
 	filePick->Enable(not active_hex);
+	btnCalculate->Enable( active_hex );
 	}
 
 void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "ChecksumDialog::EventHandler()" << std::endl;
 #endif
+	unsigned options=0;
+	options |= (chkMD5->GetValue()    ? MD5    : 0);
+	options |= (chkSHA1->GetValue()   ? SHA1   : 0);
+	options |= (chkSHA256->GetValue() ? SHA256 : 0);
+	options |= (chkSHA384->GetValue() ? SHA384 : 0);
+	options |= (chkSHA512->GetValue() ? SHA512 : 0);
+
 	if(event.GetId() == wxID_CANCEL)
 		Destroy();
-	else if(event.GetId() == btnCalculate->GetId()){
-		unsigned options;
-		options |= (chkMD5->GetValue()    ? MD5    : 0);
-		options |= (chkSHA1->GetValue()   ? SHA1   : 0);
-		options |= (chkSHA256->GetValue() ? SHA256 : 0);
-		options |= (chkSHA384->GetValue() ? SHA384 : 0);
-		options |= (chkSHA512->GetValue() ? SHA512 : 0);
 
+	else if(event.GetId() == btnCalculate->GetId()){
 		wxString msg;
 		if( chkFile->GetValue() )
 			 msg = CalculateChecksum( *parent->GetActiveHexEditor()->myfile, options );
@@ -648,54 +655,60 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 			msg = CalculateChecksum( f, options );
 			f.Close();
 			}
-		else{
-			wxMessageBox( _("No file selected!"), _("Error"), wxOK|wxCENTER|wxICON_ERROR );
-			return;
-			}
 		wxMessageBox( msg, _("Cheksum Results"));
 		}
 	else if(event.GetId() == chkFile->GetId() ){
 		filePick->Enable( not event.IsChecked() );
 		}
-	}
 
+
+	if( options == 0 or not ((filePick->GetPath() not_eq wxEmptyString) or chkFile->GetValue()) )
+		btnCalculate->Enable(false);
+	else
+		btnCalculate->Enable(true);
+	}
+void ChecksumDialog::EventHandler( wxFileDirPickerEvent& event ){
+	wxCommandEvent e;
+	EventHandler( e );
+	}
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
 	if( 0 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
-		unsigned NumBits=0;
-		for( unsigned i = 0; i < 16 ; i ++ ){
-			NumBits += (options>>i)&0x1;
-			}
-			hashwrapper **myhash= (hashwrapper**) new char[NumBits];
-			unsigned i=0;
-			if( options & MD5    ) myhash[i++]= new md5wrapper();
-			if( options & SHA1   ) myhash[i++]= new sha1wrapper();
-			if( options & SHA256 ) myhash[i++]= new sha256wrapper();
-			if( options & SHA384 ) myhash[i++]= new sha384wrapper();
-			if( options & SHA512 ) myhash[i++]= new sha512wrapper();
-
-			for(i = 0 ; i < NumBits ; i++)
-				myhash[i]->resetContext();
-
-			int rd=MB;
-			unsigned char buff[MB];
-			while(rd == MB){
-				rd = f.Read( buff, MB );
-				for( i = 0 ; i < NumBits ; i++) myhash[i]->updateContext( buff, rd);
-				}
-			wxString results;
-			i=0;
-			for(unsigned j = 0 ; j < 16 ; j++)
-				if( (options >> j) & 0x1 ){
-					results += wxString::FromAscii(checksum_options_strings[i]);
-					results += wxT(":\t");
-					//TODO: Here is giving seg fault if 4 hash calculated? Why?
-					results += wxString::FromAscii(myhash[i]->hashIt().c_str());
-					results += wxT("\n");
-					delete myhash[i++];
-					}
-			//delete myhash;
-			return results;
+//		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
+//		unsigned NumBits=0;
+//		for( unsigned i = 0; i < 16 ; i ++ ){
+//			NumBits += (options>>i)&0x1;
+//			}
+//			hashwrapper **myhash= (hashwrapper**) new char[NumBits];
+//			unsigned i=0;
+//			if( options & MD5    ) myhash[i++]= new md5wrapper();
+//			if( options & SHA1   ) myhash[i++]= new sha1wrapper();
+//			if( options & SHA256 ) myhash[i++]= new sha256wrapper();
+//			if( options & SHA384 ) myhash[i++]= new sha384wrapper();
+//			if( options & SHA512 ) myhash[i++]= new sha512wrapper();
+//
+//			for(i = 0 ; i < NumBits ; i++)
+//				myhash[i]->resetContext();
+//
+//			int rd=MB;
+//			unsigned char buff[MB];
+//			while(rd == MB){
+//				rd = f.Read( buff, MB );
+//				for( i = 0 ; i < NumBits ; i++) myhash[i]->updateContext( buff, rd);
+//				}
+//			wxString results;
+//			i=0;
+//			for(unsigned j = 0 ; j < 16 ; j++)
+//				if( (options >> j) & 0x1 ){
+//					results += wxString::FromAscii(checksum_options_strings[i]);
+//					results += wxT(":\t");
+//					//TODO: Here is giving seg fault if 4 hash calculated? Why?
+//					results += wxString::FromAscii(myhash[i]->hashIt().c_str());
+//					results += wxT("\n");
+//					delete myhash[i++];
+//					}
+//			//delete myhash;
+//			return results;
 		}
 	else{
 		hashwrapper *MD5Wrapper = new md5wrapper();

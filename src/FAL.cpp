@@ -126,8 +126,8 @@ FAL::~FAL(){
 		wxShell( cmd );
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxSleep(1);
-#endif
 		}
+#endif
 	DiffArray.Clear();
 	}
 

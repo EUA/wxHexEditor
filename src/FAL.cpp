@@ -233,12 +233,14 @@ bool FAL::Apply( void ){
 						delete [] bfr;
 						return false;
 						}
-					memcpy( bfr+StartShift, DiffArray[i]->new_data, DiffArray[i]->size);
+					//if already written and makeing undo, than use old_data
+					memcpy( bfr+StartShift, (DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
 					success*=Write(bfr, rd_size);//*= to make update success true or false
 					delete [] bfr;
 					}
-				else//too pass next line on block access
-					success*=Write(DiffArray[i]->new_data, DiffArray[i]->size);
+				else
+					//if already written and makeing undo, than use old_data
+					success*=Write((DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
 
 				if( success )
 					DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
@@ -252,6 +254,7 @@ int64_t FAL::Undo( void ){
 		wxBell();						// No possible undo action here bell
 		return -1;
 		}
+	//search for a undo node...
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( DiffArray.Item(i)->flag_undo ){		//find first undo node if available
 			if( i != 0 ){			//if it is not first node
@@ -266,6 +269,8 @@ int64_t FAL::Undo( void ){
 				}
 			}
 	DiffArray.Last()->flag_undo=true;
+	if( file_access_mode == DirectWrite )		//Direct Write mode is always applies directly.
+		Apply();
 	return DiffArray.Last()->start_offset;
 	}
 

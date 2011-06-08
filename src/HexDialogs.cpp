@@ -642,11 +642,15 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 		wxString msg;
 		if( chkFile->GetValue() )
 			 msg = CalculateChecksum( *parent->GetActiveHexEditor()->myfile, options );
-		else{
+		else if( filePick->GetPath() not_eq wxEmptyString ){
 			wxFileName fl( filePick->GetPath() );
 			FAL f( fl );
 			msg = CalculateChecksum( f, options );
 			f.Close();
+			}
+		else{
+			wxMessageBox( _("No file selected!"), _("Error"), wxOK|wxCENTER|wxICON_ERROR );
+			return;
 			}
 		wxMessageBox( msg, _("Cheksum Results"));
 		}
@@ -657,65 +661,81 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
-	unsigned NumBits=0;
-	for( unsigned i = 0; i < 16 ; i ++ ){
-		NumBits += (options>>i)&0x1;
-		}
-	hashwrapper **myhash= (hashwrapper**) new char[NumBits];
-//	hashwrapper *MD5Wrapper = new md5wrapper();
-//	hashwrapper *SHA1Wrapper = new sha1wrapper();
-//	hashwrapper *SHA256Wrapper = new sha256wrapper();
-//	hashwrapper *SHA384Wrapper = new sha384wrapper();
-//	hashwrapper *SHA512Wrapper = new sha512wrapper();
-	unsigned i=0;
-	if( options & MD5    ) myhash[i++]= new md5wrapper();
-	if( options & SHA1   ) myhash[i++]= new sha1wrapper();
-	if( options & SHA256 ) myhash[i++]= new sha256wrapper();
-	if( options & SHA384 ) myhash[i++]= new sha384wrapper();
-	if( options & SHA512 ) myhash[i++]= new sha512wrapper();
-//
-//	MD5Wrapper->resetContext();
-//	SHA1Wrapper->resetContext();
-//	SHA256Wrapper->resetContext();
-//	SHA384Wrapper->resetContext();
-//	SHA512Wrapper->resetContext();
-
-	for(i = 0 ; i < NumBits ; i++)
-		myhash[i]->resetContext();
-
-	int rd=MB;
-	unsigned char buff[MB];
-	while(rd == MB){
-		rd = f.Read( buff, MB );
-	//			if( options & MD5    ) MD5Wrapper->updateContext( buff, rd);
-	//			if( options & SHA1   ) SHA1Wrapper->updateContext( buff, rd);
-	//			if( options & SHA256 ) SHA256Wrapper->updateContext( buff, rd);
-	//			if( options & SHA384 ) SHA384Wrapper->updateContext( buff, rd);
-	//			if( options & SHA512 ) SHA512Wrapper->updateContext( buff, rd);
-
-		for( i = 0 ; i < NumBits ; i++) myhash[i]->updateContext( buff, rd);
-		}
-	wxString results;
-
-	//		if( options & MD5    ) results += wxT("MD5:\t")+ wxString::FromAscii(MD5Wrapper->hashIt().c_str())+wxT("\n");
-	//		if( options & SHA1   ) results += wxT("SHA1:\t")+ wxString::FromAscii(SHA1Wrapper->hashIt().c_str())+wxT("\n");
-	//		if( options & SHA256 ) results += wxT("SHA256:\t")+ wxString::FromAscii(SHA256Wrapper->hashIt().c_str())+wxT("\n");
-	//		if( options & SHA384 ) results += wxT("SHA384:\t")+ wxString::FromAscii(SHA384Wrapper->hashIt().c_str())+wxT("\n");
-	//		if( options & SHA512 ) results += wxT("SHA512:\t")+ wxString::FromAscii(SHA512Wrapper->hashIt().c_str())+wxT("\n");
-	i=0;
-	for(unsigned j = 0 ; j < 16 ; j++)
-		if( (options >> j) & 0x1 ){
-			//TODO: Here is giving seg fault if 4 hash calculated? Why?
-			results += wxString::FromAscii(checksum_options_strings[i]) + wxT("\t")+ wxString::FromAscii(myhash[i]->hashIt().c_str())+wxT("\n");
-			delete myhash[i++];
+	if( 0 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
+		unsigned NumBits=0;
+		for( unsigned i = 0; i < 16 ; i ++ ){
+			NumBits += (options>>i)&0x1;
 			}
-	delete myhash;
-//	delete MD5Wrapper;
-//	delete SHA1Wrapper;
-//	delete SHA256Wrapper;
-//	delete SHA384Wrapper;
-//	delete SHA512Wrapper;
+			hashwrapper **myhash= (hashwrapper**) new char[NumBits];
+			unsigned i=0;
+			if( options & MD5    ) myhash[i++]= new md5wrapper();
+			if( options & SHA1   ) myhash[i++]= new sha1wrapper();
+			if( options & SHA256 ) myhash[i++]= new sha256wrapper();
+			if( options & SHA384 ) myhash[i++]= new sha384wrapper();
+			if( options & SHA512 ) myhash[i++]= new sha512wrapper();
 
-	return results;
+			for(i = 0 ; i < NumBits ; i++)
+				myhash[i]->resetContext();
+
+			int rd=MB;
+			unsigned char buff[MB];
+			while(rd == MB){
+				rd = f.Read( buff, MB );
+				for( i = 0 ; i < NumBits ; i++) myhash[i]->updateContext( buff, rd);
+				}
+			wxString results;
+			i=0;
+			for(unsigned j = 0 ; j < 16 ; j++)
+				if( (options >> j) & 0x1 ){
+					results += wxString::FromAscii(checksum_options_strings[i]);
+					results += wxT(":\t");
+					//TODO: Here is giving seg fault if 4 hash calculated? Why?
+					results += wxString::FromAscii(myhash[i]->hashIt().c_str());
+					results += wxT("\n");
+					delete myhash[i++];
+					}
+			//delete myhash;
+			return results;
+		}
+	else{
+		hashwrapper *MD5Wrapper = new md5wrapper();
+		hashwrapper *SHA1Wrapper = new sha1wrapper();
+		hashwrapper *SHA256Wrapper = new sha256wrapper();
+		hashwrapper *SHA384Wrapper = new sha384wrapper();
+		hashwrapper *SHA512Wrapper = new sha512wrapper();
+
+
+		MD5Wrapper->resetContext();
+		SHA1Wrapper->resetContext();
+		SHA256Wrapper->resetContext();
+		SHA384Wrapper->resetContext();
+		SHA512Wrapper->resetContext();
+
+		int rd=MB;
+		unsigned char buff[MB];
+		while(rd == MB){
+			rd = f.Read( buff, MB );
+			if( options & MD5    ) MD5Wrapper->updateContext( buff, rd);
+			if( options & SHA1   ) SHA1Wrapper->updateContext( buff, rd);
+			if( options & SHA256 ) SHA256Wrapper->updateContext( buff, rd);
+			if( options & SHA384 ) SHA384Wrapper->updateContext( buff, rd);
+			if( options & SHA512 ) SHA512Wrapper->updateContext( buff, rd);
+			}
+		wxString results;
+
+		if( options & MD5    ) results += wxT("MD5:\t")+ wxString::FromAscii(MD5Wrapper->hashIt().c_str())+wxT("\n");
+		if( options & SHA1   ) results += wxT("SHA1:\t")+ wxString::FromAscii(SHA1Wrapper->hashIt().c_str())+wxT("\n");
+		if( options & SHA256 ) results += wxT("SHA256:\t")+ wxString::FromAscii(SHA256Wrapper->hashIt().c_str())+wxT("\n");
+		if( options & SHA384 ) results += wxT("SHA384:\t")+ wxString::FromAscii(SHA384Wrapper->hashIt().c_str())+wxT("\n");
+		if( options & SHA512 ) results += wxT("SHA512:\t")+ wxString::FromAscii(SHA512Wrapper->hashIt().c_str())+wxT("\n");
+
+		delete MD5Wrapper;
+		delete SHA1Wrapper;
+		delete SHA256Wrapper;
+		delete SHA384Wrapper;
+		delete SHA512Wrapper;
+
+		return results;
+		}
 	}
 

@@ -540,11 +540,11 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">Devices</property>
                     <property name="name">devicesMenu</property>
                     <property name="permission">protected</property>
-                    <object class="submenu" expanded="0">
+                    <object class="submenu" expanded="1">
                         <property name="label">Open Disk Device</property>
                         <property name="name">menuDeviceDisk</property>
                         <property name="permission">protected</property>

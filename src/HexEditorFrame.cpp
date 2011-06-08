@@ -596,13 +596,15 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 #endif
 
+
+		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
 				//This triggers segfault sometimes!!!
 				//Don't know why...
-				menuDeviceDisk->Remove( *it );
+				menuDeviceDisk->Destroy( *it );
 			}
-		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
+
 		wxArrayString disks;
 #ifdef __WXGTK__
 		///ls -l /dev/disk/by-id

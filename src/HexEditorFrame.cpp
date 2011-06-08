@@ -566,6 +566,10 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 			 "along with this program; if not, write to the Free Software\n"
 			 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
 			 "\n"
+			 "\n"
+			 "hashlib++ used under BSD licence, Benjamin Grüdelbach (c) 2007-2010\n"
+			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
+			 "\n"
 			 "home:  wxhexeditor.sourceforge.net\n"
 			 "email: spamjunkeater@gmail.com\n")
 			 );

@@ -367,6 +367,9 @@ void FAL::ApplyXOR( char* buffer, unsigned size, uint64_t from ){
 		}
 	}
 
+long FAL::Read( unsigned char* buffer, int size){
+	return Read( reinterpret_cast<char*>(buffer), size);
+	}
 long FAL::Read( char* buffer, int size){
 	uint64_t from;
 	if( BlockSize > 0 )

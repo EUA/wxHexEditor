@@ -57,6 +57,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		          long style=0);
 		~HexEditor( void );
 		friend class scrollthread;
+		friend class ChecksumDialog;
 		//friend class FindDialog;
 		wxString XORKey;
 		void Goto( int64_t goto_offset=-1 , bool set_focus=false);

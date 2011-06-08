@@ -95,10 +95,12 @@ virtual void EventHandler( wxCommandEvent& event );
 class ChecksumDialog : public ChecksumDialogGui{
 	public:
 		ChecksumDialog( wxWindow* parent );
+		ChecksumDialog( wxWindow* parent, FAL *find_file );
 	private:
 		class HexEditorFrame* parent;
-		bool Checksum( wxFileName f1, int options );
-		bool Checksum( HexEditor* h1, int options );
+		enum checksum_options{ MD5=0x1,SHA1=0x2,SHA256=0x4,SHA384=0x8,SHA512=0x10 };
+		char *checksum_options_strings[5];
+		wxString CalculateChecksum( FAL& fl, unsigned options );
 virtual void EventHandler( wxCommandEvent& event );
 	};
 #endif //__HexEditorDialogs__

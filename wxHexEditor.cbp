@@ -168,6 +168,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Linker>
+			<Add library="hashlibpp/src/libhl++.a" />
+		</Linker>
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="makefile" />
 		<Unit filename="resources/osx/png2c.h" />

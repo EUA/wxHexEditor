@@ -24,6 +24,7 @@
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
+#include "../hashlibpp/src/hashlibpp.h"
 
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
@@ -617,6 +618,11 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 
 ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
+	checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
+	bool active_hex = parent->GetActiveHexEditor() not_eq NULL;
+	chkFile->Enable(active_hex);
+	chkFile->SetValue(active_hex);
+	filePick->Enable(not active_hex);
 	}
 
 void ChecksumDialog::EventHandler( wxCommandEvent& event ){
@@ -626,6 +632,90 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 	if(event.GetId() == wxID_CANCEL)
 		Destroy();
 	else if(event.GetId() == btnCalculate->GetId()){
+		unsigned options;
+		options |= (chkMD5->GetValue()    ? MD5    : 0);
+		options |= (chkSHA1->GetValue()   ? SHA1   : 0);
+		options |= (chkSHA256->GetValue() ? SHA256 : 0);
+		options |= (chkSHA384->GetValue() ? SHA384 : 0);
+		options |= (chkSHA512->GetValue() ? SHA512 : 0);
 
+		wxString msg;
+		if( chkFile->GetValue() )
+			 msg = CalculateChecksum( *parent->GetActiveHexEditor()->myfile, options );
+		else{
+			wxFileName fl( filePick->GetPath() );
+			FAL f( fl );
+			msg = CalculateChecksum( f, options );
+			f.Close();
+			}
+		wxMessageBox( msg, _("Cheksum Results"));
+		}
+	else if(event.GetId() == chkFile->GetId() ){
+		filePick->Enable( not event.IsChecked() );
 		}
 	}
+
+wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
+	f.Seek(0);
+	unsigned NumBits=0;
+	for( unsigned i = 0; i < 16 ; i ++ ){
+		NumBits += (options>>i)&0x1;
+		}
+	hashwrapper **myhash= (hashwrapper**) new char[NumBits];
+//	hashwrapper *MD5Wrapper = new md5wrapper();
+//	hashwrapper *SHA1Wrapper = new sha1wrapper();
+//	hashwrapper *SHA256Wrapper = new sha256wrapper();
+//	hashwrapper *SHA384Wrapper = new sha384wrapper();
+//	hashwrapper *SHA512Wrapper = new sha512wrapper();
+	unsigned i=0;
+	if( options & MD5    ) myhash[i++]= new md5wrapper();
+	if( options & SHA1   ) myhash[i++]= new sha1wrapper();
+	if( options & SHA256 ) myhash[i++]= new sha256wrapper();
+	if( options & SHA384 ) myhash[i++]= new sha384wrapper();
+	if( options & SHA512 ) myhash[i++]= new sha512wrapper();
+//
+//	MD5Wrapper->resetContext();
+//	SHA1Wrapper->resetContext();
+//	SHA256Wrapper->resetContext();
+//	SHA384Wrapper->resetContext();
+//	SHA512Wrapper->resetContext();
+
+	for(i = 0 ; i < NumBits ; i++)
+		myhash[i]->resetContext();
+
+	int rd=MB;
+	unsigned char buff[MB];
+	while(rd == MB){
+		rd = f.Read( buff, MB );
+	//			if( options & MD5    ) MD5Wrapper->updateContext( buff, rd);
+	//			if( options & SHA1   ) SHA1Wrapper->updateContext( buff, rd);
+	//			if( options & SHA256 ) SHA256Wrapper->updateContext( buff, rd);
+	//			if( options & SHA384 ) SHA384Wrapper->updateContext( buff, rd);
+	//			if( options & SHA512 ) SHA512Wrapper->updateContext( buff, rd);
+
+		for( i = 0 ; i < NumBits ; i++) myhash[i]->updateContext( buff, rd);
+		}
+	wxString results;
+
+	//		if( options & MD5    ) results += wxT("MD5:\t")+ wxString::FromAscii(MD5Wrapper->hashIt().c_str())+wxT("\n");
+	//		if( options & SHA1   ) results += wxT("SHA1:\t")+ wxString::FromAscii(SHA1Wrapper->hashIt().c_str())+wxT("\n");
+	//		if( options & SHA256 ) results += wxT("SHA256:\t")+ wxString::FromAscii(SHA256Wrapper->hashIt().c_str())+wxT("\n");
+	//		if( options & SHA384 ) results += wxT("SHA384:\t")+ wxString::FromAscii(SHA384Wrapper->hashIt().c_str())+wxT("\n");
+	//		if( options & SHA512 ) results += wxT("SHA512:\t")+ wxString::FromAscii(SHA512Wrapper->hashIt().c_str())+wxT("\n");
+	i=0;
+	for(unsigned j = 0 ; j < 16 ; j++)
+		if( (options >> j) & 0x1 ){
+			//TODO: Here is giving seg fault if 4 hash calculated? Why?
+			results += wxString::FromAscii(checksum_options_strings[i]) + wxT("\t")+ wxString::FromAscii(myhash[i]->hashIt().c_str())+wxT("\n");
+			delete myhash[i++];
+			}
+	delete myhash;
+//	delete MD5Wrapper;
+//	delete SHA1Wrapper;
+//	delete SHA256Wrapper;
+//	delete SHA384Wrapper;
+//	delete SHA512Wrapper;
+
+	return results;
+	}
+

@@ -104,6 +104,7 @@ class FAL : private wxFile{
 		bool IsOpened(){ return wxFile::IsOpened(); };
 		int  fd() const { return wxFile::fd(); };
 		long Read( char* buffer, int size );
+		long Read( unsigned char* buffer, int size );
 		void SetXORKey( wxMemoryBuffer );
 		void ApplyXOR( char* buffer, unsigned size, uint64_t from );
 

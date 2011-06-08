@@ -334,7 +334,6 @@ class ChecksumDialogGui : public wxDialog
 		wxFilePickerCtrl* filePick;
 		wxCheckBox* chkMD5;
 		wxCheckBox* chkSHA1;
-		wxCheckBox* chkSHA2;
 		wxCheckBox* chkSHA256;
 		wxCheckBox* chkSHA384;
 		wxCheckBox* chkSHA512;

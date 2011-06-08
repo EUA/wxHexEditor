@@ -17,7 +17,7 @@ SOURCES= src/HexEditorGui.cpp \
 			src/HexEditorCtrl/wxHexCtrl/Tag.cpp\
 			src/HexEditorCtrl/HexEditorCtrlGui.cpp\
 			src/HexEditorFrame.cpp
-LIBS = udis86/libudis86/.libs/libudis86.a
+LIBS = udis86/libudis86/.libs/libudis86.a hashlibpp/src/libhl++.a
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
 RESOURCES= resources/resource.rc
@@ -52,6 +52,9 @@ udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./configure
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
+hashlibpp/src/libhl++.a:
+	cd hashlibpp/src; $(MAKE) $(MFLAGS)
+
 win: prepare $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
@@ -59,7 +62,7 @@ $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) $(LDFLAGS) -static-libgcc -static-libstdc++ -Wl,--stack,5242880 -o $@
 
 maclink: $(OBJECTS)
-	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) $(LIBS) -lexpat -o $(EXECUTABLE)
+	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
 
 mac: prepare maclink
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents

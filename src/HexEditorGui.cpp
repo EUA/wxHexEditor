@@ -913,6 +913,8 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	sbSizerFileToHash = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("File To Hash") ), wxVERTICAL );
 	
 	chkFile = new wxCheckBox( this, wxID_ANY, wxT("Curent File"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkFile->Enable( false );
+	
 	sbSizerFileToHash->Add( chkFile, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	filePick = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
@@ -929,9 +931,6 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	
 	chkSHA1 = new wxCheckBox( this, wxID_ANY, wxT("SHA1"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerHashTypes->Add( chkSHA1, 0, wxALL, 5 );
-	
-	chkSHA2 = new wxCheckBox( this, wxID_ANY, wxT("SHA2"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerHashTypes->Add( chkSHA2, 0, wxALL, 5 );
 	
 	chkSHA256 = new wxCheckBox( this, wxID_ANY, wxT("SHA256"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerHashTypes->Add( chkSHA256, 0, wxALL, 5 );
@@ -962,6 +961,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	chkFile->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCalculate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 }
@@ -969,6 +969,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 ChecksumDialogGui::~ChecksumDialogGui()
 {
 	// Disconnect Events
+	chkFile->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCalculate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	

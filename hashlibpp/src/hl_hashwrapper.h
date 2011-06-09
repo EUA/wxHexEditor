@@ -1,19 +1,19 @@
-/*
+/* 
  * hashlib++ - a simple hash library for C++
- *
+ * 
  * Copyright (c) 2007-2010 Benjamin Grüdelbach
- *
+ * 
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- *
+ * 
  * 	1)     Redistributions of source code must retain the above copyright
  * 	       notice, this list of conditions and the following disclaimer.
- *
+ * 
  * 	2)     Redistributions in binary form must reproduce the above copyright
  * 	       notice, this list of conditions and the following disclaimer in
  * 	       the documentation and/or other materials provided with the
  * 	       distribution.
- *
+ * 	     
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,14 +26,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //doxygen mainpage
 
 /**
  * @mainpage  hashlib++ source documentation
  *
  * 	      <div align="center"><b>Version 0.3.2</b></div>
- *
+ * 	      
  *
  * 	      @section intro Introduction
  * 	      hashlib++ a simple hash library for C++  \n
@@ -59,34 +59,34 @@
  */
 
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 
 /**
  *  @file 	hl_hashwrapper.h
  *  @brief	This file contains the hashwrapper base class
  *  @date 	Mo 17 Sep 2007
- */
+ */  
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //include protection
 #ifndef HASHWRAPPER_H
 #define HASHWRAPPER_H
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //STL includes
 #include <string>
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //C includes
 //#include <stdio.h>
 #include <fstream>
 #include <iostream>
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //hashlib++ includes
 #include "hl_exception.h"
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 
 /**
  *  @brief 	This class represents the baseclass for all subwrappers
@@ -103,7 +103,7 @@
  *  getHashFromFile() calls resetContext() before reading the specified file
  *  in 1024 byte blocks which are forwarded to the hash context by calling
  *  updateContext(). Finaly hashIt() is called to return the hash.
- */
+ */  
 class hashwrapper
 {
 	private:
@@ -119,7 +119,7 @@ class hashwrapper
 		 *  		has to be implemented by the subclass
 		 *
 		 *  @return 	the created hash as std::string
-		 */
+		 */  
 		virtual std::string hashIt(void) = 0;
 
 		/**
@@ -132,11 +132,11 @@ class hashwrapper
 		 *
 		 *  @param 	data The hash-data to covert into HEX
 		 *  @return	The converted data as std::string
-		 */
+		 */  
 		virtual std::string convToString(unsigned char *data) = 0;
 
 		/**
-		 *  @brief 	This method adds the given data to the
+		 *  @brief 	This method adds the given data to the 
 		 *  		current hash context
 		 *
 		 *  		This memberfunction is pure virtual and
@@ -144,7 +144,7 @@ class hashwrapper
 		 *
 		 *  @param 	data The data to add to the current context
 		 *  @param 	len The length of the data to add
-		 */
+		 */  
 		virtual void updateContext(unsigned char *data, unsigned int len) = 0;
 
 		/**
@@ -153,7 +153,7 @@ class hashwrapper
 		 *
 		 *  		This memberfunction is pure virtual and
 		 *  		has to be implemented by the subclass
-		 */
+		 */  
 		virtual void resetContext(void) = 0;
 
 
@@ -169,14 +169,14 @@ class hashwrapper
 		/**
 		 * @brief Default Konstruktor
 		 */
-		hashwrapper( void )
+		hashwrapper( void ) 
 			: teststring("The quick brown fox jumps over the lazy dog")
 		{
 		}
 
 		/**
 		 *  @brief 	Default destructor
-		 */
+		 */  
 		virtual ~hashwrapper ( void ) { };
 
 		/**
@@ -189,10 +189,10 @@ class hashwrapper
 			if(hash != verify)
 			{
 				throw hlException(HL_VERIFY_TEST_FAILED,
-						  "hashlib test-error: \"" +
+						  "hashlib test-error: \"" + 
 						  hash +
-						  "\" is not \"" +
-						  verify +
+						  "\" is not \"" + 
+						  verify + 
 						  "\" as supposed to be.");
 			}
 		}
@@ -209,7 +209,7 @@ class hashwrapper
 		 *  @param 	text The text to create a hash from. This
 		 *  		parameter is forwarded to updateContext()
 		 *  @return 	the created hash as std::string
-		 */
+		 */  
 		virtual std::string getHashFromString(std::string text)
 		{
 			/*
@@ -224,10 +224,10 @@ class hashwrapper
 			updateContext((unsigned char*) text.c_str(),text.length());
 
 			/*
-			 * now we can close the hash process
+			 * now we can close the hash process 
 			 * and return the created hash
 			 */
-			return this->hashIt();
+			return this->hashIt(); 
 		}
 
 		/**
@@ -246,7 +246,7 @@ class hashwrapper
 		 *  		the file could not be opened
 		 *  @throw	Throws a hlException if the specified file could not
 		 *  		be opened.
-		 */
+		 */  
 		virtual std::string getHashFromFile(std::string filename)
 		{
 			std::ifstream ifs;
@@ -265,8 +265,8 @@ class hashwrapper
 			if( ! ifs.is_open() )
 			{
 				throw hlException(HL_FILE_READ_ERROR,
-						  "Cannot read file \"" +
-						  filename +
+						  "Cannot read file \"" + 
+						  filename + 
 						  "\".");
 			}
 
@@ -282,11 +282,11 @@ class hashwrapper
 			ifs.close();
 			return(hashIt());
 		}
-};
+}; 
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //end of include protection
 #endif
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
 //EOF

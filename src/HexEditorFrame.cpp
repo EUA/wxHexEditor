@@ -179,7 +179,7 @@ void HexEditorFrame::PrepareAUI( void ){
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
 					Show(false).
-					Right().Left().Layer(1) );
+					Right().Layer(1) );
 	mbar->Check( idTagPanel, true );
 
 	MySearchPanel = new SearchPanel( this, -1 );

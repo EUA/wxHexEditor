@@ -214,8 +214,8 @@ void HexEditorFrame::PrepareAUI( void ){
 					Caption(_("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).
-					BestSize(wxSize(140,111)).
-					Resizable(false).
+					BestSize(wxSize(140,140)).
+					//Resizable(false).
 					Left().Layer(1) );
 	mbar->Check( idInfoPanel, true );
 
@@ -594,14 +594,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 #endif
 
-
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
-		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ ){
-				//This triggers segfault sometimes!!!
-				//Don't know why...
+		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
 				menuDeviceDisk->Destroy( *it );
-			}
 
 		wxArrayString disks;
 #ifdef __WXGTK__
@@ -645,6 +641,12 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 			}
+		#ifdef __WXMSW__
+			if( disks.Count() == 0 ){
+				menuDeviceDisk->Append( idDiskDevice+0, _("You needed administration privileges to see available devices"), wxT(""), wxITEM_NORMAL );
+				//menuDeviceDisk->GetMenuItems().Item(1).Toggle();
+				}
+		#endif
 		}
 
 	if( MyNotebook->GetPageCount() ){

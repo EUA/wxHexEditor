@@ -79,7 +79,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxMenuBar" expanded="1">
+            <object class="wxMenuBar" expanded="0">
                 <property name="bg"></property>
                 <property name="context_help"></property>
                 <property name="context_menu">1</property>
@@ -410,7 +410,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
+                <object class="wxMenu" expanded="0">
                     <property name="label">&amp;View</property>
                     <property name="name">viewMenu</property>
                     <property name="permission">protected</property>
@@ -490,7 +490,7 @@
                         <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
+                <object class="wxMenu" expanded="0">
                     <property name="label">Tools</property>
                     <property name="name">toolsMenu</property>
                     <property name="permission">protected</property>
@@ -540,11 +540,26 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="1">
+                <object class="wxMenu" expanded="0">
                     <property name="label">Devices</property>
                     <property name="name">devicesMenu</property>
                     <property name="permission">protected</property>
-                    <object class="submenu" expanded="1">
+                    <object class="wxMenuItem" expanded="0">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help"></property>
+                        <property name="id">idDeviceRam</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Open RAM Device</property>
+                        <property name="name">menuDevicesRam</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnDevicesMenu</event>
+                        <event name="OnUpdateUI">OnUpdateUI</event>
+                    </object>
+                    <object class="submenu" expanded="0">
                         <property name="label">Open Disk Device</property>
                         <property name="name">menuDeviceDisk</property>
                         <property name="permission">protected</property>
@@ -562,21 +577,6 @@
                             <property name="unchecked_bitmap"></property>
                             <event name="OnMenuSelection">OnDevicesMenu</event>
                             <event name="OnUpdateUI"></event>
-                        </object>
-                        <object class="wxMenuItem" expanded="0">
-                            <property name="bitmap"></property>
-                            <property name="checked">0</property>
-                            <property name="enabled">0</property>
-                            <property name="help"></property>
-                            <property name="id">idDeviceRam</property>
-                            <property name="kind">wxITEM_NORMAL</property>
-                            <property name="label">Open RAM Device</property>
-                            <property name="name">menuDevicesRam</property>
-                            <property name="permission">none</property>
-                            <property name="shortcut"></property>
-                            <property name="unchecked_bitmap"></property>
-                            <event name="OnMenuSelection">OnDevicesMenu</event>
-                            <event name="OnUpdateUI">OnUpdateUI</event>
                         </object>
                     </object>
                 </object>
@@ -2093,7 +2093,7 @@
                 </object>
             </object>
         </object>
-        <object class="Panel" expanded="1">
+        <object class="Panel" expanded="0">
             <property name="bg"></property>
             <property name="context_help"></property>
             <property name="context_menu">1</property>
@@ -2141,25 +2141,25 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="1">
+            <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
                 <property name="name">mainSizer</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxBoxSizer" expanded="1">
+                    <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
                         <property name="name">bSizerTop</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
-                        <object class="sizeritem" expanded="1">
+                        <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
                             <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                             <property name="proportion">1</property>
-                            <object class="wxChoice" expanded="1">
+                            <object class="wxChoice" expanded="0">
                                 <property name="bg"></property>
                                 <property name="choices">&quot;INTEL&quot; &quot;AMD&quot;</property>
                                 <property name="context_help"></property>
@@ -2211,11 +2211,11 @@
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
-                        <object class="sizeritem" expanded="1">
+                        <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
                             <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                             <property name="proportion">1</property>
-                            <object class="wxChoice" expanded="1">
+                            <object class="wxChoice" expanded="0">
                                 <property name="bg"></property>
                                 <property name="choices">&quot;INTEL&quot; &quot;AT&amp;T&quot;</property>
                                 <property name="context_help"></property>
@@ -2267,11 +2267,11 @@
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
-                        <object class="sizeritem" expanded="1">
+                        <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
                             <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                             <property name="proportion">1</property>
-                            <object class="wxChoice" expanded="1">
+                            <object class="wxChoice" expanded="0">
                                 <property name="bg"></property>
                                 <property name="choices">&quot;16Bit&quot; &quot;32Bit&quot; &quot;64Bit&quot;</property>
                                 <property name="context_help"></property>
@@ -2325,11 +2325,11 @@
                         </object>
                     </object>
                 </object>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT</property>
                     <property name="proportion">1</property>
-                    <object class="wxTextCtrl" expanded="1">
+                    <object class="wxTextCtrl" expanded="0">
                         <property name="bg"></property>
                         <property name="context_help"></property>
                         <property name="context_menu">1</property>
@@ -2820,7 +2820,7 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="1">
+        <object class="Dialog" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>

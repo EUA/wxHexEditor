@@ -163,15 +163,15 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	mbar->Append( toolsMenu, wxT("Tools") ); 
 	
 	devicesMenu = new wxMenu();
+	wxMenuItem* menuDevicesRam;
+	menuDevicesRam = new wxMenuItem( devicesMenu, idDeviceRam, wxString( wxT("Open RAM Device") ) , wxEmptyString, wxITEM_NORMAL );
+	devicesMenu->Append( menuDevicesRam );
+	menuDevicesRam->Enable( false );
+	
 	menuDeviceDisk = new wxMenu();
 	wxMenuItem* menuDevicesDiskItem1;
 	menuDevicesDiskItem1 = new wxMenuItem( menuDeviceDisk, wxID_ANY, wxString( wxT("N/A on this OS (yet)") ) , wxEmptyString, wxITEM_NORMAL );
 	menuDeviceDisk->Append( menuDevicesDiskItem1 );
-	
-	wxMenuItem* menuDevicesRam;
-	menuDevicesRam = new wxMenuItem( menuDeviceDisk, idDeviceRam, wxString( wxT("Open RAM Device") ) , wxEmptyString, wxITEM_NORMAL );
-	menuDeviceDisk->Append( menuDevicesRam );
-	menuDevicesRam->Enable( false );
 	
 	devicesMenu->Append( -1, wxT("Open Disk Device"), menuDeviceDisk );
 	
@@ -259,9 +259,9 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuToolChecksum->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Connect( menuToolCompare->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Connect( menuToolsXORView->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
-	this->Connect( menuDevicesDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Connect( menuDevicesDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -306,9 +306,9 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idChecksum, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idCompare, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idXORView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idFileRO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idFileRW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );

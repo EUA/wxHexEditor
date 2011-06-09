@@ -121,8 +121,6 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		if(myfile->IsOpened()) {
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
-//			LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
-//			tagpanel->Set(MainTagArray);
 			LoadFromOffset(0, true);
 			SetLocalHexInsertionPoint(0);
 			return true;
@@ -141,8 +139,12 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 	if(myfile->IsOpened()) {
 		myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
-		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) );
-		tagpanel->Set(MainTagArray);
+		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
+		tagpanel->Set(MainTagArray); //Sets Tags to Tag panel
+		if(MainTagArray.Count() > 0){
+			//TODO This doesn't working good
+			//tagpanel->Show();
+			}
 		offset_ctrl->SetOffsetLimit(  myfile->Length() );
 
 		LoadFromOffset(0, true);

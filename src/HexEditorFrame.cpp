@@ -103,7 +103,6 @@ HexEditorFrame::~HexEditorFrame(){
 
 void HexEditorFrame::PrepareAUI( void ){
 	MyAUI = new wxAuiManager( this );
-
 	//MyNotebook = new wxAuiNotebook(this,-1);//Creation moved to wxFormDialog
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
 //	MyNotebook->SetWindowStyleFlag(wxAUI_NB_TOP|
@@ -170,6 +169,7 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
+					Show(false).
 					Right().Layer(1) );
 	mbar->Check( idTagPanel, true );
 
@@ -180,6 +180,7 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
+					Show(false).
 					Right().Layer(1) );
 	mbar->Check( idTagPanel, true );
 
@@ -588,7 +589,6 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idToolbar, Toolbar->IsShown());
 	mbar->Check(idXORView, MyNotebook->GetPageCount() and (GetActiveHexEditor()->XORKey != wxEmptyString));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
-
 	if(event.GetId() == idDeviceRam ){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
 

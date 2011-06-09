@@ -105,14 +105,13 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyAUI = new wxAuiManager( this );
 	//MyNotebook = new wxAuiNotebook(this,-1);//Creation moved to wxFormDialog
 	MyNotebook->SetArtProvider(new wxAuiSimpleTabArt);
+
 //	MyNotebook->SetWindowStyleFlag(wxAUI_NB_TOP|
 //											wxAUI_NB_TAB_MOVE|
 //											wxAUI_NB_TAB_SPLIT|
 //											wxAUI_NB_MIDDLE_CLICK_CLOSE|
 //											wxAUI_NB_SCROLL_BUTTONS|
 //											wxAUI_NB_WINDOWLIST_BUTTON);
-
-//	MyAUI->AddPane( MyNotebook, wxCENTER);
 
 	MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().
 			CaptionVisible(false).
@@ -121,7 +120,6 @@ void HexEditorFrame::PrepareAUI( void ){
 			Center().Layer(1) );
 
 //    wxAuiToolBarItemArray prepend_items;
-
 //    wxAuiToolBarItemArray append_items;
 //    wxAuiToolBarItem item;
 //    item.SetKind(wxITEM_SEPARATOR);
@@ -138,25 +136,25 @@ void HexEditorFrame::PrepareAUI( void ){
 #endif
 //	Toolbar->SetToolBitmapSize(wxSize(48,48));
 
-	Toolbar->AddTool(wxID_NEW, _T("New File"), wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR), _T("New file"));
-	Toolbar->AddTool(wxID_OPEN, _T("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR), _T("Open"));
-	Toolbar->AddTool(wxID_SAVE, _T("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR), _T("Save"));
-	Toolbar->AddTool(wxID_SAVEAS, _T("SaveAs File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS, wxART_TOOLBAR), _T("Save as"));
-	Toolbar->AddTool(idClose, _T("Close File"), wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_TOOLBAR), _T("Close"));
+	Toolbar->AddTool(wxID_NEW, _("New File"), wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR), _("New file"));
+	Toolbar->AddTool(wxID_OPEN, _("Open File"), wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR), _("Open"));
+	Toolbar->AddTool(wxID_SAVE, _("Save File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR), _("Save"));
+	Toolbar->AddTool(wxID_SAVEAS, _("SaveAs File"), wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS, wxART_TOOLBAR), _("Save as"));
+	Toolbar->AddTool(idClose, _("Close File"), wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_TOOLBAR), _("Close"));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_FIND, _T("Find"), wxArtProvider::GetBitmap(wxART_FIND, wxART_TOOLBAR), _T("Find"));
-	Toolbar->AddTool(wxID_REPLACE, _T("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE, wxART_TOOLBAR), _T("Find and replace"));
-	Toolbar->AddTool(idGotoOffset, _T("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_TOOLBAR), _T("Goto offset"));
+	Toolbar->AddTool(wxID_FIND, _("Find"), wxArtProvider::GetBitmap(wxART_FIND, wxART_TOOLBAR), _("Find"));
+	Toolbar->AddTool(wxID_REPLACE, _("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE, wxART_TOOLBAR), _("Find and replace"));
+	Toolbar->AddTool(idGotoOffset, _("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_TOOLBAR), _("Goto offset"));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_UNDO, _T("Undo"), wxArtProvider::GetBitmap(wxART_UNDO, wxART_TOOLBAR), _T("Undo"));
-	Toolbar->AddTool(wxID_REDO, _T("Redo"), wxArtProvider::GetBitmap(wxART_REDO, wxART_TOOLBAR), _T("Redo"));
+	Toolbar->AddTool(wxID_UNDO, _("Undo"), wxArtProvider::GetBitmap(wxART_UNDO, wxART_TOOLBAR), _("Undo"));
+	Toolbar->AddTool(wxID_REDO, _("Redo"), wxArtProvider::GetBitmap(wxART_REDO, wxART_TOOLBAR), _("Redo"));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_COPY, _T("Copy Block"), wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR), _T("Copy"));
-	Toolbar->AddTool(wxID_PASTE, _T("Paste Block"), wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR), _T("Paste"));
+	Toolbar->AddTool(wxID_COPY, _("Copy Block"), wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR), _("Copy"));
+	Toolbar->AddTool(wxID_PASTE, _("Paste Block"), wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR), _("Paste"));
 	Toolbar->AddSeparator();
-	Toolbar->AddTool(wxID_CUT, _T("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR), _T("Cuts selected block and copies to clipboard"));
-	Toolbar->AddTool(wxID_DELETE, _T("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR), _T("Deletes selected block"));
-	Toolbar->AddTool(idInsert, _T("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _T("Insert"));
+	Toolbar->AddTool(wxID_CUT, _("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR), _("Cuts selected block and copies to clipboard"));
+	Toolbar->AddTool(wxID_DELETE, _("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR), _("Deletes selected block"));
+	Toolbar->AddTool(idInsert, _("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _("Insert"));
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
    Toolbar->Realize();
@@ -181,13 +179,13 @@ void HexEditorFrame::PrepareAUI( void ){
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
 					Show(false).
-					Right().Layer(1) );
+					Right().Left().Layer(1) );
 	mbar->Check( idTagPanel, true );
 
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
-				Caption(wxT("Search Results")).
+				Caption(_("Search Results")).
 				TopDockable(false).
 				BottomDockable(false).
 				MinSize(wxSize(70,100)).
@@ -198,7 +196,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyComparePanel = new ComparePanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
-				Caption(wxT("Comparison Results")).
+				Caption(_("Comparison Results")).
 				TopDockable(false).
 				BottomDockable(false).
 				MinSize(wxSize(70,100)).
@@ -207,13 +205,13 @@ void HexEditorFrame::PrepareAUI( void ){
 				Right().Layer(1) );
 
    MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
-                  Name(wxT("ToolBar")).Caption(wxT("Big Toolbar")).
+                  Name(_("ToolBar")).Caption(_("Big Toolbar")).
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
 
 	MyInfoPanel = new InfoPanel( this, -1 );
 	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
-					Caption(wxT("InfoPanel")).
+					Caption(_("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).
 					BestSize(wxSize(140,111)).
@@ -223,7 +221,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyInterpreter = new DataInterpreter( this, -1 );
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
-					Caption(wxT("DataInterpreter")).
+					Caption(_("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
 					BestSize(wxSize(174,218)).

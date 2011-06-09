@@ -203,9 +203,10 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		return FindBinary( textsrc, start_from, options );
 		}
 	else{//Search as UTF string.
-		wxCharBuffer a = target.ToUTF8(); //Convert to UTF8 Binary
+		wxCharBuffer a = target.ToUTF8().data(); //Convert to UTF8 Binary
 		int i=0;
-		while(a[i++] not_eq 0);					//Find stream size
+		char *b=a.data();							//Silences errors
+		while(b[i++] not_eq 0);					//Find stream size
 		textsrc.AppendData( a , i-1 );//-1 for discard null termination char
 		return FindBinary( textsrc, start_from, options|SEARCH_UTF8 );
 		}

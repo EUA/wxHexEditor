@@ -21,7 +21,7 @@
         <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="1">
+        <object class="Frame" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>
@@ -4240,7 +4240,7 @@
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
-                                <event name="OnFileChanged">EventHandler</event>
+                                <event name="OnFileChanged">OnFileChange</event>
                                 <event name="OnKeyDown"></event>
                                 <event name="OnKeyUp"></event>
                                 <event name="OnKillFocus"></event>
@@ -4354,7 +4354,7 @@
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
-                                <event name="OnFileChanged">EventHandler</event>
+                                <event name="OnFileChanged">OnFileChange</event>
                                 <event name="OnKeyDown"></event>
                                 <event name="OnKeyUp"></event>
                                 <event name="OnKillFocus"></event>
@@ -5111,7 +5111,7 @@
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
-                                <event name="OnFileChanged">EventHandler</event>
+                                <event name="OnFileChanged">OnFileChange</event>
                                 <event name="OnKeyDown"></event>
                                 <event name="OnKeyUp"></event>
                                 <event name="OnKillFocus"></event>

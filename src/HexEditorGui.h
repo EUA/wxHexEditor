@@ -312,7 +312,7 @@ class CompareDialogGui : public wxDialog
 		wxButton* btnCompare;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void EventHandler( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void OnFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
 		
 	
@@ -343,7 +343,7 @@ class ChecksumDialogGui : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
-		virtual void EventHandler( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void OnFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		
 	
 	public:

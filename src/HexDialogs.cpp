@@ -584,12 +584,13 @@ BreakDoubleFor:
 	return true;
 	}
 
-void CompareDialog::EventHandler( wxFileDirPickerEvent& event ){
+void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	if( filePick1->GetPath() not_eq wxEmptyString and filePick2->GetPath() not_eq wxEmptyString)
 		btnCompare->Enable(true);
 	else
 		btnCompare->Enable(false);
 	}
+
 void CompareDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "CompareDialog::EventHandler()" << std::endl;
@@ -668,7 +669,7 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 	else
 		btnCalculate->Enable(true);
 	}
-void ChecksumDialog::EventHandler( wxFileDirPickerEvent& event ){
+void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	wxCommandEvent e;
 	EventHandler( e );
 	}

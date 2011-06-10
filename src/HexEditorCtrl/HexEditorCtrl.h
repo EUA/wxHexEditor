@@ -105,7 +105,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		class Select *select;
 		enum IDS{ idTagAddSelection=1001,idTagEdit };
 		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
-		int64_t CursorOffset( void );
+		uint64_t CursorOffset( void );
 		void SetFont( wxFont f );
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;

@@ -1014,19 +1014,18 @@ void wxHexOffsetCtrl::SetValue( uint64_t position ){
 	}
 
 void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
-	uint64_t temp_offset_position = offset_position = position;
+	offset_position = position;
 	BytePerLine = byteperline;
 	m_text.Clear();
 
 	wxString format;;
-	if (hex_offset)
-		format << wxT("%0") << digit_count << wxT("llX");
-	else
-		format << wxT("%0") << digit_count << wxT("llu");
 
+	format << wxT("%0") << digit_count << wxLongLongFmtSpec << (hex_offset ? wxT("X") : wxT("u") );
+
+	wxULongLong ull = ( offset_position );
 	for( int i=0 ; i<LineCount() ; i++ ){
-		m_text << wxString::Format( format, temp_offset_position );
-		temp_offset_position += BytePerLine;
+		m_text << wxString::Format( format, ull );
+		ull += BytePerLine;
 		}
 	RePaint();
 	}
@@ -1039,7 +1038,7 @@ void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
 void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 	wxPoint p = PixelCoordToInternalCoord( event.GetPosition() );
 	uint64_t adress = offset_position + p.y*BytePerLine;
-	wxString adr = wxString::Format( (hex_offset ? wxT("0x%llx"): wxT("%llu")), adress);
+	wxString adr = wxString::Format( (hex_offset ? wxT("0x%"wxLongLongFmtSpec"X"): wxT("%"wxLongLongFmtSpec"u")), wxULongLong(adress));
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();
 		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) );

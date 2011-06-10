@@ -186,13 +186,13 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit8 ));
 			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit16 ));
 			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit32 ));
-			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%llu"),*X->ubit64 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"u"),wxULongLong(*X->ubit64 )));
 			}
 		else {
 			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%i"),  *X->bit8 ));
 			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit16 ));
 			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit32 ));
-			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%lld"),*X->bit64 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"d"),wxULongLong(*X->bit64) ));
 			}
 		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
 		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));

@@ -700,7 +700,7 @@ void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets positi
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}
-int64_t HexEditorCtrl::CursorOffset( void ){
+uint64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalHexInsertionPoint()/2 + page_offset;
 	}
 

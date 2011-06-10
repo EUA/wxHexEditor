@@ -534,16 +534,16 @@ BreakDoubleFor:
 		fs.Write( ln );
 		wxString line;
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
-			line = wxString::Format( _("%s found %llu - %llu \t Total : %u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], (diffBuff[i+1]-diffBuff[i]+1) );
+			line = wxString::Format( _("%s found %"wxLongLongFmtSpec"u - %"wxLongLongFmtSpec"u \t Total : %"wxLongLongFmtSpec"u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), wxULongLong(diffBuff[i]) , wxULongLong(diffBuff[i+1]), wxULongLong(diffBuff[i+1]-diffBuff[i]+1) );
 			fs.Write( line );
 			}
 
 		if( f1.Length() not_eq f2.Length() ){
 			if( f1.Length() > f2.Length() )
-				line =  wxString::Format( _("\nFile #2 ends at offset %llu. File #1 has extra %llu bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
+				line =  wxString::Format( _("\nFile #2 ends at offset %"wxLongLongFmtSpec"u. File #1 has extra %"wxLongLongFmtSpec"u bytes.\n"),wxULongLong(f2.Length()), wxULongLong(f1.Length() - f2.Length()) );
 
 			else
-				line =  wxString::Format( _("\nFile #1 ends at offset %llu. File #2 has extra %llu bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
+				line =  wxString::Format( _("\nFile #1 ends at offset %"wxLongLongFmtSpec"u. File #2 has extra %"wxLongLongFmtSpec"u bytes.\n"),wxULongLong(f1.Length()), wxULongLong(f2.Length() - f1.Length()) );
 
 			fs.Write( line );
 			}
@@ -717,7 +717,6 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		hashwrapper *SHA256Wrapper = new sha256wrapper();
 		hashwrapper *SHA384Wrapper = new sha384wrapper();
 		hashwrapper *SHA512Wrapper = new sha512wrapper();
-
 
 		MD5Wrapper->resetContext();
 		SHA1Wrapper->resetContext();

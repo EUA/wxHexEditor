@@ -222,7 +222,7 @@ inline bool IsDenied( int x ){ return false; }
 		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
 		bool hex_offset;
-		int64_t offset_position;
+		uint64_t offset_position;
 		int BytePerLine;
 	private:
 		uint64_t offset_limit;

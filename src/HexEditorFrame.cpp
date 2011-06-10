@@ -442,7 +442,7 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 		mcd->ShowModal();
 		mcd->Destroy();
 		}
-	event.Skip();
+	event.Skip(false);
 	}
 
 void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){

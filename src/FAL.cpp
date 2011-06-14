@@ -59,7 +59,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 		BlockSize=driveInfo.BytesPerSector;
 		BlockCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 #ifdef _DEBUG_
-		wxMessageBox(wxString::Format( wxT("Bytes per sector = %"wxLongLongFmtSpec"u\nTotal number of bytes = %"wxLongLongFmtSpec"u\n"),wxULongLong(BlockSize),wxULongLong(BlockCount)) ,wxT("File Info"));
+		wxMessageBox(wxString::Format( wxT("Bytes per sector = %"wxLongLongFmtSpec"u\nTotal number of bytes = %"wxLongLongFmtSpec"u\n"), BlockSize, BlockCount) ,wxT("File Info"));
 #endif
 		int fd = _open_osfhandle((long) hDevice, 0);
 		wxFile::Attach( fd );

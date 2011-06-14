@@ -36,9 +36,9 @@ GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_of
 	if(myDialogVector != NULL ){
 		m_hex->SetValue( myDialogVector->goto_hex );
 		if( myDialogVector->goto_hex )
-			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%X"),myDialogVector->goto_input) );
+			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"X"),myDialogVector->goto_input) );
 		else
-			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%ld"),myDialogVector->goto_input) );
+			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"d"),myDialogVector->goto_input) );
 		m_branch->Select( myDialogVector->goto_branch );
 		}
 	}
@@ -90,7 +90,7 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 		m_textCtrlOffset->GetValue().ToULongLong( wxul, 16 );
 		*offset = *wxul;
 		delete wxul;
-		m_textCtrlOffset->SetValue( wxString::Format(_T("%ld"),*offset) );
+		m_textCtrlOffset->SetValue( wxString::Format(_T("%"wxLongLongFmtSpec"d"),*offset) );
 // TODO (death#1#): myDialogVector->goto_hex = 0;
 		is_olddec = true;
 		}
@@ -99,7 +99,7 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 		m_textCtrlOffset->GetValue().ToULongLong( wxul, 10 );
 		*offset = *wxul;
 		delete wxul;
-		m_textCtrlOffset->SetValue( wxString::Format(_T("%X"),*offset) );
+		m_textCtrlOffset->SetValue( wxString::Format(_T("%"wxLongLongFmtSpec"X"),*offset) );
 		is_olddec = false;
 		}
 	event.Skip(false);
@@ -534,16 +534,16 @@ BreakDoubleFor:
 		fs.Write( ln );
 		wxString line;
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
-			line = wxString::Format( _("%s found %"wxLongLongFmtSpec"u - %"wxLongLongFmtSpec"u \t Total : %"wxLongLongFmtSpec"u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), wxULongLong(diffBuff[i]) , wxULongLong(diffBuff[i+1]), wxULongLong(diffBuff[i+1]-diffBuff[i]+1) );
+			line = wxString::Format( _("%s found %"wxLongLongFmtSpec"u - %"wxLongLongFmtSpec"u \t Total : %"wxLongLongFmtSpec"u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
 			fs.Write( line );
 			}
 
 		if( f1.Length() not_eq f2.Length() ){
 			if( f1.Length() > f2.Length() )
-				line =  wxString::Format( _("\nFile #2 ends at offset %"wxLongLongFmtSpec"u. File #1 has extra %"wxLongLongFmtSpec"u bytes.\n"),wxULongLong(f2.Length()), wxULongLong(f1.Length() - f2.Length()) );
+				line =  wxString::Format( _("\nFile #2 ends at offset %"wxLongLongFmtSpec"u. File #1 has extra %"wxLongLongFmtSpec"u bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
 
 			else
-				line =  wxString::Format( _("\nFile #1 ends at offset %"wxLongLongFmtSpec"u. File #2 has extra %"wxLongLongFmtSpec"u bytes.\n"),wxULongLong(f1.Length()), wxULongLong(f2.Length() - f1.Length()) );
+				line =  wxString::Format( _("\nFile #1 ends at offset %"wxLongLongFmtSpec"u. File #2 has extra %"wxLongLongFmtSpec"u bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
 
 			fs.Write( line );
 			}

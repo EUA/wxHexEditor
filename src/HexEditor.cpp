@@ -348,7 +348,7 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 		UpdateCursorLocation();
 #if wxUSE_STATUSBAR
 		if( statusbar != NULL )
-			statusbar->SetStatusText(wxString::Format(_("Showing Page: %"wxLongLongFmtSpec"u"), wxULongLong(page_offset/ByteCapacity()) ), 0);
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %"wxLongLongFmtSpec"u"), page_offset/ByteCapacity() ), 0);
 #endif
 		wxYieldIfNeeded();
 		}
@@ -932,11 +932,11 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 
 #if wxUSE_STATUSBAR
 		if( statusbar != NULL ) {
-			statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), wxULongLong(page_offset/ByteCapacity()) ), 0);
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
 			if( offset_ctrl->hex_offset )
-				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%" wxLongLongFmtSpec "X"), wxULongLong(CursorOffset()) ), 1);
+				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%" wxLongLongFmtSpec "X"), CursorOffset() ), 1);
 			else
-				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %"wxLongLongFmtSpec"u"), wxULongLong(CursorOffset() )), 1);
+				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %"wxLongLongFmtSpec"u"), CursorOffset() ), 1);
 			uint8_t ch;
 			myfile->Seek( CursorOffset() );
 			myfile->Read( reinterpret_cast<char*>(&ch), 1);
@@ -947,8 +947,8 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 				statusbar->SetStatusText(_("Block Size: N/A") ,4);
 				}
 			else {
-				statusbar->SetStatusText(wxString::Format(_("Selected Block: %"wxLongLongFmtSpec"u -> %"wxLongLongFmtSpec"u"),wxULongLong(select->GetStart()),wxULongLong(select->GetEnd())), 3);
-				statusbar->SetStatusText(wxString::Format(_("Block Size: %"wxLongLongFmtSpec"u"), wxULongLong(select->GetSize())), 4);
+				statusbar->SetStatusText(wxString::Format(_("Selected Block: %"wxLongLongFmtSpec"u -> %"wxLongLongFmtSpec"u"),select->GetStart(),select->GetEnd()), 3);
+				statusbar->SetStatusText(wxString::Format(_("Block Size: %"wxLongLongFmtSpec"u"), select->GetSize()), 4);
 				}
 			}
 #endif // wxUSE_STATUSBAR

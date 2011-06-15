@@ -66,12 +66,15 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 
 		return;
 		}
-#endif
+	if( not myfilename.IsFileReadable() ){
+		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR);
+		return;
+		}
 
-#ifndef __WXMSW__
-	while( not myfilename.IsFileReadable() ) { //IsFileReadable
-		if( wxCANCEL == wxMessageBox(_("File is not readable by permissions.\n Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
-			break;
+#elif defined( __WXGTK__ )
+	if( not myfilename.IsFileReadable() ) { //IsFileReadable
+		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
+			return;
 
 		wxArrayString output,errors;
 
@@ -94,7 +97,14 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxShell( cmd );
 		}
-#endif
+
+#elif defined ( __WXOSX__ ) //Mechanism for gnomesu like approach for OSX
+		if( not myfilename.IsFileReadable() ){
+			wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
+			return;
+			}
+#endif //wxGTK
+
 
 	if(myfilename.IsFileReadable()){//FileExists()){
 		if( FAM == ReadOnly)

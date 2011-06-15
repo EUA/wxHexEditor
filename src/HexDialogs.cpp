@@ -63,17 +63,17 @@ void GotoDialog::OnInput( wxCommandEvent& event ){
 	event.Skip(false);
 	}
 void GotoDialog::OnGo( wxCommandEvent& event ){
-	wxULongLong_t *wxul = new wxULongLong_t(0);
-	m_textCtrlOffset->GetValue().ToULongLong( wxul, m_dec->GetValue() ? 10 : 16 );
-	*offset = *wxul;
+	wxULongLong_t wxul = 0;
+	if( not m_textCtrlOffset->GetValue().ToULongLong( &wxul, m_dec->GetValue() ? 10 : 16 ))//Mingw32/64 workaround
+		wxul = strtoull( m_textCtrlOffset->GetValue().ToAscii(), '\0', m_dec->GetValue() ? 10 : 16 );
+	*offset = wxul;
 
 	if(myDialogVector != NULL ){
 		myDialogVector->goto_hex = m_hex->GetValue();
 		myDialogVector->goto_branch = m_branch->GetSelection();
-		myDialogVector->goto_input = *wxul;
+		myDialogVector->goto_input = wxul;
 		}
 
-	delete wxul;
 	if( m_branch->GetSelection() == 1)
 		*offset += cursor_offset;
 	else if( m_branch->GetSelection() == 2)
@@ -85,23 +85,23 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 	}
 
 void GotoDialog::OnConvert( wxCommandEvent& event ){
+	wxULongLong_t wxul = 0;
 	if( event.GetId() == m_dec->GetId() && !is_olddec ){	//old value is hex, new value is dec
-		wxULongLong_t *wxul = new wxULongLong_t(0);
-		m_textCtrlOffset->GetValue().ToULongLong( wxul, 16 );
-		*offset = *wxul;
-		delete wxul;
-		m_textCtrlOffset->SetValue( wxString::Format(_T("%"wxLongLongFmtSpec"d"),*offset) );
-// TODO (death#1#): myDialogVector->goto_hex = 0;
 		is_olddec = true;
+		if( not m_textCtrlOffset->GetValue().ToULongLong( &wxul, 16 ) )//Mingw32/64 workaround
+			wxul = strtoull( m_textCtrlOffset->GetValue().ToAscii(), '\0', 16 );
+		*offset = wxul;
+		m_textCtrlOffset->SetValue( wxString::Format( wxT("%"wxLongLongFmtSpec"u" ), wxul) );
 		}
 	else if( event.GetId() == m_hex->GetId() && is_olddec ){	//old value is dec, new value is hex
-		wxULongLong_t *wxul = new wxULongLong_t(0);
-		m_textCtrlOffset->GetValue().ToULongLong( wxul, 10 );
-		*offset = *wxul;
-		delete wxul;
-		m_textCtrlOffset->SetValue( wxString::Format(_T("%"wxLongLongFmtSpec"X"),*offset) );
 		is_olddec = false;
+		if( not m_textCtrlOffset->GetValue().ToULongLong( &wxul, 10 ) )//Mingw32/64 workaround
+			wxul = strtoull( m_textCtrlOffset->GetValue().ToAscii(), '\0', 10 );
+		*offset = wxul;
+		m_textCtrlOffset->SetValue( wxString::Format( wxT("%"wxLongLongFmtSpec"X") , wxul) );
 		}
+// TODO (death#1#): myDialogVector->goto_hex = 0;
+
 	event.Skip(false);
 	}
 

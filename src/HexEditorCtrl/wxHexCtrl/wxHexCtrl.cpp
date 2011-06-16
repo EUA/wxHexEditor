@@ -1022,7 +1022,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 
 	format << wxT("%0") << digit_count << wxLongLongFmtSpec << (hex_offset ? wxT("X") : wxT("u") );
 
-	wxULongLong ull = ( offset_position );
+	wxULongLong_t ull = ( offset_position );
 	for( int i=0 ; i<LineCount() ; i++ ){
 		m_text << wxString::Format( format, ull );
 		ull += BytePerLine;

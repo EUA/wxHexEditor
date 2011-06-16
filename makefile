@@ -144,6 +144,8 @@ clean:
 	rm -rf $(EXECUTABLE_DIR_MAC)
 distclean: clean
 	cd udis86;$(MAKE) distclean
+	cd hashlib/src;$(MAKE) distclean
+	rm -f hashlib/src/libhl++.a
 
 # include the auto-generated dependency files
 -include $(DEPENDS)

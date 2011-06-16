@@ -38,7 +38,7 @@
 
 #define idInjection 2000
 
-#define MB 1024*1024	//this utility uses old ECS format.
+#define MB (1024*1024)	//this utility uses old ECS format.
 
 class scrollthread;
 class copy_maker;

@@ -486,12 +486,15 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 			wxMessageBox( _("Error, Save File cannot open." ) );
 			return false;
 			}
+	wxProgressDialog pdlg( _("Compare Progress"), _("Comparison in progress"), 100, this, wxPD_AUTO_HIDE | wxPD_APP_MODAL|wxPD_CAN_ABORT/*|wxPD_CAN_SKIP*/|wxPD_REMAINING_TIME); //SKIP not ready and Buggy
+	pdlg.Show();
 
 	wxMemoryBuffer buff1,buff2;
 	int diffBuff[1*MB];
 	int diffHit = 0;
 	bool diff=false;
-	for( int mb = 0 ; not (f1.Eof() or f2.Eof()) ; mb++){
+	uint64_t drange = wxMin( f1.Length() , f2.Length() )/MB;
+	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof()) ; mb++){
 		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
 		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
 		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
@@ -525,9 +528,21 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 					}
 				}
 			}
+		bool skip=false;
+		if( not pdlg.Update( (mb*100)/drange, wxEmptyString, &skip) ){
+			f1.Close();
+			f2.Close();
+			return false;
+			}
+
+		if(skip){//Not enabled yet.
+			goto BreakDoubleFor;
+			}
+
 		}
 BreakDoubleFor:
 
+	pdlg.Show( false );
 
 	if( flsave not_eq wxEmptyString ){
 		wxString ln = _("File #1 : ") + fl1.GetFullPath() + wxT("\n")+_("File #2 : ") + fl2.GetFullPath() + wxT("\n\n");
@@ -649,32 +664,40 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 
 	else if(event.GetId() == btnCalculate->GetId()){
 		wxString msg;
-		if( chkFile->GetValue() )
-			 msg = CalculateChecksum( *parent->GetActiveHexEditor()->myfile, options );
+		if( chkFile->GetValue() ){
+			msg = CalculateChecksum( *parent->GetActiveHexEditor()->myfile, options );
+			if(msg not_eq wxEmptyString)
+				wxMessageBox( _("For currently active file\n")+msg, _("Checksum Results") );
+			}
 		else if( filePick->GetPath() not_eq wxEmptyString ){
 			wxFileName fl( filePick->GetPath() );
 			FAL f( fl );
 			msg = CalculateChecksum( f, options );
 			f.Close();
+			if(msg not_eq wxEmptyString)
+				wxMessageBox( wxString(_("File: "))+filePick->GetPath()+wxT("\n\n")+msg, _("Checksum Results") );
 			}
-		wxMessageBox( msg, _("Cheksum Results"));
+		//TODO: Copy to clipboard?
+		//wxClipboard << msg
 		}
 	else if(event.GetId() == chkFile->GetId() ){
 		filePick->Enable( not event.IsChecked() );
 		}
-
 
 	if( options == 0 or not ((filePick->GetPath() not_eq wxEmptyString) or chkFile->GetValue()) )
 		btnCalculate->Enable(false);
 	else
 		btnCalculate->Enable(true);
 	}
+
 void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	wxCommandEvent e;
 	EventHandler( e );
 	}
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
+	wxProgressDialog mypd(_("Calculating Checksum"), _("Please wait while calculating checksum."), 100, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	mypd.Show();
 	if( 0 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
 //		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 //		unsigned NumBits=0;
@@ -727,6 +750,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 
 		int rd=MB;
 		unsigned char buff[MB];
+		uint64_t readfrom=0, range= f.Length();
 		while(rd == MB){
 			rd = f.Read( buff, MB );
 			if( options & MD5    ) MD5Wrapper->updateContext( buff, rd);
@@ -734,6 +758,9 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 			if( options & SHA256 ) SHA256Wrapper->updateContext( buff, rd);
 			if( options & SHA384 ) SHA384Wrapper->updateContext( buff, rd);
 			if( options & SHA512 ) SHA512Wrapper->updateContext( buff, rd);
+			readfrom+=rd;
+			if(not mypd.Update((readfrom*100)/range) )
+				return wxEmptyString;
 			}
 		wxString results;
 

@@ -542,14 +542,14 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	wxAboutDialogInfo AllAbout;
 	AllAbout.SetName(_T("wxHexEditor"));
 	AllAbout.SetVersion( _T(_VERSION_STR_) );
-	AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland."));
+	AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices."));
 	AllAbout.SetCopyright(_T("(C) 2006-2011 Erdem U. Altinyurt"));
 	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
 	AllAbout.AddArtist( _T("Vlad Adrian") );
 	AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
 
-	AllAbout.SetLicense( _T("wxHexEditor is a hex editor for HUGE files and devices on Linux mainland.\n"
-			 "Copyright (C) 2011  Erdem U. Altinyurt\n"
+	AllAbout.SetLicense( _T("wxHexEditor is a hex editor for HUGE files and devices.\n"
+			 "Copyright (C) 2006-2011  Erdem U. Altinyurt\n"
 			 "\n"
 			 "This program is free software; you can redistribute it and/or\n"
 			 "modify it under the terms of the GNU General Public License\n"

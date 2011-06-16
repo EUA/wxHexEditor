@@ -29,6 +29,7 @@
 #include <wx/clipbrd.h>
 #include <wx/numdlg.h>
 #include <wx/version.h>
+#include <wx/progdlg.h>
 
 #include "FAL.h"
 #include "HexPanels.h"

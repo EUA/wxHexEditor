@@ -392,6 +392,7 @@ long FAL::Read( char* buffer, int size){
 	else
 		from = Tell();
 
+	//Why did I calculate j here? To find active patch indice...
 	int j=0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++)
 		if( DiffArray[i]->flag_undo and not DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here

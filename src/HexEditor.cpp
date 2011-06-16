@@ -223,10 +223,18 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	wxFFile savefile( savefilename, _("w") );
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
+		uint64_t range = myfile->Length()/MB;
+		wxProgressDialog mpd( _("Saving file"),_("File save in progress"), 100, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
+		mpd.Show();
 		char *buffer = new char[MB];
+		uint64_t readptr=0;
 		while( savefile.Tell() < myfile->Length() ) {
 			savefile.Write( buffer, myfile->Read( buffer, MB ) );
-			// TODO (death#3#): Progressbar here?
+			if( not mpd.Update( readptr++ *100/range ) ){
+				savefile.Close();
+				wxRemoveFile( savefilename );
+				return false;
+				}
 			}
 		return true;
 		}

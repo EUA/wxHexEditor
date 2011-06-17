@@ -11,7 +11,7 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.10
+Version:		0.11
 Release:		1
 License:		GPL
 Group:			Editors
@@ -23,11 +23,11 @@ BuildRequires:	pkgconfig
 %if 0%{?suse_version} >= 1140
 BuildRequires:  wxWidgets-devel
 %else
-BuildRequires:  wxGTK-devel >= 2.8.9 
+BuildRequires:  wxGTK-devel >= 2.8.9
 %endif
-%if 0%{?suse_version}  
+%if 0%{?suse_version}
 BuildRequires:  fdupes update-desktop-files
-%endif  
+%endif
 
 %description
 wxHexEditor is another GUI hex editor for open HUGE files and devices
@@ -49,10 +49,10 @@ it's writen by cross-platform API, wxWidgets.
 
 %build
 %if %{defined suse_version} && 0%{?suse_version} < 1030
-		%__make %{?jobs:-j%{jobs}} \
+		%__make -j1 \
 			WXCONFIG=wx-config-2.8
 %else
-	%__make %{?jobs:-j%{jobs}} \
+	%__make -j1 \
 		WXCONFIG=wx-config
 %endif
 

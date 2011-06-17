@@ -32,7 +32,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.10 Pre-Beta
+VERSION = 0.11 Beta
 
 all: prepare $(EXECUTABLE)
 
@@ -144,8 +144,8 @@ clean:
 	rm -rf $(EXECUTABLE_DIR_MAC)
 distclean: clean
 	cd udis86;$(MAKE) distclean
-	cd hashlib/src;$(MAKE) distclean
-	rm -f hashlib/src/libhl++.a
+	cd hashlibpp/src;$(MAKE) clean
+	rm -f hashlibpp/src/libhl++.a
 
 # include the auto-generated dependency files
 -include $(DEPENDS)

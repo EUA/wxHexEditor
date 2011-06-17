@@ -46,8 +46,6 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
 		else devnm = myfilename.GetFullPath();
 
-		wxMessageBox( _("Warning: Windows Disk access code is in Beta state.\nPlease do not try to modify your partitions with it!"), _("Opening File") );
-
 		HANDLE hDevice;
 		hDevice = CreateFile( devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 

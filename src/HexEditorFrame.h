@@ -96,6 +96,7 @@ class HexEditorFrame : public HexEditorGui {
 		TagPanel *MyComparePanel;
 		DisassemblerPanel *MyDisassemblerPanel;
 		wxFileHistory *MyFileHistory;
+		wxString license;
 #ifdef _WX_AUIBAR_H_
 		wxAuiToolBar* Toolbar;
 #else

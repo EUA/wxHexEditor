@@ -2,7 +2,7 @@ Format: 1.0
 Source: wxhexeditor
 Binary: wxhexeditor
 Architecture: any
-Version: 0.10
+Version: 0.11
 Maintainer: Erdem U. Altinyurt <spamjunkeater@gmail.com>
 Homepage: http://wxhexeditor.sourceforge.net/
 Standards-Version: 3.8.0

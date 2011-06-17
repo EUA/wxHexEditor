@@ -34,6 +34,30 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
+	license=_T("wxHexEditor is a hex editor for HUGE files and devices.\n"
+			 "Copyright (C) 2006-2011  Erdem U. Altinyurt\n"
+			 "\n"
+			 "This program is free software; you can redistribute it and/or\n"
+			 "modify it under the terms of the GNU General Public License\n"
+			 "as published by the Free Software Foundation version 2 "
+			 "of the License."
+			 "\n"
+			 "This program is distributed in the hope that it will be useful,\n"
+			 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+			 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+			 "GNU General Public License for more details.\n"
+			 "\n"
+			 "You should have received a copy of the GNU General Public License\n"
+			 "along with this program; if not, write to the Free Software\n"
+			 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
+			 "\n"
+			 "\n"
+			 "hashlib++ used under BSD licence, Benjamin Grüdelbach (c) 2007-2010\n"
+			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
+			 "\n"
+			 "home:  wxhexeditor.sourceforge.net\n"
+			 "email: spamjunkeater@gmail.com\n");
+
 
 #if defined __WXMAC__ || defined __WXMSW__
 	wxArtProvider::Push(new HexEditorArtProvider); //Using similar MacOSX icons. Much more better than wx ones...
@@ -68,7 +92,11 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	if ( ! wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
 		update_enable = true;
 		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
+		//First Run!
+		wxMessageBox( license, _("License Agreement"));
 		}
+
+
 	if( update_enable ){
 		double last_chk=0;
 		wxConfigBase::Get()->Read(_T("LastUpdateCheckTime"), (&last_chk));
@@ -548,30 +576,7 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	AllAbout.AddArtist( _T("Vlad Adrian") );
 	AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
 
-	AllAbout.SetLicense( _T("wxHexEditor is a hex editor for HUGE files and devices.\n"
-			 "Copyright (C) 2006-2011  Erdem U. Altinyurt\n"
-			 "\n"
-			 "This program is free software; you can redistribute it and/or\n"
-			 "modify it under the terms of the GNU General Public License\n"
-			 "as published by the Free Software Foundation version 2 "
-			 "of the License."
-			 "\n"
-			 "This program is distributed in the hope that it will be useful,\n"
-			 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-			 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-			 "GNU General Public License for more details.\n"
-			 "\n"
-			 "You should have received a copy of the GNU General Public License\n"
-			 "along with this program; if not, write to the Free Software\n"
-			 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
-			 "\n"
-			 "\n"
-			 "hashlib++ used under BSD licence, Benjamin Grüdelbach (c) 2007-2010\n"
-			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
-			 "\n"
-			 "home:  wxhexeditor.sourceforge.net\n"
-			 "email: spamjunkeater@gmail.com\n")
-			 );
+	AllAbout.SetLicense( license );
 
 	wxAboutBox(AllAbout);
 	}

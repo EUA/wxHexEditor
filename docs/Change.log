@@ -1,0 +1,34 @@
+wxHexEditor v0.11 Beta	17/06/2011
+Now program became from pre-Beta stage to Beta stage.
+Added Progress dialogs for file save, comparison and checksum dialogs.
+Fixed GoTo dialog and uint64_t to String conversions on MSW.
+Fixed Device menu show bug.
+Added no device information for Windows.
+Fixed compilation error on PuppyLinux.
+Fixed undo commit bug at Direct mode(Thanks guerrier for indicating bug)
+Added file owner change for automated disk access on Linux/Unix.
+Added Auto-Offset resizing by file length.
+Changed Offset Hex:Dec switching by right mouse button from now.
+Added left click to offset area copies the address.
+Implemented Checksum Dialog core with MD5 & SHA family
+Implemented Disassembler panel code by using udis86 library.(Beta)
+Implemented UTF8/Unicode searching.
+Implemented File Compare option.
+Removed "(Alpha)" keyword on right click menus.
+And Many bug fixes...
+
+wxHexEditor v0.10 Pre-Beta 19/03/2011
+Added M$ Windows partition detection and disk access code. Thanks Charilaos Skandylas.
+Added MacOSX device path recognition.
+Added Unique Feature : Insertion & Deletion without creating tempfile.
+Added XORView (r) feature to read/write XOR encrypted files on the fly.
+Added bit change ability to data interpreter panel.
+Added Open Recent File facility.
+Fixed font issues with wxOSX 2.9.x
+Added Blocky Read/Write code.
+Implemented FinAll and ReplaceAll functions.
+Added Progress gauge to FindAll function.
+Added Highlighting mechanizm for FindAll.
+Added Sector Size and Count for block device informations.
+Removed multiple "File cannot open!" warnings.
+Fixed bugs, washed codes and much more...

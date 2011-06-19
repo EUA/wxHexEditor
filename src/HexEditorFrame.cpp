@@ -537,7 +537,7 @@ void HexEditorFrame::OnQuit( wxCommandEvent& event ){
 			}
 		else{
 			Destroy();
-			event.Skip();
+			//event.Skip();//Makes error on OSX
 			return;
 			}
 		}

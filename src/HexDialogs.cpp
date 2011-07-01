@@ -493,7 +493,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	int diffBuff[1*MB];
 	int diffHit = 0;
 	bool diff=false;
-	uint64_t drange = wxMin( f1.Length() , f2.Length() )/MB;
+	uint64_t drange = wxMin( f1.Length() , f2.Length() );
+	if(drange == 0)
+		drange++; //to avoid Gauge zero div error
+
 	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof()) ; mb++){
 		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
 		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
@@ -529,7 +532,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				}
 			}
 		bool skip=false;
-		if( not pdlg.Update( (mb*100)/drange, wxEmptyString, &skip) ){
+		if( not pdlg.Update( (MB*mb*100)/drange, wxEmptyString, &skip) ){
 			f1.Close();
 			f2.Close();
 			return false;
@@ -696,8 +699,10 @@ void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	}
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
-	wxProgressDialog mypd(_("Calculating Checksum"), _("Please wait while calculating checksum."), 100, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxString msg = _("Please wait while calculating checksum.");
+	wxProgressDialog mypd(_("Calculating Checksum"), msg , 100, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
+
 	if( 0 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
 //		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 //		unsigned NumBits=0;
@@ -748,20 +753,34 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		SHA384Wrapper->resetContext();
 		SHA512Wrapper->resetContext();
 
-		int rd=MB;
-		unsigned char buff[MB];
-		uint64_t readfrom=0, range= f.Length();
-		while(rd == MB){
-			rd = f.Read( buff, MB );
+		int buffsize = MB;
+
+		unsigned char buff[buffsize];
+		uint64_t readfrom=0,readspeed=0, range= f.Length();
+		wxString emsg = msg;
+		time_t ts,te;
+		time (&ts);
+		int rd;
+		do
+		{
+			rd = f.Read( buff, buffsize );
 			if( options & MD5    ) MD5Wrapper->updateContext( buff, rd);
 			if( options & SHA1   ) SHA1Wrapper->updateContext( buff, rd);
 			if( options & SHA256 ) SHA256Wrapper->updateContext( buff, rd);
 			if( options & SHA384 ) SHA384Wrapper->updateContext( buff, rd);
 			if( options & SHA512 ) SHA512Wrapper->updateContext( buff, rd);
 			readfrom+=rd;
-			if(not mypd.Update((readfrom*100)/range) )
+
+			time(&te);
+			if(ts != te ){
+				ts=te;
+				emsg = msg + wxString::Format(_("\nHash Speed : %d MB/s"), (readfrom-readspeed)/MB);
+				readfrom=readspeed;
+				}
+			if(not mypd.Update((readfrom*100)/range, emsg ))
 				return wxEmptyString;
-			}
+			}while(rd == buffsize);
+
 		wxString results;
 
 		if( options & MD5    ) results += wxT("MD5:\t")+ wxString::FromAscii(MD5Wrapper->hashIt().c_str())+wxT("\n");

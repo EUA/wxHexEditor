@@ -224,13 +224,24 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
 		uint64_t range = myfile->Length()/MB;
-		wxProgressDialog mpd( _("Saving file"),_("File save in progress"), 100, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
+		wxString msg = _("File save in progress");
+		wxString emsg = msg;
+		wxProgressDialog mpd( _("Saving file"),msg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
 		mpd.Show();
 		char *buffer = new char[MB];
-		uint64_t readptr=0;
+		uint64_t readptr=0,readspeed=0;
+
+		time_t ts,te;
+		time (&ts);
 		while( savefile.Tell() < myfile->Length() ) {
 			savefile.Write( buffer, myfile->Read( buffer, MB ) );
-			if( not mpd.Update( readptr++ *100/range ) ){
+			time(&te);
+			if(ts != te ){
+				ts=te;
+				emsg = msg + wxString::Format(_("\nWrite Speed : %d MB/s"), readptr-readspeed);
+				readspeed=readptr;
+				}
+			if( not mpd.Update( readptr++ *1000/range, emsg) ){
 				savefile.Close();
 				wxRemoveFile( savefilename );
 				return false;

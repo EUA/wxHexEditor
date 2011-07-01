@@ -198,7 +198,7 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 	if(not (options & SEARCH_MATCHCASE))
 			target = target.Lower();
 
-	if( target.IsAscii() and 0){
+	if( target.IsAscii() ){
 		textsrc.AppendData( target.ToAscii() , target.Length() );
 		return FindBinary( textsrc, start_from, options );
 		}
@@ -217,8 +217,9 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
 	if( target.GetDataLen() == 0 )
 		return NANINT;
-
-	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , _("Finding matches... "), 100,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
+	wxString msg= _("Finding matches... ");
+	wxString emsg;
+	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
 	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
 // TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
 	//progress_gauge.SetIcon(search_ICON);
@@ -231,13 +232,15 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	// TODO (death#6#): insert error check message here
 	int found = -1;
 	int readed = 0;
-// TODO (death#1#): Seach bar with gauge???
+
+	time_t ts,te;
+	time (&ts);
+	ts=te;
+	uint64_t readspeed=0;
 	//Search step 1: From cursor to file end.
 	do{
 		findfile->Seek( current_offset, wxFromStart );
 
-		if( ! progress_gauge.Update(current_offset*100/parent->FileLength()))		// update progress and break on abort
-			break;
 		readed = findfile->Read( buffer , search_step );
 		found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 		if(found >= 0){
@@ -252,8 +255,19 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				return current_offset+found;
 				}
 			}
-		else
+		else{
 			current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
+			}
+
+		time(&te);
+		if(ts != te ){
+				ts=te;
+				emsg = msg + wxString::Format(_("\nSearch Speed : %d MB/s"), (current_offset-readspeed)/MB);
+				readspeed=current_offset;
+				}
+		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
+			break;
+
 		}while(readed >= search_step); //indicate also file end.
 
 	//Search step 2: From start to file end.
@@ -335,7 +349,7 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 	if( bfr_size < search_size )
 		return -1;
 
-	//UTF with no matched case handled here
+	//UTF with no matched case handled here !!!SLOW!!!
 	if(options & SEARCH_UTF8 and options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
 			wxString ucode;
 			wxCharBuffer ubuf;
@@ -354,9 +368,32 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 		///Search text already lowered at FindText()
 		//for( int i = 0 ; i < search_size; i++)
 		//	search[i]=tolower(search[i]);
+
+		///Make buffer low to match
 		for( int i = 0 ; i < bfr_size; i++)
 			bfr[i]=tolower(bfr[i]);
+
+		//Disabled speedy code.
+		if(0){
+			//Search at no match case ASCII handled here
+			char topSearch[search_size];
+			for( int i = 0 ; i < search_size; i++)
+				topSearch[i]=toupper(search[i]);
+
+			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
+				if( bfr[i] == search[0] or bfr[i] == topSearch[0] ){
+					//partial lowering code
+					for( int j = i ; i < bfr_size; i++)
+						bfr[j]=tolower(bfr[j]);
+
+					if(! memcmp( bfr+i, search, search_size ))	//if match found
+						return i;
+						}
+					}
+			return -1;
+			}
 		}
+
 	//Search at buffer
 	for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
 		if(! memcmp( bfr+i, search, search_size ))	//if match found
@@ -700,7 +737,7 @@ void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
 	wxString msg = _("Please wait while calculating checksum.");
-	wxProgressDialog mypd(_("Calculating Checksum"), msg , 100, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
 	if( 0 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
@@ -753,7 +790,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		SHA384Wrapper->resetContext();
 		SHA512Wrapper->resetContext();
 
-		int buffsize = MB;
+		int buffsize = MB*1;
 
 		unsigned char buff[buffsize];
 		uint64_t readfrom=0,readspeed=0, range= f.Length();
@@ -775,9 +812,9 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 			if(ts != te ){
 				ts=te;
 				emsg = msg + wxString::Format(_("\nHash Speed : %d MB/s"), (readfrom-readspeed)/MB);
-				readfrom=readspeed;
+				readspeed=readfrom;
 				}
-			if(not mypd.Update((readfrom*100)/range, emsg ))
+			if(not mypd.Update((readfrom*1000)/range, emsg ))
 				return wxEmptyString;
 			}while(rd == buffsize);
 

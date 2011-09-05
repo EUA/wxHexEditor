@@ -438,7 +438,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 						break;
 						}
 					case idFileDW:
-						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY directly."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
+						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
 							MyHexEditor->SetFileAccessMode( FAL::DirectWrite );
 						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 						break;

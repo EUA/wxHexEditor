@@ -534,7 +534,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	if(drange == 0)
 		drange++; //to avoid Gauge zero div error
 
-	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof()) ; mb++){
+	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof()) ; mb+=MB){
 		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
 		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
 		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
@@ -569,7 +569,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				}
 			}
 		bool skip=false;
-		if( not pdlg.Update( (MB*mb*100)/drange, wxEmptyString, &skip) ){
+		if( not pdlg.Update( (mb*100)/drange, wxEmptyString, &skip) ){
 			f1.Close();
 			f2.Close();
 			return false;
@@ -645,7 +645,7 @@ void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	else
 		btnCompare->Enable(false);
 	}
-
+// TODO (death#1#): Drag Drop file change event!
 void CompareDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "CompareDialog::EventHandler()" << std::endl;

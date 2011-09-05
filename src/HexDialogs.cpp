@@ -793,7 +793,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		int buffsize = MB*1;
 
 		unsigned char buff[buffsize];
-		uint64_t readfrom=0,readspeed=0, range= f.Length();
+		uint64_t readfrom=0,readspeed=0, range=f.Length();
 		wxString emsg = msg;
 		time_t ts,te;
 		time (&ts);

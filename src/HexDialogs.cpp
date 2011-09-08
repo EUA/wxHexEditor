@@ -364,7 +364,7 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 		}
 
 	//Make buffer lower if required.
-	else if(options & SEARCH_TEXT and not options & SEARCH_MATCHCASE){
+	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
 		///Search text already lowered at FindText()
 		//for( int i = 0 ; i < search_size; i++)
 		//	search[i]=tolower(search[i]);
@@ -378,7 +378,7 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 			//Search at no match case ASCII handled here
 			char topSearch[search_size];
 			for( int i = 0 ; i < search_size; i++)
-				topSearch[i]=toupper(search[i]);
+				topSearch[i]=tolower(search[i]);
 
 			for(int i=0 ; i < bfr_size - search_size + 1 ; i++ ){
 				if( bfr[i] == search[0] or bfr[i] == topSearch[0] ){

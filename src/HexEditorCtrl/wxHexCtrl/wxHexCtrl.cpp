@@ -718,14 +718,19 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	memodata.SetBufSize(HexValue.Length()/3+1);
 	char bfrL, bfrH;
 	for(unsigned int i=0 ; i < HexValue.Length() ; i+=2){
-		if(HexValue[i] == ' '){	//Removes space char
-			i--;
+		if( HexValue[i] == ' ' or HexValue[i] == ',' ){	//Removes space and period chars.
+			i--; //Means +1 after loop increament of +2. Don't put i++ due HexValue.Length() check
 			continue;
+			}
+		else if ((HexValue[i] == '0' and ( HexValue[i+1] == 'x' or HexValue[i+1] == 'X'))){ //Removes "0x" and "0X" strings.
+			continue; //Means +2 by loop increament.
 			}
 		bfrH = atoh( HexValue[i] );
 		bfrL = atoh( HexValue[i+1] );
+		//Check for if it's Hexadecimal
 		if( not (bfrH < 16 and bfrL < 16 and bfrH >= 0 and bfrL >= 0 )){
-			return NULL;
+				wxBell();
+				return NULL;
 			}
 		bfrL = bfrH << 4 | bfrL;
 		memodata.AppendByte( bfrL );

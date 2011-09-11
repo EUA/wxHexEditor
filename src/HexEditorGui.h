@@ -43,22 +43,23 @@
 
 #define ID_DEFAULT wxID_ANY // Default
 #define idClose 1000
-#define idInsert 1001
-#define idGotoOffset 1002
-#define idInterpreter 1003
-#define idToolbar 1004
-#define idInfoPanel 1005
-#define idTagPanel 1006
-#define idDisassemblerPanel 1007
-#define idChecksum 1008
-#define idCompare 1009
-#define idXORView 1010
-#define idDeviceRam 1011
-#define idFileRO 1012
-#define idFileRW 1013
-#define idFileDW 1014
-#define ID_CHK_UNSIGNED 1015
-#define ID_CHK_BIGENDIAN 1016
+#define idCopyAs 1001
+#define idInsert 1002
+#define idGotoOffset 1003
+#define idInterpreter 1004
+#define idToolbar 1005
+#define idInfoPanel 1006
+#define idTagPanel 1007
+#define idDisassemblerPanel 1008
+#define idChecksum 1009
+#define idCompare 1010
+#define idXORView 1011
+#define idDeviceRam 1012
+#define idFileRO 1013
+#define idFileRW 1014
+#define idFileDW 1015
+#define ID_CHK_UNSIGNED 1016
+#define ID_CHK_BIGENDIAN 1017
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -350,6 +351,33 @@ class ChecksumDialogGui : public wxDialog
 		
 		ChecksumDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Calculate Checksum"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~ChecksumDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CopyAsDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class CopyAsDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* txtCopyAs;
+		wxChoice* chcCopyAs;
+		wxStaticText* txtOption;
+		wxChoice* chcOption;
+		wxCheckBox* chkBigEndian;
+		wxButton* btnCancel;
+		wxButton* btnCopy;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		CopyAsDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Copy Selected Block As"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~CopyAsDialogGui();
 	
 };
 

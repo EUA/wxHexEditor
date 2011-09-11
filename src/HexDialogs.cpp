@@ -488,6 +488,68 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 		wxBell();
 	}
 
+CopyAsDialog::CopyAsDialog( wxWindow* _parent ):CopyAsDialogGui( _parent , wxID_ANY){
+	parent = static_cast< HexEditor* >(_parent);
+	chkBigEndian->SetValue( not wxIsPlatformLittleEndian() );
+	}
+
+void CopyAsDialog::EventHandler( wxCommandEvent& event ){
+	int id = event.GetId();
+	if( id == wxID_CANCEL )
+		Destroy();
+	else if( id == wxID_OK )
+		Copy();
+	else if( id == chcCopyAs->GetId() ){
+		int selected =  chcCopyAs->GetSelection();
+//wxT("Full Text"), wxT("Special Hex"), wxT("HTML"), wxT("C/C++"), wxT("Assembler")
+
+		chcOption->Enable(selected > 0);
+		chcOption->Clear();
+		if( selected == 0){
+			chcOption->Insert(_("Not Available"),0);
+			}
+		else if( selected == 1){ // Hex
+			chcOption->Insert(_("Raw Hex"),0);
+			chcOption->Insert(_("With Space"),1);
+			chcOption->Insert(_("Quad Hex"),2);
+			chcOption->Insert(_("with 0x"),3);
+			chcOption->Insert(_("with 0x and period"),4);
+			}
+		else if( selected == 2){ // HTML
+			chcOption->Insert(_("HTML tags"),0);
+			chcOption->Insert(_("phpBB forum style"),1);
+			}
+		else if( selected >= 3){ // C/C++/ASM Sources
+			chcOption->Insert(_("8bit Byte "),0);
+			chcOption->Insert(_("16bit Words"),1);
+			chcOption->Insert(_("32bit Dwords"),2);
+			chcOption->Insert(_("64bit Qwords"),3);
+			}
+
+		//Adjustinf selection part
+		if( selected == old_copyas or
+			(selected==3 and  old_copyas==4 )or
+			(selected==4 and  old_copyas==3 )
+			)
+			chcOption->SetSelection( old_option );
+		else
+			chcOption->SetSelection(0);
+
+		old_copyas=selected;
+		}
+	else if( id == chcOption->GetId() )
+		old_option = chcOption->GetSelection();
+
+	//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
+	chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
+	}
+
+void CopyAsDialog::Copy( void ){
+	chcCopyAs->GetSelection();
+	chcOption->GetSelection();
+	wxBell();
+	}
+
 CompareDialog::CompareDialog( wxWindow* parent_ ):CompareDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
 	}

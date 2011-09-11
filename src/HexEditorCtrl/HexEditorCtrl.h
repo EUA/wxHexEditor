@@ -103,7 +103,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		~HexEditorCtrl( void );
 		enum focus_ { HEX_CTRL, TEXT_CTRL } focus;
 		class Select *select;
-		enum IDS{ idTagAddSelection=1001,idTagEdit };
+		enum IDS{ idTagAddSelection=2001,idTagEdit };
 		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		uint64_t CursorOffset( void );
 		void SetFont( wxFont f );

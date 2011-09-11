@@ -76,6 +76,17 @@ virtual void EventHandler( wxCommandEvent& event );
 		FAL *findfile;
 	};
 
+class CopyAsDialog : public CopyAsDialogGui{
+	public:
+		CopyAsDialog( wxWindow* parent );
+	private:
+		class HexEditor* parent;
+		int old_copyas;
+		int old_option;
+      void EventHandler( wxCommandEvent& event );
+      void Copy( void );
+	};
+
 class ReplaceDialog : public FindDialog{
 	public:
 		ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title=_("Find & Replace") );

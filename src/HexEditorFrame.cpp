@@ -279,7 +279,7 @@ void HexEditorFrame::ActionEnabler( void ){
 	}
 
 void HexEditorFrame::ActionDisabler( void ){
-	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInsert, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, wxID_UNDO, wxID_REDO, };
+	int arr[] = { idFileRO, idFileRW,idFileDW, wxID_SAVE, wxID_SAVEAS, idClose, wxID_FIND, wxID_REPLACE, idInsert, idGotoOffset, wxID_PASTE, wxID_CUT, wxID_DELETE, wxID_COPY, idCopyAs, wxID_UNDO, wxID_REDO, };
 	for( unsigned i=0 ; i < sizeof(arr)/4 ; i++ ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
@@ -418,12 +418,13 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_UNDO:		MyHexEditor->DoUndo();					break;
 					case wxID_REDO:		MyHexEditor->DoRedo();					break;
 					case wxID_COPY:		MyHexEditor->CopySelection();			break;
+					case idCopyAs:			MyHexEditor->CopyAsDialog();			break;
 					case wxID_CUT:			MyHexEditor->CutSelection();			break;
 					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
 					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
 					case idInsert:			MyHexEditor->InsertBytes();			break;
 					//idInjection for Right click Menu Insertion Event
-					case idInjection:			MyHexEditor->InsertBytes();			break;
+					case idInjection:			MyHexEditor->InsertBytes();		break;
 					case wxID_FIND:		MyHexEditor->FindDialog();				break;
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
@@ -676,6 +677,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+			mbar->Enable( idCopyAs, event.GetString() == wxT("Selected") );
 
 			if(GetActiveHexEditor()->XORKey == wxEmptyString){
 				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
@@ -755,6 +757,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 
 				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 				mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
+				mbar->Enable( idCopyAs, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 
 				Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
 				Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );

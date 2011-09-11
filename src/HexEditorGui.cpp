@@ -84,6 +84,11 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	editMenu->Append( menuEditCopy );
 	menuEditCopy->Enable( false );
 	
+	wxMenuItem* menuEditCopyAs;
+	menuEditCopyAs = new wxMenuItem( editMenu, idCopyAs, wxString( wxT("Copy As") ) + wxT('\t') + wxT("CTRL+SHIFT+C"), wxEmptyString, wxITEM_NORMAL );
+	editMenu->Append( menuEditCopyAs );
+	menuEditCopyAs->Enable( false );
+	
 	wxMenuItem* menuEditCut;
 	menuEditCut = new wxMenuItem( editMenu, wxID_CUT, wxString( wxT("Cut") ) + wxT('\t') + wxT("CTRL+X"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditCut );
@@ -239,6 +244,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditCopy->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuEditCopyAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditCut->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditPaste->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -286,6 +292,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_UNDO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_REDO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idCopyAs, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_CUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_PASTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_DELETE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -992,5 +999,82 @@ ChecksumDialogGui::~ChecksumDialogGui()
 	chkSHA512->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCalculate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	
+}
+
+CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizerMain;
+	bSizerMain = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizerSelections;
+	fgSizerSelections = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizerSelections->SetFlexibleDirection( wxBOTH );
+	fgSizerSelections->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	txtCopyAs = new wxStaticText( this, wxID_ANY, wxT("Copy As :"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtCopyAs->Wrap( -1 );
+	fgSizerSelections->Add( txtCopyAs, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxString chcCopyAsChoices[] = { wxT("Full Text"), wxT("Special Hex"), wxT("HTML"), wxT("C/C++ Source"), wxT("Assembler Source") };
+	int chcCopyAsNChoices = sizeof( chcCopyAsChoices ) / sizeof( wxString );
+	chcCopyAs = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCopyAsNChoices, chcCopyAsChoices, 0 );
+	chcCopyAs->SetSelection( 0 );
+	fgSizerSelections->Add( chcCopyAs, 0, wxALL|wxEXPAND, 5 );
+	
+	txtOption = new wxStaticText( this, wxID_ANY, wxT("Option:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtOption->Wrap( -1 );
+	fgSizerSelections->Add( txtOption, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	wxString chcOptionChoices[] = { wxT("N/A") };
+	int chcOptionNChoices = sizeof( chcOptionChoices ) / sizeof( wxString );
+	chcOption = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcOptionNChoices, chcOptionChoices, 0 );
+	chcOption->SetSelection( 0 );
+	chcOption->Enable( false );
+	
+	fgSizerSelections->Add( chcOption, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	bSizerMain->Add( fgSizerSelections, 1, wxEXPAND, 5 );
+	
+	chkBigEndian = new wxCheckBox( this, wxID_ANY, wxT("Big Endian"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkBigEndian->Enable( false );
+	
+	bSizerMain->Add( chkBigEndian, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizerButtons;
+	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerButtons->Add( btnCancel, 0, wxALL, 5 );
+	
+	btnCopy = new wxButton( this, wxID_OK, wxT("Copy"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerButtons->Add( btnCopy, 0, wxALL, 5 );
+	
+	bSizerMain->Add( bSizerButtons, 0, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizerMain );
+	this->Layout();
+	bSizerMain->Fit( this );
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	chcCopyAs->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	chcOption->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	chkBigEndian->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	btnCopy->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+}
+
+CopyAsDialogGui::~CopyAsDialogGui()
+{
+	// Disconnect Events
+	chcCopyAs->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	chcOption->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	chkBigEndian->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	btnCopy->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
 	
 }

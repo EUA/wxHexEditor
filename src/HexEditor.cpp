@@ -755,6 +755,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(idTagEdit, _T("Tag Edit"));
 	menu.Append(idTagAddSelection, _T("New Tag"));
 	menu.Append(wxID_COPY, _T("Copy"));
+	menu.Append(idCopyAs, _T("CopyAs"));
 	menu.Append(wxID_PASTE, _T("Paste"));
 
 	if(XORKey == wxEmptyString){
@@ -783,6 +784,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		}
 
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
+	menu.Enable( idCopyAs, select->IsState( select->SELECT_END) );
 
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
@@ -995,6 +997,12 @@ void HexEditor::ReplaceDialog( void ) {
 	myfind->ShowModal();
 	myfind->Destroy();
 	}
+void HexEditor::CopyAsDialog( void ) {
+	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this );
+	mycopyas->ShowModal();
+	mycopyas->Destroy();
+	}
+
 
 void HexEditor::GotoDialog( void ) {
 	uint64_t newoffset;

@@ -109,6 +109,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 			}
 		void FindDialog( void );
 		void ReplaceDialog( void );
+		void CopyAsDialog( void );
 		void GotoDialog( void );
 		struct DialogVector *myDialogVector;
 

@@ -134,12 +134,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 	public:
 		bool Selector( void );
 		bool Select( uint64_t start_offset, uint64_t end_offset );
-//		struct xselect{		//select structure
-//			enum states { SELECT_FALSE, SELECT_TRUE, SELECT_END } state;
-//			uint64_t start_offset;	//real start position
-//			uint64_t end_offset;		//real end position, included to select
-//			uint64_t size( void ){ return abs(end_offset - start_offset)+1;};	//for select byte 13 start=13, end=13
-//			} select;
+
 	protected:
 		void HexCharReplace( long char_location, const wxChar chr);
 		void TextCharReplace( long char_location, const wxChar chr);

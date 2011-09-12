@@ -26,6 +26,7 @@
 #define __HexEditorDialogs__
 
 #include "HexEditor.h"
+#include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorGui.h"
 
 #ifdef WX_GCH
@@ -78,11 +79,13 @@ virtual void EventHandler( wxCommandEvent& event );
 
 class CopyAsDialog : public CopyAsDialogGui{
 	public:
-		CopyAsDialog( wxWindow* parent );
+		CopyAsDialog( wxWindow* parent, FAL* copy_file, Select* select);
 	private:
 		class HexEditor* parent;
+		class Select* select;
 		int old_copyas;
 		int old_option;
+		FAL * copy_file;
       void EventHandler( wxCommandEvent& event );
       void Copy( void );
 	};

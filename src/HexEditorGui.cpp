@@ -1018,7 +1018,7 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	txtCopyAs->Wrap( -1 );
 	fgSizerSelections->Add( txtCopyAs, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString chcCopyAsChoices[] = { wxT("Full Text"), wxT("Special Hex"), wxT("HTML"), wxT("C/C++ Source"), wxT("Assembler Source") };
+	wxString chcCopyAsChoices[] = { wxT("Full Text"), wxT("Special Hex"), wxT("Internet"), wxT("C/C++ Source"), wxT("Assembler Source") };
 	int chcCopyAsNChoices = sizeof( chcCopyAsChoices ) / sizeof( wxString );
 	chcCopyAs = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCopyAsNChoices, chcCopyAsChoices, 0 );
 	chcCopyAs->SetSelection( 0 );

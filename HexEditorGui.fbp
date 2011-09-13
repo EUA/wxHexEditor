@@ -5715,7 +5715,7 @@
                             <property name="proportion">0</property>
                             <object class="wxChoice" expanded="0">
                                 <property name="bg"></property>
-                                <property name="choices">&quot;Full Text&quot; &quot;Special Hex&quot; &quot;HTML&quot; &quot;C/C++ Source&quot; &quot;Assembler Source&quot;</property>
+                                <property name="choices">&quot;Full Text&quot; &quot;Special Hex&quot; &quot;Internet&quot; &quot;C/C++ Source&quot; &quot;Assembler Source&quot;</property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
                                 <property name="enabled">1</property>

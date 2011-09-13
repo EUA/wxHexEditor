@@ -88,6 +88,7 @@ class CopyAsDialog : public CopyAsDialogGui{
 		FAL * copy_file;
       void EventHandler( wxCommandEvent& event );
       void Copy( void );
+      void PrepareFullText( wxString& , wxMemoryBuffer& );
 	};
 
 class ReplaceDialog : public FindDialog{

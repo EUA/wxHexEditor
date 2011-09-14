@@ -53,6 +53,7 @@ class TagElement{
 		void Hide( void );
 		bool isCover( uint64_t );
 		void print(void);
+		wxColour SoftColour(wxColour);
 		static int TagCompare(TagElement **first, TagElement **second);
 //		bool operator<( TagElement a, TagElement b){ return a.start < b.start }
 //		bool operator>( TagElement a, TagElement b){ return a.start > b.start }

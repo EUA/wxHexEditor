@@ -998,7 +998,7 @@ void HexEditor::ReplaceDialog( void ) {
 	myfind->Destroy();
 	}
 void HexEditor::CopyAsDialog( void ) {
-	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this, myfile, HexEditorCtrl::select );
+	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this, myfile, HexEditorCtrl::select, &MainTagArray );
 	mycopyas->ShowModal();
 	mycopyas->Destroy();
 	}

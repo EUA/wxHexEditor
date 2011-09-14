@@ -79,16 +79,18 @@ virtual void EventHandler( wxCommandEvent& event );
 
 class CopyAsDialog : public CopyAsDialogGui{
 	public:
-		CopyAsDialog( wxWindow* parent, FAL* copy_file, Select* select);
+		CopyAsDialog( wxWindow* parent, FAL* copy_file, Select* select, ArrayOfTAG* MainTagArray);
 	private:
 		class HexEditor* parent;
 		class Select* select;
 		int old_copyas;
 		int old_option;
 		FAL * copy_file;
+		ArrayOfTAG* MainTagArray;
       void EventHandler( wxCommandEvent& event );
       void Copy( void );
       void PrepareFullText( wxString& , wxMemoryBuffer& );
+      void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& );
 	};
 
 class ReplaceDialog : public FindDialog{

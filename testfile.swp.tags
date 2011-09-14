@@ -23,8 +23,8 @@
       <note_colour>#FF0000</note_colour>
     </TAG>
     <TAG id="2">
-      <start_offset>388</start_offset>
-      <end_offset>352</end_offset>
+      <start_offset>352</start_offset>
+      <end_offset>388</end_offset>
       <tag_text>Third corruption</tag_text>
       <font_colour>#000000</font_colour>
       <note_colour>#00FF07</note_colour>

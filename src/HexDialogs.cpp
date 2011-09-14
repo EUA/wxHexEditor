@@ -488,10 +488,11 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 		wxBell();
 	}
 
-CopyAsDialog::CopyAsDialog( wxWindow* _parent, FAL *file, Select *select_ ):CopyAsDialogGui( _parent , wxID_ANY){
+CopyAsDialog::CopyAsDialog( wxWindow* _parent, FAL *file, Select *select_ , ArrayOfTAG* MainTagArray_):CopyAsDialogGui( _parent , wxID_ANY){
 	parent = static_cast< HexEditor* >( _parent );
 	select = select_;
 	copy_file = file;
+	MainTagArray=MainTagArray_;
 	chkBigEndian->SetValue( not wxIsPlatformLittleEndian() );
 	}
 
@@ -519,7 +520,7 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 			}
 		else if( selected == 2){ // HTML
 			chcOption->Insert(_("HTML format"),0);
-			chcOption->Insert(_("HTML with TAGs (Not Available Yet)"),1);
+			chcOption->Insert(_("HTML with TAGs"),1);
 			chcOption->Insert(_("phpBB forum style"),2);
 			}
 		else if( selected >= 3){ // C/C++/ASM Sources
@@ -576,6 +577,111 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 		}
 	}
 
+void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff ){
+	wxString last_color_hex,last_color_text;
+	cb += wxT("TAG List:\n");
+	for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){
+		TagElement *tag = MainTagArray->Item(i);
+		if(( tag->start <  select->GetStart() and tag->end   >= select->GetStart() ) or
+			( tag->start >= select->GetStart() and tag->start <= select->GetEnd() ) or
+			( tag->end   >= select->GetStart() and tag->end   <= select->GetEnd() ) ){
+
+			cb += wxT("</code><code style=\"background-color:") + tag->SoftColour( tag->NoteClrData.GetColour() ).GetAsString(wxC2S_HTML_SYNTAX) +
+					wxT(";color:") + tag->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX) +  wxT(";\">") + tag->tag +wxT("\n");
+			}
+		}
+	cb += wxT("\n</code><code>");
+
+	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += 16){
+		cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
+		cb += wxT("   ");
+
+		//Add 16 hex val
+
+		//Check for middle TAG selection starts
+		if( current_offset == 0 )
+			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+				TagElement *tg = MainTagArray->Item(j);
+				if( tg->isCover( select->GetStart() ) )
+					last_color_hex = last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+			}
+
+		if( last_color_hex.Len() )
+			cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+		for(unsigned i = 0 ; i < 16 ; i++){
+
+			//TAG Paint Loop
+			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+				TagElement *tg = MainTagArray->Item(j);
+				if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+					last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+					cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+					}
+				if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart() ){
+					cb += wxT("</code><code>");
+					last_color_hex = wxEmptyString;
+					}
+				}
+
+			if( i + current_offset < select->GetSize())
+				cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
+			else{
+				if(last_color_hex.Len() )
+					cb += wxT("</code><code>");
+				last_color_hex = wxEmptyString;
+				cb+= wxT("   "); //fill with zero to make text area at proper location
+				}
+			//This avoid to paint text section.
+			if(last_color_hex.Len() and i==15)
+				cb += wxT("</code><code>");
+			}
+
+		cb += wxT("  ");
+		//Add 16 Ascii rep
+		char chr;
+
+		if( current_offset == 0 )
+			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+				TagElement *tg = MainTagArray->Item(j);
+				if( tg->isCover( select->GetStart() ) )
+					last_color_text = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+			}
+
+		if( last_color_text.Len() )
+			cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
+		for(unsigned i = 0 ; i < 16 ; i++){
+			if( i + current_offset < select->GetSize()){
+
+							//TAG Paint Loop
+			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+				TagElement *tg = MainTagArray->Item(j);
+				if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+					last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+					cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
+					}
+				if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
+					cb += wxT("</code><code>");
+					last_color_text = wxEmptyString;
+					}
+				}
+
+				//Char filter for ascii
+				chr = buff[ current_offset + i];
+				if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
+					cb+= wxString::FromAscii( buff[ current_offset + i] );
+				else
+					cb+= wxString::FromAscii( '.' );
+				}
+			if(last_color_text.Len() and i==15)
+				cb += wxT("</code><code>");
+			}
+			cb += wxT("\n");
+		}
+
+	cb += wxT("\n");
+}
+
+
 void CopyAsDialog::Copy( void ){
 
 	chcOption->GetSelection();
@@ -616,20 +722,22 @@ void CopyAsDialog::Copy( void ){
 
 		else if( chcCopyAs->GetSelection() == 2){//Internet
 			if( chcOption->GetSelection() == 0 ){ //html
-				///<html><head><title></title></head><body>
+//				<html><head><title></title></head><body>
 //				<pre>
-//				<code style="color:#000000;">0000E973   1375 6E5A 8696 553A 01C9 51A2 F244 90BD   .unZ..U:.ÉQ¢òD.½</code>
-//				<code style="color:#Zebra?;">0000E983   1375 6E5A 8696 553A 01C9 51A2 F244 90BD   .unZ..U:.ÉQ¢òD.½</code>
+//				<code style="color:#000000;background-color:#FFFFFF">0000E973   1375 6E5A 8696 553A 01C9 51A2 F244 90BD   .unZ..U:.ÉQ¢òD.½</code>
+//				<code style="color:#000000;background-color:zebra?;">0000E983   1375 6E5A 8696 553A 01C9 51A2 F244 90BD   .unZ..U:.ÉQ¢òD.½</code>
 //				</pre>
 //				<font size="-3">Generated by <a href="http://wxhexeditor.sourceforge.net/">wxHexEditor</a></font>
-				///</body></html>
+//				</body></html>
 				cb += wxT("<pre><code style=\"color:#000000;\">");
 				PrepareFullText( cb, buff );
 				cb += wxT("</code></pre><font size=\"-3\">Generated by <a href=\"http://wxhexeditor.sourceforge.net/\">wxHexEditor</a></font>");
 				}
 
 			else if( chcOption->GetSelection() == 1 ){ //HTML with Tags
-				wxBell();
+				cb += wxT("<pre><code style=\"color:#000000;\">");
+				PrepareFullTextWithTAGs( cb, buff );
+				cb += wxT("</code></pre><font size=\"-3\">Generated by <a href=\"http://wxhexeditor.sourceforge.net/\">wxHexEditor</a></font>");
 				}
 
 			else if( chcOption->GetSelection() == 2 ){ //phpBB Forum

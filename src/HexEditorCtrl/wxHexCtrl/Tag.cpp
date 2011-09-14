@@ -35,12 +35,12 @@ TagElement::TagElement(){
 	}
 
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
-			start(_start), end(_end), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
+			start( _start < _end ? _start : _end), end(_start < _end ? _end : _start), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
 	visible = false;
 	}
 
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour fntclr, wxColour noteclr):
-			start(_start), end(_end), tag(_tag){
+			start( _start < _end ? _start : _end), end(_start < _end ? _end : _start), tag(_tag){
 	FontClrData.SetColour(fntclr);
 	NoteClrData.SetColour(noteclr);
 	visible = false;
@@ -58,6 +58,20 @@ TagElement::~TagElement(){
 
 int TagElement::TagCompare(TagElement **a, TagElement **b){
 	return (*a)->start - (*b)->start;
+	}
+
+wxColour TagElement::SoftColour( wxColour col ){
+	//fake alpha highlighting for tags.
+	unsigned char r,g,b;
+	wxColour back=col;
+	r=back.Red();
+	g=back.Green();
+	b=back.Blue();
+	r +=  (0xff - r) / 2;
+	g +=  (0xff - g) / 2;
+	b +=  (0xff - b) / 2;
+	back.Set(r,g,b,0xff);
+	return back;
 	}
 
 void TagElement::Show( const wxPoint& pos, wxWindow *parent ){

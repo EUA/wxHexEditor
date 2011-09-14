@@ -490,6 +490,7 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 
 CopyAsDialog::CopyAsDialog( wxWindow* _parent, FAL *file, Select *select_ , ArrayOfTAG* MainTagArray_):CopyAsDialogGui( _parent , wxID_ANY){
 	parent = static_cast< HexEditor* >( _parent );
+	spnBytePerLine->SetValue( parent->BytePerLine() );
 	select = select_;
 	copy_file = file;
 	MainTagArray=MainTagArray_;
@@ -564,18 +565,30 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 	chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
 	}
 
+wxString CopyAsDialog::GetDigitFormat( void ){
+	int digit_count=0;
+	int base=parent->GetIsHexOffset() ? 16 : 10;
+	while(select->GetEnd() > pow(base,++digit_count));
+	if( digit_count < 6)
+		digit_count=6;
+	if( base == 10 )
+		return wxT("%")+wxString::Format( wxT("%02d"),digit_count) + wxLongLongFmtSpec + wxT("u   ");
+	else
+		return wxT("0x%")+wxString::Format( wxT("%02d"),digit_count) + wxLongLongFmtSpec + wxT("X   ");
+	}
+
 void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
-	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += 16){
+	int BytePerLine = spnBytePerLine->GetValue();
+	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += BytePerLine){
 		if(chkOffset->GetValue()){
-			cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
-			cb += wxT("   ");
+			cb += wxString::Format(GetDigitFormat() , select->GetStart() + current_offset );
 			}
 
 		//Add 16 hex val
 		if(chkHex->GetValue()){
-			for(unsigned i = 0 ; i < 16 ; i++){
+			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize())
-					cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
+					cb+= wxString::Format( wxT("%02X "), (unsigned char)buff[ current_offset + i] );
 				else
 					cb+= wxT("   "); //fill with zero to make text area at proper location
 				}
@@ -585,7 +598,7 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 		if(chkText->GetValue()){
 		//Add 16 Ascii rep
 			char chr;
-			for(int i = 0 ; i < 16 ; i++){
+			for(int i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
 					//Char filter for ascii
 					chr = buff[ current_offset + i];
@@ -601,6 +614,7 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 	}
 
 void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff ){
+	int BytePerLine = spnBytePerLine->GetValue();
 	wxString last_color_hex,last_color_text;
 	cb += wxT("TAG List:\n");
 	for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){
@@ -615,10 +629,9 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 		}
 	cb += wxT("\n</code><code>");
 
-	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += 16){
+	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += BytePerLine){
 		if(chkOffset->GetValue()){
-			cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
-			cb += wxT("   ");
+			cb += wxString::Format(GetDigitFormat()  , select->GetStart() + current_offset );
 			}
 
 		if(chkHex->GetValue()){
@@ -633,7 +646,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 
 			if( last_color_hex.Len() )
 				cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
-			for(unsigned i = 0 ; i < 16 ; i++){
+			for(unsigned i = 0 ; i < BytePerLine ; i++){
 
 				//TAG Paint Loop
 				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
@@ -649,7 +662,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 					}
 
 				if( i + current_offset < select->GetSize())
-					cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
+					cb+= wxString::Format( wxT("%02X "), (unsigned char)buff[ current_offset + i] );
 				else{
 					if(last_color_hex.Len() )
 						cb += wxT("</code><code>");
@@ -657,7 +670,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 					cb+= wxT("   "); //fill with zero to make text area at proper location
 					}
 				//This avoid to paint text section.
-				if(last_color_hex.Len() and i==15)
+				if(last_color_hex.Len() and i==BytePerLine)
 					cb += wxT("</code><code>");
 				}
 		cb += wxT("  ");
@@ -676,7 +689,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 
 			if( last_color_text.Len() )
 				cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
-			for(unsigned i = 0 ; i < 16 ; i++){
+			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
 
 								//TAG Paint Loop
@@ -699,7 +712,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 					else
 						cb+= wxString::FromAscii( '.' );
 					}
-				if(last_color_text.Len() and i==15)
+				if(last_color_text.Len() and i==BytePerLine-1)
 					cb += wxT("</code><code>");
 				}
 			}
@@ -710,9 +723,9 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 
 
 void CopyAsDialog::Copy( void ){
-
 	chcOption->GetSelection();
 	if( not select->IsState( select->SELECT_FALSE ) ) {
+		int BytePerLine = spnBytePerLine->GetValue();
 		wxString cb;
 		uint64_t RAM_limit = 10*MB;
 		wxMemoryBuffer buff;
@@ -731,18 +744,18 @@ void CopyAsDialog::Copy( void ){
 			wxString HexFormat;
 			bool quad=false;
 			switch( chcOption->GetSelection()){
-				case 0: HexFormat=wxT("%X");break; //Raw Hex
-				case 1: HexFormat=wxT("%X ");break; //Standard
-				case 2: HexFormat=wxT("%X"); quad=true; break; //Quad
-				case 3: HexFormat=wxT("0x%X ");break; //Ox
-				case 4: HexFormat=wxT("0x%X, ");break; //Ox with period
+				case 0: HexFormat=wxT("%02X");break; //Raw Hex
+				case 1: HexFormat=wxT("%02X ");break; //Standard
+				case 2: HexFormat=wxT("%02X"); quad=true; break; //Quad
+				case 3: HexFormat=wxT("0x%02X ");break; //Ox
+				case 4: HexFormat=wxT("0x%02X, ");break; //Ox with period
 				}
 
 			for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset ++){
 				cb+= wxString::Format( HexFormat, (unsigned char)buff[ current_offset ] );
 				if( quad and ((current_offset+1)%2)==0)
 					cb += wxT(" ");
-				if(( (current_offset+1) % 16)==0 )
+				if(( (current_offset+1) % BytePerLine)==0 )
 					cb += wxT("\n");
 				}
 			}
@@ -801,7 +814,7 @@ void CopyAsDialog::Copy( void ){
 //					case 4: cb+= wxString::Format( wxT("0x%08X, "), *reinterpret_cast<unsigned int*>(	buff.GetData()+current_offset*HexSize )); break;
 //					case 8: cb+= wxString::Format( wxT("0x%016"wxLongLongFmtSpec"X, "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
 //					}
-				if(( (current_offset+1) % (16/HexSize)==0 ) and current_offset not_eq count)
+				if(( (current_offset+1) % (BytePerLine/HexSize)==0 ) and current_offset not_eq count)
 						cb += wxT("\n  ");
 				}
 			cb=cb.BeforeLast(',')+wxT(" }\n");
@@ -824,7 +837,7 @@ void CopyAsDialog::Copy( void ){
 			int limit=(bigEndianSwapReq ? -1 : HexSize);
 			int incr = (bigEndianSwapReq ? -1 : +1);
 			for(unsigned current_offset = 0; current_offset < count ; current_offset ++){
-				if( current_offset % (16/HexSize)==0 )
+				if( current_offset % (BytePerLine/HexSize)==0 )
 					cb += HexFormat;
 				b = (bigEndianSwapReq ? HexSize-1 : 0);
 				cb+= wxT("0");

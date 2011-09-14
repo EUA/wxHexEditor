@@ -1011,6 +1011,7 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	wxFlexGridSizer* fgSizerSelections;
 	fgSizerSelections = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizerSelections->AddGrowableCol( 1 );
 	fgSizerSelections->SetFlexibleDirection( wxBOTH );
 	fgSizerSelections->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -1022,7 +1023,7 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	int chcCopyAsNChoices = sizeof( chcCopyAsChoices ) / sizeof( wxString );
 	chcCopyAs = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCopyAsNChoices, chcCopyAsChoices, 0 );
 	chcCopyAs->SetSelection( 0 );
-	fgSizerSelections->Add( chcCopyAs, 0, wxALL|wxEXPAND, 5 );
+	fgSizerSelections->Add( chcCopyAs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	txtOption = new wxStaticText( this, wxID_ANY, wxT("Option:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtOption->Wrap( -1 );
@@ -1034,34 +1035,47 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	chcOption->SetSelection( 0 );
 	chcOption->Enable( false );
 	
-	fgSizerSelections->Add( chcOption, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	fgSizerSelections->Add( chcOption, 1, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	bSizerMain->Add( fgSizerSelections, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerMiddle;
 	bSizerMiddle = new wxBoxSizer( wxHORIZONTAL );
 	
+	wxBoxSizer* bSizerLeft;
+	bSizerLeft = new wxBoxSizer( wxVERTICAL );
+	
 	chkBigEndian = new wxCheckBox( this, wxID_ANY, wxT("As BigEndian"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkBigEndian->Enable( false );
 	
-	bSizerMiddle->Add( chkBigEndian, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bSizerLeft->Add( chkBigEndian, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	wxBoxSizer* bSizerParts;
-	bSizerParts = new wxBoxSizer( wxVERTICAL );
+	wxStaticBoxSizer* sbSizerBPL;
+	sbSizerBPL = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Bytes Per Line") ), wxVERTICAL );
+	
+	spnBytePerLine = new wxSpinCtrl( this, wxID_ANY, wxT("16"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 8, 1024, 0 );
+	sbSizerBPL->Add( spnBytePerLine, 0, wxALIGN_RIGHT, 5 );
+	
+	bSizerLeft->Add( sbSizerBPL, 1, wxEXPAND, 5 );
+	
+	bSizerMiddle->Add( bSizerLeft, 0, 0, 5 );
+	
+	wxBoxSizer* bSizerRight;
+	bSizerRight = new wxBoxSizer( wxVERTICAL );
 	
 	chkOffset = new wxCheckBox( this, wxID_ANY, wxT("Include Offset Part"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkOffset->SetValue(true); 
-	bSizerParts->Add( chkOffset, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	bSizerRight->Add( chkOffset, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	chkHex = new wxCheckBox( this, wxID_ANY, wxT("Include Hex Part"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkHex->SetValue(true); 
-	bSizerParts->Add( chkHex, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	bSizerRight->Add( chkHex, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	chkText = new wxCheckBox( this, wxID_ANY, wxT("Include Text Part"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkText->SetValue(true); 
-	bSizerParts->Add( chkText, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	bSizerRight->Add( chkText, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
-	bSizerMiddle->Add( bSizerParts, 0, 0, 5 );
+	bSizerMiddle->Add( bSizerRight, 0, 0, 5 );
 	
 	bSizerMain->Add( bSizerMiddle, 0, 0, 5 );
 	

@@ -367,6 +367,7 @@ class CopyAsDialogGui : public wxDialog
 		wxStaticText* txtOption;
 		wxChoice* chcOption;
 		wxCheckBox* chkBigEndian;
+		wxSpinCtrl* spnBytePerLine;
 		wxCheckBox* chkOffset;
 		wxCheckBox* chkHex;
 		wxCheckBox* chkText;

@@ -91,6 +91,7 @@ class CopyAsDialog : public CopyAsDialogGui{
       void Copy( void );
       void PrepareFullText( wxString& , wxMemoryBuffer& );
       void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& );
+      wxString GetDigitFormat( void );
 	};
 
 class ReplaceDialog : public FindDialog{

@@ -164,6 +164,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		int GetLastPosition( void ){ return hex_ctrl->GetLastPosition(); }
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );
+		bool GetIsHexOffset( void ){ return offset_ctrl->hex_offset;}
 virtual void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 	protected:

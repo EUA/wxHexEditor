@@ -510,6 +510,9 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 		chcOption->Clear();
 		if( selected == 0){
 			chcOption->Insert(_("Not Available"),0);
+			chkOffset->Enable(true);
+			chkHex->Enable(true);
+			chkText->Enable(true);
 			}
 		else if( selected == 1){ // Hex
 			chcOption->Insert(_("Raw Hex"),0);
@@ -517,18 +520,31 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 			chcOption->Insert(_("Quad Hex"),2);
 			chcOption->Insert(_("with 0x"),3);
 			chcOption->Insert(_("with 0x and period"),4);
+			chkOffset->Enable(false);
+			chkHex->Enable(false);
+			chkText->Enable(false);
+
 			}
 		else if( selected == 2){ // HTML
 			chcOption->Insert(_("HTML format"),0);
 			chcOption->Insert(_("HTML with TAGs"),1);
 			chcOption->Insert(_("phpBB forum style"),2);
+			chkOffset->Enable(true);
+			chkHex->Enable(true);
+			chkText->Enable(true);
 			}
 		else if( selected >= 3){ // C/C++/ASM Sources
 			chcOption->Insert(_("8bit Byte "),0);
 			chcOption->Insert(_("16bit Words"),1);
 			chcOption->Insert(_("32bit Dwords"),2);
 			chcOption->Insert(_("64bit Qwords"),3);
+			chkOffset->Enable(false);
+			chkHex->Enable(false);
+			chkText->Enable(false);
 			}
+		wxYield();
+		this->GetSizer()->Fit(this);
+		this->GetSizer()->Layout();
 
 		//Adjustinf selection part
 		if( selected == old_copyas or
@@ -550,30 +566,37 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 
 void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += 16){
-		cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
-		cb += wxT("   ");
-		//Add 16 hex val
-		for(unsigned i = 0 ; i < 16 ; i++){
-			if( i + current_offset < select->GetSize())
-				cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
-			else
-				cb+= wxT("   "); //fill with zero to make text area at proper location
+		if(chkOffset->GetValue()){
+			cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
+			cb += wxT("   ");
 			}
 
-		cb += wxT("  ");
-		//Add 16 Ascii rep
-		char chr;
-		for(int i = 0 ; i < 16 ; i++){
-			if( i + current_offset < select->GetSize()){
-				//Char filter for ascii
-				chr = buff[ current_offset + i];
-				if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
-					cb+= wxString::FromAscii( buff[ current_offset + i] );
+		//Add 16 hex val
+		if(chkHex->GetValue()){
+			for(unsigned i = 0 ; i < 16 ; i++){
+				if( i + current_offset < select->GetSize())
+					cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
 				else
-					cb+= wxString::FromAscii( '.' );
+					cb+= wxT("   "); //fill with zero to make text area at proper location
+				}
+			cb += wxT("  ");
+			}
+
+		if(chkText->GetValue()){
+		//Add 16 Ascii rep
+			char chr;
+			for(int i = 0 ; i < 16 ; i++){
+				if( i + current_offset < select->GetSize()){
+					//Char filter for ascii
+					chr = buff[ current_offset + i];
+					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
+						cb+= wxString::FromAscii( buff[ current_offset + i] );
+					else
+						cb+= wxString::FromAscii( '.' );
+					}
 				}
 			}
-			cb += wxT("\n");
+		cb += wxT("\n");
 		}
 	}
 
@@ -593,91 +616,95 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 	cb += wxT("\n</code><code>");
 
 	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += 16){
-		cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
-		cb += wxT("   ");
-
-		//Add 16 hex val
-
-		//Check for middle TAG selection starts
-		if( current_offset == 0 )
-			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-				TagElement *tg = MainTagArray->Item(j);
-				if( tg->isCover( select->GetStart() ) )
-					last_color_hex = last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+		if(chkOffset->GetValue()){
+			cb += wxString::Format(wxT("%06"wxLongLongFmtSpec"u" ) , select->GetStart() + current_offset );
+			cb += wxT("   ");
 			}
 
-		if( last_color_hex.Len() )
-			cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
-		for(unsigned i = 0 ; i < 16 ; i++){
+		if(chkHex->GetValue()){
+			//Add 16 hex val
+			//Check for middle TAG selection starts
+			if( current_offset == 0 )
+				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+					TagElement *tg = MainTagArray->Item(j);
+					if( tg->isCover( select->GetStart() ) )
+						last_color_hex = last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+				}
 
-			//TAG Paint Loop
-			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-				TagElement *tg = MainTagArray->Item(j);
-				if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
-					last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-					cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+			if( last_color_hex.Len() )
+				cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+			for(unsigned i = 0 ; i < 16 ; i++){
+
+				//TAG Paint Loop
+				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+					TagElement *tg = MainTagArray->Item(j);
+					if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+						last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+						cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+						}
+					if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart() ){
+						cb += wxT("</code><code>");
+						last_color_hex = wxEmptyString;
+						}
 					}
-				if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart() ){
-					cb += wxT("</code><code>");
+
+				if( i + current_offset < select->GetSize())
+					cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
+				else{
+					if(last_color_hex.Len() )
+						cb += wxT("</code><code>");
 					last_color_hex = wxEmptyString;
+					cb+= wxT("   "); //fill with zero to make text area at proper location
 					}
-				}
-
-			if( i + current_offset < select->GetSize())
-				cb+= wxString::Format( wxT("%X "), (unsigned char)buff[ current_offset + i] );
-			else{
-				if(last_color_hex.Len() )
+				//This avoid to paint text section.
+				if(last_color_hex.Len() and i==15)
 					cb += wxT("</code><code>");
-				last_color_hex = wxEmptyString;
-				cb+= wxT("   "); //fill with zero to make text area at proper location
 				}
-			//This avoid to paint text section.
-			if(last_color_hex.Len() and i==15)
-				cb += wxT("</code><code>");
-			}
-
 		cb += wxT("  ");
-		//Add 16 Ascii rep
-		char chr;
-
-		if( current_offset == 0 )
-			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-				TagElement *tg = MainTagArray->Item(j);
-				if( tg->isCover( select->GetStart() ) )
-					last_color_text = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-			}
-
-		if( last_color_text.Len() )
-			cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
-		for(unsigned i = 0 ; i < 16 ; i++){
-			if( i + current_offset < select->GetSize()){
-
-							//TAG Paint Loop
-			for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-				TagElement *tg = MainTagArray->Item(j);
-				if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
-					last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-					cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
-					}
-				if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
-					cb += wxT("</code><code>");
-					last_color_text = wxEmptyString;
-					}
-				}
-
-				//Char filter for ascii
-				chr = buff[ current_offset + i];
-				if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
-					cb+= wxString::FromAscii( buff[ current_offset + i] );
-				else
-					cb+= wxString::FromAscii( '.' );
-				}
-			if(last_color_text.Len() and i==15)
-				cb += wxT("</code><code>");
-			}
-			cb += wxT("\n");
 		}
 
+		if(chkText->GetValue()){
+			//Add 16 Ascii rep
+			char chr;
+
+			if( current_offset == 0 )
+				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+					TagElement *tg = MainTagArray->Item(j);
+					if( tg->isCover( select->GetStart() ) )
+						last_color_text = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+				}
+
+			if( last_color_text.Len() )
+				cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
+			for(unsigned i = 0 ; i < 16 ; i++){
+				if( i + current_offset < select->GetSize()){
+
+								//TAG Paint Loop
+				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+					TagElement *tg = MainTagArray->Item(j);
+					if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+						last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+						cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
+						}
+					if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
+						cb += wxT("</code><code>");
+						last_color_text = wxEmptyString;
+						}
+					}
+
+					//Char filter for ascii
+					chr = buff[ current_offset + i];
+					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
+						cb+= wxString::FromAscii( buff[ current_offset + i] );
+					else
+						cb+= wxString::FromAscii( '.' );
+					}
+				if(last_color_text.Len() and i==15)
+					cb += wxT("</code><code>");
+				}
+			}
+		cb += wxT("\n");
+		}
 	cb += wxT("\n");
 }
 

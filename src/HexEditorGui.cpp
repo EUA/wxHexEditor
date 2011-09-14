@@ -1038,21 +1038,43 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	bSizerMain->Add( fgSizerSelections, 1, wxEXPAND, 5 );
 	
-	chkBigEndian = new wxCheckBox( this, wxID_ANY, wxT("Big Endian"), wxDefaultPosition, wxDefaultSize, 0 );
+	wxBoxSizer* bSizerMiddle;
+	bSizerMiddle = new wxBoxSizer( wxHORIZONTAL );
+	
+	chkBigEndian = new wxCheckBox( this, wxID_ANY, wxT("As BigEndian"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkBigEndian->Enable( false );
 	
-	bSizerMain->Add( chkBigEndian, 0, wxALL, 5 );
+	bSizerMiddle->Add( chkBigEndian, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	wxBoxSizer* bSizerParts;
+	bSizerParts = new wxBoxSizer( wxVERTICAL );
+	
+	chkOffset = new wxCheckBox( this, wxID_ANY, wxT("Include Offset Part"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkOffset->SetValue(true); 
+	bSizerParts->Add( chkOffset, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	
+	chkHex = new wxCheckBox( this, wxID_ANY, wxT("Include Hex Part"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkHex->SetValue(true); 
+	bSizerParts->Add( chkHex, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	
+	chkText = new wxCheckBox( this, wxID_ANY, wxT("Include Text Part"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkText->SetValue(true); 
+	bSizerParts->Add( chkText, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	
+	bSizerMiddle->Add( bSizerParts, 0, 0, 5 );
+	
+	bSizerMain->Add( bSizerMiddle, 0, 0, 5 );
 	
 	wxBoxSizer* bSizerButtons;
 	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
 	
 	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnCancel, 0, wxALL, 5 );
+	bSizerButtons->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	btnCopy = new wxButton( this, wxID_OK, wxT("Copy"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnCopy, 0, wxALL, 5 );
+	bSizerButtons->Add( btnCopy, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	bSizerMain->Add( bSizerButtons, 0, wxEXPAND, 5 );
+	bSizerMain->Add( bSizerButtons, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	this->SetSizer( bSizerMain );
 	this->Layout();

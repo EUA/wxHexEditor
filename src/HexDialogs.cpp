@@ -530,6 +530,8 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 			chcOption->Insert(_("HTML format"),0);
 			chcOption->Insert(_("HTML with TAGs"),1);
 			chcOption->Insert(_("phpBB forum style"),2);
+			chcOption->Insert(_("WiKi format"),3);
+			chcOption->Insert(_("WiKi with TAGs"),4);
 			chkOffset->Enable(true);
 			chkHex->Enable(true);
 			chkText->Enable(true);
@@ -613,25 +615,25 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 		}
 	}
 
-void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff ){
+void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, wxString startup=wxEmptyString ){
 	int BytePerLine = spnBytePerLine->GetValue();
 	wxString last_color_hex,last_color_text;
-	cb += wxT("TAG List:\n");
+	cb += startup+wxT("TAG List:\n");
 	for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){
 		TagElement *tag = MainTagArray->Item(i);
 		if(( tag->start <  select->GetStart() and tag->end   >= select->GetStart() ) or
 			( tag->start >= select->GetStart() and tag->start <= select->GetEnd() ) or
 			( tag->end   >= select->GetStart() and tag->end   <= select->GetEnd() ) ){
 
-			cb += wxT("</code><code style=\"background-color:") + tag->SoftColour( tag->NoteClrData.GetColour() ).GetAsString(wxC2S_HTML_SYNTAX) +
-					wxT(";color:") + tag->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX) +  wxT(";\">") + tag->tag +wxT("\n");
+			cb += startup+wxT("<span style=\"background-color:") + tag->SoftColour( tag->NoteClrData.GetColour() ).GetAsString(wxC2S_HTML_SYNTAX) +
+					wxT(";color:") + tag->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX) +  wxT(";\">") + tag->tag +wxT("</span>\n");
 			}
 		}
-	cb += wxT("\n</code><code>");
+	cb += startup+wxT("\n");
 
 	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += BytePerLine){
 		if(chkOffset->GetValue()){
-			cb += wxString::Format(GetDigitFormat()  , select->GetStart() + current_offset );
+			cb += startup + wxString::Format(GetDigitFormat()  , select->GetStart() + current_offset );
 			}
 
 		if(chkHex->GetValue()){
@@ -645,7 +647,8 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 				}
 
 			if( last_color_hex.Len() )
-				cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+				cb += wxT("<span style=\"background-color:") + last_color_hex + wxT(";\">");
+
 			for(unsigned i = 0 ; i < BytePerLine ; i++){
 
 				//TAG Paint Loop
@@ -653,10 +656,10 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 					TagElement *tg = MainTagArray->Item(j);
 					if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
 						last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-						cb += wxT("</code><code style=\"background-color:") + last_color_hex + wxT(";\">");
+						cb += wxT("<span style=\"background-color:") + last_color_hex + wxT(";\">");
 						}
 					if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart() ){
-						cb += wxT("</code><code>");
+						cb += wxT("</span>");
 						last_color_hex = wxEmptyString;
 						}
 					}
@@ -665,13 +668,13 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 					cb+= wxString::Format( wxT("%02X "), (unsigned char)buff[ current_offset + i] );
 				else{
 					if(last_color_hex.Len() )
-						cb += wxT("</code><code>");
+						cb += wxT("</span>");
 					last_color_hex = wxEmptyString;
 					cb+= wxT("   "); //fill with zero to make text area at proper location
 					}
 				//This avoid to paint text section.
-				if(last_color_hex.Len() and i==BytePerLine)
-					cb += wxT("</code><code>");
+				if(last_color_hex.Len() and i==BytePerLine-1)
+					cb += wxT("</span>");
 				}
 		cb += wxT("  ");
 		}
@@ -688,7 +691,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 				}
 
 			if( last_color_text.Len() )
-				cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
+				cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
 			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
 
@@ -697,10 +700,10 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 					TagElement *tg = MainTagArray->Item(j);
 					if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
 						last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-						cb += wxT("</code><code style=\"background-color:") + last_color_text + wxT(";\">");
+						cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
 						}
 					if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
-						cb += wxT("</code><code>");
+						cb += wxT("</span>");
 						last_color_text = wxEmptyString;
 						}
 					}
@@ -713,14 +716,13 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff )
 						cb+= wxString::FromAscii( '.' );
 					}
 				if(last_color_text.Len() and i==BytePerLine-1)
-					cb += wxT("</code><code>");
+					cb += wxT("</span>");
 				}
 			}
 		cb += wxT("\n");
 		}
-	cb += wxT("\n");
+	cb += startup + wxT("\n");
 }
-
 
 void CopyAsDialog::Copy( void ){
 	chcOption->GetSelection();
@@ -784,6 +786,16 @@ void CopyAsDialog::Copy( void ){
 				cb+= wxT("[code]");
 				PrepareFullText( cb, buff );
 				cb += wxT("[/code]Generated by [url=http://wxhexeditor.sourceforge.net/]wxHexEditor[/url]\n");
+				}
+
+			else if( chcOption->GetSelection() == 3 ){ //WiKi format
+				cb+= wxT("<pre>");
+				PrepareFullText( cb, buff );
+				cb += wxT("</pre> Generated by [http://wxhexeditor.sourceforge.net/ wxHexEditor]\n");
+				}
+			else if( chcOption->GetSelection() == 4 ){ //WiKi with TAGs
+				PrepareFullTextWithTAGs( cb, buff, wxT(" ") );
+				cb += wxT(" Generated by [http://wxhexeditor.sourceforge.net/ wxHexEditor]\n");
 				}
 			}
 		else if( chcCopyAs->GetSelection() == 3){//C/C++

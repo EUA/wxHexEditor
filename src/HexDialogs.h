@@ -90,7 +90,7 @@ class CopyAsDialog : public CopyAsDialogGui{
       void EventHandler( wxCommandEvent& event );
       void Copy( void );
       void PrepareFullText( wxString& , wxMemoryBuffer& );
-      void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& );
+      void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& , wxString startup);
       wxString GetDigitFormat( void );
 	};
 

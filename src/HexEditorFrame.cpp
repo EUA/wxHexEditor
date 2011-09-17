@@ -89,7 +89,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 
 	bool update_enable = false;
-	if ( ! wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
+	if ( not wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
 		update_enable = true;
 		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
 		//First Run!

@@ -5827,7 +5827,7 @@
                             <property name="proportion">1</property>
                             <object class="wxChoice" expanded="0">
                                 <property name="bg"></property>
-                                <property name="choices">&quot;N/A&quot;</property>
+                                <property name="choices"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
                                 <property name="enabled">0</property>

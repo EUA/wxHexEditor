@@ -83,12 +83,11 @@ class CopyAsDialog : public CopyAsDialogGui{
 	private:
 		class HexEditor* parent;
 		class Select* select;
-		int old_copyas;
-		int old_option;
 		FAL * copy_file;
 		ArrayOfTAG* MainTagArray;
       void EventHandler( wxCommandEvent& event );
       void Copy( void );
+      void PrepareOptions( int SelectedFunction );
       void PrepareFullText( wxString& , wxMemoryBuffer& );
       void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& , wxString startup);
       wxString GetDigitFormat( void );

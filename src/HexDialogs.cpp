@@ -494,77 +494,101 @@ CopyAsDialog::CopyAsDialog( wxWindow* _parent, FAL *file, Select *select_ , Arra
 	select = select_;
 	copy_file = file;
 	MainTagArray=MainTagArray_;
-	chkBigEndian->SetValue( not wxIsPlatformLittleEndian() );
+	bool IsBigEndian;
+	//parent->interpreter->chkBigEndian->GetValue(); Does this approach better than remembering old value?
+	wxConfigBase::Get()->Read( _T("CopyAsBigEndian"), &IsBigEndian );
+	chkBigEndian->SetValue( IsBigEndian );
+
+	int CopyAsFunction;
+	if (wxConfigBase::Get()->Read(_T("CopyAsSelectedFunction"), &CopyAsFunction))
+		chcCopyAs->SetSelection( CopyAsFunction );
+	PrepareOptions( CopyAsFunction );
+	}
+
+void CopyAsDialog::PrepareOptions( int SelectedFunction ){
+//wxT("Full Text"), wxT("Special Hex"), wxT("HTML"), wxT("C/C++"), wxT("Assembler")
+	chcOption->Enable(SelectedFunction > 0);
+	chcOption->Clear();
+
+	if( SelectedFunction == 0){
+		chcOption->Insert(_("Not Available"),0);
+		chkOffset->Enable(true);
+		chkHex->Enable(true);
+		chkText->Enable(true);
+		}
+	else if( SelectedFunction == 1){ // Hex
+		chcOption->Insert(_("Raw Hex"),0);
+		chcOption->Insert(_("With Space"),1);
+		chcOption->Insert(_("Quad Hex"),2);
+		chcOption->Insert(_("with 0x"),3);
+		chcOption->Insert(_("with 0x and period"),4);
+		chkOffset->Enable(false);
+		chkHex->Enable(false);
+		chkText->Enable(false);
+
+		}
+	else if( SelectedFunction == 2){ // HTML
+		chcOption->Insert(_("HTML format"),0);
+		chcOption->Insert(_("HTML with TAGs"),1);
+		chcOption->Insert(_("phpBB forum style"),2);
+		chcOption->Insert(_("WiKi format"),3);
+		chcOption->Insert(_("WiKi with TAGs"),4);
+		chkOffset->Enable(true);
+		chkHex->Enable(true);
+		chkText->Enable(true);
+		}
+	else if( SelectedFunction >= 3){ // C/C++/ASM Sources
+		chcOption->Insert(_("8bit Byte "),0);
+		chcOption->Insert(_("16bit Words"),1);
+		chcOption->Insert(_("32bit Dwords"),2);
+		chcOption->Insert(_("64bit Qwords"),3);
+		chkOffset->Enable(false);
+		chkHex->Enable(false);
+		chkText->Enable(false);
+		}
+	int option=0;
+	wxConfigBase::Get()->Read(_T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"),SelectedFunction), &option);
+	chcOption->SetSelection( option );
+
+	//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
+	chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
+
+	wxYield();
+	this->GetSizer()->Fit(this);
+	this->GetSizer()->Layout();
 	}
 
 void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 	int id = event.GetId();
 	if( id == wxID_CANCEL )
 		Destroy();
-	else if( id == wxID_OK )
+	else if( id == wxID_OK ){
 		Copy();
+		Destroy();
+		}
 	else if( id == chcCopyAs->GetId() ){
-		int selected =  chcCopyAs->GetSelection();
-//wxT("Full Text"), wxT("Special Hex"), wxT("HTML"), wxT("C/C++"), wxT("Assembler")
+		int SelectedFunction =  chcCopyAs->GetSelection();
+		PrepareOptions(SelectedFunction);
 
-		chcOption->Enable(selected > 0);
-		chcOption->Clear();
-		if( selected == 0){
-			chcOption->Insert(_("Not Available"),0);
-			chkOffset->Enable(true);
-			chkHex->Enable(true);
-			chkText->Enable(true);
-			}
-		else if( selected == 1){ // Hex
-			chcOption->Insert(_("Raw Hex"),0);
-			chcOption->Insert(_("With Space"),1);
-			chcOption->Insert(_("Quad Hex"),2);
-			chcOption->Insert(_("with 0x"),3);
-			chcOption->Insert(_("with 0x and period"),4);
-			chkOffset->Enable(false);
-			chkHex->Enable(false);
-			chkText->Enable(false);
-
-			}
-		else if( selected == 2){ // HTML
-			chcOption->Insert(_("HTML format"),0);
-			chcOption->Insert(_("HTML with TAGs"),1);
-			chcOption->Insert(_("phpBB forum style"),2);
-			chcOption->Insert(_("WiKi format"),3);
-			chcOption->Insert(_("WiKi with TAGs"),4);
-			chkOffset->Enable(true);
-			chkHex->Enable(true);
-			chkText->Enable(true);
-			}
-		else if( selected >= 3){ // C/C++/ASM Sources
-			chcOption->Insert(_("8bit Byte "),0);
-			chcOption->Insert(_("16bit Words"),1);
-			chcOption->Insert(_("32bit Dwords"),2);
-			chcOption->Insert(_("64bit Qwords"),3);
-			chkOffset->Enable(false);
-			chkHex->Enable(false);
-			chkText->Enable(false);
-			}
-		wxYield();
-		this->GetSizer()->Fit(this);
-		this->GetSizer()->Layout();
-
+		int option;
 		//Adjustinf selection part
-		if( selected == old_copyas or
-			(selected==3 and  old_copyas==4 )or
-			(selected==4 and  old_copyas==3 )
-			)
-			chcOption->SetSelection( old_option );
+		if (wxConfigBase::Get()->Read(_T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"),SelectedFunction), &option))
+			chcOption->SetSelection( option );
 		else
 			chcOption->SetSelection(0);
 
-		old_copyas=selected;
+		wxConfigBase::Get()->Write( _T("CopyAsSelectedFunction"), SelectedFunction );
 		}
-	else if( id == chcOption->GetId() )
-		old_option = chcOption->GetSelection();
+	else if( id == chcOption->GetId() ){
+		wxConfigBase::Get()->Write( _T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"), chcCopyAs->GetSelection()), chcOption->GetSelection() );
 
-	//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
-	chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
+		//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
+		chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
+		}
+	else if( id == chkBigEndian->GetId() ){
+		wxConfigBase::Get()->Write( _T("CopyAsBigEndian"), chkBigEndian->GetValue() );
+		}
+
 	}
 
 wxString CopyAsDialog::GetDigitFormat( void ){
@@ -580,7 +604,7 @@ wxString CopyAsDialog::GetDigitFormat( void ){
 	}
 
 void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
-	int BytePerLine = spnBytePerLine->GetValue();
+	unsigned BytePerLine = spnBytePerLine->GetValue();
 	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += BytePerLine){
 		if(chkOffset->GetValue()){
 			cb += wxString::Format(GetDigitFormat() , select->GetStart() + current_offset );
@@ -600,7 +624,7 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 		if(chkText->GetValue()){
 		//Add 16 Ascii rep
 			char chr;
-			for(int i = 0 ; i < BytePerLine ; i++){
+			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
 					//Char filter for ascii
 					chr = buff[ current_offset + i];
@@ -616,7 +640,7 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 	}
 
 void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, wxString startup=wxEmptyString ){
-	int BytePerLine = spnBytePerLine->GetValue();
+	unsigned BytePerLine = spnBytePerLine->GetValue();
 	wxString last_color_hex,last_color_text;
 	cb += startup+wxT("TAG List:\n");
 	for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){

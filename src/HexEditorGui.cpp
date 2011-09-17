@@ -1029,9 +1029,8 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	txtOption->Wrap( -1 );
 	fgSizerSelections->Add( txtOption, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	wxString chcOptionChoices[] = { wxT("N/A") };
-	int chcOptionNChoices = sizeof( chcOptionChoices ) / sizeof( wxString );
-	chcOption = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcOptionNChoices, chcOptionChoices, 0 );
+	wxArrayString chcOptionChoices;
+	chcOption = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcOptionChoices, 0 );
 	chcOption->SetSelection( 0 );
 	chcOption->Enable( false );
 	

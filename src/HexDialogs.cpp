@@ -225,7 +225,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = from;
-	int search_step = parent->FileLength() < MB ? parent->FileLength() : MB ;
+	int BlockSz= 128*1024;
+	int search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
 	if(buffer == NULL) return NANINT;
@@ -262,7 +263,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxString::Format(_("\nSearch Speed : %d MB/s"), (current_offset-readspeed)/MB);
+				emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s"), 1.0*(current_offset-readspeed)/MB);
 				readspeed=current_offset;
 				}
 		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
@@ -1147,11 +1148,6 @@ void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	EventHandler( e );
 	}
 
-//mhash_get_block_size(MHASH_MD5)
-//wxString ChecksumDialog::HashToString( MHASH *hobj ){
-//
-//	}
-
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
 	wxString msg = _("Please wait while calculating checksum.");
@@ -1159,7 +1155,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	mypd.Show();
 
 	if( 1 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
-		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
+		//checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 		unsigned NumBits=0;
 		for( unsigned i = 0; i < 16 ; i ++ ){
 			NumBits += (options>>i)&0x1;
@@ -1172,23 +1168,25 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		if( options & SHA384 ) myhash[i++]= mhash_init(MHASH_SHA384);
 		if( options & SHA512 ) myhash[i++]= mhash_init(MHASH_SHA512);
 
-		int rd=MB;
-		unsigned char buff[MB];
+
+		unsigned rdBlockSz=128*1024;
+		unsigned char buff[rdBlockSz];
+		int rd=rdBlockSz;
 
 		uint64_t readfrom=0,readspeed=0, range=f.Length();
 		wxString emsg = msg;
 		time_t ts,te;
 		time (&ts);
 
-		while(rd == MB){
-			rd = f.Read( buff, MB );
+		while(rd == rdBlockSz){
+			rd = f.Read( buff, rdBlockSz );
 			readfrom+=rd;
 			for( i = 0 ; i < NumBits ; i++) mhash( myhash[i], buff, rd);
 
 			time(&te);
 			if(ts != te ){
 				ts=te;
-				emsg = msg + wxString::Format(_("\nHash Speed : %d MB/s"), (readfrom-readspeed)/MB);
+				emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
 				readspeed=readfrom;
 				}
 			if(not mypd.Update((readfrom*1000)/range, emsg ))
@@ -1202,10 +1200,10 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 
 		for(unsigned j = 0 ; j < 16 ; j++)
 			if( (options >> j) & 0x1 ){
-				results += wxString::FromAscii(checksum_options_strings[j]);
+				results += wxString::FromAscii( reinterpret_cast<const char*>(mhash_get_hash_name_static( mhash_get_mhash_algo(myhash[i]) )));
 				results += wxT(":\t");
 				hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
-				for (int k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
+				for (unsigned k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
 					results += wxString::Format( wxT("%.2x"), hash[k]);
 
 				results += wxT("\n");
@@ -1231,8 +1229,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 			}
 
 
-		int buffsize = MB*1;
-
+		int buffsize = 128*1024;
 		unsigned char buff[buffsize];
 		uint64_t readfrom=0,readspeed=0, range=f.Length();
 		wxString emsg = msg;
@@ -1253,7 +1250,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 			time(&te);
 			if(ts != te ){
 				ts=te;
-				emsg = msg + wxString::Format(_("\nHash Speed : %d MB/s"), (readfrom-readspeed)/MB);
+				emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
 				readspeed=readfrom;
 				}
 			if(not mypd.Update((readfrom*1000)/range, emsg ))
@@ -1266,14 +1263,14 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		if( options & MD5 ){
 			hash = static_cast<unsigned char *>( mhash_end(tdMD5) );
 			results += wxT("MD5:\t");
-			for (int i = 0; i < mhash_get_block_size(MHASH_MD5); i++)
+			for (unsigned i = 0; i < mhash_get_block_size(MHASH_MD5); i++)
 				results += wxString::Format( wxT("%.2x"), hash[i]);
 			results += wxT("\n");
 			}
 		if( options & SHA1 ){
 			hash = static_cast<unsigned char *>( mhash_end(tdSHA1) );
 			results += wxT("SHA1:\t");
-			for (int i = 0; i < mhash_get_block_size(MHASH_SHA1); i++)
+			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA1); i++)
 				results += wxString::Format( wxT("%.2x"), hash[i]);
 			results += wxT("\n");
 			}
@@ -1281,7 +1278,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		if( options & SHA256 ){
 			hash = static_cast<unsigned char *>( mhash_end(tdSHA256) );
 			results += wxT("SHA256:\t");
-			for (int i = 0; i < mhash_get_block_size(MHASH_SHA256); i++)
+			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA256); i++)
 				results += wxString::Format( wxT("%.2x"), hash[i]);
 			results += wxT("\n");
 			}
@@ -1289,7 +1286,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		if( options & SHA384 ){
 			hash = static_cast<unsigned char *>( mhash_end(tdSHA384) );
 			results += wxT("SHA512:\t");
-			for (int i = 0; i < mhash_get_block_size(MHASH_SHA384); i++)
+			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA384); i++)
 				results += wxString::Format( wxT("%.2x"), hash[i]);
 			results += wxT("\n");
 			}
@@ -1297,7 +1294,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		if( options & SHA512 ){
 			hash = static_cast<unsigned char *>( mhash_end(tdSHA512) );
 			results += wxT("SHA512:\t");
-			for (int i = 0; i < mhash_get_block_size(MHASH_SHA512); i++)
+			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA512); i++)
 				results += wxString::Format( wxT("%.2x"), hash[i]);
 			results += wxT("\n");
 			}

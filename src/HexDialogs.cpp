@@ -24,7 +24,7 @@
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
-#include "../hashlibpp/src/hashlibpp.h"
+#include "../mhash/include/mhash.h"
 
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
@@ -1146,61 +1146,90 @@ void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	wxCommandEvent e;
 	EventHandler( e );
 	}
+
+//mhash_get_block_size(MHASH_MD5)
+//wxString ChecksumDialog::HashToString( MHASH *hobj ){
+//
+//	}
+
 wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 	f.Seek(0);
 	wxString msg = _("Please wait while calculating checksum.");
 	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	if( 0 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
-//		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
-//		unsigned NumBits=0;
-//		for( unsigned i = 0; i < 16 ; i ++ ){
-//			NumBits += (options>>i)&0x1;
-//			}
-//			hashwrapper **myhash= (hashwrapper**) new char[NumBits];
-//			unsigned i=0;
-//			if( options & MD5    ) myhash[i++]= new md5wrapper();
-//			if( options & SHA1   ) myhash[i++]= new sha1wrapper();
-//			if( options & SHA256 ) myhash[i++]= new sha256wrapper();
-//			if( options & SHA384 ) myhash[i++]= new sha384wrapper();
-//			if( options & SHA512 ) myhash[i++]= new sha512wrapper();
-//
-//			for(i = 0 ; i < NumBits ; i++)
-//				myhash[i]->resetContext();
-//
-//			int rd=MB;
-//			unsigned char buff[MB];
-//			while(rd == MB){
-//				rd = f.Read( buff, MB );
-//				for( i = 0 ; i < NumBits ; i++) myhash[i]->updateContext( buff, rd);
-//				}
-//			wxString results;
-//			i=0;
-//			for(unsigned j = 0 ; j < 16 ; j++)
-//				if( (options >> j) & 0x1 ){
-//					results += wxString::FromAscii(checksum_options_strings[i]);
-//					results += wxT(":\t");
-//					//TODO: Here is giving seg fault if 4 hash calculated? Why?
-//					results += wxString::FromAscii(myhash[i]->hashIt().c_str());
-//					results += wxT("\n");
-//					delete myhash[i++];
-//					}
-//			//delete myhash;
-//			return results;
+	if( 1 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
+		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
+		unsigned NumBits=0;
+		for( unsigned i = 0; i < 16 ; i ++ ){
+			NumBits += (options>>i)&0x1;
+			}
+		MHASH *myhash=new MHASH[NumBits];
+		unsigned i=0;
+		if( options & MD5    ) myhash[i++]= mhash_init(MHASH_MD5);
+		if( options & SHA1   ) myhash[i++]= mhash_init(MHASH_SHA1);
+		if( options & SHA256 ) myhash[i++]= mhash_init(MHASH_SHA256);
+		if( options & SHA384 ) myhash[i++]= mhash_init(MHASH_SHA384);
+		if( options & SHA512 ) myhash[i++]= mhash_init(MHASH_SHA512);
+
+		int rd=MB;
+		unsigned char buff[MB];
+
+		uint64_t readfrom=0,readspeed=0, range=f.Length();
+		wxString emsg = msg;
+		time_t ts,te;
+		time (&ts);
+
+		while(rd == MB){
+			rd = f.Read( buff, MB );
+			readfrom+=rd;
+			for( i = 0 ; i < NumBits ; i++) mhash( myhash[i], buff, rd);
+
+			time(&te);
+			if(ts != te ){
+				ts=te;
+				emsg = msg + wxString::Format(_("\nHash Speed : %d MB/s"), (readfrom-readspeed)/MB);
+				readspeed=readfrom;
+				}
+			if(not mypd.Update((readfrom*1000)/range, emsg ))
+			return wxEmptyString;
+
+			}
+		wxString results;
+		i=0;
+
+		unsigned char *hash;
+
+		for(unsigned j = 0 ; j < 16 ; j++)
+			if( (options >> j) & 0x1 ){
+				results += wxString::FromAscii(checksum_options_strings[j]);
+				results += wxT(":\t");
+				hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
+				for (int k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
+					results += wxString::Format( wxT("%.2x"), hash[k]);
+
+				results += wxT("\n");
+				//delete myhash[i++];
+				i++;
+				}
+		delete myhash;
+		return results;//		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 		}
 	else{
-		hashwrapper *MD5Wrapper = new md5wrapper();
-		hashwrapper *SHA1Wrapper = new sha1wrapper();
-		hashwrapper *SHA256Wrapper = new sha256wrapper();
-		hashwrapper *SHA384Wrapper = new sha384wrapper();
-		hashwrapper *SHA512Wrapper = new sha512wrapper();
+		MHASH tdMD5 = mhash_init(MHASH_MD5);
+		MHASH tdSHA1 = mhash_init(MHASH_SHA1);
+		MHASH tdSHA256 = mhash_init(MHASH_SHA256);
+		MHASH tdSHA384 = mhash_init(MHASH_SHA384);
+		MHASH tdSHA512 = mhash_init(MHASH_SHA512);
 
-		MD5Wrapper->resetContext();
-		SHA1Wrapper->resetContext();
-		SHA256Wrapper->resetContext();
-		SHA384Wrapper->resetContext();
-		SHA512Wrapper->resetContext();
+		if (  tdMD5 == MHASH_FAILED or
+				tdSHA1 == MHASH_FAILED or
+				tdSHA256 == MHASH_FAILED or
+				tdSHA384 == MHASH_FAILED or
+				tdSHA512 == MHASH_FAILED ){
+			return wxEmptyString;
+			}
+
 
 		int buffsize = MB*1;
 
@@ -1210,14 +1239,15 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		time_t ts,te;
 		time (&ts);
 		int rd;
+
 		do
 		{
 			rd = f.Read( buff, buffsize );
-			if( options & MD5    ) MD5Wrapper->updateContext( buff, rd);
-			if( options & SHA1   ) SHA1Wrapper->updateContext( buff, rd);
-			if( options & SHA256 ) SHA256Wrapper->updateContext( buff, rd);
-			if( options & SHA384 ) SHA384Wrapper->updateContext( buff, rd);
-			if( options & SHA512 ) SHA512Wrapper->updateContext( buff, rd);
+			if( options & MD5    ) mhash( tdMD5, buff, rd);
+			if( options & SHA1   ) mhash( tdSHA1, buff, rd);
+			if( options & SHA256 ) mhash( tdSHA256, buff, rd);
+			if( options & SHA384 ) mhash( tdSHA384, buff, rd);
+			if( options & SHA512 ) mhash( tdSHA512, buff, rd);
 			readfrom+=rd;
 
 			time(&te);
@@ -1231,18 +1261,46 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 			}while(rd == buffsize);
 
 		wxString results;
+		unsigned char *hash;
 
-		if( options & MD5    ) results += wxT("MD5:\t")+ wxString::FromAscii(MD5Wrapper->hashIt().c_str())+wxT("\n");
-		if( options & SHA1   ) results += wxT("SHA1:\t")+ wxString::FromAscii(SHA1Wrapper->hashIt().c_str())+wxT("\n");
-		if( options & SHA256 ) results += wxT("SHA256:\t")+ wxString::FromAscii(SHA256Wrapper->hashIt().c_str())+wxT("\n");
-		if( options & SHA384 ) results += wxT("SHA384:\t")+ wxString::FromAscii(SHA384Wrapper->hashIt().c_str())+wxT("\n");
-		if( options & SHA512 ) results += wxT("SHA512:\t")+ wxString::FromAscii(SHA512Wrapper->hashIt().c_str())+wxT("\n");
+		if( options & MD5 ){
+			hash = static_cast<unsigned char *>( mhash_end(tdMD5) );
+			results += wxT("MD5:\t");
+			for (int i = 0; i < mhash_get_block_size(MHASH_MD5); i++)
+				results += wxString::Format( wxT("%.2x"), hash[i]);
+			results += wxT("\n");
+			}
+		if( options & SHA1 ){
+			hash = static_cast<unsigned char *>( mhash_end(tdSHA1) );
+			results += wxT("SHA1:\t");
+			for (int i = 0; i < mhash_get_block_size(MHASH_SHA1); i++)
+				results += wxString::Format( wxT("%.2x"), hash[i]);
+			results += wxT("\n");
+			}
 
-		delete MD5Wrapper;
-		delete SHA1Wrapper;
-		delete SHA256Wrapper;
-		delete SHA384Wrapper;
-		delete SHA512Wrapper;
+		if( options & SHA256 ){
+			hash = static_cast<unsigned char *>( mhash_end(tdSHA256) );
+			results += wxT("SHA256:\t");
+			for (int i = 0; i < mhash_get_block_size(MHASH_SHA256); i++)
+				results += wxString::Format( wxT("%.2x"), hash[i]);
+			results += wxT("\n");
+			}
+
+		if( options & SHA384 ){
+			hash = static_cast<unsigned char *>( mhash_end(tdSHA384) );
+			results += wxT("SHA512:\t");
+			for (int i = 0; i < mhash_get_block_size(MHASH_SHA384); i++)
+				results += wxString::Format( wxT("%.2x"), hash[i]);
+			results += wxT("\n");
+			}
+
+		if( options & SHA512 ){
+			hash = static_cast<unsigned char *>( mhash_end(tdSHA512) );
+			results += wxT("SHA512:\t");
+			for (int i = 0; i < mhash_get_block_size(MHASH_SHA512); i++)
+				results += wxString::Format( wxT("%.2x"), hash[i]);
+			results += wxT("\n");
+			}
 
 		return results;
 		}

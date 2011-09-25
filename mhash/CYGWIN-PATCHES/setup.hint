@@ -1,0 +1,7 @@
+sdesc: "MHash - library of hash algorithms (runtime environment)"
+ldesc: "MHash is a library that provides a uniform interface to several hash
+algorithms. It supports the basics for message authentication by following
+rfc2104 (HMAC). It also includes some key generation algorithms which are based
+on hash algorithms. This package contains the runtime environment."
+category: Libs
+requires: cygwin

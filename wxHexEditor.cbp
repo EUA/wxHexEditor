@@ -24,6 +24,7 @@
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add library="udis86" />
+					<Add library="mhash/lib/.libs/libmhash.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
@@ -48,6 +49,7 @@
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add library="udis86" />
+					<Add library="mhash/lib/.libs/libmhash.a" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Release">
@@ -167,10 +169,8 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="mhash/include" />
 		</Compiler>
-		<Linker>
-			<Add library="hashlibpp/src/libhl++.a" />
-		</Linker>
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="makefile" />
 		<Unit filename="resources/osx/png2c.h" />

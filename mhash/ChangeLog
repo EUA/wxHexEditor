@@ -1,0 +1,619 @@
+2007-04-02 12:00  imipak
+	Since the symbol clashes, it has mostly been endian and alignment
+	problems, although some compiler warnings have been squished as well.
+
+2007-02-20 12:00  imipak
+	Fixed symbol clashes. This will probably be revisited, but any future
+	scheme will transparently use the masking scheme present in this
+	edition.
+
+2007-02-10 12:00  imipak
+
+	Well, Michael Schwendt did it again. He's provided a set of patches
+	to solve the Haval endian problem, which are included. He also polished
+	off some memory leaks that had been hitherto undetected. All kudos and
+	Slashdot mod points to him for his excellent work. (Now all I have to
+	figure out is how to port this code to the Amiga...)
+
+2006-01-01 12:00  imipak
+
+	Virtually all files impacted by forcing unsigned types for unsigned
+	data. Isolated C library calls, will probably steal reimplementations
+	of these functions so that mhash will sit better on embedded platforms.
+
+2002-10-03 13:01  nmav
+
+	* lib/keygen_s2k.c:
+
+	Corrected bug which caused memory leaks. Patch by bob mathews
+	(bobmathews@alumni.calpoly.edu) 
+
+2002-10-03 12:55  nmav
+
+	* src/hmac_test.c:
+
+	Corrected wrong use of sizeof(). Reported by Ellis Pritchard
+	(ellispritchard@users.sf.net) 
+
+2002-09-02 20:59  nmav
+
+	* NEWS, lib/keygen_hex.c, lib/mhash.c:
+
+	corrected the HEX key generator. Refuses hex strings longer than the
+	key 
+
+2002-05-26 17:46  nmav
+
+	* NEWS, acconfig.h (tags: mhash_0_8_16), configure.in (tags:
+	mhash_0_8_16), lib/adler32.c (tags: mhash_0_8_16), lib/crc32.c
+	(tags: mhash_0_8_16), lib/gosthash.c (tags: mhash_0_8_16),
+	lib/haval.c (tags: mhash_0_8_16), lib/md4.c (tags: mhash_0_8_16),
+	lib/md5.c (tags: mhash_0_8_16), lib/mhash.c (tags: mhash_0_8_16),
+	lib/mhash_int.h (tags: mhash_0_8_16), lib/ripemd.c (tags:
+	mhash_0_8_16), lib/sha1.c (tags: mhash_0_8_16), lib/sha256.c (tags:
+	mhash_0_8_16), lib/tiger.c (tags: mhash_0_8_16), lib/tiger_sboxes.c
+	(tags: mhash_0_8_16):
+
+	added configure time options to disable certain algorithms 
+
+2002-05-26 17:08  nmav
+
+	* NEWS, configure.in, lib/adler32.c, lib/crc32.c, lib/haval.c,
+	lib/md4.c, lib/md5.c, lib/mhash.c, lib/mhash_adler32.h (tags:
+	mhash_0_8_16), lib/mhash_crc32.h (tags: mhash_0_8_16),
+	lib/mhash_haval.h (tags: mhash_0_8_16), lib/mhash_md4.h (tags:
+	mhash_0_8_16), lib/mhash_md5.h (tags: mhash_0_8_16),
+	src/hmac_test.c (tags: mhash_0_8_16):
+
+	Cleaned the code up. Less code now in mhash.c.  
+
+2002-05-24 14:25  nmav
+
+	* lib/keygen_s2k.c:
+
+	Corrected s2k-iterated 
+
+2002-05-17 11:26  nmav
+
+	* lib/gosthash.c (tags: mhash_0_8_15):
+
+	cleaned up 
+
+2002-05-17 11:25  nmav
+
+	* lib/mhash_gost.h (tags: mhash_0_8_16, mhash_0_8_15):
+
+	Cleaned up 
+
+2002-05-16 22:45  nmav
+
+	* THANKS (tags: mhash_0_8_16, mhash_0_8_15), lib/crc32.c (tags:
+	mhash_0_8_15), lib/gosthash.c, lib/keygen.c (tags: mhash_0_8_16,
+	mhash_0_8_15), lib/mhash.c, lib/tiger.c (tags: mhash_0_8_15),
+	lib/tiger_sboxes.c (tags: mhash_0_8_15), src/driver.c (tags:
+	mhash_0_8_16, mhash_0_8_15):
+
+	Added const to all fixed tables. Pointed out by Darryl Miles
+	<darryl@netbauds.net>.  
+
+2002-03-11 18:55  nmav
+
+	* Makefile.am (tags: mhash_0_8_16, mhash_0_8_15), NEWS, THANKS,
+	lib/gosthash.c:
+
+	fixed bug in gost. Pointed out by Mike Gorchak 
+
+2002-03-10 10:29  nmav
+
+	* Makefile.am, NEWS, configure.in, mhash.spec, mhash.spec.in:
+
+	added mhash.spec.in 
+
+2002-03-09 19:16  nmav
+
+	* mhash.spec:
+
+	added mhash.spec by Germano Rizzo <mano@pluto.linux.it> 
+
+2002-02-12 11:46  nmav
+
+	* lib/mhash.h:
+
+	corrected keygen_id prototype 
+
+2002-02-10 10:10  nmav
+
+	* NEWS, THANKS, lib/mhash.c:
+
+	corrected some memory leaks. Patch by Gustavo Niemeyer.  
+
+2002-01-26 09:09  nmav
+
+	* NEWS, doc/mhash.pod (tags: mhash_0_8_16, mhash_0_8_15),
+	lib/adler32.c (tags: mhash_0_8_15), lib/crc32.c, lib/gosthash.c,
+	lib/keygen_asis.c (tags: mhash_0_8_16, mhash_0_8_15),
+	lib/keygen_hex.c (tags: mhash_0_8_16, mhash_0_8_15),
+	lib/keygen_mcrypt.c (tags: mhash_0_8_16, mhash_0_8_15),
+	lib/keygen_s2k.c, lib/md4.c (tags: mhash_0_8_15), lib/md5.c (tags:
+	mhash_0_8_15), lib/mhash.c, lib/ripemd.c (tags: mhash_0_8_15),
+	lib/sha1.c (tags: mhash_0_8_15), lib/sha256.c (tags: mhash_0_8_15),
+	lib/tiger.c:
+
+	mhash_deinit() and mhash_hmac_deinit() can now accept null digest
+	parameter.  
+
+2001-11-19 11:52  nmav
+
+	* lib/: haval.c (tags: mhash_0_8_15), keygen_asis.c,
+	keygen_mcrypt.c, mhash.c, mhash_tiger.h (tags: mhash_0_8_16,
+	mhash_0_8_15), ripemd.c, tiger.c, tiger_sboxes.c:
+
+	several cleanups 
+
+2001-11-12 14:14  nmav
+
+	* NEWS, lib/Makefile.am, lib/adler32.c, lib/mhash.c, lib/mhash.h,
+	lib/mhash_adler32.h (tags: mhash_0_8_15), lib/mhash_int.h (tags:
+	mhash_0_8_15) (utags: libmhash_0_8_13):
+
+	added adler32 algorithm 
+
+2001-10-27 09:42  nmav
+
+	* NEWS, configure.in (tags: mhash_0_8_12_1, mhash_0_8_12),
+	lib/Makefile.am (tags: mhash_0_8_12_1, mhash_0_8_12), lib/mhash.c
+	(tags: mhash_0_8_12_1, mhash_0_8_12), lib/mhash.h (tags:
+	mhash_0_8_12_1, mhash_0_8_12), lib/mhash_int.h (tags:
+	mhash_0_8_12_1, mhash_0_8_12), lib/mhash_sha1.h (tags:
+	mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12), lib/mhash_sha256.h (tags: mhash_0_8_16,
+	mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12),
+	lib/sha1.c (tags: libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12),
+	lib/sha256.c (tags: libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12),
+	src/hash_test.sh (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12):
+
+	added SHA-256 
+
+2001-10-26 10:47  nmav
+
+	* lib/: keygen.c (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12), mhash.c:
+
+	corrected bug in get_name() 
+
+2001-10-23 09:14  nmav
+
+	* lib/libmhash.sym, src/mhash_save_restore_test.c (tags:
+	mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13) (utags:
+	mhash_0_8_12_1, mhash_0_8_12):
+
+	corrected bugs 
+
+2001-10-19 21:46  nmav
+
+	* NEWS, configure.in (tags: mhash_0_8_11), doc/mhash.pod (tags:
+	mhash_0_8_11), lib/keygen.c (tags: mhash_0_8_11), lib/mhash.c
+	(tags: mhash_0_8_11), lib/mhash.h, src/mhash_save_restore_test.c:
+
+	Added mhash_get_name_static() Corrected mhash_get_name() and
+	mhash_count() 
+
+2001-10-16 18:19  nmav
+
+	* NEWS, THANKS (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11), doc/mhash.pod, lib/libmhash.sym (tags:
+	mhash_0_8_11), lib/mhash.c, lib/mhash.h, src/Makefile.am (tags:
+	mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11), src/mhash_save_restore_test.c:
+
+	added capability to save/restore the mhash state.  Initial patches
+	and ideas by Blake Stephen <Stephen.Blake@veritect.com> 
+
+2001-09-21 13:49  nmav
+
+	* doc/mhash.pod, lib/haval.c (tags: libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11), lib/keygen.c,
+	lib/libdefs.h (tags: mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11), lib/mhash.c,
+	lib/mhash.h, lib/mhash_int.h (tags: mhash_0_8_11):
+
+	some fixes in included files 
+
+2001-09-09 09:58  nmav
+
+	* NEWS, doc/mhash.pod, lib/keygen.c, lib/mhash.c, lib/mhash.h,
+	lib/mhash_int.h:
+
+	mhash_*_get_name() return a constant string 
+
+2001-07-12 15:34  nmav
+
+	* configure.in, src/driver.c (tags: libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11) (utags: mhash_0_8_10):
+
+	moving to mhash 0.8.10 
+
+2001-07-09 07:24  nmav
+
+	* lib/: libmhash.sym (tags: mhash_0_8_10), mhash.c (tags:
+	mhash_0_8_10), mhash.h:
+
+	added functions to allow non-malloced results 
+
+2001-05-10 07:03  nmav
+
+	* src/hash_test.sh (tags: mhash_0_8_11, mhash_0_8_10):
+
+	tr fixes 
+
+2001-04-25 09:59  nmav
+
+	* src/hash_test.sh:
+
+	all outputs in hash_test are now specified in upper case 
+
+2001-04-06 12:44  nmav
+
+	* src/hash_test.sh:
+
+	corrected some case problems 
+
+2001-02-24 22:41  nmav
+
+	* src/hash_test.sh:
+
+	fixed a case problem 
+
+2001-02-11 19:33  nmav
+
+	* TODO (tags: mhash_0_8_11, mhash_0_8_10):
+
+	updated todo list 
+
+2001-02-10 11:43  nmav
+
+	* doc/mhash.pod:
+
+	updated information for md4 
+
+2001-02-04 12:06  nmav
+
+	* NEWS, README (tags: mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11, mhash_0_8_10),
+	doc/mhash.pod, lib/mhash.h:
+
+	updated documentation 
+
+2001-02-04 10:29  nmav
+
+	* doc/: Makefile.am, example.c (utags: mhash_0_8_12_1,
+	mhash_0_8_16, libmhash_0_8_13, mhash_0_8_12, mhash_0_8_15,
+	mhash_0_8_10, mhash_0_8_11):
+
+	added example program 
+
+2001-02-04 10:23  nmav
+
+	* lib/tiger_sboxes.c (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9):
+
+	removed 64 bit version of tiger tables 
+
+2001-02-01 18:38  nmav
+
+	* NEWS, configure.in (tags: mhash_0_8_9):
+
+	moving to 0.8.9 
+
+2001-02-01 18:30  nmav
+
+	* lib/tiger_sboxes.c:
+
+	removed support for 64 bit 
+
+2001-01-29 09:46  nmav
+
+	* lib/mhash_tiger.h (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9):
+
+	removed 64bit version 
+
+2001-01-28 22:05  nmav
+
+	* doc/skid2-authentication (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9):
+
+	corrected 
+
+2001-01-26 00:44  nmav
+
+	* lib/: md4.c, md5.c (utags: mhash_0_8_12_1, libmhash_0_8_13,
+	mhash_0_8_12, mhash_0_8_9, mhash_0_8_10, mhash_0_8_7,
+	mhash_0_8_11):
+
+	made a function static so it does not cause problems in big endian
+	systems 
+
+2001-01-24 08:20  nmav
+
+	* lib/: md4.c, md5.c, sha1.c (tags: mhash_0_8_11, mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7):
+
+	some speedups 
+
+2001-01-24 08:14  nmav
+
+	* doc/: Makefile.am (tags: mhash_0_8_9), mhash.pod (tags:
+	mhash_0_8_9), skid2-authentication (utags: mhash_0_8_7):
+
+	added document that describes skid2 authentication protocol 
+
+2001-01-21 19:31  nmav
+
+	* lib/: tiger.c (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11), haval.c (utags: mhash_0_8_9,
+	mhash_0_8_10, mhash_0_8_7):
+
+	removed unneeded functions 
+
+2001-01-21 19:30  nmav
+
+	* ChangeLog, NEWS, README (tags: mhash_0_8_9, mhash_0_8_7), TODO
+	(tags: mhash_0_8_9, mhash_0_8_7), buildconf (tags: mhash_0_8_16,
+	mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12,
+	mhash_0_8_11, mhash_0_8_10, mhash_0_8_9, mhash_0_8_7),
+	lib/Makefile.am, lib/keygen_hex.c (tags: libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11, mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7), lib/md5.c, lib/mhash_md5.h (tags:
+	mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12,
+	mhash_0_8_11, mhash_0_8_10, mhash_0_8_9, mhash_0_8_7),
+	lib/mhash_tiger.h, lib/tiger.c, src/hash_test.sh (tags:
+	mhash_0_8_9, mhash_0_8_7):
+
+	changes for MD4, TIGER160 and TIGER128 
+
+2001-01-21 19:28  nmav
+
+	* lib/: mhash.h, mhash_int.h (tags: mhash_0_8_10) (utags:
+	mhash_0_8_9, mhash_0_8_7):
+
+	added MD4, TIGER160, TIGER128 
+
+2001-01-21 19:27  nmav
+
+	* lib/mhash.c (tags: mhash_0_8_9, mhash_0_8_7):
+
+	added MD4, TIGER128 and TIGER160 
+
+2001-01-21 19:27  nmav
+
+	* lib/: md4.c, mhash_md4.h (tags: mhash_0_8_15, libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11, mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7):
+
+	Added MD4 algorithm 
+
+2001-01-21 17:17  nmav
+
+	* NEWS:
+
+	more news! 
+
+2001-01-21 17:14  nmav
+
+	* src/hash_test.sh:
+
+	corrected tiger vectors 
+
+2001-01-21 17:13  nmav
+
+	* lib/: gosthash.c (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7), mhash.c, mhash_tiger.h, ripemd.c (tags:
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), tiger.c, tiger_sboxes.c:
+
+	corrected tiger implementation and minor fixes 
+
+2001-01-03 22:10  nmav
+
+	* lib/keygen_s2k.c (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7):
+
+	more fixes 
+
+2001-01-03 21:55  nmav
+
+	* lib/: keygen_mcrypt.c (tags: libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7), keygen_s2k.c, mhash.c:
+
+	Corrected bugs reported by: sami Farin <sfarin@ratol.fi> Joe Hohertz
+	<jhohertz@wiretap.net> 
+
+2000-12-15 13:42  nmav
+
+	* lib/crc32.c (tags: libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12,
+	mhash_0_8_11, mhash_0_8_10, mhash_0_8_9, mhash_0_8_7):
+
+	removed deprecated comments 
+
+2000-12-15 12:43  nmav
+
+	* lib/crc-32b.c:
+
+	crc32b was moved to crc32.c 
+
+2000-12-15 12:42  nmav
+
+	* NEWS, configure.in, doc/mhash.pod, lib/libmhash.sym (tags:
+	mhash_0_8_9, mhash_0_8_7), lib/mhash.c, lib/mhash.h,
+	lib/mhash_int.h:
+
+	added new functions 
+
+2000-12-15 12:11  nmav
+
+	* lib/: Makefile.am, crc-32b.c, crc32.c, gosthash.c, gosthash.h
+	(tags: libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), mhash.c, mhash_crc32.h
+	(tags: mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12,
+	mhash_0_8_11, mhash_0_8_10, mhash_0_8_9, mhash_0_8_7):
+
+	CRC32B and GOST are now thread safe - and use less initialization
+	time.  
+
+2000-10-30 13:13  nmav
+
+	* NEWS, configure.in, doc/mhash.pod, lib/crc32.c, lib/mhash.c,
+	lib/mhash_crc32.h:
+
+	Added mhash_end_m() and mhash_hmac_end_m() functions.  
+
+2000-10-26 13:37  nmav
+
+	* NEWS, configure.in, lib/keygen.c (tags: mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7), lib/mhash.c, lib/mhash_int.h,
+	src/keygen_test.c (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7):
+
+	More win32 changes 
+
+2000-10-24 23:07  nmav
+
+	* lib/: keygen.c, keygen_asis.c (tags: libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11, mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7):
+
+	corrected bug in the KEYGEN_ASIS transformation 
+
+2000-10-20 14:32  nmav
+
+	* NEWS, configure.in, lib/Makefile.am, lib/keygen.c, lib/libdefs.h
+	(tags: mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), lib/mhash.c:
+
+	changes for WIN32 
+
+2000-05-10 19:55  nmav
+
+	* TODO:
+
+	updated TODO list 
+
+2000-05-10 05:46  nmav
+
+	* lib/mhash.c:
+
+	Corrected memory leaks in HMAC. Patches by Marios Hadjieleftheriou
+	<marioh@cs.ucr.edu> 
+
+2000-04-14 19:09  nmav
+
+	* lib/mhash.c, lib/mhash.h, lib/mhash_int.h, src/hash_test.sh:
+
+	Added HAVAL224 
+
+2000-04-11 12:11  nmav
+
+	* lib/mhash.c:
+
+	Corrected hmac implementation.  
+
+2000-04-11 11:58  nmav
+
+	* configure.in, doc/Makefile.am, doc/md2-rfc1319.txt,
+	doc/md2.license, doc/mhash.pod, lib/Makefile.am, lib/md2c.c,
+	lib/mhash.c, lib/mhash.h, lib/mhash_int.h, lib/mhash_md2.h,
+	src/hash_test.sh:
+
+	MD2 algorithm was removed.  
+
+2000-04-09 10:18  nmav
+
+	* configure.in, doc/mhash.pod, lib/mhash.h, lib/mhash_int.h,
+	lib/snefru.c:
+
+	snefru was removed.  
+
+2000-04-06 22:19  nmav
+
+	* src/: driver.c (tags: mhash_0_8_9, mhash_0_8_7), hmac_test.c
+	(tags: mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), keygen_test.c:
+
+	Corrected problem in the includes.  
+
+2000-04-04 10:34  nmav
+
+	* .cvsignore, AUTHORS (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), COPYING (tags:
+	mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7), ChangeLog, INSTALL (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), Makefile.am, NEWS, README,
+	TODO, acconfig.h, acinclude.m4 (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), buildconf,
+	changelog-update.sh (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), mhash.spec (tags:
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), doc/.cvsignore (tags:
+	mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7), doc/Makefile.am, doc/md2.license, doc/md5-rfc1321.txt
+	(tags: mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1,
+	mhash_0_8_12, mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7), doc/mhash.pod, doc/md2-rfc1319.txt, lib/Makefile.am,
+	lib/bzero.c (tags: mhash_0_8_16, mhash_0_8_15, libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11, mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7), lib/crc-32b.c, lib/crc32.c,
+	lib/gosthash.c, lib/libmhash.sym, lib/haval.c, lib/keygen.c,
+	lib/keygen_asis.c, lib/keygen_hex.c, lib/keygen_mcrypt.c,
+	lib/keygen_s2k.c, lib/md2c.c, lib/md5.c, lib/mhash.c, lib/ripemd.c,
+	lib/sha1.c, lib/snefru.c, lib/swap.c (tags: mhash_0_8_16,
+	mhash_0_8_15, libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12,
+	mhash_0_8_11, mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), lib/tiger.c,
+	lib/libdefs.h, lib/mhash_crc32.h, lib/tiger_sboxes.c,
+	lib/gosthash.h, lib/keygen.h (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), lib/mhash.h,
+	lib/mhash_haval.h (tags: mhash_0_8_15, libmhash_0_8_13,
+	mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11, mhash_0_8_10,
+	mhash_0_8_9, mhash_0_8_7), lib/mhash_md2.h, lib/mhash_md5.h,
+	lib/mhash_sha1.h (tags: mhash_0_8_11, mhash_0_8_10, mhash_0_8_9,
+	mhash_0_8_7), lib/mhash_tiger.h, lib/mhash_int.h,
+	lib/mhash_ripemd.h (tags: mhash_0_8_16, mhash_0_8_15,
+	libmhash_0_8_13, mhash_0_8_12_1, mhash_0_8_12, mhash_0_8_11,
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), src/Makefile.am (tags:
+	mhash_0_8_10, mhash_0_8_9, mhash_0_8_7), src/driver.c,
+	src/hash_test.sh, src/hmac_test.c, src/keygen_test.c (utags:
+	start):
+
+	project started in sourceforge 
+
+2000-04-04 10:34  nmav
+
+	* .cvsignore, AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am,
+	NEWS, README, TODO, acconfig.h, acinclude.m4, buildconf,
+	changelog-update.sh, mhash.spec, doc/.cvsignore, doc/Makefile.am,
+	doc/md2.license, doc/md5-rfc1321.txt, doc/mhash.pod,
+	doc/md2-rfc1319.txt, lib/Makefile.am, lib/bzero.c, lib/crc-32b.c,
+	lib/crc32.c, lib/gosthash.c, lib/libmhash.sym, lib/haval.c,
+	lib/keygen.c, lib/keygen_asis.c, lib/keygen_hex.c,
+	lib/keygen_mcrypt.c, lib/keygen_s2k.c, lib/md2c.c, lib/md5.c,
+	lib/mhash.c, lib/ripemd.c, lib/sha1.c, lib/snefru.c, lib/swap.c,
+	lib/tiger.c, lib/libdefs.h, lib/mhash_crc32.h, lib/tiger_sboxes.c,
+	lib/gosthash.h, lib/keygen.h, lib/mhash.h, lib/mhash_haval.h,
+	lib/mhash_md2.h, lib/mhash_md5.h, lib/mhash_sha1.h,
+	lib/mhash_tiger.h, lib/mhash_int.h, lib/mhash_ripemd.h,
+	src/Makefile.am, src/driver.c, src/hash_test.sh, src/hmac_test.c,
+	src/keygen_test.c:
+
+	Initial revision 
+

@@ -1,0 +1,73 @@
+mhash-0.9.1-1
+------------------------------------------ 
+MHash - library of hash algorithms
+
+Runtime requirements:
+  cygwin-1.5.11-1	or newer
+  
+Build requirements:
+  cygwin-1.5.11-1       or newer
+  gcc-3.3.1             or newer (did it with 3.4.1)
+  binutils-20040725-2   or newer
+  libtool-devel-1.5.10-1
+  automake-devel-1.9.1-1
+  autoconf-devel-2.59-1
+  make-3.80-1           or newer
+  ash-20040127-1        or newer
+  fileutils-4.1         or newer
+  sed-4.1.2-1           or newer
+  m4-1.4-1
+  perl-5                (for automake)
+
+Canonical homepage:
+  http://mhash.sourceforge.net/
+
+Canonical download:
+  http://mhash.sourceforge.net/
+
+-------------------------------------------------------------------------------
+
+Build instructions:
+
+  cd /usr/src
+  unpack mhash-<VERSION>-<CYGREL>-src.tar.bz2
+    if you use setup to install this src package, it will be
+	 unpacked under /usr/src automatically
+  ./mhash-<VERSION>-<CYGREL>.sh prep build install
+
+./mhash-<VERSION>-<CYGREL>.sh all will create:
+  /usr/src/mhash-<VERSION>-<CYGREL>.tar.bz2
+  /usr/src/mhash-<VERSION>-<CYGREL>-src.tar.bz2
+
+Or use './mhash-<VERSION>-<CYGREL>.sh prep' to get a patched source directory 
+
+-------------------------------------------------------------------------------
+
+Files included in the binary distribution:
+
+  /usr/bin/cygmhash-2.dll
+  /usr/include/mhash.h
+  /usr/lib/libmhash.a
+  /usr/lib/libmhash.dll.a
+  /usr/lib/libmhash.la
+  /usr/share/doc/Cygwin/mhash-0.9.1.README (this file)
+  /usr/share/doc/mhash-0.9.1/AUTHORS
+  /usr/share/doc/mhash-0.9.1/ChangeLog
+  /usr/share/doc/mhash-0.9.1/COPYING
+  /usr/share/doc/mhash-0.9.1/INSTALL
+  /usr/share/doc/mhash-0.9.1/NEWS
+  /usr/share/doc/mhash-0.9.1/README
+  /usr/share/doc/mhash-0.9.1/THANKS
+  /usr/share/doc/mhash-0.9.1/TODO
+  /usr/share/man/man3/mhash.3.gz
+
+-------------------------------------------------------------------------------
+
+Port Notes:
+
+----- version mhash-0.9.1-1 -----
+
+Maintainer change. Fixed to be mingw independent. All tests PASS.
+
+Cygwin port maintained by: Reini Urban <rurban@x-ray.at>
+Please address all questions to the Cygwin mailing list at <cygwin@cygwin.com>

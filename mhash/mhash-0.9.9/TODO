@@ -1,0 +1,23 @@
+mhash TODO
+===============================================================================
+
+- add PANAMA hash algorithm.
+- add 64 bit version of Tiger.
+- add all unbroken hash algorithms from Paulo Barreto's "Hashing
+   Function Lounge". In April 2004 these were: Cellhash, Parallel
+   FFT-Hash, Subhash.
+   http://planeta.terra.com.br/informatica/paulobarreto/hflounge.html
+
+- add a generic support for hash functions built upon block ciphers
+   (Matyas-Meyer-Oseas, Miyaguchi-Preneel, Davies-Meyer, Abreast
+   Davies-Meyer, Tandem Davies-Mayer, etc). 
+
+- It is possible to build block ciphers from hash functions (search
+  the web for "Luby Rackoff" or MDC). Shouldn't mhash contain appropriate
+  routines?
+
+- If there are any MAC functions in the world, that are not built upon
+   existing block ciphers or hash functions, they might be added to
+   mhash. What about MAA?
+
+

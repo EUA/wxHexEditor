@@ -1,0 +1,9 @@
+/.cvsignore/1.1/Tue Oct 16 18:29:00 2001//
+/hash_test.sh/1.13/Wed Jan 12 17:37:05 2005//
+/Makefile.am/1.4/Fri Oct 28 05:11:01 2005//
+/driver.c/1.7/Sun Jan  8 09:08:29 2006//
+/frag_test.c/1.2/Fri Oct 28 05:40:54 2005//
+/hmac_test.c/1.7/Mon Jan  9 06:48:08 2006//
+/keygen_test.c/1.5/Mon Jan  9 05:18:15 2006//
+/mhash_save_restore_test.c/1.7/Mon Jan  9 06:46:15 2006//
+D

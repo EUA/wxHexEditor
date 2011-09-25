@@ -1,0 +1,13 @@
+mhash AUTHORS
+===============================================================================
+
+The authors of libmhash are
+
+	Nikos Mavroyanopoulos <nmav@hellug.gr>
+	Sascha Schumann <sascha@schumann.cx>
+
+The library was originaly created by Nikos Mavroyanopoulos sometime
+in 1998. Many new features and algorithms were added by Sascha Schumann, 
+who maintained it from May 1999 to March 2000. 
+The library is now maintained again by Nikos Mavroyanopoulos.
+

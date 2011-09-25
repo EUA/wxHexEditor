@@ -1,0 +1,172 @@
+mhash ChangeLog ($Date: 2006/06/24 21:46:11 $)
+===============================================================================
+
+People
+
+   NM - Nikos Mavroyanopoulos <nmav@hellug.gr>
+   SS - Sascha Schumann <sascha@schumann.cx>
+
+Version 0.9.9
+- Added patch for sigbus error on unaligned data, when doing rapid copies.
+  (Thanks to Wayne - mhash@useunix.net - for that.)
+
+Version 0.9.8.1
+- Another round of bugfixes
+
+Version 0.9.8
+- As before - more patches and cleanups
+
+Version 0.9.7
+- More patches, more cleanups. Better handling of endian issues. Should
+  handle platforms that do weird things with booleans better. Eliminated
+  more redundant code. Snefru is now endian-aware. Maybe.
+
+Known Issues:
+- Sub-optimal on 64-bit platforms, as a lot of the code assumes 32-bits.
+- May be some big-endian issues remaining. make check is your friend!
+
+Version 0.9.6
+- Bunch of patches and speedups. Credits to be added.
+
+Version 0.9.2
+- Added SNEFRU128, SNEFRU256. Reintroduced MD2.
+  (jkmhash@itaparica.org)
+- Fixes to .spec file and clean-ups of documentation
+  (cpedersen[at]c-note.dk)
+- Fixed typecasts, memory leaks and compiler warnings
+  (imipak@yahoo.com)
+
+Version 0.9.1
+- Added RIPEMD128/256/320, SHA224/384/512, Whirlpool
+- Really, this time!
+  (jkmhash@itaparica.org)
+
+Version 0.8.19
+- Added VC++ project files, contributed by James M. Rogers 
+  <james@singlestep.com>
+
+Version 0.8.18 (released March 6 2003)
+- Several additions and fixes to built win32 dlls.
+
+Version 0.8.17 (released October 4 2002)
+- Corrected the HEX key mode. Refuses to convert hex strings longer
+  than the given key size.
+- Corrected some memory leaks in keygen_s2k. Patch by Bob Mathews 
+  <bobmathews@alumni.calpoly.edu>
+- Corrected wrong use of sizeof in hmac_test. Reported by Ellis Pritchard
+  <ellispritchard@users.sf.net>
+
+Version 0.8.16 (released May 29 2002)
+- Code cleanups and optimizations
+- Added configure time options to disable certain algorithms
+
+Version 0.8.15 (released May 24 2002)
+- Corrected Iterated S2K
+- Made all static tables constant (pointed out by Darryl Miles <darryl@netbauds.net>)
+
+Version 0.8.14 (release March 28 2002)
+- mhash_deinit() and mhash_hmac_deinit() now accept a null digest parameter
+- Corrected memory leaks (patch by Gustavo Niemeyer <niemeyer@conectiva.com>)
+- Corrected bug in Gost hash algorithm (pointed out by Mike Gorchak <mike@malva.ua>)
+
+Version 0.8.13 (released November 18 2001)
+- Added ADLER32 algorithm (implementation by Manuel Kasper <mk@neon1.net>)
+
+Version 0.8.12 (released October 29 2001)
+- Corrected bugs in mhash_get_name() functions
+- Added SHA-256 from libnettle.
+
+Version 0.8.11 (released October 21 2001)
+- added mhash_save_state_mem() and mhash_restore_state_mem() functions,
+  initial patches and idea by Blake Stephen <Stephen.Blake@veritect.com>
+- Added mhash_get_name_static()
+- Corrected mhash_get_name() and mhash_count()
+
+Version 0.8.10 (released on July 12 2001)
+- New mhash_deinit() and mhash_hmac_deinit() functions based on the
+  proposal, and patches by William Ahern <wahern@25thandClement.com>
+
+Version 0.8.9 (released on February 04 2001)
+- TIGER runs on alpha (NM)
+- Documentation updated
+
+Version 0.8.8 (released on January 29 2001)
+- MD4 and MD5 now compile on big endian machines (NM)
+- TIGER now compiles on big endian machines. (NM)
+
+Version 0.8.6 (released on January 21 2001)
+- Corrected Tiger implementation (NM, bug pointed out by Gordon Mohr <gojomo@usa.net>)
+- Added MD4 (NM)
+- Added TIGER128 and TIGER160 (NM)
+
+Version 0.8.5 (released on January 2001)
+- added checks for malloc failures (NM, some patches by Sami Farin <sfarin@ratol.fi>)
+- corrected old style checks for mhash failures (NM, reported by Joe Hohertz <jhohertz@wiretap.net>)
+
+Version 0.8.4 (released on December 15 2000)
+- added mhash_hmac_end_m() and mhash_end_m() functions which allow to specify the malloc function. (NM)
+- added mhash_cp() - Copy a context (NM)
+- added mhash_get_mhash_algo() - Returns the name of the algorithm of the context (NM)
+- fixes in crc32b and gost (for multithreaded applications) (NM)
+
+Version 0.8.3 (released on October 25 2000)
+- Compiles under Win32 using cygwin (with -mno-cygwin) (NM)
+- Bugfixes in KEYGEN_ASIS (NM)
+
+Version 0.8.2 (released on May 12 2000)
+- Corrected Memory leaks in HMAC implementation (NM, contributed by Marios Hadjieleftheriou <marioh@cs.ucr.edu>)
+- Added HAVAL224 (NM)
+
+Version 0.8.1 (released on April 11 2000)
+- Bugfixes in hmac implementation. (NM)
+- Removed MD2 (which was not free) (NM)
+
+Version 0.8.0 (released on April 5 2000)
+- No longer needs posix thread locks to be thread safe (NM)
+- Supports unlimited number of MHASH threads (NM)
+- Improved the key generation algorithm API (NM)
+- Corrected Haval implementation. (NM)
+  Now mhash uses Paulo Barreto's implementation
+  Added HAVAL256, HAVAL192, HAVAL160, HAVAL128 (3 passes haval)
+- License was changed to GNU Lesser GPL
+
+Version 0.7.0 (released on Mar 3rd 2000)
+- cleaned up binary interface (SS)
+- improved POSIX Threads detection (SS)
+- added keygen API (NM)
+- added new improved RIPEMD160 implementation (NM)
+- removed RIPEMD128 (NM)
+- added RPM .spec file by work@scripty.com (SS)
+
+Version 0.6.1 (released on Oct 23th 1999)
+- fixed Tiger algorithm on 32-bit architectures (NM)
+
+Version 0.6.0 (released on Oct 11th 1999)
+- export only symbols of the public interface (SS)
+- MHASH_API_VERSION has been changed to 19991004 (SS)
+- API change: All algorithm names have been prefixed with MHASH_
+  to avoid namespace pollution (SS)
+- added mhash_get_hash_pblock() by NM, reimplemented by SS
+- improved data structure handling (NM)
+- use "--silent" libtool option (SS)
+- added hmac functions (SS, contributed by NM)
+
+Version 0.5.2 (released on Jul 14th 1999)
+- fix VPATH build (SS)
+- upgrade to libtool 1.3.3 (SS)
+- rework directory layout (simplified) (SS)
+- change test script to work with Bourne shells (SS)
+- fix some big endian issues in RIPEMD160, RIPEMD128 and TIGER (SS)
+	
+Version 0.5 (relased on May 22nd 1999)
+- put under CVS control
+- change get_block_size to mhash_get_block_size (NM)
+- add --disable-pthreads option (NM)
+- add libtool and automake support (SS)
+- add several algorithms (SS)
+  HAVAL, RIPEMD128, RIPEMD160, TIGER, GOST, CRC32B
+- add mhash_get_hash_name (SS)
+- add mhash_count (SS)
+- documentation revamp (SS)
+- renew API (SS)
+- add test vectors (SS)

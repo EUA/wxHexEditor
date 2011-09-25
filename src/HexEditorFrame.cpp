@@ -52,7 +52,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
 			 "\n"
 			 "\n"
-			 "hashlib++ used under BSD licence, Benjamin Grüdelbach (c) 2007-2010\n"
+			 "mhash used under LGPL licence, Nikos Mavroyanopoulos (c) 1998-2008\n"
 			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
 			 "\n"
 			 "home:  wxhexeditor.sourceforge.net\n"

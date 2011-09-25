@@ -1,6 +1,6 @@
 WXCONFIG = wx-config
 CPP = `$(WXCONFIG) --cxx`
-CXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -MMD -c ${OPTFLAGS}
+CXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -c ${OPTFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
@@ -17,7 +17,7 @@ SOURCES= src/HexEditorGui.cpp \
 			src/HexEditorCtrl/wxHexCtrl/Tag.cpp\
 			src/HexEditorCtrl/HexEditorCtrlGui.cpp\
 			src/HexEditorFrame.cpp
-LIBS = udis86/libudis86/.libs/libudis86.a hashlibpp/src/libhl++.a
+LIBS = udis86/libudis86/.libs/libudis86.a mhash/lib/.libs/libmhash.a
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
 RESOURCES= resources/resource.rc
@@ -53,9 +53,10 @@ udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./configure
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
-hashlibpp/src/libhl++.a:
-	echo "Please make sure if libudis86 build for your host to avoid link time errors!"
-	cd hashlibpp/src;$(MAKE) $(MFLAGS)
+mhash/lib/.libs/libmhash.a:
+	echo Please make sure if libmhash build for your host to avoid link time errors!
+	cd mhash; ./configure
+	cd mhash; $(MAKE) $(MFLAGS)
 
 win: prepare $(RESOURCES) $(EXECUTABLE_WIN)
 
@@ -144,8 +145,7 @@ clean:
 	rm -rf $(EXECUTABLE_DIR_MAC)
 distclean: clean
 	cd udis86;$(MAKE) distclean
-	cd hashlibpp/src;$(MAKE) clean
-	rm -f hashlibpp/src/libhl++.a
+	cd mhash;$(MAKE) distclean
 
 # include the auto-generated dependency files
 -include $(DEPENDS)

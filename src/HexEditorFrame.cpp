@@ -595,7 +595,6 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 	if(event.GetId() == idDeviceRam ){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
-
 #ifdef _DEBUG_
 		std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 #endif
@@ -638,13 +637,31 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		for(int i=0; i < DevVector.size();i++)
 			disks.Add(wxString(DevVector[i]));
 #endif
+
+		//This /dev/ will drop on adding menu for cosmetic!
+		for( unsigned i =0 ; i < disks.Count() ; i++)
+			disks[i]=disks.Item(i).AfterLast('/');
 		disks.Sort();
+
+		wxMenu *nm;
+		int last_item=0;
 		for( unsigned i =0 ; i < disks.Count() ; i++){
 			#ifdef _DEBUG_
 			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
 			#endif
-			//Note, this /dev/ will drop on adding menu for cosmetic!
-			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
+			//Old way...
+			//menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
+
+			//SubMenu categorization
+			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) and i not_eq 0 )
+				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
+			else{
+				nm=new wxMenu( );
+				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
+				menuDeviceDisk->AppendSubMenu( nm, disks.Item(i) );
+				last_item = i;
+				}
+
 			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 			}
 		#ifdef __WXMSW__

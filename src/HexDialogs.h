@@ -117,9 +117,9 @@ class ChecksumDialog : public ChecksumDialogGui{
 		ChecksumDialog( wxWindow* parent, FAL *find_file );
 	private:
 		class HexEditorFrame* parent;
-		enum checksum_options{ MD5=0x1,SHA1=0x2,SHA256=0x4,SHA384=0x8,SHA512=0x10 };
+		//enum checksum_options{ MD5=0x1,SHA1=0x2,SHA256=0x4,SHA384=0x8,SHA512=0x10 };
 		char *checksum_options_strings[5];
-		wxString CalculateChecksum( FAL& fl, unsigned options );
+		wxString CalculateChecksum( FAL& fl, int options );
       void EventHandler( wxCommandEvent& event );
       void OnFileChange( wxFileDirPickerEvent& event );
 	};

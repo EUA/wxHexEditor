@@ -25,6 +25,7 @@
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
 #include "../mhash/include/mhash.h"
+#include <omp.h>
 
 GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
@@ -1099,18 +1100,83 @@ ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, w
 	chkFile->SetValue(active_hex);
 	filePick->Enable(not active_hex);
 	btnCalculate->Enable( active_hex );
+
+	int options;
+	wxConfigBase::Get()->Read( _T("SelectedChecksumFunctions"), &options );
+
+	chkMD2->SetValue( options & (1 << MHASH_MD2) );
+	chkMD4->SetValue( options & (1 << MHASH_MD4) );
+	chkMD5->SetValue( options & (1 << MHASH_MD5) );
+	chkSHA1->SetValue( options & (1 << MHASH_SHA1) );
+	chkSHA224->SetValue( options & (1 << MHASH_SHA224) );
+	chkSHA256->SetValue( options & (1 << MHASH_SHA256) );
+	chkSHA384->SetValue( options & (1 << MHASH_SHA384) );
+	chkSHA512->SetValue( options & (1 << MHASH_SHA512) );
+	chkRIPEMD128->SetValue( options & (1 << MHASH_RIPEMD128) );
+	chkRIPEMD160->SetValue( options & (1 << MHASH_RIPEMD160) );
+	chkRIPEMD256->SetValue( options & (1 << MHASH_RIPEMD256) );
+	chkRIPEMD320->SetValue( options & (1 << MHASH_RIPEMD320) );
+
+	chkHAVAL128->SetValue( options & (1 << MHASH_HAVAL128) );
+	chkHAVAL160->SetValue( options & (1 << MHASH_HAVAL160) );
+	chkHAVAL192->SetValue( options & (1 << MHASH_HAVAL192) );
+	chkHAVAL224->SetValue( options & (1 << MHASH_HAVAL224) );
+	chkHAVAL256->SetValue( options & (1 << MHASH_HAVAL256) );
+
+	chkTIGER128->SetValue( options & (1 << MHASH_TIGER128) );
+	chkTIGER160->SetValue( options & (1 << MHASH_TIGER160) );
+	chkTIGER   ->SetValue( options & (1 << MHASH_TIGER192) );
+
+	chkADLER32	->SetValue( options & (1 << MHASH_ADLER32) );
+	chkCRC32		->SetValue( options & (1 << MHASH_CRC32) );
+	chkCRC32B	->SetValue( options & (1 << MHASH_CRC32B) );
+	chkWHIRLPOOL->SetValue( options & (1 << MHASH_WHIRLPOOL) );
+	chkGOST		->SetValue( options & (1 << MHASH_GOST) );
+	chkSNEFRU128->SetValue( options & (1 << MHASH_SNEFRU128) );
+	chkSNEFRU256->SetValue( options & (1 << MHASH_SNEFRU256) );
+
 	}
 
 void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "ChecksumDialog::EventHandler()" << std::endl;
 #endif
-	unsigned options=0;
-	options |= (chkMD5->GetValue()    ? MD5    : 0);
-	options |= (chkSHA1->GetValue()   ? SHA1   : 0);
-	options |= (chkSHA256->GetValue() ? SHA256 : 0);
-	options |= (chkSHA384->GetValue() ? SHA384 : 0);
-	options |= (chkSHA512->GetValue() ? SHA512 : 0);
+	int options=0;
+	options |= (chkMD2->GetValue()    ? 1 << MHASH_MD2    : 0);
+	options |= (chkMD4->GetValue()    ? 1 << MHASH_MD4    : 0);
+	options |= (chkMD5->GetValue()    ? 1 << MHASH_MD5    : 0);
+
+	options |= (chkSHA1->GetValue()   ? 1 << MHASH_SHA1   : 0);
+	//options |= (chkSHA192->GetValue() ? 1 << MHASH_SHA192 : 0);
+	options |= (chkSHA224->GetValue() ? 1 << MHASH_SHA224 : 0);
+	options |= (chkSHA256->GetValue() ? 1 << MHASH_SHA256 : 0);
+	options |= (chkSHA384->GetValue() ? 1 << MHASH_SHA384 : 0);
+	options |= (chkSHA512->GetValue() ? 1 << MHASH_SHA512 : 0);
+
+	options |= (chkRIPEMD128->GetValue() ? 1 << MHASH_RIPEMD128 : 0);
+	options |= (chkRIPEMD160->GetValue() ? 1 << MHASH_RIPEMD160 : 0);
+	options |= (chkRIPEMD256->GetValue() ? 1 << MHASH_RIPEMD256 : 0);
+	options |= (chkRIPEMD320->GetValue() ? 1 << MHASH_RIPEMD320 : 0);
+
+	options |= (chkHAVAL128->GetValue() ? 1 << MHASH_HAVAL128 : 0);
+	options |= (chkHAVAL160->GetValue() ? 1 << MHASH_HAVAL160 : 0);
+	options |= (chkHAVAL192->GetValue() ? 1 << MHASH_HAVAL192 : 0);
+	options |= (chkHAVAL224->GetValue() ? 1 << MHASH_HAVAL224 : 0);
+	options |= (chkHAVAL256->GetValue() ? 1 << MHASH_HAVAL256 : 0);
+
+	options |= (chkTIGER128->GetValue() ? 1 << MHASH_TIGER128 : 0);
+	options |= (chkTIGER160->GetValue() ? 1 << MHASH_TIGER160 : 0);
+	options |= (chkTIGER->GetValue()    ? 1 << MHASH_TIGER192 : 0);
+
+	options |= (chkADLER32->GetValue()   ? 1 << MHASH_ADLER32 : 0);
+	options |= (chkCRC32->GetValue()     ? 1 << MHASH_CRC32 : 0);
+	options |= (chkCRC32B->GetValue()    ? 1 << MHASH_CRC32B : 0);
+	options |= (chkWHIRLPOOL->GetValue() ? 1 << MHASH_WHIRLPOOL : 0);
+	options |= (chkGOST->GetValue()      ? 1 << MHASH_GOST : 0);
+	options |= (chkSNEFRU128->GetValue() ? 1 << MHASH_SNEFRU128 : 0);
+	options |= (chkSNEFRU256->GetValue() ? 1 << MHASH_SNEFRU256 : 0);
+
+	wxConfigBase::Get()->Write( _T("SelectedChecksumFunctions"), options );
 
 	if(event.GetId() == wxID_CANCEL)
 		Destroy();
@@ -1148,28 +1214,56 @@ void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	EventHandler( e );
 	}
 
-wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
+wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 	f.Seek(0);
 	wxString msg = _("Please wait while calculating checksum.");
 	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	if( 1 ){	//THis is more compact code but it gives seg fault if 4+ hash selected. Why?
+	if( 1 ){	//This is more compact code but it gives seg fault if 4+ hash selected. Why?
 		//checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 		unsigned NumBits=0;
-		for( unsigned i = 0; i < 16 ; i ++ ){
+		for( unsigned i = 0; i < 32 ; i ++ ){
 			NumBits += (options>>i)&0x1;
 			}
 		MHASH *myhash=new MHASH[NumBits];
 		unsigned i=0;
-		if( options & MD5    ) myhash[i++]= mhash_init(MHASH_MD5);
-		if( options & SHA1   ) myhash[i++]= mhash_init(MHASH_SHA1);
-		if( options & SHA256 ) myhash[i++]= mhash_init(MHASH_SHA256);
-		if( options & SHA384 ) myhash[i++]= mhash_init(MHASH_SHA384);
-		if( options & SHA512 ) myhash[i++]= mhash_init(MHASH_SHA512);
+		if( options & (1 << MHASH_MD2)  )  myhash[i++]= mhash_init(MHASH_MD2);
+		if( options & (1 << MHASH_MD4)  )  myhash[i++]= mhash_init(MHASH_MD4);
+		if( options & (1 << MHASH_MD5)  )  myhash[i++]= mhash_init(MHASH_MD5);
+
+		if( options & (1 << MHASH_SHA1) )  myhash[i++]= mhash_init(MHASH_SHA1);
+		if( options & (1 << MHASH_SHA224)) myhash[i++]= mhash_init(MHASH_SHA224);
+		if( options & (1 << MHASH_SHA256)) myhash[i++]= mhash_init(MHASH_SHA256);
+		if( options & (1 << MHASH_SHA384)) myhash[i++]= mhash_init(MHASH_SHA384);
+		if( options & (1 << MHASH_SHA512)) myhash[i++]= mhash_init(MHASH_SHA512);
+
+		if( options & (1 << MHASH_RIPEMD128)) myhash[i++]= mhash_init(MHASH_RIPEMD128);
+		if( options & (1 << MHASH_RIPEMD160)) myhash[i++]= mhash_init(MHASH_RIPEMD160);
+		if( options & (1 << MHASH_RIPEMD256)) myhash[i++]= mhash_init(MHASH_RIPEMD256);
+		if( options & (1 << MHASH_RIPEMD320)) myhash[i++]= mhash_init(MHASH_RIPEMD320);
+
+		if( options & (1 << MHASH_HAVAL128)) myhash[i++]= mhash_init(MHASH_HAVAL128);
+		if( options & (1 << MHASH_HAVAL160)) myhash[i++]= mhash_init(MHASH_HAVAL160);
+		if( options & (1 << MHASH_HAVAL192)) myhash[i++]= mhash_init(MHASH_HAVAL192);
+		if( options & (1 << MHASH_HAVAL224)) myhash[i++]= mhash_init(MHASH_HAVAL224);
+		if( options & (1 << MHASH_HAVAL256)) myhash[i++]= mhash_init(MHASH_HAVAL256);
+
+		if( options & (1 << MHASH_TIGER128)) myhash[i++]= mhash_init(MHASH_TIGER128);
+		if( options & (1 << MHASH_TIGER160)) myhash[i++]= mhash_init(MHASH_TIGER160);
+		if( options & (1 << MHASH_TIGER192)) myhash[i++]= mhash_init(MHASH_TIGER192);
+
+		if( options & (1 << MHASH_ADLER32))   myhash[i++]= mhash_init(MHASH_ADLER32);
+		if( options & (1 << MHASH_CRC32))     myhash[i++]= mhash_init(MHASH_CRC32);
+		if( options & (1 << MHASH_CRC32B))    myhash[i++]= mhash_init(MHASH_CRC32B);
+		if( options & (1 << MHASH_WHIRLPOOL)) myhash[i++]= mhash_init(MHASH_WHIRLPOOL);
+		if( options & (1 << MHASH_GOST))      myhash[i++]= mhash_init(MHASH_GOST);
+		if( options & (1 << MHASH_SNEFRU128)) myhash[i++]= mhash_init(MHASH_SNEFRU128);
+		if( options & (1 << MHASH_SNEFRU256)) myhash[i++]= mhash_init(MHASH_SNEFRU256);
 
 
-		unsigned rdBlockSz=128*1024;
+
+		unsigned rdBlockSz=2*128*1024;
 		unsigned char buff[rdBlockSz];
 		int rd=rdBlockSz;
 
@@ -1181,7 +1275,12 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 		while(rd == rdBlockSz){
 			rd = f.Read( buff, rdBlockSz );
 			readfrom+=rd;
-			for( i = 0 ; i < NumBits ; i++) mhash( myhash[i], buff, rd);
+
+			//Paralelize with OpenMP
+			#pragma omp parallel for schedule(dynamic, 1)
+			for( i = 0 ; i < NumBits ; i++){
+				mhash( myhash[i], buff, rd);
+				}
 
 			time(&te);
 			if(ts != te ){
@@ -1198,108 +1297,106 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, unsigned options){
 
 		unsigned char *hash;
 
-		for(unsigned j = 0 ; j < 16 ; j++)
-			if( (options >> j) & 0x1 ){
-				results += wxString::FromAscii( reinterpret_cast<const char*>(mhash_get_hash_name_static( mhash_get_mhash_algo(myhash[i]) )));
-				results += wxT(":\t");
-				hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
-				for (unsigned k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
-					results += wxString::Format( wxT("%.2x"), hash[k]);
+		for(unsigned i = 0 ; i < NumBits ; i++){
+			results += wxString::FromAscii( reinterpret_cast<const char*>(mhash_get_hash_name_static( mhash_get_mhash_algo(myhash[i]) )));
+			results += wxT(":\t");
+			hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
+			for (unsigned k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
+				results += wxString::Format( wxT("%.2x"), hash[k]);
 
-				results += wxT("\n");
-				//delete myhash[i++];
-				i++;
-				}
-		delete myhash;
+			results += wxT("\n");
+			//delete myhash[i++];
+			}
+//		delete myhash;
 		return results;//		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 		}
-	else{
-		MHASH tdMD5 = mhash_init(MHASH_MD5);
-		MHASH tdSHA1 = mhash_init(MHASH_SHA1);
-		MHASH tdSHA256 = mhash_init(MHASH_SHA256);
-		MHASH tdSHA384 = mhash_init(MHASH_SHA384);
-		MHASH tdSHA512 = mhash_init(MHASH_SHA512);
-
-		if (  tdMD5 == MHASH_FAILED or
-				tdSHA1 == MHASH_FAILED or
-				tdSHA256 == MHASH_FAILED or
-				tdSHA384 == MHASH_FAILED or
-				tdSHA512 == MHASH_FAILED ){
-			return wxEmptyString;
-			}
-
-
-		int buffsize = 128*1024;
-		unsigned char buff[buffsize];
-		uint64_t readfrom=0,readspeed=0, range=f.Length();
-		wxString emsg = msg;
-		time_t ts,te;
-		time (&ts);
-		int rd;
-
-		do
-		{
-			rd = f.Read( buff, buffsize );
-			if( options & MD5    ) mhash( tdMD5, buff, rd);
-			if( options & SHA1   ) mhash( tdSHA1, buff, rd);
-			if( options & SHA256 ) mhash( tdSHA256, buff, rd);
-			if( options & SHA384 ) mhash( tdSHA384, buff, rd);
-			if( options & SHA512 ) mhash( tdSHA512, buff, rd);
-			readfrom+=rd;
-
-			time(&te);
-			if(ts != te ){
-				ts=te;
-				emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
-				readspeed=readfrom;
-				}
-			if(not mypd.Update((readfrom*1000)/range, emsg ))
-				return wxEmptyString;
-			}while(rd == buffsize);
-
-		wxString results;
-		unsigned char *hash;
-
-		if( options & MD5 ){
-			hash = static_cast<unsigned char *>( mhash_end(tdMD5) );
-			results += wxT("MD5:\t");
-			for (unsigned i = 0; i < mhash_get_block_size(MHASH_MD5); i++)
-				results += wxString::Format( wxT("%.2x"), hash[i]);
-			results += wxT("\n");
-			}
-		if( options & SHA1 ){
-			hash = static_cast<unsigned char *>( mhash_end(tdSHA1) );
-			results += wxT("SHA1:\t");
-			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA1); i++)
-				results += wxString::Format( wxT("%.2x"), hash[i]);
-			results += wxT("\n");
-			}
-
-		if( options & SHA256 ){
-			hash = static_cast<unsigned char *>( mhash_end(tdSHA256) );
-			results += wxT("SHA256:\t");
-			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA256); i++)
-				results += wxString::Format( wxT("%.2x"), hash[i]);
-			results += wxT("\n");
-			}
-
-		if( options & SHA384 ){
-			hash = static_cast<unsigned char *>( mhash_end(tdSHA384) );
-			results += wxT("SHA512:\t");
-			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA384); i++)
-				results += wxString::Format( wxT("%.2x"), hash[i]);
-			results += wxT("\n");
-			}
-
-		if( options & SHA512 ){
-			hash = static_cast<unsigned char *>( mhash_end(tdSHA512) );
-			results += wxT("SHA512:\t");
-			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA512); i++)
-				results += wxString::Format( wxT("%.2x"), hash[i]);
-			results += wxT("\n");
-			}
-
-		return results;
-		}
+//	else{
+//		MHASH tdMD5 = mhash_init(MHASH_MD5);
+//		MHASH tdSHA1 = mhash_init(MHASH_SHA1);
+//		MHASH tdSHA256 = mhash_init(MHASH_SHA256);
+//		MHASH tdSHA384 = mhash_init(MHASH_SHA384);
+//		MHASH tdSHA512 = mhash_init(MHASH_SHA512);
+//
+//		if (  tdMD5 == MHASH_FAILED or
+//				tdSHA1 == MHASH_FAILED or
+//				tdSHA256 == MHASH_FAILED or
+//				tdSHA384 == MHASH_FAILED or
+//				tdSHA512 == MHASH_FAILED ){
+//			return wxEmptyString;
+//			}
+//
+//
+//		int buffsize = 128*1024;
+//		unsigned char buff[buffsize];
+//		uint64_t readfrom=0,readspeed=0, range=f.Length();
+//		wxString emsg = msg;
+//		time_t ts,te;
+//		time (&ts);
+//		int rd;
+//
+//		do
+//		{
+//			rd = f.Read( buff, buffsize );
+//			if( options & 1 << MHASH_MD5    ) mhash( tdMD5, buff, rd);
+//			if( options & 1 << MHASH_SHA1   ) mhash( tdSHA1, buff, rd);
+//			if( options & 1 << MHASH_SHA256 ) mhash( tdSHA256, buff, rd);
+//			if( options & 1 << MHASH_SHA384 ) mhash( tdSHA384, buff, rd);
+//			if( options & 1 << MHASH_SHA512 ) mhash( tdSHA512, buff, rd);
+//			readfrom+=rd;
+//
+//			time(&te);
+//			if(ts != te ){
+//				ts=te;
+//				emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+//				readspeed=readfrom;
+//				}
+//			if(not mypd.Update((readfrom*1000)/range, emsg ))
+//				return wxEmptyString;
+//			}while(rd == buffsize);
+//
+//		wxString results;
+//		unsigned char *hash;
+//
+//		if( options & MD5 ){
+//			hash = static_cast<unsigned char *>( mhash_end(tdMD5) );
+//			results += wxT("MD5:\t");
+//			for (unsigned i = 0; i < mhash_get_block_size(MHASH_MD5); i++)
+//				results += wxString::Format( wxT("%.2x"), hash[i]);
+//			results += wxT("\n");
+//			}
+//		if( options & SHA1 ){
+//			hash = static_cast<unsigned char *>( mhash_end(tdSHA1) );
+//			results += wxT("SHA1:\t");
+//			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA1); i++)
+//				results += wxString::Format( wxT("%.2x"), hash[i]);
+//			results += wxT("\n");
+//			}
+//
+//		if( options & SHA256 ){
+//			hash = static_cast<unsigned char *>( mhash_end(tdSHA256) );
+//			results += wxT("SHA256:\t");
+//			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA256); i++)
+//				results += wxString::Format( wxT("%.2x"), hash[i]);
+//			results += wxT("\n");
+//			}
+//
+//		if( options & SHA384 ){
+//			hash = static_cast<unsigned char *>( mhash_end(tdSHA384) );
+//			results += wxT("SHA512:\t");
+//			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA384); i++)
+//				results += wxString::Format( wxT("%.2x"), hash[i]);
+//			results += wxT("\n");
+//			}
+//
+//		if( options & SHA512 ){
+//			hash = static_cast<unsigned char *>( mhash_end(tdSHA512) );
+//			results += wxT("SHA512:\t");
+//			for (unsigned i = 0; i < mhash_get_block_size(MHASH_SHA512); i++)
+//				results += wxString::Format( wxT("%.2x"), hash[i]);
+//			results += wxT("\n");
+//			}
+//
+//		return results;
+//		}
 	}
 

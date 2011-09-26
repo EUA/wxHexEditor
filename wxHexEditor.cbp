@@ -14,17 +14,15 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-march=athlon64" />
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
-					<Add option="-pg" />
-					<Add option="`wx-config --cflags` -march=native -mtune=native" />
+					<Add option="`wx-config --cflags` -mtune=native -march=native -fopenmp" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add library="udis86" />
 					<Add library="mhash/lib/.libs/libmhash.a" />
+					<Add library="gomp" />
 				</Linker>
 			</Target>
 			<Target title="Debug">

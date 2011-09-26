@@ -938,21 +938,118 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizerHashTypes;
 	bSizerHashTypes = new wxBoxSizer( wxHORIZONTAL );
 	
+	wxStaticBoxSizer* sbSizerMD;
+	sbSizerMD = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("MD") ), wxVERTICAL );
+	
+	chkMD2 = new wxCheckBox( this, wxID_ANY, wxT("MD2"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerMD->Add( chkMD2, 0, 0, 5 );
+	
+	chkMD4 = new wxCheckBox( this, wxID_ANY, wxT("MD4"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerMD->Add( chkMD4, 0, 0, 5 );
+	
 	chkMD5 = new wxCheckBox( this, wxID_ANY, wxT("MD5"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkMD5->SetValue(true); 
-	bSizerHashTypes->Add( chkMD5, 0, wxALL, 5 );
+	sbSizerMD->Add( chkMD5, 0, 0, 5 );
+	
+	bSizerHashTypes->Add( sbSizerMD, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerSHA;
+	sbSizerSHA = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("SHA") ), wxVERTICAL );
 	
 	chkSHA1 = new wxCheckBox( this, wxID_ANY, wxT("SHA1"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerHashTypes->Add( chkSHA1, 0, wxALL, 5 );
+	chkSHA1->SetValue(true); 
+	sbSizerSHA->Add( chkSHA1, 0, 0, 5 );
+	
+	chkSHA224 = new wxCheckBox( this, wxID_ANY, wxT("SHA224"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerSHA->Add( chkSHA224, 0, 0, 5 );
 	
 	chkSHA256 = new wxCheckBox( this, wxID_ANY, wxT("SHA256"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerHashTypes->Add( chkSHA256, 0, wxALL, 5 );
+	sbSizerSHA->Add( chkSHA256, 0, 0, 5 );
 	
 	chkSHA384 = new wxCheckBox( this, wxID_ANY, wxT("SHA384"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerHashTypes->Add( chkSHA384, 0, wxALL, 5 );
+	sbSizerSHA->Add( chkSHA384, 0, 0, 5 );
 	
 	chkSHA512 = new wxCheckBox( this, wxID_ANY, wxT("SHA512"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerHashTypes->Add( chkSHA512, 0, wxALL, 5 );
+	sbSizerSHA->Add( chkSHA512, 0, 0, 5 );
+	
+	bSizerHashTypes->Add( sbSizerSHA, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerRIPEMD;
+	sbSizerRIPEMD = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("RipeMD") ), wxVERTICAL );
+	
+	chkRIPEMD128 = new wxCheckBox( this, wxID_ANY, wxT("RipeMD128"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerRIPEMD->Add( chkRIPEMD128, 0, 0, 5 );
+	
+	chkRIPEMD160 = new wxCheckBox( this, wxID_ANY, wxT("RipeMD160"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerRIPEMD->Add( chkRIPEMD160, 0, 0, 5 );
+	
+	chkRIPEMD256 = new wxCheckBox( this, wxID_ANY, wxT("RipeMD256"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerRIPEMD->Add( chkRIPEMD256, 0, 0, 5 );
+	
+	chkRIPEMD320 = new wxCheckBox( this, wxID_ANY, wxT("RipeMD320"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerRIPEMD->Add( chkRIPEMD320, 0, 0, 5 );
+	
+	bSizerHashTypes->Add( sbSizerRIPEMD, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerHAVAL;
+	sbSizerHAVAL = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("HAVAL") ), wxVERTICAL );
+	
+	chkHAVAL128 = new wxCheckBox( this, wxID_ANY, wxT("HAVAL128"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerHAVAL->Add( chkHAVAL128, 0, 0, 5 );
+	
+	chkHAVAL160 = new wxCheckBox( this, wxID_ANY, wxT("HAVAL160"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerHAVAL->Add( chkHAVAL160, 0, 0, 5 );
+	
+	chkHAVAL192 = new wxCheckBox( this, wxID_ANY, wxT("HAVAL192"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerHAVAL->Add( chkHAVAL192, 0, 0, 5 );
+	
+	chkHAVAL224 = new wxCheckBox( this, wxID_ANY, wxT("HAVAL224"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerHAVAL->Add( chkHAVAL224, 0, 0, 5 );
+	
+	chkHAVAL256 = new wxCheckBox( this, wxID_ANY, wxT("HAVAL256"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerHAVAL->Add( chkHAVAL256, 0, 0, 5 );
+	
+	bSizerHashTypes->Add( sbSizerHAVAL, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerTIGER;
+	sbSizerTIGER = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("TIGER") ), wxVERTICAL );
+	
+	chkTIGER128 = new wxCheckBox( this, wxID_ANY, wxT("TIGER128"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerTIGER->Add( chkTIGER128, 0, 0, 5 );
+	
+	chkTIGER160 = new wxCheckBox( this, wxID_ANY, wxT("TIGER160"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerTIGER->Add( chkTIGER160, 0, 0, 5 );
+	
+	chkTIGER = new wxCheckBox( this, wxID_ANY, wxT("TIGER(192)"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerTIGER->Add( chkTIGER, 0, 0, 5 );
+	
+	bSizerHashTypes->Add( sbSizerTIGER, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerOthers;
+	sbSizerOthers = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Others") ), wxVERTICAL );
+	
+	chkADLER32 = new wxCheckBox( this, wxID_ANY, wxT("ADLER32"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkADLER32, 0, 0, 5 );
+	
+	chkCRC32 = new wxCheckBox( this, wxID_ANY, wxT("CRC32"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkCRC32, 0, 0, 5 );
+	
+	chkCRC32B = new wxCheckBox( this, wxID_ANY, wxT("CRC32B"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkCRC32B, 0, 0, 5 );
+	
+	chkWHIRLPOOL = new wxCheckBox( this, wxID_ANY, wxT("WHRILPOOL"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkWHIRLPOOL, 0, 0, 5 );
+	
+	chkGOST = new wxCheckBox( this, wxID_ANY, wxT("GOST"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkGOST, 0, 0, 5 );
+	
+	chkSNEFRU128 = new wxCheckBox( this, wxID_ANY, wxT("SNEFRU128"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkSNEFRU128, 0, 0, 5 );
+	
+	chkSNEFRU256 = new wxCheckBox( this, wxID_ANY, wxT("SNEFRU256"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerOthers->Add( chkSNEFRU256, 0, 0, 5 );
+	
+	bSizerHashTypes->Add( sbSizerOthers, 1, wxEXPAND, 5 );
 	
 	bSizerMain->Add( bSizerHashTypes, 0, wxEXPAND, 5 );
 	
@@ -978,11 +1075,33 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	// Connect Events
 	chkFile->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	filePick->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ChecksumDialogGui::OnFileChange ), NULL, this );
+	chkMD2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkMD4->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkMD5->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkSHA224->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA256->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA384->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA512->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD128->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD160->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD256->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD320->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL128->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL160->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL192->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL224->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL256->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkTIGER128->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkTIGER160->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkTIGER->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkADLER32->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkCRC32->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkCRC32B->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkWHIRLPOOL->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkGOST->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkSNEFRU128->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkSNEFRU256->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCalculate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 }
@@ -992,11 +1111,33 @@ ChecksumDialogGui::~ChecksumDialogGui()
 	// Disconnect Events
 	chkFile->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	filePick->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ChecksumDialogGui::OnFileChange ), NULL, this );
+	chkMD2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkMD4->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkMD5->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkSHA224->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA256->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA384->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkSHA512->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD128->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD160->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD256->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkRIPEMD320->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL128->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL160->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL192->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL224->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkHAVAL256->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkTIGER128->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkTIGER160->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkTIGER->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkADLER32->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkCRC32->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkCRC32B->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkWHIRLPOOL->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkGOST->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkSNEFRU128->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
+	chkSNEFRU256->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	btnCalculate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	

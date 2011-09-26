@@ -334,11 +334,33 @@ class ChecksumDialogGui : public wxDialog
 	protected:
 		wxCheckBox* chkFile;
 		wxFilePickerCtrl* filePick;
+		wxCheckBox* chkMD2;
+		wxCheckBox* chkMD4;
 		wxCheckBox* chkMD5;
 		wxCheckBox* chkSHA1;
+		wxCheckBox* chkSHA224;
 		wxCheckBox* chkSHA256;
 		wxCheckBox* chkSHA384;
 		wxCheckBox* chkSHA512;
+		wxCheckBox* chkRIPEMD128;
+		wxCheckBox* chkRIPEMD160;
+		wxCheckBox* chkRIPEMD256;
+		wxCheckBox* chkRIPEMD320;
+		wxCheckBox* chkHAVAL128;
+		wxCheckBox* chkHAVAL160;
+		wxCheckBox* chkHAVAL192;
+		wxCheckBox* chkHAVAL224;
+		wxCheckBox* chkHAVAL256;
+		wxCheckBox* chkTIGER128;
+		wxCheckBox* chkTIGER160;
+		wxCheckBox* chkTIGER;
+		wxCheckBox* chkADLER32;
+		wxCheckBox* chkCRC32;
+		wxCheckBox* chkCRC32B;
+		wxCheckBox* chkWHIRLPOOL;
+		wxCheckBox* chkGOST;
+		wxCheckBox* chkSNEFRU128;
+		wxCheckBox* chkSNEFRU256;
 		wxButton* btnCancel;
 		wxButton* btnCalculate;
 		

@@ -119,9 +119,11 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 	}
 
 void FindDialog::PrepareComboBox( bool AddString ){
-	ComboBoxFill( _T("SearchTextString"), m_comboBoxSearch, AddString);
-	//ComboBoxFill( _T("SearchHexString"), m_comboBoxSearch, AddString);
-	//ComboBoxFill( _T("ReplaceTextString"), m_comboBoxReplace, AddString);
+	int searchType = m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
+	if( searchType == SEARCH_TEXT )
+		ComboBoxFill( _T("SearchTextString"), m_comboBoxSearch, AddString);
+	else
+		ComboBoxFill( _T("SearchHexString"), m_comboBoxSearch, AddString);
 	}
 
 void FindDialog::ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString){
@@ -144,8 +146,11 @@ void FindDialog::ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bo
 			wxConfigBase::Get()->Write(SearchFormat+wxEmptyString<<i,  SearchStrings.Item(i));
 		}
 	//Set ComboBox
-	for( int i = 0 ; i < SearchStrings.Count()  ; i ++ )
+	int i;
+	for( i = 0 ; i < SearchStrings.Count()  ; i ++ )
 		CurrentBox->SetString( i, SearchStrings.Item(SearchStrings.Count()-i-1) );
+	for( i ; i < 10 ; i ++ )
+		CurrentBox->SetString( i, wxEmptyString);
 	}
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
@@ -160,6 +165,7 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		}
 	else if( event.GetId() == m_searchtype->GetId()){
 		m_searchtype->GetSelection() == 1 ? chkMatchCase->Enable(false) : chkMatchCase->Enable(true) ;
+		PrepareComboBox( false );
 		}
 	else if( event.GetId() == btnFindAll->GetId() )
 		OnFindAll();
@@ -208,7 +214,7 @@ bool FindDialog::OnFind( bool internal ){
 		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
 			hexval = wxChar('0')+hexval;
 		m_comboBoxSearch->SetValue(hexval.Upper());
-
+		PrepareComboBox( true );
 		wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
 		search_size = search_binary.GetDataLen();
 		found = FindBinary( search_binary, parent->CursorOffset()+1, options );
@@ -337,7 +343,6 @@ void FindDialog::OnFindAll( bool internal ){
 	int mode = 0;
 	if(options & SEARCH_TEXT) {
 		PrepareComboBox( true );
-
 		mode = SEARCH_TEXT;
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
@@ -352,6 +357,7 @@ void FindDialog::OnFindAll( bool internal ){
 			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
 				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
 				wxBell();
+				return;
 				}
 		//Remove all space chars and update the Search value
 		while( hexval.find(' ') != -1 )
@@ -359,6 +365,7 @@ void FindDialog::OnFindAll( bool internal ){
 		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
 			hexval = wxChar('0')+hexval;
 		m_comboBoxSearch->SetValue(hexval.Upper());
+		PrepareComboBox( true );
 		FindBinary( wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue()), 0 ,options );
 		}
 

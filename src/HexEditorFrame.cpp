@@ -58,6 +58,21 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "home:  wxhexeditor.sourceforge.net\n"
 			 "email: spamjunkeater@gmail.com\n");
 
+	wxConfigBase *pConfig = wxConfigBase::Get();
+	int x = pConfig->Read(_T("ScreenX"), 100),
+		 y = pConfig->Read(_T("ScreenY"), 100),
+		 w = pConfig->Read(_T("ScreenW"), 600),
+		 h = pConfig->Read(_T("ScreenH"), 400);
+
+	// Normalizing for avoid screen disapperaring
+	wxSize dsz = wxGetDisplaySize();
+	x = x < 0 ? 0 : x < dsz.x ? x : dsz.x - w;
+	y = y < 0 ? 0 : y < dsz.y ? y : dsz.y - h;
+
+	// restore frame position and size
+	Move(x, y);
+	SetClientSize(w, h);
+
 
 #if defined __WXMAC__ || defined __WXMSW__
 	wxArtProvider::Push(new HexEditorArtProvider); //Using similar MacOSX icons. Much more better than wx ones...
@@ -125,6 +140,18 @@ HexEditorFrame::~HexEditorFrame(){
 
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
+
+	wxConfigBase *pConfig = wxConfigBase::Get();
+	if ( pConfig == NULL )
+		return;
+	int x, y, w, h;
+	GetClientSize(&w, &h);
+	GetPosition(&x, &y);
+	pConfig->Write(_T("ScreenX"), (long) x);
+	pConfig->Write(_T("ScreenY"), (long) y);
+	pConfig->Write(_T("ScreenW"), (long) w);
+	pConfig->Write(_T("ScreenH"), (long) h);
+	pConfig->Flush();
 
 	MyNotebook->Destroy();
 	}

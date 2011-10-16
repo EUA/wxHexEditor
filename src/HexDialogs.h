@@ -81,6 +81,16 @@ virtual void EventHandler( wxCommandEvent& event );
 
 	};
 
+class ReplaceDialog : public FindDialog{
+	public:
+		ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title=_("Find & Replace") );
+			void EventHandler( wxCommandEvent& event );
+			int OnReplace( bool internal = false );
+			void OnReplaceAll( void );
+			void PrepareComboBox( bool AddString );
+	};
+
+
 class CopyAsDialog : public CopyAsDialogGui{
 	public:
 		CopyAsDialog( wxWindow* parent, FAL* copy_file, Select* select, ArrayOfTAG* MainTagArray);
@@ -95,14 +105,6 @@ class CopyAsDialog : public CopyAsDialogGui{
       void PrepareFullText( wxString& , wxMemoryBuffer& );
       void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& , wxString startup);
       wxString GetDigitFormat( void );
-	};
-
-class ReplaceDialog : public FindDialog{
-	public:
-		ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title=_("Find & Replace") );
-			void EventHandler( wxCommandEvent& event );
-			int OnReplace( bool internal = false );
-			void OnReplaceAll( void );
 	};
 
 class CompareDialog : public CompareDialogGui{

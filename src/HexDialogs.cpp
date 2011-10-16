@@ -107,7 +107,6 @@ void GotoDialog::OnConvert( wxCommandEvent& event ){
 	}
 
 // TODO (death#1#):Paint 4 Find All
-// TODO (death#1#):Make ComboBox remember old values
 // TODO (death#1#):Remember options last state
 FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):FindDialogGui( _parent, wxID_ANY, title){
 	parent = static_cast< HexEditor* >(_parent);
@@ -115,7 +114,6 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 	m_comboBoxSearch->SetFocus();
 	//Load previous search results.
 	PrepareComboBox( false );
-	wxYield();
 	}
 
 void FindDialog::PrepareComboBox( bool AddString ){
@@ -142,11 +140,11 @@ void FindDialog::ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bo
 			}
 		SearchStrings.Add( AddNewString );
 
-		for( int i = 0 ; i < 10 and i < SearchStrings.Count(); i ++)
+		for( unsigned i = 0 ; i < 10 and i < SearchStrings.Count(); i ++)
 			wxConfigBase::Get()->Write(SearchFormat+wxEmptyString<<i,  SearchStrings.Item(i));
 		}
 	//Set ComboBox
-	int i;
+	unsigned i;
 	for( i = 0 ; i < SearchStrings.Count()  ; i ++ )
 		CurrentBox->SetString( i, SearchStrings.Item(SearchStrings.Count()-i-1) );
 	for( i ; i < 10 ; i ++ )
@@ -200,8 +198,8 @@ bool FindDialog::OnFind( bool internal ){
 		found = FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1, options );
 		}
 	else { //SEARCH_HEX
+		//Hex Validation and Format
 		wxString hexval = m_comboBoxSearch->GetValue();
-
 		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
 			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
 				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
@@ -214,6 +212,7 @@ bool FindDialog::OnFind( bool internal ){
 		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
 			hexval = wxChar('0')+hexval;
 		m_comboBoxSearch->SetValue(hexval.Upper());
+
 		PrepareComboBox( true );
 		wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue());
 		search_size = search_binary.GetDataLen();
@@ -445,11 +444,14 @@ int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int searc
 	}
 
 ReplaceDialog::ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title ):FindDialog( parent, find_file, title ){
+	//Enabling hidden replace dialog elements.
 	m_comboBoxReplace->Show();
 	m_static_replace->Show();
 	btnReplace->Show();
 	btnReplaceAll->Show();
 	Fit();
+	//Load previous search results to replace box.
+	PrepareComboBox( false );
 	}
 
 int ReplaceDialog::OnReplace( bool internal ){
@@ -462,6 +464,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 
 	else{
 		if( m_searchtype->GetSelection() == 0 ){//text search
+			PrepareComboBox( true );
 			if( parent->select->GetSize() == m_comboBoxReplace->GetValue().Len() ){
 				parent->FileAddDiff( parent->CursorOffset(), m_comboBoxReplace->GetValue().ToAscii(), m_comboBoxReplace->GetValue().Len());
 				parent->select->SetState( parent->select->SELECT_FALSE );
@@ -474,6 +477,22 @@ int ReplaceDialog::OnReplace( bool internal ){
 				}
 			}
 		else{ //hex search
+			//Hex Validation and Format
+			wxString hexval = m_comboBoxReplace->GetValue();
+			for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+				if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+					wxMessageBox(_("Replace value is not hexadecimal!"), _("Format Error!"), wxOK, this );
+					wxBell();
+					return false;
+					}
+			//Remove all space chars and update the Search value
+			while( hexval.find(' ') != -1 )
+				hexval.Remove( hexval.find(' '),1);
+			if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
+				hexval = wxChar('0')+hexval;
+			m_comboBoxReplace->SetValue(hexval.Upper());
+			PrepareComboBox( true );
+
 			wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
 			if( parent->select->GetSize() == search_binary.GetDataLen() ){
 				parent->FileAddDiff( parent->CursorOffset(), static_cast<char*>(search_binary.GetData()) ,search_binary.GetDataLen() );
@@ -494,11 +513,29 @@ void ReplaceDialog::OnReplaceAll( void ){
 	OnFindAll( true );
 	//Now Highlight array has matches. We could replace them with replace string.
 	for( uint32_t i=0 ; i < parent->HighlightArray.Count() ; i++ ){
-		if( m_searchtype->GetSelection() == 0 ) //text search
+		if( m_searchtype->GetSelection() == 0 ){ //text search
+				PrepareComboBox( true );
 				parent->FileAddDiff( parent->HighlightArray.Item(i)->start,
 											m_comboBoxReplace->GetValue().ToAscii(),
 											m_comboBoxReplace->GetValue().Len());
+			}
 		else{ //hex search
+			//Hex Validation and Format
+			wxString hexval = m_comboBoxReplace->GetValue();
+			for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+				if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+					wxMessageBox(_("Replace value is not hexadecimal!"), _("Format Error!"), wxOK, this );
+					wxBell();
+					return;
+					}
+			//Remove all space chars and update the Search value
+			while( hexval.find(' ') != -1 )
+				hexval.Remove( hexval.find(' '),1);
+			if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
+				hexval = wxChar('0')+hexval;
+			m_comboBoxReplace->SetValue(hexval.Upper());
+			PrepareComboBox( true );
+
 			wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
 			parent->FileAddDiff( parent->HighlightArray.Item(i)->start,
 										static_cast<char*>(search_binary.GetData()),
@@ -526,8 +563,14 @@ void ReplaceDialog::EventHandler( wxCommandEvent& event ){
 		OnReplace();
 	else if( id == btnReplaceAll->GetId() )
 		OnReplaceAll();
+	}
+
+void ReplaceDialog::PrepareComboBox( bool AddString ){
+	int searchType = m_searchtype->GetSelection() == 0 ? SEARCH_TEXT : SEARCH_HEX;
+	if( searchType == SEARCH_TEXT )
+		ComboBoxFill( _T("ReplaceTextString"), m_comboBoxReplace, AddString);
 	else
-		wxBell();
+		ComboBoxFill( _T("ReplaceHexString"), m_comboBoxReplace, AddString);
 	}
 
 CopyAsDialog::CopyAsDialog( wxWindow* _parent, FAL *file, Select *select_ , ArrayOfTAG* MainTagArray_):CopyAsDialogGui( _parent , wxID_ANY){
@@ -947,6 +990,7 @@ CompareDialog::CompareDialog( wxWindow* parent_ ):CompareDialogGui(parent_, wxID
 	filePick1->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
 	filePick2->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
 	}
+
 CompareDialog::~CompareDialog(void){
 	filePick1->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
 	filePick2->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
@@ -1283,40 +1327,49 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 			}
 		MHASH *myhash=new MHASH[NumBits];
 		unsigned i=0;
-		if( options & (1 << MHASH_MD2)  )  myhash[i++]= mhash_init(MHASH_MD2);
-		if( options & (1 << MHASH_MD4)  )  myhash[i++]= mhash_init(MHASH_MD4);
-		if( options & (1 << MHASH_MD5)  )  myhash[i++]= mhash_init(MHASH_MD5);
 
-		if( options & (1 << MHASH_SHA1) )  myhash[i++]= mhash_init(MHASH_SHA1);
-		if( options & (1 << MHASH_SHA224)) myhash[i++]= mhash_init(MHASH_SHA224);
-		if( options & (1 << MHASH_SHA256)) myhash[i++]= mhash_init(MHASH_SHA256);
-		if( options & (1 << MHASH_SHA384)) myhash[i++]= mhash_init(MHASH_SHA384);
-		if( options & (1 << MHASH_SHA512)) myhash[i++]= mhash_init(MHASH_SHA512);
+//		if( options & (1 << MHASH_MD2)  )  myhash[i++]= mhash_init(MHASH_MD2);
+//		if( options & (1 << MHASH_MD4)  )  myhash[i++]= mhash_init(MHASH_MD4);
+//		if( options & (1 << MHASH_MD5)  )  myhash[i++]= mhash_init(MHASH_MD5);
+//
+//		if( options & (1 << MHASH_SHA1) )  myhash[i++]= mhash_init(MHASH_SHA1);
+//		if( options & (1 << MHASH_SHA224)) myhash[i++]= mhash_init(MHASH_SHA224);
+//		if( options & (1 << MHASH_SHA256)) myhash[i++]= mhash_init(MHASH_SHA256);
+//		if( options & (1 << MHASH_SHA384)) myhash[i++]= mhash_init(MHASH_SHA384);
+//		if( options & (1 << MHASH_SHA512)) myhash[i++]= mhash_init(MHASH_SHA512);
+//
+//		if( options & (1 << MHASH_RIPEMD128)) myhash[i++]= mhash_init(MHASH_RIPEMD128);
+//		if( options & (1 << MHASH_RIPEMD160)) myhash[i++]= mhash_init(MHASH_RIPEMD160);
+//		if( options & (1 << MHASH_RIPEMD256)) myhash[i++]= mhash_init(MHASH_RIPEMD256);
+//		if( options & (1 << MHASH_RIPEMD320)) myhash[i++]= mhash_init(MHASH_RIPEMD320);
+//
+//		if( options & (1 << MHASH_HAVAL128)) myhash[i++]= mhash_init(MHASH_HAVAL128);
+//		if( options & (1 << MHASH_HAVAL160)) myhash[i++]= mhash_init(MHASH_HAVAL160);
+//		if( options & (1 << MHASH_HAVAL192)) myhash[i++]= mhash_init(MHASH_HAVAL192);
+//		if( options & (1 << MHASH_HAVAL224)) myhash[i++]= mhash_init(MHASH_HAVAL224);
+//		if( options & (1 << MHASH_HAVAL256)) myhash[i++]= mhash_init(MHASH_HAVAL256);
+//
+//		if( options & (1 << MHASH_TIGER128)) myhash[i++]= mhash_init(MHASH_TIGER128);
+//		if( options & (1 << MHASH_TIGER160)) myhash[i++]= mhash_init(MHASH_TIGER160);
+//		if( options & (1 << MHASH_TIGER192)) myhash[i++]= mhash_init(MHASH_TIGER192);
+//
+//		if( options & (1 << MHASH_ADLER32))   myhash[i++]= mhash_init(MHASH_ADLER32);
+//		if( options & (1 << MHASH_CRC32))     myhash[i++]= mhash_init(MHASH_CRC32);
+//		if( options & (1 << MHASH_CRC32B))    myhash[i++]= mhash_init(MHASH_CRC32B);
+//		if( options & (1 << MHASH_WHIRLPOOL)) myhash[i++]= mhash_init(MHASH_WHIRLPOOL);
+//		if( options & (1 << MHASH_GOST))      myhash[i++]= mhash_init(MHASH_GOST);
+//		if( options & (1 << MHASH_SNEFRU128)) myhash[i++]= mhash_init(MHASH_SNEFRU128);
+//		if( options & (1 << MHASH_SNEFRU256)) myhash[i++]= mhash_init(MHASH_SNEFRU256);
 
-		if( options & (1 << MHASH_RIPEMD128)) myhash[i++]= mhash_init(MHASH_RIPEMD128);
-		if( options & (1 << MHASH_RIPEMD160)) myhash[i++]= mhash_init(MHASH_RIPEMD160);
-		if( options & (1 << MHASH_RIPEMD256)) myhash[i++]= mhash_init(MHASH_RIPEMD256);
-		if( options & (1 << MHASH_RIPEMD320)) myhash[i++]= mhash_init(MHASH_RIPEMD320);
-
-		if( options & (1 << MHASH_HAVAL128)) myhash[i++]= mhash_init(MHASH_HAVAL128);
-		if( options & (1 << MHASH_HAVAL160)) myhash[i++]= mhash_init(MHASH_HAVAL160);
-		if( options & (1 << MHASH_HAVAL192)) myhash[i++]= mhash_init(MHASH_HAVAL192);
-		if( options & (1 << MHASH_HAVAL224)) myhash[i++]= mhash_init(MHASH_HAVAL224);
-		if( options & (1 << MHASH_HAVAL256)) myhash[i++]= mhash_init(MHASH_HAVAL256);
-
-		if( options & (1 << MHASH_TIGER128)) myhash[i++]= mhash_init(MHASH_TIGER128);
-		if( options & (1 << MHASH_TIGER160)) myhash[i++]= mhash_init(MHASH_TIGER160);
-		if( options & (1 << MHASH_TIGER192)) myhash[i++]= mhash_init(MHASH_TIGER192);
-
-		if( options & (1 << MHASH_ADLER32))   myhash[i++]= mhash_init(MHASH_ADLER32);
-		if( options & (1 << MHASH_CRC32))     myhash[i++]= mhash_init(MHASH_CRC32);
-		if( options & (1 << MHASH_CRC32B))    myhash[i++]= mhash_init(MHASH_CRC32B);
-		if( options & (1 << MHASH_WHIRLPOOL)) myhash[i++]= mhash_init(MHASH_WHIRLPOOL);
-		if( options & (1 << MHASH_GOST))      myhash[i++]= mhash_init(MHASH_GOST);
-		if( options & (1 << MHASH_SNEFRU128)) myhash[i++]= mhash_init(MHASH_SNEFRU128);
-		if( options & (1 << MHASH_SNEFRU256)) myhash[i++]= mhash_init(MHASH_SNEFRU256);
-
-
+		hashid algs[]={MHASH_MD2,MHASH_MD4,MHASH_MD5,
+							MHASH_SHA1,MHASH_SHA224,MHASH_SHA256,MHASH_SHA384,MHASH_SHA512,
+							MHASH_RIPEMD128,MHASH_RIPEMD160,MHASH_RIPEMD256,MHASH_RIPEMD320,
+							MHASH_HAVAL128,MHASH_HAVAL160,MHASH_HAVAL192,MHASH_HAVAL224,MHASH_HAVAL256,
+							MHASH_TIGER128,MHASH_TIGER160,MHASH_TIGER192,
+							MHASH_ADLER32,MHASH_CRC32,MHASH_CRC32B,MHASH_WHIRLPOOL,MHASH_GOST,MHASH_SNEFRU128,MHASH_SNEFRU256};
+		for( int j = 0 ; j < sizeof algs/sizeof algs[0]; j++)
+			if( options & (1 << algs[j] ))
+				myhash[i++]= mhash_init(algs[j]);
 
 		unsigned rdBlockSz=2*128*1024;
 		unsigned char buff[rdBlockSz];

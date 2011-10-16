@@ -660,7 +660,17 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_static_search->Wrap( -1 );
 	fgSizerTop->Add( m_static_search, 0, wxALIGN_CENTER, 5 );
 	
-	m_comboBoxSearch = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN ); 
+	m_comboBoxSearch = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
+	m_comboBoxSearch->Append( wxT(" ") );
 	fgSizerTop->Add( m_comboBoxSearch, 0, wxALL|wxEXPAND, 5 );
 	
 	m_static_replace = new wxStaticText( this, wxID_ANY, wxT("Replace: "), wxDefaultPosition, wxDefaultSize, 0 );
@@ -669,7 +679,17 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizerTop->Add( m_static_replace, 0, wxALIGN_CENTER, 5 );
 	
-	m_comboBoxReplace = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN ); 
+	m_comboBoxReplace = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
+	m_comboBoxReplace->Append( wxT(" ") );
 	m_comboBoxReplace->Hide();
 	
 	fgSizerTop->Add( m_comboBoxReplace, 0, wxALL|wxEXPAND, 5 );
@@ -821,14 +841,14 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	m_TextFile1->Wrap( -1 );
 	fgSizerFiles->Add( m_TextFile1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePick1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN );
+	filePick1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
 	fgSizerFiles->Add( filePick1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	m_TextFile2 = new wxStaticText( this, wxID_ANY, wxT("File #2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_TextFile2->Wrap( -1 );
 	fgSizerFiles->Add( m_TextFile2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePick2 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN );
+	filePick2 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
 	fgSizerFiles->Add( filePick2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizerMain->Add( fgSizerFiles, 0, wxEXPAND, 5 );
@@ -899,6 +919,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	filePick2->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::OnFileChange ), NULL, this );
 	checkStopCompare->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	checkSaveResults->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	filePickSave->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::filePickSaveOnFileChanged ), NULL, this );
 	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	btnCompare->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 }
@@ -910,6 +931,7 @@ CompareDialogGui::~CompareDialogGui()
 	filePick2->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::OnFileChange ), NULL, this );
 	checkStopCompare->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	checkSaveResults->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	filePickSave->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::filePickSaveOnFileChanged ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	btnCompare->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	
@@ -922,18 +944,27 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* sbSizerFileToHash;
-	sbSizerFileToHash = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("File To Hash") ), wxVERTICAL );
+	wxBoxSizer* bSizerTop;
+	bSizerTop = new wxBoxSizer( wxHORIZONTAL );
+	
+	txtFileToHash = new wxStaticText( this, wxID_ANY, wxT("File To Hash:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtFileToHash->Wrap( -1 );
+	bSizerTop->Add( txtFileToHash, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerDiler;
+	bSizerDiler = new wxBoxSizer( wxVERTICAL );
 	
 	chkFile = new wxCheckBox( this, wxID_ANY, wxT("Curent File"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkFile->Enable( false );
 	
-	sbSizerFileToHash->Add( chkFile, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizerDiler->Add( chkFile, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	filePick = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
-	sbSizerFileToHash->Add( filePick, 1, wxALL|wxEXPAND, 5 );
+	bSizerDiler->Add( filePick, 0, wxALL|wxEXPAND, 5 );
 	
-	bSizerMain->Add( sbSizerFileToHash, 1, wxEXPAND, 5 );
+	bSizerTop->Add( bSizerDiler, 1, wxEXPAND, 5 );
+	
+	bSizerMain->Add( bSizerTop, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerHashTypes;
 	bSizerHashTypes = new wxBoxSizer( wxHORIZONTAL );
@@ -941,14 +972,13 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerMD;
 	sbSizerMD = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("MD") ), wxVERTICAL );
 	
-	chkMD2 = new wxCheckBox( this, wxID_ANY, wxT("MD2"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkMD2 = new wxCheckBox( this, wxID_ANY, wxT("MD2 (slow!)"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerMD->Add( chkMD2, 0, 0, 5 );
 	
 	chkMD4 = new wxCheckBox( this, wxID_ANY, wxT("MD4"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerMD->Add( chkMD4, 0, 0, 5 );
 	
 	chkMD5 = new wxCheckBox( this, wxID_ANY, wxT("MD5"), wxDefaultPosition, wxDefaultSize, 0 );
-	chkMD5->SetValue(true); 
 	sbSizerMD->Add( chkMD5, 0, 0, 5 );
 	
 	bSizerHashTypes->Add( sbSizerMD, 1, wxEXPAND, 5 );
@@ -957,7 +987,6 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	sbSizerSHA = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("SHA") ), wxVERTICAL );
 	
 	chkSHA1 = new wxCheckBox( this, wxID_ANY, wxT("SHA1"), wxDefaultPosition, wxDefaultSize, 0 );
-	chkSHA1->SetValue(true); 
 	sbSizerSHA->Add( chkSHA1, 0, 0, 5 );
 	
 	chkSHA224 = new wxCheckBox( this, wxID_ANY, wxT("SHA224"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1020,7 +1049,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	chkTIGER160 = new wxCheckBox( this, wxID_ANY, wxT("TIGER160"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTIGER->Add( chkTIGER160, 0, 0, 5 );
 	
-	chkTIGER = new wxCheckBox( this, wxID_ANY, wxT("TIGER(192)"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkTIGER = new wxCheckBox( this, wxID_ANY, wxT("TIGER (192)"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTIGER->Add( chkTIGER, 0, 0, 5 );
 	
 	bSizerHashTypes->Add( sbSizerTIGER, 1, wxEXPAND, 5 );
@@ -1074,7 +1103,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	
 	// Connect Events
 	chkFile->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
-	filePick->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ChecksumDialogGui::OnFileChange ), NULL, this );
+	filePick->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ChecksumDialogGui::filePickOnFileChanged ), NULL, this );
 	chkMD2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkMD4->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkMD5->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
@@ -1110,7 +1139,7 @@ ChecksumDialogGui::~ChecksumDialogGui()
 {
 	// Disconnect Events
 	chkFile->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
-	filePick->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ChecksumDialogGui::OnFileChange ), NULL, this );
+	filePick->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( ChecksumDialogGui::filePickOnFileChanged ), NULL, this );
 	chkMD2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkMD4->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );
 	chkMD5->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ChecksumDialogGui::EventHandler ), NULL, this );

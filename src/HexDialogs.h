@@ -67,6 +67,7 @@ class FindDialog : public FindDialogGui{
 		void OnFindAll( bool internal=false );
 virtual void EventHandler( wxCommandEvent& event );
 		bool OnFindEvents( wxCommandEvent& event );
+
 		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2, SEARCH_UTF8=0x4, SEARCH_UTF16=0x8,
 									SEARCH_MATCHCASE=0x10, SEARCH_BACKWARDS=0x20, SEARCH_WRAPAROUND=0x40, SEARCH_FINDALL=0x80 } searchtype;
 	protected:
@@ -75,6 +76,9 @@ virtual void EventHandler( wxCommandEvent& event );
 		int SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
 		class HexEditor* parent;
 		FAL *findfile;
+		void PrepareComboBox( bool AddString );
+		void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString);
+
 	};
 
 class CopyAsDialog : public CopyAsDialogGui{
@@ -104,10 +108,12 @@ class ReplaceDialog : public FindDialog{
 class CompareDialog : public CompareDialogGui{
 	public:
 		CompareDialog( wxWindow* parent );
+		~CompareDialog();
 	private:
 		class HexEditorFrame* parent;
 		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
       void EventHandler( wxCommandEvent& event );
+      void EventHandler2( wxDropFilesEvent& event );
       void OnFileChange( wxFileDirPickerEvent& event );
 	};
 

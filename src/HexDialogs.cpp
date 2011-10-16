@@ -113,6 +113,39 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 	parent = static_cast< HexEditor* >(_parent);
 	findfile = _findfile;
 	m_comboBoxSearch->SetFocus();
+	//Load previous search results.
+	PrepareComboBox( false );
+	wxYield();
+	}
+
+void FindDialog::PrepareComboBox( bool AddString ){
+	ComboBoxFill( _T("SearchTextString"), m_comboBoxSearch, AddString);
+	//ComboBoxFill( _T("SearchHexString"), m_comboBoxSearch, AddString);
+	//ComboBoxFill( _T("ReplaceTextString"), m_comboBoxReplace, AddString);
+	}
+
+void FindDialog::ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString){
+	wxString TempString;
+	wxArrayString SearchStrings;
+	//Prepare Array;
+	for( int i = 0 ; i < 10 ; i ++)
+		if (wxConfigBase::Get()->Read(SearchFormat+wxEmptyString<<i , &TempString))
+			SearchStrings.Add( TempString );
+
+	wxString AddNewString = CurrentBox->GetValue();
+	//Adds New String
+	if( AddString and (AddNewString not_eq wxEmptyString) ){
+		if( SearchStrings.Index( AddNewString ) not_eq wxNOT_FOUND ){
+			SearchStrings.Remove( AddNewString );
+			}
+		SearchStrings.Add( AddNewString );
+
+		for( int i = 0 ; i < 10 and i < SearchStrings.Count(); i ++)
+			wxConfigBase::Get()->Write(SearchFormat+wxEmptyString<<i,  SearchStrings.Item(i));
+		}
+	//Set ComboBox
+	for( int i = 0 ; i < SearchStrings.Count()  ; i ++ )
+		CurrentBox->SetString( i, SearchStrings.Item(SearchStrings.Count()-i-1) );
 	}
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
@@ -136,13 +169,10 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		chkUTF8->SetValue( not chkUTF8->GetValue( ));
 		wxBell();
 		}
-	else
-		wxBell();
-
-
 	}
 
-bool FindDialog::OnFind( bool internal ) {
+
+bool FindDialog::OnFind( bool internal ){
 	uint64_t found = NANINT;
 	uint64_t search_size = 0;
 	//prepare Operator
@@ -151,6 +181,7 @@ bool FindDialog::OnFind( bool internal ) {
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 	if(options & SEARCH_TEXT) {
+		PrepareComboBox( true );
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
 		if( m_comboBoxSearch->GetValue().IsAscii() )
@@ -295,7 +326,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	return NANINT;
 	}
 
-void FindDialog::OnFindAll( bool internal ) {
+void FindDialog::OnFindAll( bool internal ){
 	parent->HighlightArray.Clear();
 
 	unsigned options = SEARCH_FINDALL; //fill continue search until file and with this option.
@@ -305,6 +336,8 @@ void FindDialog::OnFindAll( bool internal ) {
 
 	int mode = 0;
 	if(options & SEARCH_TEXT) {
+		PrepareComboBox( true );
+
 		mode = SEARCH_TEXT;
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
@@ -904,6 +937,12 @@ void CopyAsDialog::Copy( void ){
 
 CompareDialog::CompareDialog( wxWindow* parent_ ):CompareDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
+	filePick1->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
+	filePick2->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
+	}
+CompareDialog::~CompareDialog(void){
+	filePick1->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
+	filePick2->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
 	}
 
 bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff, int StopAfterNMatch, wxFileName flsave ){
@@ -1059,6 +1098,15 @@ void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ){
 	else
 		btnCompare->Enable(false);
 	}
+
+void CompareDialog::EventHandler2( wxDropFilesEvent& event ){
+	wxBell();
+	if( filePick1->GetPath() not_eq wxEmptyString and filePick2->GetPath() not_eq wxEmptyString)
+		btnCompare->Enable(true);
+	else
+		btnCompare->Enable(false);
+	}
+
 // TODO (death#1#): Drag Drop file change event!
 void CompareDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
@@ -1272,12 +1320,16 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		time_t ts,te;
 		time (&ts);
 
+		int threads;
+		if(wxThread::GetCPUCount() > 0) // -1 for unknown
+			threads = NumBits > wxThread::GetCPUCount() ? wxThread::GetCPUCount() : NumBits;
+
 		while(rd == rdBlockSz){
 			rd = f.Read( buff, rdBlockSz );
 			readfrom+=rd;
 
 			//Paralelize with OpenMP
-			#pragma omp parallel for schedule(dynamic, 1)
+			#pragma omp parallel for schedule(static) num_threads(threads)
 			for( i = 0 ; i < NumBits ; i++){
 				mhash( myhash[i], buff, rd);
 				}

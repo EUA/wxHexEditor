@@ -315,6 +315,7 @@ class CompareDialogGui : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+		virtual void filePickSaveOnFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -332,6 +333,7 @@ class ChecksumDialogGui : public wxDialog
 	private:
 	
 	protected:
+		wxStaticText* txtFileToHash;
 		wxCheckBox* chkFile;
 		wxFilePickerCtrl* filePick;
 		wxCheckBox* chkMD2;
@@ -366,7 +368,7 @@ class ChecksumDialogGui : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void filePickOnFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		
 	
 	public:

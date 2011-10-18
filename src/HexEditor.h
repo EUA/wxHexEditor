@@ -111,7 +111,6 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		void ReplaceDialog( void );
 		void CopyAsDialog( void );
 		void GotoDialog( void );
-		struct DialogVector *myDialogVector;
 
 		void UpdateCursorLocation( bool force=false );
 	protected:

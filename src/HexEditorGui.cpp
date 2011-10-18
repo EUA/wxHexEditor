@@ -585,8 +585,18 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticTextOffset->Wrap( -1 );
 	bSizerTop->Add( m_staticTextOffset, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	m_textCtrlOffset = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_PROCESS_TAB|wxTE_RIGHT );
-	bSizerTop->Add( m_textCtrlOffset, 1, wxALIGN_CENTER|wxALL, 5 );
+	m_comboBoxOffset = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	m_comboBoxOffset->Append( wxT(" ") );
+	bSizerTop->Add( m_comboBoxOffset, 0, wxALL, 5 );
 	
 	m_dec = new wxRadioButton( this, wxID_ANY, wxT("Decimal"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerTop->Add( m_dec, 0, wxALL, 5 );
@@ -616,8 +626,8 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	mainSizer->Fit( this );
 	
 	// Connect Events
-	m_textCtrlOffset->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GotoDialogGui::OnInput ), NULL, this );
-	m_textCtrlOffset->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GotoDialogGui::OnGo ), NULL, this );
+	m_comboBoxOffset->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GotoDialogGui::OnInput ), NULL, this );
+	m_comboBoxOffset->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GotoDialogGui::OnGO ), NULL, this );
 	m_dec->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( GotoDialogGui::OnConvert ), NULL, this );
 	m_hex->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( GotoDialogGui::OnConvert ), NULL, this );
 	m_button_go->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GotoDialogGui::OnGo ), NULL, this );
@@ -626,8 +636,8 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 GotoDialogGui::~GotoDialogGui()
 {
 	// Disconnect Events
-	m_textCtrlOffset->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GotoDialogGui::OnInput ), NULL, this );
-	m_textCtrlOffset->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GotoDialogGui::OnGo ), NULL, this );
+	m_comboBoxOffset->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GotoDialogGui::OnInput ), NULL, this );
+	m_comboBoxOffset->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GotoDialogGui::OnGO ), NULL, this );
 	m_dec->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( GotoDialogGui::OnConvert ), NULL, this );
 	m_hex->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( GotoDialogGui::OnConvert ), NULL, this );
 	m_button_go->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GotoDialogGui::OnGo ), NULL, this );

@@ -27,11 +27,11 @@
 #include <wx/panel.h>
 #include <wx/listbox.h>
 #include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/radiobut.h>
 #include <wx/radiobox.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
-#include <wx/combobox.h>
 #include <wx/statbox.h>
 #include <wx/statline.h>
 #include <wx/statbmp.h>
@@ -213,7 +213,7 @@ class GotoDialogGui : public wxDialog
 	
 	protected:
 		wxStaticText* m_staticTextOffset;
-		wxTextCtrl* m_textCtrlOffset;
+		wxComboBox* m_comboBoxOffset;
 		wxRadioButton* m_dec;
 		wxRadioButton* m_hex;
 		wxRadioBox* m_branch;
@@ -221,8 +221,9 @@ class GotoDialogGui : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnInput( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnGo( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnGO( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConvert( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnGo( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

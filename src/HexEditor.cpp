@@ -50,10 +50,6 @@ HexEditor::HexEditor(	wxWindow* parent,
 	offset_scroll->Enable( true );
 	Dynamic_Connector();
 	copy_mark = new copy_maker( );
-	myDialogVector = new DialogVector;
-	myDialogVector->goto_hex=0;
-	myDialogVector->goto_branch=0;
-	myDialogVector->goto_input=0;
 	}
 
 HexEditor::~HexEditor() {
@@ -61,9 +57,7 @@ HexEditor::~HexEditor() {
 	Dynamic_Disconnector();
 
 	// Free resources
-	delete myDialogVector;
 	delete copy_mark;
-
 	}
 
 void HexEditor::Dynamic_Connector() {
@@ -1010,7 +1004,7 @@ void HexEditor::CopyAsDialog( void ) {
 
 void HexEditor::GotoDialog( void ) {
 	uint64_t newoffset;
-	::GotoDialog *mygoto = new ::GotoDialog( this, newoffset, CursorOffset(), FileLength(), myDialogVector );
+	::GotoDialog *mygoto = new ::GotoDialog( this, newoffset, CursorOffset(), FileLength() );
 	if( mygoto->ShowModal() == wxID_OK ) {
 		Goto( newoffset );
 		}

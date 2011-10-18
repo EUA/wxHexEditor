@@ -34,23 +34,18 @@
 #else
 #include <wx/wx.h>
 #endif
-struct DialogVector{
-	unsigned short goto_hex;
-	unsigned short goto_branch;
-	uint64_t goto_input;
-	};
+
+void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString);
 
 class GotoDialog : public GotoDialogGui{
 	public:
-		GotoDialog( wxWindow* parent, uint64_t& offset, uint64_t cursor_offset, uint64_t filesize, DialogVector * );
+		GotoDialog( wxWindow* parent, uint64_t& offset, uint64_t cursor_offset, uint64_t filesize );
 		void OnInput( wxCommandEvent& event );
 		void OnGo( wxCommandEvent& event );
 		void OnConvert( wxCommandEvent& event );
 		void OnInit( wxCommandEvent& event );
 
 		wxString Filter( wxString text );
-
-		DialogVector *myDialogVector;
 
 	protected:
 		uint64_t *offset;
@@ -77,8 +72,6 @@ virtual void EventHandler( wxCommandEvent& event );
 		class HexEditor* parent;
 		FAL *findfile;
 		void PrepareComboBox( bool AddString );
-		void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString);
-
 	};
 
 class ReplaceDialog : public FindDialog{

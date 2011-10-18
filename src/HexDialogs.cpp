@@ -27,21 +27,41 @@
 #include "../mhash/include/mhash.h"
 #include <omp.h>
 
-GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, DialogVector *_myDialogVector=NULL ):GotoDialogGui(parent, wxID_ANY){
+//Prepares and updates combo boxes with 10 elements, sycnhronizing with wxConfig..
+void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
+	wxString TempString;
+	wxArrayString SearchStrings;
+	//Prepare Array;
+	for( int i = 0 ; i < 10 ; i ++)
+		if (wxConfigBase::Get()->Read(KeyName+wxEmptyString<<i , &TempString))
+			SearchStrings.Add( TempString );
+
+	wxString AddNewString = CurrentBox->GetValue();
+	//Adds New String
+	if( AddString and (AddNewString not_eq wxEmptyString) ){
+		if( SearchStrings.Index( AddNewString ) not_eq wxNOT_FOUND ){
+			SearchStrings.Remove( AddNewString );
+			}
+		SearchStrings.Add( AddNewString );
+
+		for( unsigned i = 0 ; i < 10 and i < SearchStrings.Count(); i ++)
+			wxConfigBase::Get()->Write(KeyName+wxEmptyString<<i,  SearchStrings.Item(i));
+		}
+	//Set ComboBox
+	unsigned i;
+	for( i = 0 ; i < SearchStrings.Count()  ; i ++ )
+		CurrentBox->SetString( i, SearchStrings.Item(SearchStrings.Count()-i-1) );
+	for( ; i < 10 ; i ++ )
+		CurrentBox->SetString( i, wxEmptyString);
+	}
+
+GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
 	cursor_offset = _cursor_offset;
 	is_olddec =true;
 	filesize = _filesize;
-	m_textCtrlOffset->SetFocus();
-	myDialogVector = _myDialogVector;
-	if(myDialogVector != NULL ){
-		m_hex->SetValue( myDialogVector->goto_hex );
-		if( myDialogVector->goto_hex )
-			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"X"),myDialogVector->goto_input) );
-		else
-			m_textCtrlOffset->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"d"),myDialogVector->goto_input) );
-		m_branch->Select( myDialogVector->goto_branch );
-		}
+	ComboBoxFill( _T("GotoOffset"), m_comboBoxOffset, false);
+	m_comboBoxOffset->SetFocus();
 	}
 
 wxString GotoDialog::Filter( wxString text ){
@@ -55,25 +75,27 @@ wxString GotoDialog::Filter( wxString text ){
 	}
 
 void GotoDialog::OnInput( wxCommandEvent& event ){
-	if(!m_textCtrlOffset->IsModified())
-        return;
-    long insertionPoint = m_textCtrlOffset->GetInsertionPoint();
-// TODO (death#1#): Copy/Paste/Drop & illegal key walking?
-    m_textCtrlOffset->ChangeValue( Filter( m_textCtrlOffset->GetValue() ) );
-    m_textCtrlOffset->SetInsertionPoint(insertionPoint);
-	event.Skip(false);
+   long insertionPoint = m_comboBoxOffset->GetInsertionPoint();
+// TODO (death#1#): Copy/Paste/Drop?
+// TODO (death#1#): illegal key walking?
+	wxString OldValue = m_comboBoxOffset->GetValue();
+   m_comboBoxOffset->SetValue( Filter( OldValue ) );
+   if( OldValue not_eq  m_comboBoxOffset->GetValue() )
+		m_comboBoxOffset->SetInsertionPoint(insertionPoint);
+	event.Skip(true);
 	}
+
 void GotoDialog::OnGo( wxCommandEvent& event ){
+	if( m_comboBoxOffset->GetValue()==wxEmptyString ){
+		wxBell();
+		return;
+		}
 	wxULongLong_t wxul = 0;
-	if( not m_textCtrlOffset->GetValue().ToULongLong( &wxul, m_dec->GetValue() ? 10 : 16 ))//Mingw32/64 workaround
-		wxul = strtoull( m_textCtrlOffset->GetValue().ToAscii(), '\0', m_dec->GetValue() ? 10 : 16 );
+	if( not m_comboBoxOffset->GetValue().ToULongLong( &wxul, m_dec->GetValue() ? 10 : 16 ))//Mingw32/64 workaround
+		wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), '\0', m_dec->GetValue() ? 10 : 16 );
 	*offset = wxul;
 
-	if(myDialogVector != NULL ){
-		myDialogVector->goto_hex = m_hex->GetValue();
-		myDialogVector->goto_branch = m_branch->GetSelection();
-		myDialogVector->goto_input = wxul;
-		}
+	ComboBoxFill( _T("GotoOffset"), m_comboBoxOffset, true);
 
 	if( m_branch->GetSelection() == 1)
 		*offset += cursor_offset;
@@ -86,20 +108,23 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 	}
 
 void GotoDialog::OnConvert( wxCommandEvent& event ){
+	if( m_comboBoxOffset->GetValue().IsEmpty() )
+      return;
+
 	wxULongLong_t wxul = 0;
 	if( event.GetId() == m_dec->GetId() && !is_olddec ){	//old value is hex, new value is dec
 		is_olddec = true;
-		if( not m_textCtrlOffset->GetValue().ToULongLong( &wxul, 16 ) )//Mingw32/64 workaround
-			wxul = strtoull( m_textCtrlOffset->GetValue().ToAscii(), '\0', 16 );
+		if( not m_comboBoxOffset->GetValue().ToULongLong( &wxul, 16 ) )//Mingw32/64 workaround
+			wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), '\0', 16 );
 		*offset = wxul;
-		m_textCtrlOffset->SetValue( wxString::Format( wxT("%"wxLongLongFmtSpec"u" ), wxul) );
+		m_comboBoxOffset->SetValue( wxString::Format( wxT("%"wxLongLongFmtSpec"u" ), wxul) );
 		}
 	else if( event.GetId() == m_hex->GetId() && is_olddec ){	//old value is dec, new value is hex
 		is_olddec = false;
-		if( not m_textCtrlOffset->GetValue().ToULongLong( &wxul, 10 ) )//Mingw32/64 workaround
-			wxul = strtoull( m_textCtrlOffset->GetValue().ToAscii(), '\0', 10 );
+		if( not m_comboBoxOffset->GetValue().ToULongLong( &wxul, 10 ) )//Mingw32/64 workaround
+			wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), '\0', 10 );
 		*offset = wxul;
-		m_textCtrlOffset->SetValue( wxString::Format( wxT("%"wxLongLongFmtSpec"X") , wxul) );
+		m_comboBoxOffset->SetValue( wxString::Format( wxT("%"wxLongLongFmtSpec"X") , wxul) );
 		}
 // TODO (death#1#): myDialogVector->goto_hex = 0;
 
@@ -122,33 +147,6 @@ void FindDialog::PrepareComboBox( bool AddString ){
 		ComboBoxFill( _T("SearchTextString"), m_comboBoxSearch, AddString);
 	else
 		ComboBoxFill( _T("SearchHexString"), m_comboBoxSearch, AddString);
-	}
-
-void FindDialog::ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString){
-	wxString TempString;
-	wxArrayString SearchStrings;
-	//Prepare Array;
-	for( int i = 0 ; i < 10 ; i ++)
-		if (wxConfigBase::Get()->Read(SearchFormat+wxEmptyString<<i , &TempString))
-			SearchStrings.Add( TempString );
-
-	wxString AddNewString = CurrentBox->GetValue();
-	//Adds New String
-	if( AddString and (AddNewString not_eq wxEmptyString) ){
-		if( SearchStrings.Index( AddNewString ) not_eq wxNOT_FOUND ){
-			SearchStrings.Remove( AddNewString );
-			}
-		SearchStrings.Add( AddNewString );
-
-		for( unsigned i = 0 ; i < 10 and i < SearchStrings.Count(); i ++)
-			wxConfigBase::Get()->Write(SearchFormat+wxEmptyString<<i,  SearchStrings.Item(i));
-		}
-	//Set ComboBox
-	unsigned i;
-	for( i = 0 ; i < SearchStrings.Count()  ; i ++ )
-		CurrentBox->SetString( i, SearchStrings.Item(SearchStrings.Count()-i-1) );
-	for( i ; i < 10 ; i ++ )
-		CurrentBox->SetString( i, wxEmptyString);
 	}
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
@@ -174,7 +172,6 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		wxBell();
 		}
 	}
-
 
 bool FindDialog::OnFind( bool internal ){
 	uint64_t found = NANINT;
@@ -383,7 +380,6 @@ void FindDialog::OnFindAll( bool internal ){
 		}
 	}
 
-
 // TODO (death#9#): Implement better search algorithm. (Like one using OpenCL and one using OpenMP) :)
 //WARNING! THIS FUNCTION WILL CHANGE BFR and/or SEARCH strings if SEARCH_MATCHCASE not selected as an option!
 int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned options ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
@@ -522,8 +518,8 @@ void ReplaceDialog::OnReplaceAll( void ){
 		else{ //hex search
 			//Hex Validation and Format
 			wxString hexval = m_comboBoxReplace->GetValue();
-			for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-				if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+			for( unsigned j = 0 ; j < hexval.Len() ; j++ )
+				if( !isxdigit( hexval[j] ) or hexval == ' ' ) { //Not hexadecimal!
 					wxMessageBox(_("Replace value is not hexadecimal!"), _("Format Error!"), wxOK, this );
 					wxBell();
 					return;
@@ -1367,7 +1363,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 							MHASH_HAVAL128,MHASH_HAVAL160,MHASH_HAVAL192,MHASH_HAVAL224,MHASH_HAVAL256,
 							MHASH_TIGER128,MHASH_TIGER160,MHASH_TIGER192,
 							MHASH_ADLER32,MHASH_CRC32,MHASH_CRC32B,MHASH_WHIRLPOOL,MHASH_GOST,MHASH_SNEFRU128,MHASH_SNEFRU256};
-		for( int j = 0 ; j < sizeof algs/sizeof algs[0]; j++)
+		for( unsigned j = 0 ; j < sizeof algs/sizeof algs[0]; j++)
 			if( options & (1 << algs[j] ))
 				myhash[i++]= mhash_init(algs[j]);
 

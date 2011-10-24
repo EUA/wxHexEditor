@@ -170,7 +170,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().
 			CaptionVisible(false).
-			MinSize(wxSize(400,100)).
+			MinSize(wxSize(150,100)).
 			CloseButton(false).
 			Center().Layer(1) );
 
@@ -673,9 +673,6 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		wxMenu *nm;
 		int last_item=0;
 		for( unsigned i =0 ; i < disks.Count() ; i++){
-			#ifdef _DEBUG_
-			std::cout << "Disk: " << disks.Item(i).ToAscii() << std::endl;
-			#endif
 			//Old way...
 			//menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 
@@ -807,6 +804,8 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
 				mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
 				mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
+
+				mbar->Check( idXORView, MyHexEditor->IsFileUsingXORKey() );
 
 				Toolbar->Refresh();
 				}

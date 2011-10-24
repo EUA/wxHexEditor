@@ -97,7 +97,7 @@ class HexEditorGui : public wxFrame
 	
 	public:
 		
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~HexEditorGui();
 	
 };
@@ -407,6 +407,33 @@ class CopyAsDialogGui : public wxDialog
 		
 		CopyAsDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Copy Selected Block As"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~CopyAsDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class XORViewDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class XORViewDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* txtWarning;
+		wxStaticText* txtSelection;
+		wxRadioButton* radioASCII;
+		wxRadioButton* radioHex;
+		wxTextCtrl* XORtext;
+		wxButton* btnCancel;
+		wxButton* btnOK;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~XORViewDialogGui();
 	
 };
 

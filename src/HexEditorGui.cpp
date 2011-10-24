@@ -230,6 +230,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	this->SetSizer( FrameSizer );
 	this->Layout();
+	FrameSizer->Fit( this );
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
@@ -1291,5 +1292,62 @@ CopyAsDialogGui::~CopyAsDialogGui()
 	chkBigEndian->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
 	btnCopy->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyAsDialogGui::EventHandler ), NULL, this );
+	
+}
+
+XORViewDialogGui::XORViewDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizerMain;
+	bSizerMain = new wxBoxSizer( wxVERTICAL );
+	
+	txtWarning = new wxStaticText( this, wxID_ANY, wxT("For switching XORView Thru mode, all Undo&Redo buffer will reset and non-saved changes will discarded.\nAlso you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled."), wxDefaultPosition, wxDefaultSize, 0 );
+	txtWarning->Wrap( -1 );
+	bSizerMain->Add( txtWarning, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizerRadio;
+	bSizerRadio = new wxBoxSizer( wxHORIZONTAL );
+	
+	txtSelection = new wxStaticText( this, wxID_ANY, wxT("Please enter XOR key as "), wxDefaultPosition, wxDefaultSize, 0 );
+	txtSelection->Wrap( -1 );
+	bSizerRadio->Add( txtSelection, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	radioASCII = new wxRadioButton( this, wxID_ANY, wxT("ASCII"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerRadio->Add( radioASCII, 0, wxALIGN_CENTER_VERTICAL, 5 );
+	
+	radioHex = new wxRadioButton( this, wxID_ANY, wxT("Hex"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerRadio->Add( radioHex, 0, wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizerMain->Add( bSizerRadio, 1, wxEXPAND, 5 );
+	
+	XORtext = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP );
+	bSizerMain->Add( XORtext, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerButtons;
+	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerButtons->Add( btnCancel, 0, wxALL, 5 );
+	
+	btnOK = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerButtons->Add( btnOK, 0, wxALL, 5 );
+	
+	bSizerMain->Add( bSizerButtons, 1, wxALIGN_RIGHT, 5 );
+	
+	this->SetSizer( bSizerMain );
+	this->Layout();
+	bSizerMain->Fit( this );
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	btnOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( XORViewDialogGui::EventHandler ), NULL, this );
+}
+
+XORViewDialogGui::~XORViewDialogGui()
+{
+	// Disconnect Events
+	btnOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( XORViewDialogGui::EventHandler ), NULL, this );
 	
 }

@@ -106,6 +106,7 @@ class FAL : private wxFile{
 		long Read( char* buffer, int size );
 		long Read( unsigned char* buffer, int size );
 		void SetXORKey( wxMemoryBuffer );
+		wxMemoryBuffer GetXORKey( void );
 		void ApplyXOR( char* buffer, unsigned size, uint64_t from );
 
 		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node

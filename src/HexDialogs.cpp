@@ -1508,3 +1508,41 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 //		}
 	}
 
+
+XORViewDialog::XORViewDialog( wxWindow* parent, wxMemoryBuffer *XORKey_ ):XORViewDialogGui(parent, wxID_ANY){
+	XORKey=XORKey_;
+	}
+
+void XORViewDialog::EventHandler( wxCommandEvent& event ){
+	if( event.GetId() == wxID_CANCEL )
+		EndModal( wxID_CANCEL );
+	if( XORtext->GetValue()==wxEmptyString ){
+		wxBell();
+		return;
+		}
+	if( radioHex->GetValue() ){
+		wxString hexval = XORtext->GetValue();
+		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+				wxMessageBox(_("XOR Value is not hexadecimal!"), _("Format Error!"), wxOK, this );
+				wxBell();
+				return;
+				}
+		//Remove all space chars and update the Search value
+		while( hexval.find(' ') != -1 )
+			hexval.Remove( hexval.find(' '),1);
+		if( hexval.Len() % 2 ){//there is odd hex value, must be even for byte search!
+			wxMessageBox(_("Odd hex value not accepted!"), _("Format Error!"), wxOK, this );
+			wxBell();
+			return;
+			}
+
+		wxMemoryBuffer z = wxHexCtrl::HexToBin( hexval.Upper());
+		XORKey->AppendData( z.GetData(), z.GetDataLen() );
+	   }
+	else
+		XORKey->AppendData( XORtext->GetValue().ToAscii(), XORtext->GetValue().Len() );
+
+
+	EndModal( wxID_OK );
+	}

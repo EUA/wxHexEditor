@@ -152,14 +152,22 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	}
 
+bool HexEditor::IsFileUsingXORKey( void ){
+	return myfile->GetXORKey().GetDataLen() not_eq 0;
+	}
+
 void HexEditor::FileSetXORKey( bool enable ){
 	wxMemoryBuffer x;
 	if( enable ){
-		XORKey = wxGetTextFromUser( _("Note: For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"\
-												"Also you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled.\n\n"\
-												"Please Enter XOR key."), _("XORView Thru Warning!") );
-		x.AppendData( XORKey.ToAscii(), XORKey.Len() );
-		if(XORKey != wxEmptyString){
+//		XORKey = wxGetTextFromUser( _("Note: For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"\
+//												"Also you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled.\n\n"\
+//												"Please Enter XOR key."), _("XORView Thru Warning!") );
+		wxString XORKey;
+		XORViewDialog a( this, &x );
+		if( a.ShowModal() == wxID_CANCEL )
+			return;
+
+		if(x.GetDataLen() != 0){
  			FileReOpen();
 			}
 		}

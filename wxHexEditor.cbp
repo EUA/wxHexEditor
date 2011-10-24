@@ -41,6 +41,7 @@
 					<Add option="-D_DEBUG_" />
 					<Add option="-D_DEBUG_FILE_" />
 					<Add option="-D_DEBUG_SELECT_" />
+					<Add option="-D_DEBUG_SIZE_" />
 					<Add option="-DEnable_Injections" />
 				</Compiler>
 				<Linker>

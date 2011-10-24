@@ -368,6 +368,9 @@ wxFileOffset FAL::Length( void ){
 void FAL::SetXORKey( wxMemoryBuffer Key){
 	XORview=Key;
 	}
+wxMemoryBuffer FAL::GetXORKey( void ){
+	return XORview;
+	}
 
 void FAL::ApplyXOR( char* buffer, unsigned size, uint64_t from ){
 	if( XORview.GetDataLen() ){

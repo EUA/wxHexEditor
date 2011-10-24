@@ -124,4 +124,13 @@ class ChecksumDialog : public ChecksumDialogGui{
       void EventHandler( wxCommandEvent& event );
       void OnFileChange( wxFileDirPickerEvent& event );
 	};
+
+class XORViewDialog : public XORViewDialogGui{
+	public:
+		XORViewDialog( wxWindow* parent, wxMemoryBuffer *XORKey );
+		void EventHandler( wxCommandEvent& event );
+	private:
+		wxMemoryBuffer *XORKey;
+	};
+
 #endif //__HexEditorDialogs__

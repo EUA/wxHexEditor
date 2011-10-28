@@ -232,7 +232,7 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 #endif
 			){
 			int block_size=0;
-			int64_t block_count=0;
+			uint64_t block_count=0;
 		#ifdef __WXGTK__
 			ioctl(FD, BLKSSZGET, &block_size);
 			ioctl(FD, BLKGETSIZE64, &block_count);
@@ -246,8 +246,8 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 			block_size=driveInfo.BytesPerSector;
 			block_count=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 		#endif
-			info_string += _("Sector Size: ") + wxString::Format(wxT("%d\n"), block_size);
-			info_string += _("Sector Count: ") + wxString::Format(wxT("%d"), block_count/block_size);
+			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), block_size);
+			info_string += _("Sector Count: ") + wxString::Format(wxT("%"wxLongLongFmtSpec"u"), block_count/block_size);
 			}
 
 		if(XORKey != wxEmptyString)

@@ -658,6 +658,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 					if( CursorOffset() + ByteCapacity() <= myfile->Length() ) {	//Checks if its EOF or not
 						LoadFromOffset( page_offset + BytePerLine() );
 						hex_ctrl->LastLine();
+						hex_ctrl->Home();
 						}
 					else
 						wxBell();
@@ -692,6 +693,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 					if( page_offset + ByteCapacity() <= myfile->Length() ) {	//Checks if its EOF or not
 						LoadFromOffset(page_offset + BytePerLine());
 						text_ctrl->LastLine();
+						text_ctrl->Home();
 						}
 					else
 						wxBell();

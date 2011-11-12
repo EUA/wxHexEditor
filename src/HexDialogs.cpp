@@ -165,12 +165,61 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		}
 	else if( event.GetId() == btnFindAll->GetId() )
 		OnFindAll();
+	else if(event.GetId() == btnFindSomeBytes->GetId())
+		FindSomeBytes();
 
 	//Disables chkUTF8 setting by user.
 	else if( event.GetId() == chkUTF8->GetId() ){
 		chkUTF8->SetValue( not chkUTF8->GetValue( ));
 		wxBell();
 		}
+	}
+void FindDialog::FindSomeBytes( void ){
+	wxString msg= _("Finding Some Bytes... ");
+	wxString emsg;
+	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
+	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
+// TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
+	//progress_gauge.SetIcon(search_ICON);
+
+	uint64_t current_offset = parent->CursorOffset();
+	int BlockSz= 128*1024;
+	int search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
+	findfile->Seek( current_offset, wxFromStart );
+	char* buffer = new char [search_step];
+	if(buffer == NULL) return;
+	// TODO (death#6#): insert error check message here
+	int found = -1;
+	int readed = 0;
+	char diff_search;
+	findfile->Read( &diff_search, 1);
+	time_t ts,te;
+	time (&ts);
+	ts=te;
+	uint64_t readspeed=0;
+	//Search step 1: From cursor to file end.
+	do{
+		findfile->Seek( current_offset, wxFromStart );
+		readed = findfile->Read( buffer , search_step );
+		for( int i=0; i < readed ; i++)
+			if( buffer[i] != diff_search ){
+				parent->Goto( current_offset+i );
+				Destroy();
+				return;
+				}
+
+		time(&te);
+		if(ts != te ){
+				ts=te;
+				emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s"), 1.0*(current_offset-readspeed)/MB);
+				readspeed=current_offset;
+				}
+		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
+			break;
+
+		current_offset += readed;
+		}while(readed >= search_step); //indicate also file end.
+	wxBell();
 	}
 
 bool FindDialog::OnFind( bool internal ){
@@ -443,6 +492,7 @@ ReplaceDialog::ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title )
 	//Enabling hidden replace dialog elements.
 	m_comboBoxReplace->Show();
 	m_static_replace->Show();
+	m_staticline->Show();
 	btnReplace->Show();
 	btnReplaceAll->Show();
 	Fit();

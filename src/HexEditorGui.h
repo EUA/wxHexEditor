@@ -252,7 +252,8 @@ class FindDialogGui : public wxDialog
 		wxCheckBox* chkUTF8;
 		wxButton* btnFind;
 		wxButton* btnFindAll;
-		wxStaticLine* m_staticline1;
+		wxButton* btnFindSomeBytes;
+		wxStaticLine* m_staticline;
 		wxButton* btnReplace;
 		wxButton* btnReplaceAll;
 		

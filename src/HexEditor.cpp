@@ -773,7 +773,6 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		menu.Append(wxID_CUT, _T("Cut"));
 		}
 
-
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ) {
 		TagElement *TAG = MainTagArray.Item(i);

@@ -17,9 +17,8 @@
 *   if not, write to the Free Software Foundation, Inc.,                *
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA        *
 *                                                                       *
-*               home  : wxhexeditor.sourceforge.net                     *
-*               email : spamjunkeater at gmail dot com                  *
-*               email : spamjunkeater at gmail dot com                  *
+*               home  : www.wxhexeditor.org                             *
+*               email : spamjunkeater@gmail.com                         *
 *************************************************************************/
 
 #include "HexEditorFrame.h"
@@ -55,7 +54,8 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "mhash used under LGPL licence, Nikos Mavroyanopoulos (c) 1998-2008\n"
 			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
 			 "\n"
-			 "home:  wxhexeditor.sourceforge.net\n"
+			 "home:  www.hexeditor.eu\n"
+			 "home:  www.wxhexeditor.org\n"
 			 "email: spamjunkeater@gmail.com\n");
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
@@ -602,7 +602,7 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	AllAbout.SetCopyright(_T("(C) 2006-2011 Erdem U. Altinyurt"));
 	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
 	AllAbout.AddArtist( _T("Vlad Adrian") );
-	AllAbout.SetWebSite( _T("http://wxhexeditor.sourceforge.net"));
+	AllAbout.SetWebSite( _T("http://www.wxhexeditor.org"));
 
 	AllAbout.SetLicense( license );
 

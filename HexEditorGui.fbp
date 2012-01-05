@@ -416,10 +416,10 @@
                         <property name="help"></property>
                         <property name="id">idGotoOffset</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Goto Offset</property>
+                        <property name="label">Go to Offset</property>
                         <property name="name">menuEditGotooffset</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">CTRL+G</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnMenuEvent</event>
                         <event name="OnUpdateUI"></event>
@@ -2421,7 +2421,7 @@
             <property name="size">-1,-1</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP</property>
             <property name="subclass"></property>
-            <property name="title">Goto Offset</property>
+            <property name="title">Go to Offset</property>
             <property name="tooltip"></property>
             <property name="validator_data_type"></property>
             <property name="validator_style">wxFILTER_NONE</property>

@@ -26,13 +26,12 @@ EXECUTABLE=wxHexEditor
 EXECUTABLE_WIN=$(EXECUTABLE).exe
 EXECUTABLE_DIR_MAC=$(EXECUTABLE).app
 
-DESTDIR     =
-PREFIX      = $(DESTDIR)/usr
+PREFIX      = /usr/local
 BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.11 Beta
+VERSION = 0.12 Beta
 
 all: prepare $(EXECUTABLE)
 

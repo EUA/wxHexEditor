@@ -123,7 +123,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuEditReplace->Enable( false );
 	
 	wxMenuItem* menuEditGotooffset;
-	menuEditGotooffset = new wxMenuItem( editMenu, idGotoOffset, wxString( wxT("Goto Offset") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditGotooffset = new wxMenuItem( editMenu, idGotoOffset, wxString( wxT("Go to Offset") ) + wxT('\t') + wxT("CTRL+G"), wxEmptyString, wxITEM_NORMAL );
 	editMenu->Append( menuEditGotooffset );
 	menuEditGotooffset->Enable( false );
 	

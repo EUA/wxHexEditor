@@ -199,7 +199,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddSeparator();
 	Toolbar->AddTool(wxID_FIND, _("Find"), wxArtProvider::GetBitmap(wxART_FIND, wxART_TOOLBAR), _("Find"));
 	Toolbar->AddTool(wxID_REPLACE, _("Replace"), wxArtProvider::GetBitmap(wxART_FIND_AND_REPLACE, wxART_TOOLBAR), _("Find and replace"));
-	Toolbar->AddTool(idGotoOffset, _("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_TOOLBAR), _("Goto offset"));
+	Toolbar->AddTool(idGotoOffset, _("GoTo"), wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_TOOLBAR), _("Go to offset"));
 	Toolbar->AddSeparator();
 	Toolbar->AddTool(wxID_UNDO, _("Undo"), wxArtProvider::GetBitmap(wxART_UNDO, wxART_TOOLBAR), _("Undo"));
 	Toolbar->AddTool(wxID_REDO, _("Redo"), wxArtProvider::GetBitmap(wxART_REDO, wxART_TOOLBAR), _("Redo"));

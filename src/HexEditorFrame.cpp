@@ -771,13 +771,13 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		if(event.GetId() == SEARCH_CHANGE_EVENT ){
 			MyAUI->GetPane(MySearchPanel).Show(true);
 			MyAUI->Update();
-			MySearchPanel->Set( GetActiveHexEditor()->HighlightArray , true );
+			MySearchPanel->Set( GetActiveHexEditor()->HighlightArray );
 			}
 
 		if(event.GetId() == COMPARE_CHANGE_EVENT ){
 			MyAUI->GetPane(MyComparePanel).Show(true);
 			MyAUI->Update();
-			MyComparePanel->Set( GetActiveHexEditor()->CompareArray , true );
+			MyComparePanel->Set( GetActiveHexEditor()->CompareArray );
 			}
 		}
 	event.Skip();
@@ -793,8 +793,8 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MyHexEditor->UpdateCursorLocation(); //Also updates DataInterpreter
 				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
 				MyTagPanel->Set( MyHexEditor->MainTagArray );
-				MySearchPanel->Set( MyHexEditor->HighlightArray, true );
-				MyComparePanel->Set( MyHexEditor->CompareArray, true );
+				MySearchPanel->Set( MyHexEditor->HighlightArray );
+				MyComparePanel->Set( MyHexEditor->CompareArray );
 
 				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
 				mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );

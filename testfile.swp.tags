@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wxHexEditor_XML_TAG>
   <filename path="testfile.swp">
+    <TAG id="6">
+      <start_offset>1249</start_offset>
+      <end_offset>1392</end_offset>
+      <tag_text></tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
     <TAG id="5">
       <start_offset>795</start_offset>
       <end_offset>802</end_offset>

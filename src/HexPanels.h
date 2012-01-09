@@ -120,7 +120,7 @@ class TagPanel : public TagPanelGui{
 		parent = parent_;
 		};
 	class HexEditorFrame *parent;
-	void Set( ArrayOfTAG& TagArray, bool WithNumbers=false );
+	void Set( ArrayOfTAG& TagArray );
 	void OnTagSelect( wxCommandEvent& event );
 	void OnUpdate( wxCommandEvent& event ){
 	}

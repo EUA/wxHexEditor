@@ -792,6 +792,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
 	menu.Enable( idCopyAs, select->IsState( select->SELECT_END) );
+	menu.Enable( wxID_PASTE, select->IsState( select->SELECT_FALSE) );
 
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );

@@ -717,7 +717,9 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
+			Toolbar->EnableTool( wxID_PASTE, event.GetString() == wxT("NotSelected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+			mbar->Enable( wxID_PASTE, event.GetString() == wxT("NotSelected") );
 			mbar->Enable( idCopyAs, event.GetString() == wxT("Selected") );
 
 			if(GetActiveHexEditor()->XORKey == wxEmptyString){
@@ -796,18 +798,14 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MySearchPanel->Set( MyHexEditor->HighlightArray );
 				MyComparePanel->Set( MyHexEditor->CompareArray );
 
-				Toolbar->EnableTool( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
-				mbar->Enable( wxID_COPY, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
-				mbar->Enable( idCopyAs, not MyHexEditor->select->IsState( Select::SELECT_FALSE ) );
-
-				Toolbar->EnableTool( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
-				Toolbar->EnableTool( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
-				mbar->Enable( wxID_UNDO, MyHexEditor->IsAvailable_Undo() );
-				mbar->Enable( wxID_REDO, MyHexEditor->IsAvailable_Redo() );
-
-				mbar->Check( idXORView, MyHexEditor->IsFileUsingXORKey() );
-
-				Toolbar->Refresh();
+                //Creating custom UpdateUI event for setting mbar, toolbar...
+				wxUpdateUIEvent event;
+                if( MyHexEditor->select->IsState( Select::SELECT_FALSE ) )
+                    event.SetString( wxT("NotSelected") );
+                else
+                    event.SetString( wxT("Selected") );
+                event.SetId( SELECT_EVENT );
+                OnUpdateUI( event );
 				}
 		}
 	event.Skip();

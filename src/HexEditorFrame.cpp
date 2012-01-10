@@ -446,6 +446,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_REDO:		MyHexEditor->DoRedo();					break;
 					case wxID_COPY:		MyHexEditor->CopySelection();			break;
 					case idCopyAs:			MyHexEditor->CopyAsDialog();			break;
+					case idSaveAsDump:		MyHexEditor->SaveAsDump();			break;
+					case idFillSelection:	MyHexEditor->FillSelection();			break;
 					case wxID_CUT:			MyHexEditor->CutSelection();			break;
 					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
 					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
@@ -717,10 +719,13 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
-			Toolbar->EnableTool( wxID_PASTE, event.GetString() == wxT("NotSelected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+			Toolbar->EnableTool( wxID_PASTE, event.GetString() == wxT("NotSelected") );
 			mbar->Enable( wxID_PASTE, event.GetString() == wxT("NotSelected") );
+
 			mbar->Enable( idCopyAs, event.GetString() == wxT("Selected") );
+			mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
+			mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
 
 			if(GetActiveHexEditor()->XORKey == wxEmptyString){
 				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );

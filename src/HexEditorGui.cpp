@@ -67,12 +67,12 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	editMenu = new wxMenu();
 	wxMenuItem* menuEditUndo;
-	menuEditUndo = new wxMenuItem( editMenu, wxID_UNDO, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxEmptyString, wxITEM_NORMAL );
+	menuEditUndo = new wxMenuItem( editMenu, wxID_UNDO, wxString( wxT("&Undo") ) + wxT('\t') + wxT("CTRL+Z"), wxT("Undo last operation"), wxITEM_NORMAL );
 	editMenu->Append( menuEditUndo );
 	menuEditUndo->Enable( false );
 	
 	wxMenuItem* menuEditRedo;
-	menuEditRedo = new wxMenuItem( editMenu, wxID_REDO, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxEmptyString, wxITEM_NORMAL );
+	menuEditRedo = new wxMenuItem( editMenu, wxID_REDO, wxString( wxT("&Redo") ) + wxT('\t') + wxT("CTRL+Y"), wxT("Reverts last undo"), wxITEM_NORMAL );
 	editMenu->Append( menuEditRedo );
 	menuEditRedo->Enable( false );
 	
@@ -80,32 +80,42 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_separator2 = editMenu->AppendSeparator();
 	
 	wxMenuItem* menuEditCopy;
-	menuEditCopy = new wxMenuItem( editMenu, wxID_COPY, wxString( wxT("Copy") ) + wxT('\t') + wxT("CTRL+C"), wxEmptyString, wxITEM_NORMAL );
+	menuEditCopy = new wxMenuItem( editMenu, wxID_COPY, wxString( wxT("Copy") ) + wxT('\t') + wxT("CTRL+C"), wxT("Copies selection"), wxITEM_NORMAL );
 	editMenu->Append( menuEditCopy );
 	menuEditCopy->Enable( false );
 	
 	wxMenuItem* menuEditCopyAs;
-	menuEditCopyAs = new wxMenuItem( editMenu, idCopyAs, wxString( wxT("Copy As") ) + wxT('\t') + wxT("CTRL+SHIFT+C"), wxEmptyString, wxITEM_NORMAL );
+	menuEditCopyAs = new wxMenuItem( editMenu, idCopyAs, wxString( wxT("Copy As") ) + wxT('\t') + wxT("CTRL+SHIFT+C"), wxT("Copies selection in special format"), wxITEM_NORMAL );
 	editMenu->Append( menuEditCopyAs );
 	menuEditCopyAs->Enable( false );
 	
+	wxMenuItem* menuEditSaveAsDump;
+	menuEditSaveAsDump = new wxMenuItem( editMenu, idSaveAsDump, wxString( wxT("Save As Dump") ) + wxT('\t') + wxT("CTRL+ALT+S"), wxT("Save selections as a file"), wxITEM_NORMAL );
+	editMenu->Append( menuEditSaveAsDump );
+	menuEditSaveAsDump->Enable( false );
+	
 	wxMenuItem* menuEditCut;
-	menuEditCut = new wxMenuItem( editMenu, wxID_CUT, wxString( wxT("Cut") ) + wxT('\t') + wxT("CTRL+X"), wxEmptyString, wxITEM_NORMAL );
+	menuEditCut = new wxMenuItem( editMenu, wxID_CUT, wxString( wxT("Cut") ) + wxT('\t') + wxT("CTRL+X"), wxT("Cuts a selection"), wxITEM_NORMAL );
 	editMenu->Append( menuEditCut );
 	menuEditCut->Enable( false );
 	
 	wxMenuItem* menuEditPaste;
-	menuEditPaste = new wxMenuItem( editMenu, wxID_PASTE, wxString( wxT("Paste") ) + wxT('\t') + wxT("CTRL+V"), wxEmptyString, wxITEM_NORMAL );
+	menuEditPaste = new wxMenuItem( editMenu, wxID_PASTE, wxString( wxT("Paste") ) + wxT('\t') + wxT("CTRL+V"), wxT("Paste clipboard to cursor location"), wxITEM_NORMAL );
 	editMenu->Append( menuEditPaste );
 	menuEditPaste->Enable( false );
 	
+	wxMenuItem* menuEditFill;
+	menuEditFill = new wxMenuItem( editMenu, idFillSelection, wxString( wxT("Fill Selection") ) , wxT("Fill selection blocks"), wxITEM_NORMAL );
+	editMenu->Append( menuEditFill );
+	menuEditFill->Enable( false );
+	
 	wxMenuItem* menuEditDelete;
-	menuEditDelete = new wxMenuItem( editMenu, wxID_DELETE, wxString( wxT("Delete") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditDelete = new wxMenuItem( editMenu, wxID_DELETE, wxString( wxT("Delete") ) , wxT("Deletes selection"), wxITEM_NORMAL );
 	editMenu->Append( menuEditDelete );
 	menuEditDelete->Enable( false );
 	
 	wxMenuItem* menuEditInsert;
-	menuEditInsert = new wxMenuItem( editMenu, idInsert, wxString( wxT("Insert") ) , wxEmptyString, wxITEM_NORMAL );
+	menuEditInsert = new wxMenuItem( editMenu, idInsert, wxString( wxT("Insert") ) , wxT("Inserts new bytes to cursor location"), wxITEM_NORMAL );
 	editMenu->Append( menuEditInsert );
 	menuEditInsert->Enable( false );
 	
@@ -123,7 +133,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuEditReplace->Enable( false );
 	
 	wxMenuItem* menuEditGotooffset;
-	menuEditGotooffset = new wxMenuItem( editMenu, idGotoOffset, wxString( wxT("Go to Offset") ) + wxT('\t') + wxT("CTRL+G"), wxEmptyString, wxITEM_NORMAL );
+	menuEditGotooffset = new wxMenuItem( editMenu, idGotoOffset, wxString( wxT("Go to Offset") ) + wxT('\t') + wxT("CTRL+G"), wxT("Branhes the given location"), wxITEM_NORMAL );
 	editMenu->Append( menuEditGotooffset );
 	menuEditGotooffset->Enable( false );
 	
@@ -246,8 +256,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditCopy->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditCopyAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuEditSaveAsDump->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditCut->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditPaste->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuEditFill->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditInsert->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Connect( menuEditFind->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
@@ -294,8 +306,10 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( wxID_REDO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( idCopyAs, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idSaveAsDump, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_CUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_PASTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idFillSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_DELETE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( idInsert, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 	this->Disconnect( wxID_FIND, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );

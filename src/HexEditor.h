@@ -37,7 +37,7 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
 
-#define idInjection 2000
+#define idInjection 3000
 
 #define MB (1024*1024)	//this utility uses old ECS format.
 
@@ -74,6 +74,8 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		bool FileSave( bool question = true );
 		bool FileSave( wxString filename );
 		bool FileClose( bool WithoutChange = false );
+		bool SaveAsDump( void );
+		bool FillSelection( void );
 		void DoUndo( void );
 		void DoRedo( void );
 

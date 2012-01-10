@@ -255,7 +255,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Undo last operation</property>
                         <property name="id">wxID_UNDO</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Undo</property>
@@ -270,7 +270,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Reverts last undo</property>
                         <property name="id">wxID_REDO</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Redo</property>
@@ -289,7 +289,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Copies selection</property>
                         <property name="id">wxID_COPY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Copy</property>
@@ -304,7 +304,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Copies selection in special format</property>
                         <property name="id">idCopyAs</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Copy As</property>
@@ -319,7 +319,22 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Save selections as a file</property>
+                        <property name="id">idSaveAsDump</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Save As Dump</property>
+                        <property name="name">menuEditSaveAsDump</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut">CTRL+ALT+S</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnMenuEvent</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="0">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help">Cuts a selection</property>
                         <property name="id">wxID_CUT</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Cut</property>
@@ -334,7 +349,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Paste clipboard to cursor location</property>
                         <property name="id">wxID_PASTE</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Paste</property>
@@ -349,7 +364,22 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Fill selection blocks</property>
+                        <property name="id">idFillSelection</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Fill Selection</property>
+                        <property name="name">menuEditFill</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">OnMenuEvent</event>
+                        <event name="OnUpdateUI"></event>
+                    </object>
+                    <object class="wxMenuItem" expanded="0">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">0</property>
+                        <property name="help">Deletes selection</property>
                         <property name="id">wxID_DELETE</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Delete</property>
@@ -364,7 +394,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Inserts new bytes to cursor location</property>
                         <property name="id">idInsert</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Insert</property>
@@ -413,7 +443,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help"></property>
+                        <property name="help">Branhes the given location</property>
                         <property name="id">idGotoOffset</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Go to Offset</property>

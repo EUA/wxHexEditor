@@ -44,22 +44,24 @@
 #define ID_DEFAULT wxID_ANY // Default
 #define idClose 1000
 #define idCopyAs 1001
-#define idInsert 1002
-#define idGotoOffset 1003
-#define idInterpreter 1004
-#define idToolbar 1005
-#define idInfoPanel 1006
-#define idTagPanel 1007
-#define idDisassemblerPanel 1008
-#define idChecksum 1009
-#define idCompare 1010
-#define idXORView 1011
-#define idDeviceRam 1012
-#define idFileRO 1013
-#define idFileRW 1014
-#define idFileDW 1015
-#define ID_CHK_UNSIGNED 1016
-#define ID_CHK_BIGENDIAN 1017
+#define idSaveAsDump 1002
+#define idFillSelection 1003
+#define idInsert 1004
+#define idGotoOffset 1005
+#define idInterpreter 1006
+#define idToolbar 1007
+#define idInfoPanel 1008
+#define idTagPanel 1009
+#define idDisassemblerPanel 1010
+#define idChecksum 1011
+#define idCompare 1012
+#define idXORView 1013
+#define idDeviceRam 1014
+#define idFileRO 1015
+#define idFileRW 1016
+#define idFileDW 1017
+#define ID_CHK_UNSIGNED 1018
+#define ID_CHK_BIGENDIAN 1019
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui

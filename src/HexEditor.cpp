@@ -361,6 +361,39 @@ void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
 		hex_ctrl->SetFocus();
 	}
 
+bool HexEditor::FillSelection( void ){
+    }
+
+bool HexEditor::SaveAsDump( void ){
+    wxFileDialog filediag(this,
+        _("Choose a file for saving dump"), _(""), _(""), _("*"),
+        wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
+
+    if(wxID_OK == filediag.ShowModal()){
+// TODO (death#1#): Avoid overwrite of original file!
+        wxFFile savefile( filediag.GetPath(), _("w") );
+        if(savefile.IsOpened()) {
+            int rd;
+            wxMemoryBuffer m_buffer;
+            void* buff=NULL;
+			buff = m_buffer.GetWriteBuf( select->GetSize() );
+
+            myfile->Seek( select->GetStart(), wxFromStart);
+            rd = myfile->Read( static_cast< char*>( buff ), select->GetSize() );
+
+            m_buffer.UngetWriteBuf( rd );
+            savefile.Write( m_buffer.GetData(), rd );
+            savefile.Close();
+            return true;
+            }
+        else{
+            wxMessageBox( wxString(_("Dump cannot saved as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+            return false;
+            }
+        }
+    }
+
+
 void HexEditor::UpdateOffsetScroll( void ) {
 	if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()) ||
 	      offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
@@ -764,7 +797,10 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(idTagAddSelection, _T("New Tag"));
 	menu.Append(wxID_COPY, _T("Copy"));
 	menu.Append(idCopyAs, _T("CopyAs"));
+	menu.Append(idSaveAsDump, _T("Save As Dump"));
 	menu.Append(wxID_PASTE, _T("Paste"));
+	menu.Append(idFillSelection, _T("Fill Selecton"));
+
 
 	if(XORKey == wxEmptyString){
 		menu.AppendSeparator();
@@ -773,6 +809,14 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		menu.Append(wxID_CUT, _T("Cut"));
 		}
 
+    ///Adjust enable/disable
+
+//	if(XORKey == wxEmptyString){//Disable injection on XORkey
+//		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
+//		menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
+//		menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
+//		}
+//
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ) {
 		TagElement *TAG = MainTagArray.Item(i);
@@ -784,15 +828,14 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
 
-	if(XORKey == wxEmptyString){//Disable injection on XORkey
-		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
-		menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
-		menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
-		}
+
 
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
 	menu.Enable( idCopyAs, select->IsState( select->SELECT_END) );
+	menu.Enable( idSaveAsDump, select->IsState( select->SELECT_END) );
+	menu.Enable( idFillSelection, select->IsState( select->SELECT_END) );
 	menu.Enable( wxID_PASTE, select->IsState( select->SELECT_FALSE) );
+
 
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );

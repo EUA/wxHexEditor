@@ -723,7 +723,8 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 wxString CopyAsDialog::GetDigitFormat( void ){
-    wxString format = parent->GetOffsetFormatString() + wxT("   ");
+    wxString format = parent->GetOffsetFormatString() << wxT("   ");
+    return format;
 	}
 
 void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){

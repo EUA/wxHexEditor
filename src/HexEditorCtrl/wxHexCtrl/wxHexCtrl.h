@@ -192,7 +192,7 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 	public:
 //		wxHexOffsetCtrl():wxHexCtrl(){ hex_offset=false;offset_position=0; }
 		wxHexOffsetCtrl(wxWindow *parent): wxHexCtrl( parent ){
-			hex_offset=false;
+			offset_mode='u';
 			offset_position=0;
 			digit_count=6;
 			}
@@ -206,12 +206,14 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				GetCaret()->Hide();
 				SetCaret( NULL );
-				hex_offset=false;
+                offset_mode='u';
 				offset_position=0;
 				digit_count=6;
 				};
+        wxString GetFormatString(void);
 		void SetOffsetLimit( uint64_t max_offset ){offset_limit = max_offset;}
 		unsigned GetDigitCount( void );
+		unsigned GetLineSize( void );  //Digit count plus Formating chars like h,o if required
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
@@ -221,9 +223,10 @@ inline bool IsDenied( int x ){ return false; }
 		void OnMouseRight( wxMouseEvent& event );
 		void OnMouseLeft( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
-		bool hex_offset;
+		char offset_mode;
 		uint64_t offset_position;
 		int BytePerLine;
+
 	private:
 		uint64_t offset_limit;
 		unsigned digit_count;

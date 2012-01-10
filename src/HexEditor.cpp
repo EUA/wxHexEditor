@@ -961,10 +961,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 #if wxUSE_STATUSBAR
 		if( statusbar != NULL ) {
 			statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
-			if( offset_ctrl->hex_offset )
-				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: 0x%" wxLongLongFmtSpec "X"), CursorOffset() ), 1);
-			else
-				statusbar->SetStatusText(wxString::Format(_("Cursor Offset: %"wxLongLongFmtSpec"u"), CursorOffset() ), 1);
+			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatString(), CursorOffset() ), 1);
 			uint8_t ch;
 			myfile->Seek( CursorOffset() );
 			myfile->Read( reinterpret_cast<char*>(&ch), 1);

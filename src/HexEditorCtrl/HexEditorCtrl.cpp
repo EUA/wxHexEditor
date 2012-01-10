@@ -345,7 +345,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 	int charx = hex_ctrl->GetCharSize().GetX();
-	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetDigitCount() + 4;
+	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize() + 4;
     x -= offset_x;			//Remove Offset Control box X because its changeable
     x -= offset_scroll_real->GetSize().GetX();		//Remove Offset scroll size
     x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)

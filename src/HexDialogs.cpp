@@ -723,15 +723,7 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 wxString CopyAsDialog::GetDigitFormat( void ){
-	int digit_count=0;
-	int base=parent->GetIsHexOffset() ? 16 : 10;
-	while(select->GetEnd() > pow(base,++digit_count));
-	if( digit_count < 6)
-		digit_count=6;
-	if( base == 10 )
-		return wxT("%")+wxString::Format( wxT("%02d"),digit_count) + wxLongLongFmtSpec + wxT("u   ");
-	else
-		return wxT("0x%")+wxString::Format( wxT("%02d"),digit_count) + wxLongLongFmtSpec + wxT("X   ");
+    wxString format = parent->GetOffsetFormatString() + wxT("   ");
 	}
 
 void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){

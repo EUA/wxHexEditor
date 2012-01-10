@@ -1011,9 +1011,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	BytePerLine = byteperline;
 	m_text.Clear();
 
-	wxString format;;
-
-	format << wxT("%0") << digit_count << wxLongLongFmtSpec << (hex_offset ? wxT("X") : wxT("u") );
+    wxString format=GetFormatString();
 
 	wxULongLong_t ull = ( offset_position );
 	for( int i=0 ; i<LineCount() ; i++ ){
@@ -1023,15 +1021,31 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	RePaint();
 	}
 
+wxString wxHexOffsetCtrl::GetFormatString( void ){
+    wxString format;
+	format << wxT("%0") << GetDigitCount() << wxLongLongFmtSpec << wxChar( offset_mode );
+    if( offset_mode=='X' )
+        format << wxChar('h');
+	else if ( offset_mode=='o')
+        format << wxChar('o');
+	return format;
+    }
+
 void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
-	hex_offset = hex_offset ? false : true;
+	switch( offset_mode ){
+        case 'u': offset_mode = 'X'; break;
+        case 'X': offset_mode = 'o'; break;
+        case 'o': offset_mode = 'u'; break;
+        default : offset_mode = 'u';
+        }
 	SetValue( offset_position );
 	}
 
 void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 	wxPoint p = PixelCoordToInternalCoord( event.GetPosition() );
 	uint64_t adress = offset_position + p.y*BytePerLine;
-	wxString adr = wxString::Format( (hex_offset ? wxT("0x%"wxLongLongFmtSpec"X"): wxT("%"wxLongLongFmtSpec"u")), adress);
+	wxString adr;
+	adr = wxString::Format( GetFormatString(), adress);
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();
 		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) );
@@ -1043,9 +1057,21 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 
 unsigned wxHexOffsetCtrl::GetDigitCount( void ){
 	digit_count=0;
-	int base=hex_offset ? 16 : 10;
+	int base=0;
+    switch( offset_mode){
+        case 'u': base=10; break;
+        case 'X': base=16; break;
+        case 'o': base=8; break;
+        }
 	while(offset_limit > pow(base,++digit_count));
 	if( digit_count < 6)
 		digit_count=6;
 	return digit_count;
 	}
+
+unsigned wxHexOffsetCtrl::GetLineSize( void ){
+        unsigned line_size = GetDigitCount();
+	    if( offset_mode=='X' or offset_mode=='o' )
+            line_size++;
+        return line_size;
+        }

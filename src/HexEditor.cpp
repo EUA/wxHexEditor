@@ -362,6 +362,16 @@ void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
 	}
 
 bool HexEditor::FillSelection( void ){
+    wxString hexval = wxGetTextFromUser(_( "Enter hex value(s) for fill"), _("Fill Dialog"), wxT("00"), this );
+    if(not HexVerifyAndPrepare( hexval, _("Fill"), this ) )
+        return false;
+    wxMemoryBuffer pattern = hex_ctrl->HexToBin( hexval );
+    wxMemoryBuffer buffer;
+    for( unsigned i=0; i<select->GetSize() ; i++ ){
+        buffer.AppendByte( pattern[ i % pattern.GetDataLen() ] );
+        }
+    myfile->Add( select->GetStart(), reinterpret_cast<const char*>( buffer.GetData()), buffer.GetDataLen(), false );
+    Reload();
     }
 
 bool HexEditor::SaveAsDump( void ){

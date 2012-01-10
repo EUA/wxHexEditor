@@ -43,6 +43,7 @@
 
 class scrollthread;
 class copy_maker;
+
 class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 	public:
 		HexEditor(wxWindow* parent,

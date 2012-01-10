@@ -35,6 +35,7 @@
 #include <wx/wx.h>
 #endif
 
+bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent=NULL);
 void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString);
 
 class GotoDialog : public GotoDialogGui{

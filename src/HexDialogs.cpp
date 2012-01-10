@@ -27,6 +27,26 @@
 #include "../mhash/include/mhash.h"
 #include <omp.h>
 
+bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent){
+    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+        if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+            wxMessageBox( Value_Name + _(" value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
+            wxBell();
+            return false;
+            }
+    //Remove all space chars and update the Search value
+    while( hexval.find(' ') != -1 )
+        hexval.Remove( hexval.find(' '),1);
+
+    //there is odd hex value, must be even digit for search!
+    if( hexval.Len() % 2 ){
+        wxMessageBox( Value_Name + _(" must be even digit!"), _("Format Error!"), wxOK, parent );
+        wxBell();
+        return false;
+        }
+    return true;
+    }
+
 //Prepares and updates combo boxes with 10 elements, sycnhronizing with wxConfig..
 void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 	wxString TempString;
@@ -246,17 +266,8 @@ bool FindDialog::OnFind( bool internal ){
 	else { //SEARCH_HEX
 		//Hex Validation and Format
 		wxString hexval = m_comboBoxSearch->GetValue();
-		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
-				wxBell();
-				return false;
-				}
-		//Remove all space chars and update the Search value
-		while( hexval.find(' ') != -1 )
-			hexval.Remove( hexval.find(' '),1);
-		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
-			hexval = wxChar('0')+hexval;
+		if(not HexVerifyAndPrepare( hexval, _("Search"), this ) )
+            return false;
 		m_comboBoxSearch->SetValue(hexval.Upper());
 
 		PrepareComboBox( true );
@@ -398,17 +409,8 @@ void FindDialog::OnFindAll( bool internal ){
 		mode = SEARCH_HEX;
 		wxString hexval = m_comboBoxSearch->GetValue();
 		//parent->Goto(0);
-		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-				wxMessageBox(_("Search value is not hexadecimal!"), _("Format Error!"), wxOK, this );
-				wxBell();
-				return;
-				}
-		//Remove all space chars and update the Search value
-		while( hexval.find(' ') != -1 )
-			hexval.Remove( hexval.find(' '),1);
-		if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
-			hexval = wxChar('0')+hexval;
+		if(not HexVerifyAndPrepare( hexval, _("Search"), this ) )
+            return;
 		m_comboBoxSearch->SetValue(hexval.Upper());
 		PrepareComboBox( true );
 		FindBinary( wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue()), 0 ,options );
@@ -525,18 +527,12 @@ int ReplaceDialog::OnReplace( bool internal ){
 		else{ //hex search
 			//Hex Validation and Format
 			wxString hexval = m_comboBoxReplace->GetValue();
-			for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-				if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-					wxMessageBox(_("Replace value is not hexadecimal!"), _("Format Error!"), wxOK, this );
-					wxBell();
-					return false;
-					}
-			//Remove all space chars and update the Search value
-			while( hexval.find(' ') != -1 )
-				hexval.Remove( hexval.find(' '),1);
-			if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
-				hexval = wxChar('0')+hexval;
+
+			if( not HexVerifyAndPrepare( hexval, _("Replace"), this ) )
+                return 0;
+
 			m_comboBoxReplace->SetValue(hexval.Upper());
+
 			PrepareComboBox( true );
 
 			wxMemoryBuffer search_binary = wxHexCtrl::HexToBin( m_comboBoxReplace->GetValue());
@@ -568,17 +564,8 @@ void ReplaceDialog::OnReplaceAll( void ){
 		else{ //hex search
 			//Hex Validation and Format
 			wxString hexval = m_comboBoxReplace->GetValue();
-			for( unsigned j = 0 ; j < hexval.Len() ; j++ )
-				if( !isxdigit( hexval[j] ) or hexval == ' ' ) { //Not hexadecimal!
-					wxMessageBox(_("Replace value is not hexadecimal!"), _("Format Error!"), wxOK, this );
-					wxBell();
-					return;
-					}
-			//Remove all space chars and update the Search value
-			while( hexval.find(' ') != -1 )
-				hexval.Remove( hexval.find(' '),1);
-			if( hexval.Len() % 2 )//there is odd hex value, must be even for byte search!
-				hexval = wxChar('0')+hexval;
+			if(not HexVerifyAndPrepare( hexval, _("Replace"), this ) )
+                return;
 			m_comboBoxReplace->SetValue(hexval.Upper());
 			PrepareComboBox( true );
 
@@ -1565,21 +1552,8 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 		}
 	if( radioHex->GetValue() ){
 		wxString hexval = XORtext->GetValue();
-		for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-			if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-				wxMessageBox(_("XOR Value is not hexadecimal!"), _("Format Error!"), wxOK, this );
-				wxBell();
-				return;
-				}
-		//Remove all space chars and update the Search value
-		while( hexval.find(' ') != -1 )
-			hexval.Remove( hexval.find(' '),1);
-		if( hexval.Len() % 2 ){//there is odd hex value, must be even for byte search!
-			wxMessageBox(_("Odd hex value not accepted!"), _("Format Error!"), wxOK, this );
-			wxBell();
-			return;
-			}
-
+		if(not HexVerifyAndPrepare( hexval, _("XOR"), this ) )
+            return;
 		wxMemoryBuffer z = wxHexCtrl::HexToBin( hexval.Upper());
 		XORKey->AppendData( z.GetData(), z.GetDataLen() );
 	   }

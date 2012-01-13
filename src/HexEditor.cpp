@@ -371,6 +371,8 @@ bool HexEditor::FillSelection( void ){
         buffer.AppendByte( pattern[ i % pattern.GetDataLen() ] );
         }
     myfile->Add( select->GetStart(), reinterpret_cast<const char*>( buffer.GetData()), buffer.GetDataLen(), false );
+    wxUpdateUIEvent eventx( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
     Reload();
     }
 

@@ -741,7 +741,7 @@ WIN32DLL_DEFINE MHASH mhash_restore_state_mem(void* _mem)
 		return(MHASH_FAILED);
 }
 
-#if defined(WIN32) || defined (__CYGWIN__)
+#if (defined(WIN32) || defined (__CYGWIN__)) && __GNUC__ < 4
 WIN32DLL_DEFINE int main (void)
 {
        /* empty main function to avoid linker error (see cygwin FAQ) */

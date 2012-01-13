@@ -805,12 +805,15 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 
                 //Creating custom UpdateUI event for setting mbar, toolbar...
 				wxUpdateUIEvent event;
-                if( MyHexEditor->select->IsState( Select::SELECT_FALSE ) )
-                    event.SetString( wxT("NotSelected") );
-                else
-                    event.SetString( wxT("Selected") );
-                event.SetId( SELECT_EVENT );
-                OnUpdateUI( event );
+				if( MyHexEditor->select->IsState( Select::SELECT_FALSE ) )
+					event.SetString( wxT("NotSelected") );
+				else
+					event.SetString( wxT("Selected") );
+
+            event.SetId( SELECT_EVENT );
+				OnUpdateUI( event );
+            event.SetId( UNREDO_EVENT );
+				OnUpdateUI( event );
 				}
 		}
 	event.Skip();

@@ -1,10 +1,12 @@
 WXCONFIG = wx-config
+CC = `$(WXCONFIG) --cc`
 CPP = `$(WXCONFIG) --cxx`
 CXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -c ${OPTFLAGS}
 LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
+HOST=
 SOURCES= src/HexEditorGui.cpp \
 			src/FAL.cpp\
 			src/HexDialogs.cpp\
@@ -40,7 +42,7 @@ prepare: $(LIBS) $(SOURCES)
 $(EXECUTABLE): $(OBJECTS) $(LIBS)
 	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -o $@
 
-.cpp.o:
+.cpp.o: prepare
 	$(CPP) $(CXXFLAGS) $< -o $@
 
 %.o : %.rc
@@ -49,12 +51,12 @@ $(EXECUTABLE): $(OBJECTS) $(LIBS)
 udis86/libudis86/.libs/libudis86.a:
 	echo Please make sure if libudis86 build for your host to avoid link time errors!
 	cd udis86;./autogen.sh
-	cd udis86;./configure
+	cd udis86;./configure --host=$(HOST)
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
 	echo Please make sure if libmhash build for your host to avoid link time errors!
-	cd mhash; ./configure
+	cd mhash; ./configure --host=$(HOST)
 	cd mhash; $(MAKE) $(MFLAGS)
 
 win: prepare $(RESOURCES) $(EXECUTABLE_WIN)

@@ -25,7 +25,10 @@
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
 #include "../mhash/include/mhash.h"
-#include <omp.h>
+
+#ifndef WIN32 //sorry boys. Mingw doesn't have such file some how.
+	#include <omp.h>
+#endif
 
 bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent){
     for( unsigned i = 0 ; i < hexval.Len() ; i++ )
@@ -209,7 +212,6 @@ void FindDialog::FindSomeBytes( void ){
 	char* buffer = new char [search_step];
 	if(buffer == NULL) return;
 	// TODO (death#6#): insert error check message here
-	int found = -1;
 	int readed = 0;
 	char diff_search;
 	findfile->Read( &diff_search, 1);
@@ -396,17 +398,14 @@ void FindDialog::OnFindAll( bool internal ){
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 
-	int mode = 0;
 	if(options & SEARCH_TEXT) {
 		PrepareComboBox( true );
-		mode = SEARCH_TEXT;
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
 		FindText( m_comboBoxSearch->GetValue(), 0, options );
 		}
 
 	else {
-		mode = SEARCH_HEX;
 		wxString hexval = m_comboBoxSearch->GetValue();
 		//parent->Goto(0);
 		if(not HexVerifyAndPrepare( hexval, _("Search"), this ) )
@@ -1004,7 +1003,7 @@ void CopyAsDialog::Copy( void ){
 		if(wxTheClipboard->Open()) {
 //					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
 			wxTheClipboard->Clear();
-			int isok = wxTheClipboard->SetData( new wxTextDataObject( cb ));
+			wxTheClipboard->SetData( new wxTextDataObject( cb ));
 			wxTheClipboard->Flush();
 			wxTheClipboard->Close();
 			}
@@ -1428,7 +1427,6 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 				}
 			if(not mypd.Update((readfrom*1000)/range, emsg ))
 			return wxEmptyString;
-
 			}
 		wxString results;
 		i=0;

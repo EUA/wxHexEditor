@@ -891,6 +891,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	sbSizerSearchFor = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Search For") ), wxHORIZONTAL );
 	
 	m_radioDifferent = new wxRadioButton( this, wxID_ANY, wxT("Different bytes"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioDifferent->SetValue( true ); 
 	sbSizerSearchFor->Add( m_radioDifferent, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_radioSame = new wxRadioButton( this, wxID_ANY, wxT("Same bytes"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -914,6 +915,23 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizerStopAfter->Add( m_staticText20, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizerMain->Add( bSizerStopAfter, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerMerger;
+	bSizerMerger = new wxBoxSizer( wxHORIZONTAL );
+	
+	checkMerge = new wxCheckBox( this, wxID_ANY, wxT("Merge sections if close as"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerMerger->Add( checkMerge, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	spinMerge = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000000, 0 );
+	spinMerge->Enable( false );
+	
+	bSizerMerger->Add( spinMerge, 0, wxALL, 5 );
+	
+	m_staticText201 = new wxStaticText( this, wxID_ANY, wxT("bytes."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText201->Wrap( -1 );
+	bSizerMerger->Add( m_staticText201, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizerMain->Add( bSizerMerger, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerSave;
 	bSizerSave = new wxBoxSizer( wxHORIZONTAL );
@@ -952,6 +970,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	filePick1->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::OnFileChange ), NULL, this );
 	filePick2->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::OnFileChange ), NULL, this );
 	checkStopCompare->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	checkMerge->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	checkSaveResults->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	filePickSave->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::filePickSaveOnFileChanged ), NULL, this );
 	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
@@ -964,6 +983,7 @@ CompareDialogGui::~CompareDialogGui()
 	filePick1->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::OnFileChange ), NULL, this );
 	filePick2->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::OnFileChange ), NULL, this );
 	checkStopCompare->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
+	checkMerge->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	checkSaveResults->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	filePickSave->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::filePickSaveOnFileChanged ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );

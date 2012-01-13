@@ -311,6 +311,9 @@ class CompareDialogGui : public wxDialog
 		wxCheckBox* checkStopCompare;
 		wxSpinCtrl* spinStopCompare;
 		wxStaticText* m_staticText20;
+		wxCheckBox* checkMerge;
+		wxSpinCtrl* spinMerge;
+		wxStaticText* m_staticText201;
 		wxCheckBox* checkSaveResults;
 		wxFilePickerCtrl* filePickSave;
 		wxButton* btnCancel;

@@ -85,7 +85,6 @@ class ReplaceDialog : public FindDialog{
 			void PrepareComboBox( bool AddString );
 	};
 
-
 class CopyAsDialog : public CopyAsDialogGui{
 	public:
 		CopyAsDialog( wxWindow* parent, FAL* copy_file, Select* select, ArrayOfTAG* MainTagArray);

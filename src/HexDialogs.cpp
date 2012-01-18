@@ -28,9 +28,8 @@
 
 #ifndef WIN32 //sorry boys. Mingw doesn't have such file some how.
 	#include <omp.h>
-#endif
+	#include <sys/resource.h>
 
-#include <sys/resource.h>
 void SetStackLimit(void){
 	const rlim_t kStackSize = 64L * 1024L * 1024L;   // set stack size to = 64 Mb
 	struct rlimit rl;
@@ -50,6 +49,7 @@ void SetStackLimit(void){
 		  }
 		}
 	}
+#endif
 
 bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent){
     for( unsigned i = 0 ; i < hexval.Len() ; i++ )
@@ -973,7 +973,7 @@ void CopyAsDialog::Copy( void ){
 				b = (bigEndianSwapReq ? HexSize-1 : 0);
 				cb+= wxT("0x");
 				for(; b not_eq limit ; b+=incr)
-					cb+= wxString::Format( wxT("%02X"), *reinterpret_cast<unsigned char*>(	buff.GetData()+current_offset*HexSize+b ));
+					cb+= wxString::Format( wxT("%02X"), reinterpret_cast<unsigned char*>( buff.GetData() )[current_offset*HexSize+b]);
 				cb+= wxT(", ");
 //				switch( HexSize ){
 //					case 1: cb+= wxString::Format( wxT("0x%02X, "), *reinterpret_cast<unsigned char*>(	buff.GetData()+current_offset*HexSize )); break;
@@ -1009,7 +1009,7 @@ void CopyAsDialog::Copy( void ){
 				b = (bigEndianSwapReq ? HexSize-1 : 0);
 				cb+= wxT("0");
 				for(; b not_eq limit ; b+=incr)
-					cb+= wxString::Format( wxT("%02X"), *reinterpret_cast<unsigned char*>(	buff.GetData()+current_offset*HexSize+b ));
+					cb+= wxString::Format( wxT("%02X"), reinterpret_cast<unsigned char*>( buff.GetData() )[current_offset*HexSize+b]);
 				cb+= wxT("h ");
 //				switch( HexSize ){
 //					case 1: cb+= wxString::Format( wxT("0%02Xh "), *reinterpret_cast<unsigned char*>(	buff.GetData()+current_offset*HexSize )); break;
@@ -1234,8 +1234,11 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 				wxMessageBox( _("Error, Save File is not selected.") );
 				return;
 				}
-			SetStackLimit();
 			///Note:Triggers stack Overflow on windows. Use bigger stack...
+			#ifndef __WXMSW__
+			SetStackLimit();
+			#endif
+
 			if( Compare( filePick1->GetPath(),			//First file.
 						filePick2->GetPath(),			//Second file to compare.
 						m_radioDifferent->GetValue(), //Compare diffs or same bytes option.

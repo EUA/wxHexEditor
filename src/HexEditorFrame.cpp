@@ -34,7 +34,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 	license=_T("wxHexEditor is a hex editor for HUGE files and devices.\n"
-			 "Copyright (C) 2006-2011  Erdem U. Altinyurt\n"
+			 "Copyright (C) 2006-2012  Erdem U. Altinyurt\n"
 			 "\n"
 			 "This program is free software; you can redistribute it and/or\n"
 			 "modify it under the terms of the GNU General Public License\n"
@@ -54,8 +54,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "mhash used under LGPL licence, Nikos Mavroyanopoulos (c) 1998-2008\n"
 			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
 			 "\n"
-			 "home:  www.hexeditor.eu\n"
-			 "home:  www.wxhexeditor.org\n"
+			 "home:  hexeditor.eu  or  diskeditor.net\n"
 			 "email: spamjunkeater@gmail.com\n");
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
@@ -601,7 +600,7 @@ void HexEditorFrame::OnAbout( wxCommandEvent& event ){
 	AllAbout.SetName(_T("wxHexEditor"));
 	AllAbout.SetVersion( _T(_VERSION_STR_) );
 	AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices."));
-	AllAbout.SetCopyright(_T("(C) 2006-2011 Erdem U. Altinyurt"));
+	AllAbout.SetCopyright(_T("(C) 2006-2012 Erdem U. Altinyurt"));
 	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
 	AllAbout.AddArtist( _T("Vlad Adrian") );
 	AllAbout.SetWebSite( _T("http://www.wxhexeditor.org"));
@@ -678,7 +677,8 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			//Old way...
 			//menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 
-			//SubMenu categorization
+			//SubMenu categorization for posix
+			#ifndef __WXMSW__
 			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) and i not_eq 0 )
 				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
 			else{
@@ -687,6 +687,17 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				menuDeviceDisk->AppendSubMenu( nm, disks.Item(i) );
 				last_item = i;
 				}
+			#else	//Windows device menu categorization
+			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) and i not_eq 0 )
+				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
+			else{
+				nm=new wxMenu( );
+				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
+				menuDeviceDisk->AppendSubMenu( nm, disks.Item(i).BeforeLast('\\')+wxT('\\') );
+				last_item = i;
+				}
+			#endif
+
 
 			this->Connect( idDiskDevice+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
 			}

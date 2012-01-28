@@ -66,7 +66,7 @@ $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 	$(CPP) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) $(LDFLAGS) -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
-	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -lexpat -o $(EXECUTABLE)
+	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
 mac: prepare maclink
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents

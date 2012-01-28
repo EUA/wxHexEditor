@@ -30,17 +30,16 @@
    #include <omp.h>
 #endif
 
-#ifndef __WXMSW__ //sorry boys. Mingw doesn't have such file some how.
-	#include <sys/resource.h>
-
 #ifdef __WXMSW__
 	#define wxNewline wxT("\r\n")
 #else
 	#define wxNewline wxT("\n")
 #endif
 
+#ifndef __WXMSW__
+	#include <sys/resource.h>
 void SetStackLimit(void){
-	const rlim_t kStackSize = 32L * 1024L * 1024L;   // set stack size to = 64 Mb
+	const rlim_t kStackSize = 32L * 1024L * 1024L;
 	struct rlimit rl;
 	int result;
 

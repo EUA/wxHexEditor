@@ -405,7 +405,7 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 				line += wxT(' ');
 				continue;
 				}
-			if(z > m_text.Length())
+			if(z >= m_text.Length())
 				break;
 			wxChar ch = CharAt(z++);
 			line += ch;

@@ -490,12 +490,18 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	if( event.GetId() == idXORView )
 		GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
 	else if( event.GetId() == idCompare ){
-		::CompareDialog mcd( this );
-		mcd.ShowModal();
+		::CompareDialog *mcd = new CompareDialog( this );
+		mcd->ShowModal();
+		#ifndef __WXOSX__ // TODO: This leaks memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+		mcd->Destroy();
+		#endif
 		}
 	else if( event.GetId() == idChecksum){
-		::ChecksumDialog mcd( this );
-		mcd.ShowModal();
+		::ChecksumDialog *mcd = new ChecksumDialog( this );
+		mcd->ShowModal();
+		#ifndef __WXOSX__ // TODO: This leaks memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+		mcd->Destroy();
+		#endif
 		}
 	event.Skip(false);
 	}

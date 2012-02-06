@@ -178,7 +178,7 @@ wxFileName FAL::GetFileName( void ){
 DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, bool inject ){
 	DiffNode* newnode = new struct DiffNode( start_byte, size, inject );
 	if( size < 0 ){//Deletion!
-		newnode->old_data = new char[-size];
+		newnode->old_data = new unsigned char[-size];
 		if( newnode->old_data == NULL )
 			wxLogError( _("Not Enought RAM") );
 		else{
@@ -188,7 +188,7 @@ DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, boo
 			}
 		}
 	else if( inject ){
-		newnode->new_data = new char[size];
+		newnode->new_data = new unsigned char[size];
 		if( newnode->new_data == NULL )
 			wxLogError( _("Not Enought RAM") );
 		else{
@@ -197,8 +197,8 @@ DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, boo
 			}
 		}
 	else{// Normal opeariton
-		newnode->old_data = new char[size];
-		newnode->new_data = new char[size];
+		newnode->old_data = new unsigned char[size];
+		newnode->new_data = new unsigned char[size];
 		if( newnode->old_data == NULL || newnode->new_data == NULL){
 			wxLogError( _("Not Enought RAM") );
 			delete [] newnode->old_data;
@@ -372,7 +372,7 @@ wxMemoryBuffer FAL::GetXORKey( void ){
 	return XORview;
 	}
 
-void FAL::ApplyXOR( char* buffer, unsigned size, uint64_t from ){
+void FAL::ApplyXOR( unsigned char* buffer, unsigned size, uint64_t from ){
 	if( XORview.GetDataLen() ){
 		unsigned Xi = from%XORview.GetDataLen(); //calculates keyshift
 		for(unsigned int i = 0; i < size; i++){
@@ -383,10 +383,10 @@ void FAL::ApplyXOR( char* buffer, unsigned size, uint64_t from ){
 		}
 	}
 
-long FAL::Read( unsigned char* buffer, int size){
-	return Read( reinterpret_cast<char*>(buffer), size);
-	}
 long FAL::Read( char* buffer, int size){
+	return Read( reinterpret_cast<unsigned char*>(buffer), size);
+	}
+long FAL::Read( unsigned char* buffer, int size){
 	uint64_t from;
 	if( BlockSize > 0 )
 		from = get_ptr;
@@ -424,7 +424,7 @@ bool FAL::IsInjected( void ){
 
 ///State of the Art Read Function
 //Only recursion could handle such a complex operation. Comes my mind while I am trying to sleep.
-long FAL::ReadR( char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
+long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
 	uint64_t loc = from; //?
 	int readsize=0;
 
@@ -472,7 +472,7 @@ long FAL::ReadR( char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchA
  	return readsize;
 	}
 
-long FAL::InjectionPatcher(uint64_t current_location, char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
+long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
 	/******* MANUAL of Code understanding *******
 	* current_location                    = [   *
 	* current_location + size             = ]   *
@@ -537,7 +537,7 @@ long FAL::InjectionPatcher(uint64_t current_location, char* data, int size, Arra
 	return -1;
 	}
 
-long FAL::DeletionPatcher(uint64_t current_location, char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
+long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
 	/******* MANUAL of Code understanding ******
 	* current_location                   = [   *
 	* current_location + size            = ]   *
@@ -572,7 +572,7 @@ long FAL::DeletionPatcher(uint64_t current_location, char* data, int size, Array
 	return -1;
 	}
 
-void FAL::ModificationPatcher(uint64_t current_location, char* data, int size, DiffNode* Patch){
+void FAL::ModificationPatcher(uint64_t current_location, unsigned char* data, int size, DiffNode* Patch){
 	/***** MANUAL of Code understanding *********
 	* current_location                    = [   *
 	* current_location + size             = ]   *
@@ -612,7 +612,7 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 			if(DiffArray.Item(i)->flag_commit ){	// commited undo node
 				DiffArray[i]->flag_undo = false;		//we have to survive this node as it unwriten, non undo node
 				DiffArray[i]->flag_commit = false;
-				char *temp_buffer = DiffArray[i]->old_data;	//swap old <-> new data
+				unsigned char *temp_buffer = DiffArray[i]->old_data;	//swap old <-> new data
 				DiffArray[i]->old_data = DiffArray[i]->new_data;
 				DiffArray[i]->new_data = temp_buffer;
 				}

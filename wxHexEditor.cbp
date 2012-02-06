@@ -160,9 +160,10 @@
 					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add library="udis86/libudis86/.libs/libudis86.a" />
+					<Add library="mhash/lib/.libs/libmhash.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-trunk/release/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.9.3/debug/wx-config" />
 				</Environment>
 			</Target>
 		</Build>

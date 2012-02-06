@@ -222,7 +222,7 @@ bool HexEditor::FileSave( bool question ) {
 
 bool HexEditor::FileSave( wxString savefilename ) {
 // TODO (death#1#): Protection to save opened file/samefile
-	wxFFile savefile( savefilename, _("w") );
+	wxFFile savefile( savefilename, _("wb") );
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
 		uint64_t range = myfile->Length();

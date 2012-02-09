@@ -614,10 +614,11 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerTop->Add( m_comboBoxOffset, 0, wxALL, 5 );
 	
 	m_dec = new wxRadioButton( this, wxID_ANY, wxT("Decimal"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerTop->Add( m_dec, 0, wxALL, 5 );
+	m_dec->SetValue( true ); 
+	bSizerTop->Add( m_dec, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_hex = new wxRadioButton( this, wxID_ANY, wxT("Hex"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerTop->Add( m_hex, 0, wxALL, 5 );
+	bSizerTop->Add( m_hex, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	mainSizer->Add( bSizerTop, 0, wxEXPAND, 5 );
 	
@@ -1357,6 +1358,7 @@ XORViewDialogGui::XORViewDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizerRadio->Add( txtSelection, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	radioASCII = new wxRadioButton( this, wxID_ANY, wxT("ASCII"), wxDefaultPosition, wxDefaultSize, 0 );
+	radioASCII->SetValue( true ); 
 	bSizerRadio->Add( radioASCII, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	radioHex = new wxRadioButton( this, wxID_ANY, wxT("Hex"), wxDefaultPosition, wxDefaultSize, 0 );

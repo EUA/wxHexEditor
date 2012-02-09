@@ -50,6 +50,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 	offset_scroll->Enable( true );
 	Dynamic_Connector();
 	copy_mark = new copy_maker( );
+	BlockSelectOffset = -1;
 	}
 
 HexEditor::~HexEditor() {
@@ -359,6 +360,15 @@ void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
 	UpdateOffsetScroll();
 	if( set_focus)
 		hex_ctrl->SetFocus();
+	}
+
+bool HexEditor::BlockSelect( void ){
+	if(BlockSelectOffset == -1 )
+		BlockSelectOffset=CursorOffset();
+	else{
+		Select(BlockSelectOffset, CursorOffset() );
+		BlockSelectOffset = -1;
+		}
 	}
 
 bool HexEditor::FillSelection( void ){
@@ -812,7 +822,10 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(idSaveAsDump, _T("Save As Dump"));
 	menu.Append(wxID_PASTE, _T("Paste"));
 	menu.Append(idFillSelection, _T("Fill Selecton"));
-
+	if( BlockSelectOffset == -1 )
+		menu.Append(idBlockSelect, _T("Set Selecton Block Start"));
+	else
+		menu.Append(idBlockSelect, _T("Set Selectoin Block End"));
 
 	if(XORKey == wxEmptyString){
 		menu.AppendSeparator();
@@ -839,9 +852,6 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		}
 
 	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
-
-
-
 	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
 	menu.Enable( idCopyAs, select->IsState( select->SELECT_END) );
 	menu.Enable( idSaveAsDump, select->IsState( select->SELECT_END) );

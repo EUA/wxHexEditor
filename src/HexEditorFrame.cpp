@@ -94,10 +94,11 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	this->Connect( idInjection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
+	this->Connect( idBlockSelect, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
+
 //	this->Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
 	for(int i = 0 ; i < 10 ; i++ )
 		this->Connect( MyFileHistory->GetBaseId()+i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
-
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
@@ -445,14 +446,15 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_REDO:		MyHexEditor->DoRedo();					break;
 					case wxID_COPY:		MyHexEditor->CopySelection();			break;
 					case idCopyAs:			MyHexEditor->CopyAsDialog();			break;
-					case idSaveAsDump:		MyHexEditor->SaveAsDump();			break;
-					case idFillSelection:	MyHexEditor->FillSelection();			break;
+					case idSaveAsDump:	MyHexEditor->SaveAsDump();				break;
+					case idFillSelection:	MyHexEditor->FillSelection();		break;
+					case idBlockSelect:	MyHexEditor->BlockSelect();			break;
 					case wxID_CUT:			MyHexEditor->CutSelection();			break;
 					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
 					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
 					case idInsert:			MyHexEditor->InsertBytes();			break;
 					//idInjection for Right click Menu Insertion Event
-					case idInjection:			MyHexEditor->InsertBytes();		break;
+					case idInjection:		MyHexEditor->InsertBytes();			break;
 					case wxID_FIND:		MyHexEditor->FindDialog();				break;
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;

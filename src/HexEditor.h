@@ -38,6 +38,7 @@
 #include "HexDialogs.h"
 
 #define idInjection 3000
+#define idBlockSelect 3001
 
 #define MB (1024*1024)	//this utility uses old ECS format.
 
@@ -77,6 +78,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		bool FileClose( bool WithoutChange = false );
 		bool SaveAsDump( void );
 		bool FillSelection( void );
+		bool BlockSelect( void );
 		void DoUndo( void );
 		void DoRedo( void );
 
@@ -148,6 +150,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		copy_maker *copy_mark;
 
 	private:
+		uint64_t BlockSelectOffset;
 		bool MouseCapture;
 		void Dynamic_Connector( void );
 		void Dynamic_Disconnector( void );

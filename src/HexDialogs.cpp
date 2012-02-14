@@ -1474,8 +1474,9 @@ XORViewDialog::XORViewDialog( wxWindow* parent, wxMemoryBuffer *XORKey_ ):XORVie
 	}
 
 void XORViewDialog::EventHandler( wxCommandEvent& event ){
-	if( event.GetId() == wxID_CANCEL )
+	if( event.GetId() == wxID_CANCEL ){
 		EndModal( wxID_CANCEL );
+		}
 	if( XORtext->GetValue()==wxEmptyString ){
 		wxBell();
 		return;
@@ -1483,13 +1484,12 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 	if( radioHex->GetValue() ){
 		wxString hexval = XORtext->GetValue();
 		if(not HexVerifyAndPrepare( hexval, _("XOR"), this ) )
-            return;
+         return;
 		wxMemoryBuffer z = wxHexCtrl::HexToBin( hexval.Upper());
 		XORKey->AppendData( z.GetData(), z.GetDataLen() );
 	   }
 	else
 		XORKey->AppendData( XORtext->GetValue().ToAscii(), XORtext->GetValue().Len() );
-
 
 	EndModal( wxID_OK );
 	}

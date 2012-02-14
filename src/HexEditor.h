@@ -62,7 +62,6 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		friend class scrollthread;
 		friend class ChecksumDialog;
 		//friend class FindDialog;
-		wxString XORKey;
 		void Goto( int64_t goto_offset=-1 , bool set_focus=false);
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
@@ -70,7 +69,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 
 		bool IsFileUsingXORKey( void );
 		void FileSetXORKey( bool enable );
-		wxMemoryBuffer FileGetXORKey( void );
+		wxString FileGetXORKey( void );
 		bool FileOpen( wxFileName& filename  );
 		bool FileReOpen( void );
 		bool FileSave( bool question = true );

@@ -460,18 +460,18 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
 					case idFileRO:{
 						MyHexEditor->SetFileAccessMode( FAL::ReadOnly );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
 						break;
 						}
 					case idFileRW:{
 						MyHexEditor->SetFileAccessMode( FAL::ReadWrite );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
 						break;
 						}
 					case idFileDW:
 						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
 							MyHexEditor->SetFileAccessMode( FAL::DirectWrite );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
+						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
 						break;
 					case wxID_CLOSE:
 						OnQuit( event );
@@ -625,7 +625,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idTagPanel, MyTagPanel->IsShown());
 	mbar->Check(idDisassemblerPanel, MyDisassemblerPanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
-	mbar->Check(idXORView, MyNotebook->GetPageCount() and (GetActiveHexEditor()->XORKey != wxEmptyString));
+	mbar->Check(idXORView, (MyNotebook->GetPageCount() and GetActiveHexEditor()->IsFileUsingXORKey()));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 	if(event.GetId() == idDeviceRam ){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
@@ -744,7 +744,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
 			mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
 
-			if(GetActiveHexEditor()->XORKey == wxEmptyString){
+			if(not GetActiveHexEditor()->IsFileUsingXORKey()){
 				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
 				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
 				Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
@@ -815,7 +815,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage(  event.GetSelection() ) );
 			if( MyHexEditor != NULL ){
 				MyHexEditor->UpdateCursorLocation(); //Also updates DataInterpreter
-				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->XORKey );
+				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
 				MyTagPanel->Set( MyHexEditor->MainTagArray );
 				MySearchPanel->Set( MyHexEditor->HighlightArray );
 				MyComparePanel->Set( MyHexEditor->CompareArray );

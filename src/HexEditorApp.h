@@ -34,7 +34,7 @@
 #define WXHEXEDITORAPP_H
 
 #define _VERSION_ "0.12"
-#define _VERSION_STR_ "v0.12 Beta Development"
+#define _VERSION_STR_ "v0.12 Beta Development Version"
 #include <wx/app.h>
 #include "HexEditorFrame.h"
 class wxHexEditorApp : public wxApp

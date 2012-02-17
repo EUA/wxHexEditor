@@ -100,6 +100,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
    wxCaret *caret = GetCaret();
    if ( caret )
 		caret->Show(false);
+
+	ZebraStripping=-1;
 }
 wxHexCtrl::~wxHexCtrl()
 {
@@ -389,17 +391,26 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 
 	dcTemp->SetFont( HexDefaultAttr.GetFont() );
 	dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
-	dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
+	//dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
 	wxBrush dbrush( HexDefaultAttr.GetBackgroundColour() );
+
 	dcTemp->SetBackground(dbrush );
+	dcTemp->SetBackgroundMode( wxSOLID ); // overwrite old value
 	dcTemp->Clear();
 
 	wxString line;
 	line.Alloc( m_Window.x+1 );
+	wxColour col_standart(HexDefaultAttr.GetBackgroundColour());
+	wxColour col_zebra(0x00FFEEEE);
+	if (ZebraStripping == -1 )
+		dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
 
 	unsigned int z = 0;
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
 		line.Empty();
+		if (ZebraStripping != -1 )
+			dcTemp->SetTextBackground( (y+ZebraStripping)%2 ? col_standart : col_zebra);
+
 		for ( int x = 0 ; x < m_Window.x; x++ ){
 			if( IsDenied(x)){
 				line += wxT(' ');

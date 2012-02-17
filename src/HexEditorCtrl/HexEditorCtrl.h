@@ -27,6 +27,7 @@
 #include <wx/xml/xml.h>
 #include <wx/filename.h>
 #include <wx/event.h>
+#include <wx/config.h>
 
 #include "HexEditorCtrlGui.h"
 #define SELECT_EVENT 50005
@@ -114,6 +115,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		ArrayOfTAG HighlightArray;
 		ArrayOfTAG MainTagArray;
 		wxFont stdfont;
+		bool ZebraEnable;
 
 	protected:
 		void Dynamic_Connector();

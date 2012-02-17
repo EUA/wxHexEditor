@@ -53,15 +53,16 @@
 #define idInfoPanel 1008
 #define idTagPanel 1009
 #define idDisassemblerPanel 1010
-#define idChecksum 1011
-#define idCompare 1012
-#define idXORView 1013
-#define idDeviceRam 1014
-#define idFileRO 1015
-#define idFileRW 1016
-#define idFileDW 1017
-#define ID_CHK_UNSIGNED 1018
-#define ID_CHK_BIGENDIAN 1019
+#define idZebraStripping 1011
+#define idChecksum 1012
+#define idCompare 1013
+#define idXORView 1014
+#define idDeviceRam 1015
+#define idFileRO 1016
+#define idFileRW 1017
+#define idFileDW 1018
+#define ID_CHK_UNSIGNED 1019
+#define ID_CHK_BIGENDIAN 1020
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui

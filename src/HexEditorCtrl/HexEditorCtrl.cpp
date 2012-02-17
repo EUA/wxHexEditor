@@ -52,6 +52,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	TAGMutex = false;
 	hex_ctrl->TagMutex = &TAGMutex;
 	text_ctrl->TagMutex = &TAGMutex;
+	wxConfigBase::Get()->Read( _T("ZebraStripping"), &ZebraEnable);
    }
 
 HexEditorCtrl::~HexEditorCtrl( void ){
@@ -115,9 +116,13 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 	Clear( false, cursor_reset );
 	wxString text_string;
 // Optimized Code
-	for( unsigned i=0 ; i<lenght ; i++ ){
+	for( unsigned i=0 ; i<lenght ; i++ )
 		text_string << text_ctrl->Filter(buffer[i]);
-		}
+
+	//Painting Zebra Stripes, -1 means no stripe. 0 means start with normal, 1 means start with zebra
+	hex_ctrl->ZebraStripping=text_ctrl->ZebraStripping=offset_ctrl->ZebraStripping=
+				(ZebraEnable ? position/BytePerLine()%2 : -1);
+
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
 	offset_ctrl->SetValue( position, hex_ctrl->BytePerLine() );

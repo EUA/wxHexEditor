@@ -81,6 +81,10 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	menuFileOpenRecent->Remove( *menuFileOpenRecent->GetMenuItems().begin() ); //Removes "no recent file" message
 	MyFileHistory->Load( *wxConfigBase::Get() );
 
+	bool ZebraEnable;
+	wxConfigBase::Get()->Read( _T("ZebraStripping"), &ZebraEnable);
+	mbar->Check(idZebraStripping, ZebraEnable);
+
 	PrepareAUI();
 
 	MyAUI->Update();
@@ -121,6 +125,8 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			VersionChecker vc( wxT("http://wxhexeditor.sourceforge.net/version.php"), wxT(_VERSION_) );
 			}
 		}
+
+
 	}
 
 HexEditorFrame::~HexEditorFrame(){
@@ -596,6 +602,12 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 			break;
 		case idDisassemblerPanel:
 			MyAUI->GetPane(MyDisassemblerPanel).Show(event.IsChecked());
+			break;
+		case idZebraStripping:
+			for( int i = 0 ; i< MyNotebook->GetPageCount(); i++ ){
+				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->ZebraEnable=event.IsChecked();
+				wxConfigBase::Get()->Write( _T("ZebraStripping"), event.IsChecked() );
+				}
 			break;
 		default:
 			wxBell();

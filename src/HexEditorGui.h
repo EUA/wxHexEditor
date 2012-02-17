@@ -53,7 +53,7 @@
 #define idInfoPanel 1008
 #define idTagPanel 1009
 #define idDisassemblerPanel 1010
-#define idZebraStripping 1011
+#define idZebraStriping 1011
 #define idChecksum 1012
 #define idCompare 1013
 #define idXORView 1014

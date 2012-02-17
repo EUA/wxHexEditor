@@ -164,7 +164,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuViewSeparator1 = viewMenu->AppendSeparator();
 	
 	wxMenuItem* menuViewZebra;
-	menuViewZebra = new wxMenuItem( viewMenu, idZebraStripping, wxString( wxT("Zebra Stripping") ) , wxEmptyString, wxITEM_CHECK );
+	menuViewZebra = new wxMenuItem( viewMenu, idZebraStriping, wxString( wxT("Zebra Striping") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewZebra );
 	
 	mbar->Append( viewMenu, wxT("&View") ); 
@@ -328,7 +328,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idTagPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idDisassemblerPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idDisassemblerPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idZebraStripping, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Disconnect( idZebraStriping, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idChecksum, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idCompare, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idXORView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );

@@ -543,9 +543,9 @@
                         <property name="checked">0</property>
                         <property name="enabled">1</property>
                         <property name="help"></property>
-                        <property name="id">idZebraStripping</property>
+                        <property name="id">idZebraStriping</property>
                         <property name="kind">wxITEM_CHECK</property>
-                        <property name="label">Zebra Stripping</property>
+                        <property name="label">Zebra Striping</property>
                         <property name="name">menuViewZebra</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>

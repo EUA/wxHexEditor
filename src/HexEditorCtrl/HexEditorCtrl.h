@@ -106,6 +106,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		class Select *select;
 		enum IDS{ idTagAddSelection=2001,idTagEdit };
 		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
+		void RePaint( void );
 		uint64_t CursorOffset( void );
 		void SetFont( wxFont f );
       //void OnOffsetScroll( wxScrollEvent& event );
@@ -116,6 +117,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		ArrayOfTAG MainTagArray;
 		wxFont stdfont;
 		bool ZebraEnable;
+		int *ZebraStriping;
 
 	protected:
 		void Dynamic_Connector();

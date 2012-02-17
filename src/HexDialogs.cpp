@@ -995,7 +995,7 @@ void CopyAsDialog::Copy( void ){
 //					case 8: cb+= wxString::Format( wxT("0x%016"wxLongLongFmtSpec"X, "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
 //					}
 				if(( (current_offset+1) % (BytePerLine/HexSize)==0 ) and current_offset not_eq count)
-						cb += wxT("\n  ");
+						cb += wxT("" wxNewline "  ");
 				}
 			cb=cb.BeforeLast(',')+wxT(" }" wxNewline);
 		   }

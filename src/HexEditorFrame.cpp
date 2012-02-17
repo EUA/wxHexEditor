@@ -82,8 +82,8 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	MyFileHistory->Load( *wxConfigBase::Get() );
 
 	bool ZebraEnable;
-	wxConfigBase::Get()->Read( _T("ZebraStripping"), &ZebraEnable);
-	mbar->Check(idZebraStripping, ZebraEnable);
+	wxConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable, true );
+	mbar->Check(idZebraStriping, ZebraEnable);
 
 	PrepareAUI();
 
@@ -603,10 +603,11 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 		case idDisassemblerPanel:
 			MyAUI->GetPane(MyDisassemblerPanel).Show(event.IsChecked());
 			break;
-		case idZebraStripping:
+		case idZebraStriping:
 			for( int i = 0 ; i< MyNotebook->GetPageCount(); i++ ){
 				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->ZebraEnable=event.IsChecked();
-				wxConfigBase::Get()->Write( _T("ZebraStripping"), event.IsChecked() );
+				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->RePaint();
+				wxConfigBase::Get()->Write( _T("ZebraStriping"), event.IsChecked() );
 				}
 			break;
 		default:

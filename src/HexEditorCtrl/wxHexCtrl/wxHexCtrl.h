@@ -124,7 +124,7 @@ virtual void TagPainter( wxDC* DC, TagElement& TG );
 		void DCPainter( wxDC* );
 		void OnTagHideAll( void );
 		bool *TagMutex;
-		int ZebraStripping;
+		int *ZebraStriping;
 
 	protected:
 		// event handlers

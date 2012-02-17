@@ -52,7 +52,14 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	TAGMutex = false;
 	hex_ctrl->TagMutex = &TAGMutex;
 	text_ctrl->TagMutex = &TAGMutex;
-	wxConfigBase::Get()->Read( _T("ZebraStripping"), &ZebraEnable);
+
+	//Using hex_ctrl ZebraStriping pointer for all 3 panels.
+	delete text_ctrl->ZebraStriping;
+	delete offset_ctrl->ZebraStriping;
+	ZebraStriping = hex_ctrl->ZebraStriping;
+	text_ctrl->ZebraStriping = ZebraStriping;
+	offset_ctrl->ZebraStriping = ZebraStriping;
+	wxConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable);
    }
 
 HexEditorCtrl::~HexEditorCtrl( void ){
@@ -120,8 +127,7 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 		text_string << text_ctrl->Filter(buffer[i]);
 
 	//Painting Zebra Stripes, -1 means no stripe. 0 means start with normal, 1 means start with zebra
-	hex_ctrl->ZebraStripping=text_ctrl->ZebraStripping=offset_ctrl->ZebraStripping=
-				(ZebraEnable ? position/BytePerLine()%2 : -1);
+	*ZebraStriping=(ZebraEnable ? position/BytePerLine()%2 : -1);
 
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
@@ -344,6 +350,13 @@ void HexEditorCtrl::Clear( bool RePaint, bool cursor_reset ){
 	hex_ctrl->Clear( RePaint, cursor_reset );
 	text_ctrl->Clear( RePaint, cursor_reset );
 	offset_ctrl->Clear( RePaint, cursor_reset );
+	}
+
+void HexEditorCtrl::RePaint( void ){
+	*ZebraStriping=(ZebraEnable ? page_offset/BytePerLine()%2 : -1);
+	hex_ctrl->RePaint( );
+	text_ctrl->RePaint( );
+	offset_ctrl->RePaint( );
 	}
 
 void HexEditorCtrl::OnResize( wxSizeEvent &event){

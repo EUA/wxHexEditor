@@ -66,6 +66,9 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 									wxT(""),			// facename
 									wxFONTENCODING_CP437) );// msdos encoding
 
+	//Need to create object before Draw operation.
+	ZebraStriping=new int;
+	*ZebraStriping=-1;
 
 	SetSelectionStyle( HexDefaultAttr );
 
@@ -101,7 +104,6 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
    if ( caret )
 		caret->Show(false);
 
-	ZebraStripping=-1;
 }
 wxHexCtrl::~wxHexCtrl()
 {
@@ -384,6 +386,7 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 
 #ifdef _DEBUG_SIZE_
 		std::cout << "wxHexCtrl::CreateDC Sizes: " << this->GetSize().GetWidth() << ":" << this->GetSize().GetHeight() << std::endl;
+		std::cout << "wxHexCtrl::CreateDC Zebra: " << *ZebraStriping << std::endl;
 #endif
 	wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
 	wxMemoryDC *dcTemp = new wxMemoryDC();
@@ -391,7 +394,7 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 
 	dcTemp->SetFont( HexDefaultAttr.GetFont() );
 	dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
-	//dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
+	dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() ); //This will be overriden by Zebra stripping
 	wxBrush dbrush( HexDefaultAttr.GetBackgroundColour() );
 
 	dcTemp->SetBackground(dbrush );
@@ -402,14 +405,12 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 	line.Alloc( m_Window.x+1 );
 	wxColour col_standart(HexDefaultAttr.GetBackgroundColour());
 	wxColour col_zebra(0x00FFEEEE);
-	if (ZebraStripping == -1 )
-		dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() );
 
 	unsigned int z = 0;
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
 		line.Empty();
-		if (ZebraStripping != -1 )
-			dcTemp->SetTextBackground( (y+ZebraStripping)%2 ? col_standart : col_zebra);
+		if (*ZebraStriping != -1 )
+			dcTemp->SetTextBackground( (y+*ZebraStriping)%2 ? col_standart : col_zebra);
 
 		for ( int x = 0 ; x < m_Window.x; x++ ){
 			if( IsDenied(x)){

@@ -25,6 +25,8 @@
 #ifndef _wxHexEditor_h_
 #define _wxHexEditor_h_
 
+#include "../mhash/include/mhash.h"
+
 #include <wx/ffile.h>
 #include <wx/clipbrd.h>
 #include <wx/numdlg.h>
@@ -113,6 +115,8 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		bool IsAvailable_Redo( void ) {
 			return myfile->IsAvailable_Redo();
 			}
+		int HashVerify(FAL* File, wxString hash_file);
+
 		void FindDialog( void );
 		void ReplaceDialog( void );
 		void CopyAsDialog( void );

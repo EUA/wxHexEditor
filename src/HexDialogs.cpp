@@ -454,8 +454,11 @@ void FindDialog::OnFindAll( bool internal ){
 
 		wxUpdateUIEvent eventx( SEARCH_CHANGE_EVENT );
 		parent->GetEventHandler()->ProcessEvent( eventx );
-		if( not internal )
-			wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, this );
+		if( not internal ){
+			this->Hide();
+			wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, parent );
+			Destroy();
+			}
 		}
 	}
 
@@ -610,7 +613,9 @@ void ReplaceDialog::OnReplaceAll( void ){
 	if( parent->HighlightArray.Count() > 0){
 		parent->Goto( parent->HighlightArray.Item(0)->start );
 		parent->Refresh();
-		wxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info!"), wxOK, this);
+		this->Hide();
+		wxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info!"), wxOK, parent);
+		Destroy();
 		}
 	}
 
@@ -1397,75 +1402,74 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 	wxString msg = _("Please wait while calculating checksum.");
 	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
+	//checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 
-	if( 1 ){	//This is more compact code but it gives seg fault if 4+ hash selected. Why?
-		//checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
-		unsigned NumBits=0;
-		for( unsigned i = 0; i < 32 ; i ++ ){
-			NumBits += (options>>i)&0x1;
-			}
-		MHASH *myhash=new MHASH[NumBits];
-		unsigned i=0;
-
-		hashid algs[]={MHASH_MD2,MHASH_MD4,MHASH_MD5,
-							MHASH_SHA1,MHASH_SHA224,MHASH_SHA256,MHASH_SHA384,MHASH_SHA512,
-							MHASH_RIPEMD128,MHASH_RIPEMD160,MHASH_RIPEMD256,MHASH_RIPEMD320,
-							MHASH_HAVAL128,MHASH_HAVAL160,MHASH_HAVAL192,MHASH_HAVAL224,MHASH_HAVAL256,
-							MHASH_TIGER128,MHASH_TIGER160,MHASH_TIGER192,
-							MHASH_ADLER32,MHASH_CRC32,MHASH_CRC32B,MHASH_WHIRLPOOL,MHASH_GOST,MHASH_SNEFRU128,MHASH_SNEFRU256};
-		for( unsigned j = 0 ; j < sizeof algs/sizeof algs[0]; j++)
-			if( options & (1 << algs[j] ))
-				myhash[i++]= mhash_init(algs[j]);
-
-		unsigned rdBlockSz=2*128*1024;
-		unsigned char buff[rdBlockSz];
-		int rd=rdBlockSz;
-
-		uint64_t readfrom=0,readspeed=0, range=f.Length();
-		wxString emsg = msg;
-		time_t ts,te;
-		time (&ts);
-
-		int threads;
-		if(wxThread::GetCPUCount() > 0) // -1 for unknown
-			threads = NumBits > wxThread::GetCPUCount() ? wxThread::GetCPUCount() : NumBits;
-
-		while(rd == rdBlockSz){
-			rd = f.Read( buff, rdBlockSz );
-			readfrom+=rd;
-
-			//Paralelize with OpenMP
-			#pragma omp parallel for schedule(static) num_threads(threads)
-			for( i = 0 ; i < NumBits ; i++){
-				mhash( myhash[i], buff, rd);
-				}
-
-			time(&te);
-			if(ts != te ){
-				ts=te;
-				emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
-				readspeed=readfrom;
-				}
-			if(not mypd.Update((readfrom*1000)/range, emsg ))
-			return wxEmptyString;
-			}
-		wxString results;
-		i=0;
-
-		unsigned char *hash;
-
-		for(unsigned i = 0 ; i < NumBits ; i++){
-			results += wxString::FromAscii( reinterpret_cast<const char*>(mhash_get_hash_name_static( mhash_get_mhash_algo(myhash[i]) )));
-			results += wxT(":\t");
-			hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
-			for (unsigned k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
-				results += wxString::Format( wxT("%.2x"), hash[k]);
-
-			results += wxT("\n");
-			}
-		delete [] myhash;
-		return results;//		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
+	unsigned NumBits=0;
+	for( unsigned i = 0; i < 32 ; i ++ ){
+		NumBits += (options>>i)&0x1;
 		}
+	MHASH *myhash=new MHASH[NumBits];
+	unsigned i=0;
+
+	hashid algs[]={MHASH_MD2,MHASH_MD4,MHASH_MD5,
+						MHASH_SHA1,MHASH_SHA224,MHASH_SHA256,MHASH_SHA384,MHASH_SHA512,
+						MHASH_RIPEMD128,MHASH_RIPEMD160,MHASH_RIPEMD256,MHASH_RIPEMD320,
+						MHASH_HAVAL128,MHASH_HAVAL160,MHASH_HAVAL192,MHASH_HAVAL224,MHASH_HAVAL256,
+						MHASH_TIGER128,MHASH_TIGER160,MHASH_TIGER192,
+						MHASH_ADLER32,MHASH_CRC32,MHASH_CRC32B,MHASH_WHIRLPOOL,MHASH_GOST,MHASH_SNEFRU128,MHASH_SNEFRU256};
+	for( unsigned j = 0 ; j < sizeof algs/sizeof algs[0]; j++)
+		if( options & (1 << algs[j] ))
+			myhash[i++]= mhash_init(algs[j]);
+
+	unsigned rdBlockSz=2*128*1024;
+	unsigned char buff[rdBlockSz];
+	int rd=rdBlockSz;
+
+	uint64_t readfrom=0,readspeed=0, range=f.Length();
+	wxString emsg = msg;
+	time_t ts,te;
+	time (&ts);
+
+	int threads;
+	if(wxThread::GetCPUCount() > 0) // -1 for unknown
+		threads = NumBits > wxThread::GetCPUCount() ? wxThread::GetCPUCount() : NumBits;
+
+	while(rd == rdBlockSz){
+		rd = f.Read( buff, rdBlockSz );
+		readfrom+=rd;
+
+		//Paralelize with OpenMP
+		#pragma omp parallel for schedule(static) num_threads(threads)
+		for( i = 0 ; i < NumBits ; i++){
+			mhash( myhash[i], buff, rd);
+			}
+
+		time(&te);
+		if(ts != te ){
+			ts=te;
+			emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+			readspeed=readfrom;
+			}
+		if(not mypd.Update((readfrom*1000)/range, emsg ))
+		return wxEmptyString;
+		}
+
+	wxString results;
+	i=0;
+
+	unsigned char *hash;
+
+	for(unsigned i = 0 ; i < NumBits ; i++){
+		results += wxString::FromAscii( reinterpret_cast<const char*>(mhash_get_hash_name_static( mhash_get_mhash_algo(myhash[i]) )));
+		results += wxT(":\t");
+		hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
+		for (unsigned k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash[i]) ); k++)
+			results += wxString::Format( wxT("%.2x"), hash[k]);
+
+		results += wxT("\n");
+		}
+	delete [] myhash;
+	return results;//		checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 	}
 
 

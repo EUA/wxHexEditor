@@ -24,6 +24,7 @@
 
 #include "HexEditor.h"
 
+
 HexEditor::HexEditor(	wxWindow* parent,
                         int id,
                         wxStatusBar *statbar_,
@@ -103,15 +104,87 @@ void HexEditor::Dynamic_Disconnector() {
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
+int HexEditor::HashVerify(FAL* File, wxString hash_file){
+	wxFFile f( hash_file, wxT("rt") );
+	wxMemoryBuffer mbf;
+	hashid hash_alg;
+	if( hash_file.EndsWith( wxT(".md5") ))
+		hash_alg=MHASH_MD5;
+	else if( hash_file.EndsWith( wxT(".sha1") ))
+		hash_alg=MHASH_SHA1;
+	else if( hash_file.EndsWith(wxT(".sha256" )) )
+		hash_alg=MHASH_SHA256;
+	unsigned hash_block_size=mhash_get_block_size( hash_alg );
+	if( hash_block_size*2 != f.Read( mbf.GetWriteBuf( hash_block_size*2 ), hash_block_size*2 ) ){
+		wxMessageBox(_("Cannot read hash file!"),_("Error!"));
+		}
+	mbf.UngetWriteBuf(hash_block_size*2);
+	wxString MyHashStr = wxString::From8BitData( reinterpret_cast<char*>(mbf.GetData()), hash_block_size*2 );
+	wxMemoryBuffer compare = hex_ctrl->HexToBin(MyHashStr);
+
+	File->Seek(0);
+
+	wxString msg = _("Please wait while calculating checksum.");
+	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	mypd.Show();
+
+	MHASH myhash=mhash_init(hash_alg);
+	unsigned i=0;
+	int rdBlockSz=2*128*1024;
+	unsigned char buff[rdBlockSz];
+	int rd=rdBlockSz;
+
+	uint64_t readfrom=0,readspeed=0, range=File->Length();
+	wxString emsg = msg;
+	time_t ts,te;
+	time (&ts);
+
+	while(rd == rdBlockSz){
+		rd = File->Read( buff, rdBlockSz );
+		readfrom+=rd;
+		mhash( myhash, buff, rd);
+		time(&te);
+		if(ts != te ){
+			ts=te;
+			emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+			readspeed=readfrom;
+			}
+		if(not mypd.Update((readfrom*1000)/range, emsg ))
+		return -1;
+		}
+
+	wxString results;
+	i=0;
+	unsigned char *hash;
+
+	hash = static_cast<unsigned char *>( mhash_end(myhash) );
+	if( memcmp( compare.GetData(), hash, hash_block_size ) ){
+		wxBell();
+		wxString msg(_("File Corrupt!\nFile Hash:\t"));
+		for (unsigned k = 0; k < hash_block_size; k++)
+			msg += wxString::Format( wxT("%.2x"), hash[k]);
+		msg +=_("\nHash File:\t");
+		msg +=MyHashStr;
+		wxMessageBox(msg, _("Hash Result") );
+		return 0;
+		}
+	else{
+		wxMessageBox(_("File Verified."), _("Hash Result") );
+		return 1;
+		}
+	}
+
 bool HexEditor::FileOpen(wxFileName& myfilename ) {
 	if(myfile!=NULL) {
 		wxLogError(_("Critical Error. File pointer is not empty!"));
 		return false;
 		}
+
 		//Windows Device Loader
 #ifdef __WXMSW__
+	//if File is Windows device file! Let pass it and process under FAM
 	if( myfilename.GetFullPath().StartsWith( wxT(".:"))
-		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){ //Windows device file! Let pass it and process under FAM
+		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){
 		myfile = new FAL( myfilename ); //OpenDevice
 		if(myfile->IsOpened()) {
 			myscroll = new scrollthread(0,this);
@@ -128,6 +201,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else
 #endif
+
 	if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 		myfile = new FAL( myfilename, FAL::ReadWrite );
 	else
@@ -136,9 +210,28 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
+
+		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".md5")) ) ){
+			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) ){
+				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".md5")) );
+				}
+			}
+
+		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha1")) ) ){
+			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this )){
+				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".sha1")) );
+				}
+			}
+
+		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha256")) ) ){
+			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this )){
+				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".sha256")) );
+				}
+			}
+
 		tagpanel->Set(MainTagArray); //Sets Tags to Tag panel
 		if(MainTagArray.Count() > 0){
-			//TODO This doesn't working good
+			//TODO This tagpanel->Show() code doesn't working good
 			//tagpanel->Show();
 			}
 		offset_ctrl->SetOffsetLimit(  myfile->Length() );
@@ -147,8 +240,8 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		return true;
 		}
 	else {
-		///Handled on FAM...
-		//wxMessageBox(_("File cannot open!"),_("Error"), wxOK|wxICON_ERROR, this);
+		///Handled on FAM Layer...
+		///wxMessageBox(_("File cannot open!"),_("Error"), wxOK|wxICON_ERROR, this);
 		return false;
 		}
 	}
@@ -1075,12 +1168,14 @@ void HexEditor::ReplaceDialog( void ) {
 	myfind->ShowModal();
 	myfind->Destroy();
 	}
+
 void HexEditor::CopyAsDialog( void ) {
 	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this, myfile, HexEditorCtrl::select, &MainTagArray );
 	mycopyas->ShowModal();
+	#ifndef __WXOSX__ // TODO: This leaks memory but OSX magically give error if I Destroy this manually... Really Weird...
 	mycopyas->Destroy();
+	#endif
 	}
-
 
 void HexEditor::GotoDialog( void ) {
 	uint64_t newoffset;
@@ -1088,6 +1183,7 @@ void HexEditor::GotoDialog( void ) {
 	if( mygoto->ShowModal() == wxID_OK ) {
 		Goto( newoffset );
 		}
+	mygoto->Destroy();
 	}
 
 bool HexEditor::DeleteSelection( void ) {

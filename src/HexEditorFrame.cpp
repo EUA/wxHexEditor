@@ -318,10 +318,12 @@ void HexEditorFrame::ActionDisabler( void ){
 	}
 
 HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
+
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
+	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 	if(x->FileOpen( flname )){
 		MyNotebook->AddPage( x, flname.GetFullName(), true );
-
+		x->Show();
 		//For loop updates Open Recent Menu properly.
 		int found = -1;
 		for( unsigned i=0; i < MyFileHistory->GetCount() ; i++)
@@ -820,7 +822,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MySearchPanel->Set( MyHexEditor->HighlightArray );
 				MyComparePanel->Set( MyHexEditor->CompareArray );
 
-                //Creating custom UpdateUI event for setting mbar, toolbar...
+				//Creating custom UpdateUI event for setting mbar, toolbar...
 				wxUpdateUIEvent event;
 				if( MyHexEditor->select->IsState( Select::SELECT_FALSE ) )
 					event.SetString( wxT("NotSelected") );

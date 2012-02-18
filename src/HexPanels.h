@@ -38,22 +38,6 @@
 #ifndef HEXPANELS_H
 #define HEXPANELS_H
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdint.h>
-#include <unistd.h>
-
-#include <stdio.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
-#ifdef __WXGTK__
-	#include <sys/ioctl.h>
-	//#include <dev/disk.h>
-	#include <linux/fs.h>
-#endif
-
 #include <wx/filename.h>
 
 #include <stdint.h>

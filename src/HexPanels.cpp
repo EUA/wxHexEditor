@@ -231,6 +231,7 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 			or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
 #endif
 			){
+			/*
 			int block_size=0;
 			uint64_t block_count=0;
 		#ifdef __WXGTK__
@@ -248,6 +249,10 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 		#endif
 			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), block_size);
 			info_string += _("Sector Count: ") + wxString::Format(wxT("%"wxLongLongFmtSpec"u"), block_count/block_size);
+			*/
+			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), FDtoBlockSize( FD ));
+			info_string += _("Sector Count: ") + wxString::Format(wxT("%"wxLongLongFmtSpec"u"), FDtoBlockCount( FD ));
+
 			}
 
 		if(XORKey != wxEmptyString)

@@ -107,11 +107,26 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 		CurrentBox->SetString( i, wxEmptyString);
 	}
 
-GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize ):GotoDialogGui(parent, wxID_ANY){
+GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, unsigned _BlockSize ):GotoDialogGui(parent, wxID_ANY){
 	offset = &_offset;
 	cursor_offset = _cursor_offset;
-	is_olddec =true;
-	filesize = _filesize;
+	is_olddec = true;
+	filesize  = _filesize;
+	BlockSize = _BlockSize;
+
+	m_choiceMode->Clear();
+	m_choiceMode->SetColumns(2);
+	m_choiceMode->Append(_("Offset") );
+	wxYield();
+	m_choiceMode->SetSelection(0);
+	if( BlockSize <= 1 )
+		BlockSize=1;
+	else{
+		m_choiceMode->Append(_("Sector") );
+		wxYield();
+		m_choiceMode->SetSelection(1);
+		}
+
 	ComboBoxFill( _T("GotoOffset"), m_comboBoxOffset, false);
 	m_comboBoxOffset->SetFocus();
 	}
@@ -149,13 +164,19 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 
 	ComboBoxFill( _T("GotoOffset"), m_comboBoxOffset, true);
 
-	if( m_branch->GetSelection() == 1)
-		*offset += cursor_offset;
-	else if( m_branch->GetSelection() == 2)
-		*offset = filesize - *offset;
-	if( *offset < 0 )
-		*offset = 0;
+	unsigned blksz=1;
+	if( m_choiceMode->GetSelection() == 1)
+		blksz=BlockSize;
 
+	if( m_branch->GetSelection() == 1)
+		*offset += cursor_offset*blksz;
+	else if( m_branch->GetSelection() == 2)
+		*offset = filesize - *offset*blksz;
+	else
+		*offset *= blksz;
+
+	if( *offset < 0 )
+			*offset = 0;
 	EndModal( wxID_OK );
 	}
 

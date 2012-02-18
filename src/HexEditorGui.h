@@ -216,6 +216,7 @@ class GotoDialogGui : public wxDialog
 	
 	protected:
 		wxStaticText* m_staticTextOffset;
+		wxChoice* m_choiceMode;
 		wxComboBox* m_comboBoxOffset;
 		wxRadioButton* m_dec;
 		wxRadioButton* m_hex;

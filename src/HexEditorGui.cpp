@@ -603,7 +603,15 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_staticTextOffset = new wxStaticText( this, wxID_ANY, wxT("Offset"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextOffset->Wrap( -1 );
+	m_staticTextOffset->Hide();
+	
 	bSizerTop->Add( m_staticTextOffset, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	wxString m_choiceModeChoices[] = { wxT("Offset"), wxT("Sector") };
+	int m_choiceModeNChoices = sizeof( m_choiceModeChoices ) / sizeof( wxString );
+	m_choiceMode = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceModeNChoices, m_choiceModeChoices, 0 );
+	m_choiceMode->SetSelection( 0 );
+	bSizerTop->Add( m_choiceMode, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_comboBoxOffset = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
 	m_comboBoxOffset->Append( wxT(" ") );
@@ -616,7 +624,7 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_comboBoxOffset->Append( wxT(" ") );
 	m_comboBoxOffset->Append( wxT(" ") );
 	m_comboBoxOffset->Append( wxT(" ") );
-	bSizerTop->Add( m_comboBoxOffset, 0, wxALL, 5 );
+	bSizerTop->Add( m_comboBoxOffset, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_dec = new wxRadioButton( this, wxID_ANY, wxT("Decimal"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_dec->SetValue( true ); 

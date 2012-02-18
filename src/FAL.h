@@ -41,16 +41,34 @@
 #endif
 
 #ifdef WX_GCH
-#include <wx_pch.h>
+	#include <wx_pch.h>
 #else
-#include <wx/wx.h>
+	#include <wx/wx.h>
 #endif
 
 #ifdef __WXMSW__
-#include <windows.h>
-#include <winioctl.h>
+	#include <windows.h>
+	#include <winioctl.h>
 #endif
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdint.h>
+#include <unistd.h>
+
+#include <stdio.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#ifdef __WXGTK__
+	#include <sys/ioctl.h>
+	//#include <dev/disk.h>
+	#include <linux/fs.h>
+#endif
+
+int FDtoBlockSize( int FD );
+uint64_t FDtoBlockCount( int FD );
 
 class DiffNode{
 	public:

@@ -30,6 +30,36 @@
 
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
+int FDtoBlockSize( int FD ){
+	int block_size=0;
+#ifdef __WXGTK__
+	ioctl(FD, BLKSSZGET, &block_size);
+#elif defined (__WXMAC__)
+	ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
+#elif defined (__WXMSW__)
+	DWORD dwResult;
+	DISK_GEOMETRY driveInfo;
+	DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
+	block_size=driveInfo.BytesPerSector;
+#endif
+	return block_size;
+	}
+
+uint64_t FDtoBlockCount( int FD ) {
+	uint64_t block_count=0;
+#ifdef __WXGTK__
+	ioctl(FD, BLKGETSIZE64, &block_count);
+#elif defined (__WXMAC__)
+	ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
+#elif defined (__WXMSW__)
+	DWORD dwResult;
+	DISK_GEOMETRY driveInfo;
+	DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
+	block_count=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
+#endif
+	return block_count/FDtoBlockSize( FD );
+	}
+
 FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	file_access_mode = FAM;
 	the_file = myfilename;

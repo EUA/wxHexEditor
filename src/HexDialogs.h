@@ -40,7 +40,7 @@ void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString
 
 class GotoDialog : public GotoDialogGui{
 	public:
-		GotoDialog( wxWindow* parent, uint64_t& offset, uint64_t cursor_offset, uint64_t filesize );
+		GotoDialog( wxWindow* parent, uint64_t& offset, uint64_t cursor_offset, uint64_t filesize, unsigned BlockSize );
 		void OnInput( wxCommandEvent& event );
 		void OnGo( wxCommandEvent& event );
 		void OnConvert( wxCommandEvent& event );
@@ -52,6 +52,7 @@ class GotoDialog : public GotoDialogGui{
 		uint64_t *offset;
 		uint64_t cursor_offset;
 		uint64_t filesize;
+		unsigned BlockSize;
 		bool is_olddec;
 	};
 

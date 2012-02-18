@@ -24,7 +24,6 @@
 
 #include "HexEditor.h"
 
-
 HexEditor::HexEditor(	wxWindow* parent,
                         int id,
                         wxStatusBar *statbar_,
@@ -1184,7 +1183,7 @@ void HexEditor::CopyAsDialog( void ) {
 
 void HexEditor::GotoDialog( void ) {
 	uint64_t newoffset;
-	::GotoDialog *mygoto = new ::GotoDialog( this, newoffset, CursorOffset(), FileLength() );
+	::GotoDialog *mygoto = new ::GotoDialog( this, newoffset, CursorOffset(), FileLength(), FDtoBlockSize( GetFD() ) );
 	if( mygoto->ShowModal() == wxID_OK ) {
 		Goto( newoffset );
 		}

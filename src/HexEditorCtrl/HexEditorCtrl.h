@@ -76,7 +76,7 @@ class Select{	//for using EventHandler
 	};
 
 class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar
-   friend class wxHexEditorCtrl;
+   //friend class wxHexEditorCtrl;
    public:
       wxHugeScrollBar( wxScrollBar* m_scrollbar_ );
 		~wxHugeScrollBar();

@@ -782,19 +782,18 @@ void wxHugeScrollBar::SetScrollbar( int64_t Current_Position,int page_x, int64_t
 	}
 
 void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
-	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)){
-		if( m_range <= 2147483647){
-			m_thumb = event.GetPosition();
-			}
-		else{	//64bit mode
-			int64_t here =event.GetPosition();
-			if(here == 2147483646)	//if maximum set
-				m_thumb = m_range-1;	//than give maximum m_thumb which is -1 from range
-			else
-				m_thumb = static_cast<int64_t>(here*(m_range/2147483647.0));
-			}
-		wxYieldIfNeeded();
+	if( m_range <= 2147483647){
+		m_thumb = event.GetPosition();
 		}
+	else{	//64bit mode
+		int64_t here =event.GetPosition();
+		if(here == 2147483646)	//if maximum set
+			m_thumb = m_range-1;	//than give maximum m_thumb which is -1 from range
+		else
+			m_thumb = static_cast<int64_t>(here*(m_range/2147483647.0));
+		}
+	wxYieldIfNeeded();
+
 #ifdef _DEBUG_SCROLL_
 	if(event.GetEventType() == wxEVT_SCROLL_CHANGED)
 		std::cout << "wxEVT_SCROLL_CHANGED"  << std::endl;

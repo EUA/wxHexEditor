@@ -518,21 +518,36 @@ bool HexEditor::SaveAsDump( void ){
 
 
 void HexEditor::UpdateOffsetScroll( void ) {
-	if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()) ||
-	      offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
-		offset_scroll->SetScrollbar(page_offset / ByteCapacity(), 1, (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
+//	if( offset_scroll->GetRange() != (myfile->Length() / ByteCapacity()) ||
+//	      offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
+//		offset_scroll->SetScrollbar(page_offset / ByteCapacity(), LineCount(), (FileLength() / ByteCapacity())+1, 1 );//Adjusting slider to page size
+	if( offset_scroll->GetRange() != (myfile->Length() / BytePerLine()) ||
+	      offset_scroll->GetThumbPosition() != page_offset / BytePerLine() )
+		offset_scroll->SetScrollbar(page_offset / BytePerLine(), LineCount(), 1 + FileLength() / BytePerLine(), LineCount() + 1 );//Adjusting slider to page size
 	}
 
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
+
 	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)) {
-		LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
+		LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * BytePerLine() );
 		UpdateCursorLocation();
 #if wxUSE_STATUSBAR
 		if( statusbar != NULL )
-			statusbar->SetStatusText(wxString::Format(_("Showing Page: %"wxLongLongFmtSpec"u"), page_offset/ByteCapacity() ), 0);
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %"wxLongLongFmtSpec"u"), page_offset/BytePerLine() ), 0);
 #endif
 		wxYieldIfNeeded();
 		}
+
+//	if((event.GetEventType() == wxEVT_SCROLL_CHANGED) or (event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)) {
+//		LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * ByteCapacity() );
+//		UpdateCursorLocation();
+//#if wxUSE_STATUSBAR
+//		if( statusbar != NULL )
+//			statusbar->SetStatusText(wxString::Format(_("Showing Page: %"wxLongLongFmtSpec"u"), page_offset/ByteCapacity() ), 0);
+//#endif
+//		wxYieldIfNeeded();
+//		}
+
 	}
 
 void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint) {
@@ -566,12 +581,17 @@ void HexEditor::OnResize( wxSizeEvent &event) {
 #endif
 	HexEditorCtrl::OnResize( event );
 	//event.Skip( true );
-	if(myfile != NULL && 0 < ByteCapacity()) {
-		offset_scroll->SetScrollbar(page_offset / ByteCapacity(),
-		                            1,
-		                            1+(myfile->Length() / ByteCapacity()),
-		                            1,true
+	if(myfile != NULL && 0 < BytePerLine()){
+		offset_scroll->SetScrollbar(page_offset / BytePerLine(),
+		                            LineCount(),
+		                            1 + myfile->Length() / BytePerLine(),
+		                            LineCount()+1,true
 		                           );
+//		offset_scroll->SetScrollbar(page_offset / ByteCapacity(),
+//		                            1,
+//		                            1+(myfile->Length() / ByteCapacity()),
+//		                            1,true
+//		                           );
 		Reload();
 		}
 	}
@@ -1061,8 +1081,10 @@ void HexEditor::ScrollNoThread( int speed ) {
 		Selector();
 		PaintSelection();
 		UpdateCursorLocation( true );
-		if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
-			offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
+//		if( offset_scroll->GetThumbPosition() != page_offset / ByteCapacity() )
+//			offset_scroll->SetThumbPosition( page_offset / ByteCapacity() );
+		if( offset_scroll->GetThumbPosition() != page_offset / BytePerLine() )
+			offset_scroll->SetThumbPosition( page_offset / BytePerLine() );
 
 		if( page_offset == 0 || page_offset + ByteCapacity() >= FileLength() )
 			break;

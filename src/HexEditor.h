@@ -259,8 +259,10 @@ class scrollthread:wxThreadHelper {
 				parent->PaintSelection();					//Assets time because of Caret suspending from thread
 				parent->UpdateCursorLocation( true );	//KILLs MACOSX
 
-				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->ByteCapacity() )
-					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->ByteCapacity() );
+//				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->ByteCapacity() )
+//					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->ByteCapacity() );
+				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
+					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
 
 				//	wxYieldIfNeeded();
 				wxMutexGuiLeave();

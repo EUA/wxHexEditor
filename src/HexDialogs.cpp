@@ -235,7 +235,7 @@ void FindDialog::FindSomeBytes( void ){
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = parent->CursorOffset();
-	int BlockSz= 128*1024;
+	int BlockSz= 10*1024*1024;
 	int search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];

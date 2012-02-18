@@ -750,14 +750,18 @@ wxHugeScrollBar::~wxHugeScrollBar(){
 			}
 
 void wxHugeScrollBar::SetThumbPosition(int64_t setpos){
+#ifdef _DEBUG_SCROLL_
 	std::cout << "SetThumbPosition()" << setpos << std::endl;
+#endif
 	m_thumb = setpos;
 	if( m_range <= 2147483647){
 		m_scrollbar->SetThumbPosition( setpos );
 		}
 	else{
-		std::cout << "m_Range" << m_range << std::endl;
-		std::cout << "SetThumbPositionx()" << static_cast<int>(setpos*(2147483648.0/m_range)) << std::endl;
+#ifdef _DEBUG_SCROLL_
+		std::cout << "m_Range: " << m_range << std::endl;
+		std::cout << "SetThumbPositionx(): " << static_cast<int>(setpos*(2147483648.0/m_range)) << std::endl;
+#endif
 		m_scrollbar->SetThumbPosition(  static_cast<int>(setpos*(2147483648.0/m_range)) );
 		}
 	}
@@ -768,8 +772,10 @@ void wxHugeScrollBar::SetScrollbar( int64_t Current_Position,int page_x, int64_t
 		m_scrollbar->SetScrollbar( Current_Position, page_x, new_range, pagesize, repaint );
 		}
 	else{
+#ifdef _DEBUG_SCROLL_
 		std::cout << "new_range " << new_range << std::endl;
 		std::cout << "Current_Position :" << (Current_Position*(2147483647/new_range)) << std::endl;
+#endif
 		m_scrollbar->SetScrollbar( (Current_Position*(2147483647/new_range)), page_x, 2147483647, pagesize, repaint );
 		}
 	SetThumbPosition( Current_Position );
@@ -789,5 +795,26 @@ void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
 			}
 		wxYieldIfNeeded();
 		}
+#ifdef _DEBUG_SCROLL_
+	if(event.GetEventType() == wxEVT_SCROLL_CHANGED)
+		std::cout << "wxEVT_SCROLL_CHANGED"  << std::endl;
+	if(event.GetEventType() == wxEVT_SCROLL_THUMBTRACK)
+		std::cout << "wxEVT_SCROLL_THUMBTRACK"  << std::endl;
+	if(event.GetEventType() == wxEVT_SCROLL_THUMBRELEASE)
+		std::cout << "wxEVT_SCROLL_THUMBRELEASE"  << std::endl;
+	if( event.GetEventType() == wxEVT_SCROLL_LINEDOWN )
+		std::cout << "wxEVT_SCROLL_LINEDOWN"  << std::endl;
+	if( event.GetEventType() == wxEVT_SCROLL_LINEUP )
+		std::cout << "wxEVT_SCROLL_LINEUP" << std::endl;
+	if( event.GetEventType() == wxEVT_SCROLL_PAGEUP )
+		std::cout << "wxEVT_SCROLL_PAGEUP" << std::endl;
+	if( event.GetEventType() == wxEVT_SCROLL_PAGEDOWN )
+		std::cout << "wxEVT_SCROLL_PAGEDOWN" << std::endl;
+	if( event.GetEventType() == wxEVT_SCROLLWIN_LINEUP )
+		std::cout << "wxEVT_SCROLLWIN_LINEUP" << std::endl;
+	if( event.GetEventType() == wxEVT_SCROLLWIN_LINEDOWN )
+		std::cout << "wxEVT_SCROLLWIN_LINEDOWN" << std::endl;
+
+#endif
 	event.Skip();
 	}

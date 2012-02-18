@@ -386,7 +386,6 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 
 #ifdef _DEBUG_SIZE_
 		std::cout << "wxHexCtrl::CreateDC Sizes: " << this->GetSize().GetWidth() << ":" << this->GetSize().GetHeight() << std::endl;
-		std::cout << "wxHexCtrl::CreateDC Zebra: " << *ZebraStriping << std::endl;
 #endif
 	wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
 	wxMemoryDC *dcTemp = new wxMemoryDC();

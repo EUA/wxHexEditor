@@ -42,7 +42,7 @@
 					<Add option="-D_DEBUG_FILE_" />
 					<Add option="-D_DEBUG_SELECT_" />
 					<Add option="-D_DEBUG_SIZE_" />
-					<Add option="-DEnable_Injections" />
+					<Add option="-D_DEBUG_SCROLL_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

@@ -228,9 +228,9 @@ bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){
 		wxBell();
 		return false;
 		}
-	select->SetState( select->SELECT_END );
 	select->StartOffset = start_offset;
 	select->EndOffset  = end_offset;
+	select->SetState( select->SELECT_END );
 	PaintSelection( );
 	return true;
 	}

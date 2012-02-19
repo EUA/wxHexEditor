@@ -2610,7 +2610,7 @@
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
                                 <event name="OnChar"></event>
-                                <event name="OnChoice"></event>
+                                <event name="OnChoice">EventHandler</event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
                                 <event name="OnKeyDown"></event>
@@ -2742,7 +2742,7 @@
                                 <event name="OnMouseEvents"></event>
                                 <event name="OnMouseWheel"></event>
                                 <event name="OnPaint"></event>
-                                <event name="OnRadioButton">OnConvert</event>
+                                <event name="OnRadioButton">EventHandler</event>
                                 <event name="OnRightDClick"></event>
                                 <event name="OnRightDown"></event>
                                 <event name="OnRightUp"></event>
@@ -2869,7 +2869,7 @@
                                 <event name="OnMouseEvents"></event>
                                 <event name="OnMouseWheel"></event>
                                 <event name="OnPaint"></event>
-                                <event name="OnRadioBox"></event>
+                                <event name="OnRadioBox">EventHandler</event>
                                 <event name="OnRightDClick"></event>
                                 <event name="OnRightDown"></event>
                                 <event name="OnRightUp"></event>

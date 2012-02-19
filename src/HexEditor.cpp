@@ -467,7 +467,9 @@ bool HexEditor::BlockSelect( void ){
 		BlockSelectOffset=CursorOffset();
 	else{
 		Select(BlockSelectOffset, CursorOffset() );
+		UpdateCursorLocation(); //Update statusbar
 		BlockSelectOffset = -1;
+
 		}
 	}
 
@@ -926,9 +928,9 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(wxID_PASTE, _T("Paste"));
 	menu.Append(idFillSelection, _T("Fill Selecton"));
 	if( BlockSelectOffset == -1 )
-		menu.Append(idBlockSelect, _T("Set Selecton Block Start"));
+		menu.Append(idBlockSelect, _T("Set Selection Block Start"));
 	else
-		menu.Append(idBlockSelect, _T("Set Selectoin Block End"));
+		menu.Append(idBlockSelect, _T("Set Selection Block End"));
 
 	if(not IsFileUsingXORKey()){
 		menu.AppendSeparator();

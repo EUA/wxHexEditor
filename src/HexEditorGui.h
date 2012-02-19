@@ -224,6 +224,7 @@ class GotoDialogGui : public wxDialog
 		wxButton* m_button_go;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnInput( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnGO( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConvert( wxCommandEvent& event ) { event.Skip(); }

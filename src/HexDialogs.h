@@ -36,6 +36,8 @@
 #endif
 
 bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent=NULL);
+
+//ComboBox Filler from stored Registry values
 void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString);
 
 class GotoDialog : public GotoDialogGui{
@@ -44,8 +46,8 @@ class GotoDialog : public GotoDialogGui{
 		void OnInput( wxCommandEvent& event );
 		void OnGo( wxCommandEvent& event );
 		void OnConvert( wxCommandEvent& event );
-		void OnInit( wxCommandEvent& event );
-
+		void EventHandler( wxCommandEvent& event );
+		enum {OPT_OFFSET_MODE=0x1,OPT_DEC_INPUT=0x2,OPT_BRANCH_NORMAL=0x4,OPT_BRANCH_END=0x8};
 		wxString Filter( wxString text );
 
 	protected:

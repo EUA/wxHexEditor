@@ -85,19 +85,24 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 	wxArrayString SearchStrings;
 	//Prepare Array;
 	for( int i = 0 ; i < 10 ; i ++)
-		if (wxConfigBase::Get()->Read(KeyName+wxEmptyString<<i , &TempString))
+		if (wxConfigBase::Get()->Read(KeyName+wxEmptyString<<i , &TempString)){
 			SearchStrings.Add( TempString );
+			std::cout << "ComboBoxFill Read (" << i << ") : " << TempString.ToAscii() << std::endl;
+			}
 
 	wxString AddNewString = CurrentBox->GetValue();
 	//Adds New String
 	if( AddString and (AddNewString not_eq wxEmptyString) ){
-		if( SearchStrings.Index( AddNewString ) not_eq wxNOT_FOUND ){
+		if( SearchStrings.Index( AddNewString ) not_eq wxNOT_FOUND )
 			SearchStrings.Remove( AddNewString );
-			}
+		else if( SearchStrings.Count() >= 10 )
+			SearchStrings.RemoveAt(0);
 		SearchStrings.Add( AddNewString );
 
-		for( unsigned i = 0 ; i < 10 and i < SearchStrings.Count(); i ++)
+		for( unsigned i = 0 ; i < 10 and i < SearchStrings.Count(); i ++){
+			std::cout << "ComboBoxFill Write (" << i << ") : " << SearchStrings.Item(i).ToAscii() << std::endl;
 			wxConfigBase::Get()->Write(KeyName+wxEmptyString<<i,  SearchStrings.Item(i));
+			}
 		}
 	//Set ComboBox
 	unsigned i;
@@ -113,6 +118,12 @@ GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_of
 	is_olddec = true;
 	filesize  = _filesize;
 	BlockSize = _BlockSize;
+	int options=0;
+	wxConfigBase::Get()->Read( _T("GoToOptions"), &options );
+
+	options & OPT_DEC_INPUT ? m_dec->SetValue(true) : m_hex->SetValue(true);
+	m_branch->SetSelection( options & OPT_BRANCH_NORMAL ? 0 :
+									options & OPT_BRANCH_END ?		2 : 1);
 
 	m_choiceMode->Clear();
 	m_choiceMode->SetColumns(2);
@@ -124,13 +135,25 @@ GotoDialog::GotoDialog( wxWindow* parent, uint64_t& _offset, uint64_t _cursor_of
 	else{
 		m_choiceMode->Append(_("Sector") );
 		wxYield();
-		m_choiceMode->SetSelection(1);
+		m_choiceMode->SetSelection( options & OPT_OFFSET_MODE ? 0 : 1 );
 		}
-
 	ComboBoxFill( _T("GotoOffset"), m_comboBoxOffset, false);
+	m_comboBoxOffset->Select(0);
 	m_comboBoxOffset->SetFocus();
 	}
 
+void GotoDialog::EventHandler( wxCommandEvent& event ){
+	if( event.GetId() == m_dec->GetId()
+		or event.GetId() == m_hex->GetId() )
+		OnConvert( event );
+	int options=0;
+	options |= m_choiceMode->GetSelection() == 0 ? OPT_OFFSET_MODE : 0;
+	options |= m_dec->GetValue() ? OPT_DEC_INPUT : 0;
+	options |= m_branch->GetSelection() == 0 ? OPT_BRANCH_NORMAL :
+				  m_branch->GetSelection() == 2 ? OPT_BRANCH_END : 0;
+
+	wxConfigBase::Get()->Write( _T("GoToOptions"), options );
+	}
 wxString GotoDialog::Filter( wxString text ){
 	for( unsigned i = 0 ; i < text.Length() ; i++ ){
 		if( m_dec->GetValue() ? isdigit( text.GetChar( i ) ) : isxdigit( text.GetChar( i ) ))
@@ -162,18 +185,19 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 		wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), '\0', m_dec->GetValue() ? 10 : 16 );
 	*offset = wxul;
 
+	//Store value to Registry or Updates it!
 	ComboBoxFill( _T("GotoOffset"), m_comboBoxOffset, true);
 
-	unsigned blksz=1;
+	unsigned SectorSize=1;
 	if( m_choiceMode->GetSelection() == 1)
-		blksz=BlockSize;
+		SectorSize=BlockSize;
 
 	if( m_branch->GetSelection() == 1)
-		*offset += cursor_offset*blksz;
+		*offset += cursor_offset*SectorSize;
 	else if( m_branch->GetSelection() == 2)
-		*offset = filesize - *offset*blksz;
+		*offset = filesize - *offset*SectorSize;
 	else
-		*offset *= blksz;
+		*offset *= SectorSize;
 
 	if( *offset < 0 )
 			*offset = 0;

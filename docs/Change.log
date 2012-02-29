@@ -1,3 +1,92 @@
+wxHexEditor v0.20 Beta  29/02/2012
+Added OS types to program title.
+Fixed Backward/Forward search/replace gauge calculation with wrap around option.
+Removed some unneccessary event trigging from keyboard input, speeds up cursor a bit.
+Automated setting offset_scroll values at HexEditorCtrl::ReadFromBuffer.
+Added Clear button to Search Panel.
+Fixed Replace doesn't update UNDO
+Added better formatting to checksum result.
+Added copy checksum result to clipboard.
+Removed StatusBar Cursor Offset zeros from beginning.
+Fixed Tag offset show broken for big offsets at panel.
+Fixed Keyboard move break selection.
+Implemented native like selection on Text Control.
+Fixed Keyboard selection delay.
+Fixed Checksum file detection on custom file picks.
+Fixed comparison operation for MSW
+Added Debug Frame for redirecting MSW stdout. (Enabled via _DEBUG_ definition.)
+Added "Smart Escape" feature to GoTo dialog. Now escape clears current active field. If escape pressed on clear field, closes the dialog.
+Fixed Go to Dialog illegal key position walking on MSW.
+Fixed clearing all tag/search/compare panels on close of file.
+Fixed default positioning of Data Interpreter Panel at Win/OSX
+Disabled Win Devices that we cannot open currently
+Search speed up, also for Unicode UTF8 search.
+Added OpenMP libs flags to makefile. OpenMP still req OPTFLAGS="-fopenmp".
+Fixed Compare operation, Stop after N match counts merged diffs as 2.
+Added random color Quick TAG creation without info.
+Fixed Offset Scroll usage for lines instead of pages.
+Show sectors via thin red line for Disk access
+Added Previous & Next Sector buttons to GOTO dialog.
+Silenced some compilation warnings.
+Fixed parallel make.
+Added cancel button to Find/Replace dialog.(We don't like GNOME3)
+Rendering speedup.
+Implemented Find/Replace Dialog reverse search option.
+Allowed operation without offset control.
+Allowed Hex editor alone operation.
+Allowed Text editor alone operation.
+Added LBA adressing mode, Sector+Offset support.
+Fixed XORView key entry for OSX/WIN
+Added Import & Export TAGs support.
+Added Octal offset support.
+Added Compare: merge sections feature.
+Added stack overflow issues on CompareDialog::Compare().
+Fixed Notepad file selections undo/redo disabling.
+Added some cross-compile helper to makefile.
+Implemented Fill Selection function.
+Added Save as Dump for saving selection as a file.
+Added some help strings into menubar.
+Disabled paste operation if selection is true.
+Changed empty tags, now shown as Tag's Number + Offset at TagPanel.
+Added CTRL+G shortcut to" Go to Offset" dialog.
+Changed Goto Offset as Go to Offset.
+Changed default PREFIX to /usr/local
+Updated home url and mail
+Implemented Find Some Bytes button to find dialog.
+Fixed cursor misslocation on text/hex input at end of the screen.
+Fixed minus sector count at at InfoPanel.
+Fixed XORView check on file selections.
+Added Hexadecimal key support at XORView dialog.
+Added old value memory to all dialogs.
+Replaced hash calculation init with for looped one.
+Added MD/RIPEMD/SHA/TIGER/HAVAL/CRC/ADLER/GOST/WHRILPOOL/SNEFRU checksum
+functions.
+Added OpenMP acceleration to Checksum calculation.
+Added Devices SubMenu categorization.
+Changed file progress block sizes from 1MB to 128KB.
+Added mhash library for checksum calculations.
+Dropped Hashlib++ due some licenses in included files.
+Implemented CopyAs Dialog remembers old values.
+Changed CopyAs HTML Tags <code> tags with <span>...
+Added CopyAs Format WiKi and WiKi with TAGs.
+Added CopyAs Dialog Byte Per Line option.
+Added Offset/Hex/Text part options for CopyAs functions.
+Implemented HTML with TAGs Support. Hey this looks good!
+Implemented CopyAs Internet HTML and phpBB forum functions.
+Implemented CopyAs BigEndian support. 
+Implemented CopyAs Text/Hex/C/C++ and ASM (Without BigEndian and HTML
+support)
+Added C/C++ type hex paste input.
+Fixed unmatched case text search.
+Fixed saveAs corruption due progress bar.
+Fixed error message typo.
+Fixed Compare Dialog result corruption for bigger than MB files.
+Fixed slow ASCI Text find.
+Added speed indicator to search progress gauges.
+Added speed indicator to hash progres dialog.
+Fixed File comparison dialog error for < 1 MB files.
+Fixed MacOSX File:Quit menu bug while file was open.
+
 wxHexEditor v0.11 Beta	17/06/2011
 Now program became from pre-Beta stage to Beta stage.
 Added Progress dialogs for file save, comparison and checksum dialogs.

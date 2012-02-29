@@ -43,19 +43,25 @@ void ComboBoxFill( wxString SearchFormat, wxComboBox* CurrentBox, bool AddString
 class GotoDialog : public GotoDialogGui{
 	public:
 		GotoDialog( wxWindow* parent, uint64_t& offset, uint64_t cursor_offset, uint64_t filesize, unsigned BlockSize );
+		void OnChar( wxKeyEvent& event );
 		void OnInput( wxCommandEvent& event );
 		void OnGo( wxCommandEvent& event );
 		void OnConvert( wxCommandEvent& event );
 		void EventHandler( wxCommandEvent& event );
-		enum {OPT_OFFSET_MODE=0x1,OPT_DEC_INPUT=0x2,OPT_BRANCH_NORMAL=0x4,OPT_BRANCH_END=0x8};
 		wxString Filter( wxString text );
+		void OnPreviousSector( wxCommandEvent& event );
+		void OnNextSector( wxCommandEvent& event );
 
 	protected:
+		enum {OPT_OFFSET_MODE=0x1,OPT_DEC_INPUT=0x2,OPT_BRANCH_NORMAL=0x4,OPT_BRANCH_END=0x8};
 		uint64_t *offset;
 		uint64_t cursor_offset;
 		uint64_t filesize;
 		unsigned BlockSize;
 		bool is_olddec;
+		class HexEditor* parent;
+		wxArrayString hex_letters;//=wxT("abcdefABCDEFxX");
+		wxArrayString dec_letters;//=wxT("1234567890abcdefABCDEFxX");
 	};
 
 class FindDialog : public FindDialogGui{
@@ -64,15 +70,19 @@ class FindDialog : public FindDialogGui{
 		bool OnFind( bool intenal=false );
 		void OnFindPrev( wxCommandEvent& event );
 		void OnFindAll( bool internal=false );
+		void OnChar( wxKeyEvent& event );
 virtual void EventHandler( wxCommandEvent& event );
 		bool OnFindEvents( wxCommandEvent& event );
+		char UTF8SpeedHack[2];
 
+	protected:
 		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2, SEARCH_UTF8=0x4, SEARCH_UTF16=0x8,
 									SEARCH_MATCHCASE=0x10, SEARCH_BACKWARDS=0x20, SEARCH_WRAPAROUND=0x40, SEARCH_FINDALL=0x80 } searchtype;
-	protected:
 		uint64_t FindBinary( wxMemoryBuffer target, uint64_t start_from, unsigned oper=SEARCH_HEX );
 		uint64_t FindText( wxString target, uint64_t start_from, unsigned oper=SEARCH_TEXT);
+		int SearchAtBufferMultiThread( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
 		int SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
+		bool SearchAtBufferUnitTest();
 		void FindSomeBytes( void );
 		class HexEditor* parent;
 		FAL *findfile;
@@ -108,7 +118,9 @@ class CompareDialog : public CompareDialogGui{
 	public:
 		CompareDialog( wxWindow* parent );
 		~CompareDialog();
+
 	private:
+		enum{OPT_CMP_SEARCH_DIFF=0x01,OPT_CMP_STOP_AFTER=0x02, OPT_CMP_MERGE_SECTION=0x04, OPT_CMP_SAVE=0x8};
 		class HexEditorFrame* parent;
 		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
       void EventHandler( wxCommandEvent& event );
@@ -122,8 +134,6 @@ class ChecksumDialog : public ChecksumDialogGui{
 		ChecksumDialog( wxWindow* parent, FAL *find_file );
 	private:
 		class HexEditorFrame* parent;
-		//enum checksum_options{ MD5=0x1,SHA1=0x2,SHA256=0x4,SHA384=0x8,SHA512=0x10 };
-		char *checksum_options_strings[5];
 		wxString CalculateChecksum( FAL& fl, int options );
       void EventHandler( wxCommandEvent& event );
       void OnFileChange( wxFileDirPickerEvent& event );

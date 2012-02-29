@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+
 using namespace std;
 struct _opt {
 	bool				list;
@@ -42,20 +43,19 @@ struct _opt {
 	};
 typedef struct _opt t_opt;
 static t_opt opt = {
-	false,			/* list */
-	0,					/* quiet */
-	0,					/* start */
-	0,					/* end */
-	false,			/* read */
-	false,			/* kilobyte */
-	1,					/* refresh */
+	false,			// list
+	0,					// quiet
+	0,					// start
+	0,					// end
+	false,			// read
+	false,			// kilobyte
+	1,					// refresh
 	};
 class windowsHDD
 	{	private:
 		vector<WCHAR*> devicenames;
 
 		void list_device(WCHAR *format_str, WCHAR *szTmp, int n);
-		void GetSizeString (LONGLONG size, wchar_t *str);
 		bool RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice);
 		bool FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly);
 		void list_devices();
@@ -96,54 +96,6 @@ bool windowsHDD::RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice) {
 	return 0;
 	}
 
-
-void windowsHDD::GetSizeString (LONGLONG size, wchar_t *str) {
-	static wchar_t *b, *kb, *mb, *gb, *tb, *pb;
-
-	if (b == NULL) {
-		if (opt.kilobyte) {
-			kb = L"KiB";
-			mb = L"MiB";
-			gb = L"GiB";
-			tb = L"TiB";
-			pb = L"PiB";
-			}
-		else {
-			kb = L"KB";
-			mb = L"MB";
-			gb = L"GB";
-			tb = L"TB";
-			pb = L"PB";
-			}
-		b = L"bytes";
-		}
-
-	DWORD kilo = opt.kilobyte ? 1024 : 1000;
-	LONGLONG kiloI64 = kilo;
-	double kilod = kilo;
-
-	if (size > kiloI64 * kilo * kilo * kilo * kilo * 99)
-		swprintf (str, L"%I64d %s", size/ kilo / kilo /kilo/kilo/kilo, pb);
-	else if (size > kiloI64*kilo*kilo*kilo*kilo)
-		swprintf (str, L"%.1f %s",(double)(size/kilod/kilo/kilo/kilo/kilo), pb);
-	else if (size > kiloI64*kilo*kilo*kilo*99)
-		swprintf (str, L"%I64d %s",size/kilo/kilo/kilo/kilo, tb);
-	else if (size > kiloI64*kilo*kilo*kilo)
-		swprintf (str, L"%.1f %s",(double)(size/kilod/kilo/kilo/kilo), tb);
-	else if (size > kiloI64*kilo*kilo*99)
-		swprintf (str, L"%I64d %s",size/kilo/kilo/kilo, gb);
-	else if (size > kiloI64*kilo*kilo)
-		swprintf (str, L"%.1f %s",(double)(size/kilod/kilo/kilo), gb);
-	else if (size > kiloI64*kilo*99)
-		swprintf (str, L"%I64d %s", size/kilo/kilo, mb);
-	else if (size > kiloI64*kilo)
-		swprintf (str, L"%.1f %s",(double)(size/kilod/kilo), mb);
-	else if (size > kiloI64)
-		swprintf (str, L"%I64d %s", size/kilo, kb);
-	else
-		swprintf (str, L"%I64d %s", size, b);
-	}
-
 void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	int nDosLinkCreated;
 	HANDLE dev;
@@ -169,7 +121,8 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	                           &diskInfo, sizeof (diskInfo), &dwResult, NULL);
 
 	// Test if device is removable
-	if (/* n == 0 && */ DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0,
+	if (// n == 0 &&
+		DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0,
 	                                     &driveInfo, sizeof (driveInfo), &dwResult, NULL))
 		removable = driveInfo.MediaType == RemovableMedia;
 
@@ -220,3 +173,5 @@ vector<WCHAR*> windowsHDD::getdevicenamevector()
 	{	list_devices();
 	return devicenames;
 	}
+
+

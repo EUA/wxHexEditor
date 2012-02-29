@@ -40,26 +40,25 @@ class Select{	//for using EventHandler
 	public:
 		Select( wxEvtHandler* evth_ ){
 			StartOffset = EndOffset = 0;
-			state = SELECT_FALSE;
+			state = false;
 			evth = evth_;
 			}
-		enum state_ { SELECT_FALSE, SELECT_TRUE, SELECT_END };
 		uint64_t GetSize( void ){
 			return abs( EndOffset - StartOffset)+1;};	//for select byte 13 start=13, end=13
-		void SetState( state_ new_state ){
+		void SetState( bool new_state ){
 			state = new_state;
 
 			std::cout << "Send UpdateUI Event" << std::endl;
 			wxUpdateUIEvent event;
-			if(new_state == SELECT_FALSE )
-				event.SetString( wxT("NotSelected") );
-			else
+			if( new_state )
 				event.SetString( wxT("Selected") );
+			else
+				event.SetString( wxT("NotSelected") );
 			event.SetId( SELECT_EVENT );//idFileRO
 			evth->ProcessEvent( event );
 			}
-		bool IsState( state_  query_state){
-			return (state==query_state);
+		bool GetState(){
+			return state;
 			}
 		uint64_t GetStart( void ){
 			return StartOffset < EndOffset ? StartOffset : EndOffset;
@@ -69,9 +68,10 @@ class Select{	//for using EventHandler
 			}
 
 		uint64_t StartOffset;	//real selection start position
+		uint64_t OriginalStartOffset;  //real selection start position backup for HexTextCTRL
 		uint64_t EndOffset;		//real selection end position, included to select
 	private:
-		enum state_  state;
+		bool  state;
 		wxEvtHandler* evth;
 	};
 
@@ -102,13 +102,15 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 						const wxSize& size=wxDefaultSize,
 						long style=0);
 		~HexEditorCtrl( void );
-		enum focus_ { HEX_CTRL, TEXT_CTRL } focus;
+		enum panels { HEX_CTRL=0x1, TEXT_CTRL=0x2, OFFSET_CTRL=0x4 } focus;
 		class Select *select;
-		enum IDS{ idTagAddSelection=2001,idTagEdit };
+		enum IDS{ idTagAddSelection=2001,idTagEdit, idTagQuick };
 		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		void RePaint( void );
 		uint64_t CursorOffset( void );
 		void SetFont( wxFont f );
+		void ControlShow( panels control, bool hide );
+		bool ControlIsShown(panels control);
       //void OnOffsetScroll( wxScrollEvent& event );
 		wxHugeScrollBar* offset_scroll;
 
@@ -119,6 +121,8 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		bool ZebraEnable;
 		int *ZebraStriping;
 
+		bool LoadTAGS( wxFileName );
+		bool SaveTAGS( wxFileName );
 	protected:
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
@@ -131,8 +135,6 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void PushTAGToControls( TagElement* TAG);
 //		void TagPaint( void );
 		bool TAGMutex;
-		void LoadTAGS( wxFileName );
-		void SaveTAGS( wxFileName );
 		void MoveTAGS( uint64_t location, int64_t size );
 
 	public:
@@ -150,7 +152,9 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseRight( wxMouseEvent& event );
+		void TagCreator( bool QuickTag );
 		void OnTagAddSelection( wxCommandEvent& event );
+		void OnTagQuick( wxCommandEvent& event );
 		void OnTagEdit( wxCommandEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void UpdateUI(wxUpdateUIEvent& event);
@@ -159,18 +163,20 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		//----ADAPTERS----//
 	public:
 		void TagHideAll( void );
-		int HexPerLine( void )  { return hex_ctrl->CharacterPerLine(); }
-		int BytePerLine( void )	{ return hex_ctrl->BytePerLine(); }
-		unsigned ByteCapacity( void ){ return hex_ctrl->ByteCapacity(); }
-		int LineCount( void )	{ return hex_ctrl->LineCount(); }
-		int ActiveLine( void )	{ return hex_ctrl->ActiveLine(); }
-		int GetByteCount( void ){ return hex_ctrl->GetByteCount(); }
-		int GetLastPosition( void ){ return hex_ctrl->GetLastPosition(); }
+		int HexPerLine( void )  { return (hex_ctrl->IsShown() ? hex_ctrl->CharacterPerLine() : text_ctrl->CharacterPerLine()*2); }
+		int BytePerLine( void )	{ return (hex_ctrl->IsShown() ? hex_ctrl->BytePerLine() : text_ctrl->BytePerLine() ); }
+		unsigned ByteCapacity( void ){ return (hex_ctrl->IsShown() ? hex_ctrl->ByteCapacity() : text_ctrl->ByteCapacity()); }
+		int LineCount( void )	{ return (hex_ctrl->IsShown() ? hex_ctrl->LineCount() : text_ctrl->LineCount()); }
+		int ActiveLine( void )	{ return (hex_ctrl->IsShown() ? hex_ctrl->ActiveLine() : text_ctrl->ActiveLine() ) ; }
+		int GetByteCount( void ){ return (hex_ctrl->IsShown() ? hex_ctrl->GetByteCount() : text_ctrl->GetByteCount()); }
+		int GetLastPosition( void ){ return (hex_ctrl->IsShown() ? hex_ctrl->GetLastPosition() : text_ctrl->GetLastPosition()); }
 		int GetLocalHexInsertionPoint( void );
 		int GetLocalInsertionPoint( void );
-		wxString GetOffsetFormatString( void ){ return offset_ctrl->GetFormatString(); }
+		wxString GetFormatedOffsetString( uint64_t offset ){ return offset_ctrl->GetFormatedOffsetString( offset ); }
 virtual void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
+		int sector_size;
+
 	protected:
 		int64_t page_offset;	//holds current start offset of file
 /*

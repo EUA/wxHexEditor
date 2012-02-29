@@ -31,6 +31,12 @@
 
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
+	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
+	debugFrame = new DebugFrame(NULL, wxID_ANY);
+	debugFrame->Show();
+	debugRedirector = new wxStreamToTextRedirector(debugFrame->m_textCtrl);
+	#endif
+
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 	license=_T("wxHexEditor is a hex editor for HUGE files and devices.\n"
@@ -126,10 +132,16 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			}
 		}
 
-
 	}
 
 HexEditorFrame::~HexEditorFrame(){
+	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
+	if( debugFrame not_eq NULL )
+		debugFrame->Destroy();
+	if(debugRedirector not_eq NULL)
+		delete debugRedirector;
+	#endif
+
 	this->Disconnect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
@@ -270,16 +282,6 @@ void HexEditorFrame::PrepareAUI( void ){
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
 
-	MyInfoPanel = new InfoPanel( this, -1 );
-	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
-					Caption(_("InfoPanel")).
-					TopDockable(false).
-					BottomDockable(false).
-					BestSize(wxSize(140,140)).
-					//Resizable(false).
-					Left().Layer(1) );
-	mbar->Check( idInfoPanel, true );
-
 	MyInterpreter = new DataInterpreter( this, -1 );
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
 					Caption(_("DataInterpreter")).
@@ -287,8 +289,20 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					BestSize(wxSize(174,218)).
 					Resizable(false).
-					Left().Layer(1) );
+					Left().Layer(1).Position(0) );
 	mbar->Check( idInterpreter, true );
+
+	MyInfoPanel = new InfoPanel( this, -1 );
+	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
+					Caption(_("InfoPanel")).
+					TopDockable(false).
+					BottomDockable(false).
+					BestSize(wxSize(140,140)).
+					//Resizable(false).
+					Left().Layer(1).Position(1) );
+	mbar->Check( idInfoPanel, true );
+
+
 
 	ActionDisabler();
 	MyNotebook->SetDropTarget( new DnDFile( this ) );
@@ -307,6 +321,8 @@ void HexEditorFrame::ActionEnabler( void ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
+	mbar->Enable(idExportTAGs, true );
+	mbar->Enable(idImportTAGs, true );
 	MyInterpreter->Enable();
 	Toolbar->Refresh();
 	}
@@ -317,9 +333,14 @@ void HexEditorFrame::ActionDisabler( void ){
 		mbar->Enable( arr[i],false );
 		Toolbar->EnableTool( arr[i], false );
 		}
+	mbar->Enable(idExportTAGs, false );
+	mbar->Enable(idImportTAGs, false );
 	MyInterpreter->Clear();
 	MyInterpreter->Disable();
 	MyDisassemblerPanel->Clear();
+	MyTagPanel->Clear();
+	MySearchPanel->Clear();
+	MyComparePanel->Clear();
 	Toolbar->Refresh();
 	}
 
@@ -426,21 +447,18 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 				switch( event.GetId() ){
 					//case wxID_OPEN: not handled here!
 					case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
-					case wxID_SAVEAS:{
-						wxFileDialog filediag(this,
-															_("Choose a file for save as"),
-															_(""),
-															_(""),
-															_("*"),
-															wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
-															wxDefaultPosition);
-						if(wxID_OK == filediag.ShowModal()){
-							if( !MyHexEditor->FileSave( filediag.GetPath() )){
-								wxMessageBox( wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
-								}
-							}
-						break;
-						}
+					case wxID_SAVEAS:		{
+												wxFileDialog filediag(this,_("Choose a file for save as"),
+																					_(""),
+																					_(""),
+																					_("*"),
+																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+																					wxDefaultPosition);
+												if(wxID_OK == filediag.ShowModal())
+													if( !MyHexEditor->FileSave( filediag.GetPath() ))
+														wxMessageBox( wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+												break;
+												}
 					case idClose:{
 						if( MyHexEditor->FileClose() ){
 							MyNotebook->DeletePage( MyNotebook->GetSelection() );// delete MyHexEditor; not neccessery, DeletePage also delete this
@@ -450,6 +468,34 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 							}
 						break;
 						}
+					case idImportTAGs:	{
+												wxFileDialog filediag(this,_("Choose a file for import TAGs"),
+																					_(""),
+																					_(""),
+																					_("*.tags"),
+																					wxFD_OPEN|wxFD_CHANGE_DIR,
+																					wxDefaultPosition);
+												if(wxID_OK == filediag.ShowModal())
+													if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
+														wxMessageBox( wxString(_( "TAGS cannot imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+												break;
+												}
+					case idExportTAGs:	{
+												if( MyHexEditor->MainTagArray.Count() ){
+													wxFileDialog filediag(this,_("Choose a file for export TAGs"),
+																					_(""),
+																					_(""),
+																					_("*.tags"),
+																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+																					wxDefaultPosition);
+													if(wxID_OK == filediag.ShowModal())
+															if( !MyHexEditor->SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
+																wxMessageBox( wxString(_( "TAGs cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+													}
+												else
+													wxMessageBox( _( "There is no TAGs to Export in current active file!"),_("Error"), wxOK|wxICON_ERROR, this );
+												break;
+												}
 					case wxID_UNDO:		MyHexEditor->DoUndo();					break;
 					case wxID_REDO:		MyHexEditor->DoRedo();					break;
 					case wxID_COPY:		MyHexEditor->CopySelection();			break;
@@ -502,14 +548,14 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	else if( event.GetId() == idCompare ){
 		::CompareDialog *mcd = new CompareDialog( this );
 		mcd->ShowModal();
-		#ifndef __WXOSX__ // TODO: This leaks memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+		#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
 		mcd->Destroy();
 		#endif
 		}
 	else if( event.GetId() == idChecksum){
 		::ChecksumDialog *mcd = new ChecksumDialog( this );
 		mcd->ShowModal();
-		#ifndef __WXOSX__ // TODO: This leaks memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+		#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
 		mcd->Destroy();
 		#endif
 		}
@@ -603,11 +649,41 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 		case idDisassemblerPanel:
 			MyAUI->GetPane(MyDisassemblerPanel).Show(event.IsChecked());
 			break;
+		case idSearchPanel:
+			MyAUI->GetPane(MySearchPanel).Show(event.IsChecked());
+			break;
+		case idComparePanel:
+			MyAUI->GetPane(MyComparePanel).Show(event.IsChecked());
+			break;
 		case idZebraStriping:
-			for( int i = 0 ; i< MyNotebook->GetPageCount(); i++ ){
+			for( unsigned i = 0 ; i< MyNotebook->GetPageCount(); i++ ){
 				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->ZebraEnable=event.IsChecked();
 				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->RePaint();
 				wxConfigBase::Get()->Write( _T("ZebraStriping"), event.IsChecked() );
+				}
+			break;
+		case idShowOffset:
+			GetActiveHexEditor()->ControlShow( HexEditorCtrl::OFFSET_CTRL , event.IsChecked() );
+			MyNotebook->Layout();
+			break;
+		case idShowOnlyHex:
+				{
+				GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , true );
+				GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , !event.IsChecked() );
+				if(event.IsChecked())
+					mbar->Check( idShowOnlyText, false );
+				//For vanishing control at Win & OSX, not needed on GTK
+				MyNotebook->Layout();
+				}
+			break;
+		case idShowOnlyText:
+				{
+				GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , true );
+				GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , !event.IsChecked() );
+				if(event.IsChecked())
+					mbar->Check( idShowOnlyHex, false );
+				//For vanishing control at Win & OSX, not needed on GTK
+				MyNotebook->Layout();
 				}
 			break;
 		default:
@@ -635,13 +711,19 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 #ifdef _DEBUG_
 	std::cout << "HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event) ID " << event.GetId() << "\n" ;
 #endif
+// TODO (death#1#): Add idBased approach to decrease overhead!! This slowdowns cursor movement!!!
 	mbar->Check(idInterpreter, MyInterpreter->IsShown());
 	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
 	mbar->Check(idTagPanel, MyTagPanel->IsShown());
 	mbar->Check(idDisassemblerPanel, MyDisassemblerPanel->IsShown());
+	mbar->Check(idSearchPanel, MySearchPanel->IsShown());
+	mbar->Check(idComparePanel, MyComparePanel->IsShown());
 	mbar->Check(idToolbar, Toolbar->IsShown());
 	mbar->Check(idXORView, (MyNotebook->GetPageCount() and GetActiveHexEditor()->IsFileUsingXORKey()));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
+	mbar->Enable(idShowOffset, MyNotebook->GetPageCount() );
+	mbar->Enable(idShowOnlyHex, MyNotebook->GetPageCount() );
+	mbar->Enable(idShowOnlyText, MyNotebook->GetPageCount() );
 	if(event.GetId() == idDeviceRam ){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
 #ifdef _DEBUG_
@@ -709,12 +791,15 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				last_item = i;
 				}
 			#else	//Windows device menu categorization
-			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) and i not_eq 0 )
+			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) and i not_eq 0 ){
 				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
-			else{
+				}
+			else{ //Create new submenu
 				nm=new wxMenu( );
 				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
-				menuDeviceDisk->AppendSubMenu( nm, disks.Item(i).BeforeLast('\\')+wxT('\\') );
+				wxMenuItem* mi = menuDeviceDisk->AppendSubMenu( nm, disks.Item(i).BeforeLast('\\')+wxT('\\') );
+				if(disks.Item(i).StartsWith(wxT("\\Device")))
+					mi->Enable(false);
 				last_item = i;
 				}
 			#endif
@@ -752,6 +837,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			#endif
 			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
 			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+
 			Toolbar->EnableTool( wxID_PASTE, event.GetString() == wxT("NotSelected") );
 			mbar->Enable( wxID_PASTE, event.GetString() == wxT("NotSelected") );
 
@@ -835,12 +921,16 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MySearchPanel->Set( MyHexEditor->HighlightArray );
 				MyComparePanel->Set( MyHexEditor->CompareArray );
 
+				mbar->Check( idShowOffset, GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::OFFSET_CTRL ) );
+				mbar->Check( idShowOnlyHex, not GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::TEXT_CTRL ) );
+				mbar->Check( idShowOnlyText, not GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::HEX_CTRL ) );
+
 				//Creating custom UpdateUI event for setting mbar, toolbar...
 				wxUpdateUIEvent event;
-				if( MyHexEditor->select->IsState( Select::SELECT_FALSE ) )
-					event.SetString( wxT("NotSelected") );
-				else
+				if( MyHexEditor->select->GetState() )
 					event.SetString( wxT("Selected") );
+				else
+					event.SetString( wxT("NotSelected") );
 
             event.SetId( SELECT_EVENT );
 				OnUpdateUI( event );

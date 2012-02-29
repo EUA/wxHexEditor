@@ -85,6 +85,9 @@ class HexEditorFrame : public HexEditorGui {
 		void OnNotebookTabSelection( wxAuiNotebookEvent& event );
 		void OnNotebookTabClose( wxAuiNotebookEvent& event );
 
+		void CompareDialogx( void );
+		void ChecksumDialogx( void );
+
 	private:
 		void PrepareAUI( void );
 		//wxAuiNotebook *MyNotebook;
@@ -103,6 +106,11 @@ class HexEditorFrame : public HexEditorGui {
 		wxToolBar* Toolbar;
 #endif
 		friend class DnDFile;
+
+		#if defined( _DEBUG_ ) && defined( __WXMSW__ )
+			DebugFrame* debugFrame;
+			wxStreamToTextRedirector *debugRedirector;
+		#endif
 	};
 
 class HexEditorArtProvider : public wxArtProvider{

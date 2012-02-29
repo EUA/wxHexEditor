@@ -26,11 +26,11 @@
 #include <wx/textctrl.h>
 #include <wx/panel.h>
 #include <wx/listbox.h>
+#include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/combobox.h>
 #include <wx/radiobut.h>
 #include <wx/radiobox.h>
-#include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/statbox.h>
 #include <wx/statline.h>
@@ -43,26 +43,33 @@
 
 #define ID_DEFAULT wxID_ANY // Default
 #define idClose 1000
-#define idCopyAs 1001
-#define idSaveAsDump 1002
-#define idFillSelection 1003
-#define idInsert 1004
-#define idGotoOffset 1005
-#define idInterpreter 1006
-#define idToolbar 1007
-#define idInfoPanel 1008
-#define idTagPanel 1009
-#define idDisassemblerPanel 1010
-#define idZebraStriping 1011
-#define idChecksum 1012
-#define idCompare 1013
-#define idXORView 1014
-#define idDeviceRam 1015
-#define idFileRO 1016
-#define idFileRW 1017
-#define idFileDW 1018
-#define ID_CHK_UNSIGNED 1019
-#define ID_CHK_BIGENDIAN 1020
+#define idImportTAGs 1001
+#define idExportTAGs 1002
+#define idCopyAs 1003
+#define idSaveAsDump 1004
+#define idFillSelection 1005
+#define idInsert 1006
+#define idGotoOffset 1007
+#define idInterpreter 1008
+#define idToolbar 1009
+#define idInfoPanel 1010
+#define idTagPanel 1011
+#define idDisassemblerPanel 1012
+#define idSearchPanel 1013
+#define idComparePanel 1014
+#define idZebraStriping 1015
+#define idShowOffset 1016
+#define idShowOnlyHex 1017
+#define idShowOnlyText 1018
+#define idChecksum 1019
+#define idCompare 1020
+#define idXORView 1021
+#define idDeviceRam 1022
+#define idFileRO 1023
+#define idFileRW 1024
+#define idFileDW 1025
+#define ID_CHK_UNSIGNED 1026
+#define ID_CHK_BIGENDIAN 1027
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -154,9 +161,11 @@ class TagPanelGui : public wxPanel
 	
 	protected:
 		wxListBox* TagPanelList;
+		wxButton* m_buttonClear;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnTagSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnClear( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -220,14 +229,18 @@ class GotoDialogGui : public wxDialog
 		wxComboBox* m_comboBoxOffset;
 		wxRadioButton* m_dec;
 		wxRadioButton* m_hex;
+		wxButton* m_button_prev;
+		wxButton* m_button_next;
 		wxRadioBox* m_branch;
 		wxButton* m_button_go;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnChar( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnInput( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnGO( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnConvert( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnPreviousSector( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnNextSector( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnGo( wxCommandEvent& event ) { event.Skip(); }
 		
 	
@@ -261,8 +274,10 @@ class FindDialogGui : public wxDialog
 		wxStaticLine* m_staticline;
 		wxButton* btnReplace;
 		wxButton* btnReplaceAll;
+		wxButton* btnClose;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnChar( wxKeyEvent& event ) { event.Skip(); }
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
 		
 	
@@ -313,10 +328,10 @@ class CompareDialogGui : public wxDialog
 		wxRadioButton* m_radioSame;
 		wxCheckBox* checkStopCompare;
 		wxSpinCtrl* spinStopCompare;
-		wxStaticText* m_staticText20;
-		wxCheckBox* checkMerge;
-		wxSpinCtrl* spinMerge;
-		wxStaticText* m_staticText201;
+		wxStaticText* m_staticTextHits;
+		wxCheckBox* checkMergeSection;
+		wxSpinCtrl* spinMergeSection;
+		wxStaticText* m_staticTextBytes;
 		wxCheckBox* checkSaveResults;
 		wxFilePickerCtrl* filePickSave;
 		wxButton* btnCancel;
@@ -378,7 +393,7 @@ class ChecksumDialogGui : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
-		virtual void filePickOnFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void OnFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -443,6 +458,23 @@ class XORViewDialogGui : public wxDialog
 		
 		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~XORViewDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class DebugFrame
+///////////////////////////////////////////////////////////////////////////////
+class DebugFrame : public wxFrame 
+{
+	private:
+	
+	protected:
+	
+	public:
+		wxTextCtrl* m_textCtrl;
+		
+		DebugFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Debug Log"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 686,425 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		~DebugFrame();
 	
 };
 

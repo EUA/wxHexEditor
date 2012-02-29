@@ -79,7 +79,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		bool FileClose( bool WithoutChange = false );
 		bool SaveAsDump( void );
 		bool FillSelection( void );
-		bool BlockSelect( void );
+		void BlockSelect( void );
 		void DoUndo( void );
 		void DoRedo( void );
 
@@ -125,7 +125,6 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		void UpdateCursorLocation( bool force=false );
 	protected:
 		void SetLocalHexInsertionPoint( int hex_location );
-		void UpdateOffsetScroll( void );
 		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);
 		void OnKeyboardSelector( wxKeyEvent& event );
@@ -258,11 +257,9 @@ class scrollthread:wxThreadHelper {
 				parent->Selector();							//KILLs MACOSX
 				parent->PaintSelection();					//Assets time because of Caret suspending from thread
 				parent->UpdateCursorLocation( true );	//KILLs MACOSX
-
-//				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->ByteCapacity() )
-//					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->ByteCapacity() );
-				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
-					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
+//				Offset scroll automated at HexEditorCTRL::ReadFromBuffer
+//				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
+//					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
 
 				//	wxYieldIfNeeded();
 				wxMutexGuiLeave();

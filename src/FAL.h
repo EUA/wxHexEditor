@@ -144,8 +144,8 @@ class FAL : private wxFile{
 		void ModificationPatcher( uint64_t location, unsigned char* data, int size, DiffNode* Patch);
 
 	private:
-		int BlockSize;
-		uint64_t BlockCount;
+		int BlockRWSize;
+		uint64_t BlockRWCount;
 		FileAccessMode file_access_mode;
 		ArrayOfNode DiffArray;
 		ArrayOfNode TempDiffArray;

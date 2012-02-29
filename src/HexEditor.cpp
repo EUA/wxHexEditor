@@ -128,7 +128,7 @@ int HexEditor::HashVerify(FAL* File, wxString hash_file){
 	mypd.Show();
 
 	MHASH myhash=mhash_init(hash_alg);
-	unsigned i=0;
+
 	int rdBlockSz=2*128*1024;
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
@@ -153,7 +153,6 @@ int HexEditor::HashVerify(FAL* File, wxString hash_file){
 		}
 
 	wxString results;
-	i=0;
 	unsigned char *hash;
 
 	hash = static_cast<unsigned char *>( mhash_end(myhash) );
@@ -189,6 +188,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 			offset_ctrl->SetOffsetLimit( myfile->Length() );
+			sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
 			LoadFromOffset(0, true);
 			SetLocalHexInsertionPoint(0);
 			return true;
@@ -210,23 +210,15 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 //			copy_mark = new copy_maker();
 		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
 
-		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".md5")) ) ){
-			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) ){
+		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".md5")) ) )
+			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) )
 				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".md5")) );
-				}
-			}
-
-		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha1")) ) ){
-			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this )){
+		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha1")) ) )
+			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".sha1")) );
-				}
-			}
-
-		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha256")) ) ){
-			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this )){
+		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha256")) ) )
+			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".sha256")) );
-				}
-			}
 
 		tagpanel->Set(MainTagArray); //Sets Tags to Tag panel
 		if(MainTagArray.Count() > 0){
@@ -234,6 +226,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			//tagpanel->Show();
 			}
 		offset_ctrl->SetOffsetLimit(  myfile->Length() );
+		sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
 		LoadFromOffset(0, true);
 		SetLocalHexInsertionPoint(0);
 		return true;
@@ -259,9 +252,6 @@ wxString HexEditor::FileGetXORKey( void ){
 void HexEditor::FileSetXORKey( bool enable ){
 	wxMemoryBuffer x;
 	if( enable ){
-//		XORKey = wxGetTextFromUser( _("Note: For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"\
-//												"Also you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled.\n\n"\
-//												"Please Enter XOR key."), _("XORView Thru Warning!") );
 		XORViewDialog a( this, &x );
 		if( a.ShowModal() == wxID_CANCEL )
 			return;
@@ -377,7 +367,24 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 					wxBell();
 				}
 			}
-		SaveTAGS( myfile->GetFileName() );
+		if( !SaveTAGS( myfile->GetFileName() ) and MainTagArray.Count() not_eq 0 )
+			while( wxYES == wxMessageBox( _( "TAG file cannot save to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Saved!!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) )
+				{
+				wxFileDialog filediag(this,_("Choose a file for export TAGs"),
+													_(""),
+													_(""),
+													_("*.tags"),
+													wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+													wxDefaultPosition);
+				if(wxID_OK == filediag.ShowModal())
+						if( SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
+							break;
+						else
+							wxMessageBox( wxString(_( "TAGS cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+				else
+					break;
+				}
+
 		MainTagArray.Empty();
 		//myscroll->GetMyThread()->Delete();
 //		myscroll->GetMyThread()->Wait();
@@ -457,72 +464,68 @@ void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
 		SetLocalHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
 //	UpdateCursorLocation();
-	UpdateOffsetScroll();
+//	UpdateScrollOffset(); Moved to HexEditorCtrl::ReadFromBuffer code
 	if( set_focus)
 		hex_ctrl->SetFocus();
 	}
 
-bool HexEditor::BlockSelect( void ){
+void HexEditor::BlockSelect( void ){
 	if(BlockSelectOffset == -1 )
 		BlockSelectOffset=CursorOffset();
 	else{
 		Select(BlockSelectOffset, CursorOffset() );
 		UpdateCursorLocation(); //Update statusbar
 		BlockSelectOffset = -1;
-
 		}
 	}
 
 bool HexEditor::FillSelection( void ){
-    wxString hexval = wxGetTextFromUser(_( "Enter hex value(s) for fill"), _("Fill Dialog"), wxT("00"), this );
-    if(not HexVerifyAndPrepare( hexval, _("Fill"), this ) )
-        return false;
-    wxMemoryBuffer pattern = hex_ctrl->HexToBin( hexval );
-    wxMemoryBuffer buffer;
-    for( unsigned i=0; i<select->GetSize() ; i++ ){
-        buffer.AppendByte( pattern[ i % pattern.GetDataLen() ] );
-        }
-    myfile->Add( select->GetStart(), reinterpret_cast<const char*>( buffer.GetData()), buffer.GetDataLen(), false );
-    wxUpdateUIEvent eventx( UNREDO_EVENT );
+	wxString hexval = wxGetTextFromUser(_( "Enter hex value(s) for fill"), _("Fill Dialog"), wxT("00"), this );
+	if(not HexVerifyAndPrepare( hexval, _("Fill"), this ) )
+		return false;
+	wxMemoryBuffer pattern = hex_ctrl->HexToBin( hexval );
+	wxMemoryBuffer buffer;
+	for( unsigned i=0; i<select->GetSize() ; i++ )
+		buffer.AppendByte( pattern[ i % pattern.GetDataLen() ] );
+
+	myfile->Add( select->GetStart(), reinterpret_cast<const char*>( buffer.GetData()), buffer.GetDataLen(), false );
+
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
-    Reload();
-    }
+
+	Reload();
+	return true;
+	}
 
 bool HexEditor::SaveAsDump( void ){
-    wxFileDialog filediag(this,
-        _("Choose a file for saving dump"), _(""), _(""), _("*"),
-        wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
+   wxFileDialog filediag(this,
+   _("Choose a file for saving dump"), _(""), _(""), _("*"),
+   wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
 
-    if(wxID_OK == filediag.ShowModal()){
+   if(wxID_OK == filediag.ShowModal()) {
 // TODO (death#1#): Avoid overwrite of original file!
-        wxFFile savefile( filediag.GetPath(), _("w") );
-        if(savefile.IsOpened()) {
-            int rd;
-            wxMemoryBuffer m_buffer;
-            void* buff=NULL;
+	wxFFile savefile( filediag.GetPath(), _("w") );
+      if(savefile.IsOpened()) {
+         int rd;
+         wxMemoryBuffer m_buffer;
+         void* buff=NULL;
 			buff = m_buffer.GetWriteBuf( select->GetSize() );
 
-            myfile->Seek( select->GetStart(), wxFromStart);
-            rd = myfile->Read( static_cast< char*>( buff ), select->GetSize() );
+			myfile->Seek( select->GetStart(), wxFromStart);
+			rd = myfile->Read( static_cast< char*>( buff ), select->GetSize() );
 
-            m_buffer.UngetWriteBuf( rd );
-            savefile.Write( m_buffer.GetData(), rd );
-            savefile.Close();
-            return true;
-            }
-        else{
-            wxMessageBox( wxString(_("Dump cannot saved as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
-            return false;
-            }
-        }
-    }
-
-
-void HexEditor::UpdateOffsetScroll( void ) {
-	if( offset_scroll->GetRange() != (myfile->Length() / BytePerLine()) ||
-	      offset_scroll->GetThumbPosition() != page_offset / BytePerLine() )
-		offset_scroll->SetScrollbar(page_offset / BytePerLine(), LineCount(), 1 + FileLength() / BytePerLine(), LineCount() );//Adjusting slider to page size
-	}
+			m_buffer.UngetWriteBuf( rd );
+			savefile.Write( m_buffer.GetData(), rd );
+			savefile.Close();
+			return true;
+			}
+	  else {
+			wxMessageBox( wxString(_("Dump cannot saved as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+			return false;
+			}
+      }
+	return false;
+   }
 
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 	LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * BytePerLine() );
@@ -571,11 +574,6 @@ void HexEditor::OnResize( wxSizeEvent &event) {
 		                            1 + myfile->Length() / BytePerLine(),
 		                            LineCount(),true
 		                           );
-//		offset_scroll->SetScrollbar(page_offset / ByteCapacity(),
-//		                            1,
-//		                            1+(myfile->Length() / ByteCapacity()),
-//		                            1,true
-//		                           );
 		Reload();
 		}
 	}
@@ -585,14 +583,28 @@ bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size,
 	}
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event) {
-	if(! event.ShiftDown() ) {
-		if( select->IsState( select->SELECT_TRUE ) )
-			select->SetState( select->SELECT_END );
-		}
-	else
+	#ifdef _DEBUG_SELECT_
+	std::cout << "HexEditor::OnKeyboardSelector's event.ShiftDown()=" << event.ShiftDown() << std::endl;
+	#endif
+	//On GTK, only ShiftDown doesn't return event.ShiftDwn()
+	#ifdef __WXMSW__
+	if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
+			event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
+			event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
+			event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
+			event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
+			event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
+			event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
+			event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
+		)
+	#endif
+	if( event.ShiftDown() ){
 		Selector();
-	}
+		}
+	else if( select->GetState() ) //Only SetState if there is a selection to decrease OnUpdateUI event overhead!
+		select->SetState( false );
 
+	}
 
 // TODO (death#1#): BUG: Remove Text Selection when UNDO (CTRL+SHIFT)
 // TODO (death#1#): BUG: Hex-Text Selection at release shift action
@@ -602,6 +614,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 	if(myfile != NULL) {
 		wxHexCtrl *myctrl = static_cast<wxHexCtrl*>(event.GetEventObject());
 		//Keyboard Selection Code
+		if( event.ShiftDown() )
 		if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
 		      event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
 		      event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
@@ -796,8 +809,8 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 
 
 			}//switch end
-		UpdateOffsetScroll();
-		//OnKeyboardSelector(event);
+		//UpdateScrollOffset(); Moved to HexEditorCtrl::ReadFromBuffer code
+		OnKeyboardSelector(event);//Keeps Keyboard Selection proper
 		PaintSelection( );
 		}
 	}
@@ -920,33 +933,33 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	else if( event.GetEventObject() == text_ctrl )
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
-	menu.Append(idTagEdit, _T("Tag Edit"));
-	menu.Append(idTagAddSelection, _T("New Tag"));
-	menu.Append(wxID_COPY, _T("Copy"));
-	menu.Append(idCopyAs, _T("CopyAs"));
-	menu.Append(idSaveAsDump, _T("Save As Dump"));
-	menu.Append(wxID_PASTE, _T("Paste"));
-	menu.Append(idFillSelection, _T("Fill Selecton"));
-	if( BlockSelectOffset == -1 )
-		menu.Append(idBlockSelect, _T("Set Selection Block Start"));
-	else
-		menu.Append(idBlockSelect, _T("Set Selection Block End"));
-
+	menu.Append(wxID_COPY, _("Copy"));
+	menu.Append(idCopyAs, _("CopyAs"));
+	menu.Append(idSaveAsDump, _("Save As Dump"));
+	menu.Append(wxID_PASTE, _("Paste"));
 	if(not IsFileUsingXORKey()){
 		menu.AppendSeparator();
-		menu.Append(wxID_DELETE, _T("Delete"));
-		menu.Append(idInjection, _T("Insert"));
-		menu.Append(wxID_CUT, _T("Cut"));
+		menu.Append(wxID_DELETE, _("Delete"));
+		menu.Append(idInjection, _("Insert"));
+		menu.Append(wxID_CUT, _("Cut"));
 		}
-
-    ///Adjust enable/disable
-
 //	if(XORKey == wxEmptyString){//Disable injection on XORkey
 //		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
 //		menu.Enable( wxID_CUT, select->IsState( select->SELECT_END) );
 //		menu.Enable( wxID_DELETE, select->IsState( select->SELECT_END) );
 //		}
-//
+
+	menu.AppendSeparator();
+	menu.Append(idFillSelection, _("Fill Selecton"));
+	if( BlockSelectOffset == -1 )
+		menu.Append(idBlockSelect, _("Set Selection Block Start"));
+	else
+		menu.Append(idBlockSelect, _("Set Selection Block End"));
+	menu.AppendSeparator();
+	menu.Append(idTagQuick,			 _("Quick Tag"), _("Creates empty tag with Random Color."));
+	menu.Append(idTagAddSelection, _("New Tag") );
+	menu.Append(idTagEdit, 			 _("Tag Edit"));
+
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ) {
 		TagElement *TAG = MainTagArray.Item(i);
@@ -956,13 +969,16 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 			}
 		}
 
-	menu.Enable( idTagAddSelection, select->IsState( select->SELECT_END) );
-	menu.Enable( wxID_COPY, select->IsState( select->SELECT_END) );
-	menu.Enable( idCopyAs, select->IsState( select->SELECT_END) );
-	menu.Enable( idSaveAsDump, select->IsState( select->SELECT_END) );
-	menu.Enable( idFillSelection, select->IsState( select->SELECT_END) );
-	menu.Enable( wxID_PASTE, select->IsState( select->SELECT_FALSE) );
-
+	menu.Enable( idTagQuick, select->GetState() );
+	menu.Enable( idTagAddSelection, select->GetState() );
+	menu.Enable( wxID_COPY, select->GetState() );
+	menu.Enable( idCopyAs, select->GetState() );
+	menu.Enable( idSaveAsDump, select->GetState() );
+	menu.Enable( idFillSelection, select->GetState() );
+	menu.Enable( wxID_PASTE, not select->GetState() );
+	menu.Enable( wxID_DELETE, select->GetState());
+	menu.Enable( idInjection, not select->GetState());
+	menu.Enable( wxID_CUT, select->GetState());
 
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
@@ -1007,7 +1023,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ) {
 			wxBell();							//there is no line to slide bell
 			}
 		}
-	UpdateOffsetScroll();
+	//UpdateScrollOffset(); Moved to HexEditorCtrl::ReadFromBuffer code
 	}
 
 void HexEditor::OnMouseMove( wxMouseEvent& event ) {
@@ -1026,16 +1042,16 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if defined( __WXMAC__ ) || defined ( __WXMSW__ )
-		ScrollNoThread( spd );			//MAC has problem with GuiMutex so useing safe scroll funtion
-#ifdef _DEBUG_MOUSE_
+#if defined( __WXMAC__ )// || defined ( __WXMSW__ ) //WXMSW Stuck sometimes if thread on
+		ScrollNoThread( spd );			//MAC has problem with GuiMutex so useing safe scroll function
+	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
-#endif
+	#endif
 #else
 		myscroll->UpdateSpeed(spd);
-#ifdef _DEBUG_MOUSE_
+	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Thread) Speed = " << spd << std::endl;
-#endif
+	#endif
 #endif
 		HexEditorCtrl::OnMouseMove( event );//Also makes selection in it
 		UpdateCursorLocation();//Dont remember why did I put this here? -- Remembered, for make selection block status text proper.
@@ -1091,7 +1107,7 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ) {
 
 void HexEditor::UpdateCursorLocation( bool force ) {
 	static wxMutex update;
-
+// TODO (death#1#): Search if speedup available
 //	static int64_t lastPoint=-1;				//? Speed up Van goh
 //	if( !force )
 //		if( lastPoint == CursorOffset() )
@@ -1115,7 +1131,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 
 		if( dasmpanel != NULL ) {
 			wxMemoryBuffer bfr;
-			if( not select->IsState( select->SELECT_FALSE ) ){ //If there is a selection, use selection
+			if( select->GetState() ){ //If there is a selection, use selection
 				myfile->Seek( select->GetStart(), wxFromStart );
 				//Take just first 100 bytes!
 				int sz = select->GetSize() > 100 ? 100 : select->GetSize();
@@ -1134,13 +1150,13 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 #if wxUSE_STATUSBAR
 		if( statusbar != NULL ) {
 			statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
-			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatString(), CursorOffset() ), 1);
+			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
 			uint8_t ch;
 			myfile->Seek( CursorOffset() );
 			myfile->Read( reinterpret_cast<char*>(&ch), 1);
 			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
 
-			if( select->IsState( select->SELECT_FALSE ) ) {
+			if( not select->GetState() ) {
 				statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 				statusbar->SetStatusText(_("Block Size: N/A") ,4);
 				}
@@ -1149,6 +1165,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 				statusbar->SetStatusText(wxString::Format(_("Block Size: %"wxLongLongFmtSpec"u"), select->GetSize()), 4);
 				}
 			}
+
 #endif // wxUSE_STATUSBAR
 #ifdef _DEBUG_MUTEX_
 		std::cout << "mutex Update UnLocking..." << std::endl;
@@ -1166,19 +1183,23 @@ void HexEditor::OnMouseTest( wxMouseEvent& event ) {
 void HexEditor::FindDialog( void ) {
 	::FindDialog *myfind = new ::FindDialog( this, myfile );
 	myfind->ShowModal();
+	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
 	myfind->Destroy();
+	#endif
 	}
 
 void HexEditor::ReplaceDialog( void ) {
 	::ReplaceDialog *myfind = new ::ReplaceDialog( this, myfile );
 	myfind->ShowModal();
+	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
 	myfind->Destroy();
+	#endif
 	}
 
 void HexEditor::CopyAsDialog( void ) {
 	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this, myfile, HexEditorCtrl::select, &MainTagArray );
 	mycopyas->ShowModal();
-	#ifndef __WXOSX__ // TODO: This leaks memory but OSX magically give error if I Destroy this manually... Really Weird...
+	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this manually... Really Weird...
 	mycopyas->Destroy();
 	#endif
 	}
@@ -1197,11 +1218,11 @@ bool HexEditor::DeleteSelection( void ) {
 	std::cout << "DeleteSelection!" << std::endl;
 #endif
 	bool success=false;
-	if( not select->IsState( select->SELECT_FALSE )) {
+	if( select->GetState() ) {
 		success = myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
 		if(success)
 			MoveTAGS( std::min(select->StartOffset , select->EndOffset), -select->GetSize() );
-		select->SetState( select->SELECT_FALSE );
+		select->SetState( false );
 		}
 	else {
 		wxBell();
@@ -1232,7 +1253,7 @@ bool HexEditor::InsertBytes( void ) {
 
 	if(success)
 		MoveTAGS( CursorOffset(), injection_size );
-	select->SetState( select->SELECT_FALSE );
+	select->SetState( false );
 
 	delete [] zerostream;
 
@@ -1257,7 +1278,7 @@ bool HexEditor::CutSelection( void ) {
 	}
 
 bool HexEditor::CopySelection( void ) {
-	if( not select->IsState( select->SELECT_FALSE )) {
+	if( select->GetState()) {
 		uint64_t RAM_limit = 10*MB;
 		if(select->GetSize() < RAM_limit) {								//copy to clipboard if < 10 MB
 			myfile->Seek( select->GetStart(), wxFromStart );
@@ -1326,7 +1347,7 @@ bool HexEditor::PasteFromClipboard( void ) {
 		if( ! str.IsEmpty() ) {
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
-			select->SetState( select->SELECT_FALSE );
+			select->SetState( false );
 			Goto( CursorOffset() + mymem.GetDataLen());
 			ret = true;
 			}
@@ -1338,7 +1359,7 @@ bool HexEditor::PasteFromClipboard( void ) {
 			for( unsigned i=0; i<str.Len(); i++ )
 				ch[i] = str[i];
 			FileAddDiff( CursorOffset(), ch, str.Len() );
-			select->SetState( select->SELECT_FALSE );
+			select->SetState( false );
 			Goto( CursorOffset() + str.Len() );
 			ret = true;
 			}

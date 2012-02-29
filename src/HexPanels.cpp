@@ -309,18 +309,23 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 		}
 
 
-void TagPanel::Set( ArrayOfTAG& TagArray ){
-		static wxMutex mutextag;
-		mutextag.Lock();
-		wxArrayString str;
-		for(unsigned i = 0 ; i < TagArray.Count() ; i++)
-			str.Add( TagArray.Item(i)->tag.IsEmpty() ?
-						 wxString::Format(wxT("%d. Offset %d"),i+1, TagArray.Item(i)->start )
-						: TagArray.Item(i)->tag );
+void TagPanel::Clear( void ){
+	mutextag.Lock();
+	TagPanelList->Clear();
+	mutextag.Unlock();
+	}
 
-		TagPanelList->Clear();
-		TagPanelList->InsertItems(str,0);
-		mutextag.Unlock();
+void TagPanel::Set( ArrayOfTAG& TagArray ){
+	mutextag.Lock();
+	wxArrayString str;
+	for(unsigned i = 0 ; i < TagArray.Count() ; i++)
+		str.Add( TagArray.Item(i)->tag.IsEmpty() ?
+// TODO (death#1#): wxLongLongFmtSpec need here!!!					wxString::Format(wxT("%d. Offset %"wxLongLongFmtSpec"u"),i+1, TagArray.Item(i)->start )
+					: TagArray.Item(i)->tag );
+
+	TagPanelList->Clear();
+	TagPanelList->InsertItems(str,0);
+	mutextag.Unlock();
 	}
 
 void TagPanel::OnTagSelect(wxCommandEvent& event) {
@@ -337,6 +342,12 @@ void TagPanel::OnTagSelect(wxCommandEvent& event) {
 			}
 		MyHexEditor->Goto( tg->start );
 		}
+	}
+void SearchPanel::OnClear( wxCommandEvent& event ){
+	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+	TagPanelList->Clear();
+	MyHexEditor->HighlightArray.Clear();
+	MyHexEditor->Reload();
 	}
 
 void SearchPanel::OnTagSelect(wxCommandEvent& event) {

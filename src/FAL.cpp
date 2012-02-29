@@ -37,10 +37,18 @@ int FDtoBlockSize( int FD ){
 #elif defined (__WXMAC__)
 	ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
 #elif defined (__WXMSW__)
-	DWORD dwResult;
-	DISK_GEOMETRY driveInfo;
-	DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
-	block_size=driveInfo.BytesPerSector;
+	struct stat *sbufptr = new struct stat;
+   fstat( FD, sbufptr );
+   if(S_ISBLK( sbufptr->st_mode )
+#ifdef __WXMSW__
+		or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
+#endif
+		){
+		DWORD dwResult;
+		DISK_GEOMETRY driveInfo;
+		DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
+		block_size=driveInfo.BytesPerSector;
+		}
 #endif
 	return block_size;
 	}
@@ -49,6 +57,7 @@ uint64_t FDtoBlockCount( int FD ) {
 	uint64_t block_count=0;
 #ifdef __WXGTK__
 	ioctl(FD, BLKGETSIZE64, &block_count);
+	block_count/=FDtoBlockSize( FD );
 #elif defined (__WXMAC__)
 	ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
 #elif defined (__WXMSW__)
@@ -57,13 +66,13 @@ uint64_t FDtoBlockCount( int FD ) {
 	DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
 	block_count=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 #endif
-	return block_count/FDtoBlockSize( FD );
+	return block_count;
 	}
 
 FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	file_access_mode = FAM;
 	the_file = myfilename;
-	BlockSize = ForceBlockRW;
+	BlockRWSize = ForceBlockRW;
 
 #ifdef __WXMSW__
 	//Windows special device opening
@@ -83,15 +92,14 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 		DISK_GEOMETRY driveInfo;
 		//dev = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 		DeviceIoControl (hDevice, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
+		BlockRWSize=driveInfo.BytesPerSector;
+		BlockRWCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 
-		BlockSize=driveInfo.BytesPerSector;
-		BlockCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
-#ifdef _DEBUG_
-		wxMessageBox(wxString::Format( wxT("Bytes per sector = %"wxLongLongFmtSpec"u\nTotal number of bytes = %"wxLongLongFmtSpec"u\n"), BlockSize, BlockCount) ,wxT("File Info"));
-#endif
 		int fd = _open_osfhandle((long) hDevice, 0);
+#ifdef _DEBUG_
+		std::cout<< "Win Device Info:\n" << "Bytes per sector = " <<  BlockRWSize << "\nTotal number of bytes = " << BlockRWCount << std::endl;
+#endif
 		wxFile::Attach( fd );
-
 		return;
 		}
 	if( not myfilename.IsFileReadable() ){
@@ -141,7 +149,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			Open(myfilename.GetFullPath(), wxFile::read_write);
 
 		if( ForceBlockRW )
-			BlockCount=wxFile::Length()/ForceBlockRW;
+			BlockRWCount=wxFile::Length()/ForceBlockRW;
 
 		if(! IsOpened()){
 			file_access_mode = AccessInvalid;
@@ -259,13 +267,13 @@ bool FAL::Apply( void ){
 			if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
 				Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
 
-				if(BlockSize > 0){
-					uint64_t StartSector = put_ptr / BlockSize;
-					unsigned StartShift = put_ptr - StartSector*BlockSize;
-					uint64_t EndSector = (put_ptr + DiffArray[i]->size)/BlockSize;
-					int rd_size = (EndSector - StartSector + 1 )*BlockSize;// +1 for make read least one sector
+				if(BlockRWSize > 0){
+					uint64_t StartSector = put_ptr / BlockRWSize;
+					unsigned StartShift = put_ptr - StartSector*BlockRWSize;
+					uint64_t EndSector = (put_ptr + DiffArray[i]->size)/BlockRWSize;
+					int rd_size = (EndSector - StartSector + 1 )*BlockRWSize;// +1 for make read least one sector
 					char *bfr = new char[rd_size];
-					wxFile::Seek(StartSector*BlockSize);
+					wxFile::Seek(StartSector*BlockRWSize);
 					int rd = wxFile::Read( bfr, rd_size);
 					if( rd != rd_size ){	//Crucial if  block read error.
 						delete [] bfr;
@@ -360,12 +368,12 @@ void FAL::ShowDebugState( void ){
 	}
 
 int FAL::GetBlockSize( void ){
-	return BlockSize;
+	return BlockRWSize;
 	}
 
 wxFileOffset FAL::Length( void ){
-	if ( BlockSize > 0 )
-		return BlockSize*BlockCount;
+	if ( BlockRWSize > 0 )
+		return BlockRWSize*BlockRWCount;
 
 	#ifdef __WXGTK__
 		if( the_file.GetFullPath() == wxT("/dev/mem") ){
@@ -416,9 +424,10 @@ void FAL::ApplyXOR( unsigned char* buffer, unsigned size, uint64_t from ){
 long FAL::Read( char* buffer, int size){
 	return Read( reinterpret_cast<unsigned char*>(buffer), size);
 	}
+
 long FAL::Read( unsigned char* buffer, int size){
 	uint64_t from;
-	if( BlockSize > 0 )
+	if( BlockRWSize > 0 )
 		from = get_ptr;
 	else
 		from = Tell();
@@ -436,7 +445,7 @@ long FAL::Read( unsigned char* buffer, int size){
 	//Encryption layer
 	ApplyXOR( buffer, size, from );
 
-	if( BlockSize > 0 )
+	if( BlockRWSize > 0 )
 		get_ptr += size; //for next read
 
 	return ret;
@@ -462,17 +471,17 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 	if( PatchIndice == 0 )	//Deepest layer
 		{
 	//ugly hack
-		if ( BlockSize > 0 ){
-			uint64_t StartSector = from / BlockSize;
-			unsigned StartShift = from - (from / BlockSize)*BlockSize;
-			uint64_t EndSector = (from + size)/BlockSize;
+		if ( BlockRWSize > 0 ){
+			uint64_t StartSector = from / BlockRWSize;
+			unsigned StartShift = from - (from / BlockRWSize)*BlockRWSize;
+			uint64_t EndSector = (from + size)/BlockRWSize;
 
-			if( EndSector > BlockCount-1 )
-				EndSector = BlockCount-1;
+			if( EndSector > BlockRWCount-1 )
+				EndSector = BlockRWCount-1;
 
-		   int rd_size = (EndSector - StartSector + 1)*BlockSize; //+1 for read least one sector
+		   int rd_size = (EndSector - StartSector + 1)*BlockRWSize; //+1 for read least one sector
 			char *bfr = new char[rd_size];
-			wxFile::Seek(StartSector*BlockSize);
+			wxFile::Seek(StartSector*BlockRWSize);
 			int rd = wxFile::Read( bfr, rd_size);
 			memcpy(buffer, bfr+StartShift, wxMin(wxMin( rd, rd_size-StartShift) , size)); //wxMin protects file ends.
 			delete [] bfr;
@@ -674,7 +683,7 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 
 wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 	get_ptr = put_ptr = ofs;
-	if( BlockSize > 0 )
+	if( BlockRWSize > 0 )
 		return ofs;
 
 	return wxFile::Seek( ofs, mode );

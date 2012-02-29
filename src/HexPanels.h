@@ -88,31 +88,36 @@ class DataInterpreter : public InterpreterGui{
 
 class InfoPanel : public InfoPanelGui{
 	public:
-	InfoPanel(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:InfoPanelGui( parent, id, pos, size, style){
-	}
-	void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey );
-	void OnUpdate( wxCommandEvent& event ){
-	}
+		InfoPanel(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+		:InfoPanelGui( parent, id, pos, size, style){
+		}
+		void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey );
+		void OnUpdate( wxCommandEvent& event ){
+			}
 };
 class TagPanel : public TagPanelGui{
 	public:
-	TagPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:TagPanelGui( (wxWindow*) parent_, id, pos, size, style){
-		parent = parent_;
-		}
-	class HexEditorFrame *parent;
-	void Set( ArrayOfTAG& TagArray );
-	void OnTagSelect( wxCommandEvent& event );
-	void OnUpdate( wxCommandEvent& event ){
-	}
+		TagPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
+		:TagPanelGui( (wxWindow*) parent_, id, pos, size, style){
+			parent = parent_;
+			}
+		class HexEditorFrame *parent;
+		void Set( ArrayOfTAG& TagArray );
+		void Clear( void );
+		void OnTagSelect( wxCommandEvent& event );
+		void OnUpdate( wxCommandEvent& event ){
+			}
+	private:
+		wxMutex mutextag;
 };
 
 class SearchPanel : public TagPanel{
 	public:
 	SearchPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:TagPanel( parent_, id, pos, size, style){};
+	:TagPanel( parent_, id, pos, size, style){
+	m_buttonClear->Show(true);};
 	void OnTagSelect( wxCommandEvent& event );
+	void OnClear( wxCommandEvent& event );
 	};
 
 class ComparePanel : public TagPanel{

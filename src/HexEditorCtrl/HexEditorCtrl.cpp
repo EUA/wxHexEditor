@@ -36,6 +36,8 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	HexEditorCtrlGui(parent, id, pos, size, wxTAB_TRAVERSAL){
 	select = new class Select( GetEventHandler() );
 
+	SetAutoLayout(true);
+
 	m_static_offset->SetLabel( _("Offset") );
 
 #if defined( __WXOSX__ )
@@ -59,7 +61,8 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	ZebraStriping = hex_ctrl->ZebraStriping;
 	text_ctrl->ZebraStriping = ZebraStriping;
 	offset_ctrl->ZebraStriping = ZebraStriping;
-	wxConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable);
+	wxConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable, true);
+	sector_size=0;
    }
 
 HexEditorCtrl::~HexEditorCtrl( void ){
@@ -72,6 +75,7 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 
 void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( idTagAddSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagAddSelection ), NULL, this );
+	this->Connect( idTagQuick, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagQuick ), NULL, this );
 	this->Connect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 	this->Connect( __idOffsetHex__, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorCtrl::UpdateUI ) );
 	this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
@@ -93,11 +97,12 @@ void HexEditorCtrl::Dynamic_Connector(){
 
 void HexEditorCtrl::Dynamic_Disconnector(){
 	this->Disconnect( idTagAddSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagAddSelection ), NULL, this );
+	this->Disconnect( idTagQuick, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagQuick ), NULL, this );
 	this->Disconnect( idTagEdit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorCtrl::OnTagEdit ), NULL, this );
 	this->Disconnect( __idOffsetHex__, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorCtrl::UpdateUI ) );
-    this->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-    hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
-    text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	this->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	hex_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	text_ctrl->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 
 	offset_ctrl->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
 	offset_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
@@ -128,13 +133,37 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 
 	//Painting Zebra Stripes, -1 means no stripe. 0 means start with normal, 1 means start with zebra
 	*ZebraStriping=(ZebraEnable ? position/BytePerLine()%2 : -1);
+	if(sector_size > 1){
+		offset_ctrl->sector_size=sector_size;
+		int draw_line=sector_size-(page_offset%sector_size);
+		hex_ctrl->ThinSeperationLines.Clear();
+		text_ctrl->ThinSeperationLines.Clear();
+			do{
+			hex_ctrl->ThinSeperationLines.Add( 2*draw_line );
+			text_ctrl->ThinSeperationLines.Add( draw_line );
+			draw_line += sector_size;
+			}while (draw_line < lenght );
+		}
 
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
-	offset_ctrl->SetValue( position, hex_ctrl->BytePerLine() );
+	offset_ctrl->SetValue( position, BytePerLine() );
+
+	if( offset_scroll->GetThumbPosition() not_eq (page_offset / BytePerLine()) )
+		offset_scroll->SetThumbPosition( page_offset / BytePerLine() );
+
 	if( paint ){
 		PaintSelection();
 		}
+//	sector_size=128;
+//	if(sector_size > 1){
+//		int draw_line=sector_size-(page_offset%sector_size);
+//			do{
+//			hex_ctrl->DrawSeperationLineAfterChar( 2*draw_line );
+//			text_ctrl->DrawSeperationLineAfterChar( draw_line );
+//			draw_line += sector_size;
+//			}while (draw_line < GetByteCount() );
+//		}
 	MyBufferMutex.Unlock();
 	}
 
@@ -170,8 +199,9 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 			}
 		}
 
-	if( select->IsState( select->SELECT_END ) ){
+	if( select->GetState() ){
 		menu.Append(idTagAddSelection, _T("Tag Selection"));
+		menu.Append(idTagQuick, _T("Tag Selection"));
 		}
 //  menu.AppendSeparator();
 	wxPoint pos = event.GetPosition();
@@ -206,19 +236,41 @@ void HexEditorCtrl::SetFont( wxFont f ){
    text_ctrl->SetDefaultStyle( Style );
 	}
 
+//Handles selection operations.
 bool HexEditorCtrl::Selector(){
-	if( FindFocus() == hex_ctrl || FindFocus() == text_ctrl )				//If selecton from hex or text control
-		select->EndOffset = page_offset + GetLocalHexInsertionPoint()/2;	//Than make selection
-	else{
-		std::cout << "Selector without focuse captured" << std::endl;
+	wxWindow* FocusAt=FindFocus();
+	if( not (FocusAt == hex_ctrl || FocusAt == text_ctrl) ){		//Checks If selecton from hex or text control
+		#ifdef _DEBUG_
+		std::cout << "Selector without focus captured." << std::endl;
+		#endif
 		return false;
 		}
-
-	if( not select->IsState( select->SELECT_TRUE ) ){	// If no select available,
-		select->SetState( select->SELECT_TRUE );			// then set start selection procedure
-		select->StartOffset = select->EndOffset;
+	#ifdef _DEBUG_SELECT_
+	std::cout << "Selector captured at CursorOffset()=" << std::dec << CursorOffset() << "\t select->StartOffset:" <<  select->StartOffset << std::endl;
+	#endif
+	select->EndOffset = CursorOffset();	//Than make selection
+	if( not select->GetState() ){	// If no select available,
+		select->SetState( true );	// then set start selection procedure
+		select->OriginalStartOffset = select->StartOffset = select->EndOffset;
+		return true;
 		}
-	return true;
+
+	if( FocusAt==text_ctrl ){ //TextCtrl capture mechanism is different since cursor is a slim line "|"
+		if( select->OriginalStartOffset > select->EndOffset ){ //Backward selection at text panel
+			select->StartOffset=select->OriginalStartOffset-1;
+			}
+		else if(select->OriginalStartOffset < select->EndOffset){ //forward selection on text panel
+			select->StartOffset = select->OriginalStartOffset;
+			select->EndOffset = select->EndOffset-1;
+			}
+		else{
+			select->SetState( false );
+			}
+		}
+
+	#ifdef _DEBUG_SELECT_
+	std::cout << "Selector Result : " << select->StartOffset << ":" << select->EndOffset << std::endl;
+	#endif
 	}
 
 bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){
@@ -228,10 +280,13 @@ bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){
 		wxBell();
 		return false;
 		}
+	#ifdef _DEBUG_SELECT_
+	std::cout << "HexEditorCtrl::Select( " << std::dec << start_offset << "," <<  end_offset << ")" << std::endl;
+	#endif
 	select->StartOffset = start_offset;
 	select->EndOffset  = end_offset;
-	select->SetState( select->SELECT_END );
-	PaintSelection( );
+	select->SetState( true );
+	PaintSelection();
 	return true;
 	}
 
@@ -263,7 +318,6 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 		TAG = CompareArray.Item(i);// For debugging
 		PushTAGToControls(TAG);
 		}
-
 	}
 
 //This functions move tags to local hex and text ctrls.
@@ -292,6 +346,7 @@ void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 	end_byte		-= page_offset;
 
 	TagElement *TAX;//For debugging
+
 	TAX = new TagElement( start_byte, end_byte+1, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
 	text_ctrl->TagArray.Add( TAX );
 	TAX = new TagElement( start_byte*2, (end_byte+1)*2, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
@@ -300,7 +355,7 @@ void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 
 void HexEditorCtrl::PaintSelection( void ){
 	PreparePaintTAGs();
-	if( !select->IsState( select->SELECT_FALSE ) ){
+	if( select->GetState() ){
 		int64_t start_byte = select->StartOffset;
 		int64_t end_byte = select->EndOffset;
 
@@ -359,18 +414,53 @@ void HexEditorCtrl::RePaint( void ){
 	offset_ctrl->RePaint( );
 	}
 
+void HexEditorCtrl::ControlShow( panels control, bool show ){
+	if( control == OFFSET_CTRL ){
+		offset_ctrl->Show( show );
+		m_static_offset->Show(show);
+		}
+	else if(control == HEX_CTRL ){
+		hex_ctrl->Show( show );
+		m_static_adress->Show(show);
+		}
+	else if(control == TEXT_CTRL ){
+		text_ctrl->Show( show );
+		m_static_byteview->Show(show);
+		}
+	wxYieldIfNeeded();
+	Layout();
+	Fit();
+	}
+bool HexEditorCtrl::ControlIsShown(panels control){
+	switch(control){
+		case OFFSET_CTRL:return offset_ctrl->IsShown();
+		case HEX_CTRL	: return	hex_ctrl->IsShown();
+		case TEXT_CTRL	: return text_ctrl->IsShown();
+		}
+	return false;
+	}
+
 void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 	int charx = hex_ctrl->GetCharSize().GetX();
 	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize() + 4;
-    x -= offset_x;			//Remove Offset Control box X because its changeable
-    x -= offset_scroll_real->GetSize().GetX();		//Remove Offset scroll size
-    x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
-    y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
-	int i = x/(4*charx);	//2 hex + 1 whitespace & 1 byte view
+	offset_x = offset_ctrl->IsShown() ? offset_x : 0;
+
+   x -= offset_x;			//Remove Offset Control box X because its changeable
+   x -= offset_scroll_real->GetSize().GetX();		//Remove Offset scroll size
+   x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
+   y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
+
+	int div = 0;
+	div += text_ctrl->IsShown() ? 1 : 0; //1 character space for each byte
+	div += hex_ctrl->IsShown() ? 3 : 0;  //2 hex +1 whitespace for each byte
+
+	int i = x/(div*charx);	//Byte Per Line!
 	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
+	text_x = text_ctrl->IsShown() ? text_x : 0;
+	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
 
 #ifdef _DEBUG_SIZE_
 	std::cout<< "HexEditorCtrl::OnResize()" << std::endl
@@ -387,21 +477,20 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 		byteview << wxString::Format( wxT("%01X"), j%16 );
 		}
 	adress.RemoveLast();	//Remove last ' ' for unwrap
- 	m_static_adress->SetLabel(adress);
- 	m_static_byteview->SetLabel( byteview );
 
 	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
 //	offset_ctrl->SetSize( wxSize( offset_x , y ) ); //Not needed, Layout() Makes the job well.
+	m_static_offset->SetMinSize( wxSize(offset_x, m_static_offset->GetSize().GetY()) );
 
-	hex_ctrl->SetMinSize( wxSize(hex_x, y ));
+	hex_ctrl->SetMinSize( wxSize( hex_x, y ));
 //	hex_ctrl->SetSize( wxSize( hex_x, y ));
+	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
+	m_static_adress->SetLabel(adress);
 
 	text_ctrl->SetMinSize( wxSize( text_x, y ));
 //	text_ctrl->SetSize( wxSize( text_x, y ));
-
-	m_static_offset->SetMinSize( wxSize(offset_x, m_static_offset->GetSize().GetY()) );
-	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
 	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
+	m_static_byteview->SetLabel( byteview );
 
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
@@ -417,7 +506,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	this->Layout();
 
 #ifdef __WXMSW__
-///At windows, OnResize cannot update required things immeditialy, this hack fixes this behaviour.
+///At windows, OnResize cannot update required fields immeditialy, this hack fixes this behaviour.
 	hex_ctrl->ChangeSize();
 	text_ctrl->ChangeSize();
 	offset_ctrl->ChangeSize();
@@ -435,7 +524,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
-	select->SetState( select->SELECT_FALSE );
+	select->SetState( false );
 	ClearPaint();
 	if( event.GetEventObject() == hex_ctrl ){
 		hex_ctrl->SetFocus();
@@ -454,7 +543,7 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	if(event.m_leftDown){									//if left button is pressed
-		int new_hex_location;										// initialize new_hex_location variable
+		int new_hex_location=0;								// initialize new_hex_location variable
 		if( event.GetEventObject() == hex_ctrl ) 		// if this event from hex_ctrl area
 			new_hex_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ); //than take it's location on hex chars
 		else if ( event.GetEventObject() == text_ctrl ) //if we got this event from text area
@@ -462,11 +551,11 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 		int old_hex_location = GetLocalHexInsertionPoint();	//requesting old hex location
 		if( new_hex_location != old_hex_location ){				//if hex selection addresses are different, start selection routine
 
-			if( not select->IsState( select->SELECT_TRUE) )	//if this is new selection start
-				if( Selector() == false )								//and  select without focus
-					return;													//don't make anything.
-			SetLocalHexInsertionPoint( new_hex_location );		//Moving cursor to new location.
-			Selector();														//Making actual selection.
+			if( not select->GetState() )	//if this is new selection start
+				if( Selector() == false )	//and  select without focus
+					return;						//don't make anything.
+			SetLocalHexInsertionPoint( new_hex_location );	//Moving cursor to new location.
+			Selector();							//Making actual selection.
 			PaintSelection();
 			}
 		}
@@ -484,8 +573,6 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
-	if(select->IsState( select->SELECT_TRUE ) )
-		select->SetState( select->SELECT_END );
 	event.Skip();
 	}
 
@@ -518,20 +605,26 @@ void HexEditorCtrl::OnKillFocus( wxFocusEvent& event){
 	event.Skip();
 	}
 
-void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ){
-	if( select->IsState(select->SELECT_END) ){
+void HexEditorCtrl::TagCreator( bool QuickTag ){
+	if( select->GetState() ){
 		TagElement *TE = new TagElement;
 		TE->start=select->StartOffset;
 		TE->end=select->EndOffset;
-		static wxColour last_tag_color = *wxRED;
+
+		srand ( time(NULL) );
+		//static keeps color values for next tag here!
+		static wxColour last_tag_color = rand();
 		static wxColour last_font_color = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
-		TE->NoteClrData.SetColour( last_tag_color );
+
+		TE->NoteClrData.SetColour( QuickTag ? rand() : last_tag_color );
 		TE->FontClrData.SetColour( last_font_color );
 
-
-		TagDialog *x=new TagDialog( *TE, this );
-
-		if( x->ShowModal() == wxID_SAVE ){
+		int a=wxID_SAVE;
+		if( not QuickTag ){
+			TagDialog x( *TE, this );
+			a=x.ShowModal();
+			}
+		if( a == wxID_SAVE ){
 			last_tag_color = TE->NoteClrData.GetColour();
 			last_font_color = TE->FontClrData.GetColour();
 			MainTagArray.Add( TE );
@@ -540,13 +633,19 @@ void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ){
 			text_ctrl->RePaint();
 			hex_ctrl ->RePaint();
 			}
-		x->Destroy();
-		delete x;
-		//delete TE; Don't delete this tags!
+		//delete TE; NO! Don't delete this tags!
 		}
 	//event.Skip( true );
 	wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
+	}
+
+void HexEditorCtrl::OnTagQuick( wxCommandEvent& event ){
+	TagCreator( true );
+	}
+
+void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ){
+	TagCreator( false );
 	}
 
 void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
@@ -592,7 +691,7 @@ void HexEditorCtrl::TagHideAll( void ){
 	TAGMutex = false;
 	}
 
-void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
+bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 	wxXmlDocument doc;
 	if( flnm.IsFileReadable() )
 		if( doc.Load( flnm.GetFullPath(), wxT("UTF-8")) )
@@ -644,7 +743,9 @@ void HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 				ClearPaint();
 				text_ctrl->RePaint();
 				hex_ctrl ->RePaint();
+				return true;
 				}
+	return false;
 	}
 
 //Moves tags for deletion & insertions
@@ -662,10 +763,11 @@ void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 		}
 	}
 
-void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
+bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 	if( MainTagArray.Count() ==  0){
 		if( flnm.FileExists() )
 			wxRemoveFile( flnm.GetFullPath() << wxT(".tags") );
+		return false;
 		}
 	else{
 		wxXmlDocument doc;
@@ -698,7 +800,7 @@ void HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			}
 		doc.SetFileEncoding( wxT("UTF-8") );
 		doc.SetRoot( node_Root );
-		doc.Save(flnm.GetFullPath().Append(wxT(".tags")));
+		return doc.Save(flnm.GetFullPath().Append(wxT(".tags")));
 		}
 	}
 
@@ -708,18 +810,16 @@ void HexEditorCtrl::UpdateUI(wxUpdateUIEvent& event){
 	}
 
 //------ADAPTERS----------//
-int HexEditorCtrl::GetLocalHexInsertionPoint(){					//returns position of Hex Cursor
-	return hex_ctrl->GetInsertionPoint();
-	}
-int HexEditorCtrl::GetLocalInsertionPoint(){					//returns position of Text Cursor
-	return text_ctrl->GetInsertionPoint();
-	}
+//returns position of Hex Cursor
+int HexEditorCtrl::GetLocalHexInsertionPoint(){	return (hex_ctrl->IsShown() ? hex_ctrl->GetInsertionPoint() : text_ctrl->GetInsertionPoint()*2 ); }
+			//returns position of Text Cursor
+int HexEditorCtrl::GetLocalInsertionPoint(){ return (text_ctrl->IsShown() ? text_ctrl->GetInsertionPoint() : hex_ctrl->GetInsertionPoint()/2 ); }
 void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}
 uint64_t HexEditorCtrl::CursorOffset( void ){
-	return GetLocalHexInsertionPoint()/2 + page_offset;
+	return GetLocalInsertionPoint() + page_offset;
 	}
 
 wxHugeScrollBar::wxHugeScrollBar( wxScrollBar* m_scrollbar_ ){
@@ -813,7 +913,6 @@ void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
 		std::cout << "wxEVT_SCROLLWIN_LINEUP" << std::endl;
 	if( event.GetEventType() == wxEVT_SCROLLWIN_LINEDOWN )
 		std::cout << "wxEVT_SCROLLWIN_LINEDOWN" << std::endl;
-
 #endif
 	event.Skip();
 	}

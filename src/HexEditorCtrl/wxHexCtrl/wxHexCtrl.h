@@ -38,7 +38,6 @@
 #define __idOffsetHex__ 1502
 
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
-
 class wxHexCtrl : public wxScrolledWindow{
 	public:
 //		wxHexCtrl() { }
@@ -98,9 +97,9 @@ virtual bool IsAllowedChar(const char& chr);
 virtual int CharacterPerLine( bool NoCache=false );
 virtual int BytePerLine( void ){ return CharacterPerLine() / 2; }
 virtual int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
+virtual int GetByteCount( void ){ return m_text.Length()/2;	}
 		int LineCount( void )	{ return m_Window.y; }
 		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
-		int GetByteCount( void ){ return m_text.Length()/2;	}
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
 		int GetLastPosition( void ){ return m_text.Length() - 1; }
@@ -112,6 +111,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 
 		// TAG Support and Selection
 		ArrayOfTAG TagArray;
+		wxArrayInt ThinSeperationLines;
 		TagElement* GetTagByPix( wxPoint PixelCoord );
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );
@@ -120,13 +120,17 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			} select;
 virtual void TagPainter( wxDC* DC, TagElement& TG );
 		void RePaint( void );
-		wxMemoryDC* CreateDC( void );
-		void DCPainter( wxDC* );
+
+inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		void OnTagHideAll( void );
 		bool *TagMutex;
 		int *ZebraStriping;
 
 	protected:
+		wxDC* UpdateDC( void );
+		wxMemoryDC* CreateDC( void );
+		wxMemoryDC* internalBufferDC;
+		wxBitmap*   internalBufferBMP;
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );
@@ -175,8 +179,9 @@ class wxHexTextCtrl : public wxHexCtrl{
 				};
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
-		int CharacterPerLine( void ){ return m_Window.x; }
-		int BytePerLine( void ){ return CharacterPerLine(); }
+inline int CharacterPerLine( void ){ return m_Window.x; }
+inline int BytePerLine( void ){ return CharacterPerLine(); }
+inline int GetByteCount( void ){ return m_text.Length(); }
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
@@ -211,7 +216,8 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				offset_position=0;
 				digit_count=6;
 				};
-        wxString GetFormatString(void);
+		wxString GetFormatString( bool minimal=false );
+      wxString GetFormatedOffsetString( uint64_t c_offset, bool minimal=false );
 		void SetOffsetLimit( uint64_t max_offset ){offset_limit = max_offset;}
 		unsigned GetDigitCount( void );
 		unsigned GetLineSize( void );  //Digit count plus Formating chars like h,o if required
@@ -227,6 +233,7 @@ inline bool IsDenied( int x ){ return false; }
 		char offset_mode;
 		uint64_t offset_position;
 		int BytePerLine;
+		int sector_size;
 
 	private:
 		uint64_t offset_limit;

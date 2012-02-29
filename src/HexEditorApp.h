@@ -33,8 +33,18 @@
 #ifndef WXHEXEDITORAPP_H
 #define WXHEXEDITORAPP_H
 
-#define _VERSION_ "0.12"
-#define _VERSION_STR_ "v0.12 Beta Development Version"
+#define _VERSION_ "0.20"
+
+#ifdef __WXMSW__
+	#define _VERSION_STR_ "v0.20 Beta for Windows"
+#elif defined(__WXOSX__)
+	#define _VERSION_STR_ "v0.20 Beta for Mac"
+#elif defined(__WXGTK__)
+	#define _VERSION_STR_ "v0.20 Beta for Linux"
+#else
+	#define _VERSION_STR_ "v0.20 Beta"
+#endif
+
 #include <wx/app.h>
 #include "HexEditorFrame.h"
 class wxHexEditorApp : public wxApp

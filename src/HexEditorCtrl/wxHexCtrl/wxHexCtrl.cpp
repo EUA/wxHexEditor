@@ -70,6 +70,9 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	ZebraStriping=new int;
 	*ZebraStriping=-1;
 
+	internalBufferDC=NULL;
+	internalBufferBMP=NULL;
+
 	SetSelectionStyle( HexDefaultAttr );
 
 	HexDefaultAttr = wxTextAttr(
@@ -382,15 +385,31 @@ void wxHexCtrl::DoMoveCaret(){
 }
 
 inline wxMemoryDC* wxHexCtrl::CreateDC(){
-//	wxBufferedPaintDC *dcTemp= new wxBufferedPaintDC(this); //has problems with MacOSX
+//	wxBitmap *bmp=new wxBitmap(this->GetSize().GetWidth(), this->GetSize().GetHeight());
+//	wxMemoryDC *dcTemp = new wxMemoryDC();
+//	dcTemp->SelectObject(*bmp);
+//	return dcTemp;
+	if(internalBufferDC not_eq NULL)
+		delete internalBufferDC;
+	if(internalBufferBMP not_eq NULL)
+		delete internalBufferBMP;
+
+	internalBufferBMP=new wxBitmap(this->GetSize().GetWidth(), this->GetSize().GetHeight());
+	internalBufferDC = new wxMemoryDC();
+	internalBufferDC->SelectObject(*internalBufferBMP);
+	return internalBufferDC;
+	}
+
+inline wxDC* wxHexCtrl::UpdateDC(){
+	if(internalBufferDC==NULL)
+		internalBufferDC = CreateDC();
+	wxMemoryDC *dcTemp = internalBufferDC;
+	//wxPaintDC *dcTemp = new wxPaintDC(this);
+	//wxBufferedPaintDC *dcTemp= new wxBufferedPaintDC(this); //has problems with MacOSX
 
 #ifdef _DEBUG_SIZE_
-		std::cout << "wxHexCtrl::CreateDC Sizes: " << this->GetSize().GetWidth() << ":" << this->GetSize().GetHeight() << std::endl;
+		std::cout << "wxHexCtrl::Update Sizes: " << this->GetSize().GetWidth() << ":" << this->GetSize().GetHeight() << std::endl;
 #endif
-	wxBitmap bmp(this->GetSize().GetWidth(), this->GetSize().GetHeight());
-	wxMemoryDC *dcTemp = new wxMemoryDC();
-	dcTemp->SelectObject(bmp);
-
 	dcTemp->SetFont( HexDefaultAttr.GetFont() );
 	dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
 	dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() ); //This will be overriden by Zebra stripping
@@ -404,10 +423,12 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 	line.Alloc( m_Window.x+1 );
 	wxColour col_standart(HexDefaultAttr.GetBackgroundColour());
 	wxColour col_zebra(0x00FFEEEE);
-
-	unsigned int z = 0;
+	;
+	size_t z = 0;
+	size_t textLength=m_text.Length();
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
 		line.Empty();
+
 		if (*ZebraStriping != -1 )
 			dcTemp->SetTextBackground( (y+*ZebraStriping)%2 ? col_standart : col_zebra);
 
@@ -416,12 +437,13 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 				line += wxT(' ');
 				continue;
 				}
-			if(z >= m_text.Length())
+			if(z >= textLength)
 				break;
-			wxChar ch = CharAt(z++);
-			line += ch;
+
 #if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-			dcTemp->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+			dcTemp->DrawText( wxString::FromAscii( CharAt(z) ), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+#else
+			line += CharAt(z++);
 #endif
 			}
 #if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
@@ -439,12 +461,33 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 		}
 	if(select.selected)
 		TagPainter( dcTemp, select );
+
+	if(ThinSeperationLines.Count() > 0)
+		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)
+			DrawSeperationLineAfterChar( dcTemp, ThinSeperationLines.Item(i) );
+
 	return dcTemp;
 }
 
+inline void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset ){
+	if(m_Window.x > 0){
+		wxPoint z = InternalPositionToVisibleCoord( seperationoffset );
+		int y1=m_CharSize.y*( 1+z.y )+ m_Margin.y;
+		int y2=y1-m_CharSize.y;
+		int x1=m_CharSize.x*(z.x)+m_Margin.x;
+		int x2=m_CharSize.x*2*m_Window.x+m_Margin.x;
+
+		dcTemp->SetPen( *wxRED_PEN );
+		dcTemp->DrawLine( 0,y1,x1,y1);
+		if( z.x not_eq 0)
+			dcTemp->DrawLine( x1,y1,x1,y2);
+		dcTemp->DrawLine( x1,y2,x2,y2);
+		}
+	}
+
 void wxHexCtrl::RePaint( void ){
 	wxCaretSuspend cs(this);
-	wxMemoryDC* dcTemp = CreateDC();
+	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
 		wxClientDC dc( this );
 //		PrepareDC( dc ); //For wxWindowScrooled ?
@@ -455,15 +498,15 @@ void wxHexCtrl::RePaint( void ){
 #else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
 #endif
-		delete dcTemp;
+		///delete dcTemp;
 		}
 	}
 
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
-	wxMemoryDC* dcTemp = CreateDC();
+	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
-		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
 //		PrepareDC( dc ); //For wxWindowScrooled ?
+		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
 //		PrepareDC( dc );
@@ -472,7 +515,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 #else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
 #endif
-		delete dcTemp;
+		///delete dcTemp;
 		}
 	}
 
@@ -503,8 +546,10 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 
 		if( start < 0 )
 			start = 0;
+
 		if ( end > ByteCapacity()*2)
 			 end = ByteCapacity()*2;
+
 // TODO (death#1#): Here problem with Text Ctrl.Use smart pointer...?
 		wxPoint _start_ = InternalPositionToVisibleCoord( start );
 		wxPoint _end_   = InternalPositionToVisibleCoord( end );
@@ -614,6 +659,9 @@ void wxHexCtrl::ChangeSize(){
 		IsDeniedCache[i]=IsDenied_NoCache(i);
 	CharacterPerLine( true );//Updates CPL static int
 
+	//This Resizes internal buffer!
+	CreateDC();
+
 	RePaint();
 	SetInsertionPoint( gip );
 
@@ -648,6 +696,7 @@ void wxHexCtrl::SetBinValue( wxString buffer, bool repaint ){
 	if(repaint)
 		RePaint();
 	}
+
 void wxHexCtrl::SetBinValue( char* buffer, int byte_count, bool repaint ){
 	m_text.Clear();
 	for( int i=0 ; i < byte_count ; i++ )
@@ -729,7 +778,7 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 		//Check for if it's Hexadecimal
 		if( not (bfrH < 16 and bfrL < 16 and bfrH >= 0 and bfrL >= 0 )){
 				wxBell();
-				return NULL;
+				return memodata;
 			}
 		bfrL = bfrH << 4 | bfrL;
 		memodata.AppendByte( bfrL );
@@ -762,7 +811,6 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 		std::cout << "wxHexCtrl::OnSize X,Y" << event.GetSize().GetX() <<',' << event.GetSize().GetY() << std::endl;
 #endif
 	ChangeSize();
-
    event.Skip();
 	}
 
@@ -1022,20 +1070,46 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	BytePerLine = byteperline;
 	m_text.Clear();
 
-    wxString format=GetFormatString();
+   wxString format=GetFormatString();
 
 	wxULongLong_t ull = ( offset_position );
-	for( int i=0 ; i<LineCount() ; i++ ){
-		m_text << wxString::Format( format, ull );
-		ull += BytePerLine;
+	if( offset_mode == 's' ){//Sector Indicator!
+		for( int i=0 ; i<LineCount() ; i++ ){
+			m_text << wxString::Format( format, (1+ull/sector_size), ull%sector_size );
+			//m_text << GetFormatedOffsetString( ull );
+			ull += BytePerLine;
+			}
 		}
+	else
+		for( int i=0 ; i<LineCount() ; i++ ){
+			m_text << wxString::Format( format, ull );
+			ull += BytePerLine;
+			}
 	RePaint();
 	}
 
-wxString wxHexOffsetCtrl::GetFormatString( void ){
-    wxString format;
-	format << wxT("%0") << GetDigitCount() << wxLongLongFmtSpec << wxChar( offset_mode );
-    if( offset_mode=='X' )
+wxString wxHexOffsetCtrl::GetFormatedOffsetString( uint64_t c_offset, bool minimal ){
+   if(offset_mode=='s')
+		return wxString::Format( GetFormatString(minimal), (1+c_offset/sector_size), c_offset%sector_size );
+	return wxString::Format( GetFormatString(minimal), c_offset );
+	}
+
+wxString wxHexOffsetCtrl::GetFormatString( bool minimal ){
+   wxString format;
+   if(offset_mode=='s'){
+   	int sector_digit=0;
+   	int offset_digit=0;
+   	if(not minimal){
+			while((1+offset_limit/sector_size) > pow(10,++sector_digit));
+			while(sector_size > pow(10,++offset_digit));
+			}
+		format << wxT("%0") << sector_digit << wxLongLongFmtSpec << wxT("u:%0") << offset_digit << wxT("u");
+		return format;
+		}
+	format << wxT("%0") <<
+			(minimal? 0 : GetDigitCount())
+			<< wxLongLongFmtSpec << wxChar( offset_mode );
+   if( offset_mode=='X' )
         format << wxChar('h');
 	else if ( offset_mode=='o')
         format << wxChar('o');
@@ -1046,7 +1120,8 @@ void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
 	switch( offset_mode ){
         case 'u': offset_mode = 'X'; break;
         case 'X': offset_mode = 'o'; break;
-        case 'o': offset_mode = 'u'; break;
+        case 'o': offset_mode = (sector_size ? 's' :'u'); break;
+        case 's': offset_mode = 'u'; break;
         default : offset_mode = 'u';
         }
 	SetValue( offset_position );
@@ -1056,7 +1131,11 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 	wxPoint p = PixelCoordToInternalCoord( event.GetPosition() );
 	uint64_t adress = offset_position + p.y*BytePerLine;
 	wxString adr;
-	adr = wxString::Format( GetFormatString(), adress);
+	if(offset_mode=='s')
+		adr = wxString::Format( GetFormatString(), (1+adress/sector_size), adress%sector_size);
+	else
+		adr = wxString::Format( GetFormatString(), adress);
+
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();
 		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) );
@@ -1069,11 +1148,19 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 unsigned wxHexOffsetCtrl::GetDigitCount( void ){
 	digit_count=0;
 	int base=0;
-    switch( offset_mode){
+   switch( offset_mode){
         case 'u': base=10; break;
         case 'X': base=16; break;
-        case 'o': base=8; break;
+        case 'o': base= 8; break;
+        case 's': base=10; break;
         }
+	if( offset_mode=='s'){
+		int digit_count2=0;
+		while(1+(offset_limit/sector_size) > pow(base,++digit_count));
+		while(sector_size > pow(base,++digit_count2));
+		digit_count+=digit_count2;
+		}
+
 	while(offset_limit > pow(base,++digit_count));
 	if( digit_count < 6)
 		digit_count=6;

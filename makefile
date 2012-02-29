@@ -35,31 +35,29 @@ LOCALEDIR   = $(DATADIR)/locale
 
 VERSION = 0.12 Beta
 
-all: prepare $(EXECUTABLE)
+all: $(EXECUTABLE)
 
-prepare: $(LIBS) $(SOURCES)
+$(OBJECTS): $(LIBS) $(SOURCES)
 
-$(EXECUTABLE): $(OBJECTS) $(LIBS)
-	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -o $@
+$(EXECUTABLE): $(OBJECTS)
+	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -lgomp -o $@
 
-.cpp.o: prepare
+.cpp.o: $(LIBS)
 	$(CPP) $(CXXFLAGS) $< -o $@
 
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@
 
 udis86/libudis86/.libs/libudis86.a:
-	echo Please make sure if libudis86 build for your host to avoid link time errors!
 	cd udis86;./autogen.sh
 	cd udis86;./configure --host=$(HOST)
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
-	echo Please make sure if libmhash build for your host to avoid link time errors!
 	cd mhash; ./configure --host=$(HOST)
 	cd mhash; $(MAKE) $(MFLAGS)
 
-win: prepare $(RESOURCES) $(EXECUTABLE_WIN)
+win: $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
@@ -68,7 +66,7 @@ $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 maclink: $(OBJECTS)
 	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
-mac: prepare maclink
+mac: maclink
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/MacOS
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources

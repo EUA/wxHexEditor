@@ -33,7 +33,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.12 Beta
+VERSION = 0.20 Beta
 
 all: $(EXECUTABLE)
 

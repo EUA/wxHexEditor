@@ -488,9 +488,12 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 																					_("*.tags"),
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
-													if(wxID_OK == filediag.ShowModal())
-															if( !MyHexEditor->SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
-																wxMessageBox( wxString(_( "TAGs cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+													if(wxID_OK == filediag.ShowModal()){
+														if( wxFileNameFromPath(filediag.GetPath()).Lower().EndsWith(wxT(".tags.tags")) )
+															filediag.SetPath( filediag.GetPath().RemoveLast( 4 ));
+														if( !MyHexEditor->SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
+															wxMessageBox( wxString(_( "TAGs cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+														}
 													}
 												else
 													wxMessageBox( _( "There is no TAGs to Export in current active file!"),_("Error"), wxOK|wxICON_ERROR, this );

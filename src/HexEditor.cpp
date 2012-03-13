@@ -200,14 +200,15 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else
 #endif
-
 	if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 		myfile = new FAL( myfilename, FAL::ReadWrite );
 	else
 		myfile = new FAL( myfilename );
+
 	if(myfile->IsOpened()) {
 		myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
+
 		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
 
 		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".md5")) ) )

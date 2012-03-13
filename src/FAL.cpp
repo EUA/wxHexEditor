@@ -73,8 +73,13 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	file_access_mode = FAM;
 	the_file = myfilename;
 	BlockRWSize = ForceBlockRW;
+	ProcessID=-1;
+
+	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
+	}
 
 #ifdef __WXMSW__
+bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	//Windows special device opening
 	if(myfilename.GetFullPath().StartsWith( wxT(".:"))
 		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk")) ){
@@ -96,9 +101,9 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 		BlockRWCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 
 		int fd = _open_osfhandle((long) hDevice, 0);
-#ifdef _DEBUG_
+	#ifdef _DEBUG_
 		std::cout<< "Win Device Info:\n" << "Bytes per sector = " <<  BlockRWSize << "\nTotal number of bytes = " << BlockRWCount << std::endl;
-#endif
+	#endif
 		wxFile::Attach( fd );
 		return;
 		}
@@ -107,10 +112,31 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 		return;
 		}
 
+	return FALOpen( myfilename, FAM, ForceBlockRW);
+	}
 #elif defined( __WXGTK__ )
-	if( not myfilename.IsFileReadable() ) { //IsFileReadable
+bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
+	//#ifdef __WXGTK__
+	//Handling Memory Process Debugging Here
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid:"))){
+		long int a;
+		myfilename.GetFullPath().Mid(5).ToLong(&a);
+		ProcessID=a;
+		RAMProcess=true;
+		if((ptrace(PTRACE_ATTACH, ProcessID, NULL, NULL)) < 0 ){
+			wxMessageBox( _("Process cannot open."),_("Error"), wxOK|wxICON_ERROR );
+			ProcessID=-1;
+			return false;
+			}
+		waitpid(ProcessID, NULL, WUNTRACED);
+		BlockRWSize=4;
+		FAM == ForcedReadOnly;
+		return true;
+		}
+
+	else if( not myfilename.IsFileReadable() ) {
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
-			return;
+			return false;
 
 		wxArrayString output,errors;
 
@@ -120,28 +146,33 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			oldOwner = output[0];//this return root generally :D
 		else{
 			wxMessageBox(_("Unknown error on \"stat -c %U")+myfilename.GetFullPath()+wxT("\""),_("Error"), wxOK|wxCANCEL|wxICON_ERROR);
-			return;
+			return false;
 			}
 		//Changing owner of file...
 		//I think it's better than changing permissions directly. Doesn't it?
 		//Will restore owner on file close.
 		wxString cmd = wxT("gnomesu -c \"chown ") + wxGetUserId() + wxT(" ")+ myfilename.GetFullPath() +wxT("\"");
-#ifdef _DEBUG_
+	#ifdef _DEBUG_
 		std::cout << "Changing permission of " << myfilename.GetFullPath().ToAscii() << std::endl;
 		std::cout << cmd.ToAscii() << std::endl;
-#endif
+	#endif
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxShell( cmd );
 		}
+	return FALOpen(myfilename, FAM, ForceBlockRW);
+	}
 
-#elif defined ( __WXOSX__ ) //Mechanism for gnomesu like approach for OSX
-		if( not myfilename.IsFileReadable() ){
-			wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
-			return;
-			}
-#endif //wxGTK
+#elif defined( __WXOSX__ )
+bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
+	if( not myfilename.IsFileReadable() ){
+		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
+		return false;
+		}
+	return FALOpen(myfilename, FAM, ForceBlockRW);
+	}
+#endif
 
-
+bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	if(myfilename.IsFileReadable()){//FileExists()){
 		if( FAM == ReadOnly)
 			Open(myfilename.GetFullPath(), wxFile::read);
@@ -157,6 +188,12 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 			}
 		}
 	}
+
+bool FAL::Close(){
+			if( RAMProcess )
+				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, NULL)) >= 0 );
+			return wxFile::Close();
+			};
 
 FAL::~FAL(){
 	Close();
@@ -210,6 +247,8 @@ wxString FAL::FAMtoString( FileAccessMode& FAM ){
 	}
 
 wxFileName FAL::GetFileName( void ){
+	if( RAMProcess )
+		return wxFileNameFromPath( wxString::Format( wxT("PID:%u"), ProcessID));
 	return the_file;
 	}
 
@@ -372,6 +411,9 @@ int FAL::GetBlockSize( void ){
 	}
 
 wxFileOffset FAL::Length( void ){
+	if( RAMProcess )
+		return 0xFFFFFFFFFFFFll;
+
 	if ( BlockRWSize > 0 )
 		return BlockRWSize*BlockRWCount;
 
@@ -425,12 +467,25 @@ long FAL::Read( char* buffer, int size){
 	return Read( reinterpret_cast<unsigned char*>(buffer), size);
 	}
 
-long FAL::Read( unsigned char* buffer, int size){
+long FAL::Read( unsigned char* buffer, int size ){
 	uint64_t from;
 	if( BlockRWSize > 0 )
 		from = get_ptr;
 	else
 		from = Tell();
+
+	if (RAMProcess){
+		long word=0;
+		//unsigned long *ptr = (unsigned long *) buffer;
+		int j=0;
+		std::cout << "PTrace Read From: " << get_ptr << std::endl;
+		while (j < size) {
+			word = ptrace(PTRACE_PEEKTEXT, ProcessID, get_ptr+j, NULL);
+			memcpy( buffer+j , &word, 4);
+			j += 4;
+			}
+		return j;
+		}
 
 	//Why did I calculate j here? To find active patch indice...
 	int j=0;
@@ -470,7 +525,6 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 	///Getting Data from bellow layer.
 	if( PatchIndice == 0 )	//Deepest layer
 		{
-	//ugly hack
 		if ( BlockRWSize > 0 ){
 			uint64_t StartSector = from / BlockRWSize;
 			unsigned StartShift = from - (from / BlockRWSize)*BlockRWSize;
@@ -698,3 +752,4 @@ const DiffNode* FAL::GetFirstUndoNode( void ){
 			return DiffArray.Item(i);
 	return NULL;
 	}
+

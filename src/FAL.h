@@ -65,6 +65,17 @@
 	#include <sys/ioctl.h>
 	//#include <dev/disk.h>
 	#include <linux/fs.h>
+
+//#include <link.h>
+//#include <elf.h>
+#include <sys/ptrace.h>
+//#include <stdlib.h>
+//#include <string.h>
+#include <sys/wait.h>
+//#include <sys/types.h>
+//#include <stdio.h>
+//#include <errno.h>
+
 #endif
 
 int FDtoBlockSize( int FD );
@@ -98,7 +109,7 @@ WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
 class FAL : private wxFile{
 	public:
-	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, AccessInvalid };
+	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, ForcedReadOnly, AccessInvalid };
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		~FAL();
 //		friend class FindDialog;
@@ -118,11 +129,16 @@ class FAL : private wxFile{
 		wxFileOffset Length( void );
 
 		wxFileOffset Seek(wxFileOffset ofs, wxSeekMode mode = wxFromStart);
-		bool Close(){ return wxFile::Close();};
-		bool IsOpened(){ return wxFile::IsOpened(); };
+		bool OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
+		bool FALOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
+		bool Close();
+		bool IsOpened(){
+			if( RAMProcess )
+				return (ProcessID >= 0);
+			return wxFile::IsOpened(); };
 		int  fd() const { return wxFile::fd(); };
-		long Read( char* buffer, int size );
-		long Read( unsigned char* buffer, int size );
+virtual	long Read( char* buffer, int size );
+virtual	long Read( unsigned char* buffer, int size );
 		void SetXORKey( wxMemoryBuffer );
 		wxMemoryBuffer GetXORKey( void );
 		void ApplyXOR( unsigned char* buffer, unsigned size, uint64_t from );
@@ -146,6 +162,8 @@ class FAL : private wxFile{
 	private:
 		int BlockRWSize;
 		uint64_t BlockRWCount;
+		bool RAMProcess;
+		int ProcessID;
 		FileAccessMode file_access_mode;
 		ArrayOfNode DiffArray;
 		ArrayOfNode TempDiffArray;

@@ -349,7 +349,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 	if(x->FileOpen( flname )){
-		MyNotebook->AddPage( x, flname.GetFullName(), true );
+		MyNotebook->AddPage( x, x->GetFileName().GetFullPath(), true );
 		x->Show();
 		//For loop updates Open Recent Menu properly.
 		int found = -1;
@@ -603,6 +603,15 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 		//OpenFile( wxFileName( wxT("\\\\.\\PhysicalDrive0") ) );//Just testing
 // TODO (death#1#): RAM access with mmap and need DirectWrite Mode
 		}
+	else if( event.GetId() == idProcessRAM ){
+		int a = wxGetNumberFromUser( wxT("Please enter process identification number."), wxT("Enter PID:"), wxT("Open Process RAM"), 0, 1, 100000, this );
+		if( a < 0 )
+			return;
+		wxString str=wxT("-pid:");
+		str << a;
+		OpenFile( wxFileNameFromPath( str ));
+		}
+
 	}
 
 void HexEditorFrame::OnClose( wxCloseEvent& event ){
@@ -732,11 +741,13 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 #ifdef _DEBUG_
 		std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 #endif
-
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
+		#ifdef __WXGTK__
+		mbar->Enable(idProcessRAM, true);
+		#endif
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
-				menuDeviceDisk->Destroy( *it );
+			menuDeviceDisk->Destroy( *it );
 
 		wxArrayString disks;
 #ifdef __WXGTK__

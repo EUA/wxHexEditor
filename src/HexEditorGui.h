@@ -65,11 +65,12 @@
 #define idCompare 1020
 #define idXORView 1021
 #define idDeviceRam 1022
-#define idFileRO 1023
-#define idFileRW 1024
-#define idFileDW 1025
-#define ID_CHK_UNSIGNED 1026
-#define ID_CHK_BIGENDIAN 1027
+#define idProcessRAM 1023
+#define idFileRO 1024
+#define idFileRW 1025
+#define idFileDW 1026
+#define ID_CHK_UNSIGNED 1027
+#define ID_CHK_BIGENDIAN 1028
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui

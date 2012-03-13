@@ -51,10 +51,13 @@ bool wxHexEditorApp::OnInit()
     wxYield();
     // Open all of the files specified on the command line (assumes no flags)
     for(int ii = 1; ii < argc; ++ii){
-        wxFileName fn = wxFileName(argv[ii]);
+		  wxString str(argv[ii]);
+        wxFileName fn = wxFileName(str);
 
         if(fn.FileExists() and fn.IsFileReadable())
             frame->OpenFile(fn.GetFullPath());
+		  else if( str.Lower().StartsWith(wxT("-pid")))
+				frame->OpenFile(fn.GetFullPath());
         }
     return true;
 }

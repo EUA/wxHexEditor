@@ -132,9 +132,15 @@ class FAL : private wxFile{
 		bool OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		bool FALOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		bool Close();
+		bool IsProcess(){
+			return ( ProcessID >=0 );
+			}
+		int GetPID(){
+			return ProcessID;
+			}
 		bool IsOpened(){
-			if( RAMProcess )
-				return (ProcessID >= 0);
+			if( ProcessID >=0 )
+				return true;
 			return wxFile::IsOpened(); };
 		int  fd() const { return wxFile::fd(); };
 virtual	long Read( char* buffer, int size );

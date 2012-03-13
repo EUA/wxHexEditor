@@ -57,7 +57,11 @@ TagElement::~TagElement(){
 	}
 
 int TagElement::TagCompare(TagElement **a, TagElement **b){
-	return (*a)->start - (*b)->start;
+	if( (*a)->start == (*b)->start )
+		return 0;
+	if( (*a)->start > (*b)->start )
+		return 1;
+	return -1;
 	}
 
 wxColour TagElement::SoftColour( wxColour col ){

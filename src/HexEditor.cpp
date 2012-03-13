@@ -209,6 +209,30 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 
+	if( myfile->GetPID() >= 0 ){
+		#ifdef __WXGTK__
+		std::cout << "PID MAPS loading..." << std::endl;
+		wxString command( wxT("cat /proc/") );
+		command << myfile->GetPID() << wxT("/maps");
+		std::cout << command.ToAscii() << std::endl;
+		wxArrayString output;
+		int a = wxExecute( command, output);
+		//output has Count() lines process it
+		for( int i=0; i < output.Count() ; i++){
+			TagElement *tmp = new TagElement();
+			long long unsigned int x;
+			output[i].BeforeFirst('-').ToULongLong(&x, 16);
+			tmp->start = x;
+			//output[i].AfterFirst('-').BeforeFirst(' ').ToULongLong(&x,16);
+			tmp->end = x;
+			tmp->tag = output[i].AfterLast( wxT(' '));
+			tmp->FontClrData.SetColour( *wxBLACK );
+			tmp->NoteClrData.SetColour( *wxCYAN );
+			MainTagArray.Add(tmp);
+			}
+		#endif
+		}
+
 		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
 
 		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".md5")) ) )

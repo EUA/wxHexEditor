@@ -190,7 +190,7 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 	}
 
 bool FAL::Close(){
-			if( RAMProcess )
+			if( ProcessID >=0 )
 				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, NULL)) >= 0 );
 			return wxFile::Close();
 			};
@@ -247,7 +247,7 @@ wxString FAL::FAMtoString( FileAccessMode& FAM ){
 	}
 
 wxFileName FAL::GetFileName( void ){
-	if( RAMProcess )
+	if( ProcessID >=0 )
 		return wxFileNameFromPath( wxString::Format( wxT("PID:%u"), ProcessID));
 	return the_file;
 	}
@@ -411,7 +411,7 @@ int FAL::GetBlockSize( void ){
 	}
 
 wxFileOffset FAL::Length( void ){
-	if( RAMProcess )
+	if( ProcessID >=0 )
 		return 0xFFFFFFFFFFFFll;
 
 	if ( BlockRWSize > 0 )
@@ -474,7 +474,7 @@ long FAL::Read( unsigned char* buffer, int size ){
 	else
 		from = Tell();
 
-	if (RAMProcess){
+	if ( ProcessID >=0 ){
 		long word=0;
 		//unsigned long *ptr = (unsigned long *) buffer;
 		int j=0;

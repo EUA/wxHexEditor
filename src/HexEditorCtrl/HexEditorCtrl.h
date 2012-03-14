@@ -36,6 +36,9 @@
 #define SEARCH_CHANGE_EVENT 50008
 #define COMPARE_CHANGE_EVENT 50009
 #define XORVIEW_EVENT 500010
+
+WX_DECLARE_OBJARRAY(uint64_t, wxArrayUINT64);
+
 class Select{	//for using EventHandler
 	public:
 		Select( wxEvtHandler* evth_ ){
@@ -176,6 +179,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 virtual void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		int sector_size;
+		wxArrayUINT64 ProcessRAMMap;
 
 	protected:
 		int64_t page_offset;	//holds current start offset of file

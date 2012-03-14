@@ -149,6 +149,24 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 			}while (draw_line < lenght );
 		}
 
+	if(ProcessRAMMap.Count())
+		hex_ctrl->ThinSeperationLines.Clear();
+		text_ctrl->ThinSeperationLines.Clear();
+		//Notice that, ProcessRAMMap is SORTED.
+		for( int i=0; i < ProcessRAMMap.Count(); i++ ){
+			uint64_t M = ProcessRAMMap.Item(i);
+			if( M > page_offset + ByteCapacity() )
+				break;
+
+			if(    (M > page_offset)
+				and (M <= page_offset + ByteCapacity()) ){
+
+				int draw_line = M - page_offset;
+				hex_ctrl->ThinSeperationLines.Add( 2*draw_line );
+				text_ctrl->ThinSeperationLines.Add( draw_line );
+				}
+			}
+
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	text_ctrl->ChangeValue(text_string, false);
 	offset_ctrl->SetValue( position, BytePerLine() );
@@ -159,15 +177,7 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 	if( paint ){
 		PaintSelection();
 		}
-//	sector_size=128;
-//	if(sector_size > 1){
-//		int draw_line=sector_size-(page_offset%sector_size);
-//			do{
-//			hex_ctrl->DrawSeperationLineAfterChar( 2*draw_line );
-//			text_ctrl->DrawSeperationLineAfterChar( draw_line );
-//			draw_line += sector_size;
-//			}while (draw_line < GetByteCount() );
-//		}
+
 	MyBufferMutex.Unlock();
 	}
 

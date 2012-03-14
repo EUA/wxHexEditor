@@ -24,6 +24,9 @@
 
 #include "HexEditor.h"
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_OBJARRAY(wxArrayUINT64);
+
 HexEditor::HexEditor(	wxWindow* parent,
                         int id,
                         wxStatusBar *statbar_,
@@ -216,6 +219,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		command << myfile->GetPID() << wxT("/maps");
 		std::cout << command.ToAscii() << std::endl;
 		wxArrayString output;
+
 		int a = wxExecute( command, output);
 		//output has Count() lines process it
 		for( int i=0; i < output.Count() ; i++){
@@ -223,8 +227,10 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			long long unsigned int x;
 			output[i].BeforeFirst('-').ToULongLong(&x, 16);
 			tmp->start = x;
+			ProcessRAMMap.Add(x);
 			//output[i].AfterFirst('-').BeforeFirst(' ').ToULongLong(&x,16);
 			tmp->end = x;
+			ProcessRAMMap.Add(x);
 			tmp->tag = output[i].AfterLast( wxT(' '));
 			tmp->FontClrData.SetColour( *wxBLACK );
 			tmp->NoteClrData.SetColour( *wxCYAN );

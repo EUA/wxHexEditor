@@ -106,6 +106,9 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		wxString GetFileAccessModeString( void ) {
 			return myfile->GetAccessModeString();
 			}
+		bool IsBlockDevice( void ){
+			return myfile->GetBlockSize() > 0;
+			}
 		int GetFD( void ) {
 			return myfile->fd();
 			}

@@ -859,7 +859,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
 			mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
 
-			if(not GetActiveHexEditor()->IsFileUsingXORKey()){
+			if(not GetActiveHexEditor()->IsFileUsingXORKey() and not GetActiveHexEditor()->IsBlockDevice() ){
 				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
 				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
 				Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );

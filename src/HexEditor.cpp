@@ -1007,9 +1007,17 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Enable( idSaveAsDump, select->GetState() );
 	menu.Enable( idFillSelection, select->GetState() );
 	menu.Enable( wxID_PASTE, not select->GetState() );
-	menu.Enable( wxID_DELETE, select->GetState());
-	menu.Enable( idInjection, not select->GetState());
-	menu.Enable( wxID_CUT, select->GetState());
+
+	if( not IsBlockDevice() ){
+		menu.Enable( wxID_DELETE, select->GetState());
+		menu.Enable( idInjection, not select->GetState());
+		menu.Enable( wxID_CUT, select->GetState());
+		}
+	else{
+		menu.Enable( wxID_DELETE, false);
+		menu.Enable( idInjection, false);
+		menu.Enable( wxID_CUT, false);
+		}
 
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );

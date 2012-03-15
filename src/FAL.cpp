@@ -130,7 +130,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			}
 		waitpid(ProcessID, NULL, WUNTRACED);
 		BlockRWSize=4;
-		FAM == ForcedReadOnly;
+		FAM == ReadOnly;
 		return true;
 		}
 
@@ -215,6 +215,10 @@ FAL::~FAL(){
 	}
 
 bool FAL::SetAccessMode( FileAccessMode fam ){
+	if( ProcessID > 0 )
+		file_access_mode = fam;
+			return true;
+
 	if( Access( the_file.GetFullPath() , (fam == ReadOnly ? wxFile::read : wxFile::read_write) ) ){
 		Close();
 		Open( the_file.GetFullPath(), (fam == ReadOnly ? wxFile::read : wxFile::read_write) );
@@ -312,15 +316,42 @@ bool FAL::Apply( void ){
 					uint64_t EndSector = (put_ptr + DiffArray[i]->size)/BlockRWSize;
 					int rd_size = (EndSector - StartSector + 1 )*BlockRWSize;// +1 for make read least one sector
 					char *bfr = new char[rd_size];
-					wxFile::Seek(StartSector*BlockRWSize);
-					int rd = wxFile::Read( bfr, rd_size);
+					int rd = 0;
+					if ( ProcessID >=0 ){
+						long word=0;
+						//unsigned long *ptr = (unsigned long *) buffer;
+						while (rd < rd_size) {
+							word = ptrace(PTRACE_PEEKTEXT, ProcessID, StartSector*BlockRWSize+rd, NULL);
+							memcpy( bfr+rd , &word, 4);
+							rd += 4;
+							}
+						}
+					else{
+						wxFile::Seek(StartSector*BlockRWSize);
+						rd = wxFile::Read( bfr, rd_size);
+						}
+
 					if( rd != rd_size ){	//Crucial if  block read error.
 						delete [] bfr;
 						return false;
 						}
 					//if already written and makeing undo, than use old_data
 					memcpy( bfr+StartShift, (DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
-					success*=Write(bfr, rd_size);//*= to make update success true or false
+
+					if ( ProcessID >=0 ){
+						int wr=0;
+						long word=0;
+						while (wr < rd_size) {
+								memcpy(&word, bfr + wr, sizeof(word));
+								if( ptrace(PTRACE_POKETEXT, ProcessID, StartSector*BlockRWSize+wr, word) == -1 )
+									wxMessageBox( _("Error on Write operation to Process RAM"), _("FATAL ERROR") );
+								wr += 4;
+							}
+						success*=true;
+						}
+					else
+						success*=Write(bfr, rd_size);//*= to make update success true or false
+
 					delete [] bfr;
 					}
 				else
@@ -474,19 +505,6 @@ long FAL::Read( unsigned char* buffer, int size ){
 	else
 		from = Tell();
 
-	if ( ProcessID >=0 ){
-		long word=0;
-		//unsigned long *ptr = (unsigned long *) buffer;
-		int j=0;
-		std::cout << "PTrace Read From: " << get_ptr << std::endl;
-		while (j < size) {
-			word = ptrace(PTRACE_PEEKTEXT, ProcessID, get_ptr+j, NULL);
-			memcpy( buffer+j , &word, 4);
-			j += 4;
-			}
-		return j;
-		}
-
 	//Why did I calculate j here? To find active patch indice...
 	int j=0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++)
@@ -535,8 +553,20 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 
 		   int rd_size = (EndSector - StartSector + 1)*BlockRWSize; //+1 for read least one sector
 			char *bfr = new char[rd_size];
-			wxFile::Seek(StartSector*BlockRWSize);
-			int rd = wxFile::Read( bfr, rd_size);
+			int rd=0;
+			if ( ProcessID >=0 ){
+				long word=0;
+				//unsigned long *ptr = (unsigned long *) buffer;
+				while (rd < rd_size) {
+					word = ptrace(PTRACE_PEEKTEXT, ProcessID, StartSector*BlockRWSize+rd, NULL);
+					memcpy( bfr+rd , &word, 4);
+					rd += 4;
+					}
+				}
+			else{
+				wxFile::Seek(StartSector*BlockRWSize);
+				rd = wxFile::Read( bfr, rd_size);
+				}
 			memcpy(buffer, bfr+StartShift, wxMin(wxMin( rd, rd_size-StartShift) , size)); //wxMin protects file ends.
 			delete [] bfr;
 			return wxMin(wxMin( rd, rd_size-StartShift), size);

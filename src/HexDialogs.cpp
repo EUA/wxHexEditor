@@ -557,7 +557,37 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		}
 	}
 
+uint64_t FindDialog::ProcessRAM_FindNextMapStart( uint64_t current_offset ){
+	if(parent->ProcessRAMMap.Count())
+		for( int i=0; i < parent->ProcessRAMMap.Count() ; i+=2 )
+			if( parent->ProcessRAMMap.Item(i) > current_offset )
+				return parent->ProcessRAMMap.Item(i);
+	return 0;
+	}
+
+uint64_t FindDialog::ProcessRAM_FindMapEnd( uint64_t current_offset ){
+	if(parent->ProcessRAMMap.Count())
+		for( int i=0; i < parent->ProcessRAMMap.Count() ; i+=2 )
+			if( parent->ProcessRAMMap.Item(i+1) >= current_offset )
+				return parent->ProcessRAMMap.Item(i+1);
+	return 0;
+	}
+
+bool FindDialog::ProcessRAM_IsAddressAvailable( uint64_t current_offset ){
+	if( not findfile->IsProcess() )
+		return current_offset;
+
+	//We needed to skip unmapped regions.
+	if(parent->ProcessRAMMap.Count())
+		for( int i=0; i < parent->ProcessRAMMap.Count() ; i+=2 )
+			if(( parent->ProcessRAMMap.Item(i) <= current_offset ) and
+				( parent->ProcessRAMMap.Item(i+1) >= current_offset ))
+					return true;
+	return false;
+	}
+
 // TODO (death#1#): FindDialog::FindBinaryUnitTest()
+
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
 	#ifdef _DEBUG_
 		std::cout << "FindDialog::FindBinary() From:" << from << std::endl;
@@ -588,7 +618,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	ts=te;
 	uint64_t readspeed=0;
 
-
+// TODO (death#1#): MemorySearch Backward.
 	if( options & SEARCH_BACKWARDS and not ( options & SEARCH_FINDALL ) ){
 		//BACKWARD SEARCH!
 		uint64_t current_offset = from;
@@ -673,6 +703,23 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			current_offset=0;
 		//Search step 1: From cursor to file end.
 		do{
+			//Skipping unmapped regions if ProcessRAM operation
+			if( findfile->IsProcess() ){
+				std::cout << "Processing from " << current_offset << std::endl;
+				search_step=BlockSz;
+				if( ProcessRAM_IsAddressAvailable( current_offset ) ){
+					if( ProcessRAM_FindMapEnd(current_offset) - current_offset < search_step )
+						search_step = ProcessRAM_FindMapEnd(current_offset) - current_offset;
+					}
+				else{
+					std::cout << "Skipping from: " << current_offset <<  " to " ;
+					current_offset = ProcessRAM_FindNextMapStart(current_offset);
+					std::cout << current_offset << std::endl;
+					}
+				if( current_offset == 0 ) //means memory map ends
+					break;
+				}
+
 			findfile->Seek( current_offset, wxFromStart );
 			readed = findfile->Read( buffer , search_step );
 			#ifdef _DEBUG_
@@ -708,7 +755,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 													, emsg))		// update progress and break on abort
 				break;
 
-			}while(readed >= search_step); //indicate also file end.
+			}while(readed == search_step); //indicate also file end.
 
 		//Search step 2: From start to file end.
 		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
@@ -718,6 +765,20 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				std::cout << "FindBinary() FORWARD2 " << current_offset << "-" << current_offset+search_step<< std::endl;
 			#endif
 			do{
+				if( findfile->IsProcess() ){
+					std::cout << "Processing from " << current_offset << std::endl;
+					search_step=BlockSz;
+					if( ProcessRAM_IsAddressAvailable( current_offset ) ){
+						if( ProcessRAM_FindMapEnd(current_offset) - current_offset < search_step ){
+							search_step = ProcessRAM_FindMapEnd(current_offset) - current_offset;
+							}
+						}
+					else{
+						std::cout << "Skipping from: " << current_offset <<  " to " ;
+						current_offset = ProcessRAM_FindNextMapStart(current_offset);
+						std::cout << current_offset << std::endl;
+						}
+					}
 				findfile->Seek(current_offset, wxFromStart );
 				readed = findfile->Read( buffer , search_step );
 				if( readed + current_offset > from )

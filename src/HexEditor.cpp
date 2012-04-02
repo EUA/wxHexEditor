@@ -227,9 +227,9 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			long long unsigned int x;
 			output[i].BeforeFirst('-').ToULongLong(&x, 16);
 			tmp->start = x;
-			ProcessRAMMap.Add(x);
-			//output[i].AfterFirst('-').BeforeFirst(' ').ToULongLong(&x,16);
 			tmp->end = x;
+			ProcessRAMMap.Add(x);
+			output[i].AfterFirst('-').BeforeFirst(' ').ToULongLong(&x,16);
 			ProcessRAMMap.Add(x);
 			tmp->tag = output[i].AfterLast( wxT(' '));
 			tmp->FontClrData.SetColour( *wxBLACK );

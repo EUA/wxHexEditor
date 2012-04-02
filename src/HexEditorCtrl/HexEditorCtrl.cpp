@@ -836,6 +836,15 @@ uint64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalInsertionPoint() + page_offset;
 	}
 
+uint64_t HexEditorCtrl::GetProcessRAMFootPrint(){
+	uint64_t fp;
+	for( int i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
+		fp += ProcessRAMMap.Item(i+1);
+		fp -= ProcessRAMMap.Item(i);
+		}
+	return fp;
+	}
+
 wxHugeScrollBar::wxHugeScrollBar( wxScrollBar* m_scrollbar_ ){
          m_range = m_thumb = 0;
          m_scrollbar = m_scrollbar_;

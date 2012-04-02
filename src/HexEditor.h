@@ -91,6 +91,8 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 
 		//----File Functions----//
 		int64_t FileLength( void ) {
+			//if( myfile->IsProcess() )
+			//	return ProcessRAMMap.Last();
 			return myfile->Length();
 			}
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node

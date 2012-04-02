@@ -450,11 +450,12 @@ void FindDialog::FindSomeBytes( void ){
 	time_t ts,te;
 	time (&ts);
 	ts=te;
-	uint64_t readspeed=0;
+	uint64_t read_speed=0;
 	//Search step 1: From cursor to file end.
 	do{
 		findfile->Seek( current_offset, wxFromStart );
 		readed = findfile->Read( buffer , search_step );
+		read_speed += readed;
 		for( int i=0; i < readed ; i++)
 			if( buffer[i] != diff_search ){
 				parent->Goto( current_offset+i );
@@ -465,8 +466,8 @@ void FindDialog::FindSomeBytes( void ){
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s"), 1.0*(current_offset-readspeed)/MB);
-				readspeed=current_offset;
+				emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s"), 1.0*read_speed/MB);
+				read_speed=0;
 				}
 		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
 			break;
@@ -616,7 +617,13 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	time_t ts,te;
 	time (&ts);
 	ts=te;
-	uint64_t readspeed=0;
+	unsigned read_speed=0;
+	unsigned percentage=0;
+	uint64_t processfootprint=0;
+	if( findfile->IsProcess() )
+		processfootprint = parent->GetProcessRAMFootPrint();
+	uint64_t processreadedtotal=0;
+
 
 // TODO (death#1#): MemorySearch Backward.
 	if( options & SEARCH_BACKWARDS and not ( options & SEARCH_FINDALL ) ){
@@ -636,6 +643,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				readed=findfile->Read( buffer , search_step+target.GetDataLen()-1 );
 			else
 				readed=findfile->Read( buffer , search_step ); //Up TO FROM!!!
+			read_speed += readed;
+
 			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 
 			if(found >= 0){
@@ -649,8 +658,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*(abs(current_offset-readspeed))/MB);
-					readspeed=current_offset;
+					emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+					read_speed=0;
 					}
 
 			if( ! progress_gauge.Update(
@@ -664,7 +673,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 		//Search step 2: From end to to current offset.
 		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
-			readspeed = current_offset = findfile->Length();
+			current_offset = findfile->Length();
 			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 			do{
 				backward_offset = current_offset - search_step < from ? from : current_offset-search_step;
@@ -674,6 +683,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				#endif
 				findfile->Seek( backward_offset, wxFromStart );
 				readed=findfile->Read( buffer , search_step ); //Up TO FROM!!!
+				read_speed += readed;
 				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 
 				if(found >= 0){
@@ -688,8 +698,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*(abs(current_offset-readspeed))/MB);
-						readspeed=current_offset;
+						emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+						read_speed=0;
 						}
 
 				if( ! progress_gauge.Update((current_offset-from)*1000/parent->FileLength(), emsg))		// update progress and break on abort
@@ -707,26 +717,39 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			if( findfile->IsProcess() ){
 				std::cout << "Processing from " << current_offset << std::endl;
 				search_step=BlockSz;
-				if( ProcessRAM_IsAddressAvailable( current_offset ) ){
-					if( ProcessRAM_FindMapEnd(current_offset) - current_offset < search_step )
-						search_step = ProcessRAM_FindMapEnd(current_offset) - current_offset;
-					}
-				else{
+				if( not ProcessRAM_IsAddressAvailable( current_offset ) or
+					( ProcessRAM_FindMapEnd(current_offset) - current_offset < target.GetDataLen() )
+					){
 					std::cout << "Skipping from: " << current_offset <<  " to " ;
 					current_offset = ProcessRAM_FindNextMapStart(current_offset);
 					std::cout << current_offset << std::endl;
 					}
+
+				if( ProcessRAM_FindMapEnd(current_offset) - current_offset < search_step )
+					search_step = ProcessRAM_FindMapEnd(current_offset) - current_offset;
+
+				if( search_step < target.GetDataLen()){
+					std::cout << "Skipping due StepSize: " << current_offset <<  " to " ;
+					current_offset = ProcessRAM_FindNextMapStart(current_offset);
+					std::cout << current_offset << std::endl;
+					}
+
+				std::cout << "Step size:" << search_step << std::endl;
 				if( current_offset == 0 ) //means memory map ends
 					break;
 				}
 
 			findfile->Seek( current_offset, wxFromStart );
 			readed = findfile->Read( buffer , search_step );
+			read_speed += readed;
+
 			#ifdef _DEBUG_
+				std::cout << "Readed: " << readed << std::endl;
 				std::cout << "FindBinary() FORWARD1 " << current_offset << "-" << current_offset+search_step<< std::endl;
 			#endif
 			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
-			if(found >= 0){
+
+			if(found >= 0){//We found something
 				if( options & SEARCH_FINDALL ){
 					TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
 					parent->HighlightArray.Add(mytag);
@@ -739,27 +762,33 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 					}
 				}
 			else{
-				current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
+				int z = readed - target.GetDataLen() -1;
+				current_offset += (z <= 0 ? 1 : z); //Unprocessed bytes
 				}
 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*(current_offset-readspeed)/MB);
-					readspeed=current_offset;
+					emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+					read_speed=0;
 					}
-			if( ! progress_gauge.Update(
-												(( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ))
+			if( findfile->IsProcess() ){
+				processreadedtotal += readed;
+				percentage = processreadedtotal*1000 / processfootprint;
+				}
+			else
+				percentage = ( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ))
 													? (current_offset-from)*1000/(parent->FileLength())
-													: (current_offset-from)*1000/(parent->FileLength()-from+1)) //+1 to avoid error
-													, emsg))		// update progress and break on abort
+													: (current_offset-from)*1000/(parent->FileLength()-from+1);//+1 to avoid error
+
+			if( ! progress_gauge.Update( percentage, emsg))		// update progress and break on abort
 				break;
 
 			}while(readed == search_step); //indicate also file end.
 
 		//Search step 2: From start to file end.
 		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
-			readspeed = current_offset = 0;
+			current_offset = 0;
 			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 			#ifdef _DEBUG_
 				std::cout << "FindBinary() FORWARD2 " << current_offset << "-" << current_offset+search_step<< std::endl;
@@ -768,19 +797,28 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				if( findfile->IsProcess() ){
 					std::cout << "Processing from " << current_offset << std::endl;
 					search_step=BlockSz;
-					if( ProcessRAM_IsAddressAvailable( current_offset ) ){
-						if( ProcessRAM_FindMapEnd(current_offset) - current_offset < search_step ){
-							search_step = ProcessRAM_FindMapEnd(current_offset) - current_offset;
-							}
-						}
-					else{
+					if( not ProcessRAM_IsAddressAvailable( current_offset ) ){
 						std::cout << "Skipping from: " << current_offset <<  " to " ;
 						current_offset = ProcessRAM_FindNextMapStart(current_offset);
 						std::cout << current_offset << std::endl;
 						}
+
+					if( ProcessRAM_FindMapEnd(current_offset) - current_offset < search_step )
+						search_step = ProcessRAM_FindMapEnd(current_offset) - current_offset;
+
+					if( search_step < target.GetDataLen()){
+						std::cout << "Skipping due StepSize: " << current_offset <<  " to " ;
+						current_offset = ProcessRAM_FindNextMapStart(current_offset);
+						std::cout << current_offset << std::endl;
+						}
+
+					std::cout << "Step size:" << search_step << std::endl;
+					if( current_offset == 0 ) //means memory map ends
+						break;
 					}
 				findfile->Seek(current_offset, wxFromStart );
 				readed = findfile->Read( buffer , search_step );
+				read_speed += readed;
 				if( readed + current_offset > from )
 					search_step = readed + current_offset - from - 1;
 				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
@@ -788,16 +826,25 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 					delete [] buffer;
 					return current_offset+found;
 					}
-				else
-					current_offset +=readed - target.GetDataLen() - 1; //Unprocessed bytes
+				else{
+					int z= readed - target.GetDataLen() -1;
+					current_offset += (z <= 0 ? 1 : z); //Unprocessed bytes
+					}
 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*(current_offset-readspeed)/MB);
-						readspeed=current_offset;
+						emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+						read_speed=0;
 						}
-				if( ! progress_gauge.Update( (current_offset+parent->FileLength()-from)*1000/parent->FileLength(), emsg))	// update progress and break on abort
+
+				if( findfile->IsProcess() ){
+					processreadedtotal += readed;
+					percentage = processreadedtotal*1000 / processfootprint;
+					}
+				else
+					percentage = (current_offset+parent->FileLength()-from)*1000/parent->FileLength();
+				if( ! progress_gauge.Update( percentage, emsg))	// update progress and break on abort
 					break;
 
 				}while(current_offset + readed < from); //Search until cursor
@@ -1990,13 +2037,14 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
-	uint64_t readfrom=0,readspeed=0, range=f.Length();
+	uint64_t readfrom=0,read_speed=0, range=f.Length();
 	wxString emsg = msg;
 	time_t ts,te;
 	time (&ts);
 
 	while(rd == rdBlockSz){
 		rd = f.Read( buff, rdBlockSz );
+		read_speed+=rd;
 		readfrom+=rd;
 
 		//Paralelize with OpenMP
@@ -2008,8 +2056,8 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
-			readspeed=readfrom;
+			emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			read_speed=0;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))
 		return wxEmptyString;

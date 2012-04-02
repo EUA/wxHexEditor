@@ -443,7 +443,7 @@ int FAL::GetBlockSize( void ){
 
 wxFileOffset FAL::Length( void ){
 	if( ProcessID >=0 )
-		return 0xFFFFFFFFFFFFll;
+		return 0x7FFFFFFFFFFFll;
 
 	if ( BlockRWSize > 0 )
 		return BlockRWSize*BlockRWCount;

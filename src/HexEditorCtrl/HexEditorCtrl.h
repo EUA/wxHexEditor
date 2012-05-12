@@ -180,7 +180,10 @@ virtual void SetLocalHexInsertionPoint( int hex_location );
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		int sector_size;
 		wxArrayUINT64 ProcessRAMMap;
-		uint64_t GetProcessRAMFootPrint();
+		uint64_t ProcessRAM_GetFootPrint();
+		uint64_t ProcessRAM_GetVirtualOffset( uint64_t offset );
+		uint64_t ProcessRAM_FindNextMap( uint64_t current_offset, bool backward=false );
+		bool ProcessRAM_FindMap( uint64_t current_offset, uint64_t& start, uint64_t& end, bool backward=false);
 
 	protected:
 		int64_t page_offset;	//holds current start offset of file

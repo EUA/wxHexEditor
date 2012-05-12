@@ -87,9 +87,8 @@ virtual void EventHandler( wxCommandEvent& event );
 		class HexEditor* parent;
 		FAL *findfile;
 		void PrepareComboBox( bool AddString );
-		bool ProcessRAM_IsAddressAvailable( uint64_t current_offset );
-		uint64_t ProcessRAM_FindNextMapStart( uint64_t current_offset );
-		uint64_t ProcessRAM_FindMapEnd( uint64_t current_offset );
+
+		bool SkipRAM( uint64_t& current_offset, unsigned search_size, unsigned& search_step, bool backward=false );
 	};
 
 class ReplaceDialog : public FindDialog{

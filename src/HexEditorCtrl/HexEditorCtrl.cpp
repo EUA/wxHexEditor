@@ -836,13 +836,73 @@ uint64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalInsertionPoint() + page_offset;
 	}
 
-uint64_t HexEditorCtrl::GetProcessRAMFootPrint(){
+uint64_t HexEditorCtrl::ProcessRAM_GetFootPrint(){
 	uint64_t fp;
 	for( int i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
 		fp += ProcessRAMMap.Item(i+1);
 		fp -= ProcessRAMMap.Item(i);
 		}
 	return fp;
+	}
+
+uint64_t HexEditorCtrl::ProcessRAM_GetVirtualOffset( uint64_t offset ){
+	uint64_t fp=0;
+	for( int i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
+		uint64_t z = ProcessRAMMap.Item(i);
+		if( i == 0 and ProcessRAMMap.Item(i) > offset )
+			return 0;
+		//If map end smaller than offset, just add memory map size to "fp"
+		if( offset > ProcessRAMMap.Item(i+1) ){
+			fp += ProcessRAMMap.Item(i+1);
+			fp -= ProcessRAMMap.Item(i);
+			}
+		//if map end bigger than offset, and map start smaller than offset,
+		else if( offset >= ProcessRAMMap.Item(i) ) {
+			uint64_t P = ProcessRAMMap.Item(i);
+			fp += offset - ProcessRAMMap.Item(i);
+			return fp;
+			}
+		//if map start bigger than offset, means offset is non mapped region.
+		else //( offset < ProcessRAMMap.Item(i) )
+			return fp;
+		}
+	return 0;
+	}
+
+uint64_t HexEditorCtrl::ProcessRAM_FindNextMap( uint64_t offset, bool backward ){
+	if(ProcessRAMMap.Count()){
+		if(backward){
+			for( int i=ProcessRAMMap.Count()-2; i >= 0 ; i-=2 )
+				if( ProcessRAMMap.Item(i+1) < offset )
+					return ProcessRAMMap.Item(i+1);
+			}
+		else{
+			for( int i=0; i < ProcessRAMMap.Count() ; i+=2 )
+				if( ProcessRAMMap.Item(i) > offset )
+					return ProcessRAMMap.Item(i);
+			}
+		}
+	return 0;
+	}
+
+bool HexEditorCtrl::ProcessRAM_FindMap( uint64_t offset, uint64_t& start, uint64_t& end, bool backward ){
+	start=0;
+	end=0;
+	if(ProcessRAMMap.Count())
+		for( int i=0; i < ProcessRAMMap.Count() ; i+=2 )
+			if(( ProcessRAMMap.Item(i) <=  offset ) and
+				( ProcessRAMMap.Item(i+1) >= offset )){
+					start=ProcessRAMMap.Item(i);
+					end=ProcessRAMMap.Item(i+1);
+					if( backward and i >= 2 ){
+						start=ProcessRAMMap.Item(i-2);
+						end=ProcessRAMMap.Item(i-2+1);
+						}
+					else
+						return false;
+					return true;
+					}
+	return false;
 	}
 
 wxHugeScrollBar::wxHugeScrollBar( wxScrollBar* m_scrollbar_ ){

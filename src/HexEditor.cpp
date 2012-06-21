@@ -535,7 +535,7 @@ bool HexEditor::SaveAsDump( void ){
 
    if(wxID_OK == filediag.ShowModal()) {
 // TODO (death#1#): Avoid overwrite of original file!
-	wxFFile savefile( filediag.GetPath(), _("w") );
+	wxFFile savefile( filediag.GetPath(), _("wb") );
       if(savefile.IsOpened()) {
          int rd;
          wxMemoryBuffer m_buffer;

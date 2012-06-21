@@ -59,25 +59,28 @@ void SetStackLimit(void){
 	}
 #endif
 
-bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent){
-    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-        if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-            wxMessageBox( Value_Name + _(" value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
-            wxBell();
-            return false;
-            }
-    //Remove all space chars and update the Search value
-    while( hexval.find(' ') != -1 )
-        hexval.Remove( hexval.find(' '),1);
+bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent) {
+   if( hexval.Len() < 2 )
+      return false;
 
-    //there is odd hex value, must be even digit for search!
-    if( hexval.Len() % 2 ){
-        wxMessageBox( Value_Name + _(" must be even digit!"), _("Format Error!"), wxOK, parent );
-        wxBell();
-        return false;
-        }
-    return true;
-    }
+   for( unsigned i = 0 ; i < hexval.Len() ; i++ )
+      if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+         wxMessageBox( Value_Name + _(" value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
+         wxBell();
+         return false;
+         }
+   //Remove all space chars and update the Search value
+   while( hexval.find(' ') != -1 )
+      hexval.Remove( hexval.find(' '),1);
+
+   //there is odd hex value, must be even digit for search!
+   if( hexval.Len() % 2 ) {
+      wxMessageBox( Value_Name + _(" must be even digit!"), _("Format Error!"), wxOK, parent );
+      wxBell();
+      return false;
+      }
+   return true;
+   }
 
 //Prepares and updates combo boxes with 10 elements, sycnhronizing with wxConfig..
 void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){

@@ -25,7 +25,7 @@ case "$host_os" in
 esac
 
 # Initialize the automake subsystem.
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall foreign])
 
 #
 # In case we have a Windows build, we pass a 
@@ -38,6 +38,8 @@ AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 AC_ENABLE_SHARED
 AM_PROG_CC_C_O
+#AM_PROG_AR
+#LT_INIT
 
 # If this is a gnu compiler, pass -Wall
 if test "$ac_cv_c_compiler_gnu" = "yes"; then

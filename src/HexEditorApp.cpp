@@ -61,6 +61,29 @@ bool wxHexEditorApp::OnInit()
         }
     return true;
 }
+
+bool wxHexEditorApp::SetLanguage(void){
+	if ( ! wxConfigBase::Get()->Read(_T("Language")).IsEmpty() ){
+		int langid = wxConfigBase::Get()->Read( _T("Language"), -1 );
+		if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING) ){
+				wxLogError(_T("This language is not supported by the system."));
+				return false;
+			}
+			wxFileName flnm(argv[0]);
+			myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) + _T("locale") );
+//#ifdef _UNIX_
+//			myLocale.AddCatalogLookupPathPrefix( _T("/usr/local/share/locale/") );
+//#endif
+#ifdef __WXMAC__
+			myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) +
+			_T("..") + wxFileName::GetPathSeparator() + _T("Resources") + wxFileName::GetPathSeparator() + _T("locale") );
+#endif
+			myLocale.AddCatalog(_T("wxHexEditor"));
+		return true;
+		}
+	return false;
+	}
+
 #ifdef _DEBUG__EVENTS_
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){
 	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )

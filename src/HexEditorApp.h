@@ -47,16 +47,17 @@
 
 #include <wx/app.h>
 #include "HexEditorFrame.h"
-class wxHexEditorApp : public wxApp
-{
-    public:
-        virtual bool OnInit();
+class wxHexEditorApp : public wxApp {
+   public:
+      virtual bool OnInit();
+      bool SetLanguage(void);
 #ifdef _DEBUG_EVENTS_
-        int FilterEvent(wxEvent &evt);
-        void OnMouseMove(wxMouseEvent &event);
+      int FilterEvent(wxEvent &evt);
+      void OnMouseMove(wxMouseEvent &event);
 #endif
-	private:
-		class HexEditorFrame* frame;
-};
+   private:
+      class HexEditorFrame* frame;
+      wxLocale myLocale;
+   };
 
 #endif // WXHEXEDITORAPP_H

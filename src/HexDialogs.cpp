@@ -2153,3 +2153,6 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 		XORtext->SetFocus();
 	event.Skip();
 	}
+
+PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(parent, wxID_ANY){
+	}

@@ -115,10 +115,10 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 	return FALOpen( myfilename, FAM, ForceBlockRW);
 	}
 #elif defined( __WXGTK__ )
+
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
-	//#ifdef __WXGTK__
 	//Handling Memory Process Debugging Here
-	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid:"))){
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
 		long int a;
 		myfilename.GetFullPath().Mid(5).ToLong(&a);
 		ProcessID=a;
@@ -134,6 +134,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 
+	//Owning file
 	else if( not myfilename.IsFileReadable() ) {
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
 			return false;
@@ -159,11 +160,29 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxShell( cmd );
 		}
+
 	return FALOpen(myfilename, FAM, ForceBlockRW);
 	}
 
 #elif defined( __WXOSX__ )
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
+	//Handling Memory Process Debugging Here
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
+		long int a;
+		myfilename.GetFullPath().Mid(5).ToLong(&a);
+		ProcessID=a;
+		RAMProcess=true;
+		if((ptrace(PTRACE_ATTACH, ProcessID, NULL, NULL)) < 0 ){
+			wxMessageBox( _("Process cannot open."),_("Error"), wxOK|wxICON_ERROR );
+			ProcessID=-1;
+			return false;
+			}
+		waitpid(ProcessID, NULL, WUNTRACED);
+		BlockRWSize=4;
+		FAM == ReadOnly;
+		return true;
+		}
+
 	if( not myfilename.IsFileReadable() ){
 		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
 		return false;
@@ -215,9 +234,10 @@ FAL::~FAL(){
 	}
 
 bool FAL::SetAccessMode( FileAccessMode fam ){
-	if( ProcessID > 0 )
+	if( ProcessID > 0 ){
 		file_access_mode = fam;
-			return true;
+		return true;
+		}
 
 	if( Access( the_file.GetFullPath() , (fam == ReadOnly ? wxFile::read : wxFile::read_write) ) ){
 		Close();

@@ -515,21 +515,6 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_FIND:		MyHexEditor->FindDialog();				break;
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
-					case idFileRO:{
-						MyHexEditor->SetFileAccessMode( FAL::ReadOnly );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
-						break;
-						}
-					case idFileRW:{
-						MyHexEditor->SetFileAccessMode( FAL::ReadWrite );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
-						break;
-						}
-					case idFileDW:
-						if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
-							MyHexEditor->SetFileAccessMode( FAL::DirectWrite );
-						MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
-						break;
 					case wxID_CLOSE:
 						OnQuit( event );
 						break;
@@ -607,11 +592,56 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 		int a = wxGetNumberFromUser( wxT("Please enter process identification number."), wxT("Enter PID:"), wxT("Open Process RAM"), 0, 1, 100000, this );
 		if( a < 0 )
 			return;
-		wxString str=wxT("-pid:");
+		wxString str=wxT("-pid=");
 		str << a;
 		OpenFile( wxFileNameFromPath( str ));
 		}
 
+	}
+
+void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
+	if( event.GetId() == wxID_PREFERENCES){
+		PreferencesDialog *prefdlg = new PreferencesDialog( this );
+		prefdlg->ShowModal();
+		prefdlg->Destroy();
+/*
+		wxConfigBase* pConfig = wxConfigBase::Get();
+		if ( ! pConfig->Read(_T("Language")).IsEmpty() ) {
+			int lang = wxConfigBase::Get()->Read(_T("Language"), -1) ;
+			if ( lang != -1 )
+				if ( wxGetLocale()->GetLanguage() != lang) {
+					if( lang == 0 && wxGetLocale()->GetSystemLanguage() == wxGetLocale()->GetLanguage() )	//prevents default redraw
+						return;
+					else {
+						delete single_inst_checker;
+						single_inst_checker=NULL;
+						wxGetApp().ReCreateGui();
+						Destroy();
+						}
+					}
+			}
+*/
+	}
+	HexEditor *MyHexEditor = GetActiveHexEditor();
+	if( MyHexEditor != NULL ) {
+		switch( event.GetId()) {
+			case idFileRO: {
+				MyHexEditor->SetFileAccessMode( FAL::ReadOnly );
+				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
+				break;
+				}
+			case idFileRW: {
+				MyHexEditor->SetFileAccessMode( FAL::ReadWrite );
+				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
+				break;
+				}
+			case idFileDW:
+				if( wxOK == wxMessageBox( _("This mode will write changes every change to file DIRECTLY."),_("Warning!"), wxOK|wxCANCEL|wxICON_WARNING, this, wxCenter ) )
+					MyHexEditor->SetFileAccessMode( FAL::DirectWrite );
+				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
+				break;
+			}
+		}
 	}
 
 void HexEditorFrame::OnClose( wxCloseEvent& event ){
@@ -1024,7 +1054,6 @@ wxBitmap HexEditorArtProvider::CreateBitmap(const wxArtID& id, const wxArtClient
 	return wxNullBitmap;
 	}
 
-
 bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 	size_t nFiles = filenames.GetCount();
 	for ( size_t n = 0; n < nFiles; n++ ) {
@@ -1066,3 +1095,4 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
 	wxConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
 	}
+

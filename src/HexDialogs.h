@@ -149,4 +149,11 @@ class XORViewDialog : public XORViewDialogGui{
 		wxMemoryBuffer *XORKey;
 	};
 
+class PreferencesDialog : public PreferencesDialogGui{
+	public:
+		PreferencesDialog( wxWindow* parent );
+		void EventHandler( wxCommandEvent& event );
+	};
+
+
 #endif //__HexEditorDialogs__

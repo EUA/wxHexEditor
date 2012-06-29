@@ -38,6 +38,7 @@
 #include <wx/hyperlink.h>
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
+#include <wx/bmpbuttn.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -103,6 +104,7 @@ class HexEditorGui : public wxFrame
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void OnToolsMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDevicesMenu( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnOptionsMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		
 	
@@ -459,6 +461,29 @@ class XORViewDialogGui : public wxDialog
 		
 		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~XORViewDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class PreferencesDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class PreferencesDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* txtBtn;
+		wxBitmapButton* bpBtnBackground;
+		wxBitmapButton* bpBtnForeground;
+		wxStaticText* txtLang;
+		wxChoice* chcLang;
+		wxButton* BtnOK;
+		wxButton* BtnCancel;
+	
+	public:
+		
+		PreferencesDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~PreferencesDialogGui();
 	
 };
 

@@ -225,17 +225,17 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	devicesMenu->Append( menuDevicesRam );
 	menuDevicesRam->Enable( false );
 	
-	wxMenuItem* menuDevicesProcessRAM;
-	menuDevicesProcessRAM = new wxMenuItem( devicesMenu, idProcessRAM, wxString( wxT("Open Process RAM") ) , wxEmptyString, wxITEM_NORMAL );
-	devicesMenu->Append( menuDevicesProcessRAM );
-	menuDevicesProcessRAM->Enable( false );
-	
 	menuDeviceDisk = new wxMenu();
 	wxMenuItem* menuDevicesDiskItem1;
 	menuDevicesDiskItem1 = new wxMenuItem( menuDeviceDisk, wxID_ANY, wxString( wxT("N/A on this OS (yet)") ) , wxEmptyString, wxITEM_NORMAL );
 	menuDeviceDisk->Append( menuDevicesDiskItem1 );
 	
 	devicesMenu->Append( -1, wxT("Open Disk Device"), menuDeviceDisk );
+	
+	wxMenuItem* menuDevicesProcessRAM;
+	menuDevicesProcessRAM = new wxMenuItem( devicesMenu, idProcessRAM, wxString( wxT("Open Process RAM") ) , wxEmptyString, wxITEM_NORMAL );
+	devicesMenu->Append( menuDevicesProcessRAM );
+	menuDevicesProcessRAM->Enable( false );
 	
 	mbar->Append( devicesMenu, wxT("Devices") ); 
 	
@@ -262,7 +262,6 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxMenuItem* menuOptionsPreferences;
 	menuOptionsPreferences = new wxMenuItem( optionsMenu, wxID_PREFERENCES, wxString( wxT("Preferences") ) , wxEmptyString, wxITEM_NORMAL );
 	optionsMenu->Append( menuOptionsPreferences );
-	menuOptionsPreferences->Enable( false );
 	
 	mbar->Append( optionsMenu, wxT("Options") ); 
 	
@@ -335,14 +334,15 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuToolsXORView->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuDevicesRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuDevicesProcessRAM->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuDevicesProcessRAM->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Connect( menuOptionsPreferences->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 }
 
@@ -394,14 +394,15 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idXORView, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idProcessRAM, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( idFileRO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idProcessRAM, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Disconnect( idFileRO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idFileRW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idFileRW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileRW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idFileDW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( idFileDW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileDW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( wxID_PREFERENCES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnAbout ) );
 	
 }
@@ -1526,6 +1527,64 @@ XORViewDialogGui::~XORViewDialogGui()
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( XORViewDialogGui::EventHandler ), NULL, this );
 	btnOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( XORViewDialogGui::EventHandler ), NULL, this );
 	
+}
+
+PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizerMain;
+	bSizerMain = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer;
+	bSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	txtBtn = new wxStaticText( this, wxID_ANY, wxT("Hex Colors:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtBtn->Wrap( -1 );
+	bSizer->Add( txtBtn, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bpBtnBackground = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+	bSizer->Add( bpBtnBackground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bpBtnForeground = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+	bSizer->Add( bpBtnForeground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizerMain->Add( bSizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	wxBoxSizer* bSizerLang;
+	bSizerLang = new wxBoxSizer( wxHORIZONTAL );
+	
+	txtLang = new wxStaticText( this, wxID_ANY, wxT("Language:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtLang->Wrap( -1 );
+	bSizerLang->Add( txtLang, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxArrayString chcLangChoices;
+	chcLang = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcLangChoices, 0 );
+	chcLang->SetSelection( 0 );
+	bSizerLang->Add( chcLang, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizerMain->Add( bSizerLang, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerBtns;
+	bSizerBtns = new wxBoxSizer( wxHORIZONTAL );
+	
+	BtnOK = new wxButton( this, wxID_OK, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBtns->Add( BtnOK, 0, wxALL, 5 );
+	
+	BtnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBtns->Add( BtnCancel, 0, wxALL, 5 );
+	
+	bSizerMain->Add( bSizerBtns, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizerMain );
+	this->Layout();
+	bSizerMain->Fit( this );
+	
+	this->Centre( wxBOTH );
+}
+
+PreferencesDialogGui::~PreferencesDialogGui()
+{
 }
 
 DebugFrame::DebugFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )

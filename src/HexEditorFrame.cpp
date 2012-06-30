@@ -604,23 +604,24 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 		PreferencesDialog *prefdlg = new PreferencesDialog( this );
 		prefdlg->ShowModal();
 		prefdlg->Destroy();
-/*
+
 		wxConfigBase* pConfig = wxConfigBase::Get();
 		if ( ! pConfig->Read(_T("Language")).IsEmpty() ) {
 			int lang = wxConfigBase::Get()->Read(_T("Language"), -1) ;
+			int z=wxGetLocale()->GetLanguage();
 			if ( lang != -1 )
 				if ( wxGetLocale()->GetLanguage() != lang) {
 					if( lang == 0 && wxGetLocale()->GetSystemLanguage() == wxGetLocale()->GetLanguage() )	//prevents default redraw
 						return;
 					else {
-						delete single_inst_checker;
-						single_inst_checker=NULL;
-						wxGetApp().ReCreateGui();
-						Destroy();
+						wxMessageBox( _("Please restart program for changes."), _("Info") );
+//						delete single_inst_checker;
+//						single_inst_checker=NULL;
+//						wxGetApp().ReCreateGui();
+//						Destroy();
 						}
 					}
 			}
-*/
 	}
 	HexEditor *MyHexEditor = GetActiveHexEditor();
 	if( MyHexEditor != NULL ) {

@@ -60,4 +60,6 @@ class wxHexEditorApp : public wxApp {
       wxLocale myLocale;
    };
 
+DECLARE_APP(wxHexEditorApp)
+
 #endif // WXHEXEDITORAPP_H

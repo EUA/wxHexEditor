@@ -1543,11 +1543,15 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	txtBtn->Wrap( -1 );
 	bSizer->Add( txtBtn, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	bpBtnBackground = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-	bSizer->Add( bpBtnBackground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	clrPickerBackground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerBackground->Enable( false );
 	
-	bpBtnForeground = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-	bSizer->Add( bpBtnForeground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer->Add( clrPickerBackground, 0, wxALL, 5 );
+	
+	clrPickerForeground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 0, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerForeground->Enable( false );
+	
+	bSizer->Add( clrPickerForeground, 0, wxALL, 5 );
 	
 	bSizerMain->Add( bSizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
@@ -1568,23 +1572,26 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizerBtns;
 	bSizerBtns = new wxBoxSizer( wxHORIZONTAL );
 	
-	BtnOK = new wxButton( this, wxID_OK, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerBtns->Add( BtnOK, 0, wxALL, 5 );
+	BtnOK = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBtns->Add( BtnOK, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	BtnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerBtns->Add( BtnCancel, 0, wxALL, 5 );
-	
-	bSizerMain->Add( bSizerBtns, 1, wxEXPAND, 5 );
+	bSizerMain->Add( bSizerBtns, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	this->SetSizer( bSizerMain );
 	this->Layout();
 	bSizerMain->Fit( this );
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	BtnOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnOK ), NULL, this );
 }
 
 PreferencesDialogGui::~PreferencesDialogGui()
 {
+	// Disconnect Events
+	BtnOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnOK ), NULL, this );
+	
 }
 
 DebugFrame::DebugFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )

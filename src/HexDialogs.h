@@ -30,11 +30,10 @@
 #include "HexEditorGui.h"
 
 #ifdef WX_GCH
-#include <wx_pch.h>
+	#include <wx_pch.h>
 #else
-#include <wx/wx.h>
+	#include <wx/wx.h>
 #endif
-
 bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent=NULL);
 
 //ComboBox Filler from stored Registry values
@@ -153,6 +152,11 @@ class PreferencesDialog : public PreferencesDialogGui{
 	public:
 		PreferencesDialog( wxWindow* parent );
 		void EventHandler( wxCommandEvent& event );
+		void GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers);
+		void OnOK(wxCommandEvent& event);
+
+		wxArrayString LangNames;
+		wxArrayLong LangIds;
 	};
 
 

@@ -39,28 +39,27 @@
 #endif //__BORLANDC__
 
 #include "HexEditorApp.h"
-IMPLEMENT_APP(wxHexEditorApp);
+IMPLEMENT_APP(wxHexEditorApp)
 
-bool wxHexEditorApp::OnInit()
-{
-	 wxImage::AddHandler(new wxPNGHandler);
-
-    frame = new HexEditorFrame( 0L );
+bool wxHexEditorApp::OnInit() {
+   wxImage::AddHandler(new wxPNGHandler);
+   SetLanguage();
+   frame = new HexEditorFrame( 0L );
 //    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
-    frame->Show();
-    wxYield();
-    // Open all of the files specified on the command line (assumes no flags)
-    for(int ii = 1; ii < argc; ++ii){
-		  wxString str(argv[ii]);
-        wxFileName fn = wxFileName(str);
+   frame->Show();
+   wxYield();
+   // Open all of the files specified on the command line (assumes no flags)
+   for(int ii = 1; ii < argc; ++ii) {
+      wxString str(argv[ii]);
+      wxFileName fn = wxFileName(str);
 
-        if(fn.FileExists() and fn.IsFileReadable())
-            frame->OpenFile(fn.GetFullPath());
-		  else if( str.Lower().StartsWith(wxT("-pid")))
-				frame->OpenFile(fn.GetFullPath());
-        }
-    return true;
-}
+      if(fn.FileExists() and fn.IsFileReadable())
+         frame->OpenFile(fn.GetFullPath());
+      else if( str.Lower().StartsWith(wxT("-pid")))
+         frame->OpenFile(fn.GetFullPath());
+      }
+   return true;
+   }
 
 bool wxHexEditorApp::SetLanguage(void){
 	if ( ! wxConfigBase::Get()->Read(_T("Language")).IsEmpty() ){

@@ -2155,4 +2155,143 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(parent, wxID_ANY){
+	GetInstalledLanguages( LangNames, LangIds );
+
+	chcLang->Clear();
+	chcLang->Append( LangNames );
+
+	wxConfigBase *pConfig = wxConfigBase::Get();
+
+	if ( ! pConfig->Read(_T("Language")).IsEmpty() ){
+		int lang = pConfig->Read(_T("Language"), -1) ;
+		if ( lang != -1 )
+			for( unsigned i = 0 ; i < LangIds.Count() ; i++)
+				if( lang == LangIds.Item(i)){
+					chcLang->SetSelection(i);
+					break;
+					}
+		}
+	else
+		chcLang->SetSelection(0);
 	}
+
+void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
+   names.Clear();
+   identifiers.Clear();
+   const wxLanguageInfo * langinfo;
+   wxString name = wxLocale::GetLanguageName(wxLANGUAGE_DEFAULT);
+   if(!name.IsEmpty()) {
+      names.Add(_T("Default"));
+      identifiers.Add(wxLANGUAGE_DEFAULT);
+      }
+
+   names.Add(_T("English"));
+   identifiers.Add(wxLANGUAGE_ENGLISH);
+
+   wxString dirname;
+   wxFileName flnm( wxGetApp().argv[0] );
+   //This part scans default installation on linux directory for available catalogs - both on main and on local share
+   for( int i = 0 ; i < 2 ; i++ ) {
+      if( i == 0 )
+         dirname = (_T("/usr/local/share/locale"));
+      else dirname = (_T("/usr/share/locale"));
+      if(wxDir::Exists( dirname )) {
+         wxDir dir(dirname);
+         for(bool cont = dir.GetFirst(&dirname,_T(""),wxDIR_DEFAULT);
+               cont;
+               cont = dir.GetNext(&dirname)) {
+            langinfo = wxLocale::FindLanguageInfo(dirname);
+            if(langinfo != NULL) {
+               if(wxFileExists(
+                        dir.GetName() + wxFileName::GetPathSeparator() +
+                        dirname + wxFileName::GetPathSeparator() +
+                        _T("LC_MESSAGES") + wxFileName::GetPathSeparator() +
+                        _T("wxHexEditor") + _T(".mo"))) {
+
+                  bool duplicate = false;
+                  for( unsigned i = 0 ; i < identifiers.Count() ; i++ )	//Avoid duplicated locales
+                     if( identifiers.Item(i) == langinfo->Language ) {
+                        duplicate = true;
+                        break;
+                        }
+                  if ( duplicate ) break;
+
+                  names.Add(langinfo->Description);
+                  identifiers.Add(langinfo->Language);
+                  }
+               }
+            }
+         }
+      }
+
+   //This part scans for for available catalogs on local directory, for Windows and Linux.
+   dirname = (flnm.GetPath() + wxFileName::GetPathSeparator() + _T("locale"));
+   if(wxDir::Exists( dirname )) {
+      wxDir dir(dirname);
+      for(bool cont = dir.GetFirst(&dirname,_T(""),wxDIR_DEFAULT);
+            cont;
+            cont = dir.GetNext(&dirname)) {
+         langinfo = wxLocale::FindLanguageInfo(dirname);
+         if(langinfo != NULL) {
+            if(wxFileExists(
+                     dir.GetName() + wxFileName::GetPathSeparator() +
+                     dirname + wxFileName::GetPathSeparator() +
+                     _T("wxHexEditor") + _T(".mo"))) {
+
+               bool duplicate = false;
+               for( unsigned i = 0 ; i < identifiers.Count() ; i++ )	//Avoid duplicated locales
+                  if( identifiers.Item(i) == langinfo->Language ) {
+                     duplicate = true;
+                     break;
+                     }
+               if ( duplicate ) break;
+
+               names.Add(langinfo->Description);
+               identifiers.Add(langinfo->Language);
+               }
+            }
+         }
+      }
+
+#ifdef __WXMAC__
+   //This part scans for for available catalogs on Bundle directory,for Mac.
+   dirname = (flnm.GetPath() + wxFileName::GetPathSeparator() +
+              _T("..") + wxFileName::GetPathSeparator() +
+              _T("Resources") + wxFileName::GetPathSeparator() +
+              _T("locale"));
+
+   if(wxDir::Exists( dirname )) {
+      wxDir dir(dirname);
+      for(bool cont = dir.GetFirst(&dirname,_T(""),wxDIR_DEFAULT);
+            cont;
+            cont = dir.GetNext(&dirname)) {
+         langinfo = wxLocale::FindLanguageInfo(dirname);
+         if(langinfo != NULL) {
+            if(wxFileExists(
+                     dir.GetName() + wxFileName::GetPathSeparator() +
+                     dirname + wxFileName::GetPathSeparator() +
+                     _T("wxHexEditor") + _T(".mo"))) {
+
+               bool duplicate = false;
+               for( unsigned i = 0 ; i < identifiers.Count() ; i++ )	//Avoid duplicated locales
+                  if( identifiers.Item(i) == langinfo->Language ) {
+                     duplicate = true;
+                     break;
+                     }
+               if ( duplicate ) break;
+
+               names.Add(langinfo->Description);
+               identifiers.Add(langinfo->Language);
+               }
+            }
+         }
+      }
+#endif  //__WXMAC__
+	}
+
+void PreferencesDialog::OnOK( wxCommandEvent& event ) {
+   wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+   wxConfigBase::Get()->Flush();
+   event.Skip();
+   }
+

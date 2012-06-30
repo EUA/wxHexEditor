@@ -38,7 +38,7 @@
 #include <wx/hyperlink.h>
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
-#include <wx/bmpbuttn.h>
+#include <wx/clrpicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -473,12 +473,15 @@ class PreferencesDialogGui : public wxDialog
 	
 	protected:
 		wxStaticText* txtBtn;
-		wxBitmapButton* bpBtnBackground;
-		wxBitmapButton* bpBtnForeground;
+		wxColourPickerCtrl* clrPickerBackground;
+		wxColourPickerCtrl* clrPickerForeground;
 		wxStaticText* txtLang;
 		wxChoice* chcLang;
 		wxButton* BtnOK;
-		wxButton* BtnCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

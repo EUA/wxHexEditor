@@ -44,7 +44,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 	infopanel(infopanel_),
 	tagpanel(tagpanel_),
 	dasmpanel(dasmpanel_) {
-	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD neccessary
+	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD for protecting our file, this is really neccessary!
 	myfile = NULL;
 	if( myfilename_ != NULL ) {
 		if( !FileOpen( *myfilename_ ) ) {
@@ -148,7 +148,7 @@ int HexEditor::HashVerify(FAL* File, wxString hash_file){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+			emsg = msg + wxT("\n") + wxString::Format(_("Hash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
 			readspeed=readfrom;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))
@@ -161,11 +161,10 @@ int HexEditor::HashVerify(FAL* File, wxString hash_file){
 	hash = static_cast<unsigned char *>( mhash_end(myhash) );
 	if( memcmp( compare.GetData(), hash, hash_block_size ) ){
 		wxBell();
-		wxString msg(_("File Corrupt!\nFile Hash:\t"));
+		wxString msg = wxString(_("File Corrupt!"))+wxT("\n")+_("File Hash:")+wxT("\t");
 		for (unsigned k = 0; k < hash_block_size; k++)
 			msg += wxString::Format( wxT("%.2x"), hash[k]);
-		msg +=_("\nHash File:\t");
-		msg +=MyHashStr;
+		msg +=wxString( wxT("\n") ) +_("Hash File:")+wxT("\t") + MyHashStr;
 		wxMessageBox(msg, _("Hash Result") );
 		return 0;
 		}
@@ -292,7 +291,7 @@ void HexEditor::FileSetXORKey( bool enable ){
 			}
 		}
 	else{
-		if( wxMessageBox( _("For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded.\n"), _("XORView Thru Warning"), wxOK | wxCANCEL | wxICON_EXCLAMATION ) == wxCANCEL)
+		if( wxMessageBox( _("For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded."), _("XORView Thru Warning"), wxOK | wxCANCEL | wxICON_EXCLAMATION ) == wxCANCEL)
 			return;
 		FileReOpen();
 		}
@@ -312,21 +311,21 @@ void HexEditor::FileSetXORKey( bool enable ){
 bool HexEditor::FileSave( bool question ) {
 	if( myfile->IsChanged() ) {
 		if ( myfile->GetAccessMode() == FAL::ReadOnly) {
-			wxMessageBox( _( "File in Read Only mode. Cannot save file.\n"), _("File Save"), wxOK|wxICON_EXCLAMATION, this );
+			wxMessageBox( _( "File in Read Only mode. Cannot save file."), _("File Save"), wxOK|wxICON_EXCLAMATION, this );
 			return false;
 			}
 		if ( myfile->IsInjected() ) {
-			wxMessageBox( _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs.\n"), _("File Save Error."), wxOK|wxICON_EXCLAMATION, this );
+			wxMessageBox( _( "File has some insertion/deletions. You cannot save this file-self (yet). Please use SaveAs."), _("File Save Error."), wxOK|wxICON_EXCLAMATION, this );
 			return false;
 			}
 		int select = wxYES;
 		if ( question )
-			select=wxMessageBox( _( "Do you want to save this file?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
+			select=wxMessageBox( _( "Do you want to save this file?"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 
 		switch( select ) {
 			case(wxYES):
 				if( !myfile->Apply() ) {
-					wxMessageBox( _( "File cannot saved. Operation Cancelled\n"), _("File Save Error"), wxOK|wxICON_ERROR, this );
+					wxMessageBox( _( "File cannot saved. Operation Cancelled"), _("File Save Error"), wxOK|wxICON_ERROR, this );
 					return false;
 					}
 			case(wxNO):
@@ -402,8 +401,8 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 			while( wxYES == wxMessageBox( _( "TAG file cannot save to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Saved!!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) )
 				{
 				wxFileDialog filediag(this,_("Choose a file for export TAGs"),
-													_(""),
-													_(""),
+													wxEmptyString,
+													wxEmptyString,
 													_("*.tags"),
 													wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 													wxDefaultPosition);
@@ -530,7 +529,7 @@ bool HexEditor::FillSelection( void ){
 
 bool HexEditor::SaveAsDump( void ){
    wxFileDialog filediag(this,
-   _("Choose a file for saving dump"), _(""), _(""), _("*"),
+   _("Choose a file for saving dump"), wxEmptyString, wxEmptyString, _("*"),
    wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
 
    if(wxID_OK == filediag.ShowModal()) {
@@ -1349,7 +1348,7 @@ bool HexEditor::CopySelection( void ) {
 				return copy_mark->SetClipboardData( CopyString );
 				}
 			else {
-				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
+				wxMessageBox( wxString(_( "You have no RAM to copy this data.")) + wxT("\n") + _("Operation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
 				return false;
 				}
 			}
@@ -1368,7 +1367,7 @@ bool HexEditor::CopySelection( void ) {
 				return true;
 				}
 			else {
-// TODO (death#1#): If there is no ram, use HDD temp file				wxMessageBox(_( "You have no RAM to copy this data.\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
+// TODO (death#1#): If there is no ram, use HDD temp file
 				return false;
 				}
 			}

@@ -1543,15 +1543,14 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	txtBtn->Wrap( -1 );
 	bSizer->Add( txtBtn, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	clrPickerBackground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	clrPickerBackground->Enable( false );
+	clrPickerForeground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 0, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	bSizer->Add( clrPickerForeground, 0, wxALL, 5 );
 	
+	clrPickerBackground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	bSizer->Add( clrPickerBackground, 0, wxALL, 5 );
 	
-	clrPickerForeground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 0, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	clrPickerForeground->Enable( false );
-	
-	bSizer->Add( clrPickerForeground, 0, wxALL, 5 );
+	clrPickerBackgroundZebra = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	bSizer->Add( clrPickerBackgroundZebra, 0, wxALL, 5 );
 	
 	bSizerMain->Add( bSizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 	

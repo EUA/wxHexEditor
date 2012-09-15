@@ -469,7 +469,7 @@ void FindDialog::FindSomeBytes( void ){
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s"), 1.0*read_speed/MB);
+				emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
 				read_speed=0;
 				}
 		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
@@ -676,7 +676,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s") , 1.0*read_speed/MB) + wxT("\n");
 					read_speed=0;
 					}
 			totalread += readed;
@@ -728,7 +728,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
 						read_speed=0;
 						}
 				totalread += readed;
@@ -809,7 +809,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
 					read_speed=0;
 					}
 
@@ -863,7 +863,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxString::Format(_("\nSearch Speed : %.2f MB/s\n"), 1.0*read_speed/MB);
+						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
 						read_speed=0;
 						}
 
@@ -1135,7 +1135,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				return 1;
 				}
 			else{
-				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet size are not supported yet."), _("Error!"), wxOK, this);
+				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with different size are not supported yet."), _("Error!"), wxOK, this);
 				return 0;
 				}
 			}
@@ -1160,7 +1160,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				return 1;
 				}
 			else{
-				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with differnet size are not supported yet."), _("Error!"), wxOK, this);
+				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with different size are not supported yet."), _("Error!"), wxOK, this);
 				return 0;
 				}
 			}
@@ -1717,7 +1717,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 #endif
 		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
 			if(diffHit >= 500000){
-				wxMessageBox( _("Sorry, this program supports up to 500K differences.\nRemaining differences not shown."), _("Error on Comparison"));
+				wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
 				BreakDoubleFor = true;
 				break;
 				}
@@ -2085,7 +2085,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxString::Format(_("\nHash Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			emsg = msg + wxT("\n") + wxString::Format(_("Hash Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
 			read_speed=0;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))

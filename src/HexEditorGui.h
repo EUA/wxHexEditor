@@ -473,8 +473,9 @@ class PreferencesDialogGui : public wxDialog
 	
 	protected:
 		wxStaticText* txtBtn;
-		wxColourPickerCtrl* clrPickerBackground;
 		wxColourPickerCtrl* clrPickerForeground;
+		wxColourPickerCtrl* clrPickerBackground;
+		wxColourPickerCtrl* clrPickerBackgroundZebra;
 		wxStaticText* txtLang;
 		wxChoice* chcLang;
 		wxButton* BtnOK;

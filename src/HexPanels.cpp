@@ -206,26 +206,25 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
       fstat( FD, sbufptr );
 
 		wxString info_string;
-		info_string =	_("Name:\t")+flnm.GetFullName()+wxT("\n")+
-							_("Path:\t")+flnm.GetPath()+wxT("\n")+
-							_("Size:\t")+ wxFileName::GetHumanReadableSize( wxULongLong(lenght) ) +wxT("\n")+
-							_("Access:\t")+ AccessMode +wxT("\n")+
-							_("Device:\t")+ (S_ISREG( sbufptr->st_mode ) ? _("FILE") :
-												 S_ISDIR( sbufptr->st_mode ) ? _("DIRECTORY") :
-												 S_ISCHR( sbufptr->st_mode ) ? _("CHARACTER") :
-												 S_ISBLK( sbufptr->st_mode ) ? _("BLOCK") :
-												 S_ISFIFO( sbufptr->st_mode ) ? _("FIFO") :
-												#ifndef __WXMSW__ //Windows has no link and socket files
-												 S_ISLNK( sbufptr->st_mode ) ? _("LINK") :
-												 S_ISSOCK( sbufptr->st_mode ) ? _("SOCKET") :
-												#endif
-												#ifdef __WXMSW__ //S_ISBLK doesn't work on windows.
-												 wxT("BLOCK")
-												#else
-												 wxT("?")
-												#endif
-												 )+wxT("\n");
-
+		info_string =  info_string + _("Name:") + wxT("\t")+flnm.GetFullName()+wxT("\n")+
+							_("Path:")+wxT("\t")+flnm.GetPath()+wxT("\n")+
+							_("Size:")+wxT("\t")+ wxFileName::GetHumanReadableSize( wxULongLong(lenght) ) +wxT("\n")+
+							_("Access:")+wxT("\t")+AccessMode +wxT("\n")+
+							_("Device:")+wxT("\t")+(S_ISREG( sbufptr->st_mode ) ? _("FILE") :
+															S_ISDIR( sbufptr->st_mode ) ? _("DIRECTORY") :
+															S_ISCHR( sbufptr->st_mode ) ? _("CHARACTER") :
+															S_ISBLK( sbufptr->st_mode ) ? _("BLOCK") :
+															S_ISFIFO( sbufptr->st_mode ) ? _("FIFO") :
+														#ifndef __WXMSW__ //Windows has no link and socket files
+															S_ISLNK( sbufptr->st_mode ) ? _("LINK") :
+															S_ISSOCK( sbufptr->st_mode ) ? _("SOCKET") :
+														#endif
+														#ifdef __WXMSW__ //S_ISBLK doesn't work on windows.
+															wxT("BLOCK")
+														#else
+															wxT("?")
+														#endif
+															)+wxT("\n");
 		if(S_ISBLK( sbufptr->st_mode )
 #ifdef __WXMSW__
 			or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
@@ -256,7 +255,7 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 			}
 
 		if(XORKey != wxEmptyString)
-			info_string += _("XORKey:\t") + XORKey;
+			info_string += wxString(_("XORKey:")) + wxT("\t") + XORKey;
 
 		m_InfoPanelText->SetLabel( info_string );
 

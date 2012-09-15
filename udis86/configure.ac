@@ -38,8 +38,8 @@ AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 AC_ENABLE_SHARED
 AM_PROG_CC_C_O
-#AM_PROG_AR
-#LT_INIT
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+LT_INIT
 
 # If this is a gnu compiler, pass -Wall
 if test "$ac_cv_c_compiler_gnu" = "yes"; then

@@ -394,8 +394,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 		//Save file
 		wxFileDialog* filediag = new wxFileDialog(this,
 									_("Choose a file for save as"),
-									_(""),
-									_(""),
+									wxEmptyString,
+									wxEmptyString,
 									_("*"),
 									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
@@ -424,8 +424,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	else if( event.GetId() == wxID_OPEN ){
 		wxFileDialog filediag(this,
 									_("Choose a file for editing"),
-									_(""),
-									_(""),
+									wxEmptyString,
+									wxEmptyString,
 									_("*"),
 									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
@@ -449,8 +449,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
 					case wxID_SAVEAS:		{
 												wxFileDialog filediag(this,_("Choose a file for save as"),
-																					_(""),
-																					_(""),
+																					wxEmptyString,
+																					wxEmptyString,
 																					_("*"),
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
@@ -470,8 +470,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 						}
 					case idImportTAGs:	{
 												wxFileDialog filediag(this,_("Choose a file for import TAGs"),
-																					_(""),
-																					_(""),
+																					wxEmptyString,
+																					wxEmptyString,
 																					_("*.tags"),
 																					wxFD_OPEN|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
@@ -483,8 +483,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case idExportTAGs:	{
 												if( MyHexEditor->MainTagArray.Count() ){
 													wxFileDialog filediag(this,_("Choose a file for export TAGs"),
-																					_(""),
-																					_(""),
+																					wxEmptyString,
+																					wxEmptyString,
 																					_("*.tags"),
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
@@ -1062,7 +1062,7 @@ bool DnDFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames){
 		if ( myfl.FileExists() )
 			HexFramework->OpenFile( myfl );
 		else
-			wxMessageBox( wxString(_("Dropped file:\n")).Append( myfl.GetPath() ).Append(_("\ncannot open!")),_("Error"), wxOK|wxICON_ERROR );
+			wxMessageBox(  _("Cannot open dropped file: " )  + myfl.GetPath() ,_("Error"), wxOK|wxICON_ERROR );
 		}
 	return TRUE;
 	}

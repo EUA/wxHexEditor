@@ -190,14 +190,8 @@ class copy_maker {
 				wxTheClipboard->Close();
 				return isok;
 				}
-//					else{
-//						wxMessageBox( _( "Clipboard is not support TEXT copy\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR, this);
-//						wxTheClipboard->Close();
-//						return false;
-//						}
-//					}
 			else {
-				wxMessageBox( _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+				wxMessageBox( wxString(_( "Clipboard could not be opened.")) + wxT("\n") + _("Operation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 				return false;
 				}
 			}
@@ -217,7 +211,7 @@ class copy_maker {
 					}
 				}
 			else {
-				wxMessageBox( _( "Clipboard could not be opened\nOperation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+				wxMessageBox( wxString(_( "Clipboard could not be opened.")) + wxT("\n") + _("Operation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
 				return wxString();
 				}
 			}

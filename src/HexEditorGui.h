@@ -476,12 +476,20 @@ class PreferencesDialogGui : public wxDialog
 		wxColourPickerCtrl* clrPickerForeground;
 		wxColourPickerCtrl* clrPickerBackground;
 		wxColourPickerCtrl* clrPickerBackgroundZebra;
+		wxStaticText* txtSelection;
+		wxColourPickerCtrl* clrPickerSelectionForeground;
+		wxColourPickerCtrl* clrPickerSelectionBackground;
+		wxButton* btnResetColours;
 		wxStaticText* txtLang;
 		wxChoice* chcLang;
-		wxButton* BtnOK;
+		wxCheckBox* chkCustom;
+		wxTextCtrl* txtCtrl_CustomHexFormat;
+		wxButton* BtnSave;
+		wxButton* BtnCancel;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnResetColours( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

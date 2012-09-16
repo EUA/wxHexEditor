@@ -35,7 +35,8 @@
 #define TAG_CHANGE_EVENT 50007
 #define SEARCH_CHANGE_EVENT 50008
 #define COMPARE_CHANGE_EVENT 50009
-#define XORVIEW_EVENT 500010
+#define XORVIEW_EVENT 50010
+#define RESET_STYLE_EVENT 50011
 
 WX_DECLARE_OBJARRAY(uint64_t, wxArrayUINT64);
 
@@ -112,6 +113,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void RePaint( void );
 		uint64_t CursorOffset( void );
 		void SetFont( wxFont f );
+		void ResetStyle( void );
 		void ControlShow( panels control, bool hide );
 		bool ControlIsShown(panels control);
       //void OnOffsetScroll( wxScrollEvent& event );

@@ -232,22 +232,46 @@ void HexEditorCtrl::SetFont( wxFont f ){
 	m_static_offset->SetFont( stdfont );
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
+	ResetStyle();
+	}
 
-	wxTextAttr Style( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ),
-					wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ),
-					stdfont);
+void HexEditorCtrl::ResetStyle(){
+	wxString Colour;
+	wxColour Foreground,Background;
+	wxTextAttr Style;
 
+	//Normal style set
+	if( wxConfig::Get()->Read( _T("ColourHexForeground"), &Colour) )
+		Foreground.Set( Colour );
+	else
+		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) ;
+
+	if( wxConfig::Get()->Read( _T("ColourHexBackground"), &Colour) )
+		Background.Set( Colour );
+	else
+		Background = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) ;
+
+	Style = wxTextAttr( Foreground, Background,	stdfont );
+	offset_ctrl->SetDefaultStyle( Style );
+   hex_ctrl->SetDefaultStyle( Style );
+   text_ctrl->SetDefaultStyle( Style );
+
+	//Selection style set
+
+	if(wxConfig::Get()->Read( _T("ColourHexSelectionForeground"), &Colour) )
+		Foreground.Set( Colour );
+	else
+		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT );
+
+	if( wxConfig::Get()->Read( _T("ColourHexSelectionBackground"), &Colour) )
+		Background.Set( Colour );
+	else
+		Background = wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT );
+
+	Style = wxTextAttr( Foreground, Background,	stdfont );
 	offset_ctrl->SetSelectionStyle( Style );
 	hex_ctrl->SetSelectionStyle( Style );
 	text_ctrl->SetSelectionStyle( Style );
-
-	Style = wxTextAttr( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ),
-										wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ),
-										stdfont);
-
-   offset_ctrl->SetDefaultStyle( Style );
-   hex_ctrl->SetDefaultStyle( Style );
-   text_ctrl->SetDefaultStyle( Style );
 	}
 
 //Handles selection operations.
@@ -466,15 +490,39 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
    x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
    y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
 
+////AutoFill:
+//	int dx = 0;
+//	wxString fmt(_T("xxxx "));
+//	int cnt_chr=4;// CountX(fmt);
+//	//while( fmt.len()+
+//	dx=fmt.Len()+cnt_chr/2;
+//	int dx2=dx;
+//	int r=0;
+//	while((dx2*charx < x)){
+//		dx2+=dx;
+//		r++;
+//		}
+//	int text_x = charx*r*(cnt_chr/2)  +2 +4;
+//	int hex_x = charx*r*fmt.Len()  +2 +4;
+//	int i=text_x;
+//
+//	text_x = text_ctrl->IsShown() ? text_x : 0;
+//	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
+//
+
 	int div = 0;
 	div += text_ctrl->IsShown() ? 1 : 0; //1 character space for each byte
 	div += hex_ctrl->IsShown() ? 3 : 0;  //2 hex +1 whitespace for each byte
 
-	int i = x/(div*charx);	//Byte Per Line!
+	int i = x/(div*charx);	   // i is our Byte Per Line number!
 	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
 	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
+
 	text_x = text_ctrl->IsShown() ? text_x : 0;
 	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
+
+
+
 
 #ifdef _DEBUG_SIZE_
 	std::cout<< "HexEditorCtrl::OnResize()" << std::endl

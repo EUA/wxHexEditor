@@ -239,6 +239,14 @@ inline bool wxHexCtrl::IsDenied( int x ){	// State Of The Art :) Hex plotter fun
 
 inline bool wxHexCtrl::IsDenied_NoCache( int x ){	// State Of The Art :) Hex plotter function by idents avoiding some X axes :)
 //		x%=m_Window.x;						// Discarding y axis noise
+	if(0){ //EXPERIMENTAL
+		wxString fmt(_T("xxxx "));
+		if( ( ( m_Window.x - 1 ) % fmt.Len() == 0 )	// For avoid hex divorcings
+			&& ( x == m_Window.x - 1 ))
+			return true;
+		return fmt[x%(fmt.Len())]==' ';
+		}
+
 	if( ( ( m_Window.x - 1 ) % 3 == 0 )		// For avoid hex divorcings
 		&& ( x == m_Window.x - 1 ))
 		return true;
@@ -422,8 +430,13 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	wxString line;
 	line.Alloc( m_Window.x+1 );
 	wxColour col_standart(HexDefaultAttr.GetBackgroundColour());
+
 	wxColour col_zebra(0x00FFEEEE);
-	;
+// TODO (death#1#): Remove colour lookup for speed up
+	wxString Colour;
+	if( wxConfig::Get()->Read( _T("ColourHexBackgroundZebra"), &Colour) )
+		col_zebra.Set( Colour );
+
 	size_t z = 0;
 	size_t textLength=m_text.Length();
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color

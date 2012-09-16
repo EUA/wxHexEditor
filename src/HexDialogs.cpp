@@ -2173,6 +2173,13 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 		}
 	else
 		chcLang->SetSelection(0);
+
+	wxString Colour;
+	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &Colour) )				clrPickerForeground->SetColour( Colour );
+   if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &Colour) )				clrPickerBackground->SetColour( Colour );
+   if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &Colour) )		clrPickerBackgroundZebra->SetColour( Colour );
+   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &Colour) )	clrPickerSelectionForeground->SetColour(Colour);
+   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &Colour) )	clrPickerSelectionBackground->SetColour(Colour);
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
@@ -2289,9 +2296,32 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 #endif  //__WXMAC__
 	}
 
-void PreferencesDialog::OnOK( wxCommandEvent& event ) {
+void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+   wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+   wxConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+   wxConfigBase::Get()->Write( _T("ColourHexBackgroundZebra"), clrPickerBackgroundZebra->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+   wxConfigBase::Get()->Write( _T("ColourHexSelectionForeground"), clrPickerSelectionForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+   wxConfigBase::Get()->Write( _T("ColourHexSelectionBackground"), clrPickerSelectionBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
    wxConfigBase::Get()->Flush();
-   event.Skip();
+
+	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+   Close();
    }
+
+void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
+	if( wxOK == wxMessageBox( _("Do you sure about resetting colours?"), _("Resetting Hex Colours"), wxOK|wxCANCEL) ){
+		wxConfigBase::Get()->DeleteEntry(_T("ColourHexForeground"));
+		wxConfigBase::Get()->DeleteEntry(_T("ColourHexBackground"));
+		wxConfigBase::Get()->DeleteEntry(_T("ColourHexBackgroundZebra"));
+		wxConfigBase::Get()->DeleteEntry(_T("ColourHexSelectionForeground"));
+		wxConfigBase::Get()->DeleteEntry(_T("ColourHexSelectionBackground"));
+		wxConfigBase::Get()->Flush();
+
+		wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+		GetEventHandler()->ProcessEvent( eventx );
+		Close();
+		}
+	}
 

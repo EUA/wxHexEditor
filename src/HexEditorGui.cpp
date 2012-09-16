@@ -1536,23 +1536,55 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
 	
-	wxBoxSizer* bSizer;
-	bSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxStaticBoxSizer* sbSizerColour;
+	sbSizerColour = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Colours") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizerColours;
+	fgSizerColours = new wxFlexGridSizer( 2, 4, 0, 0 );
+	fgSizerColours->SetFlexibleDirection( wxBOTH );
+	fgSizerColours->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	txtBtn = new wxStaticText( this, wxID_ANY, wxT("Hex Colors:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtBtn->Wrap( -1 );
-	bSizer->Add( txtBtn, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizerColours->Add( txtBtn, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	clrPickerForeground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 0, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	bSizer->Add( clrPickerForeground, 0, wxALL, 5 );
+	clrPickerForeground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerForeground->SetToolTip( wxT("Foreground Colour") );
 	
-	clrPickerBackground = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	bSizer->Add( clrPickerBackground, 0, wxALL, 5 );
+	fgSizerColours->Add( clrPickerForeground, 0, wxALL, 5 );
 	
-	clrPickerBackgroundZebra = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	bSizer->Add( clrPickerBackgroundZebra, 0, wxALL, 5 );
+	clrPickerBackground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerBackground->SetToolTip( wxT("Background Colour") );
 	
-	bSizerMain->Add( bSizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	fgSizerColours->Add( clrPickerBackground, 0, wxALL, 5 );
+	
+	clrPickerBackgroundZebra = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 238, 238, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerBackgroundZebra->SetToolTip( wxT("Zebra Colour") );
+	
+	fgSizerColours->Add( clrPickerBackgroundZebra, 0, wxALL, 5 );
+	
+	txtSelection = new wxStaticText( this, wxID_ANY, wxT("Selection Colours:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtSelection->Wrap( -1 );
+	fgSizerColours->Add( txtSelection, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	clrPickerSelectionForeground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerSelectionForeground->SetToolTip( wxT("Selection Foreground Colour") );
+	
+	fgSizerColours->Add( clrPickerSelectionForeground, 0, wxALL, 5 );
+	
+	clrPickerSelectionBackground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerSelectionBackground->SetToolTip( wxT("Selection Colour") );
+	
+	fgSizerColours->Add( clrPickerSelectionBackground, 0, wxALL, 5 );
+	
+	btnResetColours = new wxButton( this, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnResetColours->SetToolTip( wxT("Reset Colour Values to Default") );
+	
+	fgSizerColours->Add( btnResetColours, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	sbSizerColour->Add( fgSizerColours, 1, wxEXPAND, 5 );
+	
+	bSizerMain->Add( sbSizerColour, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerLang;
 	bSizerLang = new wxBoxSizer( wxHORIZONTAL );
@@ -1566,13 +1598,32 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	chcLang->SetSelection( 0 );
 	bSizerLang->Add( chcLang, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	bSizerMain->Add( bSizerLang, 1, wxEXPAND, 5 );
+	bSizerMain->Add( bSizerLang, 0, wxEXPAND|wxALL, 5 );
+	
+	wxStaticBoxSizer* sbSizerFormat;
+	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Custom Hex Formating") ), wxHORIZONTAL );
+	
+	chkCustom = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	chkCustom->Enable( false );
+	
+	sbSizerFormat->Add( chkCustom, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	txtCtrl_CustomHexFormat = new wxTextCtrl( this, wxID_ANY, wxT("xx "), wxDefaultPosition, wxDefaultSize, 0 );
+	txtCtrl_CustomHexFormat->Enable( false );
+	txtCtrl_CustomHexFormat->SetToolTip( wxT("Please enter recursive hex format pattern here.\n\"xx \" is default pattern.") );
+	
+	sbSizerFormat->Add( txtCtrl_CustomHexFormat, 1, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	bSizerMain->Add( sbSizerFormat, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerBtns;
 	bSizerBtns = new wxBoxSizer( wxHORIZONTAL );
 	
-	BtnOK = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerBtns->Add( BtnOK, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	BtnSave = new wxButton( this, wxID_SAVE, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBtns->Add( BtnSave, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	BtnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBtns->Add( BtnCancel, 0, wxALL, 5 );
 	
 	bSizerMain->Add( bSizerBtns, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
@@ -1583,13 +1634,15 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	BtnOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnOK ), NULL, this );
+	btnResetColours->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
+	BtnSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 }
 
 PreferencesDialogGui::~PreferencesDialogGui()
 {
 	// Disconnect Events
-	BtnOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnOK ), NULL, this );
+	btnResetColours->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
+	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 	
 }
 

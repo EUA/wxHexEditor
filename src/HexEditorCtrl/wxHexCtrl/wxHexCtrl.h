@@ -29,6 +29,7 @@
 #include <wx/textctrl.h>
 #include <wx/caret.h>
 #include <wx/wx.h>
+#include <wx/config.h>
 #include <wx/dcbuffer.h>
 #include <wx/clipbrd.h>
 #include "Tag.h"

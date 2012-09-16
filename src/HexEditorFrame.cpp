@@ -100,6 +100,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Connect( RESET_STYLE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -148,6 +149,8 @@ HexEditorFrame::~HexEditorFrame(){
    this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
    this->Disconnect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+  	this->Disconnect( RESET_STYLE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+
    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
@@ -874,6 +877,11 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 					mbar->Check(idFileDW, true);
 					break;
 				}
+			}
+		if( event.GetId() == RESET_STYLE_EVENT ){
+//			for each MyNotebook->GetSelection();
+//			ReSetStyle
+			wxBell();
 			}
 
 		if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){

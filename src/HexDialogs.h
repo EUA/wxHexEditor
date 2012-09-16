@@ -153,7 +153,8 @@ class PreferencesDialog : public PreferencesDialogGui{
 		PreferencesDialog( wxWindow* parent );
 		void EventHandler( wxCommandEvent& event );
 		void GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers);
-		void OnOK(wxCommandEvent& event);
+		void OnSave(wxCommandEvent& event);
+		void OnResetColours(wxCommandEvent& event);
 
 		wxArrayString LangNames;
 		wxArrayLong LangIds;

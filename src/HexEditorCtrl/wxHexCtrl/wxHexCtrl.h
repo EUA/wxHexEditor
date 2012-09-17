@@ -54,6 +54,8 @@ class wxHexCtrl : public wxScrolledWindow{
 		wxChar CharAt(int offset){ return m_text.GetChar(offset); }
 
 		// Operations
+		void SetFormat( wxString fmt );
+		wxString GetFormat( void );
 virtual void SetDefaultStyle( wxTextAttr& new_attr );
 		void SetSelectionStyle( wxTextAttr& new_attr );
 virtual void CreateCaret( void );
@@ -132,6 +134,7 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		wxMemoryDC* CreateDC( void );
 		wxMemoryDC* internalBufferDC;
 		wxBitmap*   internalBufferBMP;
+		wxString		HexFormat;
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );

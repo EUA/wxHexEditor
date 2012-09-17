@@ -490,36 +490,46 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
    x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
    y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
 
-////AutoFill:
-//	int dx = 0;
-//	wxString fmt(_T("xxxx "));
-//	int cnt_chr=4;// CountX(fmt);
-//	//while( fmt.len()+
-//	dx=fmt.Len()+cnt_chr/2;
-//	int dx2=dx;
-//	int r=0;
-//	while((dx2*charx < x)){
-//		dx2+=dx;
-//		r++;
-//		}
-//	int text_x = charx*r*(cnt_chr/2)  +2 +4;
-//	int hex_x = charx*r*fmt.Len()  +2 +4;
-//	int i=text_x;
-//
-//	text_x = text_ctrl->IsShown() ? text_x : 0;
-//	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
-//
-
 	int div = 0;
-	div += text_ctrl->IsShown() ? 1 : 0; //1 character space for each byte
-	div += hex_ctrl->IsShown() ? 3 : 0;  //2 hex +1 whitespace for each byte
 
-	int i = x/(div*charx);	   // i is our Byte Per Line number!
-	int text_x = charx*i +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
-	int hex_x = charx*3*i +2 +4 - charx; //no need for last gap
+//AutoFill:
+	bool custom_hex_format;
+	wxConfig::Get()->Read( wxT("UseCustomHexFormat"), &custom_hex_format, false );
+	wxString fmt;
+	if( custom_hex_format ){
+		wxConfig::Get()->Read( wxT("CustomHexFormat"), &fmt, wxT("xx "));
+		hex_ctrl->SetFormat( fmt );
+		}
+	else
+		fmt = hex_ctrl->GetFormat();
+
+	int cnt_chr=0;
+	for( int i = 0 ; i <  fmt.Len() ; i++ ){
+		if( fmt[i]!=' ' )
+			cnt_chr++;
+		}
+	cnt_chr/=2; // divide 2 for find byte per hex representation.
+
+	div=fmt.Len()+cnt_chr;
+	int r=0;
+	r=x/(div*charx);
+
+	int text_x = charx*r*cnt_chr  +2 +4;
+	int hex_x = charx*r*fmt.Len()  +2 +4 - charx ; //no need for last gap;
+	int BytePL=r*cnt_chr;
 
 	text_x = text_ctrl->IsShown() ? text_x : 0;
 	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
+
+//	div += text_ctrl->IsShown() ? 1 : 0; //1 character space for each byte
+//	div += hex_ctrl->IsShown() ? 3 : 0;  //2 hex +1 whitespace for each byte
+//
+//	int BytePL = x/(div*charx);	   // i is our Byte Per Line number!
+//	int text_x = charx*BytePL +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
+//	int hex_x = charx*3*BytePL +2 +4 - charx; //no need for last gap
+//
+//	text_x = text_ctrl->IsShown() ? text_x : 0;
+//	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
 
 
 
@@ -533,12 +543,24 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 			<< "Text Ctrl: \t(" << text_x << ',' << event.GetSize().GetY() << ")\n"
 			<< "Hex Char: " << charx << std::endl;
 #endif
+
+	//Formating Hex and byteview column labels
 	wxString adress,byteview;
-	for( int j = 0 ; j < i ; j++ ){
-		adress << wxString::Format( wxT("%02X "), j );
-		byteview << wxString::Format( wxT("%01X"), j%16 );
+	int h=0;
+	for( int j = 0 ; j < BytePL ; j++ ){
+		byteview << wxString::Format( wxT("%01X"), j%0x10 );
+
+		while(hex_ctrl->IsDenied(h)){
+			adress << wxT(" ");
+			h++;
+			}
+
+		adress << wxString::Format( wxT("%02X"), j%0x100 );
+		h+=2;
 		}
-	adress.RemoveLast();	//Remove last ' ' for unwrap
+
+	if(adress.Last()==' ')
+		adress.RemoveLast();	//Remove last ' ' for unwrap
 
 	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
 //	offset_ctrl->SetSize( wxSize( offset_x , y ) ); //Not needed, Layout() Makes the job well.

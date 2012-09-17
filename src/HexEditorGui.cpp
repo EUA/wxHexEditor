@@ -1603,16 +1603,18 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxStaticBoxSizer* sbSizerFormat;
 	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Custom Hex Formating") ), wxHORIZONTAL );
 	
-	chkCustom = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	chkCustom->Enable( false );
-	
+	chkCustom = new wxCheckBox( this, wxID_ANY, wxT("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerFormat->Add( chkCustom, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	txtCtrl_CustomHexFormat = new wxTextCtrl( this, wxID_ANY, wxT("xx "), wxDefaultPosition, wxDefaultSize, 0 );
-	txtCtrl_CustomHexFormat->Enable( false );
-	txtCtrl_CustomHexFormat->SetToolTip( wxT("Please enter recursive hex format pattern here.\n\"xx \" is default pattern.") );
+	comboCustomHexFormat = new wxComboBox( this, wxID_ANY, wxT("xx "), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	comboCustomHexFormat->Append( wxT("xx ") );
+	comboCustomHexFormat->Append( wxT("xxxx ") );
+	comboCustomHexFormat->Append( wxT("xx xx xx xx xx xx xx xx  ") );
+	comboCustomHexFormat->Append( wxT("xxxx xxxx xxxx xxxx  ") );
+	comboCustomHexFormat->Enable( false );
+	comboCustomHexFormat->SetToolTip( wxT("Custom Hex Format Pattern") );
 	
-	sbSizerFormat->Add( txtCtrl_CustomHexFormat, 1, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	sbSizerFormat->Add( comboCustomHexFormat, 0, wxALL, 5 );
 	
 	bSizerMain->Add( sbSizerFormat, 0, wxEXPAND, 5 );
 	
@@ -1635,6 +1637,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	
 	// Connect Events
 	btnResetColours->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
+	chkCustom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 }
 
@@ -1642,6 +1645,7 @@ PreferencesDialogGui::~PreferencesDialogGui()
 {
 	// Disconnect Events
 	btnResetColours->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
+	chkCustom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 	
 }

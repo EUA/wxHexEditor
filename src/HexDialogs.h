@@ -155,6 +155,8 @@ class PreferencesDialog : public PreferencesDialogGui{
 		void GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers);
 		void OnSave(wxCommandEvent& event);
 		void OnResetColours(wxCommandEvent& event);
+		void OnCustomHexCheck( wxCommandEvent& event );
+
 
 		wxArrayString LangNames;
 		wxArrayLong LangIds;

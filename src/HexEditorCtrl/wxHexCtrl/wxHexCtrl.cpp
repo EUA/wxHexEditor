@@ -73,6 +73,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	internalBufferDC=NULL;
 	internalBufferBMP=NULL;
 
+	HexFormat = wxT("xx ");
+
 	SetSelectionStyle( HexDefaultAttr );
 
 	HexDefaultAttr = wxTextAttr(
@@ -239,12 +241,11 @@ inline bool wxHexCtrl::IsDenied( int x ){	// State Of The Art :) Hex plotter fun
 
 inline bool wxHexCtrl::IsDenied_NoCache( int x ){	// State Of The Art :) Hex plotter function by idents avoiding some X axes :)
 //		x%=m_Window.x;						// Discarding y axis noise
-	if(0){ //EXPERIMENTAL
-		wxString fmt(_T("xxxx "));
-		if( ( ( m_Window.x - 1 ) % fmt.Len() == 0 )	// For avoid hex divorcings
+	if(1){ //EXPERIMENTAL
+		if( ( ( m_Window.x - 1 ) % HexFormat.Len() == 0 )	// For avoid hex divorcings
 			&& ( x == m_Window.x - 1 ))
 			return true;
-		return fmt[x%(fmt.Len())]==' ';
+		return HexFormat[x%(HexFormat.Len())]==' ';
 		}
 
 	if( ( ( m_Window.x - 1 ) % 3 == 0 )		// For avoid hex divorcings
@@ -328,6 +329,14 @@ wxPoint wxHexCtrl::PixelCoordToInternalCoord( wxPoint mouse ){
 	int x = (mouse.x - m_Margin.x) / m_CharSize.x;
 	int y = (mouse.y - m_Margin.y) / m_CharSize.y;
 	return wxPoint(x,y);
+	}
+
+void wxHexCtrl::SetFormat( wxString fmt ){
+	HexFormat = fmt;
+	}
+
+wxString wxHexCtrl::GetFormat( void ){
+	return HexFormat;
 	}
 
 void wxHexCtrl::SetDefaultStyle( wxTextAttr& new_attr ){

@@ -483,12 +483,13 @@ class PreferencesDialogGui : public wxDialog
 		wxStaticText* txtLang;
 		wxChoice* chcLang;
 		wxCheckBox* chkCustom;
-		wxTextCtrl* txtCtrl_CustomHexFormat;
+		wxComboBox* comboCustomHexFormat;
 		wxButton* BtnSave;
 		wxButton* BtnCancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnResetColours( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCustomHexCheck( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
 		
 	

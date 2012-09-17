@@ -2180,6 +2180,11 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
    if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &Colour) )		clrPickerBackgroundZebra->SetColour( Colour );
    if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &Colour) )	clrPickerSelectionForeground->SetColour(Colour);
    if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &Colour) )	clrPickerSelectionBackground->SetColour(Colour);
+   bool custom_hex;
+   if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &custom_hex ) )		chkCustom->SetValue( custom_hex );
+   if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &Colour	)	)				comboCustomHexFormat->SetValue( Colour );
+   comboCustomHexFormat->Enable( chkCustom->IsChecked() );
+
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
@@ -2298,11 +2303,16 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+
    wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
    wxConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
    wxConfigBase::Get()->Write( _T("ColourHexBackgroundZebra"), clrPickerBackgroundZebra->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
    wxConfigBase::Get()->Write( _T("ColourHexSelectionForeground"), clrPickerSelectionForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
    wxConfigBase::Get()->Write( _T("ColourHexSelectionBackground"), clrPickerSelectionBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+
+   wxConfigBase::Get()->Write( _T("UseCustomHexFormat"), chkCustom->GetValue() );
+	wxConfigBase::Get()->Write( _T("CustomHexFormat"), comboCustomHexFormat->GetValue() );
+
    wxConfigBase::Get()->Flush();
 
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
@@ -2325,3 +2335,6 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 		}
 	}
 
+void PreferencesDialog::OnCustomHexCheck( wxCommandEvent& event ){
+	comboCustomHexFormat->Enable( event.IsChecked() );
+	}

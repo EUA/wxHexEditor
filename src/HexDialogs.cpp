@@ -2316,8 +2316,9 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    wxConfigBase::Get()->Flush();
 
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
-	GetEventHandler()->ProcessEvent( eventx );
+	GetParent()->GetEventHandler()->ProcessEvent( eventx );
    Close();
+
    }
 
 void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
@@ -2330,7 +2331,7 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 		wxConfigBase::Get()->Flush();
 
 		wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
-		GetEventHandler()->ProcessEvent( eventx );
+		GetParent()->GetEventHandler()->ProcessEvent( eventx );
 		Close();
 		}
 	}

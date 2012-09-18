@@ -1607,12 +1607,11 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	sbSizerFormat->Add( chkCustom, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	comboCustomHexFormat = new wxComboBox( this, wxID_ANY, wxT("xx "), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-	comboCustomHexFormat->Append( wxT("xx ") );
 	comboCustomHexFormat->Append( wxT("xxxx ") );
 	comboCustomHexFormat->Append( wxT("xx xx xx xx xx xx xx xx  ") );
 	comboCustomHexFormat->Append( wxT("xxxx xxxx xxxx xxxx  ") );
 	comboCustomHexFormat->Enable( false );
-	comboCustomHexFormat->SetToolTip( wxT("Custom Hex Format Pattern") );
+	comboCustomHexFormat->SetToolTip( wxT("Recursive custom hex format pattern") );
 	
 	sbSizerFormat->Add( comboCustomHexFormat, 0, wxALL, 5 );
 	

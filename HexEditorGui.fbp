@@ -9684,7 +9684,7 @@
                             <property name="proportion">0</property>
                             <object class="wxComboBox" expanded="0">
                                 <property name="bg"></property>
-                                <property name="choices">&quot;xx &quot; &quot;xxxx &quot; &quot;xx xx xx xx xx xx xx xx  &quot; &quot;xxxx xxxx xxxx xxxx  &quot;</property>
+                                <property name="choices">&quot;xxxx &quot; &quot;xx xx xx xx xx xx xx xx  &quot; &quot;xxxx xxxx xxxx xxxx  &quot;</property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
                                 <property name="enabled">0</property>
@@ -9700,7 +9700,7 @@
                                 <property name="size"></property>
                                 <property name="style"></property>
                                 <property name="subclass"></property>
-                                <property name="tooltip">Custom Hex Format Pattern</property>
+                                <property name="tooltip">Recursive custom hex format pattern</property>
                                 <property name="validator_data_type"></property>
                                 <property name="validator_style">wxFILTER_NONE</property>
                                 <property name="validator_type">wxDefaultValidator</property>

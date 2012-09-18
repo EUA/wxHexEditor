@@ -232,46 +232,6 @@ void HexEditorCtrl::SetFont( wxFont f ){
 	m_static_offset->SetFont( stdfont );
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
-	ResetStyle();
-	}
-
-void HexEditorCtrl::ResetStyle(){
-	wxString Colour;
-	wxColour Foreground,Background;
-	wxTextAttr Style;
-
-	//Normal style set
-	if( wxConfig::Get()->Read( _T("ColourHexForeground"), &Colour) )
-		Foreground.Set( Colour );
-	else
-		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) ;
-
-	if( wxConfig::Get()->Read( _T("ColourHexBackground"), &Colour) )
-		Background.Set( Colour );
-	else
-		Background = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) ;
-
-	Style = wxTextAttr( Foreground, Background,	stdfont );
-	offset_ctrl->SetDefaultStyle( Style );
-   hex_ctrl->SetDefaultStyle( Style );
-   text_ctrl->SetDefaultStyle( Style );
-
-	//Selection style set
-
-	if(wxConfig::Get()->Read( _T("ColourHexSelectionForeground"), &Colour) )
-		Foreground.Set( Colour );
-	else
-		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT );
-
-	if( wxConfig::Get()->Read( _T("ColourHexSelectionBackground"), &Colour) )
-		Background.Set( Colour );
-	else
-		Background = wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT );
-
-	Style = wxTextAttr( Foreground, Background,	stdfont );
-	offset_ctrl->SetSelectionStyle( Style );
-	hex_ctrl->SetSelectionStyle( Style );
-	text_ctrl->SetSelectionStyle( Style );
 	}
 
 //Handles selection operations.
@@ -495,13 +455,12 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 //AutoFill:
 	bool custom_hex_format;
 	wxConfig::Get()->Read( wxT("UseCustomHexFormat"), &custom_hex_format, false );
-	wxString fmt;
-	if( custom_hex_format ){
+	wxString fmt(wxT("xx "));
+	if( custom_hex_format )
 		wxConfig::Get()->Read( wxT("CustomHexFormat"), &fmt, wxT("xx "));
-		hex_ctrl->SetFormat( fmt );
-		}
-	else
-		fmt = hex_ctrl->GetFormat();
+
+// TODO (death#1#): Move style engine somewhere else to speedy resizing.
+	hex_ctrl->SetFormat( fmt );
 
 	int cnt_chr=0;
 	for( int i = 0 ; i <  fmt.Len() ; i++ ){

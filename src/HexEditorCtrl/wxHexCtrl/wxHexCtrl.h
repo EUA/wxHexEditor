@@ -206,6 +206,7 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 			offset_position=0;
 			digit_count=6;
 			}
+
 		wxHexOffsetCtrl(wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
@@ -216,7 +217,12 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				GetCaret()->Hide();
 				SetCaret( NULL );
-                offset_mode='u';
+
+            //offset_mode='u';
+            offset_mode=wxConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
+            if( offset_mode=='s' )	// No force to sector mode at startup.
+					offset_mode=='u';
+
 				offset_position=0;
 				digit_count=6;
 				};

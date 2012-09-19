@@ -1146,6 +1146,10 @@ void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
         case 's': offset_mode = 'u'; break;
         default : offset_mode = 'u';
         }
+
+	wxString s= wxChar( offset_mode );
+   wxConfigBase::Get()->Write( _T("LastOffsetMode"), s);
+
 	SetValue( offset_position );
 	}
 
@@ -1186,6 +1190,7 @@ unsigned wxHexOffsetCtrl::GetDigitCount( void ){
 	while(offset_limit > pow(base,++digit_count));
 	if( digit_count < 6)
 		digit_count=6;
+
 	return digit_count;
 	}
 

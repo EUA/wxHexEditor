@@ -28,6 +28,18 @@
 #include "FAL.h"
 #include <wx/arrimpl.cpp>
 
+#ifndef __WXMSW__
+	#include <sys/ptrace.h> //No ptrace at windows
+#endif
+
+#ifdef __MACOSX__
+	#define PTRACE_ATTACH PT_ATTACH
+	#define PTRACE_DETACH PT_DETACH
+	#define PTRACE_PEEKTEXT PT_READ_I
+	#define PTRACE_POKETEXT PT_WRITE_I
+#endif
+
+
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
 int FDtoBlockSize( int FD ){
@@ -105,11 +117,11 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		std::cout<< "Win Device Info:\n" << "Bytes per sector = " <<  BlockRWSize << "\nTotal number of bytes = " << BlockRWCount << std::endl;
 	#endif
 		wxFile::Attach( fd );
-		return;
+		return true;
 		}
 	if( not myfilename.IsFileReadable() ){
 		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR);
-		return;
+		return false;
 		}
 
 	return FALOpen( myfilename, FAM, ForceBlockRW);
@@ -209,8 +221,10 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 	}
 
 bool FAL::Close(){
+			#ifndef __WXMSW__
 			if( ProcessID >=0 )
 				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, NULL)) >= 0 );
+			#endif
 			return wxFile::Close();
 			};
 
@@ -338,13 +352,15 @@ bool FAL::Apply( void ){
 					char *bfr = new char[rd_size];
 					int rd = 0;
 					if ( ProcessID >=0 ){
+						#ifndef __WXMSW__
 						long word=0;
 						//unsigned long *ptr = (unsigned long *) buffer;
 						while (rd < rd_size) {
-							word = ptrace(PTRACE_PEEKTEXT, ProcessID, StartSector*BlockRWSize+rd, NULL);
+							word = ptrace(PTRACE_PEEKTEXT, ProcessID, reinterpret_cast<char*>(StartSector*BlockRWSize+rd), NULL);
 							memcpy( bfr+rd , &word, 4);
 							rd += 4;
 							}
+						#endif
 						}
 					else{
 						wxFile::Seek(StartSector*BlockRWSize);
@@ -361,13 +377,15 @@ bool FAL::Apply( void ){
 					if ( ProcessID >=0 ){
 						int wr=0;
 						long word=0;
+						#ifndef __WXMSW__
 						while (wr < rd_size) {
 								memcpy(&word, bfr + wr, sizeof(word));
-								if( ptrace(PTRACE_POKETEXT, ProcessID, StartSector*BlockRWSize+wr, word) == -1 )
+								if( ptrace(PTRACE_POKETEXT, ProcessID, reinterpret_cast<char*>(StartSector*BlockRWSize+wr), word) == -1 )
 									wxMessageBox( _("Error on Write operation to Process RAM"), _("FATAL ERROR") );
 								wr += 4;
 							}
 						success*=true;
+						#endif
 						}
 					else
 						success*=Write(bfr, rd_size);//*= to make update success true or false
@@ -577,11 +595,13 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			if ( ProcessID >=0 ){
 				long word=0;
 				//unsigned long *ptr = (unsigned long *) buffer;
+				#ifndef __WXMSW__
 				while (rd < rd_size) {
-					word = ptrace(PTRACE_PEEKTEXT, ProcessID, StartSector*BlockRWSize+rd, NULL);
+					word = ptrace(PTRACE_PEEKTEXT, ProcessID, reinterpret_cast<char*>(StartSector*BlockRWSize+rd), NULL);
 					memcpy( bfr+rd , &word, 4);
 					rd += 4;
 					}
+				#endif
 				}
 			else{
 				wxFile::Seek(StartSector*BlockRWSize);
@@ -796,7 +816,7 @@ wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 
 const DiffNode* FAL::GetFirstUndoNode( void ){
 	if( DiffArray.GetCount() == 0 )
-		return false;
+		return NULL;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
 		if( !DiffArray.Item(i)->flag_undo )
 			return DiffArray.Item(i);

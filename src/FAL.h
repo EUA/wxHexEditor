@@ -68,7 +68,7 @@
 
 //#include <link.h>
 //#include <elf.h>
-#include <sys/ptrace.h>
+//#include <sys/ptrace.h>
 //#include <stdlib.h>
 //#include <string.h>
 #include <sys/wait.h>

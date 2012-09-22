@@ -232,7 +232,48 @@ void HexEditorCtrl::SetFont( wxFont f ){
 	m_static_offset->SetFont( stdfont );
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
+	SetStyle();
 	}
+
+void HexEditorCtrl::SetStyle() {
+   wxString Colour;
+   wxColour Foreground,Background;
+   wxTextAttr Style;
+
+   //Normal style set
+   if( wxConfig::Get()->Read( _T("ColourHexForeground"), &Colour) )
+      Foreground.Set( Colour );
+   else
+      Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) ;
+
+   if( wxConfig::Get()->Read( _T("ColourHexBackground"), &Colour) )
+      Background.Set( Colour );
+   else
+      Background = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) ;
+
+   Style = wxTextAttr( Foreground, Background,	stdfont );
+   offset_ctrl->SetDefaultStyle( Style );
+   hex_ctrl->SetDefaultStyle( Style );
+   text_ctrl->SetDefaultStyle( Style );
+
+   //Selection style set
+
+   if(wxConfig::Get()->Read( _T("ColourHexSelectionForeground"), &Colour) )
+      Foreground.Set( Colour );
+   else
+      Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT );
+
+   if( wxConfig::Get()->Read( _T("ColourHexSelectionBackground"), &Colour) )
+      Background.Set( Colour );
+   else
+      Background = wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT );
+
+   Style = wxTextAttr( Foreground, Background,	stdfont );
+   offset_ctrl->SetSelectionStyle( Style );
+   hex_ctrl->SetSelectionStyle( Style );
+   text_ctrl->SetSelectionStyle( Style );
+   }
+
 
 //Handles selection operations.
 bool HexEditorCtrl::Selector(){

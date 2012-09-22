@@ -884,8 +884,13 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				}
 			}
 
-		if( event.GetId() == RESET_STYLE_EVENT )
+		if( event.GetId() == RESET_STYLE_EVENT ){
+			HexEditor *MyHexEditor = NULL;
+			for(int i=0 ; i < MyNotebook->GetPageCount() ; i++)
+				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetStyle();
+
 			MyNotebook->Layout();
+			}
 
 
 		if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){

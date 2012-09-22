@@ -32,7 +32,7 @@
 	#include <sys/ptrace.h> //No ptrace at windows
 #endif
 
-#ifdef __MACOSX__
+#ifdef __WXMAC__
 	#define PTRACE_ATTACH PT_ATTACH
 	#define PTRACE_DETACH PT_DETACH
 	#define PTRACE_PEEKTEXT PT_READ_I

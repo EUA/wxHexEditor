@@ -67,11 +67,14 @@
 #define idXORView 1021
 #define idDeviceRam 1022
 #define idProcessRAM 1023
-#define idFileRO 1024
-#define idFileRW 1025
-#define idFileDW 1026
-#define ID_CHK_UNSIGNED 1027
-#define ID_CHK_BIGENDIAN 1028
+#define idDeviceBackup 1024
+#define idDeviceRestore 1025
+#define idDeviceErase 1026
+#define idFileRO 1027
+#define idFileRW 1028
+#define idFileDW 1029
+#define ID_CHK_UNSIGNED 1030
+#define ID_CHK_BIGENDIAN 1031
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -89,6 +92,7 @@ class HexEditorGui : public wxFrame
 		wxMenu* toolsMenu;
 		wxMenu* devicesMenu;
 		wxMenu* menuDeviceDisk;
+		wxMenu* menuDeviceImage;
 		wxMenu* optionsMenu;
 		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
@@ -497,6 +501,83 @@ class PreferencesDialogGui : public wxDialog
 		
 		PreferencesDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~PreferencesDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class DeviceBackupDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class DeviceBackupDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* txtSource;
+		wxChoice* chcPartition;
+		wxStaticText* txtDestination;
+		wxFilePickerCtrl* filePickBackup;
+		wxButton* btnBackup;
+		wxButton* btnCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnBackup( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		DeviceBackupDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Backup Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~DeviceBackupDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class DeviceRestoreDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class DeviceRestoreDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* txtSource;
+		wxFilePickerCtrl* filePickBackup;
+		wxStaticText* txtDestination;
+		wxChoice* chcPartition;
+		wxButton* btnRestore;
+		wxButton* btnCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnRestore( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Restore Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~DeviceRestoreDialogGui();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class DeviceEraseDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class DeviceEraseDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* txtDestination;
+		wxChoice* chcPartition;
+		wxRadioBox* radioErase;
+		wxButton* btnErase;
+		wxButton* btnCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnErase( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		DeviceEraseDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Erase Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~DeviceEraseDialogGui();
 	
 };
 

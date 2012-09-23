@@ -162,5 +162,21 @@ class PreferencesDialog : public PreferencesDialogGui{
 		wxArrayLong LangIds;
 	};
 
+class DeviceBackupDialog : public DeviceBackupDialogGui{
+	public:
+		DeviceBackupDialog( wxWindow* parent );
+		void OnBackup( wxCommandEvent& event );
+	};
 
+class DeviceRestoreDialog : public DeviceRestoreDialogGui{
+	public:
+		DeviceRestoreDialog( wxWindow* parent );
+		void OnRestore( wxCommandEvent& event );
+	};
+
+class DeviceEraseDialog : public DeviceEraseDialogGui{
+	public:
+		DeviceEraseDialog( wxWindow* parent );
+		void OnErase( wxCommandEvent& event );
+	};
 #endif //__HexEditorDialogs__

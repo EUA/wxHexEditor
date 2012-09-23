@@ -2339,3 +2339,177 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 void PreferencesDialog::OnCustomHexCheck( wxCommandEvent& event ){
 	comboCustomHexFormat->Enable( event.IsChecked() );
 	}
+
+extern wxArrayString GetDeviceList();
+DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui(parent, wxID_ANY){
+	wxArrayString disks = GetDeviceList();
+	for( unsigned i =0 ; i < disks.Count() ; i++)
+		disks[i]=disks.Item(i).AfterLast('/');
+	disks.Sort();
+	chcPartition->Append( disks );
+	}
+
+void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
+	wxArrayString disks = GetDeviceList();
+	disks.Sort();
+	wxFileName src(disks.Item( chcPartition->GetSelection() ) );
+	wxFileName dst(filePickBackup->GetPath());
+
+	FAL src_fl(src);
+	wxFFile dst_fl(dst.GetFullPath(), wxT("wb"));
+
+	wxString msg = _("Please wait while backing up disk/partition image.");
+	wxProgressDialog mypd(_("Disk/Partition Backup"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	mypd.Show();
+
+	MHASH myhash = mhash_init( MHASH_MD5 );
+
+	unsigned rdBlockSz=1024*1024;
+	unsigned char buff[rdBlockSz];
+	int rd=rdBlockSz;
+
+	uint64_t readfrom=0,read_speed=0, range=src_fl.Length();
+	wxString emsg = msg;
+	time_t ts,te;
+	time (&ts);
+
+	while(rd == rdBlockSz){
+		rd=src_fl.Read(buff, rdBlockSz);
+		read_speed+=rd;
+		readfrom+=rd;
+		dst_fl.Write( buff, rd );
+		mhash( myhash, buff, rd);
+
+		time(&te);
+		if(ts != te ){
+			ts=te;
+			emsg = msg + wxT("\n") + wxString::Format(_("Backup Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			read_speed=0;
+			}
+		if(not mypd.Update((readfrom*1000)/range, emsg ))
+			return;
+		}
+	src_fl.Close();
+	dst_fl.Close();
+
+	wxString AlgName = wxString::FromAscii( reinterpret_cast<const char*>(mhash_get_hash_name_static( mhash_get_mhash_algo(myhash) )));
+	wxFFile dst_hash(dst.GetFullPath()+wxT(".")+AlgName.Lower(), wxT("wb"));
+
+	unsigned char *hash;
+	hash = static_cast<unsigned char *>( mhash_end(myhash) );
+
+	wxString result;
+	for (unsigned k = 0; k < mhash_get_block_size( mhash_get_mhash_algo(myhash) ); k++)
+		result << wxString::Format( wxT("%.2x"), hash[k]);
+
+	dst_hash.Write( result );
+	dst_hash.Write( wxT("  ") );
+	dst_hash.Write( dst.GetFullName() );
+	dst_hash.Close();
+	}
+
+DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialogGui(parent, wxID_ANY){
+	wxArrayString disks = GetDeviceList();
+	for( unsigned i =0 ; i < disks.Count() ; i++)
+		disks[i]=disks.Item(i).AfterLast('/');
+	disks.Sort();
+	chcPartition->Append( disks );
+	}
+
+void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
+	wxArrayString disks = GetDeviceList();
+	disks.Sort();
+	wxFileName dst(disks.Item( chcPartition->GetSelection() ) );
+	wxFileName src(filePickBackup->GetPath());
+
+	wxFFile src_fl(src.GetFullPath(), wxT("rb"));
+	FAL dst_fl( dst, FAL::ReadWrite );
+
+	wxString msg = _("Please wait while restoring disk/partition image.");
+	wxProgressDialog mypd(_("Disk/Partition Restore"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	mypd.Show();
+
+	unsigned rdBlockSz=1024*1024;
+	unsigned char buff[rdBlockSz];
+	int rd=rdBlockSz;
+
+	uint64_t readfrom=0,read_speed=0, range=src_fl.Length();
+	wxString emsg = msg;
+	time_t ts,te;
+	time (&ts);
+
+
+	while(rd == rdBlockSz){
+		rd=src_fl.Read(buff, rdBlockSz);
+		read_speed+=rd;
+		readfrom+=rd;
+
+		dst_fl.BlockWrite( buff, rd );
+
+		time(&te);
+		if(ts != te ){
+			ts=te;
+			emsg = msg + wxT("\n") + wxString::Format(_("Restore Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			read_speed=0;
+			}
+		if(not mypd.Update((readfrom*1000)/range, emsg ))
+			return;
+		}
+	src_fl.Close();
+	dst_fl.Close();
+	}
+
+
+DeviceEraseDialog::DeviceEraseDialog( wxWindow* parent ):DeviceEraseDialogGui(parent, wxID_ANY){
+	wxArrayString disks = GetDeviceList();
+	for( unsigned i =0 ; i < disks.Count() ; i++)
+		disks[i]=disks.Item(i).AfterLast('/');
+	disks.Sort();
+	chcPartition->Append( disks );
+	}
+
+
+void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
+	wxArrayString disks = GetDeviceList();
+	disks.Sort();
+	wxFileName dst(disks.Item( chcPartition->GetSelection() ) );
+	FAL dst_fl( dst, FAL::ReadWrite, 1024 );
+
+	wxString msg = _("Please wait while erasing disk/partition image.");
+	wxProgressDialog mypd(_("Disk/Partition Erase"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	mypd.Show();
+
+	unsigned rdBlockSz=1024*1024;
+	unsigned char buff[rdBlockSz];
+	int rd=rdBlockSz;
+
+	uint64_t readfrom=0,read_speed=0, range=dst_fl.Length();
+	wxString emsg = msg;
+	time_t ts,te;
+	time (&ts);
+
+	int sel = radioErase->GetSelection();
+	memset( buff, (sel == 0 ? 0x00 : 0xFF ), rdBlockSz);
+
+	while(readfrom < range){
+		if( sel == 2 )
+			for( int i = 0 ; i < rdBlockSz ; i++ )
+				buff[i]=rand()%0xFF;
+
+		if( readfrom+rd > range )
+			rd = range-readfrom;
+
+		dst_fl.BlockWrite( buff, rd );
+		read_speed+=rd;
+		readfrom+=rd;
+
+		time(&te);
+		if(ts != te ){
+			ts=te;
+			emsg = msg + wxT("\n") + wxString::Format(_("Erase Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			read_speed=0;
+			}
+		if(not mypd.Update((readfrom*1000)/range, emsg ))
+			return;
+		}
+	}

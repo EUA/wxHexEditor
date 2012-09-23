@@ -343,7 +343,7 @@ bool HexEditor::FileSave( bool question ) {
 
 bool HexEditor::FileSave( wxString savefilename ) {
 // TODO (death#1#): Protection to save opened file/samefile
-	wxFFile savefile( savefilename, _("wb") );
+	wxFFile savefile( savefilename, wxT("wb") );
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
 		uint64_t range = myfile->Length();
@@ -534,7 +534,7 @@ bool HexEditor::SaveAsDump( void ){
 
    if(wxID_OK == filediag.ShowModal()) {
 // TODO (death#1#): Avoid overwrite of original file!
-	wxFFile savefile( filediag.GetPath(), _("wb") );
+	wxFFile savefile( filediag.GetPath(), wxT("wb") );
       if(savefile.IsOpened()) {
          int rd;
          wxMemoryBuffer m_buffer;

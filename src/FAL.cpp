@@ -86,6 +86,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	the_file = myfilename;
 	BlockRWSize = ForceBlockRW;
 	ProcessID=-1;
+	get_ptr = put_ptr = 0;
 
 	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
 	}
@@ -337,12 +338,28 @@ bool FAL::IsChanged( void ){
 	return false;
 	}
 
+bool FAL::BlockWrite( unsigned char* buffer, unsigned size ){
+	if( size % BlockRWSize )
+		return false;
+
+	std::cout << "buffer write : " << size << "put_ptr :" << put_ptr << std::endl;
+	uint64_t StartSector = put_ptr / BlockRWSize;
+	unsigned StartShift = put_ptr - StartSector*BlockRWSize;
+	uint64_t EndSector = (put_ptr + size)/BlockRWSize;
+
+	int rd = 0;
+	wxFile::Seek(StartSector*BlockRWSize);
+	bool ret = Write(buffer, size);//*= to make update success true or false
+	put_ptr+=size;
+	return ret;
+	}
+
 bool FAL::Apply( void ){
 	bool success=true;
 	if( file_access_mode != ReadOnly )
 		for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
 			if( DiffArray[i]->flag_commit == DiffArray[i]->flag_undo ){		// If there is unwriten data
-				Seek(DiffArray[i]->start_offset, wxFromStart);			// write it
+				Seek(DiffArray[i]->start_offset, wxFromStart);					// write it
 
 				if(BlockRWSize > 0){
 					uint64_t StartSector = put_ptr / BlockRWSize;
@@ -517,6 +534,7 @@ wxFileOffset FAL::Length( void ){
 void FAL::SetXORKey( wxMemoryBuffer Key){
 	XORview=Key;
 	}
+
 wxMemoryBuffer FAL::GetXORKey( void ){
 	return XORview;
 	}

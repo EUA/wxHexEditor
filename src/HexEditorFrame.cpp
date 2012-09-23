@@ -29,6 +29,38 @@
 	#include "HDwin.h"
 #endif
 
+wxArrayString GetDeviceList(){
+	wxArrayString disks;
+#ifdef __WXGTK__ //linux
+	if(wxDir::Exists(wxT("/dev/disk/by-id")) ){
+		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
+		}
+	else{
+		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("sd*"), wxDIR_FILES );
+		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("hd*"), wxDIR_FILES );
+		}
+#elif defined( __WXMAC__ )
+	#if wxCHECK_VERSION(2, 9, 0) //Problem on wx 2.8.x, returns null.
+	wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("disk*"), wxDIR_FILES );
+	#else
+	DIR *dirp;
+		struct dirent *entry;
+		if(dirp = opendir("/dev")){
+			while(entry = readdir(dirp))
+				if( !strncmp(entry->d_name, "disk", 4) )
+					disks.Add(wxT("/dev/") + wxString::FromAscii(entry->d_name));
+			closedir(dirp);
+			}
+	#endif
+#elif defined( __WXMSW__ )
+ 		windowsHDD windevs;
+ 		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
+ 		for(int i=0; i < DevVector.size();i++)
+			disks.Add(wxString(DevVector[i]));
+#endif
+	return disks;
+	}
+
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
@@ -559,34 +591,7 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){
 		int i=event.GetId() - idDiskDevice;
-		wxArrayString disks;
-#ifdef __WXGTK__ //linux
-		if(wxDir::Exists(wxT("/dev/disk/by-id")) ){
-			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
-			}
-		else{
-			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("sd*"), wxDIR_FILES );
-			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("hd*"), wxDIR_FILES );
-			}
-#elif defined( __WXMAC__ )
-	#if wxCHECK_VERSION(2, 9, 0) //Problem on wx 2.8.x, returns null.
-		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("disk*"), wxDIR_FILES );
-	#else
-		DIR *dirp;
-			struct dirent *entry;
-			if(dirp = opendir("/dev")){
-				while(entry = readdir(dirp))
-					if( !strncmp(entry->d_name, "disk", 4) )
-						disks.Add(wxT("/dev/") + wxString::FromAscii(entry->d_name));
-				closedir(dirp);
-				}
-	#endif
-#elif defined( __WXMSW__ )
- 		windowsHDD windevs;
- 		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
- 		for(int i=0; i < DevVector.size();i++)
-			disks.Add(wxString(DevVector[i]));
-#endif
+		wxArrayString disks = GetDeviceList();
 		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
 		}
@@ -603,6 +608,18 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 		OpenFile( wxFileNameFromPath( str ));
 		}
 
+	else if( event.GetId() == idDeviceBackup ){
+		DeviceBackupDialog bd( this );
+		bd.ShowModal();
+	}
+	else if( event.GetId() == idDeviceRestore ){
+		DeviceRestoreDialog rd( this );
+		rd.ShowModal();
+		}
+	else if( event.GetId() == idDeviceErase ){
+		DeviceEraseDialog rd( this );
+		rd.ShowModal();
+		}
 	}
 
 void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
@@ -610,8 +627,6 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 		PreferencesDialog *prefdlg = new PreferencesDialog( this );
 		prefdlg->ShowModal();
 		prefdlg->Destroy();
-
-
 
 		wxConfigBase* pConfig = wxConfigBase::Get();
 		if ( ! pConfig->Read(_T("Language")).IsEmpty() ) {
@@ -788,39 +803,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		for( wxMenuItemList::iterator it = devMen.begin(); it != devMen.end() ; it++ )
 			menuDeviceDisk->Destroy( *it );
 
-		wxArrayString disks;
-#ifdef __WXGTK__
-		///ls -l /dev/disk/by-id
-		//wxExecute(wxT("ls \-1 \\dev\\sd*"), disks, disks);
-		if( wxDir::Exists(wxT("/dev/disk/by-id")) ){
-			wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
-			}
-		else{
-			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("sd*"), wxDIR_FILES );
-			wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("hd*"), wxDIR_FILES );
-			}
-#elif defined( __WXMAC__ )
-		//wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("rdisk*"), wxDIR_FILES ); those are "character files". Not eligible for opening in Hex Editor
-	#if wxCHECK_VERSION(2, 9, 0) //Problem on wx 2.8.x, returns null.
-		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("disk*"), wxDIR_FILES );
-	#else
-		DIR *dirp;
-			struct dirent *entry;
-			if(dirp = opendir("/dev")){
-				while(entry = readdir(dirp))
-					if( !strncmp(entry->d_name, "disk", 4) )
-						//Note, this /dev/ will drop on adding menu for cosmetic!
-						disks.Add(wxT("/dev/") + wxString::FromAscii(entry->d_name));
-				closedir(dirp);
-				}
-	#endif
-
-#elif defined( __WXMSW__ )
-		windowsHDD windevs;
-		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
-		for(int i=0; i < DevVector.size();i++)
-			disks.Add(wxString(DevVector[i]));
-#endif
+		wxArrayString disks = GetDeviceList();
 
 		//This /dev/ will drop on adding menu for cosmetic!
 		for( unsigned i =0 ; i < disks.Count() ; i++)
@@ -891,7 +874,6 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 			MyNotebook->Layout();
 			}
-
 
 		if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){
 			#ifdef _DEBUG_SELECT_

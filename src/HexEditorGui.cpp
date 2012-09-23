@@ -237,6 +237,24 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	devicesMenu->Append( menuDevicesProcessRAM );
 	menuDevicesProcessRAM->Enable( false );
 	
+	wxMenuItem* m_separator7;
+	m_separator7 = devicesMenu->AppendSeparator();
+	
+	menuDeviceImage = new wxMenu();
+	wxMenuItem* menuDeviceBackup;
+	menuDeviceBackup = new wxMenuItem( menuDeviceImage, idDeviceBackup, wxString( wxT("Backup") ) , wxEmptyString, wxITEM_NORMAL );
+	menuDeviceImage->Append( menuDeviceBackup );
+	
+	wxMenuItem* menuDeviceRestore;
+	menuDeviceRestore = new wxMenuItem( menuDeviceImage, idDeviceRestore, wxString( wxT("Restore") ) , wxEmptyString, wxITEM_NORMAL );
+	menuDeviceImage->Append( menuDeviceRestore );
+	
+	wxMenuItem* menuDeviceErase;
+	menuDeviceErase = new wxMenuItem( menuDeviceImage, idDeviceErase, wxString( wxT("Erase") ) , wxEmptyString, wxITEM_NORMAL );
+	menuDeviceImage->Append( menuDeviceErase );
+	
+	devicesMenu->Append( -1, wxT("Device Image Tools"), menuDeviceImage );
+	
 	mbar->Append( devicesMenu, wxT("Devices") ); 
 	
 	optionsMenu = new wxMenu();
@@ -336,6 +354,9 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuDevicesRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuDevicesDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesProcessRAM->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Connect( menuDeviceBackup->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Connect( menuDeviceRestore->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Connect( menuDeviceErase->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
@@ -396,6 +417,9 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idProcessRAM, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Disconnect( idDeviceBackup, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Disconnect( idDeviceRestore, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	this->Disconnect( idDeviceErase, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idFileRO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idFileRW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
@@ -1646,6 +1670,179 @@ PreferencesDialogGui::~PreferencesDialogGui()
 	btnResetColours->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
 	chkCustom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
+	
+}
+
+DeviceBackupDialogGui::DeviceBackupDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* MainSizer;
+	MainSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizerSourceDestination;
+	fgSizerSourceDestination = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizerSourceDestination->AddGrowableCol( 1 );
+	fgSizerSourceDestination->SetFlexibleDirection( wxBOTH );
+	fgSizerSourceDestination->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	txtSource = new wxStaticText( this, wxID_ANY, wxT("Source :"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtSource->Wrap( -1 );
+	fgSizerSourceDestination->Add( txtSource, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxArrayString chcPartitionChoices;
+	chcPartition = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcPartitionChoices, 0 );
+	chcPartition->SetSelection( 0 );
+	fgSizerSourceDestination->Add( chcPartition, 1, wxALL|wxEXPAND, 5 );
+	
+	txtDestination = new wxStaticText( this, wxID_ANY, wxT("Destination :"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtDestination->Wrap( -1 );
+	fgSizerSourceDestination->Add( txtDestination, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	filePickBackup = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE|wxFLP_USE_TEXTCTRL );
+	fgSizerSourceDestination->Add( filePickBackup, 1, wxALL|wxEXPAND, 5 );
+	
+	MainSizer->Add( fgSizerSourceDestination, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	
+	wxBoxSizer* ButtonSizer;
+	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnBackup = new wxButton( this, wxID_ANY, wxT("Backup"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnBackup, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	MainSizer->Add( ButtonSizer, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	this->SetSizer( MainSizer );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	btnBackup->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeviceBackupDialogGui::OnBackup ), NULL, this );
+}
+
+DeviceBackupDialogGui::~DeviceBackupDialogGui()
+{
+	// Disconnect Events
+	btnBackup->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeviceBackupDialogGui::OnBackup ), NULL, this );
+	
+}
+
+DeviceRestoreDialogGui::DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* MainSizer;
+	MainSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizerSourceDestination;
+	fgSizerSourceDestination = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizerSourceDestination->AddGrowableCol( 1 );
+	fgSizerSourceDestination->SetFlexibleDirection( wxBOTH );
+	fgSizerSourceDestination->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	txtSource = new wxStaticText( this, wxID_ANY, wxT("Source :"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtSource->Wrap( -1 );
+	fgSizerSourceDestination->Add( txtSource, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	filePickBackup = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN|wxFLP_USE_TEXTCTRL );
+	fgSizerSourceDestination->Add( filePickBackup, 0, wxALL|wxEXPAND, 5 );
+	
+	txtDestination = new wxStaticText( this, wxID_ANY, wxT("Destination :"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtDestination->Wrap( -1 );
+	fgSizerSourceDestination->Add( txtDestination, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxArrayString chcPartitionChoices;
+	chcPartition = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcPartitionChoices, 0 );
+	chcPartition->SetSelection( 0 );
+	fgSizerSourceDestination->Add( chcPartition, 0, wxALL|wxEXPAND, 5 );
+	
+	MainSizer->Add( fgSizerSourceDestination, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* ButtonSizer;
+	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnRestore = new wxButton( this, wxID_ANY, wxT("Restore"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnRestore, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	MainSizer->Add( ButtonSizer, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	this->SetSizer( MainSizer );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	btnRestore->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeviceRestoreDialogGui::OnRestore ), NULL, this );
+}
+
+DeviceRestoreDialogGui::~DeviceRestoreDialogGui()
+{
+	// Disconnect Events
+	btnRestore->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeviceRestoreDialogGui::OnRestore ), NULL, this );
+	
+}
+
+DeviceEraseDialogGui::DeviceEraseDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* MainSizer;
+	MainSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizerSourceDestination;
+	fgSizerSourceDestination = new wxFlexGridSizer( 1, 2, 0, 0 );
+	fgSizerSourceDestination->AddGrowableCol( 1 );
+	fgSizerSourceDestination->SetFlexibleDirection( wxBOTH );
+	fgSizerSourceDestination->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	txtDestination = new wxStaticText( this, wxID_ANY, wxT("Destination :"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtDestination->Wrap( -1 );
+	fgSizerSourceDestination->Add( txtDestination, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxArrayString chcPartitionChoices;
+	chcPartition = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcPartitionChoices, 0 );
+	chcPartition->SetSelection( 0 );
+	fgSizerSourceDestination->Add( chcPartition, 0, wxALL|wxEXPAND, 5 );
+	
+	MainSizer->Add( fgSizerSourceDestination, 1, wxEXPAND, 5 );
+	
+	wxString radioEraseChoices[] = { wxT("0x00"), wxT("0xFF"), wxT("0xRANDOM") };
+	int radioEraseNChoices = sizeof( radioEraseChoices ) / sizeof( wxString );
+	radioErase = new wxRadioBox( this, wxID_ANY, wxT("Erase With "), wxDefaultPosition, wxDefaultSize, radioEraseNChoices, radioEraseChoices, 1, wxRA_SPECIFY_ROWS );
+	radioErase->SetSelection( 0 );
+	MainSizer->Add( radioErase, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	wxBoxSizer* ButtonSizer;
+	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnErase = new wxButton( this, wxID_ANY, wxT("Erase"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnErase, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	MainSizer->Add( ButtonSizer, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	this->SetSizer( MainSizer );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	btnErase->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeviceEraseDialogGui::OnErase ), NULL, this );
+}
+
+DeviceEraseDialogGui::~DeviceEraseDialogGui()
+{
+	// Disconnect Events
+	btnErase->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeviceEraseDialogGui::OnErase ), NULL, this );
 	
 }
 

@@ -60,8 +60,8 @@
 #define idComparePanel 1014
 #define idZebraStriping 1015
 #define idShowOffset 1016
-#define idShowOnlyHex 1017
-#define idShowOnlyText 1018
+#define idShowHex 1017
+#define idShowText 1018
 #define idChecksum 1019
 #define idCompare 1020
 #define idXORView 1021

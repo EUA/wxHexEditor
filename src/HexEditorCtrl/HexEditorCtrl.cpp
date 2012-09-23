@@ -510,7 +510,9 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 		}
 	cnt_chr/=2; // divide 2 for find byte per hex representation.
 
-	div=fmt.Len()+cnt_chr;
+	//ReAssing unused area due hidden panels.
+	div+=hex_ctrl->IsShown() ? fmt.Len() : 0;
+	div+=text_ctrl->IsShown() ? cnt_chr : 0;
 	int r=0;
 	r=x/(div*charx);
 

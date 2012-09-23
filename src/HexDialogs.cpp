@@ -2346,8 +2346,14 @@ DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
 	disks.Sort();
+	#ifdef __WXMSW__
+	for( int i=0 ; i < disks.Count() ; i++ )
+		if(disks.Item(i).StartsWith(wxT("\\Device")))
+			disks.Remove(i);
+	#endif
 	chcPartition->Append( disks );
 	}
+
 
 void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 	wxArrayString disks = GetDeviceList();
@@ -2356,6 +2362,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 	wxFileName dst(filePickBackup->GetPath());
 
 	FAL src_fl(src);
+
 	wxFFile dst_fl(dst.GetFullPath(), wxT("wb"));
 
 	wxString msg = _("Please wait while backing up disk/partition image.");
@@ -2377,7 +2384,10 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 		rd=src_fl.Read(buff, rdBlockSz);
 		read_speed+=rd;
 		readfrom+=rd;
-		dst_fl.Write( buff, rd );
+		if( rd != dst_fl.Write( buff, rd ) ){
+			wxMessageBox( _("Error on writing to backup image."), _("ERROR!") );
+			return;
+			}
 		mhash( myhash, buff, rd);
 
 		time(&te);
@@ -2413,6 +2423,11 @@ DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialog
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
 	disks.Sort();
+	#ifdef __WXMSW__
+	for( int i=0 ; i < disks.Count() ; i++ )
+		if(disks.Item(i).StartsWith(wxT("\\Device")))
+			disks.Remove(i);
+	#endif
 	chcPartition->Append( disks );
 	}
 
@@ -2423,7 +2438,21 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 	wxFileName src(filePickBackup->GetPath());
 
 	wxFFile src_fl(src.GetFullPath(), wxT("rb"));
+
 	FAL dst_fl( dst, FAL::ReadWrite );
+
+	if( wxCANCEL == wxMessageBox( _("WARNING! THIS OPERATION WILL DESTROY EVERY INFORMATION AT :\n")+dst.GetFullPath()+wxT("\n")+_("ARE YOU SURE?"), _("WARNING!"), wxOK|wxCANCEL|wxCENTRE, this ))
+		return;
+
+	if( src_fl.Length() > dst_fl.Length() ){
+		wxMessageBox( _("ERROR!: Disk space is smaller than the image file."), _("ERROR!"), wxCANCEL|wxCENTRE, this );
+		return;
+		}
+
+	if( src_fl.Length() < dst_fl.Length() ){
+		if( wxCANCEL==wxMessageBox( _("WARNING!: Disk space is bigger than the image file. \nRemaining space will remain untouched."), _("WARNING!"), wxOK|wxCANCEL|wxCENTRE, this ) )
+			return;
+		}
 
 	wxString msg = _("Please wait while restoring disk/partition image.");
 	wxProgressDialog mypd(_("Disk/Partition Restore"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
@@ -2465,6 +2494,11 @@ DeviceEraseDialog::DeviceEraseDialog( wxWindow* parent ):DeviceEraseDialogGui(pa
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
 	disks.Sort();
+	#ifdef __WXMSW__
+	for( int i=0 ; i < disks.Count() ; i++ )
+		if(disks.Item(i).StartsWith(wxT("\\Device")))
+			disks.Remove(i);
+	#endif
 	chcPartition->Append( disks );
 	}
 
@@ -2473,7 +2507,10 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 	wxArrayString disks = GetDeviceList();
 	disks.Sort();
 	wxFileName dst(disks.Item( chcPartition->GetSelection() ) );
-	FAL dst_fl( dst, FAL::ReadWrite, 1024 );
+	FAL dst_fl( dst, FAL::ReadWrite );
+
+	if( wxCANCEL == wxMessageBox( _("WARNING! THIS OPERATION WILL DESTROY EVERY INFORMATION AT :\n")+dst.GetFullPath()+wxT("\n")+_("ARE YOU SURE?"), _("WARNING!"), wxOK|wxCANCEL|wxCENTRE, this ))
+		return;
 
 	wxString msg = _("Please wait while erasing disk/partition image.");
 	wxProgressDialog mypd(_("Disk/Partition Erase"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
@@ -2491,7 +2528,11 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 	int sel = radioErase->GetSelection();
 	memset( buff, (sel == 0 ? 0x00 : 0xFF ), rdBlockSz);
 
+	srand((unsigned)time(0));
+
 	while(readfrom < range){
+
+// TODO (death#1#): Speed up for random
 		if( sel == 2 )
 			for( int i = 0 ; i < rdBlockSz ; i++ )
 				buff[i]=rand()%0xFF;

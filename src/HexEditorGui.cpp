@@ -195,12 +195,14 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuViewOffset->Check( true );
 	
 	wxMenuItem* menuViewHex;
-	menuViewHex = new wxMenuItem( viewMenu, idShowOnlyHex, wxString( wxT("Only Hex Control") ) , wxEmptyString, wxITEM_CHECK );
+	menuViewHex = new wxMenuItem( viewMenu, idShowHex, wxString( wxT("Hex Control") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewHex );
+	menuViewHex->Check( true );
 	
 	wxMenuItem* menuViewText;
-	menuViewText = new wxMenuItem( viewMenu, idShowOnlyText, wxString( wxT("Only Text Control") ) , wxEmptyString, wxITEM_CHECK );
+	menuViewText = new wxMenuItem( viewMenu, idShowText, wxString( wxT("Text Control") ) , wxEmptyString, wxITEM_CHECK );
 	viewMenu->Append( menuViewText );
+	menuViewText->Check( true );
 	
 	mbar->Append( viewMenu, wxT("&View") ); 
 	
@@ -407,8 +409,8 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idComparePanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idZebraStriping, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idShowOffset, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idShowOnlyHex, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idShowOnlyText, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Disconnect( idShowHex, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	this->Disconnect( idShowText, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idChecksum, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idCompare, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idXORView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );

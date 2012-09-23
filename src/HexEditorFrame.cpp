@@ -596,7 +596,6 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 		OpenFile( wxFileName(disks.Item(i)) );
 		}
 	else if( event.GetId() == idDeviceRam ){
-		//OpenFile( wxFileName( wxT("\\\\.\\PhysicalDrive0") ) );//Just testing
 // TODO (death#1#): RAM access with mmap and need DirectWrite Mode
 		}
 	else if( event.GetId() == idProcessRAM ){
@@ -732,25 +731,21 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 			GetActiveHexEditor()->ControlShow( HexEditorCtrl::OFFSET_CTRL , event.IsChecked() );
 			MyNotebook->Layout();
 			break;
-		case idShowOnlyHex:
-				{
-				GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , true );
-				GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , !event.IsChecked() );
-				if(event.IsChecked())
-					mbar->Check( idShowOnlyText, false );
-				//For vanishing control at Win & OSX, not needed on GTK
-				MyNotebook->Layout();
-				}
+		case idShowHex:
+			GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , true );
+			GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , event.IsChecked() );
+			if(not event.IsChecked())
+				mbar->Check( idShowText, true );
+			//For vanishing control at Win & OSX, not needed on GTK
+			MyNotebook->Layout();
 			break;
-		case idShowOnlyText:
-				{
-				GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , true );
-				GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , !event.IsChecked() );
-				if(event.IsChecked())
-					mbar->Check( idShowOnlyHex, false );
-				//For vanishing control at Win & OSX, not needed on GTK
-				MyNotebook->Layout();
-				}
+		case idShowText:
+			GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , true );
+			GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , event.IsChecked() );
+			if(not event.IsChecked())
+				mbar->Check( idShowHex, true );
+			//For vanishing control at Win & OSX, not needed on GTK
+			MyNotebook->Layout();
 			break;
 		default:
 			wxBell();
@@ -788,8 +783,8 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	mbar->Check(idXORView, (MyNotebook->GetPageCount() and GetActiveHexEditor()->IsFileUsingXORKey()));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowOffset, MyNotebook->GetPageCount() );
-	mbar->Enable(idShowOnlyHex, MyNotebook->GetPageCount() );
-	mbar->Enable(idShowOnlyText, MyNotebook->GetPageCount() );
+	mbar->Enable(idShowHex, MyNotebook->GetPageCount() );
+	mbar->Enable(idShowText, MyNotebook->GetPageCount() );
 	if(event.GetId() == idDeviceRam ){
 		//when updateUI received by Ram Device open event is came, thna needed to update Device List.
 #ifdef _DEBUG_
@@ -965,9 +960,10 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MySearchPanel->Set( MyHexEditor->HighlightArray );
 				MyComparePanel->Set( MyHexEditor->CompareArray );
 
+				//Updates visible panels checks
 				mbar->Check( idShowOffset, GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::OFFSET_CTRL ) );
-				mbar->Check( idShowOnlyHex, not GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::TEXT_CTRL ) );
-				mbar->Check( idShowOnlyText, not GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::HEX_CTRL ) );
+				mbar->Check( idShowHex, GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::TEXT_CTRL ) );
+				mbar->Check( idShowText, GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::HEX_CTRL ) );
 
 				//Creating custom UpdateUI event for setting mbar, toolbar...
 				wxUpdateUIEvent event;

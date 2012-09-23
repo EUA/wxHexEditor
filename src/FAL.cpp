@@ -338,7 +338,10 @@ bool FAL::IsChanged( void ){
 	return false;
 	}
 
-bool FAL::BlockWrite( unsigned char* buffer, unsigned size ){
+size_t FAL::BlockWrite( unsigned char* buffer, unsigned size ){
+	if(BlockRWSize==0)
+		return Write( buffer, size );
+
 	if( size % BlockRWSize )
 		return false;
 
@@ -349,7 +352,7 @@ bool FAL::BlockWrite( unsigned char* buffer, unsigned size ){
 
 	int rd = 0;
 	wxFile::Seek(StartSector*BlockRWSize);
-	bool ret = Write(buffer, size);//*= to make update success true or false
+	size_t ret = Write(buffer, size);//*= to make update success true or false
 	put_ptr+=size;
 	return ret;
 	}

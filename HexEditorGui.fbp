@@ -638,12 +638,12 @@
                     </object>
                     <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
-                        <property name="checked">0</property>
+                        <property name="checked">1</property>
                         <property name="enabled">1</property>
                         <property name="help"></property>
-                        <property name="id">idShowOnlyHex</property>
+                        <property name="id">idShowHex</property>
                         <property name="kind">wxITEM_CHECK</property>
-                        <property name="label">Only Hex Control</property>
+                        <property name="label">Hex Control</property>
                         <property name="name">menuViewHex</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -653,12 +653,12 @@
                     </object>
                     <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
-                        <property name="checked">0</property>
+                        <property name="checked">1</property>
                         <property name="enabled">1</property>
                         <property name="help"></property>
-                        <property name="id">idShowOnlyText</property>
+                        <property name="id">idShowText</property>
                         <property name="kind">wxITEM_CHECK</property>
-                        <property name="label">Only Text Control</property>
+                        <property name="label">Text Control</property>
                         <property name="name">menuViewText</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>

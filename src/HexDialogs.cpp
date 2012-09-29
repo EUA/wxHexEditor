@@ -2184,7 +2184,6 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
    if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &custom_hex ) )		chkCustom->SetValue( custom_hex );
    if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &Colour	)	)				comboCustomHexFormat->SetValue( Colour );
    comboCustomHexFormat->Enable( chkCustom->IsChecked() );
-
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
@@ -2318,7 +2317,6 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
 	GetParent()->GetEventHandler()->ProcessEvent( eventx );
    Close();
-
    }
 
 void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
@@ -2340,7 +2338,7 @@ void PreferencesDialog::OnCustomHexCheck( wxCommandEvent& event ){
 	comboCustomHexFormat->Enable( event.IsChecked() );
 	}
 
-extern wxArrayString GetDeviceList();
+extern wxArrayString GetDeviceList( bool=true );
 DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui(parent, wxID_ANY){
 	wxArrayString disks = GetDeviceList();
 	for( unsigned i =0 ; i < disks.Count() ; i++)
@@ -2349,7 +2347,7 @@ DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui
 	#ifdef __WXMSW__
 	for( int i=0 ; i < disks.Count() ; i++ )
 		if(disks.Item(i).StartsWith(wxT("\\Device")))
-			disks.Remove(i);
+			disks.RemoveAt(i);
 	#endif
 	chcPartition->Append( disks );
 	}
@@ -2426,7 +2424,7 @@ DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialog
 	#ifdef __WXMSW__
 	for( int i=0 ; i < disks.Count() ; i++ )
 		if(disks.Item(i).StartsWith(wxT("\\Device")))
-			disks.Remove(i);
+			disks.RemoveAt(i);
 	#endif
 	chcPartition->Append( disks );
 	}
@@ -2494,11 +2492,6 @@ DeviceEraseDialog::DeviceEraseDialog( wxWindow* parent ):DeviceEraseDialogGui(pa
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
 	disks.Sort();
-	#ifdef __WXMSW__
-	for( int i=0 ; i < disks.Count() ; i++ )
-		if(disks.Item(i).StartsWith(wxT("\\Device")))
-			disks.Remove(i);
-	#endif
 	chcPartition->Append( disks );
 	}
 

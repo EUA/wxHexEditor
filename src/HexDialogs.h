@@ -179,4 +179,5 @@ class DeviceEraseDialog : public DeviceEraseDialogGui{
 		DeviceEraseDialog( wxWindow* parent );
 		void OnErase( wxCommandEvent& event );
 	};
+
 #endif //__HexEditorDialogs__

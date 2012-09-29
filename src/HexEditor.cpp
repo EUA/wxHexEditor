@@ -591,7 +591,12 @@ void HexEditor::Reload( void ) {
 	delete [] buffer;
 	}
 
-void HexEditor::OnResize( wxSizeEvent &event) {
+void HexEditor::ReDraw(){
+	wxSizeEvent ev(GetSize());
+	OnResize(ev);
+	}
+
+void HexEditor::OnResize( wxSizeEvent &event ) {
 #ifdef _DEBUG_SIZE_
 	std::cout << "HexEditor::OnResize() Event Type:" << event.GetEventType() << std::endl ;
 	std::cout << "ByteCapacity() Before:" << ByteCapacity() << std::endl;
@@ -1080,7 +1085,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if defined( __WXMAC__ )// || defined ( __WXMSW__ ) //WXMSW Stuck sometimes if thread on
+#if defined( __WXMAC__ ) || defined ( __WXMSW__ ) //WXMSW Stuck sometimes if thread on
 		ScrollNoThread( spd );			//MAC has problem with GuiMutex so useing safe scroll function
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;

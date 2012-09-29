@@ -123,6 +123,7 @@ class FAL : private wxFile{
 
 		bool IsChanged( void );	//returns if file is dirty or not
 		bool Apply( void );		//flush changes to file
+		bool Flush( void ){ return wxFile::Flush();}
 		size_t BlockWrite( unsigned char* buffer, unsigned size );
 		int64_t Undo( void );	//undo last action
 		int64_t Redo( void );	//redo last undo

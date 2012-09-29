@@ -274,7 +274,6 @@ void HexEditorCtrl::SetStyle() {
    text_ctrl->SetSelectionStyle( Style );
    }
 
-
 //Handles selection operations.
 bool HexEditorCtrl::Selector(){
 	wxWindow* FocusAt=FindFocus();
@@ -479,16 +478,16 @@ bool HexEditorCtrl::ControlIsShown(panels control){
 	return false;
 	}
 
-void HexEditorCtrl::OnResize( wxSizeEvent &event){
+void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 	int charx = hex_ctrl->GetCharSize().GetX();
 	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize() + 4;
 	offset_x = offset_ctrl->IsShown() ? offset_x : 0;
 
-   x -= offset_x;			//Remove Offset Control box X because its changeable
-   x -= offset_scroll_real->GetSize().GetX();		//Remove Offset scroll size
-   x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
+   x -= offset_x;										//Remove Offset Control box X because its changeable
+   x -= offset_scroll_real->GetSize().GetX();//Remove Offset scroll size
+   x -= 4*2;											//+x 4 pixel external borders (dark ones, 2 pix each size)
    y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
 
 	int div = 0;
@@ -523,19 +522,6 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	text_x = text_ctrl->IsShown() ? text_x : 0;
 	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
 
-//	div += text_ctrl->IsShown() ? 1 : 0; //1 character space for each byte
-//	div += hex_ctrl->IsShown() ? 3 : 0;  //2 hex +1 whitespace for each byte
-//
-//	int BytePL = x/(div*charx);	   // i is our Byte Per Line number!
-//	int text_x = charx*BytePL +2 +4;// +2 for internal space pixel and +4 for external ones, 4 reduced at around SetSize function.
-//	int hex_x = charx*3*BytePL +2 +4 - charx; //no need for last gap
-//
-//	text_x = text_ctrl->IsShown() ? text_x : 0;
-//	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
-
-
-
-
 #ifdef _DEBUG_SIZE_
 	std::cout<< "HexEditorCtrl::OnResize()" << std::endl
 			<< "HexEditorCtrl SizeEvent ReSize Command=(" << event.GetSize().GetX() << ',' << event.GetSize().GetY() << ")\n"
@@ -546,7 +532,43 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 			<< "Hex Char: " << charx << std::endl;
 #endif
 
+	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
+//	offset_ctrl->SetSize( wxSize( offset_x , y ) ); //Not needed, Layout() Makes the job well.
+	m_static_offset->SetMinSize( wxSize(offset_x, m_static_offset->GetSize().GetY()) );
+
+	hex_ctrl->SetMinSize( wxSize( hex_x, y ));
+//	hex_ctrl->SetSize( wxSize( hex_x, y ));
+	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
+
+	text_ctrl->SetMinSize( wxSize( text_x, y ));
+//	text_ctrl->SetSize( wxSize( text_x, y ));
+	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
+
+	//Preparing Sizer
+	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
+	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
+	fgSizer1->Add( m_static_adress, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
+	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
+	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( offset_scroll_real, 0, wxEXPAND, 0 );
+
+//	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
+
+	this->SetSizer( fgSizer1 );
+	this->Layout();
+
+#ifdef __WXMSW__
+///At windows, OnResize cannot update required fields immeditialy, this hack fixes this behaviour.
+	hex_ctrl->ChangeSize();
+	text_ctrl->ChangeSize();
+	offset_ctrl->ChangeSize();
+#endif
+
 	//Formating Hex and byteview column labels
+	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
 	wxString adress,byteview;
 	int h=0;
 	for( int j = 0 ; j < BytePL ; j++ ){
@@ -564,40 +586,8 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event){
 	if(adress.Last()==' ')
 		adress.RemoveLast();	//Remove last ' ' for unwrap
 
-	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
-//	offset_ctrl->SetSize( wxSize( offset_x , y ) ); //Not needed, Layout() Makes the job well.
-	m_static_offset->SetMinSize( wxSize(offset_x, m_static_offset->GetSize().GetY()) );
-
-	hex_ctrl->SetMinSize( wxSize( hex_x, y ));
-//	hex_ctrl->SetSize( wxSize( hex_x, y ));
-	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
 	m_static_adress->SetLabel(adress);
-
-	text_ctrl->SetMinSize( wxSize( text_x, y ));
-//	text_ctrl->SetSize( wxSize( text_x, y ));
-	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 	m_static_byteview->SetLabel( byteview );
-
-	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
-	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
-	fgSizer1->Add( m_static_adress, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
-	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
-	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
-	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( offset_scroll_real, 0, wxEXPAND, 0 );
-
-	this->SetSizer( fgSizer1 );
-	this->Layout();
-
-#ifdef __WXMSW__
-///At windows, OnResize cannot update required fields immeditialy, this hack fixes this behaviour.
-	hex_ctrl->ChangeSize();
-	text_ctrl->ChangeSize();
-	offset_ctrl->ChangeSize();
-#endif
-//	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
 
 #ifdef _DEBUG_SIZE_
 	std::cout<< "HexEditorCtrl After ReSize=(" << x << ',' << y << ")\n"

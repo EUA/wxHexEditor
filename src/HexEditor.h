@@ -68,6 +68,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 		void Reload();	//loads file from current page offset; refresh
+		void ReDraw();
 
 		bool IsFileUsingXORKey( void );
 		void FileSetXORKey( bool enable );

@@ -333,6 +333,8 @@ wxPoint wxHexCtrl::PixelCoordToInternalCoord( wxPoint mouse ){
 
 void wxHexCtrl::SetFormat( wxString fmt ){
 	HexFormat = fmt;
+//	for(int i=0 ; i < m_Window.x+1 ; i++)
+//		IsDeniedCache[i]=IsDenied_NoCache(i);
 	}
 
 wxString wxHexCtrl::GetFormat( void ){

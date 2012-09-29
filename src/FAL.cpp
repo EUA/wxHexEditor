@@ -835,6 +835,7 @@ wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 	}
 
 
+
 const DiffNode* FAL::GetFirstUndoNode( void ){
 	if( DiffArray.GetCount() == 0 )
 		return NULL;

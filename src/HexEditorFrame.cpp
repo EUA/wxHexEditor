@@ -29,7 +29,7 @@
 	#include "HDwin.h"
 #endif
 
-wxArrayString GetDeviceList(){
+wxArrayString GetDeviceList( bool WithPartitions=true){
 	wxArrayString disks;
 #ifdef __WXGTK__ //linux
 	if(wxDir::Exists(wxT("/dev/disk/by-id")) ){
@@ -56,8 +56,31 @@ wxArrayString GetDeviceList(){
  		windowsHDD windevs;
  		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
  		for(int i=0; i < DevVector.size();i++)
-			disks.Add(wxString(DevVector[i]));
+// TODO (death#1#): Enable \\Device files!
+			if( not wxString(DevVector[i]).StartsWith(wxT("\\Device")))
+				disks.Add(wxString(DevVector[i]));
 #endif
+	if( WithPartitions )
+		return disks;
+
+	int last_item=0;
+	disks.Sort();
+	for( unsigned i =0 ; i < disks.Count() ; i++){
+		//SubMenu categorization for posix
+		#ifndef __WXMSW__
+		if( disks.Item(i).StartsWith( disks.Item( last_item ) ) and i not_eq 0 )
+			disks.RemoveAt(i--);
+		else
+			last_item = i;
+
+		#else	//Windows device menu categorization
+		if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) and i not_eq 0 )
+			disks.RemoveAt(i);
+		else //Create new submenu
+			last_item = i;
+		#endif
+		}
+
 	return disks;
 	}
 
@@ -627,8 +650,7 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 		prefdlg->ShowModal();
 		prefdlg->Destroy();
 
-		wxConfigBase* pConfig = wxConfigBase::Get();
-		if ( ! pConfig->Read(_T("Language")).IsEmpty() ) {
+		if ( ! wxConfig::Get()->Read(_T("Language")).IsEmpty() ) {
 			int lang = wxConfigBase::Get()->Read(_T("Language"), -1) ;
 			int z=wxGetLocale()->GetLanguage();
 			if ( lang != -1 )
@@ -864,9 +886,12 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 		if( event.GetId() == RESET_STYLE_EVENT ){
 			HexEditor *MyHexEditor = NULL;
-			for(int i=0 ; i < MyNotebook->GetPageCount() ; i++)
+			for(int i=0 ; i < MyNotebook->GetPageCount() ; i++){
 				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetStyle();
-
+				#ifdef __WXMSW__ //Force redraw resize
+				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->ReDraw();
+				#endif
+				}
 			MyNotebook->Layout();
 			}
 

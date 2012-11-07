@@ -2414,6 +2414,8 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 	dst_hash.Write( wxT("  ") );
 	dst_hash.Write( dst.GetFullName() );
 	dst_hash.Close();
+
+	wxMessageBox( _("Backup operation completed."), _("Operation Complete") );
 	}
 
 DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialogGui(parent, wxID_ANY){
@@ -2484,6 +2486,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 		}
 	src_fl.Close();
 	dst_fl.Close();
+	wxMessageBox( _("Restore operation completed."), _("Operation Complete") );
 	}
 
 
@@ -2546,4 +2549,6 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 		if(not mypd.Update((readfrom*1000)/range, emsg ))
 			return;
 		}
+
+	wxMessageBox( _("Restore operation completed."), _("Operation Complete") );
 	}

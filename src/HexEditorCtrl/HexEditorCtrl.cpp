@@ -886,10 +886,15 @@ void HexEditorCtrl::UpdateUI(wxUpdateUIEvent& event){
 	}
 
 //------ADAPTERS----------//
-//returns position of Hex Cursor
-int HexEditorCtrl::GetLocalHexInsertionPoint(){	return (hex_ctrl->IsShown() ? hex_ctrl->GetInsertionPoint() : text_ctrl->GetInsertionPoint()*2 ); }
-			//returns position of Text Cursor
-int HexEditorCtrl::GetLocalInsertionPoint(){ return (text_ctrl->IsShown() ? text_ctrl->GetInsertionPoint() : hex_ctrl->GetInsertionPoint()/2 ); }
+	//returns position of Hex Cursor
+int HexEditorCtrl::GetLocalHexInsertionPoint(){
+	return (hex_ctrl->IsShown() ? hex_ctrl->GetInsertionPoint() : text_ctrl->GetInsertionPoint()*2 );
+	}
+	//returns position of Text Cursor
+int HexEditorCtrl::GetLocalInsertionPoint(){
+	return (FindFocus() == text_ctrl ? text_ctrl->GetInsertionPoint() : hex_ctrl->GetInsertionPoint()/2 );
+	}
+
 void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );

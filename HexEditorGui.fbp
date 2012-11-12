@@ -477,7 +477,7 @@
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
                         <property name="enabled">0</property>
-                        <property name="help">Branhes the given location</property>
+                        <property name="help">Branches the given location</property>
                         <property name="id">idGotoOffset</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Go to Offset</property>

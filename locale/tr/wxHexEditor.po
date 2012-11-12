@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wxHexEditor v0.21\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-12 20:04+0200\n"
-"PO-Revision-Date: 2012-11-12 20:04+0200\n"
+"POT-Creation-Date: 2012-11-12 23:39+0200\n"
+"PO-Revision-Date: 2012-11-12 23:39+0200\n"
 "Last-Translator: Erdem U. Altinyurt <spamjunkeater@gmail.com>\n"
 "Language-Team: EUA <spamjunkeater@gmail.com>\n"
 "Language: tr_TR\n"
@@ -342,7 +342,8 @@ msgstr "Seçilmiş Blok: N/A"
 msgid "Block Size: N/A"
 msgstr "Blok Boyutu: N/A"
 
-#: ../../src/HexEditor.cpp:971 ../../src/HexEditorFrame.cpp:286
+#: ../../src/HexEditor.cpp:971 ../../src/HexEditorGui.cpp:94
+#: ../../src/HexEditorGui.cpp:1464 ../../src/HexEditorFrame.cpp:286
 msgid "Copy"
 msgstr "Kopyala"
 
@@ -350,23 +351,25 @@ msgstr "Kopyala"
 msgid "CopyAs"
 msgstr "Farklı Kopyala"
 
-#: ../../src/HexEditor.cpp:973
+#: ../../src/HexEditor.cpp:973 ../../src/HexEditorGui.cpp:104
 msgid "Save As Dump"
 msgstr "Parça Olarak Kaydet"
 
-#: ../../src/HexEditor.cpp:974 ../../src/HexEditorFrame.cpp:287
+#: ../../src/HexEditor.cpp:974 ../../src/HexEditorGui.cpp:114
+#: ../../src/HexEditorFrame.cpp:287
 msgid "Paste"
 msgstr "Yapıştır"
 
-#: ../../src/HexEditor.cpp:977
+#: ../../src/HexEditor.cpp:977 ../../src/HexEditorGui.cpp:124
 msgid "Delete"
 msgstr "Sil"
 
-#: ../../src/HexEditor.cpp:978 ../../src/HexEditorFrame.cpp:291
+#: ../../src/HexEditor.cpp:978 ../../src/HexEditorGui.cpp:129
+#: ../../src/HexEditorFrame.cpp:291
 msgid "Insert"
 msgstr "Ekle"
 
-#: ../../src/HexEditor.cpp:979
+#: ../../src/HexEditor.cpp:979 ../../src/HexEditorGui.cpp:109
 msgid "Cut"
 msgstr "Kes"
 
@@ -483,6 +486,986 @@ msgstr ""
 msgid "Info"
 msgstr "Bilgi"
 
+#: ../../src/HexEditorGui.cpp:29
+msgid "&New"
+msgstr "&Yeni"
+
+#: ../../src/HexEditorGui.cpp:29
+msgid "CTRL+N"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:29
+msgid "Creates a new file"
+msgstr "Yeni dosya oluşturur"
+
+#: ../../src/HexEditorGui.cpp:33
+msgid "&Open"
+msgstr "Aç"
+
+#: ../../src/HexEditorGui.cpp:33
+msgid "CTRL+O"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:33
+msgid "Open a file"
+msgstr "Dosya Aç"
+
+#: ../../src/HexEditorGui.cpp:38
+msgid "No Recent File"
+msgstr "Önceki Dosya yok"
+
+#: ../../src/HexEditorGui.cpp:42
+msgid "Open &Recent"
+msgstr "Geçmiş Dosyala&rı Aç"
+
+#: ../../src/HexEditorGui.cpp:45
+msgid "&Save"
+msgstr "Kaydet"
+
+#: ../../src/HexEditorGui.cpp:45
+msgid "CTRL+S"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:45
+msgid "Save modifications"
+msgstr "Değişiklikleri kaydet"
+
+#: ../../src/HexEditorGui.cpp:50
+msgid "Save &As"
+msgstr "Farklı Kaydet"
+
+#: ../../src/HexEditorGui.cpp:50
+msgid "SHIFT+CTRL+S"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:50
+msgid "Save current file as..."
+msgstr "Geçerli dosyayı farklı kaydet..."
+
+#: ../../src/HexEditorGui.cpp:55
+msgid "&Close"
+msgstr "Kapat"
+
+#: ../../src/HexEditorGui.cpp:55
+msgid "CTRL+W"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:55
+msgid "Close current file"
+msgstr "Geçerli dosyayı kapat"
+
+#: ../../src/HexEditorGui.cpp:63
+msgid "Import TAGs"
+msgstr "TAGları al"
+
+#: ../../src/HexEditorGui.cpp:67
+msgid "Export TAGs"
+msgstr "TAGları yolla"
+
+#: ../../src/HexEditorGui.cpp:74
+msgid "&Quit"
+msgstr "Çıkış"
+
+#: ../../src/HexEditorGui.cpp:74
+msgid "CTRL+Q"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:74
+msgid "Quit the application"
+msgstr "Programdan çık"
+
+#: ../../src/HexEditorGui.cpp:77
+msgid "&File"
+msgstr "&Dosya"
+
+#: ../../src/HexEditorGui.cpp:81
+msgid "&Undo"
+msgstr "Geri Al"
+
+#: ../../src/HexEditorGui.cpp:81
+msgid "CTRL+Z"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:81
+msgid "Undo last operation"
+msgstr "Son işlemi geri al"
+
+#: ../../src/HexEditorGui.cpp:86
+msgid "&Redo"
+msgstr "İleri Al"
+
+#: ../../src/HexEditorGui.cpp:86
+msgid "CTRL+Y"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:86
+msgid "Reverts last undo"
+msgstr "Son geri almayı geri al"
+
+#: ../../src/HexEditorGui.cpp:94
+msgid "CTRL+C"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:94
+msgid "Copies selection"
+msgstr "Seçimi kopyalar"
+
+#: ../../src/HexEditorGui.cpp:99
+msgid "Copy As"
+msgstr "Farklı Kopyala"
+
+#: ../../src/HexEditorGui.cpp:99
+msgid "CTRL+SHIFT+C"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:99
+msgid "Copies selection in special format"
+msgstr "Seçili bölgeyi özel biçimde kopyala"
+
+#: ../../src/HexEditorGui.cpp:104
+msgid "CTRL+ALT+S"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:104
+msgid "Save selections as a file"
+msgstr "Seçimi farklı dosya olarak kaydeder"
+
+#: ../../src/HexEditorGui.cpp:109
+msgid "CTRL+X"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:109
+msgid "Cuts a selection"
+msgstr "Seçili bölgeyi keser"
+
+#: ../../src/HexEditorGui.cpp:114
+msgid "CTRL+V"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:114
+msgid "Paste clipboard to cursor location"
+msgstr "Sistem panosundaki veriyi buraya yapıştırır"
+
+#: ../../src/HexEditorGui.cpp:119
+msgid "Fill Selection"
+msgstr "Seçimi Doldur"
+
+#: ../../src/HexEditorGui.cpp:119
+msgid "Fill selection blocks"
+msgstr "Seçimi doldurma bloğu"
+
+#: ../../src/HexEditorGui.cpp:124
+msgid "Deletes selection"
+msgstr "Seçilmiş kısımı siler"
+
+#: ../../src/HexEditorGui.cpp:129
+msgid "Inserts new bytes to cursor location"
+msgstr "Geçerli noktaya veri eklemesi yapar"
+
+#: ../../src/HexEditorGui.cpp:137 ../../src/HexEditorGui.cpp:892
+#: ../../src/HexEditorFrame.cpp:279 ../../src/HexDialogs.h:68
+msgid "Find"
+msgstr "Ara"
+
+#: ../../src/HexEditorGui.cpp:137
+msgid "CTRL+F"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:142 ../../src/HexEditorGui.cpp:909
+#: ../../src/HexDialogs.cpp:1148 ../../src/HexDialogs.cpp:1186
+#: ../../src/HexEditorFrame.cpp:280
+msgid "Replace"
+msgstr "Değiştir"
+
+#: ../../src/HexEditorGui.cpp:142
+msgid "CTRL+R"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:147 ../../src/HexEditorGui.h:256
+msgid "Go to Offset"
+msgstr "Adrese git"
+
+#: ../../src/HexEditorGui.cpp:147
+msgid "CTRL+G"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:147
+msgid "Branches the given location"
+msgstr "Verilen adrese dallanır"
+
+#: ../../src/HexEditorGui.cpp:151
+msgid "&Edit"
+msgstr "Etiket Düzenle"
+
+#: ../../src/HexEditorGui.cpp:155
+msgid "Data Interpreter"
+msgstr "Veri Yorumcusu"
+
+#: ../../src/HexEditorGui.cpp:159 ../../src/HexEditorFrame.cpp:342
+msgid "Toolbar"
+msgstr "Araç Çubuğu"
+
+#: ../../src/HexEditorGui.cpp:163 ../../src/HexEditorFrame.cpp:358
+msgid "InfoPanel"
+msgstr "Bilgi Paneli"
+
+#: ../../src/HexEditorGui.cpp:167
+msgid "TAG Panel"
+msgstr "TAG Paneli"
+
+#: ../../src/HexEditorGui.cpp:171
+msgid "Disassembler Panel"
+msgstr "Disassembler Paneli"
+
+#: ../../src/HexEditorGui.cpp:175
+msgid "Search Panel"
+msgstr "Arama Paneli"
+
+#: ../../src/HexEditorGui.cpp:179
+msgid "Comparison Panel"
+msgstr "Karşılaştırma Paneli"
+
+#: ../../src/HexEditorGui.cpp:186
+msgid "Zebra Striping"
+msgstr "Zebra Çizgileri"
+
+#: ../../src/HexEditorGui.cpp:193
+msgid "Offset Control"
+msgstr "Adres Kontrolü"
+
+#: ../../src/HexEditorGui.cpp:198
+msgid "Hex Control"
+msgstr "Hex Kontrolü"
+
+#: ../../src/HexEditorGui.cpp:203
+msgid "Text Control"
+msgstr "Text Kontrolü"
+
+#: ../../src/HexEditorGui.cpp:207
+msgid "&View"
+msgstr "Görünüm"
+
+#: ../../src/HexEditorGui.cpp:211 ../../src/HexEditorGui.h:408
+msgid "Calculate Checksum"
+msgstr "Sağlama Hesaplanıyor"
+
+#: ../../src/HexEditorGui.cpp:215 ../../src/HexEditorGui.h:355
+msgid "Compare Files"
+msgstr "Dosyaları Karşılaştır"
+
+#: ../../src/HexEditorGui.cpp:219
+msgid "XORView Thru"
+msgstr "XOR Görüşü Uyarısı"
+
+#: ../../src/HexEditorGui.cpp:219
+msgid "View your XOR encrypted file without decrypting!"
+msgstr "XOR ile şifrelenmiş dosyalarınızı şifresiz gösterir."
+
+#: ../../src/HexEditorGui.cpp:222
+msgid "Tools"
+msgstr "Araçlar"
+
+#: ../../src/HexEditorGui.cpp:226
+msgid "Open RAM Device"
+msgstr "RAM Aygıtı Aç"
+
+#: ../../src/HexEditorGui.cpp:232
+msgid "N/A on this OS (yet)"
+msgstr "Bu işletim sisteminde (henüz) hazır değil"
+
+#: ../../src/HexEditorGui.cpp:235
+msgid "Open Disk Device"
+msgstr "Disk Aygıtı Aç"
+
+#: ../../src/HexEditorGui.cpp:238
+msgid "Open Process RAM"
+msgstr "RAM Prosesi Aç"
+
+#: ../../src/HexEditorGui.cpp:247 ../../src/HexEditorGui.cpp:1712
+msgid "Backup"
+msgstr "Yedekle"
+
+#: ../../src/HexEditorGui.cpp:251 ../../src/HexEditorGui.cpp:1770
+msgid "Restore"
+msgstr "Onar"
+
+#: ../../src/HexEditorGui.cpp:255 ../../src/HexEditorGui.cpp:1827
+msgid "Erase"
+msgstr "Sil"
+
+#: ../../src/HexEditorGui.cpp:258
+msgid "Device Image Tools"
+msgstr "Aygıt İmaj Araçları"
+
+#: ../../src/HexEditorGui.cpp:260
+msgid "Devices"
+msgstr "Aygıtlar"
+
+#: ../../src/HexEditorGui.cpp:265
+msgid "Read Only"
+msgstr "Salt Okunur"
+
+#: ../../src/HexEditorGui.cpp:271
+msgid "Writeable"
+msgstr "Yazılabilir"
+
+#: ../../src/HexEditorGui.cpp:276
+msgid "Direct Write"
+msgstr "Doğrudan Yazma"
+
+#: ../../src/HexEditorGui.cpp:280
+msgid "File Mode"
+msgstr "Dosya Modu"
+
+#: ../../src/HexEditorGui.cpp:283 ../../src/HexEditorGui.h:502
+msgid "Preferences"
+msgstr "Tercihler"
+
+#: ../../src/HexEditorGui.cpp:286 ../../src/HexEditorGui.cpp:869
+msgid "Options"
+msgstr "Seçenekler"
+
+#: ../../src/HexEditorGui.cpp:290
+msgid "&About"
+msgstr "&Hakkında"
+
+#: ../../src/HexEditorGui.cpp:290
+msgid "F1"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:290
+msgid "Show info about this application"
+msgstr "Bu uygulama hakkında bilgiler gösterir."
+
+#: ../../src/HexEditorGui.cpp:293
+msgid "&Help"
+msgstr "&Yardım"
+
+#: ../../src/HexEditorGui.cpp:444
+msgid "Unsigned"
+msgstr "İşaretsiz"
+
+#: ../../src/HexEditorGui.cpp:445
+msgid "Sans"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:449
+msgid "Big Endian"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:461
+msgid "Binary"
+msgstr "İkili"
+
+#: ../../src/HexEditorGui.cpp:470
+msgid "00000000"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:473
+msgid "Press enter to make changes!"
+msgstr "Değişiklikleri kaydetmek için Enter tuşuna basınız!"
+
+#: ../../src/HexEditorGui.cpp:477
+msgid "Edit"
+msgstr "Düzenle"
+
+#: ../../src/HexEditorGui.cpp:479
+msgid "Allow editing by Data Interpreter Panel"
+msgstr "Veri Panelinden Girişe İzin Ver"
+
+#: ../../src/HexEditorGui.cpp:485
+msgid "8 bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:491 ../../src/HexEditorGui.cpp:502
+#: ../../src/HexEditorGui.cpp:513 ../../src/HexEditorGui.cpp:524
+#: ../../src/HexEditorGui.cpp:535 ../../src/HexEditorGui.cpp:546
+msgid "0"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:496
+msgid "16 bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:507
+msgid "32 bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:518
+msgid "64 bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:529
+msgid "Float"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:540
+msgid "Double"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:593
+msgid "Clear"
+msgstr "Temizle"
+
+#: ../../src/HexEditorGui.cpp:640 ../../src/HexEditorGui.cpp:649
+msgid "INTEL"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:640
+msgid "AMD"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:645
+msgid "CPU Vendor"
+msgstr "İşlemci Üreticisi"
+
+#: ../../src/HexEditorGui.cpp:649
+msgid "AT&T"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:653
+msgid "Assembly Type"
+msgstr "Assembly Tipi"
+
+#: ../../src/HexEditorGui.cpp:657
+msgid "16Bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:657
+msgid "32Bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:657
+msgid "64Bit"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:661
+msgid "Disassembly Bit Mode"
+msgstr "Disassembly Bit Modu"
+
+#: ../../src/HexEditorGui.cpp:698 ../../src/HexEditorGui.cpp:704
+#: ../../src/HexDialogs.cpp:160 ../../src/HexEditorCtrl/HexEditorCtrl.cpp:41
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:33
+msgid "Offset"
+msgstr "Adres"
+
+#: ../../src/HexEditorGui.cpp:704 ../../src/HexDialogs.cpp:166
+msgid "Sector"
+msgstr "Sektör"
+
+#: ../../src/HexEditorGui.cpp:711 ../../src/HexEditorGui.cpp:712
+#: ../../src/HexEditorGui.cpp:713 ../../src/HexEditorGui.cpp:714
+#: ../../src/HexEditorGui.cpp:715 ../../src/HexEditorGui.cpp:716
+#: ../../src/HexEditorGui.cpp:717 ../../src/HexEditorGui.cpp:718
+#: ../../src/HexEditorGui.cpp:719 ../../src/HexEditorGui.cpp:720
+#: ../../src/HexEditorGui.cpp:822 ../../src/HexEditorGui.cpp:823
+#: ../../src/HexEditorGui.cpp:824 ../../src/HexEditorGui.cpp:825
+#: ../../src/HexEditorGui.cpp:826 ../../src/HexEditorGui.cpp:827
+#: ../../src/HexEditorGui.cpp:828 ../../src/HexEditorGui.cpp:829
+#: ../../src/HexEditorGui.cpp:830 ../../src/HexEditorGui.cpp:831
+#: ../../src/HexEditorGui.cpp:841 ../../src/HexEditorGui.cpp:842
+#: ../../src/HexEditorGui.cpp:843 ../../src/HexEditorGui.cpp:844
+#: ../../src/HexEditorGui.cpp:845 ../../src/HexEditorGui.cpp:846
+#: ../../src/HexEditorGui.cpp:847 ../../src/HexEditorGui.cpp:848
+#: ../../src/HexEditorGui.cpp:849 ../../src/HexEditorGui.cpp:850
+msgid " "
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:723
+msgid "Decimal"
+msgstr "Desimal"
+
+#: ../../src/HexEditorGui.cpp:727 ../../src/HexEditorGui.cpp:862
+#: ../../src/HexEditorGui.cpp:1516
+msgid "Hex"
+msgstr "Hex"
+
+#: ../../src/HexEditorGui.cpp:735
+msgid "Previous Sector"
+msgstr "Önceki Sektör"
+
+#: ../../src/HexEditorGui.cpp:740
+msgid "Next Sector"
+msgstr "Sonraki Sektör"
+
+#: ../../src/HexEditorGui.cpp:750
+msgid "From beginning"
+msgstr "Baştan"
+
+#: ../../src/HexEditorGui.cpp:750
+msgid "From here"
+msgstr "Geçerli yerden"
+
+#: ../../src/HexEditorGui.cpp:750
+msgid "From end"
+msgstr "Sondan"
+
+#: ../../src/HexEditorGui.cpp:752
+msgid "Type of branch"
+msgstr "Dallanma tipi"
+
+#: ../../src/HexEditorGui.cpp:756
+msgid "Go!"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:817
+msgid "Search: "
+msgstr "Arama:"
+
+#: ../../src/HexEditorGui.cpp:834
+msgid "Replace: "
+msgstr "Değiştir:"
+
+#: ../../src/HexEditorGui.cpp:862
+msgid "Text"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:864
+msgid "Search as"
+msgstr "Farklı ara"
+
+#: ../../src/HexEditorGui.cpp:871
+msgid "Match Case"
+msgstr "Büyük Küçük Harf"
+
+#: ../../src/HexEditorGui.cpp:874
+msgid "Search backwards"
+msgstr "Geriye doğru ara"
+
+#: ../../src/HexEditorGui.cpp:877
+msgid "Wrap around"
+msgstr "Dosyanın sonundan başa dön"
+
+#: ../../src/HexEditorGui.cpp:880
+msgid "As UTF-8"
+msgstr "UTF-8 olarak"
+
+#: ../../src/HexEditorGui.cpp:896
+msgid "Find All"
+msgstr "Hepsini Bul"
+
+#: ../../src/HexEditorGui.cpp:899
+msgid "Find Some Bytes"
+msgstr "Birkaç Byte Bul"
+
+#: ../../src/HexEditorGui.cpp:900
+msgid ""
+"This function finds some different values at file. Usefull for finding non-"
+"null sections at disks."
+msgstr ""
+"Bu fonksiyon dosyada bulunabilecek farklı değerleri arar. Diskler ile "
+"uğraşırken boş olmayan kısımları bulmak için kullanışlı bir araçtır."
+
+#: ../../src/HexEditorGui.cpp:914
+msgid "Replace All"
+msgstr "Hepsini Değiştir"
+
+#: ../../src/HexEditorGui.cpp:919 ../../src/HexEditorGui.cpp:1100
+#: ../../src/HexEditorGui.cpp:1294 ../../src/HexEditorGui.cpp:1461
+#: ../../src/HexEditorGui.cpp:1527 ../../src/HexEditorGui.cpp:1652
+#: ../../src/HexEditorGui.cpp:1715 ../../src/HexEditorGui.cpp:1773
+#: ../../src/HexEditorGui.cpp:1830
+msgid "Cancel"
+msgstr "İptal"
+
+#: ../../src/HexEditorGui.cpp:982 ../../src/HexEditorFrame.cpp:1104
+#, c-format
+msgid "New wxHexEditor version %s is available!"
+msgstr "Yeni wxHexEditor versiyonu %s yayımlandı!"
+
+#: ../../src/HexEditorGui.cpp:986
+msgid "Download new wxHexEditor"
+msgstr "Yeni wxHexEditor'ü yükleyin"
+
+#: ../../src/HexEditorGui.cpp:986
+msgid "http://wxhexeditor.sourceforge.net"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:989
+msgid "Do not show this again."
+msgstr "Bunu bir daha gösterme."
+
+#: ../../src/HexEditorGui.cpp:1022
+msgid "File #1"
+msgstr "Dosya #1"
+
+#: ../../src/HexEditorGui.cpp:1026 ../../src/HexEditorGui.cpp:1033
+#: ../../src/HexEditorGui.cpp:1090 ../../src/HexEditorGui.cpp:1168
+#: ../../src/HexEditorGui.cpp:1704 ../../src/HexEditorGui.cpp:1753
+msgid "Select a file"
+msgstr "Dosya seçin"
+
+#: ../../src/HexEditorGui.cpp:1026 ../../src/HexEditorGui.cpp:1033
+#: ../../src/HexEditorGui.cpp:1168 ../../src/HexEditorGui.cpp:1704
+#: ../../src/HexEditorGui.cpp:1753
+msgid "*.*"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1029
+msgid "File #2"
+msgstr "Dosya #2"
+
+#: ../../src/HexEditorGui.cpp:1039
+msgid "Search For"
+msgstr "Şunun İçin Ara"
+
+#: ../../src/HexEditorGui.cpp:1041
+msgid "Different bytes"
+msgstr "Farklı baytlar"
+
+#: ../../src/HexEditorGui.cpp:1045
+msgid "Same bytes"
+msgstr "Aynı baytlar"
+
+#: ../../src/HexEditorGui.cpp:1053
+msgid "Stop comparison after"
+msgstr "Karşılaşmadan sonra dur"
+
+#: ../../src/HexEditorGui.cpp:1061
+msgid "hits."
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1070
+msgid "Merge sections if close as"
+msgstr "Yakın olan alanları birleştir, bayt farkı "
+
+#: ../../src/HexEditorGui.cpp:1078
+msgid "bytes."
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1087
+msgid "Save Results to File"
+msgstr "Sonuçları Dosyaya Kaydet"
+
+#: ../../src/HexEditorGui.cpp:1090
+msgid "*.txt"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1103
+msgid "Compare"
+msgstr "Karşılaştırma"
+
+#: ../../src/HexEditorGui.cpp:1156
+msgid "File To Hash:"
+msgstr "Parmak İzi Dosyası:"
+
+#: ../../src/HexEditorGui.cpp:1163
+msgid "Curent File"
+msgstr "Şu Anki Dosya"
+
+#: ../../src/HexEditorGui.cpp:1179
+msgid "MD"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1181
+msgid "MD2 (slow!)"
+msgstr "MD2 (yavaş!)"
+
+#: ../../src/HexEditorGui.cpp:1184
+msgid "MD4"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1187
+msgid "MD5"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1193
+msgid "SHA"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1195
+msgid "SHA1"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1198
+msgid "SHA224"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1201
+msgid "SHA256"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1204
+msgid "SHA384"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1207
+msgid "SHA512"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1213
+msgid "RipeMD"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1215
+msgid "RipeMD128"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1218
+msgid "RipeMD160"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1221
+msgid "RipeMD256"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1224
+msgid "RipeMD320"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1230
+msgid "HAVAL"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1232
+msgid "HAVAL128"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1235
+msgid "HAVAL160"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1238
+msgid "HAVAL192"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1241
+msgid "HAVAL224"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1244
+msgid "HAVAL256"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1250
+msgid "TIGER"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1252
+msgid "TIGER128"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1255
+msgid "TIGER160"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1258
+msgid "TIGER192"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1264
+msgid "Others"
+msgstr "Diğerleri"
+
+#: ../../src/HexEditorGui.cpp:1266
+msgid "ADLER32"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1269
+msgid "CRC32"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1272
+msgid "CRC32B"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1275
+msgid "WHRILPOOL"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1278
+msgid "GOST"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1281
+msgid "SNEFRU128"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1284
+msgid "SNEFRU256"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1297
+msgid "Calculate"
+msgstr "Hesapla"
+
+#: ../../src/HexEditorGui.cpp:1395
+msgid "Copy As :"
+msgstr "Farklı Kopyala :"
+
+#: ../../src/HexEditorGui.cpp:1399
+msgid "Full Text"
+msgstr "Tam Metin"
+
+#: ../../src/HexEditorGui.cpp:1399
+msgid "Special Hex"
+msgstr "Özel Hex"
+
+#: ../../src/HexEditorGui.cpp:1399
+msgid "Internet"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1399
+msgid "C/C++ Source"
+msgstr "C/C++ Kaynağı"
+
+#: ../../src/HexEditorGui.cpp:1399
+msgid "Assembler Source"
+msgstr "Assembler Kaynağı"
+
+#: ../../src/HexEditorGui.cpp:1405
+msgid "Option:"
+msgstr "Seçenek:"
+
+#: ../../src/HexEditorGui.cpp:1424
+msgid "As BigEndian"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1430
+msgid "Bytes Per Line"
+msgstr "Byte Her Satırda"
+
+#: ../../src/HexEditorGui.cpp:1432
+msgid "16"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1442
+msgid "Include Offset Part"
+msgstr "Adres Alanı İçer"
+
+#: ../../src/HexEditorGui.cpp:1446
+msgid "Include Hex Part"
+msgstr "Hex Alanı İçer"
+
+#: ../../src/HexEditorGui.cpp:1450
+msgid "Include Text Part"
+msgstr "Metin Alanı İçer"
+
+#: ../../src/HexEditorGui.cpp:1501
+msgid ""
+"For switching XORView Thru mode, all Undo&Redo buffer will reset and non-"
+"saved changes will discarded.\n"
+"Also you can't use methods that changes file size (like delete and inject) "
+"with XORView Thru mode enabled."
+msgstr ""
+"XORView Thru modunu açmak için, tüm İleri-Geri Al belleği sıfırlanacak ve "
+"kayıt edilmemiş değişiklikler silinecek.Ayrıca bu modda dosya boyutunu "
+"değiştiren (sil ve ekle gibi) metotları kullanamazsınız."
+
+#: ../../src/HexEditorGui.cpp:1508
+msgid "Please enter XOR key as "
+msgstr "Lütfen XOR anahtarını girin"
+
+#: ../../src/HexEditorGui.cpp:1512
+msgid "ASCII"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1530
+msgid "OK"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1566
+msgid "Colours"
+msgstr "Renkler"
+
+#: ../../src/HexEditorGui.cpp:1573
+msgid "Hex Colors:"
+msgstr "Hex Rengi :"
+
+#: ../../src/HexEditorGui.cpp:1578
+msgid "Foreground Colour"
+msgstr "Önalan Rengi :"
+
+#: ../../src/HexEditorGui.cpp:1583
+msgid "Background Colour"
+msgstr "Arkaalan Rengi"
+
+#: ../../src/HexEditorGui.cpp:1588
+msgid "Zebra Colour"
+msgstr "Zebra Rengi"
+
+#: ../../src/HexEditorGui.cpp:1592
+msgid "Selection Colours:"
+msgstr "Seçim Renkleri:"
+
+#: ../../src/HexEditorGui.cpp:1597
+msgid "Selection Foreground Colour"
+msgstr "Seçilen Önalan Rengi"
+
+#: ../../src/HexEditorGui.cpp:1602
+msgid "Selection Colour"
+msgstr "Seçim Renkleri"
+
+#: ../../src/HexEditorGui.cpp:1606
+msgid "Reset"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1607
+msgid "Reset Colour Values to Default"
+msgstr "Renk Değerlerini Varsayılan Yap"
+
+#: ../../src/HexEditorGui.cpp:1618
+msgid "Language:"
+msgstr "Lisan:"
+
+#: ../../src/HexEditorGui.cpp:1630
+msgid "Custom Hex Formating"
+msgstr "Özel Hex Biçimi Kullan"
+
+#: ../../src/HexEditorGui.cpp:1632
+msgid "Enable"
+msgstr "Etkin"
+
+#: ../../src/HexEditorGui.cpp:1635
+msgid "xx "
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1636
+msgid "xxxx "
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1637
+msgid "xx xx xx xx xx xx xx xx  "
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1638
+msgid "xxxx xxxx xxxx xxxx  "
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1640
+msgid "Recursive custom hex format pattern"
+msgstr "Özyineli özel hex biçim şablonu"
+
+#: ../../src/HexEditorGui.cpp:1649 ../../src/HexEditorFrame.cpp:275
+#: ../../src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:56
+msgid "Save"
+msgstr "Kaydet"
+
+#: ../../src/HexEditorGui.cpp:1691 ../../src/HexEditorGui.cpp:1749
+msgid "Source :"
+msgstr "Kaynak :"
+
+#: ../../src/HexEditorGui.cpp:1700 ../../src/HexEditorGui.cpp:1756
+#: ../../src/HexEditorGui.cpp:1807
+msgid "Destination :"
+msgstr "Hedef :"
+
+#: ../../src/HexEditorGui.cpp:1818
+msgid "0x00"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1818
+msgid "0xFF"
+msgstr ""
+
+#: ../../src/HexEditorGui.cpp:1818
+msgid "0xRANDOM"
+msgstr "0xRASTGELE"
+
+#: ../../src/HexEditorGui.cpp:1820
+msgid "Erase With "
+msgstr "Şununla Sil "
+
 #: ../../src/HexDialogs.cpp:68
 msgid "Value is not hexadecimal!"
 msgstr "Değer HEX uyumlu değil!"
@@ -494,14 +1477,6 @@ msgstr "Biçim Hatası!"
 #: ../../src/HexDialogs.cpp:78
 msgid "Value must be even digit!"
 msgstr "Değer mutlaka çift haneli olmalı!"
-
-#: ../../src/HexDialogs.cpp:160 ../../src/HexEditorCtrl/HexEditorCtrl.cpp:41
-msgid "Offset"
-msgstr "Adres"
-
-#: ../../src/HexDialogs.cpp:166
-msgid "Sector"
-msgstr "Sektör"
 
 #: ../../src/HexDialogs.cpp:436
 msgid "Finding Some Bytes... "
@@ -550,11 +1525,6 @@ msgid ""
 msgstr ""
 "Arama ve Değiştirme boyutları eşit değil!\n"
 "Değişik boyutlu değiştirme işlemi henüz desteklenmiyor."
-
-#: ../../src/HexDialogs.cpp:1148 ../../src/HexDialogs.cpp:1186
-#: ../../src/HexEditorFrame.cpp:280
-msgid "Replace"
-msgstr "Değiştir"
 
 #: ../../src/HexDialogs.cpp:1207
 #, c-format
@@ -814,11 +1784,6 @@ msgstr "Aç"
 msgid "Save File"
 msgstr "Dosyaya Kaydet"
 
-#: ../../src/HexEditorFrame.cpp:275
-#: ../../src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:56
-msgid "Save"
-msgstr "Kaydet"
-
 #: ../../src/HexEditorFrame.cpp:276
 msgid "SaveAs File"
 msgstr "Farklı Kaydetme Dosyası"
@@ -834,10 +1799,6 @@ msgstr "Dosyayı Kapat"
 #: ../../src/HexEditorFrame.cpp:277
 msgid "Close"
 msgstr "Kapat"
-
-#: ../../src/HexEditorFrame.cpp:279 ../../src/HexDialogs.h:68
-msgid "Find"
-msgstr "Ara"
 
 #: ../../src/HexEditorFrame.cpp:280
 msgid "Find and replace"
@@ -895,17 +1856,9 @@ msgstr "Arama sonuçları"
 msgid "Comparison Results"
 msgstr "Karşılaştırma Sonuçları"
 
-#: ../../src/HexEditorFrame.cpp:342
-msgid "Toolbar"
-msgstr "Araç Çubuğu"
-
 #: ../../src/HexEditorFrame.cpp:348
 msgid "DataInterpreter"
 msgstr "Veri Yorumcusu"
-
-#: ../../src/HexEditorFrame.cpp:358
-msgid "InfoPanel"
-msgstr "Bilgi Paneli"
 
 #: ../../src/HexEditorFrame.cpp:445
 msgid "Please indicate file size in decimal."
@@ -980,10 +1933,21 @@ msgstr "Aygıtları görmek için programı yönetici yetkileri ile açmalısın
 msgid "Cannot open dropped file: "
 msgstr "Sürüklenen dosya okunamıyor: "
 
-#: ../../src/HexEditorFrame.cpp:1104
-#, c-format
-msgid "New wxHexEditor version %s is available!"
-msgstr "Yeni wxHexEditor versiyonu %s yayımlandı!"
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:35
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:41
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:47
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:56
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:67
+msgid "sans"
+msgstr ""
+
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:39
+msgid "Adress"
+msgstr "Adres"
+
+#: ../../src/HexEditorCtrl/HexEditorCtrlGui.cpp:45
+msgid "Byte View"
+msgstr "Bayt Görünümü"
 
 #: ../../src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:37
 msgid "Font Color :"
@@ -1000,6 +1964,38 @@ msgstr "Kaldır"
 #: ../../src/HexEditor.h:195 ../../src/HexEditor.h:215
 msgid "Clipboard could not be opened."
 msgstr "Sistem panosu açılamiyor."
+
+#: ../../src/HexEditorGui.h:117
+msgid "wxHexEditor Alpha Development version"
+msgstr ""
+
+#: ../../src/HexEditorGui.h:317
+msgid "New wxHexEditor Version!"
+msgstr "Yeni wxHexEditor Versiyonu!"
+
+#: ../../src/HexEditorGui.h:439
+msgid "Copy Selected Block As"
+msgstr "Seçilmiş Alanı Farklı Kopyala"
+
+#: ../../src/HexEditorGui.h:466
+msgid "XORView Thru Warning!"
+msgstr "XOR Görüşü Uyarısı!"
+
+#: ../../src/HexEditorGui.h:528
+msgid "Disk/Partition Backup Tool"
+msgstr "Disk/Bölüm Yedekleme Aracı"
+
+#: ../../src/HexEditorGui.h:554
+msgid "Disk/Partition Restore Tool"
+msgstr "Disk/Bölüm Onarımı Aracı"
+
+#: ../../src/HexEditorGui.h:579
+msgid "Disk/Partition Erase Tool"
+msgstr "Disk/Bölüm Silme Aracı"
+
+#: ../../src/HexEditorGui.h:596
+msgid "Debug Log"
+msgstr "Hata ayıklama defteri"
 
 #: ../../src/HexDialogs.h:95
 msgid "Find & Replace"
@@ -1031,21 +2027,6 @@ msgstr "Etiket Diyaloğu"
 
 #~ msgid "&Quit\tAlt-F4"
 #~ msgstr "&Çıkış\tAlt-F4"
-
-#~ msgid "Quit the application"
-#~ msgstr "Programdan çık"
-
-#~ msgid "&File"
-#~ msgstr "&Dosya"
-
-#~ msgid "&About\tF1"
-#~ msgstr "&Hakkında\tF1"
-
-#~ msgid "Show info about this application"
-#~ msgstr "Bu uygulama hakkında bilgiler gösterir."
-
-#~ msgid "&Help"
-#~ msgstr "&Yardım"
 
 #~ msgid "ReadByte/WriteByte: "
 #~ msgstr "Okunan Byte/Yazılan Byte:"

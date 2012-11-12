@@ -267,7 +267,7 @@ bool FAL::SetAccessMode( FileAccessMode fam ){
 		return true;
 		}
 	wxBell();
-	wxMessageBox( wxString(_("File cannot open in ")).Append( FAMtoString( fam) ).Append(_(" mode.")),_("Error"), wxOK|wxICON_ERROR );
+	wxMessageBox( wxString(_("File cannot open in this mode : ")).Append( FAMtoString( fam) ),_("Error"), wxOK|wxICON_ERROR );
 	return false;
 	}
 

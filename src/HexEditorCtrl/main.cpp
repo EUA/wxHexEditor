@@ -41,14 +41,14 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
     // create a menu bar
     wxMenuBar* mbar = new wxMenuBar();
     wxMenu* fileMenu = new wxMenu(_T(""));
-    fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
-    mbar->Append(fileMenu, _("&File"));
+    fileMenu->Append(idMenuQuit, _T("&Quit\tAlt-F4"), _T("Quit the application"));
+    mbar->Append(fileMenu, _T("&File"));
 
     HexEditorCtrl *hexed = new HexEditorCtrl(this, -1, wxDefaultPosition, wxDefaultSize);
 
     wxMenu* helpMenu = new wxMenu(_T(""));
-    helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
-    mbar->Append(helpMenu, _("&Help"));
+    helpMenu->Append(idMenuAbout, _T("&About\tF1"), _T("Show info about this application"));
+    mbar->Append(helpMenu, _T("&Help"));
 
     SetMenuBar(mbar);
 #endif // wxUSE_MENUS
@@ -56,7 +56,7 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
 #if wxUSE_STATUSBAR
     // create a status bar with some information about the used wxWidgets version
     CreateStatusBar(2);
-    SetStatusText(_("HexEditorCtrl Status"),0);
+    SetStatusText(_T("HexEditorCtrl Status"),0);
     SetStatusText(wxbuildinfo(short_f),1);
 #endif // wxUSE_STATUSBAR
 	char *buf = new char [512];
@@ -78,6 +78,6 @@ void MyFrame::OnQuit(wxCommandEvent& event)
 void MyFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
+    wxMessageBox(msg, _T("Welcome to..."));
 }
 

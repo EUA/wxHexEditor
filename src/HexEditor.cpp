@@ -403,14 +403,14 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 				wxFileDialog filediag(this,_("Choose a file for export TAGs"),
 													wxEmptyString,
 													wxEmptyString,
-													_("*.tags"),
+													wxT("*.tags"),
 													wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 													wxDefaultPosition);
 				if(wxID_OK == filediag.ShowModal())
 						if( SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
 							break;
 						else
-							wxMessageBox( wxString(_( "TAGS cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+							wxMessageBox( wxString(_( "TAGs cannot exported to file : ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 				else
 					break;
 				}
@@ -529,7 +529,7 @@ bool HexEditor::FillSelection( void ){
 
 bool HexEditor::SaveAsDump( void ){
    wxFileDialog filediag(this,
-   _("Choose a file for saving dump"), wxEmptyString, wxEmptyString, _("*"),
+   _("Choose a file for saving dump"), wxEmptyString, wxEmptyString, wxT("*"),
    wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
 
    if(wxID_OK == filediag.ShowModal()) {
@@ -994,6 +994,8 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(idTagQuick,			 _("Quick Tag"), _("Creates empty tag with Random Color."));
 	menu.Append(idTagAddSelection, _("New Tag") );
 	menu.Append(idTagEdit, 			 _("Tag Edit"));
+//	menu.AppendSeparator();
+//	menu.Append(idClose, 			 _("Close File")); Results Seg-error
 
 	menu.Enable( idTagEdit, false );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ) {
@@ -1408,7 +1410,7 @@ bool HexEditor::PasteFromClipboard( void ) {
 			}
 		}
 	else
-		wxMessageBox(_( "There is no focus!"), _("Paste Error"), wxOK|wxICON_ERROR, this);
+		wxMessageBox(wxT( "There is no focus!"), wxT("Paste Error"), wxOK|wxICON_ERROR, this);
 
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;

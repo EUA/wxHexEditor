@@ -339,7 +339,7 @@ void HexEditorFrame::PrepareAUI( void ){
 				Right().Layer(1) );
 
    MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
-                  Name(_("ToolBar")).Caption(_("Big Toolbar")).
+                  Name(wxT("ToolBar")).Caption(_("Toolbar")).
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
 
@@ -456,7 +456,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									_("Choose a file for save as"),
 									wxEmptyString,
 									wxEmptyString,
-									_("*"),
+									wxT("*"),
 									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 
@@ -486,7 +486,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									_("Choose a file for editing"),
 									wxEmptyString,
 									wxEmptyString,
-									_("*"),
+									wxT("*"),
 									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 		if(wxID_OK == filediag.ShowModal()){
@@ -511,7 +511,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 												wxFileDialog filediag(this,_("Choose a file for save as"),
 																					wxEmptyString,
 																					wxEmptyString,
-																					_("*"),
+																					wxT("*"),
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
 												if(wxID_OK == filediag.ShowModal())
@@ -532,7 +532,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 												wxFileDialog filediag(this,_("Choose a file for import TAGs"),
 																					wxEmptyString,
 																					wxEmptyString,
-																					_("*.tags"),
+																					wxT("*.tags"),
 																					wxFD_OPEN|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
 												if(wxID_OK == filediag.ShowModal())
@@ -545,7 +545,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 													wxFileDialog filediag(this,_("Choose a file for export TAGs"),
 																					wxEmptyString,
 																					wxEmptyString,
-																					_("*.tags"),
+																					wxT("*.tags"),
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
 													if(wxID_OK == filediag.ShowModal()){

@@ -65,7 +65,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
 
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
       if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-         wxMessageBox( Value_Name + _(" value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
+         wxMessageBox( _("Value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
          wxBell();
          return false;
          }
@@ -75,7 +75,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
 
    //there is odd hex value, must be even digit for search!
    if( hexval.Len() % 2 ) {
-      wxMessageBox( Value_Name + _(" must be even digit!"), _("Format Error!"), wxOK, parent );
+      wxMessageBox( _("Value must be even digit!"), _("Format Error!"), wxOK, parent );
       wxBell();
       return false;
       }
@@ -1202,7 +1202,7 @@ void ReplaceDialog::OnReplaceAll( void ){
 		this->Hide();
 		wxUpdateUIEvent eventx( UNREDO_EVENT );
 		parent->GetEventHandler()->ProcessEvent( eventx );
-		wxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info!"), wxOK, parent);
+		wxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info"), wxOK, parent);
 		Destroy();
 		}
 	}
@@ -1277,10 +1277,10 @@ void CopyAsDialog::PrepareOptions( int SelectedFunction ){
 		chkText->Enable(true);
 		}
 	else if( SelectedFunction >= 3){ // C/C++/ASM Sources
-		chcOption->Insert(_("8bit Byte "),0);
-		chcOption->Insert(_("16bit Words"),1);
-		chcOption->Insert(_("32bit Dwords"),2);
-		chcOption->Insert(_("64bit Qwords"),3);
+		chcOption->Insert(_("8bit - Byte "),0);
+		chcOption->Insert(_("16bit - Words"),1);
+		chcOption->Insert(_("32bit - Dwords"),2);
+		chcOption->Insert(_("64bit - Qwords"),3);
 		chkOffset->Enable(false);
 		chkHex->Enable(false);
 		chkText->Enable(false);
@@ -1784,16 +1784,16 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		fs.Write( ln );
 		wxString line;
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
-			line = wxString::Format( _("%s found %"wxLongLongFmtSpec"u - %"wxLongLongFmtSpec"u \t Total : %"wxLongLongFmtSpec"u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
+			line = wxString::Format( wxT("%s found %"wxLongLongFmtSpec"u - %"wxLongLongFmtSpec"u \t Total : %"wxLongLongFmtSpec"u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
 			fs.Write( line );
 			}
 
 		if( f1.Length() not_eq f2.Length() ){
 			if( f1.Length() > f2.Length() )
-				line =  wxString::Format( _("\nFile #2 ends at offset %"wxLongLongFmtSpec"u. File #1 has extra %"wxLongLongFmtSpec"u bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
+				line =  wxString::Format( wxT("\nFile #2 ends at offset %"wxLongLongFmtSpec"u. File #1 has extra %"wxLongLongFmtSpec"u bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
 
 			else
-				line =  wxString::Format( _("\nFile #1 ends at offset %"wxLongLongFmtSpec"u. File #2 has extra %"wxLongLongFmtSpec"u bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
+				line =  wxString::Format( wxT("\nFile #1 ends at offset %"wxLongLongFmtSpec"u. File #2 has extra %"wxLongLongFmtSpec"u bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
 
 			fs.Write( line );
 			}
@@ -2138,7 +2138,7 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 			}
 		if( radioHex->GetValue() ){
 			wxString hexval = XORtext->GetValue();
-			if(not HexVerifyAndPrepare( hexval, _("XOR"), this ) )
+			if(not HexVerifyAndPrepare( hexval, wxT("XOR"), this ) )
 				return;
 			wxMemoryBuffer z = wxHexCtrl::HexToBin( hexval );
 			XORKey->AppendData( z.GetData(), z.GetDataLen() );
@@ -2454,7 +2454,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 			return;
 		}
 
-	wxString msg = _("Please wait while restoring disk/partition image.");
+	wxString msg = _("Please wait while restoring disk/partition.");
 	wxProgressDialog mypd(_("Disk/Partition Restore"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 

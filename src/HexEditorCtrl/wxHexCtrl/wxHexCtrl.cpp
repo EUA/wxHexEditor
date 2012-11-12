@@ -716,7 +716,7 @@ void wxHexCtrl::WriteByte( const unsigned char& byte ){	//write string as bin va
 void wxHexCtrl::SetBinValue( wxString buffer, bool repaint ){
 	m_text.Clear();
 	for( unsigned i=0 ; i < buffer.Length() ; i++ )
-		m_text += wxString::Format(_("%02X"), static_cast<unsigned char>(buffer.at(i)));
+		m_text += wxString::Format(wxT("%02X"), static_cast<unsigned char>(buffer.at(i)));
 	if(repaint)
 		RePaint();
 	}
@@ -724,7 +724,7 @@ void wxHexCtrl::SetBinValue( wxString buffer, bool repaint ){
 void wxHexCtrl::SetBinValue( char* buffer, int byte_count, bool repaint ){
 	m_text.Clear();
 	for( int i=0 ; i < byte_count ; i++ )
-		m_text += wxString::Format(_("%02X"), static_cast<unsigned char>(buffer[i]));
+		m_text += wxString::Format(wxT("%02X"), static_cast<unsigned char>(buffer[i]));
 	if(repaint)
 		RePaint();
 	}
@@ -991,11 +991,11 @@ void wxHexCtrl::OnTestCall( void ){
 			char x = 0;
 			WriteByte(x);
 			msg.Empty();
-			msg << _("ReadByte/WriteByte: ");
+			msg << _T("ReadByte/WriteByte: ");
 			if( x == ReadByte(0) )
-				msg << _("OK");
+				msg << _T("OK");
 			else
-				msg << _("FAILED");
+				msg << _T("FAILED");
 			frame->SetStatusText(msg, 0);
 			}
 			break;

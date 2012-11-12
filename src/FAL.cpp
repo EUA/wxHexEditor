@@ -148,7 +148,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		}
 
 	//Owning file
-	else if( not myfilename.IsFileReadable() ) {
+	else if( not myfilename.IsFileReadable() and myfilename.FileExists() ) {
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
 			return false;
 

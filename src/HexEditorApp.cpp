@@ -53,10 +53,8 @@ bool wxHexEditorApp::OnInit() {
       wxString str(argv[ii]);
       wxFileName fn = wxFileName(str);
 
-      if(fn.FileExists() and fn.IsFileReadable())
-         frame->OpenFile(fn.GetFullPath());
-      else if( str.Lower().StartsWith(wxT("-pid")))
-         frame->OpenFile(fn.GetFullPath());
+ //  if(fn.FileExists() or str.Lower().StartsWith(wxT("-pid")))
+      frame->OpenFile(fn.GetFullPath());
       }
    return true;
    }

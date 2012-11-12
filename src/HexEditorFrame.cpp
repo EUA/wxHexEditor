@@ -406,7 +406,6 @@ void HexEditorFrame::ActionDisabler( void ){
 	}
 
 HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
-
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 	if(x->FileOpen( flname )){

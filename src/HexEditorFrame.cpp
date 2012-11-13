@@ -621,7 +621,7 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 // TODO (death#1#): RAM access with mmap and need DirectWrite Mode
 		}
 	else if( event.GetId() == idProcessRAM ){
-		int a = wxGetNumberFromUser( wxT("Please enter process identification number."), wxT("Enter PID:"), wxT("Open Process RAM"), 0, 1, 100000, this );
+		int a = wxGetNumberFromUser( _("Please enter process identification number."), _("Enter PID:"), _("Open Process RAM"), 0, 1, 100000, this );
 		if( a < 0 )
 			return;
 		wxString str=wxT("-pid=");

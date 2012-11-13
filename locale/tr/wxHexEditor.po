@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# wxHexEditor Turkish Translation File.
+# Copyright (C) 2012 Erdem U. Altinyurt
+# This file is distributed under the same license as the wxHexEditor package.
+# FIRST AUTHOR <spamjunkeater@gmail.com>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: wxHexEditor v0.21\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-12 23:39+0200\n"
-"PO-Revision-Date: 2012-11-12 23:39+0200\n"
+"POT-Creation-Date: 2012-11-14 00:31+0200\n"
+"PO-Revision-Date: 2012-11-14 00:38+0200\n"
 "Last-Translator: Erdem U. Altinyurt <spamjunkeater@gmail.com>\n"
 "Language-Team: EUA <spamjunkeater@gmail.com>\n"
 "Language: tr_TR\n"
@@ -160,7 +160,7 @@ msgstr "Lütfen parmakizi hesaplanırken bekleyin."
 
 #: ../../src/HexEditor.cpp:130 ../../src/HexDialogs.cpp:2046
 msgid "Calculating Checksum"
-msgstr "Sağlama Hesaplanıyor"
+msgstr "Sağlama Hesaplaması Yapılıyor"
 
 #: ../../src/HexEditor.cpp:151 ../../src/HexDialogs.cpp:2090
 #, c-format
@@ -747,7 +747,7 @@ msgstr "Görünüm"
 
 #: ../../src/HexEditorGui.cpp:211 ../../src/HexEditorGui.h:408
 msgid "Calculate Checksum"
-msgstr "Sağlama Hesaplanıyor"
+msgstr "Sağlama Hesaplama"
 
 #: ../../src/HexEditorGui.cpp:215 ../../src/HexEditorGui.h:355
 msgid "Compare Files"
@@ -777,9 +777,9 @@ msgstr "Bu işletim sisteminde (henüz) hazır değil"
 msgid "Open Disk Device"
 msgstr "Disk Aygıtı Aç"
 
-#: ../../src/HexEditorGui.cpp:238
+#: ../../src/HexEditorGui.cpp:238 ../../src/HexEditorFrame.cpp:625
 msgid "Open Process RAM"
-msgstr "RAM Prosesi Aç"
+msgstr "Süreç Belleğini Aç"
 
 #: ../../src/HexEditorGui.cpp:247 ../../src/HexEditorGui.cpp:1712
 msgid "Backup"
@@ -851,7 +851,7 @@ msgstr ""
 
 #: ../../src/HexEditorGui.cpp:449
 msgid "Big Endian"
-msgstr ""
+msgstr "Büyük Bit Sonda"
 
 #: ../../src/HexEditorGui.cpp:461
 msgid "Binary"
@@ -1006,7 +1006,7 @@ msgstr "Dallanma tipi"
 
 #: ../../src/HexEditorGui.cpp:756
 msgid "Go!"
-msgstr ""
+msgstr "Git!"
 
 #: ../../src/HexEditorGui.cpp:817
 msgid "Search: "
@@ -1303,7 +1303,7 @@ msgstr "Özel Hex"
 
 #: ../../src/HexEditorGui.cpp:1399
 msgid "Internet"
-msgstr ""
+msgstr "İnternet"
 
 #: ../../src/HexEditorGui.cpp:1399
 msgid "C/C++ Source"
@@ -1319,7 +1319,7 @@ msgstr "Seçenek:"
 
 #: ../../src/HexEditorGui.cpp:1424
 msgid "As BigEndian"
-msgstr ""
+msgstr "BigEndian Olarak"
 
 #: ../../src/HexEditorGui.cpp:1430
 msgid "Bytes Per Line"
@@ -1904,6 +1904,14 @@ msgstr "TAG dosyası yazılamadı : "
 #: ../../src/HexEditorFrame.cpp:560
 msgid "There is no TAGs to Export in current active file!"
 msgstr "Aktif dosyanın ihraç edilebilecek bir etiketi yok bulunmamakta!"
+
+#: ../../src/HexEditorFrame.cpp:625
+msgid "Please enter process identification number."
+msgstr "Lütfen süreç kimlik numarasını giriniz."
+
+#: ../../src/HexEditorFrame.cpp:625
+msgid "Enter PID:"
+msgstr "PID Numarası:"
 
 #: ../../src/HexEditorFrame.cpp:661
 msgid "Please restart program for changes."

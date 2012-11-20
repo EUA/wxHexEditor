@@ -393,6 +393,12 @@ void DisassemblerPanel::OnUpdate( wxCommandEvent& event){
 	ud_t ud_obj;
    ud_init(&ud_obj);
    ud_set_input_buffer(&ud_obj, reinterpret_cast<uint8_t*>(mybuff.GetData()), mybuff.GetDataLen() );
+
+   std::cout << "mybuff.GetDataLen() :" << mybuff.GetDataLen() << std::endl;
+   for( int i=0; i < mybuff.GetDataLen() ; i++ )
+		printf( "0x%02X ", reinterpret_cast<uint8_t*>(mybuff.GetData())[i] );
+	printf( "\n");
+
    ud_set_vendor(&ud_obj, (m_choiceVendor->GetSelection()) ? UD_VENDOR_AMD : UD_VENDOR_INTEL);
    ud_set_mode(&ud_obj, (m_choiceBitMode->GetSelection()+1)*16);
    ud_set_syntax(&ud_obj, (m_choiceASMType->GetSelection() ? UD_SYN_ATT : UD_SYN_INTEL ));

@@ -47,7 +47,8 @@ class UdItabGenerator( ud_opcode.UdOpcodeTables ):
         "Gb"       : [    "OP_G"        , "SZ_B"     ],
         "Gw"       : [    "OP_G"        , "SZ_W"     ],
         "Gv"       : [    "OP_G"        , "SZ_V"     ],
-        "Gvw"      : [    "OP_G"        , "SZ_MDQ"   ],
+        "Gy"       : [    "OP_G"        , "SZ_MDQ"   ],
+        "Gy"       : [    "OP_G"        , "SZ_MDQ"   ],
         "Gd"       : [    "OP_G"        , "SZ_D"     ],
         "Gq"       : [    "OP_G"        , "SZ_Q"     ],
         "Gx"       : [    "OP_G"        , "SZ_MDQ"   ],
@@ -61,6 +62,7 @@ class UdItabGenerator( ud_opcode.UdOpcodeTables ):
         "Mt"       : [    "OP_M"        , "SZ_T"     ],
         "Mo"       : [    "OP_M"        , "SZ_O"     ],
         "MwRv"     : [    "OP_MR"       , "SZ_WV"    ],
+        "MdRy"     : [    "OP_MR"       , "SZ_DY"    ],
         "MbRv"     : [    "OP_MR"       , "SZ_BV"    ],
         "I1"       : [    "OP_I1"       , "SZ_NA"    ],
         "I3"       : [    "OP_I3"       , "SZ_NA"    ],
@@ -81,6 +83,8 @@ class UdItabGenerator( ud_opcode.UdOpcodeTables ):
         "Ov"       : [    "OP_O"        , "SZ_V"     ],
         "V"        : [    "OP_V"        , "SZ_O"     ],
         "W"        : [    "OP_W"        , "SZ_O"     ],
+        "Wsd"      : [    "OP_W"        , "SZ_O"     ],
+        "Wss"      : [    "OP_W"        , "SZ_O"     ],
         "P"        : [    "OP_P"        , "SZ_Q"     ],
         "Q"        : [    "OP_Q"        , "SZ_Q"     ],
         "VR"       : [    "OP_VR"       , "SZ_O"     ],
@@ -233,7 +237,10 @@ class UdItabGenerator( ud_opcode.UdOpcodeTables ):
                 self.ItabC.write( "\n" )
             if ( i%4 == 0 ):
                 self.ItabC.write( "  /* %2x */" % i)
-            self.ItabC.write( "%12d," % ( idxArray[ i ] ))
+            if idxArray[ i ] >= 0x8000:
+                self.ItabC.write( "%12s," % ("GROUP(%d)" % ( ~0x8000 & idxArray[ i ] )))
+            else:
+                self.ItabC.write( "%12d," % ( idxArray[ i ] ))
         self.ItabC.write( "\n" )
         self.ItabC.write( "};\n" )
 
@@ -312,6 +319,8 @@ class UdItabGenerator( ud_opcode.UdOpcodeTables ):
         self.ItabH.write("\n\n");
 
         self.ItabH.write( "extern const char * ud_mnemonics_str[];\n" )
+
+        self.ItabH.write( "#define GROUP(n) (0x8000 | (n))" )
 
         self.ItabH.write( "\n#endif /* UD_ITAB_H */\n" )
     

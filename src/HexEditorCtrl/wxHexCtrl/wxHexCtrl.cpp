@@ -477,14 +477,13 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 
 	int TAC = TagArray.Count();
 	if( TAC != 0 ){
-		TagElement *TAX;
-		for(int i = 0 ; i < TAC ; i++){
-			TAX = TagArray.Item(i);
-			TagPainter( dcTemp, *TAX );
-			}
+		for(int i = 0 ; i < TAC ; i++)
+			TagPainter( dcTemp, *TagArray.Item(i) );
 		}
 	if(select.selected)
 		TagPainter( dcTemp, select );
+
+	DrawCursorShadow(dcTemp);
 
 	if(ThinSeperationLines.Count() > 0)
 		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)
@@ -492,6 +491,20 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 
 	return dcTemp;
 }
+
+inline void wxHexCtrl::DrawCursorShadow(wxDC* dcTemp){
+	if( m_Window.x <= 0 or
+		FindFocus()==this )
+		return;
+
+	int y=m_CharSize.y*( m_Caret.y ) + m_Margin.y;
+	int x=m_CharSize.x*( m_Caret.x ) + m_Margin.x;
+
+	dcTemp->SetPen( *wxBLACK_PEN );
+	dcTemp->SetBrush( *wxTRANSPARENT_BRUSH );
+	dcTemp->DrawRectangle(x,y,m_CharSize.x*2+1,m_CharSize.y);
+	}
+
 
 inline void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset ){
 	if(m_Window.x > 0){
@@ -544,65 +557,63 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 	}
 
 void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
-	{	//Selection Painter
-		DC->SetFont( HexDefaultAttr.GetFont() );
-		DC->SetTextForeground( TG.FontClrData.GetColour() );
+	//Selection Painter
+	DC->SetFont( HexDefaultAttr.GetFont() );
+	DC->SetTextForeground( TG.FontClrData.GetColour() );
 //		DC->SetTextBackground( TG.NoteClrData.GetColour() );
+	DC->SetTextBackground( TG.SoftColour( TG.NoteClrData.GetColour() ));
 
-		DC->SetTextBackground( TG.SoftColour( TG.NoteClrData.GetColour() ));
+	wxBrush sbrush( TG.NoteClrData.GetColour() );
+	//preparation for wxGCDC for semi transparent marking.
+	//wxBrush sbrush(wxBrush(wxColour(255,0,0,128),wxBRUSHSTYLE_TRANSPARENT ));
+	DC->SetBackground( sbrush );
+	DC->SetBackgroundMode( wxSOLID ); // overwrite old value
+	m_CharSize.y = DC->GetCharHeight();
+	m_CharSize.x = DC->GetCharWidth();
 
-		wxBrush sbrush( TG.NoteClrData.GetColour() );
-		//preparation for wxGCDC for semi transparent marking.
-		//wxBrush sbrush(wxBrush(wxColour(255,0,0,128),wxBRUSHSTYLE_TRANSPARENT ));
-		DC->SetBackground( sbrush );
-		DC->SetBackgroundMode( wxSOLID ); // overwrite old value
-		m_CharSize.y = DC->GetCharHeight();
-		m_CharSize.x = DC->GetCharWidth();
+	int start = TG.start;
+	int end = TG.end;
 
-		int start = TG.start;
-		int end = TG.end;
+	if( start > end ){
+		int temp = end;
+		end = start;
+		start = temp;
+		}
 
-		if( start > end ){
-			int temp = end;
-			end = start;
-			start = temp;
-			}
+	if( start < 0 )
+		start = 0;
 
-		if( start < 0 )
-			start = 0;
-
-		if ( end > ByteCapacity()*2)
-			 end = ByteCapacity()*2;
+	if ( end > ByteCapacity()*2)
+		 end = ByteCapacity()*2;
 
 // TODO (death#1#): Here problem with Text Ctrl.Use smart pointer...?
-		wxPoint _start_ = InternalPositionToVisibleCoord( start );
-		wxPoint _end_   = InternalPositionToVisibleCoord( end );
-		wxPoint _temp_  = _start_;
-		for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
-			wxString line;
-			_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start
-			int z = ( _temp_.y == _end_.y ) ? _end_.x : m_Window.x;	// and end point
-			for ( int x = _temp_.x; x < z; x++ ){					//Prepare line to write process
-				if( IsDenied(x) ){
-					if(x+1 < z){
-						line += wxT(' ');
+	wxPoint _start_ = InternalPositionToVisibleCoord( start );
+	wxPoint _end_   = InternalPositionToVisibleCoord( end );
+	wxPoint _temp_  = _start_;
+	for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
+		wxString line;
+		_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start
+		int z = ( _temp_.y == _end_.y ) ? _end_.x : m_Window.x;	// and end point
+		for ( int x = _temp_.x; x < z; x++ ){					//Prepare line to write process
+			if( IsDenied(x) ){
+				if(x+1 < z){
+					line += wxT(' ');
 #if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-						DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
+					DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 #endif
-						}
-					continue;
 					}
-				wxChar ch = CharAt(start++);
-				line += ch;
-#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-				DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
-#endif
+				continue;
 				}
-#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
-			DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
-								   m_Margin.x + _temp_.y * m_CharSize.y );
+			wxChar ch = CharAt(start++);
+			line += ch;
+#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
+			DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 #endif
 			}
+#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
+		DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
+								m_Margin.x + _temp_.y * m_CharSize.y );
+#endif
 		}
 	}
 
@@ -1084,6 +1095,18 @@ void wxHexTextCtrl::SetInsertionPoint( unsigned int pos ){
 	MoveCaret( wxPoint(pos%m_Window.x , pos/m_Window.x) );
 	}
 
+void wxHexTextCtrl::DrawCursorShadow(wxDC* dcTemp){
+	if( m_Window.x <= 0 or
+		FindFocus()==this )
+		return;
+
+	int y=m_CharSize.y*( m_Caret.y ) + m_Margin.y;
+	int x=m_CharSize.x*( m_Caret.x ) + m_Margin.x;
+
+	dcTemp->SetPen( *wxBLACK_PEN );
+	dcTemp->SetBrush( *wxTRANSPARENT_BRUSH );
+	dcTemp->DrawRectangle(x,y,m_CharSize.x+1,m_CharSize.y);
+	}
 ///------HEXOFFSETCTRL-----///
 void wxHexOffsetCtrl::SetValue( uint64_t position ){
 	SetValue( position, BytePerLine );

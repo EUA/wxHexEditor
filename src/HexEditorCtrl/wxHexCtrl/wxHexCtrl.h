@@ -97,6 +97,7 @@ virtual bool IsAllowedChar(const char& chr);
 		wxSize GetCharSize(){return m_CharSize;}
 
 		// Movement Support
+virtual void DrawCursorShadow(wxDC*);
 virtual int CharacterPerLine( bool NoCache=false );
 virtual int BytePerLine( void ){ return CharacterPerLine() / 2; }
 virtual int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
@@ -196,6 +197,7 @@ inline int GetByteCount( void ){ return m_text.Length(); }
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
 		wxChar Filter(const char& chr);
+inline void DrawCursorShadow(wxDC* dcTemp);
 	};
 
 class wxHexOffsetCtrl : public wxHexCtrl{
@@ -248,5 +250,6 @@ inline bool IsDenied( int x ){ return false; }
 	private:
 		uint64_t offset_limit;
 		unsigned digit_count;
+inline void DrawCursorShadow(wxDC* dcTemp){}
 	};
 #endif

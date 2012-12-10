@@ -31,7 +31,6 @@
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Option parameters="testfile.swp " />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>

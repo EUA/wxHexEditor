@@ -483,7 +483,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	if(select.selected)
 		TagPainter( dcTemp, select );
 
-	DrawCursorShadow(dcTemp);
+//	DrawCursorShadow(dcTemp);
 
 	if(ThinSeperationLines.Count() > 0)
 		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)
@@ -494,7 +494,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 
 inline void wxHexCtrl::DrawCursorShadow(wxDC* dcTemp){
 	if( m_Window.x <= 0 or
-		FindFocus()==this )
+		FindFocus()==this)
 		return;
 
 	int y=m_CharSize.y*( m_Caret.y ) + m_Margin.y;
@@ -823,9 +823,10 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 //------------EVENT HANDLERS---------------//
 void wxHexCtrl::OnFocus(wxFocusEvent& event ){
 	wxCaret *caret = GetCaret();
-    if ( caret )
+   if ( caret )
 		caret->Show(true);
 	}
+
 void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 #ifdef _DEBUG_MOUSE_
 	std::cout << "wxHexCtrl::OnKillFocus()" << std::endl;
@@ -839,6 +840,9 @@ void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 //		*TagMutex = false;
 //		}
 	event.Skip();
+
+	//wxClientDC dc( this );
+	//DrawCursorShadow(&dc);
 	}
 
 void wxHexCtrl::OnSize( wxSizeEvent &event ){

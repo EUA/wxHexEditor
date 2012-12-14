@@ -35,7 +35,7 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_MENU( __idTagEdit__, wxHexCtrl::OnTagEdit )
 	EVT_MOTION( wxHexCtrl::OnMouseMove )
 	EVT_SET_FOCUS( wxHexCtrl::OnFocus )
-	EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
+	//EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
 END_EVENT_TABLE()
 
 
@@ -106,8 +106,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
   //  ChangeSize();
 
    wxCaret *caret = GetCaret();
-   if ( caret )
-		caret->Show(false);
+   //if ( caret )
+	//	caret->Show(false);
 
 }
 wxHexCtrl::~wxHexCtrl()
@@ -822,18 +822,19 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	}
 //------------EVENT HANDLERS---------------//
 void wxHexCtrl::OnFocus(wxFocusEvent& event ){
-	wxCaret *caret = GetCaret();
-   if ( caret )
-		caret->Show(true);
+	//wxCaret *caret = GetCaret();
+   //if ( caret )
+	//	caret->Show(true);
 	}
 
 void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 #ifdef _DEBUG_MOUSE_
 	std::cout << "wxHexCtrl::OnKillFocus()" << std::endl;
 #endif
-	wxCaret *caret = GetCaret();
-    if ( caret )
-		caret->Show(false);
+	wxCaretSuspend cs(this);
+	//wxCaret *caret = GetCaret();
+   //if ( caret )
+	//	caret->Show(false);
 //	if( *TagMutex ){
 //		for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
 //			TagArray.Item(i)->Hide();
@@ -1066,15 +1067,16 @@ void wxHexTextCtrl::ChangeValue( const wxString& value, bool paint ){
 void wxHexTextCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
 	HexDefaultAttr = new_attr;
 
-    wxClientDC dc(this);
-    dc.SetFont( HexDefaultAttr.GetFont() );
-    SetFont( HexDefaultAttr.GetFont() );
-    m_CharSize.y = dc.GetCharHeight();
-    m_CharSize.x = dc.GetCharWidth();
+	wxClientDC dc(this);
+	dc.SetFont( HexDefaultAttr.GetFont() );
+	SetFont( HexDefaultAttr.GetFont() );
+	m_CharSize.y = dc.GetCharHeight();
+	m_CharSize.x = dc.GetCharWidth();
 
-    wxCaret *caret = GetCaret();
-    if ( caret )
+	wxCaret *caret = GetCaret();
+	if ( caret )
 		caret->SetSize(1, m_CharSize.y);
+
 	RePaint();
 }
 

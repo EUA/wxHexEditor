@@ -6,6 +6,8 @@ LDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
+MSGFMT = msgfmt
+
 HOST=
 SOURCES= src/HexEditorGui.cpp \
 			src/FAL.cpp\
@@ -22,6 +24,8 @@ SOURCES= src/HexEditorGui.cpp \
 LIBS = udis86/libudis86/.libs/libudis86.a mhash/lib/.libs/libmhash.a
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
+LANGUAGEDIRS=tr
+LANGUAGES=$(wildcard locale/*/wxHexEditor.po)
 RESOURCES= resources/resource.rc
 RESOURCE_OBJ=$(RESOURCES:.rc=.o)
 EXECUTABLE=wxHexEditor
@@ -33,11 +37,13 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.20 Beta
+VERSION = 0.21 Beta
 
-all: $(EXECUTABLE)
+all:$(EXECUTABLE) langs
 
 $(OBJECTS): $(LIBS) $(SOURCES)
+
+MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CPP) $(OBJECTS) $(LIBS) $(LDFLAGS) -lgomp -o $@
@@ -47,6 +53,11 @@ $(EXECUTABLE): $(OBJECTS)
 
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@
+
+langs: $(MOBJECTS)
+
+%.mo : %.po
+	$(MSGFMT) $< -o $@
 
 udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./autogen.sh
@@ -125,16 +136,27 @@ mac: maclink
 \
 </dict>\n\
 </plist>\n\n" > $(EXECUTABLE_DIR_MAC)/Contents/Info.plist
-
+	@for i in $(LANGUAGEDIRS); do \
+		echo "mkdir -p wxHexEditor.app/Contents/Resources/locale/$$i/"; \
+		mkdir -p wxHexEditor.app/Contents/Resources/locale/$$i; done
+	@for i in $(LANGUAGEDIRS); do \
+		echo "cp locale/$$i/wxHexEditor.mo wxHexEditor.app/Contents/Resources/locale/$$i/"; \
+		cp locale/$$i/wxHexEditor.mo wxHexEditor.app/Contents/Resources/locale/$$i/; done
+		
 install:
 	install -D -m 755 $(EXECUTABLE) $(DESTDIR)/$(BINDIR)/$(EXECUTABLE)
 	install -D -m 644 resources/wxHexEditor.png $(DESTDIR)/$(DATADIR)/pixmaps/wxHexEditor.png
 	install -D -m 644 resources/wxHexEditor.desktop $(DESTDIR)/$(DATADIR)/applications/wxHexEditor.desktop
-
+	@for i in $(LANGUAGEDIRS); do \
+	   echo "install -D -m 644 locale/$$i/wxHexEditor.mo $(DESTDIR)/$(LOCALEDIR)/$$i/LC_MESSAGES/wxHexEditor.mo"; \
+	   install -D -m 644 locale/$$i/wxHexEditor.mo $(DESTDIR)/$(LOCALEDIR)/$$i/LC_MESSAGES/wxHexEditor.mo; done
+	   
 uninstall:
 	rm -f $(DESTDIR)/$(BINDIR)/$(EXECUTABLE)
 	rm -f $(DESTDIR)/$(DATADIR)/pixmaps/wxHexEditor.png
 	rm -f $(DESTDIR)/$(DATADIR)/applications/wxHexEditor.desktop
+	rm -f $(DESTDIR)/$(LOCALEDIR)/*/LC_MESSAGES/wxHexEditor.mo
+	
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(RESOURCE_OBJ)
@@ -142,6 +164,7 @@ clean:
 	rm -f $(EXECUTABLE)
 	rm -f $(EXECUTABLE_WIN)
 	rm -rf $(EXECUTABLE_DIR_MAC)
+	rm -f locale/*/wxHexEditor.mo
 distclean: clean
 	cd udis86;$(MAKE) distclean
 	cd mhash;$(MAKE) distclean

@@ -11,7 +11,7 @@
 
 Name:				wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.20
+Version:		0.21
 Release:		1
 License:		GPL
 Group:			Editors
@@ -59,9 +59,14 @@ it's writen by cross-platform API, wxWidgets.
 %install
 %__install -dm 755 %{buildroot}%{_datadir}/pixmaps
 %__install -dm 755 %{buildroot}%{_datadir}/applications
+%__install -dm 755 %{buildroot}%{_datadir}/locale
 %__rm -f %{buildroot}%{_datadir}/applications/%{name}.desktop
 %__install -D -s -m 755 %{name} %{buildroot}%{_bindir}/%{name}
 %__install -D -m 644 resources/%{name}.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
+%__rm -f locale/*/*.po
+%__rm -f locale/*.pot
+%__rm -f locale/*.po
+%__cp -rf locale/* %{buildroot}%{_datadir}/locale
 %if %{defined suse_version}
 mv resources/%{name}.desktop ./
 %suse_update_desktop_file -i %{name} TextEditor Editor
@@ -79,6 +84,8 @@ mv resources/%{name}.desktop ./
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Wed Dec 12 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.21-
+- Updated to version v0.21
 * Wed Feb 29 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.20-
 - Updated to version v0.20
 * Sat Mar 19 2011 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.10-

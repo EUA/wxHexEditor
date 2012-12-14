@@ -1,3 +1,22 @@
+wxHexEditor v0.21 Beta  xx/12/2012
+Imported new udis86 version with SSSE3 and some SSE4.1 support.
+Fixed opening hdd drives from linux shell.
+Implemented Disk Backup/Restore & Erase tools.
+Added custom hex area formating.
+Implemented Multi Language support with TURKISH locale.
+Added Preferences menu.
+Fixed saveasdump 0A -> 0D 0A conversion on windows.
+Improved file speed gauges.
+Added Thin Seperation Lines at Process Memory Map boundries.
+ReImplemented TagElement::Compare function for big offsets.
+Added Auto TAG regeneration from /proc/<pid>/maps file.
+Added Argument for open processes: -pid:<pid_number>
+Added Feature on Linux : Open Process RAM
+Fixed Export TAGs ".tags.tags" issue.
+
+wxHexEditor v0.20a Beta  14/11/2012
+Fixed Hex Panel input issue.
+
 wxHexEditor v0.20 Beta  29/02/2012
 Added OS types to program title.
 Fixed Backward/Forward search/replace gauge calculation with wrap around option.

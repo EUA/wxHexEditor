@@ -464,15 +464,15 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 			if(z >= textLength)
 				break;
 
-#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-			dcTemp->DrawText( wxString::FromAscii( CharAt(z) ), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
-#else
+//#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
+//			dcTemp->DrawText( wxString::FromAscii( CharAt(z++) ), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+//#else
 			line += CharAt(z++);
-#endif
+//#endif
 			}
-#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
+//#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
 		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
-#endif
+//#endif
 		}
 
 	int TAC = TagArray.Count();
@@ -598,22 +598,22 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 			if( IsDenied(x) ){
 				if(x+1 < z){
 					line += wxT(' ');
-#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-					DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
-#endif
+//#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
+//					DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
+//#endif
 					}
 				continue;
 				}
 			wxChar ch = CharAt(start++);
 			line += ch;
-#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-			DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
-#endif
+//#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
+//			DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
+//#endif
 			}
-#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
+//#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
 		DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								m_Margin.x + _temp_.y * m_CharSize.y );
-#endif
+//#endif
 		}
 	}
 

@@ -38,6 +38,8 @@
 #define __idTagEdit__ 1501
 #define __idOffsetHex__ 1502
 
+//#define _Use_Graphics_Contex_
+
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 class wxHexCtrl : public wxScrolledWindow{
 	public:

@@ -219,7 +219,9 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator) :
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
-				GetCaret()->Hide();
+				wxCaret *caret = GetCaret();
+				if(caret)
+					GetCaret()->Hide();
 				SetCaret( NULL );
 
             //offset_mode='u';

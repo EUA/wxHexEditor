@@ -526,11 +526,14 @@ void wxHexCtrl::RePaint( void ){
 	wxCaretSuspend cs(this);
 	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
+	#if wxVERSION_NUMBER > 2900 & defined( __WXOSX__ ) //OSX wxClientDC bug workaround.
+		wxWindowDC dc( this );
+	#else
 		wxClientDC dc( this );
-//		PrepareDC( dc ); //For wxWindowScrooled ?
+	#endif
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
-		gc->DrawBitmap( dcTemp->GetSelectedBitmap(), 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
 		delete gc;
 #else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
@@ -542,12 +545,10 @@ void wxHexCtrl::RePaint( void ){
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
-//		PrepareDC( dc ); //For wxWindowScrooled ?
 		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
-//		PrepareDC( dc );
-		gc->DrawBitmap( dcTemp->GetSelectedBitmap(), 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
 		delete gc;
 #else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);

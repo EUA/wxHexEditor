@@ -841,7 +841,7 @@ void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 
 bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 	if( MainTagArray.Count() ==  0){
-		if( flnm.FileExists() )
+		if( wxFileName::FileName( flnm.GetFullPath() << wxT(".tags") ).FileExists() )
 			wxRemoveFile( flnm.GetFullPath() << wxT(".tags") );
 		return false;
 		}

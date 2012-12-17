@@ -107,7 +107,7 @@ virtual int GetByteCount( void ){ return m_text.Length()/2;	}
 		int LineCount( void )	{ return m_Window.y; }
 		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
 		int GetInsertionPoint( void );
-		void SetInsertionPoint( unsigned int pos );
+virtual void SetInsertionPoint( unsigned int pos );
 		int GetLastPosition( void ){ return m_text.Length() - 1; }
 virtual int ToVisiblePosition( int InternalPosition );
 virtual int ToInternalPosition( int VisiblePosition );
@@ -156,7 +156,7 @@ virtual void OnMouseRight( wxMouseEvent& event );
 
 		void OnTestCall(void); // 4 Test
 	public:
-		void ChangeSize();	// update the geometry
+virtual void ChangeSize();	// update the geometry
 	protected:
 		wxPoint   m_Margin;	// the margin around the text (looks nicer)
 		wxPoint   m_Caret;	// position (in text coords) of the caret
@@ -198,6 +198,7 @@ inline int GetByteCount( void ){ return m_text.Length(); }
 		bool IsAllowedChar(const char& chr);
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
+		void ChangeSize();
 		wxChar Filter(const char& chr);
 inline void DrawCursorShadow(wxDC* dcTemp);
 	};

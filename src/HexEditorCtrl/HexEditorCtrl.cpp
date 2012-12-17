@@ -610,7 +610,7 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	else if( event.GetEventObject() == text_ctrl ){
 		text_ctrl->SetFocus();
 		focus=TEXT_CTRL;
-		SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) + 1);
+		SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
 		}
 	else if( event.GetEventObject() == offset_ctrl ){
 		event.Skip(); //to lower level for copy offset to clipboard
@@ -896,6 +896,9 @@ int HexEditorCtrl::GetLocalInsertionPoint(){
 	}
 
 void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
+	#ifdef _DEBUG_CARET_
+		std::cout<< "Caret at Hex:" << std::dec << hex_location << std::endl;
+	#endif // _DEBUG_CARET_
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}

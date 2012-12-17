@@ -106,8 +106,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
   //  ChangeSize();
 
    wxCaret *caret = GetCaret();
-   //if ( caret )
-	//	caret->Show(false);
+   if ( caret )
+		caret->Show(false);
 
 }
 wxHexCtrl::~wxHexCtrl()
@@ -483,7 +483,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	if(select.selected)
 		TagPainter( dcTemp, select );
 
-//	DrawCursorShadow(dcTemp);
+	DrawCursorShadow(dcTemp);
 
 	if(ThinSeperationLines.Count() > 0)
 		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)
@@ -548,7 +548,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
-		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0, dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
 		delete gc;
 #else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
@@ -657,8 +657,8 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
 				select.selected=false;
 				(chr>='a'&&chr<='z')?(chr-=('a'-'A')):(chr=chr);	//Upper() for Char
 				WriteHex(chr);
-				//CharAt(m_Caret.x, m_Caret.y) = ch;
 
+				//CharAt(m_Caret.x, m_Caret.y) = ch;
 /*				wxCaretSuspend cs(this);
                 wxClientDC dc(this);
                 dc.SetFont(m_font);
@@ -823,9 +823,9 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	}
 //------------EVENT HANDLERS---------------//
 void wxHexCtrl::OnFocus(wxFocusEvent& event ){
-	//wxCaret *caret = GetCaret();
-   //if ( caret )
-	//	caret->Show(true);
+	wxCaret *caret = GetCaret();
+   if ( caret )
+		caret->Show(true);
 	}
 
 void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
@@ -833,18 +833,16 @@ void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
 	std::cout << "wxHexCtrl::OnKillFocus()" << std::endl;
 #endif
 	wxCaretSuspend cs(this);
-	//wxCaret *caret = GetCaret();
-   //if ( caret )
-	//	caret->Show(false);
-//	if( *TagMutex ){
-//		for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
-//			TagArray.Item(i)->Hide();
-//		*TagMutex = false;
-//		}
-	event.Skip();
+	wxCaret *caret = GetCaret();
+   if ( caret )
+		caret->Show(false);
 
-	//wxClientDC dc( this );
-	//DrawCursorShadow(&dc);
+	if( *TagMutex ){
+		for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
+			TagArray.Item(i)->Hide();
+		*TagMutex = false;
+		}
+	event.Skip();
 	}
 
 void wxHexCtrl::OnSize( wxSizeEvent &event ){
@@ -856,7 +854,7 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
-#ifdef _DEBUG_CARET_
+#ifdef _DEBUG_MOUSE_
 	std::cout << "wxHexCtrl::OnMouseMove Coordinate X:Y = " << event.m_x	<< " " << event.m_y
 			<< "\tLMR mouse button:" << event.m_leftDown << event.m_middleDown << event.m_rightDown << std::endl;
 #endif
@@ -1102,10 +1100,32 @@ void wxHexTextCtrl::SetInsertionPoint( unsigned int pos ){
 	MoveCaret( wxPoint(pos%m_Window.x , pos/m_Window.x) );
 	}
 
+void wxHexTextCtrl::ChangeSize(){
+	unsigned gip = GetInsertionPoint();
+	wxSize size = GetClientSize();
+
+	m_Window.x = (size.x - 2*m_Margin.x) / m_CharSize.x;
+	m_Window.y = (size.y - 2*m_Margin.x) / m_CharSize.y;
+	if ( m_Window.x < 1 )
+		m_Window.x = 1;
+	if ( m_Window.y < 1 )
+		m_Window.y = 1;
+
+	//This Resizes internal buffer!
+	CreateDC();
+
+	RePaint();
+	SetInsertionPoint( gip );
+	}
+
 void wxHexTextCtrl::DrawCursorShadow(wxDC* dcTemp){
 	if( m_Window.x <= 0 or
 		FindFocus()==this )
 		return;
+
+	#ifdef _DEBUG_CARET_
+	std::cout << "DrawCursorShadow(x,y) :" << m_Caret.x << ',' <<  m_Caret.y << std::endl;
+	#endif // _DEBUG_CARET_
 
 	int y=m_CharSize.y*( m_Caret.y ) + m_Margin.y;
 	int x=m_CharSize.x*( m_Caret.x ) + m_Margin.x;

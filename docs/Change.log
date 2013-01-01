@@ -1,4 +1,4 @@
-wxHexEditor v0.21 Beta  xx/12/2012
+wxHexEditor v0.21 Beta  01/01/2013
 Imported new udis86 version with SSSE3 and some SSE4.1 support.
 Fixed opening hdd drives from linux shell.
 Implemented Disk Backup/Restore & Erase tools.

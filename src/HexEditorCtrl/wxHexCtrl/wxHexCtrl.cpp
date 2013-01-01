@@ -463,16 +463,9 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 				}
 			if(z >= textLength)
 				break;
-
-//#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
-//			dcTemp->DrawText( wxString::FromAscii( CharAt(z++) ), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
-//#else
 			line += CharAt(z++);
-//#endif
 			}
-//#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
 		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
-//#endif
 		}
 
 	int TAC = TagArray.Count();
@@ -483,7 +476,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	if(select.selected)
 		TagPainter( dcTemp, select );
 
-	DrawCursorShadow(dcTemp);
+	//DrawCursorShadow(dcTemp);
 
 	if(ThinSeperationLines.Count() > 0)
 		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)

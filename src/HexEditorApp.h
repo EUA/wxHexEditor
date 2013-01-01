@@ -36,13 +36,13 @@
 #define _VERSION_ "0.21"
 
 #ifdef __WXMSW__
-	#define _VERSION_STR_ "v0.21 Beta RC for Windows"
+	#define _VERSION_STR_ "v0.21 Beta for Windows"
 #elif defined(__WXOSX__)
-	#define _VERSION_STR_ "v0.21 Beta RC for Mac"
+	#define _VERSION_STR_ "v0.21 Beta for Mac"
 #elif defined(__WXGTK__)
-	#define _VERSION_STR_ "v0.21 Beta RC for Linux"
+	#define _VERSION_STR_ "v0.21 Beta for Linux"
 #else
-	#define _VERSION_STR_ "v0.21 Beta RC"
+	#define _VERSION_STR_ "v0.21 Beta"
 #endif
 
 #include <wx/app.h>

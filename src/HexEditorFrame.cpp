@@ -124,6 +124,9 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 		 w = pConfig->Read(_T("ScreenW"), 600),
 		 h = pConfig->Read(_T("ScreenH"), 400);
 
+	bool fullScreen;
+	pConfig->Read(_T("ScreenFullScreen"), &fullScreen, false);
+
 	// Normalizing for avoid screen disapperaring
 	wxSize dsz = wxGetDisplaySize();
 	x = x < 0 ? 0 : x < dsz.x ? x : dsz.x - w;
@@ -132,6 +135,8 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	// restore frame position and size
 	Move(x, y);
 	SetClientSize(w, h);
+
+	Maximize(fullScreen);
 
 
 #if defined __WXMAC__ || defined __WXMSW__
@@ -230,6 +235,7 @@ HexEditorFrame::~HexEditorFrame(){
 	pConfig->Write(_T("ScreenY"), (long) y);
 	pConfig->Write(_T("ScreenW"), (long) w);
 	pConfig->Write(_T("ScreenH"), (long) h);
+	pConfig->Write(_T("ScreenFullScreen"), IsMaximized());
 	pConfig->Flush();
 
 	MyNotebook->Destroy();

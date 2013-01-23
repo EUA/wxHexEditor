@@ -476,7 +476,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	if(select.selected)
 		TagPainter( dcTemp, select );
 
-	//DrawCursorShadow(dcTemp);
+	DrawCursorShadow(dcTemp);
 
 	if(ThinSeperationLines.Count() > 0)
 		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)
@@ -519,11 +519,7 @@ void wxHexCtrl::RePaint( void ){
 	wxCaretSuspend cs(this);
 	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
-	#if wxVERSION_NUMBER > 2900 & defined( __WXOSX__ ) //OSX wxClientDC bug workaround.
-		wxWindowDC dc( this );
-	#else
 		wxClientDC dc( this );
-	#endif
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
 		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());

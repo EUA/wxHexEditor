@@ -1629,10 +1629,21 @@ void CopyAsDialog::Copy( void ){
 		}
 	}
 
-CompareDialog::CompareDialog( wxWindow* parent_ ):CompareDialogGui(parent_, wxID_ANY){
+CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 ):CompareDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
 	filePick1->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
 	filePick2->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
+
+	if( File1 != wxEmptyString ){
+		filePick1->SetPath( File1 );
+		filePick2->SetPath( File2 );
+		filePick1->Hide();
+		filePick2->Hide();
+		m_TextFile1->Hide();
+		m_TextFile2->Hide();
+		btnCompare->Enable(true);
+		Fit();
+		}
 
 	int options=0;
 	wxConfigBase::Get()->Read( _T("CompareOptions"), &options );

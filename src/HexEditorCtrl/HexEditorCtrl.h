@@ -113,7 +113,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void RePaint( void );
 		uint64_t CursorOffset( void );
 		void SetFont( wxFont f );
-		void SetStyle();
+		void SetStyle( );
 		void ControlShow( panels control, bool hide );
 		bool ControlIsShown(panels control);
       //void OnOffsetScroll( wxScrollEvent& event );

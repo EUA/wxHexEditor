@@ -49,6 +49,31 @@ bool wxHexEditorApp::OnInit() {
    frame->Show();
    wxYield();
    // Open all of the files specified on the command line (assumes no flags)
+
+	//processing --flags
+   if(argc == 4)
+		for(int ii = 1; ii < argc; ++ii){
+			wxString str(argv[ii]);
+
+			//Initializes comparison startup
+			if(str.Lower().StartsWith(wxT("--compare"))){
+				wxArrayString cfiles;
+				for(int j = 1; j < argc; ++j){
+					wxString str(argv[j]);
+					if(not str.Lower().StartsWith(wxT("--compare")) )
+						cfiles.Add(str);
+					}
+
+				::CompareDialog *mcd = new CompareDialog( frame, cfiles[0], cfiles[1]);
+				mcd->ShowModal();
+				#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+				mcd->Destroy();
+				#endif
+
+				}
+			return true;
+			}
+
    for(int ii = 1; ii < argc; ++ii) {
       wxString str(argv[ii]);
       wxFileName fn = wxFileName(str);
@@ -56,6 +81,7 @@ bool wxHexEditorApp::OnInit() {
  //  if(fn.FileExists() or str.Lower().StartsWith(wxT("-pid")))
       frame->OpenFile(fn.GetFullPath());
       }
+
    return true;
    }
 

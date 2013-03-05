@@ -46,6 +46,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Courier New"), wxFONTENCODING_CP437);
 #else
 	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_CP437);
+	//stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_ISO8859_1);
 #endif
 	SetFont( stdfont );
 
@@ -235,7 +236,7 @@ void HexEditorCtrl::SetFont( wxFont f ){
 	SetStyle();
 	}
 
-void HexEditorCtrl::SetStyle() {
+void HexEditorCtrl::SetStyle( ) {
    wxString Colour;
    wxColour Foreground,Background;
    wxTextAttr Style;
@@ -251,7 +252,7 @@ void HexEditorCtrl::SetStyle() {
    else
       Background = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) ;
 
-   Style = wxTextAttr( Foreground, Background,	stdfont );
+   Style = wxTextAttr( Foreground, Background, stdfont );
    offset_ctrl->SetDefaultStyle( Style );
    hex_ctrl->SetDefaultStyle( Style );
    text_ctrl->SetDefaultStyle( Style );

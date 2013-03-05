@@ -117,7 +117,8 @@ class CopyAsDialog : public CopyAsDialogGui{
 
 class CompareDialog : public CompareDialogGui{
 	public:
-		CompareDialog( wxWindow* parent );
+		//CompareDialog( wxWindow* parent );
+		CompareDialog( wxWindow* parent, wxString file1=wxEmptyString, wxString file2=wxEmptyString );
 		~CompareDialog();
 
 	private:

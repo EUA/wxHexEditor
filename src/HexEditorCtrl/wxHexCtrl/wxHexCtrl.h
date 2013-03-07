@@ -195,11 +195,11 @@ inline int GetByteCount( void ){ return m_text.Length(); }
 		int PixelCoordToInternalPosition( wxPoint mouse );
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
-		bool IsAllowedChar(const char& chr);
+		bool IsAllowedChar(const unsigned char& chr);
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
 		void ChangeSize();
-		wxChar Filter(const char& chr);
+		wxChar Filter(const unsigned char& chr);
 inline void DrawCursorShadow(wxDC* dcTemp);
 	};
 

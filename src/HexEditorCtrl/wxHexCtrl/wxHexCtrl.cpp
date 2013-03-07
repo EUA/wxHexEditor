@@ -451,7 +451,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 
 	size_t z = 0;
 	size_t textLength=m_text.Length();
-	char bux[1000];
+	//char bux[1000];  //++//
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
 		line.Empty();
 
@@ -461,19 +461,20 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 		for ( int x = 0 ; x < m_Window.x; x++ ){
 			if( IsDenied(x)){
 				line += wxT(' ');
-				bux[x]=' ';
+				//bux[x]=' ';//++//
 				continue;
 				}
 			if(z >= textLength)
 				break;
-			char t=CharAt(z++);
-			line+=t;
-			bux[x]=t;
+			//bux[x]=CharAt(z);//++//
+			line += CharAt(z++);
+			//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 			}
 
 		//line=wxString(bux, wxCSConv(wxFONTENCODING_CP437), line.Len());
-		//line=wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_CP437),  line.Len());
-		//dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
+		line=wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_ISO8859_1),  line.Len());
+		//line=wxString(bux, wxCSConv(wxFONTENCODING_ISO8859_1),  line.Len());
+
 		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
 		}
 
@@ -590,7 +591,7 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	wxPoint _end_   = InternalPositionToVisibleCoord( end );
 	wxPoint _temp_  = _start_;
 
-	char bux[1024];
+	//char bux[1024];//++//
 	for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
 		wxString line;
 		_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start
@@ -599,16 +600,16 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 			if( IsDenied(x) ){
 				if(x+1 < z){
 					line += wxT(' ');
-					bux[x]=' ';
+					//bux[x]=' ';//++//
 //#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
 //					DC->DrawText( wxString::FromAscii(' '), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 //#endif
 					}
 				continue;
 				}
-			wxChar ch = CharAt(start++);
-			line += ch;
-			bux[x]=ch;
+			//bux[x]=CharAt(start); //++//
+			line += CharAt(start++);
+
 //#if wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ ) //OSX DrawText bug
 //			DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 //#endif
@@ -617,6 +618,7 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 
 		///Cannot convert from the charset 'Windows/DOS OEM (CP 437)'!
 //		line=wxString(bux, wxCSConv(wxFONTENCODING_CP437),  _temp_.y);
+		line=wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_ISO8859_1),  line.Len());
 		DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								m_Margin.x + _temp_.y * m_CharSize.y );
 //#endif
@@ -1041,12 +1043,12 @@ void wxHexCtrl::OnTestCall( void ){
 	}
 
 ///------HEXTEXTCTRL-----///
-inline bool wxHexTextCtrl::IsAllowedChar(const char& chr){
+inline bool wxHexTextCtrl::IsAllowedChar(const unsigned char& chr){
 	return ((chr !=173) && ( (chr>31 && chr<127) || chr>159));	//Visible Char filter
 	//return true;
 	}
 
-wxChar wxHexTextCtrl::Filter(const char& ch){
+wxChar wxHexTextCtrl::Filter(const unsigned char& ch){
 	//return ch;
 	if( IsAllowedChar(ch) )
 		return ch;

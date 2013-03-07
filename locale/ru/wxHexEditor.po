@@ -581,7 +581,9 @@ msgstr "Сохраняем файл"
 msgid ""
 "\n"
 "Write Speed : %.2f MB/s"
-msgstr "Скорость записи : %.2f MB/s"
+msgstr ""
+"\n"
+"Скорость записи : %.2f MB/s"
 
 #: src/HexEditor.cpp:386
 msgid "Do you want to save file?\n"

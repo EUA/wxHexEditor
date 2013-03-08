@@ -228,7 +228,7 @@ class wxHexOffsetCtrl : public wxHexCtrl{
             //offset_mode='u';
             offset_mode=wxConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
             if( offset_mode=='s' )	// No force to sector mode at startup.
-					offset_mode=='u';
+					offset_mode='u';
 
 				offset_position=0;
 				digit_count=6;

@@ -45,10 +45,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 #elif defined( __WXMSW__ )
 	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Courier New"), wxFONTENCODING_ISO8859_1);
 #else
-	//stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_CP437);
 	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_ISO8859_1);
-	//stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_UTF8);
-
 #endif
 	SetFont( stdfont );
 
@@ -136,13 +133,14 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 	wxString text_string;
 // Optimized Code
 	for( unsigned i=0 ; i<lenght ; i++ )
-		text_string << text_ctrl->Filter(buffer[i]);
+	//	text_string << text_ctrl->Filter(buffer[i]);
+		text_string << buffer[i];
 
 	//Painting Zebra Stripes, -1 means no stripe. 0 means start with normal, 1 means start with zebra
 	*ZebraStriping=(ZebraEnable ? position/BytePerLine()%2 : -1);
 	if(sector_size > 1){
 		offset_ctrl->sector_size=sector_size;
-		int draw_line=sector_size-(page_offset%sector_size);
+		unsigned draw_line=sector_size-(page_offset%sector_size);
 		hex_ctrl->ThinSeperationLines.Clear();
 		text_ctrl->ThinSeperationLines.Clear();
 			do{
@@ -156,7 +154,7 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 		hex_ctrl->ThinSeperationLines.Clear();
 		text_ctrl->ThinSeperationLines.Clear();
 		//Notice that, ProcessRAMMap is SORTED.
-		for( int i=0; i < ProcessRAMMap.Count(); i++ ){
+		for( unsigned i=0; i < ProcessRAMMap.Count(); i++ ){
 			uint64_t M = ProcessRAMMap.Item(i);
 			if( M > page_offset + ByteCapacity() )
 				break;
@@ -506,7 +504,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	hex_ctrl->SetFormat( fmt );
 
 	int cnt_chr=0;
-	for( int i = 0 ; i <  fmt.Len() ; i++ ){
+	for( unsigned i = 0 ; i <  fmt.Len() ; i++ ){
 		if( fmt[i]!=' ' )
 			cnt_chr++;
 		}
@@ -911,7 +909,7 @@ uint64_t HexEditorCtrl::CursorOffset( void ){
 
 uint64_t HexEditorCtrl::ProcessRAM_GetFootPrint(){
 	uint64_t fp;
-	for( int i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
+	for( unsigned i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
 		fp += ProcessRAMMap.Item(i+1);
 		fp -= ProcessRAMMap.Item(i);
 		}
@@ -920,7 +918,7 @@ uint64_t HexEditorCtrl::ProcessRAM_GetFootPrint(){
 
 uint64_t HexEditorCtrl::ProcessRAM_GetVirtualOffset( uint64_t offset ){
 	uint64_t fp=0;
-	for( int i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
+	for( unsigned i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
 		uint64_t z = ProcessRAMMap.Item(i);
 		if( i == 0 and ProcessRAMMap.Item(i) > offset )
 			return 0;
@@ -950,7 +948,7 @@ uint64_t HexEditorCtrl::ProcessRAM_FindNextMap( uint64_t offset, bool backward )
 					return ProcessRAMMap.Item(i+1);
 			}
 		else{
-			for( int i=0; i < ProcessRAMMap.Count() ; i+=2 )
+			for( unsigned i=0; i < ProcessRAMMap.Count() ; i+=2 )
 				if( ProcessRAMMap.Item(i) > offset )
 					return ProcessRAMMap.Item(i);
 			}
@@ -962,7 +960,7 @@ bool HexEditorCtrl::ProcessRAM_FindMap( uint64_t offset, uint64_t& start, uint64
 	start=0;
 	end=0;
 	if(ProcessRAMMap.Count())
-		for( int i=0; i < ProcessRAMMap.Count() ; i+=2 )
+		for( unsigned i=0; i < ProcessRAMMap.Count() ; i+=2 )
 			if(( ProcessRAMMap.Item(i) <=  offset ) and
 				( ProcessRAMMap.Item(i+1) >= offset )){
 					start=ProcessRAMMap.Item(i);

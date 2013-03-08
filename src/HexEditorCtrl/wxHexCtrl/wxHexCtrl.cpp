@@ -487,12 +487,12 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 			//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 			}
 
-		//line=wxString(bux, wxCSConv(wxFONTENCODING_CP437), line.Len());
-		//line=wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_ISO8859_1),  line.Len());
-		//wxString str(wxConvertMB2WX(bux), wxConvUTF8);
+		#ifndef __WXGTK__
+		//Error on WXGTK. Need test on other platforms.
+		line = wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_CP437), line.Len());
+		#else
 		line = CP473toUnicode(line);
-		//line=wxString(line.To8BitData(), wxMBConv(wxConvUTF8),  line.Len());
-		//line=wxString(bux, wxCSConv(wxFONTENCODING_ISO8859_1),  line.Len());
+		#endif
 
 		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
 		}
@@ -1063,6 +1063,7 @@ void wxHexCtrl::OnTestCall( void ){
 	}
 
 ///------HEXTEXTCTRL-----///
+/*
 inline bool wxHexTextCtrl::IsAllowedChar(const unsigned char& chr){
 	return ((chr !=173) && ( (chr>31 && chr<127) || chr>159));	//Visible Char filter
 	//return true;
@@ -1083,6 +1084,15 @@ void wxHexTextCtrl::Replace(unsigned text_location, const wxChar& value, bool pa
 		m_text << Filter(value);
 		//m_text << wxT("0");
 		}
+	RePaint();
+	}
+*/
+
+void wxHexTextCtrl::Replace(unsigned text_location, const wxChar& value, bool paint){
+	if( text_location < m_text.Length() )
+		m_text[text_location] = value;
+	else
+		m_text << value;
 	RePaint();
 	}
 

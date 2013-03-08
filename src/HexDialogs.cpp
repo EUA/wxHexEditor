@@ -1726,7 +1726,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 #ifdef _DEBUG_
 		std::cout << "Diff Compare Offset: " << mb << std::endl;
 #endif
-		for( int i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
+		for( unsigned i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
 			if(diffHit >= 500000){
 				wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
 				BreakDoubleFor = true;
@@ -2541,7 +2541,7 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 
 // TODO (death#1#): Speed up for random
 		if( sel == 2 )
-			for( int i = 0 ; i < rdBlockSz ; i++ )
+			for( unsigned i = 0 ; i < rdBlockSz ; i++ )
 				buff[i]=rand()%0xFF;
 
 		if( readfrom+rd > range )

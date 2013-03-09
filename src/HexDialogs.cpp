@@ -2195,6 +2195,11 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
    if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &custom_hex ) )		chkCustom->SetValue( custom_hex );
    if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &Colour	)	)				comboCustomHexFormat->SetValue( Colour );
    comboCustomHexFormat->Enable( chkCustom->IsChecked() );
+
+   if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &custom_hex	)	) 	chkBytePerLineLimit->SetValue( custom_hex );
+   if( wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &Colour	)	)			spinBytePerLine->SetValue( Colour );
+	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
+
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
@@ -2323,6 +2328,9 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    wxConfigBase::Get()->Write( _T("UseCustomHexFormat"), chkCustom->GetValue() );
 	wxConfigBase::Get()->Write( _T("CustomHexFormat"), comboCustomHexFormat->GetValue() );
 
+	wxConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
+	wxConfigBase::Get()->Write( _T("BytesPerLineLimit"), spinBytePerLine->GetValue());
+
    wxConfigBase::Get()->Flush();
 
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
@@ -2346,7 +2354,11 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 	}
 
 void PreferencesDialog::OnCustomHexCheck( wxCommandEvent& event ){
-	comboCustomHexFormat->Enable( event.IsChecked() );
+	if(event.GetId() == chkCustom->GetId() )
+		comboCustomHexFormat->Enable( event.IsChecked() );
+	if(event.GetId() == chkBytePerLineLimit->GetId() )
+		spinBytePerLine->Enable( event.IsChecked() );
+
 	}
 
 extern wxArrayString GetDeviceList( bool=true );

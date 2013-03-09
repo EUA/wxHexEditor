@@ -1675,10 +1675,13 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	bSizerMain->Add( bSizerLang, 0, wxEXPAND|wxALL, 5 );
 	
 	wxStaticBoxSizer* sbSizerFormat;
-	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Custom Hex Formating") ), wxHORIZONTAL );
+	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Custom Hex Formating") ), wxVERTICAL );
 	
-	chkCustom = new wxCheckBox( this, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerFormat->Add( chkCustom, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	wxFlexGridSizer* fgSizerCustomFormat;
+	fgSizerCustomFormat = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizerCustomFormat->AddGrowableCol( 0 );
+	fgSizerCustomFormat->SetFlexibleDirection( wxBOTH );
+	fgSizerCustomFormat->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	comboCustomHexFormat = new wxComboBox( this, wxID_ANY, _("xx "), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
 	comboCustomHexFormat->Append( _("xxxx ") );
@@ -1687,7 +1690,27 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	comboCustomHexFormat->Enable( false );
 	comboCustomHexFormat->SetToolTip( _("Recursive custom hex format pattern") );
 	
-	sbSizerFormat->Add( comboCustomHexFormat, 0, wxALL, 5 );
+	fgSizerCustomFormat->Add( comboCustomHexFormat, 1, wxALL|wxEXPAND, 5 );
+	
+	chkCustom = new wxCheckBox( this, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizerCustomFormat->Add( chkCustom, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	
+	sbSizerFormat->Add( fgSizerCustomFormat, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerBytePerLine;
+	bSizerBytePerLine = new wxBoxSizer( wxHORIZONTAL );
+	
+	chkBytePerLineLimit = new wxCheckBox( this, wxID_ANY, _("Bytes Per Line Limit"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBytePerLine->Add( chkBytePerLineLimit, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	spinBytePerLine = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 8 );
+	spinBytePerLine->Enable( false );
+	
+	bSizerBytePerLine->Add( spinBytePerLine, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	
+	sbSizerFormat->Add( bSizerBytePerLine, 0, 0, 5 );
 	
 	
 	bSizerMain->Add( sbSizerFormat, 0, wxEXPAND, 5 );
@@ -1714,6 +1737,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	// Connect Events
 	btnResetColours->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
 	chkCustom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
+	chkBytePerLineLimit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 }
 
@@ -1722,6 +1746,7 @@ PreferencesDialogGui::~PreferencesDialogGui()
 	// Disconnect Events
 	btnResetColours->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
 	chkCustom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
+	chkBytePerLineLimit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 	
 }

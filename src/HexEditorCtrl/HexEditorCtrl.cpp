@@ -507,22 +507,38 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 // TODO (death#1#): Move style engine somewhere else to speedy resizing.
 	hex_ctrl->SetFormat( fmt );
 
-	int cnt_chr=0;
+	int cnt_chr=0; //Counted character at current format
 	for( unsigned i = 0 ; i <  fmt.Len() ; i++ ){
 		if( fmt[i]!=' ' )
 			cnt_chr++;
 		}
 	cnt_chr/=2; // divide 2 for find byte per hex representation.
 
-	//ReAssing unused area due hidden panels.
+
+	//Recalculate available area due hidden panels.
 	div+=hex_ctrl->IsShown() ? fmt.Len() : 0;
 	div+=text_ctrl->IsShown() ? cnt_chr : 0;
-	int r=0;
-	r=x/(div*charx);
+	int available_space=0;
+	available_space=x/(div*charx);
 
-	int text_x = charx*r*cnt_chr  +2 +4;
-	int hex_x = charx*r*fmt.Len()  +2 +4 - charx ; //no need for last gap;
-	int BytePL=r*cnt_chr;
+	//Limiting Bytes Per Line
+	bool use_BytesPerLineLimit;
+	wxConfig::Get()->Read( wxT("UseBytesPerLineLimit"), &use_BytesPerLineLimit, false );
+	if( use_BytesPerLineLimit ){
+		long int BytesPerLineLimit=8; //just non-sense default value
+		wxString s;
+		if( wxConfig::Get()->Read( wxT("BytesPerLineLimit"), &s)	)
+			s.ToLong(&BytesPerLineLimit,10);
+
+		//Downsizing is available
+		if( available_space > BytesPerLineLimit )
+			available_space = BytesPerLineLimit;
+		}
+
+	//Calculation of available area for Hex and Text panels.
+	int text_x = charx*available_space*cnt_chr  +2 +4;
+	int hex_x = charx*available_space*fmt.Len()  +2 +4 - charx ; //no need for last gap;
+	int ByteShownPerLine=available_space*cnt_chr;
 
 	text_x = text_ctrl->IsShown() ? text_x : 0;
 	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
@@ -575,8 +591,9 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	//Formating Hex and byteview column labels
 	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
 	wxString adress,byteview;
+
 	int h=0;
-	for( int j = 0 ; j < BytePL ; j++ ){
+	for( int j = 0 ; j < ByteShownPerLine ; j++ ){
 		byteview << wxString::Format( wxT("%01X"), j%0x10 );
 
 		while(hex_ctrl->IsDenied(h)){

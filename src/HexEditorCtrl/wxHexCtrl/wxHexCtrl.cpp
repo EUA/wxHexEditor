@@ -56,14 +56,8 @@ inline wxChar CP473toUnicodeCHR( const unsigned char& chr){
 
 inline wxString CP473toUnicode( wxString& line ){
 	wxString ret;
-	for(unsigned i=0; i < line.Len() ; i++){
-		if(line[i]<0x20)
-			ret+=CP473T1[line[i]];
-		else if(line[i]>0x7E)
-			ret+=CP473T2[line[i]-0x7F];
-		else
-			ret+=line[i];
-		}
+	for(unsigned i=0; i < line.Len() ; i++)
+		ret+=CP473toUnicodeCHR(line[i]);
 	return ret;
 	}
 

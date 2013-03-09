@@ -131,10 +131,12 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 		}
 	Clear( false, cursor_reset );
 	wxString text_string;
+
 // Optimized Code
-	for( unsigned i=0 ; i<lenght ; i++ )
-	//	text_string << text_ctrl->Filter(buffer[i]);
-		text_string << buffer[i];
+//	for( unsigned i=0 ; i<lenght ; i++ )
+		//text_string << text_ctrl->Filter(buffer[i]);
+//		text_string << static_cast<wxChar>((unsigned char)(buffer[i]));
+//		text_string << CP473toUnicode((unsigned char)(buffer[i]));
 
 	//Painting Zebra Stripes, -1 means no stripe. 0 means start with normal, 1 means start with zebra
 	*ZebraStriping=(ZebraEnable ? position/BytePerLine()%2 : -1);
@@ -169,7 +171,9 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 			}
 
 	hex_ctrl->SetBinValue(buffer, lenght, false );
-	text_ctrl->ChangeValue(text_string, false);
+	//text_ctrl->ChangeValue(text_string, false);
+	text_ctrl->SetBinValue(buffer, lenght, false);
+
 	offset_ctrl->SetValue( position, BytePerLine() );
 
 	if( offset_scroll->GetThumbPosition() not_eq (page_offset / BytePerLine()) )

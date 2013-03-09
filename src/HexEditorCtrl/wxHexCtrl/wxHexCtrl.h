@@ -40,6 +40,9 @@
 
 //#define _Use_Graphics_Contex_
 
+inline wxChar CP473toUnicode( unsigned char ch );
+inline wxString CP473toUnicode( wxString& line );
+
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 class wxHexCtrl : public wxScrolledWindow{
 	public:
@@ -191,6 +194,7 @@ inline int BytePerLine( void ){ return CharacterPerLine(); }
 inline int GetByteCount( void ){ return m_text.Length(); }
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
+		void SetBinValue( char* buffer, int len, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
 		int PixelCoordToInternalPosition( wxPoint mouse );
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }

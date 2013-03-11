@@ -1674,6 +1674,22 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	
 	bSizerMain->Add( bSizerLang, 0, wxEXPAND|wxALL, 5 );
 	
+	wxBoxSizer* bSizerCharacterEncodings;
+	bSizerCharacterEncodings = new wxBoxSizer( wxHORIZONTAL );
+	
+	txtCharacter = new wxStaticText( this, wxID_ANY, _("Character Encoding:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtCharacter->Wrap( -1 );
+	bSizerCharacterEncodings->Add( txtCharacter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxString chcCharacterEncodingChoices[] = { _("OEM - Code page 437"), _("ANSI - Code page 1252"), _("ASCII") };
+	int chcCharacterEncodingNChoices = sizeof( chcCharacterEncodingChoices ) / sizeof( wxString );
+	chcCharacterEncoding = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingNChoices, chcCharacterEncodingChoices, 0 );
+	chcCharacterEncoding->SetSelection( 0 );
+	bSizerCharacterEncodings->Add( chcCharacterEncoding, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	
+	bSizerMain->Add( bSizerCharacterEncodings, 0, wxEXPAND, 5 );
+	
 	wxStaticBoxSizer* sbSizerFormat;
 	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Custom Hex Formating") ), wxVERTICAL );
 	

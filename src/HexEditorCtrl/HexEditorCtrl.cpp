@@ -277,6 +277,10 @@ void HexEditorCtrl::SetStyle( ) {
    offset_ctrl->SetSelectionStyle( Style );
    hex_ctrl->SetSelectionStyle( Style );
    text_ctrl->SetSelectionStyle( Style );
+
+	wxString cp;
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("OEM") );
+	text_ctrl->PrepareCodepageTable(cp);
    }
 
 //Handles selection operations.

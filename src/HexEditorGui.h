@@ -489,6 +489,8 @@ class PreferencesDialogGui : public wxDialog
 		wxButton* btnResetColours;
 		wxStaticText* txtLang;
 		wxChoice* chcLang;
+		wxStaticText* txtCharacter;
+		wxChoice* chcCharacterEncoding;
 		wxComboBox* comboCustomHexFormat;
 		wxCheckBox* chkCustom;
 		wxCheckBox* chkBytePerLineLimit;

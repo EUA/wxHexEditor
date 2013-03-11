@@ -2200,6 +2200,8 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
    if( wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &Colour	)	)			spinBytePerLine->SetValue( Colour );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
+	if( wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Colour ) )				chcCharacterEncoding->SetStringSelection( Colour );
+
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
@@ -2330,6 +2332,8 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
 
 	wxConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
 	wxConfigBase::Get()->Write( _T("BytesPerLineLimit"), spinBytePerLine->GetValue());
+
+	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
 
    wxConfigBase::Get()->Flush();
 

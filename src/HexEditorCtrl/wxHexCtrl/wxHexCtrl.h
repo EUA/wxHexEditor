@@ -175,6 +175,7 @@ virtual void ChangeSize();	// update the geometry
 
 class wxHexTextCtrl : public wxHexCtrl{
 	public:
+		wxString CodepageTable;
 //		wxHexTextCtrl():wxHexCtrl(){}
 		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){}
 		wxHexTextCtrl( wxWindow *parent,
@@ -186,7 +187,12 @@ class wxHexTextCtrl : public wxHexCtrl{
 				const wxValidator& validator = wxDefaultValidator) :
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				wxWindow::SetCursor( wxCURSOR_CHAR );
+
+				wxString cp;
+				wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("OEM") );
+				PrepareCodepageTable(cp);
 				};
+		wxString PrepareCodepageTable(wxString);
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }
 inline int CharacterPerLine( void ){ return m_Window.x; }
@@ -199,7 +205,7 @@ inline int GetByteCount( void ){ return m_text.Length(); }
 		int PixelCoordToInternalPosition( wxPoint mouse );
 		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
 		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
-		bool IsAllowedChar(const unsigned char& chr);
+//		bool IsAllowedChar(const unsigned char& chr);
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
 		void ChangeSize();

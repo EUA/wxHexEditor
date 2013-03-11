@@ -44,7 +44,7 @@ available_tags=" CXX"
 
 # ### BEGIN LIBTOOL CONFIG
 
-# Libtool was configured on host triQuad.site:
+# Libtool was configured on host triQuad:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -325,10 +325,10 @@ variables_saved_for_relink="PATH LD_LIBRARY_PATH LD_RUN_PATH GCC_EXEC_PREFIX COM
 link_all_deplibs=no
 
 # Compile-time system search path for libraries
-sys_lib_search_path_spec=" /usr/lib64/gcc/x86_64-suse-linux/4.6/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib/x86_64-suse-linux/4.6/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../x86_64-suse-linux/4.6/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../lib64/ /lib/x86_64-suse-linux/4.6/ /lib/../lib64/ /usr/lib/x86_64-suse-linux/4.6/ /usr/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../ /lib/ /usr/lib/"
+sys_lib_search_path_spec=" /usr/lib64/gcc/x86_64-suse-linux/4.7/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib/x86_64-suse-linux/4.7/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../x86_64-suse-linux/4.7/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../lib64/ /lib/x86_64-suse-linux/4.7/ /lib/../lib64/ /usr/lib/x86_64-suse-linux/4.7/ /usr/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../ /lib/ /usr/lib/"
 
 # Run-time system search path for libraries
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/local/lib64 /usr/local/lib /usr/lib64/wx-2.8-wxcontainer "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/local/lib64 /usr/local/lib /usr/lib64/xorg/modules /usr/lib64/wx-2.8-wxcontainer "
 
 # Fix the shell variable $srcfile for the compiler.
 fix_srcfile_path=""
@@ -7223,7 +7223,7 @@ disable_libs=static
 # End:
 # ### BEGIN LIBTOOL TAG CONFIG: CXX
 
-# Libtool was configured on host triQuad.site:
+# Libtool was configured on host triQuad:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -7405,11 +7405,11 @@ striplib="strip --strip-unneeded"
 
 # Dependencies to place before the objects being linked to create a
 # shared library.
-predep_objects="/usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.6/crtbeginS.o"
+predep_objects="/usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.7/crtbeginS.o"
 
 # Dependencies to place after the objects being linked to create a
 # shared library.
-postdep_objects="/usr/lib64/gcc/x86_64-suse-linux/4.6/crtendS.o /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../lib64/crtn.o"
+postdep_objects="/usr/lib64/gcc/x86_64-suse-linux/4.7/crtendS.o /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../lib64/crtn.o"
 
 # Dependencies to place before the objects being linked to create a
 # shared library.
@@ -7421,7 +7421,7 @@ postdeps="-lstdc++ -lm -lgcc_s -lc -lgcc_s"
 
 # The library search path used internally by the compiler when linking
 # a shared library.
-compiler_lib_search_path="-L/usr/lib64/gcc/x86_64-suse-linux/4.6 -L/usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib -L/usr/lib64/gcc/x86_64-suse-linux/4.6/../../.."
+compiler_lib_search_path="-L/usr/lib64/gcc/x86_64-suse-linux/4.7 -L/usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib -L/usr/lib64/gcc/x86_64-suse-linux/4.7/../../.."
 
 # Method to check whether dependent libraries are shared objects.
 deplibs_check_method="pass_all"
@@ -7501,10 +7501,10 @@ variables_saved_for_relink="PATH LD_LIBRARY_PATH LD_RUN_PATH GCC_EXEC_PREFIX COM
 link_all_deplibs=no
 
 # Compile-time system search path for libraries
-sys_lib_search_path_spec=" /usr/lib64/gcc/x86_64-suse-linux/4.6/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib/x86_64-suse-linux/4.6/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../x86_64-suse-linux/4.6/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../lib64/ /lib/x86_64-suse-linux/4.6/ /lib/../lib64/ /usr/lib/x86_64-suse-linux/4.6/ /usr/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../../x86_64-suse-linux/lib/ /usr/lib64/gcc/x86_64-suse-linux/4.6/../../../ /lib/ /usr/lib/"
+sys_lib_search_path_spec=" /usr/lib64/gcc/x86_64-suse-linux/4.7/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib/x86_64-suse-linux/4.7/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../x86_64-suse-linux/4.7/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../lib64/ /lib/x86_64-suse-linux/4.7/ /lib/../lib64/ /usr/lib/x86_64-suse-linux/4.7/ /usr/lib/../lib64/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../../x86_64-suse-linux/lib/ /usr/lib64/gcc/x86_64-suse-linux/4.7/../../../ /lib/ /usr/lib/"
 
 # Run-time system search path for libraries
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/local/lib64 /usr/local/lib /usr/lib64/wx-2.8-wxcontainer "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/local/lib64 /usr/local/lib /usr/lib64/xorg/modules /usr/lib64/wx-2.8-wxcontainer "
 
 # Fix the shell variable $srcfile for the compiler.
 fix_srcfile_path=""

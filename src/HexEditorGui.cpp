@@ -1681,10 +1681,10 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	txtCharacter->Wrap( -1 );
 	bSizerCharacterEncodings->Add( txtCharacter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString chcCharacterEncodingChoices[] = { _("OEM - Code page 437"), _("ANSI - Code page 1252"), _("ASCII") };
+	wxString chcCharacterEncodingChoices[] = { _("ANSI - Code page 1252"), _("ASCII"), _("OEM - Code page 437"), _("EBCDIC - CCSID 500") };
 	int chcCharacterEncodingNChoices = sizeof( chcCharacterEncodingChoices ) / sizeof( wxString );
 	chcCharacterEncoding = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingNChoices, chcCharacterEncodingChoices, 0 );
-	chcCharacterEncoding->SetSelection( 0 );
+	chcCharacterEncoding->SetSelection( 2 );
 	bSizerCharacterEncodings->Add( chcCharacterEncoding, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	

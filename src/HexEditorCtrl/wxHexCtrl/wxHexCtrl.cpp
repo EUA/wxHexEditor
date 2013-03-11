@@ -1071,27 +1071,26 @@ inline wxChar wxHexTextCtrl::Filter(const unsigned char& ch){
 	}
 
 wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
+	wxString newCP;
 	if(codepage == wxT("ASCII")){
-		wxString newCP;
 		for (unsigned i=0; i<=0xFF ; i++){
 			if(i<0x20 or i>=0x7F)
 				newCP+=wxT('.');
 			else if(i>=0x20 and i<0x7F)
 				newCP+=wxChar(i);
 			}
-		return CodepageTable=newCP;
 		}
 
-	if(codepage.StartsWith(wxT("OEM")) or codepage == wxT("CP437")){
-		CodepageTable=wxT( \
+	else if(codepage.StartsWith(wxT("OEM")) or codepage == wxT("CP437")){
+		newCP=wxT( \
 					"\x20\x263A\x263B\x2665\x2666\x2663\x2660\x2022\x25D8\x25CB\x25D9"\
 					"\x2642\x2640\x266A\x266B\x263C\x25BA\x25C4\x2195\x203C\x00B6\x00A7"\
 					"\x25AC\x21A8\x2191\x2193\x2192\x2190\x221F\x2194\x25B2\x25BC" );
 
 		for( unsigned i=0x20 ; i < 0x7F ; i++ )
-			CodepageTable += wxChar(i);
+			newCP += wxChar(i);
 
-		CodepageTable +=	wxT(\
+		newCP +=	wxT(\
 					"\x2302\x00C7\x00FC\x00E9\x00E2\x00E4\x00E0\x00E5\x00E7\x00EA\x00EB"\
 					"\x00E8\x00EF\x00EE\x00EC\x00C4\x00C5\x00C9\x00E6\x00C6\x00F4\x00F6"\
 					"\x00F2\x00FB\x00F9\x00FF\x00D6\x00DC\x00A2\x00A3\x00A5\x20A7\x0192"\
@@ -1104,12 +1103,11 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 					"\x0393\x03C0\x03A3\x03C3\x00B5\x03C4\x03A6\x0398\x03A9\x03B4\x221E"\
 					"\x03C6\x03B5\x2229\x2261\x00B1\x2265\x2264\x2320\x2321\x00F7\x2248"\
 					"\x00B0\x2219\x00B7\x221A\x207F\x00B2\x25A0\x00A0");
-		return CodepageTable;
 		}
 
-	if(codepage.StartsWith(wxT("ANSI")) or codepage == wxT("CP1252")){
-		wxString ansiymbol=wxT("\x20AC.\x201A\x0192\x201E\x2026\x2020\x2021\x02C6\x2030\x0160\x2039\x0152.\x017D.\x2018.\x2019\x201C\x201D\x2022\x2013\x2014\x02DC\x2122\x0161\x203A\x0153.\x017E\x0178");
-		wxString newCP;
+	else if(codepage.StartsWith(wxT("ANSI")) or codepage == wxT("CP1252")){
+		wxString ansiymbol=wxT("\x20AC.\x201A\x0192\x201E\x2026\x2020\x2021\x02C6\x2030\x0160\x2039\x0152.\x017D."\
+									  "\x2018.\x2019\x201C\x201D\x2022\x2013\x2014\x02DC\x2122\x0161\x203A\x0153.\x017E\x0178");
 		for (unsigned i=0; i<=0xFF ; i++){
 			if(i<0x20 or i==0x7F or i==0xAD)
 				newCP+=wxT('.');
@@ -1118,8 +1116,37 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 			else
 				newCP+=wxChar(i);
 			}
-		return CodepageTable=newCP;
 		}
+
+	else if(codepage.StartsWith(wxT("EBCDIC"))){
+		for (unsigned i=0; i<0x40 ; i++)
+			newCP+=wxChar('.');
+
+		/// \x00AD (Soft Hypen) replaced with dot .
+		newCP+=wxT( "\x0020\x00A0\x00E2\x00E4\x00E0\x00E1\x00E3\x00E5\x00E7\x00F1"\
+						"\x005B\x002E\x003C\x0028\x002B\x0021\x0026\x00E9\x00EA\x00EB"\
+						"\x00E8\x00ED\x00EE\x00EF\x00EC\x00DF\x005D\x0024\x002A\x0029"\
+						"\x003B\x005E\x002D\x002F\x00C2\x00C4\x00C0\x00C1\x00C3\x00C5"\
+						"\x00C7\x00D1\x00A6\x002C\x0025\x005F\x003E\x003F\x00F8\x00C9"\
+						"\x00CA\x00CB\x00C8\x00CD\x00CE\x00CF\x00CC\x0060\x003A\x0023"\
+						"\x0040\x0027\x003D\x0022\x00D8\x0061\x0062\x0063\x0064\x0065"\
+						"\x0066\x0067\x0068\x0069\x00AB\x00BB\x00F0\x00FD\x00FE\x00B1"\
+						"\x00B0\x006A\x006B\x006C\x006D\x006E\x006F\x0070\x0071\x0072"\
+						"\x00AA\x00BA\x00E6\x00B8\x00C6\x00A4\x00B5\x007E\x0073\x0074"\
+						"\x0075\x0076\x0077\x0078\x0079\x007A\x00A1\x00BF\x00D0\x00DD"\
+						"\x00DE\x00AE\x00A2\x00A3\x00A5\x00B7\x00A9\x00A7\x00B6\x00BC"\
+						"\x00BD\x00BE\x00AC\x007C\x00AF\x00A8\x00B4\x00D7\x007B\x0041"\
+						"\x0042\x0043\x0044\x0045\x0046\x0047\x0048\x0049.\x00F4"\
+						"\x00F6\x00F2\x00F3\x00F5\x007D\x004A\x004B\x004C\x004D\x004E"\
+						"\x004F\x0050\x0051\x0052\x00B9\x00FB\x00FC\x00F9\x00FA\x00FF"\
+						"\x005C\x00F7\x0053\x0054\x0055\x0056\x0057\x0058\x0059\x005A"\
+						"\x00B2\x00D4\x00D6\x00D2\x00D3\x00D5\x0030\x0031\x0032\x0033"\
+						"\x0034\x0035\x0036\x0037\x0038\x0039\x00B3\x00DB\x00DC\x00D9\x00DA");
+		newCP+=wxChar('.');
+		}
+
+
+	return CodepageTable=newCP;
 	}
 
 

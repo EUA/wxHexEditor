@@ -1067,7 +1067,7 @@ inline wxChar wxHexTextCtrl::Filter(const unsigned char& ch){
 
 inline wxString wxHexTextCtrl::FilterUTF8(const char *str, int Len){
 	wxString ret;
-	wxCSConv mcv(wxFONTENCODING_UTF8);
+	//wxCSConv mcv(wxFONTENCODING_UTF8);
 	// size_t WC2MB(char* buf, const wchar_t* psz, size_t n) const
 	// size_t MB2WC(wchar_t* buf, const char* psz, size_t n) const
 	wxString z;
@@ -1255,13 +1255,15 @@ void wxHexTextCtrl::ChangeValue( const wxString& value, bool paint ){
 
 void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 	m_text.Clear();
-	for( unsigned i=0 ; i<len ; i++ )
-		m_text << Filter(buffer[i]);
-//	m_text << FilterUTF8(buffer,len);
+	if(CodepageTable.IsEmpty())
+		m_text << FilterUTF8(buffer,len);
+	else
+		for( unsigned i=0 ; i<len ; i++ )
+			m_text << Filter(buffer[i]);
 
+//	m_text << FilterUTF8(buffer,len);
 //	m_text=wxString(buffer, wxCSConv(wxFONTENCODING_CP1252),  len);
 //	m_text=wxString(buffer, wxCSConv(wxFONTENCODING_UTF8),  len);
-
 
 	if( paint )
 		RePaint();

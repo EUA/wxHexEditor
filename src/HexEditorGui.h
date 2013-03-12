@@ -116,7 +116,7 @@ class HexEditorGui : public wxFrame
 	
 	public:
 		
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~HexEditorGui();
 	
@@ -256,7 +256,7 @@ class GotoDialogGui : public wxDialog
 	
 	public:
 		
-		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Go to Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP ); 
+		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Go to Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP ); 
 		~GotoDialogGui();
 	
 };
@@ -317,7 +317,7 @@ class UpdateDialogGui : public wxDialog
 	
 	public:
 		
-		UpdateDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("New wxHexEditor Version!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+		UpdateDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("New wxHexEditor Version!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~UpdateDialogGui();
 	
 };
@@ -355,7 +355,7 @@ class CompareDialogGui : public wxDialog
 	
 	public:
 		
-		CompareDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Compare Files"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		CompareDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Compare Files"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~CompareDialogGui();
 	
 };
@@ -408,7 +408,7 @@ class ChecksumDialogGui : public wxDialog
 	
 	public:
 		
-		ChecksumDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Calculate Checksum"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+		ChecksumDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Calculate Checksum"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ChecksumDialogGui();
 	
 };
@@ -439,7 +439,7 @@ class CopyAsDialogGui : public wxDialog
 	
 	public:
 		
-		CopyAsDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Copy Selected Block As"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+		CopyAsDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Copy Selected Block As"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~CopyAsDialogGui();
 	
 };
@@ -466,7 +466,7 @@ class XORViewDialogGui : public wxDialog
 	
 	public:
 		
-		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~XORViewDialogGui();
 	
 };
@@ -506,7 +506,7 @@ class PreferencesDialogGui : public wxDialog
 	
 	public:
 		
-		PreferencesDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+		PreferencesDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~PreferencesDialogGui();
 	
 };
@@ -532,7 +532,7 @@ class DeviceBackupDialogGui : public wxDialog
 	
 	public:
 		
-		DeviceBackupDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Backup Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		DeviceBackupDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Disk/Partition Backup Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~DeviceBackupDialogGui();
 	
 };
@@ -558,7 +558,7 @@ class DeviceRestoreDialogGui : public wxDialog
 	
 	public:
 		
-		DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Restore Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Disk/Partition Restore Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~DeviceRestoreDialogGui();
 	
 };
@@ -583,7 +583,7 @@ class DeviceEraseDialogGui : public wxDialog
 	
 	public:
 		
-		DeviceEraseDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Erase Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		DeviceEraseDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Disk/Partition Erase Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~DeviceEraseDialogGui();
 	
 };
@@ -600,7 +600,7 @@ class DebugFrame : public wxFrame
 	public:
 		wxTextCtrl* m_textCtrl;
 		
-		DebugFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Debug Log"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 686,425 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		DebugFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug Log"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 686,425 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~DebugFrame();
 	

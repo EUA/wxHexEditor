@@ -426,7 +426,8 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
 		if( found != -1 )
 				MyFileHistory->RemoveFileFromHistory( found );
 		MyFileHistory->AddFileToHistory( flname.GetFullPath() );
-		MyFileHistory->Save( *wxConfigBase::Get() );
+		MyFileHistory->Save( *(wxConfigBase::Get()) );
+		wxConfigBase::Get()->Flush();
 		ActionEnabler();
 		return x;
 		}

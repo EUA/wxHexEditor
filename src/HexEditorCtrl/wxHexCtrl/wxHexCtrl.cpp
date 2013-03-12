@@ -1063,16 +1063,61 @@ inline wxString CP437toUnicode( wxString& line ){
 */
 inline wxChar wxHexTextCtrl::Filter(const unsigned char& ch){
 	return CodepageTable[ch];
-	//return CP437Table[ch];
-//	if( IsAllowedChar(ch) )
-//		return ch;
-//	else
-//		return '.'; //Special Character '?'
+	}
+
+inline wxString wxHexTextCtrl::FilterUTF8(const char *str, int Len){
+	wxString ret;
+	wxCSConv mcv(wxFONTENCODING_UTF8);
+	// size_t WC2MB(char* buf, const wchar_t* psz, size_t n) const
+	// size_t MB2WC(wchar_t* buf, const char* psz, size_t n) const
+	wxString z;
+
+	for( int i=0 ; i< Len ; i++){
+		unsigned char ch = str[i];
+		if(ch < 0x20) ret+='.';									// Control characters
+		else if( ch >= 0x20 and ch <= 0x7E ) ret+=ch;	// ASCII compatible part
+		else if(ch == 0x7F) ret+='.';							// Control character
+		else if( ch >= 0x80 and ch < 0xC0 ) ret+='.';	// 6 Bit Extension Region
+		else if( ch >= 0xC0 and ch < 0xC2 ) ret+='.';	// Invalid UTF8 2 byte codes
+		else if( ch >= 0xC2 and ch < 0xE0 ) {				// 2 Byte UTF Start Codes
+			z=wxString::FromUTF8( str+i, 2);
+			if( z.Len() > 0){
+				ret+=z;
+				ret+=' ';
+				i+=1;
+				}
+			else
+				ret+='.';
+			}
+		else if( ch >= 0xE0 and ch < 0xF0 ){				// 3 Byte UTF Start Codes
+			z=wxString::FromUTF8( str+i, 3);
+			if( z.Len() > 0){
+				ret+=z;
+				ret+=wxT("  ");
+				i+=2;
+				}
+			else
+				ret+='.';
+			}
+		else if( ch >= 0xF0 and ch < 0xF5 ){				// 4 Byte UTF Start Codes
+//			ret+=wxString(str+i, wxConvUTF8, 4);
+			z=wxString::FromUTF8( str+i, 4);
+			if( z.Len() > 0){
+				ret+=z;
+				ret+=wxT("   ");
+				i+=3;
+				}
+			else
+				ret+='.';
+			}
+		else if( ch >= 0xF5 and ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
+		}
+	return ret;
 	}
 
 wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 	wxString newCP;
-	if(codepage == wxT("ASCII")){
+	if(codepage.StartsWith(wxT("ASCII"))){
 		for (unsigned i=0; i<=0xFF ; i++){
 			//Control chars replaced with dot
 			if(i<0x20 or i>=0x7F)
@@ -1174,6 +1219,18 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 						"\x00D3\x00D4\xF8FF\x00D2\x00DA\x00DB\x00D9\x0131\x02C6\x02DC"\
 						"\x00AF\x02D8\x02D9\x02DA\x00B8\x02DD\x02DB\x02C7" );
 		}
+	else if(codepage.StartsWith(wxT("UTF8"))){
+//		//Control chars replaced with dot
+//		for (unsigned i=0; i<0x20 ; i++)
+//			newCP+=wxChar('.');
+//		//ASCII compatible part
+//		for( unsigned i=0x20 ; i < 0x7F ; i++ )
+//			newCP += wxChar(i);
+//		newCP+=wxChar('.');// 0x7F control char
+		newCP=wxEmptyString;
+		//newCP=wxString(newCP.To8BitData(), wxCSConv(wxFONTENCODING_UTF8),  newCP.Len());
+		}
+
 	return CodepageTable=newCP;
 	}
 
@@ -1198,14 +1255,13 @@ void wxHexTextCtrl::ChangeValue( const wxString& value, bool paint ){
 
 void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 	m_text.Clear();
-	for( unsigned i=0 ; i<len ; i++ ){
+	for( unsigned i=0 ; i<len ; i++ )
 		m_text << Filter(buffer[i]);
-//		m_text << static_cast<wxChar>((unsigned char)(buffer[i]));
-//		m_text << CP437toUnicodeCHR( buffer[i] );
-//		char *x=buffer+i;
-//		m_text << wxString(x , wxCSConv(wxFONTENCODING_CP437),  1);
-		}
-//	m_text=wxString(m_text.To8BitData(), wxCSConv(wxFONTENCODING_CP1252),  m_text.Len());
+//	m_text << FilterUTF8(buffer,len);
+
+//	m_text=wxString(buffer, wxCSConv(wxFONTENCODING_CP1252),  len);
+//	m_text=wxString(buffer, wxCSConv(wxFONTENCODING_UTF8),  len);
+
 
 	if( paint )
 		RePaint();

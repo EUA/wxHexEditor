@@ -1144,8 +1144,8 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 			if(i>=0x20 and i<0x7F)		newCP+=wxChar(i);	//ASCII region
 			}
 		}
-
-	else if(codepage.StartsWith(wxT("OEM")) or codepage == wxT("CP437")){
+	//OEM PC-DOS
+	else if(codepage.Find(wxT("CP437")) not_eq wxNOT_FOUND ){
 		//CP437 Control Symbols
 		newCP=wxT(  "\x20\x263A\x263B\x2665\x2666\x2663\x2660\x2022\x25D8\x25CB\x25D9"\
 						"\x2642\x2640\x266A\x266B\x263C\x25BA\x25C4\x2195\x203C\x00B6\x00A7"\
@@ -1170,12 +1170,29 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 						"\x00B0\x2219\x00B7\x221A\x207F\x00B2\x25A0\x00A0");
 		}
 
+	else if(codepage.Find(wxT("CP850")) not_eq wxNOT_FOUND ){
+//		for (unsigned i=0; i<=0xFF ; i++)
+//			bf[i] =i;
+//		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP850), 256); //Why this doesnt works?
+		newCP=PrepareCodepageTable(wxT("CP437"));
+		newCP=newCP.Mid(0,0x80);
+		newCP+= wxT("\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5\xC9"\
+						"\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xF8\xA3\xD8\xD7\x0192\xE1\xED"\
+						"\xF3\xFA\xF1\xD1\xAA\xBA\xBF\xAE\xAC\xBD\xBC\xA1\xAB\xBB\x2591\x2592"\
+						"\x2593\x2502\x2524\xC1\xC2\xC0\xA9\x2563\x2551\x2557\x255D\xA2\xA5"\
+						"\x2510\x2514\x2534\x252C\x251C\x2500\x253C\xE3\xC3\x255A\x2554\x2569"\
+						"\x2566\x2560\x2550\x256C\xA4\xF0\xD0\xCA\xCB\xC8\x0131\xCD\xCE\xCF"\
+						"\x2518\x250C\x2588\x2584\xA6\xCC\x2580\xD3\xDF\xD4\xD2\xF5\xD5\xB5"\
+						"\xFE\xDE\xDA\xDB\xD9\xFD\xDD\xAF\xB4\xAD\xB1\x2017\xBE\xB6\xA7\xF7"\
+						"\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0");
+		}
+
 	else if(codepage.StartsWith(wxT("Central European")) or (codepage.Find(wxT("CP1250")) not_eq wxNOT_FOUND )){
 		for (unsigned i=0; i<=0xFF ; i++)
 			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
 						i==0x81 or i==0x83 or i==0x88 or
 						i==0x90 or i==0x98)	? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1250), 256); //Why this doesnt works?
+		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1250), 256);
 		}
 
 	else if(codepage.StartsWith(wxT("Cyrillic")) or (codepage.Find(wxT("CP1251")) not_eq wxNOT_FOUND )){

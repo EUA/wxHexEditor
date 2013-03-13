@@ -210,7 +210,7 @@ inline int GetByteCount( void ){ return m_text.Length(); }
 		void SetInsertionPoint( unsigned int pos );
 		void ChangeSize();
 		wxChar Filter(const unsigned char& chr);
-		wxString FilterUTF8(const char *str, int len);
+		wxString FilterMBBuffer(const char *str, int len, int fontenc);
 inline void DrawCursorShadow(wxDC* dcTemp);
 	};
 

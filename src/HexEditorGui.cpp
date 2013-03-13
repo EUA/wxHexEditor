@@ -1681,7 +1681,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	txtCharacter->Wrap( -1 );
 	bSizerCharacterEncodings->Add( txtCharacter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString chcCharacterEncodingChoices[] = { _("ANSI - Windows Code page 1252"), _("ASCII Code page"), _("EBCDIC - IBM Code page 500"), _("Macintosh - Code page 10000"), _("OEM - IBM PC/DOS Code page 437"), _("UTF8 - Universal Character Set ") };
+	wxString chcCharacterEncodingChoices[] = { _("ANSI - Windows Code page 1252"), _("ASCII Code page"), _("EBCDIC - IBM Code page 500"), _("GB2312 - Guojia Biaozhun (国家标准)"), _("Macintosh - Code page 10000"), _("OEM - IBM PC/DOS Code page 437"), _("UTF8 - Universal Character Set") };
 	int chcCharacterEncodingNChoices = sizeof( chcCharacterEncodingChoices ) / sizeof( wxString );
 	chcCharacterEncoding = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingNChoices, chcCharacterEncodingChoices, 0 );
 	chcCharacterEncoding->SetSelection( 5 );

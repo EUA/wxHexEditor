@@ -1187,130 +1187,115 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 						"\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0");
 		}
 
-	else if(codepage.StartsWith(wxT("Central European")) or (codepage.Find(wxT("CP1250")) not_eq wxNOT_FOUND )){
+	// ISO/IEC 8859 Part1
+	else	if(codepage.Find(wxT("8859-")) not_eq wxNOT_FOUND ){
+		//Masking default area
 		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
-						i==0x81 or i==0x83 or i==0x88 or
-						i==0x90 or i==0x98)	? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1250), 256);
+			bf[i] =  (i< 0x20 or i==0x7F or i==0xAD or (i>=0x80 and i<=0x9F ))	? '.' : i;
+
+		//Detecting exact encoding
+		int q=codepage.Find(wxT("8859-"))+5;
+
+		//Filtering gaps
+		if(codepage.Mid(q,2).StartsWith(wxT("3 ")))			bf[0xA5]=bf[0xAE]=bf[0xBE]=bf[0xC3]=bf[0xD0]=bf[0xE3]=bf[0xF0]='.';
+		else if(codepage.Mid(q,2).StartsWith(wxT("6 "))){	//Arabic
+			for(int i=0xA1 ; i<=0xC0 ; i++) bf[i]='.';
+			bf[0xA4]=0xA4;
+			bf[0xAC]=0xAC;
+			bf[0xBB]=0xBB;
+			bf[0xBF]=0xBF;
+			for(int i=0xDB ; i<=0xDF ; i++) bf[i]='.';
+			for(int i=0xF3 ; i<=0xFF ; i++) bf[i]='.';
+			}
+		else if(codepage.Mid(q,2).StartsWith(wxT("7 ")))	bf[0xAE]=bf[0xD2]=bf[0xFF]='.';
+		else if(codepage.Mid(q,2).StartsWith(wxT("8 "))){	//Hebrew
+			for(int i=0xBF ; i<=0xDE ; i++) bf[i]='.';
+			for(int i=0xFB ; i<=0xFF ; i++) bf[i]='.';
+			bf[0xA1]='.';
+			}
+		else if(codepage.Mid(q,2).StartsWith(wxT("11")))	bf[0xDB]=bf[0xDC]=bf[0xDD]=bf[0xDE]=bf[0xFC]=bf[0xFD]=bf[0xFE]=bf[0xFF]='.';
+
+		//Encoding
+		if		 (codepage.Mid(q,2).StartsWith(wxT("1 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_1), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("2 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_2), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("3 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_3), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("4 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_4), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("5 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_5), 256);
+		// Arabic Output not looks good.
+		else if(codepage.Mid(q,2).StartsWith(wxT("6 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_6), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("7 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_7), 256);
+		// Hebrew Output not looks good.
+		else if(codepage.Mid(q,2).StartsWith(wxT("8 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_8), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("9 ")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_9), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("10")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_10), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("11")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_11), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("12")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_12), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("13")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_13), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("14")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_14), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("15")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_15), 256);
+		//else if(codepage.Mid(q,2).StartsWith(wxT("16")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_16), 256);
 		}
 
-	else if(codepage.StartsWith(wxT("Cyrillic")) or (codepage.Find(wxT("CP1251")) not_eq wxNOT_FOUND )){
+	// Windows Code Pages
+	else if(codepage.Find(wxT("CP125")) not_eq wxNOT_FOUND ){
 		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i<0x20 or i==0x7F or i==0xAD or i==0x98)	? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1251), 256); //Why this doesnt works?
+			bf[i] = (i< 0x20 or i==0x7F or i==0xAD) ? '.' : i;
 
-//		//Control chars replaced with dot
-//		for (unsigned i=0; i<0x20 ; i++)				newCP+=wxChar('.');
-//		//ASCII compatible part
-//		for( unsigned i=0x20 ; i < 0x7F ; i++ )	newCP += wxChar(i);
-//		//Cyrillic Script Extension, 0x7F, 0xAD and 0x98 replaced with dot.
-//		newCP+=wxT(".\x0402\x0403\x201A\x0453\x201E\x2026\x2020\x2021\x20AC\x2030\x0409"\
-//					 "\x2039\x040A\x040C\x040B\x040F\x0452\x2018\x2019\x201C\x201D\x2022"\
-//					 "\x2013\x2014.\x2122\x0459\x203A\x045A\x045C\x045B\x045F\x00A0\x040E"\
-//					 "\x045E\x0408\x00A4\x0490\x00A6\x00A7\x0401\x00A9\x0404\x00AB\x00AC"\
-//					 ".\x00AE\x0407\x00B0\x00B1\x0406\x0456\x0491\x00B5\x00B6\x00B7"\
-//					 "\x0451\x2116\x0454\x00BB\x0458\x0405\x0455\x0457\x0410\x0411\x0412"\
-//					 "\x0413\x0414\x0415\x0416\x0417\x0418\x0419\x041A\x041B\x041C\x041D"\
-//					 "\x041E\x041F\x0420\x0421\x0422\x0423\x0424\x0425\x0426\x0427\x0428"\
-//					 "\x0429\x042A\x042B\x042C\x042D\x042E\x042F\x0430\x0431\x0432\x0433"\
-//					 "\x0434\x0435\x0436\x0437\x0438\x0439\x043A\x043B\x043C\x043D\x043E"\
-//					 "\x043F\x0440\x0441\x0442\x0443\x0444\x0445\x0446\x0447\x0448\x0449"\
-//					 "\x044A\x044B\x044C\x044D\x044E\x044F");
+		//Detecting Encoding
+		char q=codepage[codepage.Find(wxT("CP125"))+5];
+
+		//Filtering gaps
+		if		 (q=='0') bf[0x81]=bf[0x83]=bf[0x88]=bf[0x90]=bf[0x98]='.';
+		else if(q=='1') bf[0x98]='.';
+		else if(q=='2') bf[0x81]=bf[0x8D]=bf[0x8F]=bf[0x90]=bf[0x9D]='.';
+		else if(q=='3') bf[0x81]=bf[0x88]=bf[0x8A]=bf[0x8C]=bf[0x8D]=
+							 bf[0x8E]=bf[0x8F]=bf[0x90]=bf[0x98]=bf[0x9A]=
+							 bf[0x9C]=bf[0x9D]=bf[0x9E]=bf[0x9F]=bf[0xAA]=bf[0xD2]=bf[0xFF]='.';
+		else if(q=='4') bf[0x81]=bf[0x8D]=bf[0x8E]=bf[0x8F]=bf[0x90]=bf[0x9D]=bf[0x9E]='.';
+		else if(q=='5') bf[0x81]=bf[0x88]=bf[0x8A]=bf[0x8C]=bf[0x8D]=
+							 bf[0x8E]=bf[0x8F]=bf[0x90]=bf[0x9A]=
+							 bf[0x9C]=bf[0x9D]=bf[0x9E]=bf[0x9F]=bf[0xCA]=
+							 bf[0xD9]=bf[0xDA]=bf[0xDB]=bf[0xDC]=bf[0xDD]=
+							 bf[0xDE]=bf[0xDF]=bf[0xFB]=bf[0xFC]=bf[0xFF]='.';
+		else if(q=='7') bf[0x81]=bf[0x83]=bf[0x88]=bf[0x8A]=bf[0x8C]=
+							 bf[0x90]=bf[0x98]=bf[0x9A]=bf[0x9C]=bf[0x9F]=bf[0xA1]=bf[0xA5]='.' ;
+
+		//Encoding
+		if		(q=='0')		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1250), 256);
+		else if(q=='1')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1251), 256);
+		else if(q=='2')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1252), 256);
+		else if(q=='3')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1253), 256);
+		else if(q=='4')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1254), 256);
+		// Hebrew Output not looks good.
+		else if(q=='5')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1255), 256);
+		// Arabic Output from right issue!
+		else if(q=='6')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1256), 256);
+		else if(q=='7')	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1257), 256);
+		else if(q=='8'){ //Windows Vietnamese
+			newCP=PrepareCodepageTable(wxT("CP1252")); //ANSI
+			newCP[0x8A]=newCP[0x8E]=newCP[0x9A]=newCP[0x9E]='.';
+			newCP[0xC3]=wxChar(0x0102);
+			newCP[0xCC]='.';//wxChar(0x0300);
+			newCP[0xD0]=wxChar(0x0110);
+			newCP[0xD2]='.';//wxChar(0x0309);
+			newCP[0xD5]=wxChar(0x01A0);
+			newCP[0xDD]=wxChar(0x01AF);
+			newCP[0xDE]='.';//wxChar(0x0303);
+			newCP[0xE3]=wxChar(0x0103);
+			newCP[0xEC]='.';//wxChar(0x0301);
+			newCP[0xF0]=wxChar(0x0111);
+			newCP[0xF2]='.';//wxChar(0x0323);
+			newCP[0xF5]=wxChar(0x01A1);
+			newCP[0xFD]=wxChar(0x01B0);
+			newCP[0xFE]=wxChar(0x20AB);
+			}
 		}
 
-	else if(codepage.StartsWith(wxT("ANSI")) or (codepage.Find(wxT("CP1252")) not_eq wxNOT_FOUND )){
-		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
-						i==0x81 or i==0x8D or i==0x8F or i==0x90 or i==0x9D )	? '.' : i;
-
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1252), 256);
-
-//		wxString ansiymbol=wxT("\x20AC.\x201A\x0192\x201E\x2026\x2020\x2021\x02C6\x2030\x0160\x2039\x0152.\x017D."\
-//									  "\x2018.\x2019\x201C\x201D\x2022\x2013\x2014\x02DC\x2122\x0161\x203A\x0153.\x017E\x0178");
-//		for (unsigned i=0; i<=0xFF ; i++){
-//			//Control chars replaced with dot
-//			if(i<0x20 or i==0x7F or i==0xAD)
-//				newCP+=wxT('.');
-//			//ANSI symbols
-//			else if(i>=0x80 and i<0xA0)
-//				newCP+=ansiymbol[i-0x80];
-//			//
-//			else
-//				newCP+=wxChar(i);
-//			}
-		}
-
-	else if(codepage.StartsWith(wxT("Greek")) or (codepage.Find(wxT("CP1253")) not_eq wxNOT_FOUND )){
-		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
-						i==0x81 or i==0x88 or i==0x8A or (i>=0x8C and i<=0x8F) or
-						i==0x90 or i==0x98 or i==0x9A or (i>=0x9C and i<=0x9F) or
-						i==0xAA or i==0xD2 or i==0xFF) ? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1253), 256);
-		}
-
-	else if(codepage.StartsWith(wxT("Turkish")) or (codepage.Find(wxT("CP1254")) not_eq wxNOT_FOUND )){
-		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
-						i==0x81 or (i>=0x8D and i<=0x8F) or
-						i==0x90 or (i>=0x9D and i<=0x9E) ) ? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1254), 256);
-		}
-///Output not looks good.
-//	else if(codepage.StartsWith(wxT("Hebrew")) or (codepage.Find(wxT("CP1255")) not_eq wxNOT_FOUND )){
-//		for (unsigned i=0; i<=0xFF ; i++)
-//			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
-//						i==0x81 or i==0x88 or i==0x8A or (i>=0x8C and i<=0x8F) or
-//						i==0x90 or i==0x98 or i==0x9A or (i>=0x9C and i<=0x9F) or
-//						i==0xCA or (i>=0xD9 and i<=0xDF) or  i==0xFB or i==0xFC or i==0xFF) ? '.' : i;
-//		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1255), 256);
-//		}
-///Output from right issue!
-//	else if(codepage.StartsWith(wxT("Arabic")) or (codepage.Find(wxT("CP1256")) not_eq wxNOT_FOUND )){
-//		for (unsigned i=0; i<=0xFF ; i++)
-//			bf[i] = (i< 0x20 or i==0x7F or i==0xAD) ? '.' : i;
-//		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1256), 256);
-//		}
-
-	else if(codepage.StartsWith(wxT("Baltic")) or (codepage.Find(wxT("CP1257")) not_eq wxNOT_FOUND )){
-		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i< 0x20 or i==0x7F or i==0xAD or
-						i==0x81 or i==0x83 or i==0x88 or i==0x8A or i==0x8C or
-						i==0x90 or i==0x98 or i==0x9A or i==0x9C or i==0x9F or
-						i==0xA1 or i==0xA5 ) ? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_CP1257), 256);
-		}
-
-	else if(codepage.StartsWith(wxT("Vietnamese")) or (codepage.Find(wxT("CP1258")) not_eq wxNOT_FOUND )){
-		newCP=PrepareCodepageTable(wxT("ANSI"));
-		newCP[0x8A]=newCP[0x8E]=newCP[0x9A]=newCP[0x9E]='.';
-		newCP[0xC3]=wxChar(0x0102);
-		newCP[0xCC]='.';//wxChar(0x0300);
-		newCP[0xD0]=wxChar(0x0110);
-		newCP[0xD2]='.';//wxChar(0x0309);
-		newCP[0xD5]=wxChar(0x01A0);
-		newCP[0xDD]=wxChar(0x01AF);
-		newCP[0xDE]='.';//wxChar(0x0303);
-		newCP[0xE3]=wxChar(0x0103);
-		newCP[0xEC]='.';//wxChar(0x0301);
-		newCP[0xF0]=wxChar(0x0111);
-		newCP[0xF2]='.';//wxChar(0x0323);
-		newCP[0xF5]=wxChar(0x01A1);
-		newCP[0xFD]=wxChar(0x01B0);
-		newCP[0xFE]=wxChar(0x20AB);
-		}
-
-	else if(codepage.StartsWith(wxT("KOI8-R"))){
+	else if(codepage.StartsWith(wxT("KOI8"))){
 		for (unsigned i=0; i<=0xFF ; i++)
 			bf[i] = (i<0x20 or i==0x7F)	? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_KOI8), 256);
-		}
-
-	else if(codepage.StartsWith(wxT("KOI8-U"))){
-		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i<0x20 or i==0x7F)	? '.' : i;
-		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_KOI8_U), 256);
+		if(codepage.StartsWith(wxT("KOI8-R"))) newCP+=wxString( bf, wxCSConv(wxFONTENCODING_KOI8), 256);
+		if(codepage.StartsWith(wxT("KOI8-U"))) newCP+=wxString( bf, wxCSConv(wxFONTENCODING_KOI8_U), 256);
 		}
 
 	else if(codepage.StartsWith(wxT("EBCDIC"))){

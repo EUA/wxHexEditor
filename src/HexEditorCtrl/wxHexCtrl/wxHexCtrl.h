@@ -176,6 +176,7 @@ virtual void ChangeSize();	// update the geometry
 class wxHexTextCtrl : public wxHexCtrl{
 	public:
 		wxString CodepageTable;
+		wxString Codepage;
 //		wxHexTextCtrl():wxHexCtrl(){}
 		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){}
 		wxHexTextCtrl( wxWindow *parent,

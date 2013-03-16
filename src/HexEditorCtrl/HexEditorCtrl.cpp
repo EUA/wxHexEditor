@@ -39,15 +39,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	SetAutoLayout(true);
 
 	m_static_offset->SetLabel( _("Offset") );
-
-#if defined( __WXOSX__ )
-	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"), wxFONTENCODING_ISO8859_1);// Fonts are too small on wxOSX 2.9.x series.
-#elif defined( __WXMSW__ )
-	stdfont = wxFont(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Courier New"), wxFONTENCODING_ISO8859_1);
-#else
-	stdfont = wxFont(20, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_ISO8859_1);
-#endif
-	SetFont( stdfont );
+	SetFont();
 
 	Dynamic_Connector();
 	offset_scroll = new wxHugeScrollBar( offset_scroll_real );
@@ -232,12 +224,25 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 //-----VISUAL FUNCTIONS------//
 void HexEditorCtrl::SetFont( wxFont f ){
 	stdfont = f;
-//	stdfont = wxFont t(10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"));
-
 	m_static_offset->SetFont( stdfont );
 	m_static_adress->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
 	SetStyle();
+	}
+
+void HexEditorCtrl::SetFont( ){
+	wxFont newfont;
+	int FontSize=10;
+	wxConfigBase::Get()->Read( wxT("FontSize"), &FontSize, 10 );
+
+#if defined( __WXOSX__ )
+	newfont = wxFont(FontSize, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"), wxFONTENCODING_ISO8859_1);// Fonts are too small on wxOSX 2.9.x series.
+#elif defined( __WXMSW__ )
+	newfont = wxFont(FontSize, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Courier New"), wxFONTENCODING_ISO8859_1);
+#else
+	newfont = wxFont(FontSize, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monospace"), wxFONTENCODING_ISO8859_1);
+#endif
+	SetFont( newfont );
 	}
 
 void HexEditorCtrl::SetStyle( ) {

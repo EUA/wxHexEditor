@@ -892,7 +892,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 		if( event.GetId() == RESET_STYLE_EVENT ){
 			for(int i=0 ; i < MyNotebook->GetPageCount() ; i++){
-				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetStyle();
+				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetFont();
 				#ifdef __WXMSW__ //Force redraw resize
 				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->ReDraw();
 				#endif

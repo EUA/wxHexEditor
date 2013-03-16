@@ -1677,18 +1677,40 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizerCharacterEncodings;
 	bSizerCharacterEncodings = new wxBoxSizer( wxHORIZONTAL );
 	
-	txtCharacter = new wxStaticText( this, wxID_ANY, _("Character Encoding:"), wxDefaultPosition, wxDefaultSize, 0 );
-	txtCharacter->Wrap( -1 );
-	bSizerCharacterEncodings->Add( txtCharacter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	txtCharacterFamily = new wxStaticText( this, wxID_ANY, _("Character Encoding Family:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtCharacterFamily->Wrap( -1 );
+	bSizerCharacterEncodings->Add( txtCharacterFamily, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxArrayString chcCharacterEncodingFamilyChoices;
+	chcCharacterEncodingFamily = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingFamilyChoices, 0 );
+	chcCharacterEncodingFamily->SetSelection( 0 );
+	bSizerCharacterEncodings->Add( chcCharacterEncodingFamily, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	
+	bSizerMain->Add( bSizerCharacterEncodings, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerSubCharacterEncodings;
+	bSizerSubCharacterEncodings = new wxBoxSizer( wxHORIZONTAL );
+	
+	txtCharacterEncoding = new wxStaticText( this, wxID_ANY, _("Character Encoding:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtCharacterEncoding->Wrap( -1 );
+	bSizerSubCharacterEncodings->Add( txtCharacterEncoding, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString chcCharacterEncodingChoices[] = { _("ASCII - American Standard Code for Information Interchange"), _("ISCII - Indian Script Code for Information Interchange"), _("EBCDIC - IBM Code page 500"), _("GB2312 - Guojia Biaozhun (国家标准)"), _("KOI7 Код Обмена Информацией, 7 бит"), _("KOI8-R Код Обмена Информацией, 8 бит"), _("KOI8-U Код Обмена Информацией, 8 бит"), _("Macintosh - Code page 10000"), _("OEM - IBM PC/DOS CP437"), _("OEM - IBM PC/DOS CP850"), _("UTF8 - Universal Character Set"), _("ISO/IEC 8859-1 Latin-1 Western European"), _("ISO/IEC 8859-2 Latin-2 Central European"), _("ISO/IEC 8859-3 Latin-3 South European"), _("ISO/IEC 8859-4 Latin-4 North European"), _("ISO/IEC 8859-5 Latin/Cyrillic"), _("ISO/IEC 8859-6 Latin/Arabic"), _("ISO/IEC 8859-7 Latin/Greek"), _("ISO/IEC 8859-8 Latin/Hebrew"), _("ISO/IEC 8859-9 Latin/Turkish"), _("ISO/IEC 8859-10 Latin/Nordic"), _("ISO/IEC 8859-11 Latin/Thai"), _("ISO/IEC 8859-13 Latin-7 Baltic Rim"), _("ISO/IEC 8859-14 Latin-8 Celtic"), _("ISO/IEC 8859-15 Latin-9"), _("ISO/IEC 8859-16 Latin-10 South-Eastern European"), _("Windows CP1250 - Central and Eastern European"), _("Windows CP1251 - Cyrillic Script"), _("Windows CP1252 - ANSI"), _("Windows CP1253 - Greek Modern"), _("Windows CP1254 - Turkish"), _("Windows CP1255 - Hebrew"), _("Windows CP1256 - Arabic"), _("Windows CP1257 - Baltic"), _("Windows CP1258 - Vietnamese"), _("PASCII - Perso-Arabic Script Code for Information Interchange"), _("VSCII - Vietnamese Standard Code for Information Interchange"), _("TSCII - Tamil Script Code for Information Interchange"), _("MIK code page"), _("JIS X 0201 - Japanese Industrial Standard "), _("TIS-620 - Thai Industrial Standard 620-2533") };
 	int chcCharacterEncodingNChoices = sizeof( chcCharacterEncodingChoices ) / sizeof( wxString );
 	chcCharacterEncoding = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingNChoices, chcCharacterEncodingChoices, 0 );
-	chcCharacterEncoding->SetSelection( 4 );
-	bSizerCharacterEncodings->Add( chcCharacterEncoding, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	chcCharacterEncoding->SetSelection( 0 );
+	bSizerSubCharacterEncodings->Add( chcCharacterEncoding, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	txtfontSize = new wxStaticText( this, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtfontSize->Wrap( -1 );
+	bSizerSubCharacterEncodings->Add( txtfontSize, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	spinFontSize = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 5, 32, 10 );
+	bSizerSubCharacterEncodings->Add( spinFontSize, 0, wxALL, 5 );
 	
 	
-	bSizerMain->Add( bSizerCharacterEncodings, 0, wxEXPAND, 5 );
+	bSizerMain->Add( bSizerSubCharacterEncodings, 0, 0, 5 );
 	
 	wxStaticBoxSizer* sbSizerFormat;
 	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Custom Hex Formating") ), wxVERTICAL );
@@ -1752,6 +1774,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	
 	// Connect Events
 	btnResetColours->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
+	chcCharacterEncodingFamily->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	chkCustom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	chkBytePerLineLimit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
@@ -1761,6 +1784,7 @@ PreferencesDialogGui::~PreferencesDialogGui()
 {
 	// Disconnect Events
 	btnResetColours->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
+	chcCharacterEncodingFamily->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	chkCustom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	chkBytePerLineLimit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
 	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );

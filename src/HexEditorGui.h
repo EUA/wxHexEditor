@@ -489,8 +489,12 @@ class PreferencesDialogGui : public wxDialog
 		wxButton* btnResetColours;
 		wxStaticText* txtLang;
 		wxChoice* chcLang;
-		wxStaticText* txtCharacter;
+		wxStaticText* txtCharacterFamily;
+		wxChoice* chcCharacterEncodingFamily;
+		wxStaticText* txtCharacterEncoding;
 		wxChoice* chcCharacterEncoding;
+		wxStaticText* txtfontSize;
+		wxSpinCtrl* spinFontSize;
 		wxComboBox* comboCustomHexFormat;
 		wxCheckBox* chkCustom;
 		wxCheckBox* chkBytePerLineLimit;
@@ -500,6 +504,7 @@ class PreferencesDialogGui : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnResetColours( wxCommandEvent& event ) { event.Skip(); }
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCustomHexCheck( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
 		

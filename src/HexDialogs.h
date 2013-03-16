@@ -158,9 +158,10 @@ class PreferencesDialog : public PreferencesDialogGui{
 		void OnResetColours(wxCommandEvent& event);
 		void OnCustomHexCheck( wxCommandEvent& event );
 
-
 		wxArrayString LangNames;
 		wxArrayLong LangIds;
+
+		wxArrayString Encodings;
 	};
 
 class DeviceBackupDialog : public DeviceBackupDialogGui{

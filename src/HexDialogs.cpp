@@ -2200,7 +2200,75 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
    if( wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &Colour	)	)			spinBytePerLine->SetValue( Colour );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
-	if( wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Colour ) )				chcCharacterEncoding->SetStringSelection( Colour );
+	if( Encodings.IsEmpty() )
+		Encodings=chcCharacterEncoding->GetStrings();
+
+//	wxString estr[]={ wxT("ASCII - American Standard Code for Information Interchange"),
+//							wxT("ISCII - Indian Script Code for Information Interchange"),
+//							wxT("EBCDIC - IBM Code page 500"),
+//							wxT("GB2312 - Guojia Biaozhun (国家标准)"),
+//							wxT("KOI7 Код Обмена Информацией, 7 бит"),
+//							wxT("KOI8-R Код Обмена Информацией, 8 бит"),
+//							wxT("KOI8-U Код Обмена Информацией, 8 бит"),
+//							wxT("Macintosh - Code page 10000"),
+//							wxT("OEM - IBM PC/DOS CP437"),
+//							wxT("OEM - IBM PC/DOS CP850"),
+//							wxT("UTF8 - Universal Character Set"),
+//							wxT("ISO/IEC 8859-1 Latin-1 Western European"),
+//							wxT("ISO/IEC 8859-2 Latin-2 Central European"),
+//							wxT("ISO/IEC 8859-3 Latin-3 South European"),
+//							wxT("ISO/IEC 8859-4 Latin-4 North European"),
+//							wxT("ISO/IEC 8859-5 Latin/Cyrillic"),
+//							wxT("ISO/IEC 8859-6 Latin/Arabic"),
+//							wxT("ISO/IEC 8859-7 Latin/Greek"),
+//							wxT("ISO/IEC 8859-8 Latin/Hebrew"),
+//							wxT("ISO/IEC 8859-9 Latin/Turkish"),
+//							wxT("ISO/IEC 8859-10 Latin/Nordic"),
+//							wxT("ISO/IEC 8859-11 Latin/Thai"),
+//							wxT("ISO/IEC 8859-13 Latin-7 Baltic Rim"),
+//							wxT("ISO/IEC 8859-14 Latin-8 Celtic"),
+//							wxT("ISO/IEC 8859-15 Latin-9"),
+//							wxT("ISO/IEC 8859-16 Latin-10 South-Eastern European"),
+//							wxT("Windows CP1250 - Central and Eastern European"),
+//							wxT("Windows CP1251 - Cyrillic Script"),
+//							wxT("Windows CP1252 - ANSI"),
+//							wxT("Windows CP1253 - Greek Modern"),
+//							wxT("Windows CP1254 - Turkish"),
+//							wxT("Windows CP1255 - Hebrew"),
+//							wxT("Windows CP1256 - Arabic"),
+//							wxT("Windows CP1257 - Baltic"),
+//							wxT("Windows CP1258 - Vietnamese"),
+//							wxT("PASCII - Perso-Arabic Script Code for Information Interchange"),
+//							wxT("VSCII - Vietnamese Standard Code for Information Interchange"),
+//							wxT("TSCII - Tamil Script Code for Information Interchange"),
+//							wxT("MIK code page"),
+//							wxT("JIS X 0201 - Japanese Industrial Standard "),
+//							wxT("TIS-620 - Thai Industrial Standard 620-2533")
+//							};
+
+	chcCharacterEncodingFamily->Clear();
+	chcCharacterEncoding->Clear();
+
+	chcCharacterEncodingFamily->Append(wxT("Code for Information Interchange"));
+	chcCharacterEncodingFamily->Append(wxT("DOS"));
+	chcCharacterEncodingFamily->Append(wxT("ISO/IEC"));
+	//chcCharacterEncodingFamily->Append(wxT("Industrial Standard"));
+	chcCharacterEncodingFamily->Append(wxT("KOI"));
+	chcCharacterEncodingFamily->Append(wxT("Windows CP"));
+	chcCharacterEncodingFamily->Append(wxT("Experimental"));
+	chcCharacterEncodingFamily->Append(wxT("Others"));
+
+	if( wxConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &Colour ) )		chcCharacterEncodingFamily->SetStringSelection( Colour );
+	wxCommandEvent e;
+	e.SetString( Colour );
+	e.SetId( chcCharacterEncodingFamily->GetId() );
+	EventHandler( e );
+
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Colour );
+	if( not chcCharacterEncoding->SetStringSelection( Colour ) )
+		chcCharacterEncoding->SetSelection( 0 );
+
+	if( wxConfigBase::Get()->Read( _T("FontSize"), &Colour ) )							spinFontSize->SetValue( Colour );
 
 	}
 
@@ -2318,6 +2386,52 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 #endif  //__WXMAC__
 	}
 
+void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
+	if(event.GetId()==chcCharacterEncodingFamily->GetId()){
+		wxArrayString ExperimentalList;
+		ExperimentalList.Clear();
+		for(int i=0; i< Encodings.Count(); i++){
+			if(( Encodings.Item(i).Find( wxT("Industrial Standard") ) not_eq wxNOT_FOUND ) or
+				( Encodings.Item(i).Find( wxT("Arabic") ) not_eq wxNOT_FOUND ) or
+				( Encodings.Item(i).Find( wxT("Hebrew") ) not_eq wxNOT_FOUND ) or
+				( Encodings.Item(i).Find( wxT("ISCII") ) not_eq wxNOT_FOUND ) or
+				( Encodings.Item(i).Find( wxT("TSCII") ) not_eq wxNOT_FOUND ) or
+				( Encodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND )
+				)
+				ExperimentalList.Add( Encodings.Item(i) );
+				}
+
+		chcCharacterEncoding->Clear();
+		if( event.GetString()==wxT("Experimental") )
+			chcCharacterEncoding->Append(ExperimentalList);
+
+		else if( event.GetString()==wxT("Others") ){
+			wxArrayString others=Encodings;
+			for(int i=0; i< ExperimentalList.Count(); i++)
+				others.Remove(ExperimentalList.Item(i));
+
+			wxArrayString families=chcCharacterEncodingFamily->GetStrings();
+			for(int f=0; f< families.Count(); f++)
+				for(int i=0; i< Encodings.Count(); i++){
+					if( Encodings.Item(i).Find( families.Item(f) ) not_eq wxNOT_FOUND )
+						others.Remove( Encodings.Item(i) );
+				}
+			chcCharacterEncoding->Append( others );
+			}
+		else
+			for(int i=0; i< Encodings.Count(); i++){
+				if(( Encodings.Item(i).Find( event.GetString() ) not_eq wxNOT_FOUND ) and
+					(	ExperimentalList.Index( Encodings.Item(i) )==wxNOT_FOUND) )
+					chcCharacterEncoding->Append( Encodings.Item(i) );
+				}
+
+		wxString Selection;
+		wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Selection );
+		if( not chcCharacterEncoding->SetStringSelection( Selection ) )
+			chcCharacterEncoding->SetSelection( 0 );
+		}
+	}
+
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
 
@@ -2333,7 +2447,9 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
 	wxConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
 	wxConfigBase::Get()->Write( _T("BytesPerLineLimit"), spinBytePerLine->GetValue());
 
+	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
+	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
 
    wxConfigBase::Get()->Flush();
 

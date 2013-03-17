@@ -1,12 +1,12 @@
 [Desktop Entry]
-Version=v1.0
+Version=1.0
 Encoding=UTF-8
 Name=wxHexEditor
 GenericName=wxHexEditor
 Comment=A hex editor for huge files and devices
 Exec=wxHexEditor
-Icon=wxHexEditor.png
+Icon=wxHexEditor
 Terminal=false
 Type=Application
-MimeType=*
+MimeType=*;
 Categories=Utility;TextEditor;

@@ -1,8 +1,8 @@
 WXCONFIG = wx-config
 CC = `$(WXCONFIG) --cc`
 CXX = `$(WXCONFIG) --cxx`
-CXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -O2 -c ${OPTFLAGS}
-LDFLAGS = `$(WXCONFIG) --libs`
+WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -O2 -c ${OPTFLAGS}
+WXLDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
@@ -46,10 +46,10 @@ $(OBJECTS): $(LIBS) $(SOURCES)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) $(LDFLAGS) -lgomp -o $@
+	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lgomp -o $@
 
 .cpp.o: $(LIBS)
-	$(CXX) $(CXXFLAGS) $< -o $@
+	$(CXX) $(WXCXXFLAGS) ${CXXFLAGS} $< -o $@
 
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@
@@ -72,10 +72,10 @@ win: $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) $(LDFLAGS) -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
+	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} $(WXLDFLAGS) ${LDFLAGS} -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) $(LDFLAGS) -lexpat -lgomp -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
+	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -lgomp -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
 mac: maclink langs
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents

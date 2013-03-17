@@ -496,7 +496,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 	int charx = hex_ctrl->GetCharSize().GetX();
-	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize() + 4;
+	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize();// + 4;
 	offset_x = offset_ctrl->IsShown() ? offset_x : 0;
 
    x -= offset_x;										//Remove Offset Control box X because its changeable

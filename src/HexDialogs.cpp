@@ -2185,91 +2185,66 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	else
 		chcLang->SetSelection(0);
 
-	wxString Colour;
-	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &Colour) )				clrPickerForeground->SetColour( Colour );
-   if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &Colour) )				clrPickerBackground->SetColour( Colour );
-   if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &Colour) )		clrPickerBackgroundZebra->SetColour( Colour );
-   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &Colour) )	clrPickerSelectionForeground->SetColour(Colour);
-   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &Colour) )	clrPickerSelectionBackground->SetColour(Colour);
-   bool custom_hex;
-   if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &custom_hex ) )		chkCustom->SetValue( custom_hex );
-   if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &Colour	)	)				comboCustomHexFormat->SetValue( Colour );
+	wxString TempString;
+	bool TempBool;
+	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );
+   if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &TempString) )				clrPickerBackground->SetColour( TempString );
+   if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
+   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )	clrPickerSelectionForeground->SetColour(TempString);
+   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )	clrPickerSelectionBackground->SetColour(TempString);
+   if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
+   if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)					comboCustomHexFormat->SetValue( TempString );
    comboCustomHexFormat->Enable( chkCustom->IsChecked() );
-
-   if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &custom_hex	)	) 	chkBytePerLineLimit->SetValue( custom_hex );
-   if( wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &Colour	)	)			spinBytePerLine->SetValue( Colour );
+   if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 				chkBytePerLineLimit->SetValue( TempBool );
+   if( wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempString	)	)				spinBytePerLine->SetValue( TempString );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
-	if( Encodings.IsEmpty() )
-		Encodings=chcCharacterEncoding->GetStrings();
-
-//	wxString estr[]={ wxT("ASCII - American Standard Code for Information Interchange"),
-//							wxT("ISCII - Indian Script Code for Information Interchange"),
-//							wxT("EBCDIC - IBM Code page 500"),
-//							wxT("GB2312 - Guojia Biaozhun (国家标准)"),
-//							wxT("KOI7 Код Обмена Информацией, 7 бит"),
-//							wxT("KOI8-R Код Обмена Информацией, 8 бит"),
-//							wxT("KOI8-U Код Обмена Информацией, 8 бит"),
-//							wxT("Macintosh - Code page 10000"),
-//							wxT("OEM - IBM PC/DOS CP437"),
-//							wxT("OEM - IBM PC/DOS CP850"),
-//							wxT("UTF8 - Universal Character Set"),
-//							wxT("ISO/IEC 8859-1 Latin-1 Western European"),
-//							wxT("ISO/IEC 8859-2 Latin-2 Central European"),
-//							wxT("ISO/IEC 8859-3 Latin-3 South European"),
-//							wxT("ISO/IEC 8859-4 Latin-4 North European"),
-//							wxT("ISO/IEC 8859-5 Latin/Cyrillic"),
-//							wxT("ISO/IEC 8859-6 Latin/Arabic"),
-//							wxT("ISO/IEC 8859-7 Latin/Greek"),
-//							wxT("ISO/IEC 8859-8 Latin/Hebrew"),
-//							wxT("ISO/IEC 8859-9 Latin/Turkish"),
-//							wxT("ISO/IEC 8859-10 Latin/Nordic"),
-//							wxT("ISO/IEC 8859-11 Latin/Thai"),
-//							wxT("ISO/IEC 8859-13 Latin-7 Baltic Rim"),
-//							wxT("ISO/IEC 8859-14 Latin-8 Celtic"),
-//							wxT("ISO/IEC 8859-15 Latin-9"),
-//							wxT("ISO/IEC 8859-16 Latin-10 South-Eastern European"),
-//							wxT("Windows CP1250 - Central and Eastern European"),
-//							wxT("Windows CP1251 - Cyrillic Script"),
-//							wxT("Windows CP1252 - ANSI"),
-//							wxT("Windows CP1253 - Greek Modern"),
-//							wxT("Windows CP1254 - Turkish"),
-//							wxT("Windows CP1255 - Hebrew"),
-//							wxT("Windows CP1256 - Arabic"),
-//							wxT("Windows CP1257 - Baltic"),
-//							wxT("Windows CP1258 - Vietnamese"),
-//							wxT("PASCII - Perso-Arabic Script Code for Information Interchange"),
-//							wxT("VSCII - Vietnamese Standard Code for Information Interchange"),
-//							wxT("TSCII - Tamil Script Code for Information Interchange"),
-//							wxT("MIK code page"),
-//							wxT("JIS X 0201 - Japanese Industrial Standard "),
-//							wxT("TIS-620 - Thai Industrial Standard 620-2533")
-//							};
+	if( AvailableEncodings.IsEmpty() )
+		AvailableEncodings=chcCharacterEncoding->GetStrings();
 
 	chcCharacterEncodingFamily->Clear();
 	chcCharacterEncoding->Clear();
 
-	chcCharacterEncodingFamily->Append(wxT("Code for Information Interchange"));
-	chcCharacterEncodingFamily->Append(wxT("DOS"));
-	chcCharacterEncodingFamily->Append(wxT("ISO/IEC"));
-	//chcCharacterEncodingFamily->Append(wxT("Industrial Standard"));
-	chcCharacterEncodingFamily->Append(wxT("KOI"));
-	chcCharacterEncodingFamily->Append(wxT("Windows CP"));
-	chcCharacterEncodingFamily->Append(wxT("Experimental"));
-	chcCharacterEncodingFamily->Append(wxT("Others"));
+	wxArrayString ChrEncFamArray;
+	ChrEncFamArray.Add(wxT("Code for Information Interchange"));
+	ChrEncFamArray.Add(wxT("DOS"));
+	ChrEncFamArray.Add(wxT("ISO/IEC"));
+	ChrEncFamArray.Add(wxT("KOI"));
+	ChrEncFamArray.Add(wxT("Macintosh"));
+	ChrEncFamArray.Add(wxT("Industrial Standard"));
+	ChrEncFamArray.Add(wxT("Extended Binary Coded Decimal Interchange Code"));
+	ChrEncFamArray.Add(wxT("Windows CP"));
+	ChrEncFamArray.Sort();
+	ChrEncFamArray.Add(wxT("Experimental"));
+	ChrEncFamArray.Add(wxT("Other"));
+	chcCharacterEncodingFamily->Append(ChrEncFamArray);
 
-	if( wxConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &Colour ) )		chcCharacterEncodingFamily->SetStringSelection( Colour );
+	if( wxConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &TempString ) )
+		chcCharacterEncodingFamily->SetStringSelection( TempString );
+
+	ExperimentalEncodingsList.Clear();
+	for(int i=0; i< AvailableEncodings.Count(); i++){
+		if(( AvailableEncodings.Item(i).Find( wxT("Industrial Standard") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("Arabic") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("Hebrew") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("ISCII") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("TSCII") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("ANSEL") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND ))
+			ExperimentalEncodingsList.Add( AvailableEncodings.Item(i) );
+			}
+
 	wxCommandEvent e;
-	e.SetString( Colour );
+	e.SetString( TempString );
 	e.SetId( chcCharacterEncodingFamily->GetId() );
 	EventHandler( e );
 
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Colour );
-	if( not chcCharacterEncoding->SetStringSelection( Colour ) )
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString );
+	if( not chcCharacterEncoding->SetStringSelection( TempString ) )
 		chcCharacterEncoding->SetSelection( 0 );
 
-	if( wxConfigBase::Get()->Read( _T("FontSize"), &Colour ) )							spinFontSize->SetValue( Colour );
-
+	if( wxConfigBase::Get()->Read( _T("FontSize"), &TempString ) )
+		spinFontSize->SetValue( TempString );
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {
@@ -2388,43 +2363,32 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 
 void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	if(event.GetId()==chcCharacterEncodingFamily->GetId()){
-		wxArrayString ExperimentalList;
-		ExperimentalList.Clear();
-		for(int i=0; i< Encodings.Count(); i++){
-			if(( Encodings.Item(i).Find( wxT("Industrial Standard") ) not_eq wxNOT_FOUND ) or
-				( Encodings.Item(i).Find( wxT("Arabic") ) not_eq wxNOT_FOUND ) or
-				( Encodings.Item(i).Find( wxT("Hebrew") ) not_eq wxNOT_FOUND ) or
-				( Encodings.Item(i).Find( wxT("ISCII") ) not_eq wxNOT_FOUND ) or
-				( Encodings.Item(i).Find( wxT("TSCII") ) not_eq wxNOT_FOUND ) or
-				( Encodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND )
-				)
-				ExperimentalList.Add( Encodings.Item(i) );
-				}
-
-		chcCharacterEncoding->Clear();
+		wxArrayString Encodings;
 		if( event.GetString()==wxT("Experimental") )
-			chcCharacterEncoding->Append(ExperimentalList);
+			Encodings=ExperimentalEncodingsList;
 
-		else if( event.GetString()==wxT("Others") ){
-			wxArrayString others=Encodings;
-			for(int i=0; i< ExperimentalList.Count(); i++)
-				others.Remove(ExperimentalList.Item(i));
+		else if( event.GetString()==wxT("Other") ){
+			Encodings=AvailableEncodings;
+			for(int i=0; i< ExperimentalEncodingsList.Count(); i++)
+				Encodings.Remove(ExperimentalEncodingsList.Item(i));
 
 			wxArrayString families=chcCharacterEncodingFamily->GetStrings();
 			for(int f=0; f< families.Count(); f++)
-				for(int i=0; i< Encodings.Count(); i++){
-					if( Encodings.Item(i).Find( families.Item(f) ) not_eq wxNOT_FOUND )
-						others.Remove( Encodings.Item(i) );
+				for(int i=0; i< AvailableEncodings.Count(); i++){
+					if( AvailableEncodings.Item(i).Find( families.Item(f) ) not_eq wxNOT_FOUND )
+						Encodings.Remove( AvailableEncodings.Item(i) );
 				}
-			chcCharacterEncoding->Append( others );
 			}
 		else
-			for(int i=0; i< Encodings.Count(); i++){
-				if(( Encodings.Item(i).Find( event.GetString() ) not_eq wxNOT_FOUND ) and
-					(	ExperimentalList.Index( Encodings.Item(i) )==wxNOT_FOUND) )
-					chcCharacterEncoding->Append( Encodings.Item(i) );
+			for(int i=0; i< AvailableEncodings.Count(); i++){
+				if(( AvailableEncodings.Item(i).Find( event.GetString() ) not_eq wxNOT_FOUND ) and
+					(	ExperimentalEncodingsList.Index( AvailableEncodings.Item(i) )==wxNOT_FOUND) )
+					Encodings.Add( AvailableEncodings.Item(i) );
 				}
 
+		Encodings.Sort();
+		chcCharacterEncoding->Clear();
+		chcCharacterEncoding->Append( Encodings );
 		wxString Selection;
 		wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Selection );
 		if( not chcCharacterEncoding->SetStringSelection( Selection ) )

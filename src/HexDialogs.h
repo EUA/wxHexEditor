@@ -161,7 +161,8 @@ class PreferencesDialog : public PreferencesDialogGui{
 		wxArrayString LangNames;
 		wxArrayLong LangIds;
 
-		wxArrayString Encodings;
+		wxArrayString ExperimentalEncodingsList;
+		wxArrayString AvailableEncodings;
 	};
 
 class DeviceBackupDialog : public DeviceBackupDialogGui{

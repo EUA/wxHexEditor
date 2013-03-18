@@ -2196,8 +2196,14 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
    if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)					comboCustomHexFormat->SetValue( TempString );
    comboCustomHexFormat->Enable( chkCustom->IsChecked() );
    if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 				chkBytePerLineLimit->SetValue( TempBool );
-   if( wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempString	)	)				spinBytePerLine->SetValue( TempString );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
+
+   int TempInt;
+   wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
+   spinBytePerLine->SetValue( TempString );
+
+	wxConfigBase::Get()->Read( _T("FontSize"), &TempInt, 10 );
+	spinFontSize->SetValue( TempString );
 
 	if( AvailableEncodings.IsEmpty() )
 		AvailableEncodings=chcCharacterEncoding->GetStrings();
@@ -2243,8 +2249,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	if( not chcCharacterEncoding->SetStringSelection( TempString ) )
 		chcCharacterEncoding->SetSelection( 0 );
 
-	if( wxConfigBase::Get()->Read( _T("FontSize"), &TempString ) )
-		spinFontSize->SetValue( TempString );
+
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {

@@ -8,5 +8,4 @@ Exec=wxHexEditor
 Icon=wxHexEditor
 Terminal=false
 Type=Application
-MimeType=*;
 Categories=Utility;TextEditor;

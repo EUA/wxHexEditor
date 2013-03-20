@@ -111,7 +111,7 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 //-----READ/WRITE FUNCTIONS-------//
 
 void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset, bool paint ){
-	if( lenght==4294967295 ){
+	if( lenght==4294967295LL ){
 		std::cout << "Buffer has no data!" << std::endl;
 		return;
 		}

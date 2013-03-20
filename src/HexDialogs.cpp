@@ -2200,10 +2200,10 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 
    int TempInt;
    wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
-   spinBytePerLine->SetValue( TempString );
+   spinBytePerLine->SetValue( TempInt );
 
 	wxConfigBase::Get()->Read( _T("FontSize"), &TempInt, 10 );
-	spinFontSize->SetValue( TempString );
+	spinFontSize->SetValue( TempInt );
 
 	if( AvailableEncodings.IsEmpty() )
 		AvailableEncodings=chcCharacterEncoding->GetStrings();
@@ -2236,7 +2236,10 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 			( AvailableEncodings.Item(i).Find( wxT("ISCII") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("TSCII") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("ANSEL") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND ))
+			( AvailableEncodings.Item(i).Find( wxT("AtariST") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("Iran") ) not_eq wxNOT_FOUND )
+			)
 			ExperimentalEncodingsList.Add( AvailableEncodings.Item(i) );
 			}
 
@@ -2246,6 +2249,8 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	EventHandler( e );
 
 	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString );
+	if(TempString==wxT("Extended Binary Coded Decimal Interchange Code"))
+		TempString=wxT("EBCDIC");
 	if( not chcCharacterEncoding->SetStringSelection( TempString ) )
 		chcCharacterEncoding->SetSelection( 0 );
 
@@ -2380,13 +2385,19 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 			wxArrayString families=chcCharacterEncodingFamily->GetStrings();
 			for(int f=0; f< families.Count(); f++)
 				for(int i=0; i< AvailableEncodings.Count(); i++){
-					if( AvailableEncodings.Item(i).Find( families.Item(f) ) not_eq wxNOT_FOUND )
+					wxString family=families.Item(f);
+					if(family==wxT("Extended Binary Coded Decimal Interchange Code"))
+						family=wxT("EBCDIC");
+					if( AvailableEncodings.Item(i).Find( family ) not_eq wxNOT_FOUND )
 						Encodings.Remove( AvailableEncodings.Item(i) );
-				}
+					}
 			}
 		else
 			for(int i=0; i< AvailableEncodings.Count(); i++){
-				if(( AvailableEncodings.Item(i).Find( event.GetString() ) not_eq wxNOT_FOUND ) and
+				wxString family=event.GetString();
+				if(family==wxT("Extended Binary Coded Decimal Interchange Code"))
+					family=wxT("EBCDIC");
+				if(( AvailableEncodings.Item(i).Find( family ) not_eq wxNOT_FOUND ) and
 					(	ExperimentalEncodingsList.Index( AvailableEncodings.Item(i) )==wxNOT_FOUND) )
 					Encodings.Add( AvailableEncodings.Item(i) );
 				}
@@ -2399,6 +2410,14 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		if( not chcCharacterEncoding->SetStringSelection( Selection ) )
 			chcCharacterEncoding->SetSelection( 0 );
 		}
+
+	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
+	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
+	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+   wxConfigBase::Get()->Flush();
+	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+	GetParent()->GetEventHandler()->ProcessEvent( eventx );
+
 	}
 
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {

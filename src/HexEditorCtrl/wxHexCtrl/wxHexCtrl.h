@@ -177,6 +177,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 	public:
 		wxString CodepageTable;
 		wxString Codepage;
+		wxFontEncoding FontEnc;
 //		wxHexTextCtrl():wxHexCtrl(){}
 		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){}
 		wxHexTextCtrl( wxWindow *parent,
@@ -188,6 +189,8 @@ class wxHexTextCtrl : public wxHexCtrl{
 				const wxValidator& validator = wxDefaultValidator) :
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
 				wxWindow::SetCursor( wxCURSOR_CHAR );
+
+				FontEnc=wxFONTENCODING_ALTERNATIVE;
 
 				wxString cp;
 				wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("OEM") );

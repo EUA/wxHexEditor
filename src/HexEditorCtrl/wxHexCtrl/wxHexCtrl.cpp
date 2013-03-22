@@ -24,6 +24,7 @@
 
 #include "wxHexCtrl.h"
 #include <wx/encconv.h>
+#include <wx/fontmap.h>
 
 BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_CHAR( wxHexCtrl::OnChar )
@@ -1065,7 +1066,7 @@ inline wxChar wxHexTextCtrl::Filter(const unsigned char& ch){
 	return CodepageTable[ch];
 	}
 
-inline wxString wxHexTextCtrl::FilterMBBuffer(const char *str, int Len, int fontenc ){
+inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fontenc ){
 	wxString ret;
 	//wxCSConv mcv(wxFONTENCODING_UTF8);
 	// size_t WC2MB(char* buf, const wchar_t* psz, size_t n) const
@@ -1076,7 +1077,7 @@ inline wxString wxHexTextCtrl::FilterMBBuffer(const char *str, int Len, int font
 			unsigned char ch = str[i];
 			if(ch < 0x20) ret+='.';									// Control characters
 			else if( ch >= 0x20 and ch <= 0x7E ) ret+=ch;	// ASCII compatible part
-			else if(ch == 0x7F) ret+='.';							// Control character
+			else if( ch == 0x7F) ret+='.';						// Control character
 			else if( ch >= 0x80 and ch < 0xC0 ) ret+='.';	// 6 Bit Extension Region
 			else if( ch >= 0xC0 and ch < 0xC2 ) ret+='.';	// Invalid UTF8 2 byte codes
 			else if( ch >= 0xC2 and ch < 0xE0 ) {				// 2 Byte UTF Start Codes
@@ -1113,10 +1114,6 @@ inline wxString wxHexTextCtrl::FilterMBBuffer(const char *str, int Len, int font
 				}
 			else if( ch >= 0xF5 and ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
 			}
-
-	if(fontenc==wxFONTENCODING_UTF7){
-		return wxString( str, wxCSConv(wxFONTENCODING_UTF7), Len);
-		}
 
 	if(fontenc==wxFONTENCODING_UTF16){
 		for( int i=0 ; i< Len-1 ; i+=2){
@@ -1156,36 +1153,88 @@ inline wxString wxHexTextCtrl::FilterMBBuffer(const char *str, int Len, int font
 		}
 
 	if(fontenc==wxFONTENCODING_SHIFT_JIS){
+		//wxCSConv m_SJISConv = wxCSConv(wxFONTENCODING_SHIFT_JIS); //error on linux
+		wxCSConv SJISConv = wxCSConv(wxT("SHIFT-JIS"));
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch = str[i];
 			if(ch < 0x20) ret+='.';									// Control characters
-			else if( ch == 0x5C ) ret+=wxChar(0xA5);
-			else if( ch == 0x7E ) ret+=wxChar(0x203E);
-			else if( ch >= 0x20 and ch <= 0x7D ) ret+=ch;	// ASCII compatible part
-			else if(ch < 0x81) ret+='.';							// Void Characters
-			else if(ch == 0xA0) ret+='.';							// Void Characters
-			else if(ch >= 0xF0) ret+='.';							// Void Characters
-			else { //First byte of a double-byte JIS X 0208 character
-				if(Len>i and (str[i+1]>=0x40 and str[i+1]!=0x7F and str[i+1]<=0xFC )){
-					//Second byte of a double-byte JIS X 0208 character
-					z=wxString( str+i, wxCSConv(wxFONTENCODING_SHIFT_JIS), 2);
-					if( z.Len() > 0){
-						ret+=z;
-						if( z.Len() == 1 )
-							ret+=' ';
-						i+=1;
-						}
+			else if( (ch >= 0x20 and ch <= 0x7D) or			//ASCII
+						(ch > 0xA0 and ch < 0xE0 )){				//One-byte JIS X 0208 character
+				ret+=wxString( str+i, SJISConv, 1);
+				//ret+='O';//for debug
+				}
+			else if(ch < 0x81 or ch >= 0xF0 or ch==0xA0) ret+='.';	// Void Characters
+			else if(Len>i){ 											//First byte of a double-byte JIS X 0208 character
+				ch = str[i+1];											//Fetching second character.
+				if( ch>=0x40 and ch!=0x7F and ch<=0xFC ){		//Second byte of a double-byte JIS X 0208 character
+					ret+=wxString( str+i, SJISConv, 2);
+					//ret+=wxString( str+i, wxCSConv(wxFONTENCODING_SHIFT_JIS), 2);
+					//ret+='X';//for debug
+					i+=1;
+					ret+=' '; //Add space for matching
 					}
 				else
-					ret+='.';
+					ret+='.'; // First character is fit but second doesn't. So this is void character
 				}
 			}
 		}
 
 	if(fontenc==wxFONTENCODING_EUC_JP){
+//		xxx
+//		wxCSConv m_SJISConv = wxCSConv(wxFONTENCODING_EUC_JP);
+//		//wxCSConv m_SJISConv = wxCSConv(wxT("EUC-JP"));
+//		for( int i=0 ; i< Len ; i++){
+//			unsigned char ch = str[i];
+//			if(ch < 0x20) ret+='.';									// Control characters
+//			else if( (ch >= 0x20 and ch <= 0x7D) or			//ASCII
+//						(ch > 0xA0 and ch < 0xE0 )){				//One-byte JIS X 0208 character
+//				ret+=wxString( str+i, m_SJISConv, 1);
+//				//ret+='O';//for debug
+//				}
+//			else if(ch < 0x81 or ch >= 0xF0 or ch==0xA0) ret+='.';	// Void Characters
+//			else if(Len>i){ 											//First byte of a double-byte JIS X 0208 character
+//				ch = str[i+1];											//Fetching second character.
+//				if( ch>=0x40 and ch!=0x7F and ch<=0xFC ){		//Second byte of a double-byte JIS X 0208 character
+//					ret+=wxString( str+i, m_SJISConv, 2);
+//					//ret+=wxString( str+i, wxCSConv(wxFONTENCODING_SHIFT_JIS), 2);
+//					//ret+='X';//for debug
+//					i+=1;
+//					ret+=' '; //Add space for matching
+//					}
+//				else
+//					ret+='.'; // First character is fit but second doesn't. So this is void character
+//				}
 		}
 
 	if(fontenc==wxFONTENCODING_BIG5){
+//		wxCSConv Big5Conv = wxCSConv(wxFONTENCODING_BIG5); //Error on linux
+		wxCSConv Big5Conv = wxCSConv(wxT("BIG5"));
+//		First byte ("lead byte") 	0x81 to 0xfe (or 0xa1 to 0xf9 for non-user-defined characters)
+//		Second byte 	0x40 to 0x7e, 0xa1 to 0xfe
+		for( int i=0 ; i< Len ; i++){
+			unsigned char ch = str[i];
+			if(ch<0x20 or ch==0x7F or ch==0x80 or ch==0xFF )
+				ret+='.';
+			else if( (ch >= 0x81 and ch <= 0xFE) or	//1.st byte
+				 (ch >= 0xA1 and ch < 0xF9 ) ){
+				ch = str[i+1];
+				if((ch >= 0x40 and ch <= 0x7E) or		//2.nd byte
+					(ch >= 0xA1 and ch <= 0xFE )){
+					z=wxString(str+i, Big5Conv, 2);
+					if( z.Len() > 0){
+						ret+=z;
+						ret+=wxT(" ");
+						i+=1;
+					}
+					else
+						ret+='.';
+					}
+				else
+					ret+='.';
+				}
+			else
+				ret+=wxString(str+i, Big5Conv, 1);
+			}
 		}
 
 	if(fontenc==wxFONTENCODING_GB2312)
@@ -1905,7 +1954,6 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 			}
 		}
 
-
 	else if(codepage.StartsWith(wxT("DEC Multinational Character Set"))){
 		newCP=PrepareCodepageTable(wxT("ISO/IEC 8859-1 "));//Warning! Watch the space after last 1
 		unsigned char a[]="\xA0\xA4\xA6\xA8\xAC\xAD\xAE\xAF\xB4\xB8\xBE\xD0\xDE\xF0\xFD\xFE\xFF";  //Patch Index
@@ -1918,7 +1966,6 @@ wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 		newCP[0xF7]=wxChar(0x0153);
 		}
 
-	else if(codepage.StartsWith(wxT("UTF7 ")))		FontEnc=wxFONTENCODING_UTF7;
 	else if(codepage.StartsWith(wxT("UTF8 ")))		FontEnc=wxFONTENCODING_UTF8;
 	else if(codepage.StartsWith(wxT("UTF16 ")))		FontEnc=wxFONTENCODING_UTF16;
 	else if(codepage.StartsWith(wxT("UTF16LE")))		FontEnc=wxFONTENCODING_UTF16LE;
@@ -1962,8 +2009,11 @@ void wxHexTextCtrl::ChangeValue( const wxString& value, bool paint ){
 
 void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 	m_text.Clear();
-	if(FontEnc!=wxFONTENCODING_ALTERNATIVE)
+	if(FontEnc!=wxFONTENCODING_ALTERNATIVE){
+		if(not wxFontMapper::Get()->IsEncodingAvailable( FontEnc ) )
+			wxMessageBox(wxT("Encoding is not available!"), wxT("Error!"), wxOK|wxCENTRE );
 		m_text << FilterMBBuffer(buffer,len,FontEnc);
+		}
 	else
 		for( unsigned i=0 ; i<len ; i++ )
 			m_text << Filter(buffer[i]);

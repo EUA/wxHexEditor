@@ -2219,7 +2219,8 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	ChrEncFamArray.Add(wxT("Macintosh"));
 	ChrEncFamArray.Add(wxT("Industrial Standard"));
 	ChrEncFamArray.Add(wxT("Extended Binary Coded Decimal Interchange Code"));
-	ChrEncFamArray.Add(wxT("Windows CP"));
+	ChrEncFamArray.Add(wxT("Windows"));
+	ChrEncFamArray.Add(wxT("UTF"));
 	ChrEncFamArray.Sort();
 	ChrEncFamArray.Add(wxT("Experimental"));
 	ChrEncFamArray.Add(wxT("Other"));
@@ -2237,6 +2238,10 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 			( AvailableEncodings.Item(i).Find( wxT("TSCII") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("ANSEL") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("AtariST") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("EUC") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("Big5") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("JIS") ) not_eq wxNOT_FOUND ) or
+			( AvailableEncodings.Item(i).Find( wxT("GBK") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("Iran") ) not_eq wxNOT_FOUND )
 			)

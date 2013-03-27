@@ -1039,14 +1039,14 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	m_TextFile1->Wrap( -1 );
 	fgSizerFiles->Add( m_TextFile1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePick1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	filePick1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
 	fgSizerFiles->Add( filePick1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	m_TextFile2 = new wxStaticText( this, wxID_ANY, _("File #2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_TextFile2->Wrap( -1 );
 	fgSizerFiles->Add( m_TextFile2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePick2 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	filePick2 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
 	fgSizerFiles->Add( filePick2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
@@ -1188,7 +1188,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	
 	bSizerDiler->Add( chkFile, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePick = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	filePick = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
 	bSizerDiler->Add( filePick, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1819,7 +1819,7 @@ DeviceBackupDialogGui::DeviceBackupDialogGui( wxWindow* parent, wxWindowID id, c
 	txtDestination->Wrap( -1 );
 	fgSizerSourceDestination->Add( txtDestination, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePickBackup = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE|wxFLP_USE_TEXTCTRL );
+	filePickBackup = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*"), wxDefaultPosition, wxDefaultSize, wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE|wxFLP_USE_TEXTCTRL );
 	fgSizerSourceDestination->Add( filePickBackup, 1, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1871,7 +1871,7 @@ DeviceRestoreDialogGui::DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id,
 	txtSource->Wrap( -1 );
 	fgSizerSourceDestination->Add( txtSource, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	filePickBackup = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN|wxFLP_USE_TEXTCTRL );
+	filePickBackup = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), _("*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN|wxFLP_USE_TEXTCTRL );
 	fgSizerSourceDestination->Add( filePickBackup, 0, wxALL|wxEXPAND, 5 );
 	
 	txtDestination = new wxStaticText( this, wxID_ANY, _("Destination :"), wxDefaultPosition, wxDefaultSize, 0 );

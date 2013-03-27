@@ -165,7 +165,14 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//Changing owner of file...
 		//I think it's better than changing permissions directly. Doesn't it?
 		//Will restore owner on file close.
-		wxString cmd = wxT("gnomesu -c \"chown ") + wxGetUserId() + wxT(" ")+ myfilename.GetFullPath() +wxT("\"");
+		wxString cmd;
+		if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
+			cmd = wxT("gnomesu -u root-c \"chown ");
+		else if( wxFile::Exists( wxT("/usr/bin/gksu")))
+			cmd = wxT("gksu -u root \"chown ");
+		else if( wxFile::Exists( wxT("/usr/bin/gksudo")))
+			cmd = wxT("gksudo -u root \"chown ");
+		cmd+=wxGetUserId() + wxT(" ")+ myfilename.GetFullPath() +wxT("\"");
 	#ifdef _DEBUG_
 		std::cout << "Changing permission of " << myfilename.GetFullPath().ToAscii() << std::endl;
 		std::cout << cmd.ToAscii() << std::endl;
@@ -234,13 +241,20 @@ FAL::~FAL(){
 #ifndef __WXMSW__
 	if(not oldOwner.IsEmpty() ){
 		//Will restore owner on file close.
-		wxString cmd = wxT("gnomesu -c \"chown ") + oldOwner + wxT(" ")+ the_file.GetFullPath() +wxT("\"");
+		wxString cmd;
+		if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
+			cmd = wxT("gnomesu -c \"chown ");
+		else if( wxFile::Exists( wxT("/usr/bin/gksu")))
+			cmd = wxT("gksu -u root \"chown ");
+		else if( wxFile::Exists( wxT("/usr/bin/gksudo")))
+			cmd = wxT("gksudo -u root \"chown ");
+		cmd += oldOwner + wxT(" ")+ the_file.GetFullPath() +wxT("\"");
 #ifdef _DEBUG_
 		std::cout << "Changing permission of " << the_file.GetFullPath().ToAscii() << std::endl;
 		std::cout << cmd.ToAscii() << std::endl;
 #endif
-		wxArrayString output,errors;
 		wxShell( cmd );
+		//wxArrayString output,errors;
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxSleep(1);
 		}

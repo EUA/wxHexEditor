@@ -572,12 +572,6 @@ long FAL::Read( char* buffer, int size){
 	}
 
 long FAL::Read( unsigned char* buffer, int size ){
-	uint64_t from;
-	if( BlockRWSize > 0 )
-		from = get_ptr;
-	else
-		from = Tell();
-
 	//Why did I calculate j here? To find active patch indice...
 	int j=0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++)
@@ -586,13 +580,12 @@ long FAL::Read( unsigned char* buffer, int size ){
 		else
 			j=i+1;
 
-	long ret = ReadR( buffer, size, from, &DiffArray, j);
+	long ret = ReadR( buffer, size, get_ptr, &DiffArray, j);
 
 	//Encryption layer
-	ApplyXOR( buffer, size, from );
+	ApplyXOR( buffer, ret, get_ptr );
 
-	if( BlockRWSize > 0 )
-		get_ptr += size; //for next read
+	get_ptr += ret; //for next read
 
 	return ret;
 	}
@@ -671,7 +664,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 	}
 
 long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
-	/******* MANUAL of Code understanding *******
+	/******* MANUAL of Code Understanding *******
 	* current_location                    = [   *
 	* current_location + size             = ]   *
 	* Injections start_offset             = (   *
@@ -736,7 +729,7 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 	}
 
 long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
-	/******* MANUAL of Code understanding ******
+	/******* MANUAL of Code Understanding ******
 	* current_location                   = [   *
 	* current_location + size            = ]   *
 	* Deletes start_offset               = (   *

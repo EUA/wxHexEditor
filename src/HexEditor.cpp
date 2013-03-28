@@ -359,9 +359,12 @@ bool HexEditor::FileSave( wxString savefilename ) {
 		time_t ts,te;
 		time (&ts);
 		while( savefile.Tell() < myfile->Length() ) {
+			int a=myfile->Length();
+			int b=savefile.Tell();
 			rd=myfile->Read( buffer, BlockSz );
 			readfrom+=rd;
 			savefile.Write( buffer, rd );
+			memset(buffer,0,BlockSz);
 			time(&te);
 			if(ts != te ){
 				ts=te;

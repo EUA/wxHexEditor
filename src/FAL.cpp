@@ -640,7 +640,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			return wxMin(wxMin( rd, rd_size-StartShift), size);
 			}
 
-		wxFile::Seek( from );
+		wxFile::Seek( from ); //Since this is the Deepest layer
 		return wxFile::Read( buffer, size ); //Ends recursion. here
 		}
 

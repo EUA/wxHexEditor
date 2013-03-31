@@ -1602,7 +1602,7 @@ XORViewDialogGui::~XORViewDialogGui()
 
 PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( 500,-1 ), wxDefaultSize );
 	
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
@@ -1696,11 +1696,10 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	txtCharacterEncoding->Wrap( -1 );
 	bSizerSubCharacterEncodings->Add( txtCharacterEncoding, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString chcCharacterEncodingChoices[] = { _("ASCII - American Standard Code for Information Interchange"), _("*ISCII - Indian Script Code for Information Interchange"), _("KOI7 Код Обмена Информацией, 7 бит"), _("KOI8-R Код Обмена Информацией, 8 бит"), _("KOI8-U Код Обмена Информацией, 8 бит"), _("ISO/IEC 6937"), _("ISO/IEC 8859-1 Latin-1 Western European"), _("ISO/IEC 8859-2 Latin-2 Central European"), _("ISO/IEC 8859-3 Latin-3 South European"), _("ISO/IEC 8859-4 Latin-4 North European"), _("ISO/IEC 8859-5 Latin/Cyrillic"), _("*ISO/IEC 8859-6 Latin/Arabic"), _("ISO/IEC 8859-7 Latin/Greek"), _("*ISO/IEC 8859-8 Latin/Hebrew"), _("ISO/IEC 8859-9 Latin/Turkish"), _("ISO/IEC 8859-10 Latin/Nordic"), _("*ISO/IEC 8859-11 Latin/Thai"), _("ISO/IEC 8859-13 Latin-7 Baltic Rim"), _("ISO/IEC 8859-14 Latin-8 Celtic"), _("ISO/IEC 8859-15 Latin-9"), _("ISO/IEC 8859-16 Latin-10 South-Eastern European"), _("*Windows CP874 - Thai"), _("Windows CP1250 - Central and Eastern European"), _("Windows CP1251 - Cyrillic Script"), _("Windows CP1252 - ANSI"), _("Windows CP1253 - Greek Modern"), _("Windows CP1254 - Turkish"), _("*Windows CP1255 - Hebrew"), _("*Windows CP1256 - Arabic"), _("Windows CP1257 - Baltic"), _("Windows CP1258 - Vietnamese"), _("VSCII - Vietnamese Standard Code for Information Interchange"), _("*TSCII - Tamil Script Code for Information Interchange"), _("*JIS X 0201 - Japanese Industrial Standard "), _("*TIS-620 - Thai Industrial Standard 620-2533"), _("EBCDIC  037 - IBM U.S. Canada"), _("EBCDIC  285 - IBM Ireland U.K."), _("EBCDIC  424 - IBM Hebrew"), _("EBCDIC  500 - IBM International"), _("EBCDIC  875 - IBM Greek"), _("EBCDIC 1026 - IBM Latin 5 Turkish"), _("EBCDIC 1047 - IBM Latin 1"), _("EBCDIC 1140 - IBM U.S. Canada with €"), _("EBCDIC 1146 - IBM Ireland U.K. with €"), _("EBCDIC 1148 - IBM International with €"), _("*ANSEL - American National Standard for Extended Latin"), _("DEC Multinational Character Set - VT220"), _("OEM - IBM PC/DOS CP437 - MS-DOS Latin US"), _("*PC/DOS CP720 - MS-DOS Arabic"), _("PC/DOS CP737 - MS-DOS Greek"), _("PC/DOS CP775 - MS-DOS Baltic Rim"), _("PC/DOS CP850 - MS-DOS Latin 1"), _("PC/DOS CP852 - MS-DOS Latin 2"), _("PC/DOS CP855 - MS-DOS Cyrillic"), _("*PC/DOS CP856 - Hebrew"), _("PC/DOS CP857 - MS-DOS Turkish"), _("PC/DOS CP858 - MS-DOS Latin 1 Update"), _("PC/DOS CP860 - MS-DOS Portuguese"), _("PC/DOS CP861 - MS-DOS Icelandic"), _("*PC/DOS CP862 - MS-DOS Hebrew"), _("PC/DOS CP863 - MS-DOS French Canada"), _("*PC/DOS CP864 - MS-DOS Arabic 2"), _("PC/DOS CP866 - MS-DOS Cyrillic Russian"), _("PC/DOS CP869 - MS-DOS Greek 2"), _("PC/DOS CP1006 - Arabic"), _("PC/DOS KZ-1048 - Kazakhstan"), _("PC/DOS MIK Code page"), _("PC/DOS Kamenický Encoding"), _("PC/DOS Mazovia Encoding"), _("*PC/DOS Iran System Encoding Standard"), _("*Big5"), _("*GBK - GB2312 - Guojia Biaozhun (国家标准)"), _("UTF8 - Universal Character Set"), _("UTF16 - Universal Character Set"), _("UTF16LE - Universal Character Set"), _("UTF16BE - Universal Character Set"), _("UTF32 - Universal Character Set"), _("UTF32LE - Universal Character Set"), _("UTF32BE - Universal Character Set"), _("Unicode"), _("*EUC-JP Extended Unix Code for Japanese"), _("*EUC-KR Extended Unix Code for Korean"), _("*Shift JIS"), _("Macintosh CP10000 - Roman"), _("Macintosh Arabic"), _("Macintosh Celtic"), _("Macintosh Central European"), _("Macintosh Croatian"), _("Macintosh Cyrillic"), _("Macintosh Devanagari"), _("Macintosh Dingbats"), _("Macintosh Gaelic"), _("Macintosh Greek"), _("Macintosh Gujarati"), _("Macintosh Gurmukhi"), _("Macintosh Hebrew"), _("Macintosh Icelandic"), _("Macintosh Inuit"), _("Macintosh Keyboard"), _("Macintosh Roman"), _("Macintosh Romanian"), _("Macintosh Symbol"), _("Macintosh Thai"), _("Macintosh Tibetan"), _("Macintosh Turkish"), _("Macintosh Ukraine"), _("*AtariST"), _("*Windows CP932 - Japanese (Shift JIS)"), _("*Windows CP936 - Chinese Simplified (GBK)"), _("*Windows CP949 - Korean (EUC-KR)"), _("*Windows CP950 - Chinese Traditional (Big5)") };
-	int chcCharacterEncodingNChoices = sizeof( chcCharacterEncodingChoices ) / sizeof( wxString );
-	chcCharacterEncoding = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingNChoices, chcCharacterEncodingChoices, 0 );
-	chcCharacterEncoding->SetSelection( 26 );
-	bSizerSubCharacterEncodings->Add( chcCharacterEncoding, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	wxArrayString chcCharacterEncodingChoices;
+	chcCharacterEncoding = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCharacterEncodingChoices, 0 );
+	chcCharacterEncoding->SetSelection( 0 );
+	bSizerSubCharacterEncodings->Add( chcCharacterEncoding, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	txtfontSize = new wxStaticText( this, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtfontSize->Wrap( -1 );
@@ -1710,7 +1709,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	bSizerSubCharacterEncodings->Add( spinFontSize, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
-	bSizerMain->Add( bSizerSubCharacterEncodings, 0, 0, 5 );
+	bSizerMain->Add( bSizerSubCharacterEncodings, 0, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizerFormat;
 	sbSizerFormat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Custom Hex Formating") ), wxVERTICAL );

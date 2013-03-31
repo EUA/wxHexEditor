@@ -37,6 +37,8 @@
 		<Linker>
 			<Add option="`wx-config --libs`" />
 		</Linker>
+		<Unit filename="Encodings.cpp" />
+		<Unit filename="Encodings.h" />
 		<Unit filename="Tag.cpp" />
 		<Unit filename="Tag.h" />
 		<Unit filename="TagDialog.fbp" />

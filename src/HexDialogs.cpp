@@ -2206,7 +2206,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	spinFontSize->SetValue( TempInt );
 
 	if( AvailableEncodings.IsEmpty() )
-		AvailableEncodings=chcCharacterEncoding->GetStrings();
+		AvailableEncodings=GetSupportedEncodings();
 
 	chcCharacterEncodingFamily->Clear();
 	chcCharacterEncoding->Clear();

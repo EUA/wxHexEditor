@@ -39,7 +39,7 @@
 #define __idOffsetHex__ 1502
 
 //#define _Use_Graphics_Contex_
-
+wxArrayString GetSupportedEncodings();
 inline wxChar CP473toUnicode( unsigned char ch );
 inline wxString CP473toUnicode( wxString& line );
 
@@ -47,7 +47,7 @@ WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 class wxHexCtrl : public wxScrolledWindow{
 	public:
 //		wxHexCtrl() { }
-		wxHexCtrl( wxWindow *parent );
+		wxHexCtrl( wxWindow *parent ){};
 		wxHexCtrl( wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
@@ -196,6 +196,8 @@ class wxHexTextCtrl : public wxHexCtrl{
 				wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("OEM") );
 				PrepareCodepageTable(cp);
 				};
+
+//wxArrayString GetSupportedEncodings(void);
 		wxString PrepareCodepageTable(wxString);
 inline bool IsDenied(){ return false; }
 inline bool IsDenied( int x ){ return false; }

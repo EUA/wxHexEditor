@@ -1383,6 +1383,142 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 	return ret;
 	}
 
+//wxArrayString wxHexTextCtrl::GetSupportedEncodings(void){
+//	return GetSupportedEncodings(void);
+//	}
+
+wxArrayString GetSupportedEncodings(void){
+	wxArrayString AvailableEncodings;
+	wxString CharacterEncodings[] = {
+					wxT("ASCII - American Standard Code for Information Interchange"),
+					wxT("*ISCII - Indian Script Code for Information Interchange"),
+					wxT("KOI7 Код Обмена Информацией, 7 бит"),
+					wxT("KOI8-R Код Обмена Информацией, 8 бит"),
+					wxT("KOI8-U Код Обмена Информацией, 8 бит"),
+					wxT("ISO/IEC 6937"),
+					wxT("ISO/IEC 8859-1 Latin-1 Western European"),
+					wxT("ISO/IEC 8859-2 Latin-2 Central European"),
+					wxT("ISO/IEC 8859-3 Latin-3 South European"),
+					wxT("ISO/IEC 8859-4 Latin-4 North European"),
+					wxT("ISO/IEC 8859-5 Latin/Cyrillic"),
+					wxT("*ISO/IEC 8859-6 Latin/Arabic"),
+					wxT("ISO/IEC 8859-7 Latin/Greek"),
+					wxT("*ISO/IEC 8859-8 Latin/Hebrew"),
+					wxT("ISO/IEC 8859-9 Latin/Turkish"),
+					wxT("ISO/IEC 8859-10 Latin/Nordic"),
+					wxT("*ISO/IEC 8859-11 Latin/Thai"),
+					wxT("ISO/IEC 8859-13 Latin-7 Baltic Rim"),
+					wxT("ISO/IEC 8859-14 Latin-8 Celtic"),
+					wxT("ISO/IEC 8859-15 Latin-9"),
+					wxT("ISO/IEC 8859-16 Latin-10 South-Eastern European"),
+					wxT("*Windows CP874 - Thai"),
+					wxT("Windows CP1250 - Central and Eastern European"),
+					wxT("Windows CP1251 - Cyrillic Script"),
+					wxT("Windows CP1252 - ANSI"),
+					wxT("Windows CP1253 - Greek Modern"),
+					wxT("Windows CP1254 - Turkish"),
+					wxT("*Windows CP1255 - Hebrew"),
+					wxT("*Windows CP1256 - Arabic"),
+					wxT("Windows CP1257 - Baltic"),
+					wxT("Windows CP1258 - Vietnamese"),
+					wxT("VSCII - Vietnamese Standard Code for Information Interchange"),
+					wxT("*TSCII - Tamil Script Code for Information Interchange"),
+					wxT("*JIS X 0201 - Japanese Industrial Standard "),
+					wxT("*TIS-620 - Thai Industrial Standard 620-2533"),
+					wxT("EBCDIC  037 - IBM U.S. Canada"),
+					wxT("EBCDIC  285 - IBM Ireland U.K."),
+					wxT("EBCDIC  424 - IBM Hebrew"),
+					wxT("EBCDIC  500 - IBM International"),
+					wxT("EBCDIC  875 - IBM Greek"),
+					wxT("EBCDIC 1026 - IBM Latin 5 Turkish"),
+					wxT("EBCDIC 1047 - IBM Latin 1"),
+					wxT("EBCDIC 1140 - IBM U.S. Canada with €"),
+					wxT("EBCDIC 1146 - IBM Ireland U.K. with €"),
+					wxT("EBCDIC 1148 - IBM International with €"),
+					wxT("*ANSEL - American National Standard for Extended Latin"),
+					wxT("DEC Multinational Character Set - VT220"),
+					wxT("OEM - IBM PC/DOS CP437 - MS-DOS Latin US"),
+					wxT("*PC/DOS CP720 - MS-DOS Arabic"),
+					wxT("PC/DOS CP737 - MS-DOS Greek"),
+					wxT("PC/DOS CP775 - MS-DOS Baltic Rim"),
+					wxT("PC/DOS CP850 - MS-DOS Latin 1"),
+					wxT("PC/DOS CP852 - MS-DOS Latin 2"),
+					wxT("PC/DOS CP855 - MS-DOS Cyrillic"),
+					wxT("*PC/DOS CP856 - Hebrew"),
+					wxT("PC/DOS CP857 - MS-DOS Turkish"),
+					wxT("PC/DOS CP858 - MS-DOS Latin 1 Update"),
+					wxT("PC/DOS CP860 - MS-DOS Portuguese"),
+					wxT("PC/DOS CP861 - MS-DOS Icelandic"),
+					wxT("*PC/DOS CP862 - MS-DOS Hebrew"),
+					wxT("PC/DOS CP863 - MS-DOS French Canada"),
+					wxT("*PC/DOS CP864 - MS-DOS Arabic 2"),
+					wxT("PC/DOS CP866 - MS-DOS Cyrillic Russian"),
+					wxT("PC/DOS CP869 - MS-DOS Greek 2"),
+					wxT("PC/DOS CP1006 - Arabic"),
+					wxT("PC/DOS KZ-1048 - Kazakhstan"),
+					wxT("PC/DOS MIK Code page"),
+					wxT("PC/DOS Kamenický Encoding"),
+					wxT("PC/DOS Mazovia Encoding"),
+					wxT("*PC/DOS Iran System Encoding Standard"),
+					wxT("*Big5"),
+					wxT("*GBK - GB2312 - Guojia Biaozhun (国家标准)"),
+					wxT("UTF8 - Universal Character Set"),
+					wxT("UTF16 - Universal Character Set"),
+					wxT("UTF16LE - Universal Character Set"),
+					wxT("UTF16BE - Universal Character Set"),
+					wxT("UTF32 - Universal Character Set"),
+					wxT("UTF32LE - Universal Character Set"),
+					wxT("UTF32BE - Universal Character Set"),
+					wxT("Unicode"),
+					wxT("*EUC-JP Extended Unix Code for Japanese"),
+					wxT("*EUC-KR Extended Unix Code for Korean"),
+					wxT("*Shift JIS"),
+
+					wxT("Macintosh CP10000 - MacRoman"),
+					wxT("Macintosh CP10007 - MacCyrillic"),
+					wxT("Macintosh CP10006 - MacGreek"),
+					wxT("Macintosh CP10079 - MacIcelandic"),
+					wxT("Macintosh CP10029 - MacLatin2"),
+					wxT("Macintosh CP10081 - MacTurkish"),
+
+		#ifdef __WXMAC__
+					wxT("Macintosh Arabic"),
+					wxT("Macintosh Celtic"),
+					wxT("Macintosh Central European"),
+					wxT("Macintosh Croatian"),
+					wxT("Macintosh Cyrillic"),
+					wxT("Macintosh Devanagari"),
+					wxT("Macintosh Dingbats"),
+					wxT("Macintosh Gaelic"),
+					wxT("Macintosh Greek"),
+					wxT("Macintosh Gujarati"),
+					wxT("Macintosh Gurmukhi"),
+					wxT("Macintosh Hebrew"),
+					wxT("Macintosh Icelandic"),
+					wxT("Macintosh Inuit"),
+					wxT("Macintosh Keyboard"),
+					wxT("Macintosh Roman"),
+					wxT("Macintosh Romanian"),
+					wxT("Macintosh Symbol"),
+					wxT("Macintosh Thai"),
+					wxT("Macintosh Tibetan"),
+					wxT("Macintosh Turkish"),
+					wxT("Macintosh Ukraine"),
+			#endif
+
+					wxT("*AtariST"),
+					wxT("*Windows CP932 - Japanese (Shift JIS)"),
+					wxT("*Windows CP936 - Chinese Simplified (GBK)"),
+					wxT("*Windows CP949 - Korean (EUC-KR)"),
+					wxT("*Windows CP950 - Chinese Traditional (Big5)")
+					};
+
+		int EncCnt = sizeof( CharacterEncodings ) / sizeof( wxString );
+		for( int i=0 ; i< EncCnt ; i++ )
+			AvailableEncodings.Add(CharacterEncodings[i]);
+		return AvailableEncodings;
+		}
+
 wxString wxHexTextCtrl::PrepareCodepageTable(wxString codepage){
 /****Python script for fetch Code page tables*********
 import urllib,sys
@@ -1516,7 +1652,11 @@ cpformat(a)
 
 		newCP+=wxChar(0x2302); //0x7F symbol
 
+		for (unsigned i=0x80; i<=0xFF ; i++)
+			bf[i-0x80] =  wxChar(i);
+
 		if(codepage.Find(wxT("CP437")) not_eq wxNOT_FOUND )//Extended ASCII region of CP437
+//			newCP+=wxString( bf, wxCSConv(wxT("CP437")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xA2\xA3\xA5\x20A7\x0192"\
 							"\xE1\xED\xF3\xFA\xF1\xD1\xAA\xBA\xBF\x2310\xAC\xBD\xBC\xA1\xAB\xBB"\
@@ -1527,6 +1667,7 @@ cpformat(a)
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP720")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP720")), 0x80);
 			newCP+=wxT(	"..\xE9\xE2.\xE0.\xE7\xEA\xEB\xE8\xEF\xEE..."\
 							".\x0651\x0652\xF4\xA4\x0640\xFB\xF9\x0621\x0622\x0623\x0624\xA3\x0625\x0626\x0627"\
 							"\x0628\x0629\x062A\x062B\x062C\x062D\x062E\x062F\x0630\x0631\x0632\x0633\x0634\x0635\xAB\xBB"\
@@ -1537,6 +1678,7 @@ cpformat(a)
 							"\x2261\x064B\x064C\x064D\x064E\x064F\x0650\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP737")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP737")), 0x80);
 			newCP+=wxT( "\x0391\x0392\x0393\x0394\x0395\x0396\x0397\x0398\x0399\x039A\x039B\x039C\x039D\x039E\x039F\x03A0"\
 							"\x03A1\x03A3\x03A4\x03A5\x03A6\x03A7\x03A8\x03A9\x03B1\x03B2\x03B3\x03B4\x03B5\x03B6\x03B7\x03B8"\
 							"\x03B9\x03BA\x03BB\x03BC\x03BD\x03BE\x03BF\x03C0\x03C1\x03C3\x03C2\x03C4\x03C5\x03C6\x03C7\x03C8"\
@@ -1547,6 +1689,7 @@ cpformat(a)
 							"\x038F\xB1\x2265\x2264\x03AA\x03AB\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP775")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP775")), 0x80);
 			newCP+=wxT( "\x0106\xFC\xE9\x0101\xE4\x0123\xE5\x0107\x0142\x0113\x0156\x0157\x012B\x0179\xC4\xC5"\
 							"\xC9\xE6\xC6\x014D\xF6\x0122\xA2\x015A\x015B\xD6\xDC\xF8\xA3\xD8\xD7\xA4"\
 							"\x0100\x012A\xF3\x017B\x017C\x017A\x201D\xA6\xA9\xAE\xAC\xBD\xBC\x0141\xAB\xBB"\
@@ -1557,6 +1700,7 @@ cpformat(a)
 							".\xB1\x201C\xBE\xB6\xA7\xF7\x201E\xB0\x2219\xB7\xB9\xB3\xB2\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP850")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP850")), 0x80);
 			newCP+=wxT( "\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xF8\xA3\xD8\xD7\x0192"\
 							"\xE1\xED\xF3\xFA\xF1\xD1\xAA\xBA\xBF\xAE\xAC\xBD\xBC\xA1\xAB\xBB"\
@@ -1567,6 +1711,7 @@ cpformat(a)
 							".\xB1\x2017\xBE\xB6\xA7\xF7\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0");
 
 		else if(codepage.Find(wxT("CP852")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP852")), 0x80);
 			newCP+=wxT( "\xC7\xFC\xE9\xE2\xE4\x016F\x0107\xE7\x0142\xEB\x0150\x0151\xEE\x0179\xC4\x0106"\
 							"\xC9\x0139\x013A\xF4\xF6\x013D\x013E\x015A\x015B\xD6\xDC\x0164\x0165\x0141\xD7\x010D"\
 							"\xE1\xED\xF3\xFA\x0104\x0105\x017D\x017E\x0118\x0119\xAC\x017A\x010C\x015F\xAB\xBB"\
@@ -1574,10 +1719,10 @@ cpformat(a)
 							"\x2514\x2534\x252C\x251C\x2500\x253C\x0102\x0103\x255A\x2554\x2569\x2566\x2560\x2550\x256C\xA4"\
 							"\x0111\x0110\x010E\xCB\x010F\x0147\xCD\xCE\x011B\x2518\x250C\x2588\x2584\x0162\x016E\x2580"\
 							"\xD3\xDF\xD4\x0143\x0144\x0148\x0160\x0161\x0154\xDA\x0155\x0170\xFD\xDD\x0163\xB4"\
-							".\x02DD\x02DB\x02C7\x02D8\xA7\xF7\xB8\xB0\xA8\x02D9\x0171\x0158\x0159\x25A0\xA0"
-						 );
+							".\x02DD\x02DB\x02C7\x02D8\xA7\xF7\xB8\xB0\xA8\x02D9\x0171\x0158\x0159\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP855")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP855")), 0x80);
 			newCP+=wxT(	"\x0452\x0402\x0453\x0403\x0451\x0401\x0454\x0404\x0455\x0405\x0456\x0406\x0457\x0407\x0458\x0408"\
 							"\x0459\x0409\x045A\x040A\x045B\x040B\x045C\x040C\x045E\x040E\x045F\x040F\x044E\x042E\x044A\x042A"\
 							"\x0430\x0410\x0431\x0411\x0446\x0426\x0434\x0414\x0435\x0415\x0444\x0424\x0433\x0413\xAB\xBB"\
@@ -1588,6 +1733,7 @@ cpformat(a)
 							".\x044B\x042B\x0437\x0417\x0448\x0428\x044D\x042D\x0449\x0429\x0447\x0427\xA7\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP856")) not_eq wxNOT_FOUND )
+			//newCP+=wxString( bf, wxCSConv(wxT("CP856")), 0x80);
 			newCP+=wxT( "\x05D0\x05D1\x05D2\x05D3\x05D4\x05D5\x05D6\x05D7\x05D8\x05D9\x05DA\x05DB\x05DC\x05DD\x05DE\x05DF"\
 							"\x05E0\x05E1\x05E2\x05E3\x05E4\x05E5\x05E6\x05E7\x05E8\x05E9\x05EA.\xA3.\xD7."\
 							".........\xAE\xAC\xBD\xBC.\xAB\xBB"\
@@ -1597,7 +1743,10 @@ cpformat(a)
 							"......\xB5.......\xAF\xB4"\
 							".\xB1\x2017\xBE\xB6\xA7\xF7\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP857")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP857")) not_eq wxNOT_FOUND ){
+//			bf[0xD5-0x80]=bf[0xE7-0x80]=bf[0xF2-0x80]='.';
+//			newCP+=wxString( bf, wxCSConv(wxT("CP857")), 0x80);
+//			newCP[0xD5]=wxChar(0x20AC); //Euro Sign
 			//Updated 0xD5 with euro sign
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\x0131\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\x0130\xD6\xDC\xF8\xA3\xD8\x015E\x015F"\
@@ -1607,6 +1756,7 @@ cpformat(a)
 							"\xBA\xAA\xCA\xCB\xC8\x20AC\xCD\xCE\xCF\x2518\x250C\x2588\x2584\xA6\xCC\x2580"\
 							"\xD3\xDF\xD4\xD2\xF5\xD5\xB5.\xD7\xDA\xDB\xD9\xEC\xFF\xAF\xB4"\
 							".\xB1.\xBE\xB6\xA7\xF7\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0" );
+		}
 
 		else if(codepage.Find(wxT("CP858")) not_eq wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("PC/DOS CP850"));
@@ -1614,6 +1764,7 @@ cpformat(a)
 			}
 
 		else if(codepage.Find(wxT("CP860")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP860")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE3\xE0\xC1\xE7\xEA\xCA\xE8\xCD\xD4\xEC\xC3\xC2"\
 							"\xC9\xC0\xC8\xF4\xF5\xF2\xDA\xF9\xCC\xD5\xDC\xA2\xA3\xD9\x20A7\xD3"\
 							"\xE1\xED\xF3\xFA\xF1\xD1\xAA\xBA\xBF\xD2\xAC\xBD\xBC\xA1\xAB\xBB"\
@@ -1624,6 +1775,7 @@ cpformat(a)
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP861")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP861")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xD0\xF0\xDE\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xFE\xFB\xDD\xFD\xD6\xDC\xF8\xA3\xD8\x20A7\x0192"\
 							"\xE1\xED\xF3\xFA\xC1\xCD\xD3\xDA\xBF\x2310\xAC\xBD\xBC\xA1\xAB\xBB"\
@@ -1634,6 +1786,7 @@ cpformat(a)
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP862")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP862")), 0x80);
 			newCP+=wxT(	"\x05D0\x05D1\x05D2\x05D3\x05D4\x05D5\x05D6\x05D7\x05D8\x05D9\x05DA\x05DB\x05DC\x05DD\x05DE\x05DF"\
 							"\x05E0\x05E1\x05E2\x05E3\x05E4\x05E5\x05E6\x05E7\x05E8\x05E9\x05EA\xA2\xA3\xA5\x20A7\x0192"\
 							"\xE1\xED\xF3\xFA\xF1\xD1\xAA\xBA\xBF\x2310\xAC\xBD\xBC\xA1\xAB\xBB"\
@@ -1644,6 +1797,7 @@ cpformat(a)
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0");
 
 		else if(codepage.Find(wxT("CP863")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP863")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xC2\xE0\xB6\xE7\xEA\xEB\xE8\xEF\xEE\x2017\xC0\xA7"\
 							"\xC9\xC8\xCA\xF4\xCB\xCF\xFB\xF9\xA4\xD4\xDC\xA2\xA3\xD9\xDB\x0192"\
 							"\xA6\xB4\xF3\xFA\xA8\xB8\xB3\xAF\xCE\x2310\xAC\xBD\xBC\xBE\xAB\xBB"\
@@ -1655,6 +1809,7 @@ cpformat(a)
 
 		else if(codepage.Find(wxT("CP864")) not_eq wxNOT_FOUND ){
 			//0xA7 replaced with EUR
+//			newCP+=wxString( bf, wxCSConv(wxT("CP864")), 0x80);
 			newCP+=wxT(	"\xB0\xB7\x2219\x221A\x2592\x2500\x2502\x253C\x2524\x252C\x251C\x2534\x2510\x250C\x2514\x2518"\
 							"\x03B2\x221E\x03C6\xB1\xBD\xBC\x2248\xAB\xBB\xFEF7\xFEF8..\xFEFB\xFEFC."\
 							"\xA0.\xFE82\xA3\xA4\xFE84.\x20AC\xFE8E\xFE8F\xFE95\xFE99\x060C\xFE9D\xFEA1\xFEA5"\
@@ -1674,6 +1829,7 @@ cpformat(a)
 			}
 
 		else if(codepage.Find(wxT("CP866")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP866")), 0x80);
 			newCP+=wxT(	"\x0410\x0411\x0412\x0413\x0414\x0415\x0416\x0417\x0418\x0419\x041A\x041B\x041C\x041D\x041E\x041F"\
 							"\x0420\x0421\x0422\x0423\x0424\x0425\x0426\x0427\x0428\x0429\x042A\x042B\x042C\x042D\x042E\x042F"\
 							"\x0430\x0431\x0432\x0433\x0434\x0435\x0436\x0437\x0438\x0439\x043A\x043B\x043C\x043D\x043E\x043F"\
@@ -1684,6 +1840,7 @@ cpformat(a)
 							"\x0401\x0451\x0404\x0454\x0407\x0457\x040E\x045E\xB0\x2219\xB7\x221A\x2116\xA4\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP869")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP869")), 0x80);
 			newCP+=wxT(	"......\x0386.\xB7\xAC\xA6\x2018\x2019\x0388\x2015\x0389"\
 							"\x038A\x03AA\x038C..\x038E\x03AB\xA9\x038F\xB2\xB3\x03AC\xA3\x03AD\x03AE\x03AF"\
 							"\x03CA\x0390\x03CC\x03CD\x0391\x0392\x0393\x0394\x0395\x0396\x0397\xBD\x0398\x0399\xAB\xBB"\
@@ -1694,6 +1851,7 @@ cpformat(a)
 							".\xB1\x03C5\x03C6\x03C7\xA7\x03C8\x0385\xB0\xA8\x03C9\x03CB\x03B0\x03CE\x25A0\xA0" );
 
 		else if(codepage.Find(wxT("CP1006")) not_eq wxNOT_FOUND )
+//			newCP+=wxString( bf, wxCSConv(wxT("CP1006")), 0x80);
 			newCP+=wxT(	"\xA0\x06F0\x06F1\x06F2\x06F3\x06F4\x06F5\x06F6\x06F7\x06F8\x06F9\x060C\x061B.\x061F\xFE81"\
 							"\xFE8D\xFE8E\xFE8E\xFE8F\xFE91\xFB56\xFB58\xFE93\xFE95\xFE97\xFB66\xFB68\xFE99\xFE9B\xFE9D\xFE9F"\
 							"\xFB7A\xFB7C\xFEA1\xFEA3\xFEA5\xFEA7\xFEA9\xFB84\xFEAB\xFEAD\xFB8C\xFEAF\xFB8A\xFEB1\xFEB3\xFEB5"\
@@ -1809,7 +1967,16 @@ cpformat(a)
 		else if(codepage.Mid(q,2).StartsWith(wxT("13")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_13), 256);
 		else if(codepage.Mid(q,2).StartsWith(wxT("14")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_14), 256);
 		else if(codepage.Mid(q,2).StartsWith(wxT("15")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_15), 256);
-		//else if(codepage.Mid(q,2).StartsWith(wxT("16")))	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_ISO8859_16), 256);
+		else if(codepage.Mid(q,2).StartsWith(wxT("16"))){
+			//newCP+=wxString( bf, wxCSConv(wxT("ISO8859-16")), 256);
+			newCP=PrepareCodepageTable(wxT("ASCII")).Mid(0,0xA0);
+			newCP+=wxT(	"\xA0\x0104\x0105\x0141\x20AC\x201E\x0160\xA7\x0161\xA9\x0218\xAB\x0179\xAD\x017A\x017B"\
+							"\xB0\xB1\x010C\x0142\x017D\x201D\xB6\xB7\x017E\x010D\x0219\xBB\x0152\x0153\x0178\x017C"\
+							"\xC0\xC1\xC2\x0102\xC4\x0106\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF"\
+							"\x0110\x0143\xD2\xD3\xD4\x0150\xD6\x015A\x0170\xD9\xDA\xDB\xDC\x0118\x021A\xDF"\
+							"\xE0\xE1\xE2\x0103\xE4\x0107\xE6\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF"\
+							"\x0111\x0144\xF2\xF3\xF4\x0151\xF6\x015B\x0171\xF9\xFA\xFB\xFC\x0119\x021B\xFF" );
+			}
 		}
 
 	// Windows Code Pages
@@ -2051,35 +2218,80 @@ cpformat(a)
 		}
 
 	else if(codepage.Find(wxT("Macintosh")) not_eq wxNOT_FOUND ){
-		if( codepage.Find(wxT("CP10000")) not_eq wxNOT_FOUND ){
-//		char bf[256];
-//		for (unsigned i=0; i<=0xFF ; i++)
-//			bf[i] = (i<0x20 or i==0x7F)	? '.' : i;
-//		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACROMAN), 256);
-
 		//Control chars replaced with dot
-		for (unsigned i=0; i<0x20 ; i++)				newCP+=wxChar('.');
+		for (unsigned i=0; i<0x20 ; i++)
+			newCP+=wxChar('.');
 		//ASCII compatible part
-		for( unsigned i=0x20 ; i < 0x7F ; i++ )	newCP += wxChar(i);
-		//Macintosh Roman CP10000 extension table
-		newCP+=wxT(	".\x00C4\x00C5\x00C7\x00C9\x00D1\x00D6\x00DC\x00E1\x00E0\x00E2"\
-						"\x00E4\x00E3\x00E5\x00E7\x00E9\x00E8\x00EA\x00EB\x00ED\x00EC"\
-						"\x00EE\x00EF\x00F1\x00F3\x00F2\x00F4\x00F6\x00F5\x00FA\x00F9"\
-						"\x00FB\x00FC\x2020\x00B0\x00A2\x00A3\x00A7\x2022\x00B6\x00DF"\
-						"\x00AE\x00A9\x2122\x00B4\x00A8\x2260\x00C6\x00D8\x221E\x00B1"\
-						"\x2264\x2265\x00A5\x00B5\x2202\x2211\x220F\x03C0\x222B\x00AA"\
-						"\x00BA\x03A9\x00E6\x00F8\x00BF\x00A1\x00AC\x221A\x0192\x2248"\
-						"\x2206\x00AB\x00BB\x2026\x00A0\x00C0\x00C3\x00D5\x0152\x0153"\
-						"\x2013\x2014\x201C\x201D\x2018\x2019\x00F7\x25CA\x00FF\x0178"\
-						"\x2044\x20AC\x2039\x203A\xFB01\xFB02\x2021\x00B7\x201A\x201E"\
-						"\x2030\x00C2\x00CA\x00C1\x00CB\x00C8\x00CD\x00CE\x00CF\x00CC"\
-						"\x00D3\x00D4\xF8FF\x00D2\x00DA\x00DB\x00D9\x0131\x02C6\x02DC"\
-						"\x00AF\x02D8\x02D9\x02DA\x00B8\x02DD\x02DB\x02C7" );
-		}
+		for( unsigned i=0x20 ; i < 0x7F ; i++ )
+			newCP += wxChar(i);
+		newCP+='.';//0xFF delete char
+
+		if( codepage.Find(wxT("CP10000")) not_eq wxNOT_FOUND )		//Macintosh Roman extension table
+			newCP+=wxT(	"\xC4\xC5\xC7\xC9\xD1\xD6\xDC\xE1\xE0\xE2\xE4\xE3\xE5\xE7\xE9\xE8"\
+							"\xEA\xEB\xED\xEC\xEE\xEF\xF1\xF3\xF2\xF4\xF6\xF5\xFA\xF9\xFB\xFC"\
+							"\x2020\xB0\xA2\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\xB4\xA8\x2260\xC6\xD8"\
+							"\x221E\xB1\x2264\x2265\xA5\xB5\x2202\x2211\x220F\x03C0\x222B\xAA\xBA\x2126\xE6\xF8"\
+							"\xBF\xA1\xAC\x221A\x0192\x2248\x2206\xAB\xBB\x2026\xA0\xC0\xC3\xD5\x0152\x0153"\
+							"\x2013\x2014\x201C\x201D\x2018\x2019\xF7\x25CA\xFF\x0178\x2044\xA4\x2039\x203A\xFB01\xFB02"\
+							"\x2021\xB7\x201A\x201E\x2030\xC2\xCA\xC1\xCB\xC8\xCD\xCE\xCF\xCC\xD3\xD4"\
+							".\xD2\xDA\xDB\xD9\x0131\x02C6\x02DC\xAF\x02D8\x02D9\x02DA\xB8\x02DD\x02DB\x02C7" );
+
+		else if( codepage.Find(wxT("CP10029")) not_eq wxNOT_FOUND )		//Macintosh Latin2 extension table
+			newCP+=wxT( "\xC4\x0100\x0101\xC9\x0104\xD6\xDC\xE1\x0105\x010C\xE4\x010D\x0106\x0107\xE9\x0179"\
+							"\x017A\x010E\xED\x010F\x0112\x0113\x0116\xF3\x0117\xF4\xF6\xF5\xFA\x011A\x011B\xFC"\
+							"\x2020\xB0\x0118\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\x0119\xA8\x2260\x0123\x012E"\
+							"\x012F\x012A\x2264\x2265\x012B\x0136\x2202\x2211\x0142\x013B\x013C\x013D\x013E\x0139\x013A\x0145"\
+							"\x0146\x0143\xAC\x221A\x0144\x0147\x2206\xAB\xBB\x2026\xA0\x0148\x0150\xD5\x0151\x014C"\
+							"\x2013\x2014\x201C\x201D\x2018\x2019\xF7\x25CA\x014D\x0154\x0155\x0158\x2039\x203A\x0159\x0156"\
+							"\x0157\x0160\x201A\x201E\x0161\x015A\x015B\xC1\x0164\x0165\xCD\x017D\x017E\x016A\xD3\xD4"\
+							"\x016B\x016E\xDA\x016F\x0170\x0171\x0172\x0173\xDD\xFD\x0137\x017B\x0141\x017C\x0122\x02C7" );
+
+
+		else if( codepage.Find(wxT("CP10079")) not_eq wxNOT_FOUND )		//Macintosh Icelandic extension table
+			newCP+=wxT(	"\xC4\xC5\xC7\xC9\xD1\xD6\xDC\xE1\xE0\xE2\xE4\xE3\xE5\xE7\xE9\xE8"\
+							"\xEA\xEB\xED\xEC\xEE\xEF\xF1\xF3\xF2\xF4\xF6\xF5\xFA\xF9\xFB\xFC"\
+							"\xDD\xB0\xA2\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\xB4\xA8\x2260\xC6\xD8"\
+							"\x221E\xB1\x2264\x2265\xA5\xB5\x2202\x2211\x220F\x03C0\x222B\xAA\xBA\x2126\xE6\xF8"\
+							"\xBF\xA1\xAC\x221A\x0192\x2248\x2206\xAB\xBB\x2026\xA0\xC0\xC3\xD5\x0152\x0153"\
+							"\x2013\x2014\x201C\x201D\x2018\x2019\xF7\x25CA\xFF\x0178\x2044\xA4\xD0\xF0\xDE\xFE"\
+							"\xFD\xB7\x201A\x201E\x2030\xC2\xCA\xC1\xCB\xC8\xCD\xCE\xCF\xCC\xD3\xD4"\
+							".\xD2\xDA\xDB\xD9\x0131\x02C6\x02DC\xAF\x02D8\x02D9\x02DA\xB8\x02DD\x02DB\x02C7" );
+
+
+		else if( codepage.Find(wxT("CP10006")) not_eq wxNOT_FOUND )		//Macintosh Greek CP10006 extension table
+			newCP+=wxT(	"\xC4\xB9\xB2\xC9\xB3\xD6\xDC\x0385\xE0\xE2\xE4\x0384\xA8\xE7\xE9\xE8"\
+							"\xEA\xEB\xA3\x2122\xEE\xEF\x2022\xBD\x2030\xF4\xF6\xA6\xAD\xF9\xFB\xFC"\
+							"\x2020\x0393\x0394\x0398\x039B\x039E\x03A0\xDF\xAE\xA9\x03A3\x03AA\xA7\x2260\xB0\x0387"\
+							"\x0391\xB1\x2264\x2265\xA5\x0392\x0395\x0396\x0397\x0399\x039A\x039C\x03A6\x03AB\x03A8\x03A9"\
+							"\x03AC\x039D\xAC\x039F\x03A1\x2248\x03A4\xAB\xBB\x2026\xA0\x03A5\x03A7\x0386\x0388\x0153"\
+							"\x2013\x2015\x201C\x201D\x2018\x2019\xF7\x0389\x038A\x038C\x038E\x03AD\x03AE\x03AF\x03CC\x038F"\
+							"\x03CD\x03B1\x03B2\x03C8\x03B4\x03B5\x03C6\x03B3\x03B7\x03B9\x03BE\x03BA\x03BB\x03BC\x03BD\x03BF"\
+							"\x03C0\x03CE\x03C1\x03C3\x03C4\x03B8\x03C9\x03C2\x03C7\x03C5\x03B6\x03CA\x03CB\x0390\x03B0." );
+
+		else if( codepage.Find(wxT("CP10007")) not_eq wxNOT_FOUND )//Macintosh Cyrillic extension table
+			newCP+=wxT( "\x0410\x0411\x0412\x0413\x0414\x0415\x0416\x0417\x0418\x0419\x041A\x041B\x041C\x041D\x041E\x041F"\
+							"\x0420\x0421\x0422\x0423\x0424\x0425\x0426\x0427\x0428\x0429\x042A\x042B\x042C\x042D\x042E\x042F"\
+							"\x2020\xB0\xA2\xA3\xA7\x2022\xB6\x0406\xAE\xA9\x2122\x0402\x0452\x2260\x0403\x0453"\
+							"\x221E\xB1\x2264\x2265\x0456\xB5\x2202\x0408\x0404\x0454\x0407\x0457\x0409\x0459\x040A\x045A"\
+							"\x0458\x0405\xAC\x221A\x0192\x2248\x2206\xAB\xBB\x2026\xA0\x040B\x045B\x040C\x045C\x0455"\
+							"\x2013\x2014\x201C\x201D\x2018\x2019\xF7\x201E\x040E\x045E\x040F\x045F\x2116\x0401\x0451\x044F"\
+							"\x0430\x0431\x0432\x0433\x0434\x0435\x0436\x0437\x0438\x0439\x043A\x043B\x043C\x043D\x043E\x043F"\
+							"\x0440\x0441\x0442\x0443\x0444\x0445\x0446\x0447\x0448\x0449\x044A\x044B\x044C\x044D\x044E\xA4" );
+
+		else if( codepage.Find(wxT("CP10081")) not_eq wxNOT_FOUND )		//Macintosh Turkish extension table
+			newCP+=wxT(	"\xC4\xC5\xC7\xC9\xD1\xD6\xDC\xE1\xE0\xE2\xE4\xE3\xE5\xE7\xE9\xE8"\
+							"\xEA\xEB\xED\xEC\xEE\xEF\xF1\xF3\xF2\xF4\xF6\xF5\xFA\xF9\xFB\xFC"\
+							"\x2020\xB0\xA2\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\xB4\xA8\x2260\xC6\xD8"\
+							"\x221E\xB1\x2264\x2265\xA5\xB5\x2202\x2211\x220F\x03C0\x222B\xAA\xBA\x2126\xE6\xF8"\
+							"\xBF\xA1\xAC\x221A\x0192\x2248\x2206\xAB\xBB\x2026\xA0\xC0\xC3\xD5\x0152\x0153"\
+							"\x2013\x2014\x201C\x201D\x2018\x2019\xF7\x25CA\xFF\x0178\x011E\x011F\x0130\x0131\x015E\x015F"\
+							"\x2021\xB7\x201A\x201E\x2030\xC2\xCA\xC1\xCB\xC8\xCD\xCE\xCF\xCC\xD3\xD4"\
+							".\xD2\xDA\xDB\xD9.\x02C6\x02DC\xAF\x02D8\x02D9\x02DA\xB8\x02DD\x02DB\x02C7" );
+
+		#ifdef __WXMAC__
 		else{
 			for (unsigned i=0; i<=0xFF ; i++)
 				bf[i] = (i<0x20 or i==0x7F)	? '.' : i;
-
 			if( codepage.Find(wxT("Arabic")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARABIC), 256);
 			if( codepage.Find(wxT("Arabic Ext")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARABICEXT), 256);
 			if( codepage.Find(wxT("Armanian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARMENIAN), 256);
@@ -2123,6 +2335,7 @@ cpformat(a)
 			if( codepage.Find(wxT("Turkish")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTURKISH), 256);
 			if( codepage.Find(wxT("Viatnamese")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACVIATNAMESE), 256);
 			}
+		#endif// __WXMAC__
 		}
 
 	else if( codepage.Find(wxT("DEC Multinational")) not_eq wxNOT_FOUND ){

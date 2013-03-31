@@ -12671,7 +12671,7 @@
             <property name="hidden">0</property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
-            <property name="minimum_size"></property>
+            <property name="minimum_size">500,-1</property>
             <property name="name">PreferencesDialogGui</property>
             <property name="pos"></property>
             <property name="size"></property>
@@ -13810,7 +13810,7 @@
                 </object>
                 <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
-                    <property name="flag"></property>
+                    <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
@@ -13902,7 +13902,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND</property>
+                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                             <property name="proportion">1</property>
                             <object class="wxChoice" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -13918,7 +13918,7 @@
                                 <property name="caption"></property>
                                 <property name="caption_visible">1</property>
                                 <property name="center_pane">0</property>
-                                <property name="choices">&quot;ASCII - American Standard Code for Information Interchange&quot; &quot;*ISCII - Indian Script Code for Information Interchange&quot; &quot;KOI7 Код Обмена Информацией, 7 бит&quot; &quot;KOI8-R Код Обмена Информацией, 8 бит&quot; &quot;KOI8-U Код Обмена Информацией, 8 бит&quot; &quot;ISO/IEC 6937&quot; &quot;ISO/IEC 8859-1 Latin-1 Western European&quot; &quot;ISO/IEC 8859-2 Latin-2 Central European&quot; &quot;ISO/IEC 8859-3 Latin-3 South European&quot; &quot;ISO/IEC 8859-4 Latin-4 North European&quot; &quot;ISO/IEC 8859-5 Latin/Cyrillic&quot; &quot;*ISO/IEC 8859-6 Latin/Arabic&quot; &quot;ISO/IEC 8859-7 Latin/Greek&quot; &quot;*ISO/IEC 8859-8 Latin/Hebrew&quot; &quot;ISO/IEC 8859-9 Latin/Turkish&quot; &quot;ISO/IEC 8859-10 Latin/Nordic&quot; &quot;*ISO/IEC 8859-11 Latin/Thai&quot; &quot;ISO/IEC 8859-13 Latin-7 Baltic Rim&quot; &quot;ISO/IEC 8859-14 Latin-8 Celtic&quot; &quot;ISO/IEC 8859-15 Latin-9&quot; &quot;ISO/IEC 8859-16 Latin-10 South-Eastern European&quot; &quot;*Windows CP874 - Thai&quot; &quot;Windows CP1250 - Central and Eastern European&quot; &quot;Windows CP1251 - Cyrillic Script&quot; &quot;Windows CP1252 - ANSI&quot; &quot;Windows CP1253 - Greek Modern&quot; &quot;Windows CP1254 - Turkish&quot; &quot;*Windows CP1255 - Hebrew&quot; &quot;*Windows CP1256 - Arabic&quot; &quot;Windows CP1257 - Baltic&quot; &quot;Windows CP1258 - Vietnamese&quot; &quot;VSCII - Vietnamese Standard Code for Information Interchange&quot; &quot;*TSCII - Tamil Script Code for Information Interchange&quot; &quot;*JIS X 0201 - Japanese Industrial Standard &quot; &quot;*TIS-620 - Thai Industrial Standard 620-2533&quot; &quot;EBCDIC  037 - IBM U.S. Canada&quot; &quot;EBCDIC  285 - IBM Ireland U.K.&quot; &quot;EBCDIC  424 - IBM Hebrew&quot; &quot;EBCDIC  500 - IBM International&quot; &quot;EBCDIC  875 - IBM Greek&quot; &quot;EBCDIC 1026 - IBM Latin 5 Turkish&quot; &quot;EBCDIC 1047 - IBM Latin 1&quot; &quot;EBCDIC 1140 - IBM U.S. Canada with €&quot; &quot;EBCDIC 1146 - IBM Ireland U.K. with €&quot; &quot;EBCDIC 1148 - IBM International with €&quot; &quot;*ANSEL - American National Standard for Extended Latin&quot; &quot;DEC Multinational Character Set - VT220&quot; &quot;OEM - IBM PC/DOS CP437 - MS-DOS Latin US&quot; &quot;*PC/DOS CP720 - MS-DOS Arabic&quot; &quot;PC/DOS CP737 - MS-DOS Greek&quot; &quot;PC/DOS CP775 - MS-DOS Baltic Rim&quot; &quot;PC/DOS CP850 - MS-DOS Latin 1&quot; &quot;PC/DOS CP852 - MS-DOS Latin 2&quot; &quot;PC/DOS CP855 - MS-DOS Cyrillic&quot; &quot;*PC/DOS CP856 - Hebrew&quot; &quot;PC/DOS CP857 - MS-DOS Turkish&quot; &quot;PC/DOS CP858 - MS-DOS Latin 1 Update&quot; &quot;PC/DOS CP860 - MS-DOS Portuguese&quot; &quot;PC/DOS CP861 - MS-DOS Icelandic&quot; &quot;*PC/DOS CP862 - MS-DOS Hebrew&quot; &quot;PC/DOS CP863 - MS-DOS French Canada&quot; &quot;*PC/DOS CP864 - MS-DOS Arabic 2&quot; &quot;PC/DOS CP866 - MS-DOS Cyrillic Russian&quot; &quot;PC/DOS CP869 - MS-DOS Greek 2&quot; &quot;PC/DOS CP1006 - Arabic&quot; &quot;PC/DOS KZ-1048 - Kazakhstan&quot; &quot;PC/DOS MIK Code page&quot; &quot;PC/DOS Kamenický Encoding&quot; &quot;PC/DOS Mazovia Encoding&quot; &quot;*PC/DOS Iran System Encoding Standard&quot; &quot;*Big5&quot; &quot;*GBK - GB2312 - Guojia Biaozhun (国家标准)&quot; &quot;UTF8 - Universal Character Set&quot; &quot;UTF16 - Universal Character Set&quot; &quot;UTF16LE - Universal Character Set&quot; &quot;UTF16BE - Universal Character Set&quot; &quot;UTF32 - Universal Character Set&quot; &quot;UTF32LE - Universal Character Set&quot; &quot;UTF32BE - Universal Character Set&quot; &quot;Unicode&quot; &quot;*EUC-JP Extended Unix Code for Japanese&quot; &quot;*EUC-KR Extended Unix Code for Korean&quot; &quot;*Shift JIS&quot; &quot;Macintosh CP10000 - Roman&quot; &quot;Macintosh Arabic&quot; &quot;Macintosh Celtic&quot; &quot;Macintosh Central European&quot; &quot;Macintosh Croatian&quot; &quot;Macintosh Cyrillic&quot; &quot;Macintosh Devanagari&quot; &quot;Macintosh Dingbats&quot; &quot;Macintosh Gaelic&quot; &quot;Macintosh Greek&quot; &quot;Macintosh Gujarati&quot; &quot;Macintosh Gurmukhi&quot; &quot;Macintosh Hebrew&quot; &quot;Macintosh Icelandic&quot; &quot;Macintosh Inuit&quot; &quot;Macintosh Keyboard&quot; &quot;Macintosh Roman&quot; &quot;Macintosh Romanian&quot; &quot;Macintosh Symbol&quot; &quot;Macintosh Thai&quot; &quot;Macintosh Tibetan&quot; &quot;Macintosh Turkish&quot; &quot;Macintosh Ukraine&quot; &quot;*AtariST&quot; &quot;*Windows CP932 - Japanese (Shift JIS)&quot; &quot;*Windows CP936 - Chinese Simplified (GBK)&quot; &quot;*Windows CP949 - Korean (EUC-KR)&quot; &quot;*Windows CP950 - Chinese Traditional (Big5)&quot;</property>
+                                <property name="choices"></property>
                                 <property name="close_button">1</property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -13948,7 +13948,7 @@
                                 <property name="pin_button">1</property>
                                 <property name="pos"></property>
                                 <property name="resize">Resizable</property>
-                                <property name="selection">26</property>
+                                <property name="selection">0</property>
                                 <property name="show">1</property>
                                 <property name="size"></property>
                                 <property name="style"></property>

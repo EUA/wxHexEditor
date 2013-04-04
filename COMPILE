@@ -21,7 +21,7 @@ Than extract the wxHexEditor
 
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
-make WXCONFIG=../wxWigdets/release/wx-config HOST=i686-w64-mingw32
+make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
 
 -----------------------------------------------------
 
@@ -38,6 +38,6 @@ than extract the wxHexEditor as:
 
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
-make mac WXCONFIG=<wx-config OPTFLAGS="-arch i386"
+make mac WXCONFIG=<wx-config path> OPTFLAGS="-arch i386"
 
 Thats all.

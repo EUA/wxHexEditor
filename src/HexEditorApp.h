@@ -33,16 +33,16 @@
 #ifndef WXHEXEDITORAPP_H
 #define WXHEXEDITORAPP_H
 
-#define _VERSION_ "0.21"
-
+#define _VERSION_ "0.22"
+#define _VERSION_S_ _VERSION_ " Beta Development"
 #ifdef __WXMSW__
-	#define _VERSION_STR_ "v0.21 Beta for Windows"
+	#define _VERSION_STR_ _VERSION_S_ " for Windows"
 #elif defined(__WXOSX__)
-	#define _VERSION_STR_ "v0.21 Beta for Mac"
+	#define _VERSION_STR_ _VERSION_S_ " for Mac"
 #elif defined(__WXGTK__)
-	#define _VERSION_STR_ "v0.21 Beta for Linux"
+	#define _VERSION_STR_ _VERSION_S_ " for Linux"
 #else
-	#define _VERSION_STR_ "v0.21 Beta"
+	#define _VERSION_STR_ _VERSION_S_
 #endif
 
 #include <wx/app.h>

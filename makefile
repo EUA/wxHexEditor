@@ -46,7 +46,7 @@ $(OBJECTS): $(LIBS) $(SOURCES)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lgomp -o $@
+	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lgomp -o $@
 
 .cpp.o: $(LIBS)
 	$(CXX) $(WXCXXFLAGS) ${CXXFLAGS} $< -o $@
@@ -65,17 +65,17 @@ udis86/libudis86/.libs/libudis86.a:
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
-	cd mhash; ./configure --host=$(HOST)CFLAGS="-g -O2 -Wall ${OPTFLAGS}"
+	cd mhash; ./configure --host=$(HOST) CFLAGS="-g -O2 -Wall ${OPTFLAGS}"
 	cd mhash; $(MAKE) $(MFLAGS)
 
 win: $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} $(WXLDFLAGS) ${LDFLAGS} -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
+	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -lgomp -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
+	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -lgomp -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
 mac: maclink langs
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents

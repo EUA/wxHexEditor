@@ -801,7 +801,7 @@ GotoDialogGui::~GotoDialogGui()
 
 FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxSize( 350,-1 ), wxDefaultSize );
+	this->SetSizeHints( wxSize( -1,-1 ), wxDefaultSize );
 	
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxHORIZONTAL );
@@ -938,6 +938,8 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	this->SetSizer( bSizerMain );
 	this->Layout();
 	bSizerMain->Fit( this );
+	
+	this->Centre( wxBOTH );
 	
 	// Connect Events
 	m_comboBoxSearch->Connect( wxEVT_CHAR, wxKeyEventHandler( FindDialogGui::OnChar ), NULL, this );

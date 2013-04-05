@@ -540,8 +540,8 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 			s.ToLong(&BytesPerLineLimit,10);
 
 		//Downsizing is available
-		if( available_space > BytesPerLineLimit )
-			available_space = BytesPerLineLimit;
+		if( available_space*cnt_chr > BytesPerLineLimit )
+			available_space = BytesPerLineLimit/cnt_chr;
 		}
 
 	//Calculation of available area for Hex and Text panels.

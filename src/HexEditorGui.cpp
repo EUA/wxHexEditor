@@ -1997,3 +1997,44 @@ DebugFrame::DebugFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 DebugFrame::~DebugFrame()
 {
 }
+
+OSXMessageDialogGui::OSXMessageDialogGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizerMain;
+	bSizerMain = new wxBoxSizer( wxHORIZONTAL );
+	
+	icon_bitmap = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerMain->Add( icon_bitmap, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer51;
+	bSizer51 = new wxBoxSizer( wxVERTICAL );
+	
+	txtCaption = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	txtCaption->Wrap( -1 );
+	txtCaption->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer51->Add( txtCaption, 0, wxALL, 5 );
+	
+	txtMessage = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	txtMessage->Wrap( -1 );
+	bSizer51->Add( txtMessage, 0, wxALL, 5 );
+	
+	btnOK = new wxButton( this, wxID_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer51->Add( btnOK, 0, wxALL|wxALIGN_RIGHT, 5 );
+	
+	
+	bSizerMain->Add( bSizer51, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizerMain );
+	this->Layout();
+	bSizerMain->Fit( this );
+	
+	this->Centre( wxBOTH );
+}
+
+OSXMessageDialogGui::~OSXMessageDialogGui()
+{
+}

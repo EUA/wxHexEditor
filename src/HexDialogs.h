@@ -183,4 +183,11 @@ class DeviceEraseDialog : public DeviceEraseDialogGui{
 		void OnErase( wxCommandEvent& event );
 	};
 
+class OSXMessageDialog : public OSXMessageDialogGui{
+	public:
+		OSXMessageDialog( wxWindow* parent, wxString message, wxString Caption );
+	};
+
+void OSXwxMessageBox( wxString message, wxString Caption, int x, wxWindow* parent );
+
 #endif //__HexEditorDialogs__

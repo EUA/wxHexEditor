@@ -38,6 +38,7 @@
 
 #ifndef __WXMSW__
 	#include <sys/resource.h>
+
 void SetStackLimit(void){
 	const rlim_t kStackSize = 32L * 1024L * 1024L;
 	struct rlimit rl;
@@ -65,7 +66,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
 
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
       if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
-         wxMessageBox( _("Value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
+         OSXwxMessageBox( _("Value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
          wxBell();
          return false;
          }
@@ -75,7 +76,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
 
    //there is odd hex value, must be even digit for search!
    if( hexval.Len() % 2 ) {
-      wxMessageBox( _("Value must be even digit!"), _("Format Error!"), wxOK, parent );
+      OSXwxMessageBox( _("Value must be even digit!"), _("Format Error!"), wxOK, parent );
       wxBell();
       return false;
       }
@@ -607,7 +608,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		std::cout << "FindDialog::FindBinary() From:" << from << std::endl;
 	#endif
 	if( target.GetDataLen() == 0 ){
-		wxMessageBox( wxT("FindBinary() function called with Empty Target!\n"), _("Error"), wxOK);
+		OSXwxMessageBox( wxT("FindBinary() function called with Empty Target!\n"), _("Error"), wxOK, this);
 		return NANINT;
 		}
 	wxString msg= _("Finding matches... ");
@@ -915,7 +916,7 @@ void FindDialog::OnFindAll( bool internal ){
 		}
 
 	if(parent->HighlightArray.GetCount()==0 and not internal) {
-		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
+		OSXwxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 		}
 	else {
 		//Is selection needed to show first tag?
@@ -926,7 +927,7 @@ void FindDialog::OnFindAll( bool internal ){
 		parent->GetEventHandler()->ProcessEvent( eventx );
 		if( not internal ){
 			this->Hide();
-			wxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, parent );
+			OSXwxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, parent );
 			Destroy();
 			}
 		}
@@ -1135,7 +1136,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				return 1;
 				}
 			else{
-				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with different size are not supported yet."), _("Error!"), wxOK, this);
+				OSXwxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with different size are not supported yet."), _("Error!"), wxOK, this);
 				return 0;
 				}
 			}
@@ -1160,7 +1161,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				return 1;
 				}
 			else{
-				wxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with different size are not supported yet."), _("Error!"), wxOK, this);
+				OSXwxMessageBox(_("Search and Replace sizes are not equal!\nReplacing with different size are not supported yet."), _("Error!"), wxOK, this);
 				return 0;
 				}
 			}
@@ -1202,7 +1203,7 @@ void ReplaceDialog::OnReplaceAll( void ){
 		this->Hide();
 		wxUpdateUIEvent eventx( UNREDO_EVENT );
 		parent->GetEventHandler()->ProcessEvent( eventx );
-		wxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info"), wxOK, parent);
+		OSXwxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info"), wxOK, parent);
 		Destroy();
 		}
 	}
@@ -1485,7 +1486,7 @@ void CopyAsDialog::Copy( void ){
 		uint64_t RAM_limit = 10*MB;
 		wxMemoryBuffer buff;
 		if(select->GetSize() > RAM_limit) {
-			wxMessageBox( _("Selected block bigger than limit." ),_("Error!"), wxOK|wxICON_ERROR , this);
+			OSXwxMessageBox( _("Selected block bigger than limit." ),_("Error!"), wxOK|wxICON_ERROR , this);
 			return;
 			}
 
@@ -2687,4 +2688,23 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 		}
 
 	wxMessageBox( _("Restore operation completed."), _("Operation Complete") );
+
+	}
+
+OSXMessageDialog::OSXMessageDialog( wxWindow* parent, wxString message, wxString Caption):OSXMessageDialogGui(parent, wxID_ANY){
+		txtMessage->SetLabel( message );
+		txtCaption->SetLabel( Caption );
+		wxIcon wxHexEditor_ICON ( wxhex_xpm );
+		icon_bitmap->SetIcon(wxHexEditor_ICON);
+		this->Fit();
+		this->Layout();
+	}
+
+void OSXwxMessageBox( wxString message, wxString Caption, int x, wxWindow* parent ){
+	#ifndef __WXMAC__
+		wxMessageBox( message,Caption,x, parent );
+	#else
+		OSXMessageDialog osxmsg(parent, message, Caption );
+		osxmsg.ShowModal();
+	#endif
 	}

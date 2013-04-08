@@ -611,4 +611,24 @@ class DebugFrame : public wxFrame
 	
 };
 
+///////////////////////////////////////////////////////////////////////////////
+/// Class OSXMessageDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class OSXMessageDialogGui : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticBitmap* icon_bitmap;
+		wxStaticText* txtCaption;
+		wxStaticText* txtMessage;
+		wxButton* btnOK;
+	
+	public:
+		
+		OSXMessageDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~OSXMessageDialogGui();
+	
+};
+
 #endif //__HEXEDITORGUI_H__

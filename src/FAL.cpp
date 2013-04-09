@@ -130,6 +130,8 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 #elif defined( __WXGTK__ )
 
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
+	struct stat fileStat;
+    bool DoFileExists = (stat(myfilename.GetFullPath().To8BitData(),&fileStat) >= 0);
 	//Handling Memory Process Debugging Here
 	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
 		long int a;
@@ -147,8 +149,13 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 
+	else if(not DoFileExists){
+		wxMessageBox(wxString(_("File does not exists at path:"))+wxT("\n")+myfilename.GetFullPath(),_("Error"), wxOK|wxICON_ERROR);
+		return false;
+		}
+
 	//Owning file
-	else if( not myfilename.IsFileReadable() and myfilename.FileExists() ) {
+	else if( not myfilename.IsFileReadable() and DoFileExists ){ // "and myfilename.FileExist()" not used because it's for just plain files, not for block ones.
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
 			return false;
 
@@ -167,7 +174,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//Will restore owner on file close.
 		wxString cmd;
 		if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
-			cmd = wxT("gnomesu -u root-c \"chown ");
+			cmd = wxT("gnomesu -u root -c \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksu")))
 			cmd = wxT("gksu -u root \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksudo")))

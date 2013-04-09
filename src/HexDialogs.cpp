@@ -525,7 +525,7 @@ bool FindDialog::OnFind( bool internal ){
 		}
 
 	else if( !internal )
-		wxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
+		OSXwxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 	return false;
 	}
 

@@ -213,14 +213,16 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 
 		if( myfile->GetPID() >= 0 ){
 			#ifdef __WXGTK__
+			//offset_scroll->Enable(false);
 			std::cout << "PID MAPS loading..." << std::endl;
 			wxString command( wxT("cat /proc/") );
 			command << myfile->GetPID() << wxT("/maps");
 			std::cout << command.ToAscii() << std::endl;
 			wxArrayString output;
 
-			int a = wxExecute( command, output);
+			wxExecute( command, output);
 			//output has Count() lines process it
+
 			for( int i=0; i < output.Count() ; i++){
 				TagElement *tmp = new TagElement();
 				long long unsigned int x;
@@ -359,8 +361,6 @@ bool HexEditor::FileSave( wxString savefilename ) {
 		time_t ts,te;
 		time (&ts);
 		while( savefile.Tell() < myfile->Length() ) {
-			int a=myfile->Length();
-			int b=savefile.Tell();
 			rd=myfile->Read( buffer, BlockSz );
 			readfrom+=rd;
 			savefile.Write( buffer, rd );
@@ -572,7 +572,7 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 
 void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint) {
 #ifdef _DEBUG_FILE_
-	std::cout << "LoadFromOffset() : " << position << std::endl;
+	std::cout << "\nLoadFromOffset() : " << position << std::endl;
 #endif
 	myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
@@ -1097,6 +1097,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 	#endif
 #else
 		myscroll->UpdateSpeed(spd);
+		//ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Thread) Speed = " << spd << std::endl;
 	#endif

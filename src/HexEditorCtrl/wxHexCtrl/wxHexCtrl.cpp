@@ -1655,7 +1655,8 @@ cpformat(a)
 		for (unsigned i=0x80; i<=0xFF ; i++)
 			bf[i-0x80] =  wxChar(i);
 
-		if(codepage.Find(wxT("CP437")) not_eq wxNOT_FOUND )//Extended ASCII region of CP437
+		if((codepage.Find(wxT("CP437")) not_eq wxNOT_FOUND ) or //Extended ASCII region of CP437
+		  (codepage.Find(wxT("OEM")) not_eq wxNOT_FOUND ))
 //			newCP+=wxString( bf, wxCSConv(wxT("CP437")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xA2\xA3\xA5\x20A7\x0192"\

@@ -193,7 +193,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 				FontEnc=wxFONTENCODING_ALTERNATIVE;
 
 				wxString cp;
-				wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("OEM") );
+				wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS CP437") );
 				PrepareCodepageTable(cp);
 				};
 

@@ -257,6 +257,7 @@ class scrollthread:wxThreadHelper {
 				parent->Selector();							//KILLs MACOSX
 				parent->PaintSelection();					//Assets time because of Caret suspending from thread
 				parent->UpdateCursorLocation( true );	//KILLs MACOSX
+
 //				Offset scroll automated at HexEditorCTRL::ReadFromBuffer
 //				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
 //					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );

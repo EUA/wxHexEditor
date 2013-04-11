@@ -284,7 +284,7 @@ void HexEditorCtrl::SetStyle( ) {
    text_ctrl->SetSelectionStyle( Style );
 
 	wxString cp;
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("OEM") );
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS OEM") );
 	text_ctrl->PrepareCodepageTable(cp);
    }
 
@@ -949,7 +949,7 @@ uint64_t HexEditorCtrl::ProcessRAM_GetFootPrint(){
 uint64_t HexEditorCtrl::ProcessRAM_GetVirtualOffset( uint64_t offset ){
 	uint64_t fp=0;
 	for( unsigned i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
-		uint64_t z = ProcessRAMMap.Item(i);
+		ProcessRAMMap.Item(i);
 		if( i == 0 and ProcessRAMMap.Item(i) > offset )
 			return 0;
 		//If map end smaller than offset, just add memory map size to "fp"
@@ -959,7 +959,7 @@ uint64_t HexEditorCtrl::ProcessRAM_GetVirtualOffset( uint64_t offset ){
 			}
 		//if map end bigger than offset, and map start smaller than offset,
 		else if( offset >= ProcessRAMMap.Item(i) ) {
-			uint64_t P = ProcessRAMMap.Item(i);
+			ProcessRAMMap.Item(i);
 			fp += offset - ProcessRAMMap.Item(i);
 			return fp;
 			}

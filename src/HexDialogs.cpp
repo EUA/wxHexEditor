@@ -2189,19 +2189,19 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	wxString TempString;
 	bool TempBool;
 	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );
-   if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &TempString) )				clrPickerBackground->SetColour( TempString );
-   if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
-   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )	clrPickerSelectionForeground->SetColour(TempString);
-   if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )	clrPickerSelectionBackground->SetColour(TempString);
-   if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
-   if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)					comboCustomHexFormat->SetValue( TempString );
-   comboCustomHexFormat->Enable( chkCustom->IsChecked() );
-   if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 				chkBytePerLineLimit->SetValue( TempBool );
-	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
+	if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &TempString) )				clrPickerBackground->SetColour( TempString );
+	if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
+	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )	clrPickerSelectionForeground->SetColour(TempString);
+	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )	clrPickerSelectionBackground->SetColour(TempString);
+	if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
+	if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)					comboCustomHexFormat->SetValue( TempString );
+		comboCustomHexFormat->Enable( chkCustom->IsChecked() );
+	if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 				chkBytePerLineLimit->SetValue( TempBool );
+		spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
-   int TempInt;
-   wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
-   spinBytePerLine->SetValue( TempInt );
+	int TempInt;
+	wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
+	spinBytePerLine->SetValue( TempInt );
 
 	wxConfigBase::Get()->Read( _T("FontSize"), &TempInt, 10 );
 	spinFontSize->SetValue( TempInt );
@@ -2227,8 +2227,8 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	ChrEncFamArray.Add(wxT("Other"));
 	chcCharacterEncodingFamily->Append(ChrEncFamArray);
 
-	if( wxConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &TempString ) )
-		chcCharacterEncodingFamily->SetStringSelection( TempString );
+	wxConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &TempString, wxT("DOS") );
+	chcCharacterEncodingFamily->SetStringSelection( TempString );
 
 	ExperimentalEncodingsList.Clear();
 	for(int i=0; i< AvailableEncodings.Count(); i++){
@@ -2254,13 +2254,11 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	e.SetId( chcCharacterEncodingFamily->GetId() );
 	EventHandler( e );
 
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString );
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString, wxT("OEM - IBM PC/DOS CP437 - MS-DOS Latin US" ));
 	if(TempString==wxT("Extended Binary Coded Decimal Interchange Code"))
 		TempString=wxT("EBCDIC");
 	if( not chcCharacterEncoding->SetStringSelection( TempString ) )
 		chcCharacterEncoding->SetSelection( 0 );
-
-
 	}
 
 void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers) {

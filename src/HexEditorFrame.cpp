@@ -115,7 +115,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "mhash used under LGPL licence, Nikos Mavroyanopoulos (c) 1998-2008\n"
 			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
 			 "\n"
-			 "home:  hexeditor.eu  or  diskeditor.net\n"
+			 "home:  wxhexeditor.org  -  diskeditor.net\n"
 			 "email: spamjunkeater@gmail.com\n");
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
@@ -428,6 +428,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
 		MyFileHistory->AddFileToHistory( flname.GetFullPath() );
 		MyFileHistory->Save( *(wxConfigBase::Get()) );
 		wxConfigBase::Get()->Flush();
+//		mbar->Check(idFileRO, x->GetFileAccessMode()==FAL::FileAccessMode::ReadOnly);
 		ActionEnabler();
 		return x;
 		}

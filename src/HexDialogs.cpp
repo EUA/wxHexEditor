@@ -463,7 +463,7 @@ void FindDialog::FindSomeBytes( void ){
 		for( int i=0; i < readed ; i++)
 			if( buffer[i] != diff_search ){
 				parent->Goto( current_offset+i );
-				Destroy();
+				//Destroy();
 				return;
 				}
 

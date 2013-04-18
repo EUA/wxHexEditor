@@ -505,7 +505,8 @@ class PreferencesDialogGui : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnResetColours( wxCommandEvent& event ) { event.Skip(); }
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
-		virtual void EventHandler( wxSpinEvent& event ) { event.Skip(); }
+		virtual void SpinEventHandler( wxSpinEvent& event ) { event.Skip(); }
+		virtual void SpinEventHandler( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCustomHexCheck( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
 		

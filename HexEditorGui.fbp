@@ -14153,8 +14153,8 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnSpinCtrl">EventHandler</event>
-                                <event name="OnSpinCtrlText">EventHandler</event>
+                                <event name="OnSpinCtrl">SpinEventHandler</event>
+                                <event name="OnSpinCtrlText">SpinEventHandler</event>
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>

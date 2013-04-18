@@ -2375,6 +2375,14 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 #endif  //__WXMAC__
 	}
 
+//Could use EventHandler directly but that breaks GCC4.4 :p
+void PreferencesDialog::SpinEventHandler( wxSpinEvent& event ) {
+	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+   wxConfigBase::Get()->Flush();
+	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+	GetParent()->GetEventHandler()->ProcessEvent( eventx );
+	}
+
 void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	if(event.GetId()==chcCharacterEncodingFamily->GetId()){
 		wxArrayString Encodings;
@@ -2421,7 +2429,6 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
    wxConfigBase::Get()->Flush();
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
 	GetParent()->GetEventHandler()->ProcessEvent( eventx );
-
 	}
 
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {

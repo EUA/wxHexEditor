@@ -153,6 +153,7 @@ class PreferencesDialog : public PreferencesDialogGui{
 	public:
 		PreferencesDialog( wxWindow* parent );
 		void EventHandler( wxCommandEvent& event );
+		void SpinEventHandler( wxSpinEvent& event );
 		void GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers);
 		void OnSave(wxCommandEvent& event);
 		void OnResetColours(wxCommandEvent& event);

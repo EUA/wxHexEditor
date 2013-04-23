@@ -323,7 +323,8 @@ void TagPanel::Set( ArrayOfTAG& TagArray ){
 					: TagArray.Item(i)->tag );
 
 	TagPanelList->Clear();
-	TagPanelList->InsertItems(str,0);
+	if(str.Count())
+		TagPanelList->InsertItems(str,0);
 	mutextag.Unlock();
 	}
 

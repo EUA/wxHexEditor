@@ -121,7 +121,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		bool IsAvailable_Redo( void ) {
 			return myfile->IsAvailable_Redo();
 			}
-		int HashVerify(FAL* File, wxString hash_file);
+		int HashVerify(wxString hash_file,FAL* File=NULL);
 
 		void FindDialog( void );
 		void ReplaceDialog( void );

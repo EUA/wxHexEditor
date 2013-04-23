@@ -87,7 +87,6 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	BlockRWSize = ForceBlockRW;
 	ProcessID=-1;
 	get_ptr = put_ptr = 0;
-
 	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
 	}
 
@@ -131,7 +130,8 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	struct stat fileStat;
-    bool DoFileExists = (stat(myfilename.GetFullPath().To8BitData(),&fileStat) >= 0);
+   bool DoFileExists = (stat(myfilename.GetFullPath().To8BitData(),&fileStat) >= 0);
+
 	//Handling Memory Process Debugging Here
 	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
 		long int a;
@@ -228,11 +228,14 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 		if( ForceBlockRW )
 			BlockRWCount=wxFile::Length()/ForceBlockRW;
 
-		if(! IsOpened()){
+		if(not IsOpened()){
 			file_access_mode = AccessInvalid;
 			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
+			return false;
 			}
 		}
+	else
+		return false;
 	}
 
 bool FAL::Close(){
@@ -841,14 +844,15 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 	}
 
 wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
+	if(!IsOpened())
+		return -1;
+
 	get_ptr = put_ptr = ofs;
 	if( BlockRWSize > 0 )
 		return ofs;
 
 	return wxFile::Seek( ofs, mode );
 	}
-
-
 
 const DiffNode* FAL::GetFirstUndoNode( void ){
 	if( DiffArray.GetCount() == 0 )

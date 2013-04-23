@@ -106,7 +106,10 @@ void HexEditor::Dynamic_Disconnector() {
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	}
 
-int HexEditor::HashVerify(FAL* File, wxString hash_file){
+int HexEditor::HashVerify(wxString hash_file, FAL* File){
+	if( File==NULL )
+		File=myfile;
+
 	wxFFile f( hash_file, wxT("rt") );
 	wxMemoryBuffer mbf;
 	hashid hash_alg;
@@ -202,6 +205,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else
 #endif
+
 	if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
 		myfile = new FAL( myfilename, FAL::ReadWrite );
 	else
@@ -241,16 +245,6 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			}
 
 		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
-
-		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".md5")) ) )
-			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) )
-				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".md5")) );
-		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha1")) ) )
-			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
-				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".sha1")) );
-		if( wxFileName::IsFileReadable( myfilename.GetFullPath().Append(wxT(".sha256")) ) )
-			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
-				HashVerify( myfile, myfilename.GetFullPath().Append(wxT(".sha256")) );
 
 		tagpanel->Set(MainTagArray); //Sets Tags to Tag panel
 		if(MainTagArray.Count() > 0){

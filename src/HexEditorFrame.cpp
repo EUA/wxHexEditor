@@ -431,13 +431,13 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
 		wxConfigBase::Get()->Flush();
 //		mbar->Check(idFileRO, x->GetFileAccessMode()==FAL::FileAccessMode::ReadOnly);
 
-		if( wxFileName::IsFileReadable( flname.GetFullPath().Append(wxT(".md5")) ) )
+		if( wxFileName::FileExists( flname.GetFullPath().Append(wxT(".md5")) ) )
 			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) )
 				x->HashVerify( flname.GetFullPath().Append(wxT(".md5")) );
-		if( wxFileName::IsFileReadable( flname.GetFullPath().Append(wxT(".sha1")) ) )
+		if( wxFileName::FileExists( flname.GetFullPath().Append(wxT(".sha1")) ) )
 			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( flname.GetFullPath().Append(wxT(".sha1")) );
-		if( wxFileName::IsFileReadable( flname.GetFullPath().Append(wxT(".sha256")) ) )
+		if( wxFileName::FileExists( flname.GetFullPath().Append(wxT(".sha256")) ) )
 			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( flname.GetFullPath().Append(wxT(".sha256")) );
 

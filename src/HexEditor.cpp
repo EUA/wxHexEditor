@@ -122,6 +122,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 	unsigned hash_block_size=mhash_get_block_size( hash_alg );
 	if( hash_block_size*2 != f.Read( mbf.GetWriteBuf( hash_block_size*2 ), hash_block_size*2 ) ){
 		wxMessageBox(_("Cannot read hash file!"),_("Error!"));
+		return -1;
 		}
 	mbf.UngetWriteBuf(hash_block_size*2);
 	wxString MyHashStr = wxString::From8BitData( reinterpret_cast<char*>(mbf.GetData()), hash_block_size*2 );
@@ -155,7 +156,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 			readspeed=readfrom;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))
-		return -1;
+			return -1;
 		}
 
 	wxString results;

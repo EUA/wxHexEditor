@@ -294,7 +294,7 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 		*offset *= SectorSize;
 
 	if( *offset < 0 )
-			*offset = 0;
+		*offset = 0;
 	EndModal( wxID_OK );
 	}
 
@@ -453,7 +453,7 @@ void FindDialog::FindSomeBytes( void ){
 	findfile->Read( &diff_search, 1);
 	time_t ts,te;
 	time (&ts);
-	ts=te;
+	te=ts;
 	uint64_t read_speed=0;
 	//Search step 1: From cursor to file end.
 	do{
@@ -630,7 +630,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 	time_t ts,te;
 	time (&ts);
-	ts=te;
+	te=ts;
 	unsigned read_speed=0;
 	unsigned percentage=0;
 	uint64_t processfootprint=0;
@@ -1352,7 +1352,7 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 
 		if(chkText->GetValue()){
 		//Add 16 Ascii rep
-			char chr;
+			unsigned char chr;
 			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
 					//Char filter for ascii
@@ -1435,7 +1435,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 
 		if(chkText->GetValue()){
 			//Add 16 Ascii rep
-			char chr;
+			unsigned char chr;
 
 			if( current_offset == 0 )
 				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
@@ -2002,7 +2002,7 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 
 	else if(event.GetId() == btnCalculate->GetId()){
 		wxString msg;
-		FAL *F;
+		FAL *F=NULL;
 		if( chkFile->GetValue() )
 			F=parent->GetActiveHexEditor()->myfile;
 

@@ -309,7 +309,7 @@ bool HexEditorCtrl::Selector(){
 
 	if( FocusAt==text_ctrl ){ //TextCtrl capture mechanism is different since cursor is a slim line "|"
 		if( select->OriginalStartOffset > select->EndOffset ){ //Backward selection at text panel
-			select->StartOffset=select->OriginalStartOffset-1;
+			select->StartOffset = select->OriginalStartOffset-1;
 			}
 		else if(select->OriginalStartOffset < select->EndOffset){ //forward selection on text panel
 			select->StartOffset = select->OriginalStartOffset;

@@ -145,7 +145,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			}
 		waitpid(ProcessID, NULL, WUNTRACED);
 		BlockRWSize=4;
-		FAM == ReadOnly;
+		FAM = ReadOnly;
 		return true;
 		}
 
@@ -233,6 +233,8 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 			return false;
 			}
+
+		return true;
 		}
 	else
 		return false;

@@ -75,8 +75,9 @@
 #define idFileRO 1027
 #define idFileRW 1028
 #define idFileDW 1029
-#define ID_CHK_UNSIGNED 1030
-#define ID_CHK_BIGENDIAN 1031
+#define idDonate 1030
+#define ID_CHK_UNSIGNED 1031
+#define ID_CHK_BIGENDIAN 1032
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -111,7 +112,7 @@ class HexEditorGui : public wxFrame
 		virtual void OnToolsMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDevicesMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnOptionsMenu( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnHelpMenu( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

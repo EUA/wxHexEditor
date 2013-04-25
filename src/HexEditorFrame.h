@@ -78,7 +78,7 @@ class HexEditorFrame : public HexEditorGui {
 		void OnOptionsFileMode( wxCommandEvent& event );
 		void OnClose( wxCloseEvent& event );
 		void OnQuit( wxCommandEvent& event );
-		void OnAbout( wxCommandEvent& event );
+		void OnHelpMenu( wxCommandEvent& event );
 		void OnActivate( wxActivateEvent& event );
 
 		void ActionEnabler( void );

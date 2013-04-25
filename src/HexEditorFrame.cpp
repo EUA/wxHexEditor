@@ -794,19 +794,24 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 	MyAUI->Update();
 	}
 
-void HexEditorFrame::OnAbout( wxCommandEvent& event ){
-	wxAboutDialogInfo AllAbout;
-	AllAbout.SetName(_T("wxHexEditor"));
-	AllAbout.SetVersion( _T(_VERSION_STR_) );
-	AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices."));
-	AllAbout.SetCopyright(_T("(C) 2006-2012 Erdem U. Altinyurt"));
-	AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
-	AllAbout.AddArtist( _T("Vlad Adrian") );
-	AllAbout.SetWebSite( _T("http://www.wxhexeditor.org"));
+void HexEditorFrame::OnHelpMenu( wxCommandEvent& event ){
+	if(event.GetId() == wxID_ABOUT ){
+		wxAboutDialogInfo AllAbout;
+		AllAbout.SetName(_T("wxHexEditor"));
+		AllAbout.SetVersion( _T(_VERSION_STR_) );
+		AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices."));
+		AllAbout.SetCopyright(_T("(C) 2006-2012 Erdem U. Altinyurt"));
+		AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
+		AllAbout.AddArtist( _T("Vlad Adrian") );
+		AllAbout.SetWebSite( _T("http://www.wxhexeditor.org"));
 
-	AllAbout.SetLicense( license );
-
-	wxAboutBox(AllAbout);
+		AllAbout.SetLicense( license );
+		wxAboutBox(AllAbout);
+		}
+	else if(event.GetId() == idDonate ){
+		///Thanks for donations to support this project!
+		wxLaunchDefaultBrowser( wxT("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=erdem%2eua%40gmail%2ecom&lc=US&item_name=Erdem%20U%2e%20Altinyurt&item_number=wxHexEditor&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"),wxBROWSER_NEW_WINDOW);
+		}
 	}
 
 void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){

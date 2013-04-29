@@ -134,7 +134,7 @@ class FAL : private wxFile{
 		bool OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		bool FALOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		bool Close();
-		bool IsProcess(){
+		bool IsProcess(){	//For detect if this is RAM Process device
 			return ( ProcessID >=0 );
 			}
 		int GetPID(){

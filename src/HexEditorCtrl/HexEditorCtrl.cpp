@@ -323,6 +323,7 @@ bool HexEditorCtrl::Selector(){
 	#ifdef _DEBUG_SELECT_
 	std::cout << "Selector Result : " << select->StartOffset << ":" << select->EndOffset << std::endl;
 	#endif
+	return select->GetState();
 	}
 
 bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){

@@ -44,7 +44,10 @@ HexEditor::HexEditor(	wxWindow* parent,
 	infopanel(infopanel_),
 	tagpanel(tagpanel_),
 	dasmpanel(dasmpanel_) {
-	printf("Rahman ve Rahim olan Allah'ın adıyla.\n"); // Praying to GOD for protecting our file, this is really neccessary!
+
+	// Here, code praying to the GOD for protecting our open file from wxHexEditor's bugs and other things.
+	// This is really crucial step! Be adviced to not remove it, even if you don't believer.
+	printf("Rahman ve Rahim olan Allah'ın adıyla.\n");
 	myfile = NULL;
 	if( myfilename_ != NULL ) {
 		if( !FileOpen( *myfilename_ ) ) {
@@ -1091,8 +1094,12 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
 	#endif
 #else
+	//This is workaround.
+	//Reading from RAM doesn't like read from "thread" and return "0xFF" somehow.
+	if( myfile->IsProcess() )
+		ScrollNoThread( spd );
+	else
 		myscroll->UpdateSpeed(spd);
-		//ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Thread) Speed = " << spd << std::endl;
 	#endif

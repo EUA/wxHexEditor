@@ -30,12 +30,13 @@
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="clang" />
 				<Option parameters="testfile.swp " />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-pg" />
+					<Add option="-fcatch-undefined-behavior" />
 					<Add option="-g" />
+					<Add option="-pg" />
 					<Add option="`wx-config  --cflags`" />
 					<Add option="-D_DEBUG_" />
 					<Add option="-D_DEBUG_FILE_" />

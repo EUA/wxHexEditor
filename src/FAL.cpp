@@ -615,9 +615,6 @@ bool FAL::IsInjected( void ){
 ///State of the Art Read Function
 //Only recursion could handle such a complex operation. Comes my mind while I am trying to sleep.
 long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
-	uint64_t loc = from; //?
-	int readsize=0;
-
 	///Getting Data from bellow layer.
 	if( PatchIndice == 0 )	//Deepest layer
 		{
@@ -656,6 +653,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 		return wxFile::Read( buffer, size ); //Ends recursion. here
 		}
 
+	int readsize=0;
 	//than process at current layer
 	if(PatchIndice != 0){
 		DiffNode* patch = PatchArray->Item(PatchIndice-1); //PatchIndice-1 means the last patch item! Don't confuse at upper code.
@@ -666,10 +664,10 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			readsize = InjectionPatcher( from, buffer, size, PatchArray, PatchIndice );
 			}
 		else{
-			readsize = ReadR( buffer, size, loc, PatchArray, PatchIndice-1 );//PatchIndice-1 => Makes Patch = 0 for 1 patch. Read from file.
+			readsize = ReadR( buffer, size, from, PatchArray, PatchIndice-1 );//PatchIndice-1 => Makes Patch = 0 for 1 patch. Read from file.
 			if(size != readsize) //If there is free chars
-				readsize = (Length() - loc > size) ? (size):(Length() - loc);	//check for buffer overflow
-			ModificationPatcher( loc, buffer, size, patch );
+				readsize = (Length() - from > size) ? (size):(Length() - from);	//check for buffer overflow
+			ModificationPatcher( from, buffer, size, patch );
 			}
 		}
  	return readsize;

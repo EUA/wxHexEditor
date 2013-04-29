@@ -45,7 +45,7 @@ void SetStackLimit(void){
 	int result;
 
 	result = getrlimit(RLIMIT_STACK, &rl);
-	fprintf(stderr, "current stack limit = %d\n", rl );
+	fprintf(stderr, "current stack limit = %ul\n", static_cast<unsigned int>(rl.rlim_cur) );
 	if (result == 0){
 		  if (rl.rlim_cur < kStackSize)
 		  {
@@ -276,7 +276,7 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 		}
 	wxULongLong_t wxul = 0;
 	if( not m_comboBoxOffset->GetValue().ToULongLong( &wxul, m_dec->GetValue() ? 10 : 16 ))//Mingw32/64 workaround
-		wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), '\0', m_dec->GetValue() ? 10 : 16 );
+		wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), 0, m_dec->GetValue() ? 10 : 16 );
 	*offset = wxul;
 
 	//Store value to Registry or Updates it!
@@ -288,13 +288,20 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 
 	if( m_branch->GetSelection() == 1)
 		*offset += cursor_offset*SectorSize;
-	else if( m_branch->GetSelection() == 2)
-		*offset = filesize - *offset*SectorSize;
+	else if( m_branch->GetSelection() == 2){
+		if(filesize < *offset * SectorSize)
+			*offset = 0;
+		else
+			*offset = filesize - *offset * SectorSize;
+		}
 	else
 		*offset *= SectorSize;
-
+/*
+	//No -locations due uint64_t
 	if( *offset < 0 )
 		*offset = 0;
+*/
+
 	EndModal( wxID_OK );
 	}
 
@@ -2231,7 +2238,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	chcCharacterEncodingFamily->SetStringSelection( TempString );
 
 	ExperimentalEncodingsList.Clear();
-	for(int i=0; i< AvailableEncodings.Count(); i++){
+	for(unsigned i=0; i< AvailableEncodings.Count(); i++){
 		if(( AvailableEncodings.Item(i).Find( wxT("Industrial Standard") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("Arabic") ) not_eq wxNOT_FOUND ) or
 			( AvailableEncodings.Item(i).Find( wxT("Hebrew") ) not_eq wxNOT_FOUND ) or
@@ -2391,12 +2398,12 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 
 		else if( event.GetString()==wxT("Other") ){
 			Encodings=AvailableEncodings;
-			for(int i=0; i< ExperimentalEncodingsList.Count(); i++)
+			for(unsigned i=0; i< ExperimentalEncodingsList.Count(); i++)
 				Encodings.Remove(ExperimentalEncodingsList.Item(i));
 
 			wxArrayString families=chcCharacterEncodingFamily->GetStrings();
-			for(int f=0; f< families.Count(); f++)
-				for(int i=0; i< AvailableEncodings.Count(); i++){
+			for(unsigned f=0; f< families.Count(); f++)
+				for(unsigned i=0; i< AvailableEncodings.Count(); i++){
 					wxString family=families.Item(f);
 					if(family==wxT("Extended Binary Coded Decimal Interchange Code"))
 						family=wxT("EBCDIC");
@@ -2405,7 +2412,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 					}
 			}
 		else
-			for(int i=0; i< AvailableEncodings.Count(); i++){
+			for(unsigned i=0; i< AvailableEncodings.Count(); i++){
 				wxString family=event.GetString();
 				if(family==wxT("Extended Binary Coded Decimal Interchange Code"))
 					family=wxT("EBCDIC");

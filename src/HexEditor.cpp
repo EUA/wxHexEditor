@@ -120,7 +120,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 		hash_alg=MHASH_MD5;
 	else if( hash_file.EndsWith( wxT(".sha1") ))
 		hash_alg=MHASH_SHA1;
-	else if( hash_file.EndsWith(wxT(".sha256" )) )
+	else//if( hash_file.EndsWith(wxT(".sha256" )) )
 		hash_alg=MHASH_SHA256;
 	unsigned hash_block_size=mhash_get_block_size( hash_alg );
 	if( hash_block_size*2 != f.Read( mbf.GetWriteBuf( hash_block_size*2 ), hash_block_size*2 ) ){
@@ -231,7 +231,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			wxExecute( command, output);
 			//output has Count() lines process it
 
-			for( int i=0; i < output.Count() ; i++){
+			for( unsigned i=0; i < output.Count() ; i++){
 				TagElement *tmp = new TagElement();
 				long long unsigned int x;
 				output[i].BeforeFirst('-').ToULongLong(&x, 16);

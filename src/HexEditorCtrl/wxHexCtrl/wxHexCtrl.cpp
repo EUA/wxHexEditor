@@ -2396,7 +2396,7 @@ void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 		m_text << FilterMBBuffer(buffer,len,FontEnc);
 		}
 	else
-		for( unsigned i=0 ; i<len ; i++ )
+		for( int i=0 ; i<len ; i++ )
 			m_text << Filter(buffer[i]);
 
 //	m_text << FilterUTF8(buffer,len);
@@ -2560,7 +2560,7 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();
-		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) );
+		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) )
 			wxBell();
 		wxTheClipboard->Flush();
 		wxTheClipboard->Close();

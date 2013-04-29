@@ -30,20 +30,19 @@
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
-				<Option compiler="clang" />
+				<Option compiler="gcc" />
 				<Option parameters="testfile.swp " />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-fcatch-undefined-behavior" />
-					<Add option="-g" />
 					<Add option="-pg" />
+					<Add option="-g" />
 					<Add option="`wx-config  --cflags`" />
 					<Add option="-D_DEBUG_" />
-					<Add option="-D_DEBUG_FILE_" />
-					<Add option="-D_DEBUG_SELECT_" />
+					<Add option="-D_DEBUG_FILE_x" />
+					<Add option="-D_DEBUG_SELECT_x" />
 					<Add option="-D_DEBUG_SIZE_x" />
-					<Add option="-D_DEBUG_SCROLL_" />
-					<Add option="-D_DEBUG_CARET_" />
+					<Add option="-D_DEBUG_SCROLL_x" />
+					<Add option="-D_DEBUG_CARET_x" />
 					<Add option="-D_DEBUG_MOUSE_x" />
 				</Compiler>
 				<Linker>
@@ -99,25 +98,22 @@
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
 				<Option compiler="mingw32_gcc_compiler" />
-				<Option projectCompilerOptionsRelation="1" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="`/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config --cflags`" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="$($(WXCONFIG) --cppflags)" />
-				</ResourceCompiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="$($(WXCONFIG) --libs)" />
-					<Add option="-static-libgcc" />
-					<Add option="-static-libstdc++" />
-				</Linker>
+				<Option projectCompilerOptionsRelation="0" />
+				<Option projectLinkerOptionsRelation="0" />
+				<Option projectIncludeDirsRelation="0" />
+				<Option projectResourceIncludeDirsRelation="0" />
+				<Option projectLibDirsRelation="0" />
 				<Environment>
 					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
 				</Environment>
+				<MakeCommands>
+					<Build command="" />
+					<CompileFile command="" />
+					<Clean command="" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command=" &gt; $(CMD_NULL)" />
+				</MakeCommands>
 			</Target>
 			<Target title="Debug Cross-Win32">
 				<Option output="Debug/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
@@ -148,13 +144,13 @@
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="clang" />
 				<Option use_console_runner="0" />
 				<Option parameters="testfile.swp" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --cflags)" />
 					<Add option="-D_DEBUG_=6" />
 				</Compiler>
@@ -165,7 +161,7 @@
 					<Add library="mhash/lib/.libs/libmhash.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.9.3/debug/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.9.4/release/wx-config" />
 				</Environment>
 			</Target>
 		</Build>

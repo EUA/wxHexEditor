@@ -327,12 +327,14 @@ bool HexEditorCtrl::Selector(){
 	}
 
 bool HexEditorCtrl::Select ( uint64_t start_offset, uint64_t end_offset ){
+	/*
 	if( start_offset < 0 || end_offset < 0
 //	|| start_offset > myfile->Length() ||  end_offset > myfile->Length() //??
 		){
 		wxBell();
 		return false;
-		}
+	}
+	*/
 	#ifdef _DEBUG_SELECT_
 	std::cout << "HexEditorCtrl::Select( " << std::dec << start_offset << "," <<  end_offset << ")" << std::endl;
 	#endif
@@ -928,9 +930,9 @@ int HexEditorCtrl::GetLocalInsertionPoint(){
 	}
 
 void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
-	#ifdef _DEBUG_CARET_
-		std::cout<< "Caret at Hex:" << std::dec << hex_location << std::endl;
-	#endif // _DEBUG_CARET_
+#ifdef _DEBUG_CARET_
+	std::cout<< "Caret at Hex:" << std::dec << hex_location << std::endl;
+#endif // _DEBUG_CARET_
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}

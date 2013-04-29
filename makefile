@@ -1,6 +1,8 @@
 WXCONFIG = wx-config
 CC = `$(WXCONFIG) --cc`
 CXX = `$(WXCONFIG) --cxx`
+CFLAGS = -O2
+CXXFLAGS = -O2
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -O2 -c ${OPTFLAGS}
 WXLDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
@@ -61,11 +63,11 @@ langs: $(MOBJECTS)
 
 udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./autogen.sh
-	cd udis86;./configure --host=$(HOST) CFLAGS="-g -O2 -Wall ${OPTFLAGS}"
+	cd udis86;./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}"
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
-	cd mhash; ./configure --host=$(HOST) CFLAGS="-g -O2 -Wall ${OPTFLAGS}"
+	cd mhash; ./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}"
 	cd mhash; $(MAKE) $(MFLAGS)
 
 win: $(RESOURCES) $(EXECUTABLE_WIN)

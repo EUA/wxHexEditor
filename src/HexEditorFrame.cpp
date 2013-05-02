@@ -418,8 +418,12 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
 		MyNotebook->AddPage( x, x->GetFileName().GetFullPath(), true );
 		x->Show();
 
-		//For loop updates Open Recent Menu properly.
+		//Detect from file name if we are opening a RAM Process:
+		MyAUI->GetPane(MyTagPanel).Show( flname.GetFullPath().Lower().StartsWith( wxT("-pid=")) );
+		MyAUI->Update();
+
 		int found = -1;
+		//For loop updates Open Recent Menu properly.
 		for( unsigned i=0; i < MyFileHistory->GetCount() ; i++)
 			if( MyFileHistory->GetHistoryFile( i ) == flname.GetFullPath() )
 				found = i;

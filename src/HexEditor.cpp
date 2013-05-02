@@ -219,7 +219,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		myscroll = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 
-		if( myfile->GetPID() >= 0 ){
+		if( myfile->IsProcess() ){
 			#ifdef __WXGTK__
 			//offset_scroll->Enable(false);
 			std::cout << "PID MAPS loading..." << std::endl;

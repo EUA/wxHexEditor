@@ -170,7 +170,7 @@
 			<Add directory="mhash/include" />
 		</Compiler>
 		<Unit filename="HexEditorGui.fbp" />
-		<Unit filename="makefile" />
+		<Unit filename="Makefile" />
 		<Unit filename="resources/osx/png2c.h" />
 		<Unit filename="resources/resource.rc">
 			<Option target="Release Cross-Win32" />

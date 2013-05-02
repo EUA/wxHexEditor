@@ -145,6 +145,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			}
 		waitpid(ProcessID, NULL, WUNTRACED);
 		BlockRWSize=4;
+		BlockRWCount=0x800000000000LL/4;
 		FAM = ReadOnly;
 		return true;
 		}
@@ -527,7 +528,7 @@ int FAL::GetBlockSize( void ){
 
 wxFileOffset FAL::Length( void ){
 	if( ProcessID >=0 )
-		return 0x7FFFFFFFFFFFll;
+		return 0x800000000000LL;
 
 	if ( BlockRWSize > 0 )
 		return BlockRWSize*BlockRWCount;
@@ -597,7 +598,8 @@ long FAL::Read( unsigned char* buffer, int size ){
 	//Encryption layer
 	ApplyXOR( buffer, ret, get_ptr );
 
-	get_ptr += ret; //for next read
+	//for next read
+	get_ptr += ret;
 
 	return ret;
 	}
@@ -848,6 +850,7 @@ wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 		return -1;
 
 	get_ptr = put_ptr = ofs;
+
 	if( BlockRWSize > 0 )
 		return ofs;
 

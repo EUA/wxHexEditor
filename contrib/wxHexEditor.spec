@@ -61,7 +61,7 @@ it's writen by cross-platform API, wxWidgets.
 %__install -D -m 644 resources/%{name}.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
 %__rm -f locale/*/*.po
 %__rm -f locale/*.po
-%__cp -rf locale/* %{buildroot}%{_datadir}/locale
+%__cp -rf locale/*/ %{buildroot}%{_datadir}/locale
 #%if %{defined suse_version}
 #mv resources/%{name}.desktop ./
 #%suse_update_desktop_file -i %{name} TextEditor Editor

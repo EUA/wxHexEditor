@@ -26,7 +26,7 @@ SOURCES= src/HexEditorGui.cpp \
 LIBS = udis86/libudis86/.libs/libudis86.a mhash/lib/.libs/libmhash.a
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
-LANGUAGEDIRS=tr
+LANGUAGEDIRS=tr ru
 LANGUAGES=$(wildcard locale/*/wxHexEditor.po)
 RESOURCES= resources/resource.rc
 RESOURCE_OBJ=$(RESOURCES:.rc=.o)

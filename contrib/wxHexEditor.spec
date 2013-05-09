@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2011 Erdem U. Altinyurt
+# Copyright (c) 2006-2012 Erdem U. Altinyurt
 # Thanks for oc2pus
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
@@ -9,25 +9,25 @@
 
 %define _prefix	/usr
 
-Name:				wxHexEditor
+Name:			wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.21
+Version:		0.22
 Release:		1
 License:		GPL
 Group:			Editors
-URL:				http://wxhexeditor.sourceforge.net/
+URL:			http://www.wxhexeditor.org
 Source0:		%{name}-v%{version}-src.tar.bz2
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 BuildRequires:	gcc-c++
-BuildRequires:	pkgconfig
+BuildRequires:	pkgconfig, automake, autoconf
 %if 0%{?suse_version} >= 1140
 BuildRequires:  wxWidgets-devel
 %else
 BuildRequires:  wxGTK-devel >= 2.8.9
 %endif
-%if 0%{?suse_version}
-BuildRequires:  fdupes update-desktop-files
-%endif
+#%if 0%{?suse_version}
+#BuildRequires:  fdupes update-desktop-files
+#%endif
 
 %description
 wxHexEditor is another GUI hex editor for open HUGE files and devices
@@ -48,13 +48,9 @@ it's writen by cross-platform API, wxWidgets.
 %setup -q -n %{name}
 
 %build
-%if %{defined suse_version} && 0%{?suse_version} < 1030
-		%__make -j1 \
-			WXCONFIG=wx-config-2.8
-%else
-	%__make -j1 \
-		WXCONFIG=wx-config
-%endif
+%__make -j4 \
+	WXCONFIG=wx-config \
+	OPTFLAGS="-fopenmp"
 
 %install
 %__install -dm 755 %{buildroot}%{_datadir}/pixmaps
@@ -66,23 +62,27 @@ it's writen by cross-platform API, wxWidgets.
 %__rm -f locale/*/*.po
 %__rm -f locale/*.po
 %__cp -rf locale/* %{buildroot}%{_datadir}/locale
-%if %{defined suse_version}
-mv resources/%{name}.desktop ./
-%suse_update_desktop_file -i %{name} TextEditor Editor
-%else
+#%if %{defined suse_version}
+#mv resources/%{name}.desktop ./
+#%suse_update_desktop_file -i %{name} TextEditor Editor
+#%else
 %__install -D -m 644 resources/%{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
-%endif
+#%endif
+
+%find_lang %{name}
 
 %clean
 [ -d "%{buildroot}" -a "%{buildroot}" != "" ] && %__rm -rf "%{buildroot}"
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root)
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Thu May 09 2013 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.22-
+- Updated to version v0.22, dropped openSUSE 11 version support and lowers.
 * Wed Dec 12 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.21-
 - Updated to version v0.21
 * Wed Feb 29 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.20-

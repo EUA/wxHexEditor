@@ -2200,11 +2200,12 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
 	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )	clrPickerSelectionForeground->SetColour(TempString);
 	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )	clrPickerSelectionBackground->SetColour(TempString);
+	if( wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )						chkAutoShowTagPanel->SetValue( TempBool );
 	if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
 	if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)					comboCustomHexFormat->SetValue( TempString );
-		comboCustomHexFormat->Enable( chkCustom->IsChecked() );
+	comboCustomHexFormat->Enable( chkCustom->IsChecked() );
 	if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 				chkBytePerLineLimit->SetValue( TempBool );
-		spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
+	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
 	int TempInt;
 	wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
@@ -2456,6 +2457,8 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
 	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+
+	wxConfigBase::Get()->Write( _T("AutoShowTagPanel"), chkAutoShowTagPanel->GetValue() );
 
    wxConfigBase::Get()->Flush();
 

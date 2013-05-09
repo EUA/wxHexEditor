@@ -501,6 +501,7 @@ class PreferencesDialogGui : public wxDialog
 		wxCheckBox* chkCustom;
 		wxCheckBox* chkBytePerLineLimit;
 		wxSpinCtrl* spinBytePerLine;
+		wxCheckBox* chkAutoShowTagPanel;
 		wxButton* BtnSave;
 		wxButton* BtnCancel;
 		

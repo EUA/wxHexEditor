@@ -411,39 +411,43 @@ void HexEditorFrame::ActionDisabler( void ){
 	Toolbar->Refresh();
 	}
 
-HexEditor* HexEditorFrame::OpenFile(wxFileName flname){
+HexEditor* HexEditorFrame::OpenFile(wxFileName filename){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
-	if(x->FileOpen( flname )){
+	if(x->FileOpen( filename )){
 		MyNotebook->AddPage( x, x->GetFileName().GetFullPath(), true );
 		x->Show();
 
+		bool autoShowTagsSwitch;
+		wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &autoShowTagsSwitch, true );
+
 		//Detect from file name if we are opening a RAM Process:
-		MyAUI->GetPane(MyTagPanel).Show( flname.GetFullPath().Lower().StartsWith( wxT("-pid=")) );
+		if( (x->MainTagArray.Count() > 0 and autoShowTagsSwitch)  or filename.GetFullPath().Lower().StartsWith( wxT("-pid=")) )
+		MyAUI->GetPane(MyTagPanel).Show( true );
 		MyAUI->Update();
 
 		int found = -1;
 		//For loop updates Open Recent Menu properly.
 		for( unsigned i=0; i < MyFileHistory->GetCount() ; i++)
-			if( MyFileHistory->GetHistoryFile( i ) == flname.GetFullPath() )
+			if( MyFileHistory->GetHistoryFile( i ) == filename.GetFullPath() )
 				found = i;
 
 		if( found != -1 )
 				MyFileHistory->RemoveFileFromHistory( found );
-		MyFileHistory->AddFileToHistory( flname.GetFullPath() );
+		MyFileHistory->AddFileToHistory( filename.GetFullPath() );
 		MyFileHistory->Save( *(wxConfigBase::Get()) );
 		wxConfigBase::Get()->Flush();
 //		mbar->Check(idFileRO, x->GetFileAccessMode()==FAL::FileAccessMode::ReadOnly);
 
-		if( wxFileName::FileExists( flname.GetFullPath().Append(wxT(".md5")) ) )
+		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".md5")) ) )
 			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) )
-				x->HashVerify( flname.GetFullPath().Append(wxT(".md5")) );
-		if( wxFileName::FileExists( flname.GetFullPath().Append(wxT(".sha1")) ) )
+				x->HashVerify( filename.GetFullPath().Append(wxT(".md5")) );
+		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".sha1")) ) )
 			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
-				x->HashVerify( flname.GetFullPath().Append(wxT(".sha1")) );
-		if( wxFileName::FileExists( flname.GetFullPath().Append(wxT(".sha256")) ) )
+				x->HashVerify( filename.GetFullPath().Append(wxT(".sha1")) );
+		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".sha256")) ) )
 			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
-				x->HashVerify( flname.GetFullPath().Append(wxT(".sha256")) );
+				x->HashVerify( filename.GetFullPath().Append(wxT(".sha256")) );
 
 		ActionEnabler();
 		return x;

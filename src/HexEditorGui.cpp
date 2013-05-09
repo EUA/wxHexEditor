@@ -283,9 +283,9 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuHelpDonate = new wxMenuItem( helpMenu, idDonate, wxString( _("Donate") ) , _("Donate some money to author as a return!"), wxITEM_NORMAL );
 	helpMenu->Append( menuHelpDonate );
 	
-	wxMenuItem* menuHelpReportBug;
-	menuHelpReportBug = new wxMenuItem( helpMenu, idBugReport, wxString( _("Report a Bug") ) , _("Report bugs for smashing them!"), wxITEM_NORMAL );
-	helpMenu->Append( menuHelpReportBug );
+	wxMenuItem* menuHelpBugReporting;
+	menuHelpBugReporting = new wxMenuItem( helpMenu, idBugReport, wxString( _("Bug Reporting") ) , _("Report bugs for smashing them!"), wxITEM_NORMAL );
+	helpMenu->Append( menuHelpBugReporting );
 	
 	wxMenuItem* menuHelpAbout;
 	menuHelpAbout = new wxMenuItem( helpMenu, wxID_ABOUT, wxString( _("&About") ) + wxT('\t') + _("F1"), _("Show info about this application"), wxITEM_NORMAL );
@@ -369,7 +369,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuOptionsPreferences->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuHelpDonate->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Connect( menuHelpReportBug->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
+	this->Connect( menuHelpBugReporting->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 }
 
@@ -1765,6 +1765,16 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	
 	
 	bSizerMain->Add( sbSizerFormat, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerTags;
+	bSizerTags = new wxBoxSizer( wxVERTICAL );
+	
+	chkAutoShowTagPanel = new wxCheckBox( this, wxID_ANY, _("Auto show tag panel if tags detected."), wxDefaultPosition, wxDefaultSize, 0 );
+	chkAutoShowTagPanel->SetValue(true); 
+	bSizerTags->Add( chkAutoShowTagPanel, 0, wxALL, 5 );
+	
+	
+	bSizerMain->Add( bSizerTags, 0, 0, 5 );
 	
 	wxBoxSizer* bSizerBtns;
 	bSizerBtns = new wxBoxSizer( wxHORIZONTAL );

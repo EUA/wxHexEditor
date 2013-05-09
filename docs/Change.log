@@ -1,3 +1,31 @@
+wxHexEditor v0.22 Beta  09/05/2013
+Implemented auto tag panel popup with Process RAM open.
+Fixed Process RAM seeking.
+Added Bug Reporting menu item.
+Fixed LLVM-Clang compilation.
+Added another killer feature : donation menu item.
+Find Some Bytes button doesn't close find dialog anymore.
+Replaced default font to DOS OEM CP437.
+Implemented auto preview feature for font size changes.
+Fixed MacOSX "Find" wxMessageBox stall with work-a-round.
+Fixed SaveAS for files that have filesize changes.
+Added gksu and gksudo support.
+Changed file pick filters from *.* to *
+Implemented EUC-KR, Big5, AtariST, UTF8, UTF16, UTF32, Unicode, Shift JIS, Macintosh encodings.
+Implemented EBCDIC IBM Codepage 500, 875 and 1026 all other PC/DOS Codepages.
+Implemented Iran System,Mozevia and Kamanicky Encodings.
+Implemented Font Size change option.
+Implemented Font Families for categorization encoding schemas.
+Implemented MIK, KOI7, TSCII, VSCII,EBCDIC CP037,285,1047,ANSEL, ISO/IEC 8859-1, DOS CP850, All Windows CP125x encodings, GB2312, Macintosh Roman CP10000 Encoding.
+Implemented Mac Windows codepages and ISO8859-16, KZ-1048, EBCDIC 474, CP1006.
+Implemented preferences codepage selection, ANSI,OEM,ASCI
+Added Gentoo patches from DirtyEpic. (Thanks)
+Implemented Bytes Per Line Limit.
+Fixed text panel that broken at last revision.
+Added non-compleeted Russian translation.(Thanks to Nikolai Novikov)
+Added --compare flag for CLI startup.
+Fixed restore main window at full screen state on opening.
+
 wxHexEditor v0.21 Beta  01/01/2013
 Imported new udis86 version with SSSE3 and some SSE4.1 support.
 Fixed opening hdd drives from linux shell.

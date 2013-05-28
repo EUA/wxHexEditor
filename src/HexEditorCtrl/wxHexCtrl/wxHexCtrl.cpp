@@ -2493,8 +2493,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	wxULongLong_t ull = ( offset_position );
 	if( offset_mode == 's' ){//Sector Indicator!
 		for( int i=0 ; i<LineCount() ; i++ ){
-			m_text << wxString::Format( format, (1+ull/sector_size), ull%sector_size );
-			//m_text << GetFormatedOffsetString( ull );
+			m_text << wxString::Format( format, (ull/sector_size), ull%sector_size );
 			ull += BytePerLine;
 			}
 		}
@@ -2508,7 +2507,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 
 wxString wxHexOffsetCtrl::GetFormatedOffsetString( uint64_t c_offset, bool minimal ){
    if(offset_mode=='s')
-		return wxString::Format( GetFormatString(minimal), (1+c_offset/sector_size), c_offset%sector_size );
+		return wxString::Format( GetFormatString(minimal), (c_offset/sector_size), c_offset%sector_size );
 	return wxString::Format( GetFormatString(minimal), c_offset );
 	}
 

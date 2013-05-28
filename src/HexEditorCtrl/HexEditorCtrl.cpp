@@ -135,18 +135,18 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 	if(sector_size > 1){
 		offset_ctrl->sector_size=sector_size;
 		unsigned draw_line=sector_size-(page_offset%sector_size);
-		hex_ctrl->ThinSeperationLines.Clear();
-		text_ctrl->ThinSeperationLines.Clear();
+		hex_ctrl->ThinSeparationLines.Clear();
+		text_ctrl->ThinSeparationLines.Clear();
 			do{
-			hex_ctrl->ThinSeperationLines.Add( 2*draw_line );
-			text_ctrl->ThinSeperationLines.Add( draw_line );
+			hex_ctrl->ThinSeparationLines.Add( 2*draw_line );
+			text_ctrl->ThinSeparationLines.Add( draw_line );
 			draw_line += sector_size;
 			}while (draw_line < lenght );
 		}
 
-	if(ProcessRAMMap.Count())
-		hex_ctrl->ThinSeperationLines.Clear();
-		text_ctrl->ThinSeperationLines.Clear();
+	if(ProcessRAMMap.Count()){
+		hex_ctrl->ThinSeparationLines.Clear();
+		text_ctrl->ThinSeparationLines.Clear();
 		//Notice that, ProcessRAMMap is SORTED.
 		for( unsigned i=0; i < ProcessRAMMap.Count(); i++ ){
 			uint64_t M = ProcessRAMMap.Item(i);
@@ -157,10 +157,11 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 				and (M <= page_offset + ByteCapacity()) ){
 
 				int draw_line = M - page_offset;
-				hex_ctrl->ThinSeperationLines.Add( 2*draw_line );
-				text_ctrl->ThinSeperationLines.Add( draw_line );
+				hex_ctrl->ThinSeparationLines.Add( 2*draw_line );
+				text_ctrl->ThinSeparationLines.Add( draw_line );
 				}
 			}
+		}
 
 	hex_ctrl->SetBinValue(buffer, lenght, false );
 	//text_ctrl->ChangeValue(text_string, false);

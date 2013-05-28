@@ -493,9 +493,9 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 
 	DrawCursorShadow(dcTemp);
 
-	if(ThinSeperationLines.Count() > 0)
-		for( unsigned i=0 ; i < ThinSeperationLines.Count() ; i++)
-			DrawSeperationLineAfterChar( dcTemp, ThinSeperationLines.Item(i) );
+	if(ThinSeparationLines.Count() > 0)
+		for( unsigned i=0 ; i < ThinSeparationLines.Count() ; i++)
+			DrawSeperationLineAfterChar( dcTemp, ThinSeparationLines.Item(i) );
 
 	return dcTemp;
 }
@@ -514,7 +514,11 @@ inline void wxHexCtrl::DrawCursorShadow(wxDC* dcTemp){
 	}
 
 
-inline void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset ){
+void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset ){
+#ifdef _DEBUG_
+		std::cout << "DrawSeperatıonLineAfterChar(" <<  seperationoffset << ")" << std::endl;
+#endif
+
 	if(m_Window.x > 0){
 		wxPoint z = InternalPositionToVisibleCoord( seperationoffset );
 		int y1=m_CharSize.y*( 1+z.y )+ m_Margin.y;

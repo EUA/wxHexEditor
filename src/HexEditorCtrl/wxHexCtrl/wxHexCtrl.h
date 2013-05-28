@@ -120,7 +120,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 
 		// TAG Support and Selection
 		ArrayOfTAG TagArray;
-		wxArrayInt ThinSeperationLines;
+		wxArrayInt ThinSeparationLines;
 		TagElement* GetTagByPix( wxPoint PixelCoord );
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );

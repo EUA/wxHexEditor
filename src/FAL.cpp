@@ -130,7 +130,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	struct stat fileStat;
-   bool DoFileExists = (stat(myfilename.GetFullPath().To8BitData(),&fileStat) >= 0);
+   bool DoFileExists = (stat((const char*) myfilename.GetFullPath().fn_str(),&fileStat) >= 0);
 
 	//Handling Memory Process Debugging Here
 	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){

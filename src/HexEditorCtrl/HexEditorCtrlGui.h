@@ -34,31 +34,31 @@ class wxHexTextCtrl;
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorCtrlGui
 ///////////////////////////////////////////////////////////////////////////////
-class HexEditorCtrlGui : public wxPanel 
+class HexEditorCtrlGui : public wxPanel
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_static_offset;
-		wxStaticText* m_static_adress;
+		wxStaticText* m_static_address;
 		wxStaticText* m_static_byteview;
 		wxStaticText* m_static_null;
 		wxHexOffsetCtrl* offset_ctrl;
 		wxHexCtrl* hex_ctrl;
 		wxHexTextCtrl* text_ctrl;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnKeyboardChar( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnResize( wxSizeEvent& event ) { event.Skip(); }
 		virtual void OnOffsetScroll( wxScrollEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
 		wxScrollBar* offset_scroll_real;
-		
+
 		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~HexEditorCtrlGui();
-	
+
 };
 
 #endif //__HexEditorCtrlGui__

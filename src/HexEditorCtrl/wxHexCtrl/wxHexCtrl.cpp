@@ -2554,12 +2554,12 @@ void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
 
 void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 	wxPoint p = PixelCoordToInternalCoord( event.GetPosition() );
-	uint64_t adress = offset_position + p.y*BytePerLine;
+	uint64_t address = offset_position + p.y*BytePerLine;
 	wxString adr;
 	if(offset_mode=='s')
-		adr = wxString::Format( GetFormatString(), (1+adress/sector_size), adress%sector_size);
+		adr = wxString::Format( GetFormatString(), (1+address/sector_size), address%sector_size);
 	else
-		adr = wxString::Format( GetFormatString(), adress);
+		adr = wxString::Format( GetFormatString(), address);
 
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();

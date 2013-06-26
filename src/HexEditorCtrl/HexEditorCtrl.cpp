@@ -226,7 +226,7 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 void HexEditorCtrl::SetFont( wxFont f ){
 	stdfont = f;
 	m_static_offset->SetFont( stdfont );
-	m_static_adress->SetFont( stdfont );
+	m_static_address->SetFont( stdfont );
 	m_static_byteview->SetFont( stdfont );
 	SetStyle();
 	}
@@ -477,7 +477,7 @@ void HexEditorCtrl::ControlShow( panels control, bool show ){
 		}
 	else if(control == HEX_CTRL ){
 		hex_ctrl->Show( show );
-		m_static_adress->Show(show);
+		m_static_address->Show(show);
 		}
 	else if(control == TEXT_CTRL ){
 		text_ctrl->Show( show );
@@ -572,7 +572,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 
 	hex_ctrl->SetMinSize( wxSize( hex_x, y ));
 //	hex_ctrl->SetSize( wxSize( hex_x, y ));
-	m_static_adress->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
+	m_static_address->SetMinSize( wxSize(hex_x, m_static_offset->GetSize().GetY()) ) ;
 
 	text_ctrl->SetMinSize( wxSize( text_x, y ));
 //	text_ctrl->SetSize( wxSize( text_x, y ));
@@ -581,7 +581,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	//Preparing Sizer
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
-	fgSizer1->Add( m_static_adress, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
+	fgSizer1->Add( m_static_address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
 	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
 	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
 	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
@@ -603,25 +603,25 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 
 	//Formating Hex and byteview column labels
 	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
-	wxString adress,byteview;
+	wxString address,byteview;
 
 	int h=0;
 	for( int j = 0 ; j < ByteShownPerLine ; j++ ){
 		byteview << wxString::Format( wxT("%01X"), j%0x10 );
 
 		while(hex_ctrl->IsDenied(h)){
-			adress << wxT(" ");
+			address << wxT(" ");
 			h++;
 			}
 
-		adress << wxString::Format( wxT("%02X"), j%0x100 );
+		address << wxString::Format( wxT("%02X"), j%0x100 );
 		h+=2;
 		}
 
-	if(adress.Last()==' ')
-		adress.RemoveLast();	//Remove last ' ' for unwrap
+	if(address.Last()==' ')
+		address.RemoveLast();	//Remove last ' ' for unwrap
 
-	m_static_adress->SetLabel(adress);
+	m_static_address->SetLabel(address);
 	m_static_byteview->SetLabel( byteview );
 
 #ifdef _DEBUG_SIZE_

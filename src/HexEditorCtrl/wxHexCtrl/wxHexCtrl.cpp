@@ -451,10 +451,40 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	if( wxConfig::Get()->Read( _T("ColourHexBackgroundZebra"), &Colour) )
 		col_zebra.Set( Colour );
 
-	size_t z = 0;
+	size_t textLenghtLimit = 0;
 	size_t textLength=m_text.Length();
 //	char bux[1000];  //++//
-	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color
+/*** Hex to Color Engine Prototype
+   char chr;
+   unsigned char chrP,chrC;
+   chrP=0;
+	if(1)
+	for ( int y = 0 ; y < m_Window.y; y++ ){
+		for ( int x = 0 ; x < m_Window.x; x++ ){
+			if( IsDenied(x)){
+				chr=' ';
+				dcTemp->DrawText( wxString::From8BitData(&chr), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+				//bux[x]=' ';//++//
+				continue;
+				}
+			if(textLenghtLimit >= textLength)
+				break;
+	//		bux[x]=CharAt(z);//++//
+			chr = CharAt(textLenghtLimit++);
+
+			if( not (chrP++ % 2) )
+			   chrC = (atoh( chr ) << 4) | atoh( CharAt(textLenghtLimit) );
+
+			unsigned char R=(chrC>>5)*0xFF/7;
+			unsigned char G=(0x07 & (chrC>>2))*0xFF/7;
+			unsigned char B=(0x03 & chrC)*0xFF/3;
+		   dcTemp->SetTextBackground( wxColour(R,G,B) );
+			dcTemp->DrawText( wxString::From8BitData(&chr), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+			}
+		}
+	else
+//*/
+	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
 		line.Empty();
 
 		if (*ZebraStriping != -1 )
@@ -466,10 +496,10 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 				//bux[x]=' ';//++//
 				continue;
 				}
-			if(z >= textLength)
+			if(textLenghtLimit >= textLength)
 				break;
 	//		bux[x]=CharAt(z);//++//
-			line += CharAt(z++);
+			line += CharAt(textLenghtLimit++);
 			//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 			}
 /*

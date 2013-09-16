@@ -42,6 +42,7 @@
 wxArrayString GetSupportedEncodings();
 inline wxChar CP473toUnicode( unsigned char ch );
 inline wxString CP473toUnicode( wxString& line );
+int atoh( const char );
 
 WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
 class wxHexCtrl : public wxScrolledWindow{

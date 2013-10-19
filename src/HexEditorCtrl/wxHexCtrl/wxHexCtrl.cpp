@@ -133,16 +133,15 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 	if( cursor_reset )
 		SetInsertionPoint(0);
 	OnTagHideAll();
-	TagArray.Clear();
-	/*BUG!!!
-	TagElement *TAG;
-	while( TagArray.Count() > 0 ){
-		int x =  TagArray.Count();
-		TAG = TagArray.Item(0);
-		TagArray.Remove(0);
-		}
-	*/
+	//*BUG!!!*/
+
 	ClearSelection( RePaint );
+	}
+
+void wxHexCtrl::ClearTAGs(){
+	for( int i=0; i < TagArray.Count(); i++ )
+		delete TagArray.Item(i);
+	TagArray.Clear();
 	}
 
 void wxHexCtrl::CreateCaret(){

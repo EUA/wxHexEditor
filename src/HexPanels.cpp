@@ -328,21 +328,15 @@ void TagPanel::Set( ArrayOfTAG& TagArray ){
 	mutextag.Unlock();
 	}
 
+
 void TagPanel::OnTagSelect(wxCommandEvent& event) {
 	//HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor(); //if detached, parent changes!
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
-	if( MyHexEditor->MainTagArray.Count() >= selection ) {
-		TagElement *tg = MyHexEditor->MainTagArray.Item( selection );
-		if(tg == NULL) {
-#ifdef _DEBUG_
-			std::cerr << "TagPanel::OnTagSelect Selection of tag " << selection << " returns NULL TAG" << std::endl;
-#endif
-			return;
-			}
-		MyHexEditor->Goto( tg->start );
-		}
+	if( MyHexEditor->MainTagArray.Count() >= selection )
+		MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( selection )->start );
 	}
+
 void SearchPanel::OnClear( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	TagPanelList->Clear();
@@ -353,31 +347,15 @@ void SearchPanel::OnClear( wxCommandEvent& event ){
 void SearchPanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
-	if( MyHexEditor->HighlightArray.Count() >= selection ) {
-		TagElement *tg = MyHexEditor->HighlightArray.Item( selection );
-		if(tg == NULL) {
-#ifdef _DEBUG_
-			std::cerr << "SearchPanel::OnTagSelect Selection of tag " << selection << " returns NULL TAG" << std::endl;
-#endif
-			return;
-			}
-		MyHexEditor->Goto( tg->start , true);
-		}
+	if( MyHexEditor->HighlightArray.Count() >= selection )
+		MyHexEditor->Goto( MyHexEditor->HighlightArray.Item( selection )->start , true);
 	}
 
 void ComparePanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
-	if( MyHexEditor->CompareArray.Count() >= selection ) {
-		TagElement *tg = MyHexEditor->CompareArray.Item( selection );
-		if(tg == NULL) {
-#ifdef _DEBUG_
-			std::cerr << "ComparePanel::OnTagSelect Selection of tag " << selection << " returns NULL TAG" << std::endl;
-#endif
-			return;
-			}
-		MyHexEditor->Goto( tg->start , true);
-		}
+	if( MyHexEditor->CompareArray.Count() >= selection )
+		MyHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start , true);
 	}
 
 void DisassemblerPanel::Set( wxMemoryBuffer buff ){

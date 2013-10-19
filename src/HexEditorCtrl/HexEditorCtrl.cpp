@@ -353,8 +353,8 @@ void inline HexEditorCtrl::ClearPaint( void ){
 
 void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagHideAll();
-	hex_ctrl->TagArray.Clear();
-	text_ctrl->TagArray.Clear();
+	hex_ctrl->ClearTAGs();
+	text_ctrl->ClearTAGs();
 
 	MainTagArray.Sort( TagElement::TagCompare );
 	TagElement *TAG;

@@ -68,6 +68,7 @@ virtual void CreateCaret( void );
 		void MoveCaret( int x );
 		void MoveCaret( wxPoint p );
 		void Clear( bool ClearDC=true, bool cursor_reset=true );
+		void ClearTAGs();
 		void SetBinValue( wxString buffer, bool repaint = true );
 		void SetBinValue( char* buffer, int byte_count, bool repaint = true );
 		void SetValue( wxString buffer, bool repaint = true );

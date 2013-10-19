@@ -37,6 +37,9 @@ TagElement::TagElement(){
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
 			start( _start < _end ? _start : _end), end(_start < _end ? _end : _start), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
 	visible = false;
+	#ifndef __WXMAC__
+	wxP = NULL;
+	#endif
 	}
 
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour fntclr, wxColour noteclr):
@@ -44,6 +47,9 @@ TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour 
 	FontClrData.SetColour(fntclr);
 	NoteClrData.SetColour(noteclr);
 	visible = false;
+	#ifndef __WXMAC__
+	wxP = NULL;
+	#endif
 	}
 
 TagElement::~TagElement(){
@@ -111,6 +117,7 @@ void TagElement::Hide( void ){
 #ifndef __WXMAC__
 		wxP->Hide();
 		wxP->Destroy();
+		wxP=NULL;
 #endif
 		}
 	}

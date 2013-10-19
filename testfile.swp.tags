@@ -60,7 +60,7 @@
     <TAG id="1">
       <start_offset>9</start_offset>
       <end_offset>12</end_offset>
-      <tag_text></tag_text>
+      <tag_text>1234</tag_text>
       <font_colour>#000000</font_colour>
       <note_colour>#C8983C</note_colour>
     </TAG>

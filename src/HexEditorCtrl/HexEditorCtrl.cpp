@@ -60,7 +60,11 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
 	Clear();
-	MainTagArray.Clear();
+
+	WX_CLEAR_ARRAY(MainTagArray)
+	WX_CLEAR_ARRAY(HighlightArray)
+   WX_CLEAR_ARRAY(CompareArray)
+
 	delete select;
 	delete offset_scroll;
 	}
@@ -353,27 +357,20 @@ void inline HexEditorCtrl::ClearPaint( void ){
 
 void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagHideAll();
-	hex_ctrl->ClearTAGs();
-	text_ctrl->ClearTAGs();
+	WX_CLEAR_ARRAY(hex_ctrl->TagArray);
+	WX_CLEAR_ARRAY(text_ctrl->TagArray);
 
 	MainTagArray.Sort( TagElement::TagCompare );
-	TagElement *TAG;
-	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ ){	//Painting all TAGs here.
-		TAG = MainTagArray.Item(i);// For debugging
-		PushTAGToControls(TAG);
-		}
+	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ )	//Painting all TAGs here.
+		PushTAGToControls(MainTagArray.Item(i));
 
 	HighlightArray.Sort( TagElement::TagCompare );
-	for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ ){	//Just highlighting required sections.
-		TAG = HighlightArray.Item(i);// For debugging
-		PushTAGToControls(TAG);
-		}
+	for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ )	//Just highlighting required sections.
+		PushTAGToControls(HighlightArray.Item(i));
 
 	CompareArray.Sort( TagElement::TagCompare );
-	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ ){	//Just highlighting diff sections.
-		TAG = CompareArray.Item(i);// For debugging
-		PushTAGToControls(TAG);
-		}
+	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ )	//Just highlighting diff sections.
+		PushTAGToControls(CompareArray.Item(i));
 	}
 
 //This functions move tags to local hex and text ctrls.

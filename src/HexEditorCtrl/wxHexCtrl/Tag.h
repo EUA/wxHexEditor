@@ -37,19 +37,33 @@
 #include <wx/dcmemory.h>
 #include "TagDialogGui.h"
 
+class TagElementData{
+	public:
+	uint64_t start;
+	uint64_t end;
+	wxString tag;
+	wxColourData FontClrData;
+	wxColourData NoteClrData;
+	bool visible;
+	};
+
 //class TagElement:public wxPopupWindow{
+//class TagElement:public TagElementData{
 class TagElement{
 	public:
 		TagElement();
 		~TagElement();
+		TagElement( TagElementData data );
 		TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr);
 		TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour fntclr, wxColour noteclr);
+
 		uint64_t start;
 		uint64_t end;
 		wxString tag;
 		wxColourData FontClrData;
 		wxColourData NoteClrData;
 		bool visible;
+
 		void Show( const wxPoint& pos, wxWindow *parent );
 		void Hide( void );
 		bool isCover( uint64_t );

@@ -34,6 +34,17 @@ TagElement::TagElement(){
 #endif
 	}
 
+TagElement::TagElement( TagElementData data ){
+	start = data.start;
+	end=data.end;
+	FontClrData=data.FontClrData;
+	NoteClrData=data.NoteClrData;
+	visible = false;
+	#ifndef __WXMAC__
+	wxP = NULL;
+	#endif
+	}
+
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
 			start( _start < _end ? _start : _end), end(_start < _end ? _end : _start), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
 	visible = false;
@@ -51,6 +62,7 @@ TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour 
 	wxP = NULL;
 	#endif
 	}
+
 
 TagElement::~TagElement(){
 	if( visible )

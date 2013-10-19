@@ -340,7 +340,11 @@ void TagPanel::OnTagSelect(wxCommandEvent& event) {
 void SearchPanel::OnClear( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	TagPanelList->Clear();
+
+	for( int i=0; i < MyHexEditor->HighlightArray.Count(); i++ )
+		delete MyHexEditor->HighlightArray.Item(i);
 	MyHexEditor->HighlightArray.Clear();
+
 	MyHexEditor->Reload();
 	}
 

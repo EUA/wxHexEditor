@@ -403,7 +403,11 @@ void FindDialog::OnChar( wxKeyEvent& event ){
 	}
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
+
+	for( int i=0; i < parent->HighlightArray.Count(); i++ )
+		delete parent->HighlightArray.Item(i);
 	parent->HighlightArray.Clear();
+
 	if( event.GetId() == btnFind->GetId())
 		OnFind();
 	else if(event.GetId() == m_comboBoxSearch->GetId()){
@@ -569,7 +573,6 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		}
 	}
 
-// TODO (death#1#): FindDialog::FindBinaryUnitTest()
 bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsigned& search_step, bool backward ){
 	uint64_t map_start;
 	uint64_t map_end;
@@ -610,6 +613,7 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	return false;
 	}
 
+// TODO (death#1#): FindDialog::FindBinaryUnitTest()
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
 	#ifdef _DEBUG_
 		std::cout << "FindDialog::FindBinary() From:" << from << std::endl;
@@ -639,6 +643,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	time (&ts);
 	te=ts;
 	unsigned read_speed=0;
+	uint64_t read_speed_offset=0;
 	unsigned percentage=0;
 	uint64_t processfootprint=0;
 	if( findfile->IsProcess() )
@@ -789,36 +794,41 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 			findfile->Seek( current_offset, wxFromStart );
 			readed = findfile->Read( buffer , search_step );
-			read_speed += readed;
+			//read_speed += readed;
 
 			#ifdef _DEBUG_
 				std::cout << "Readed: " << readed << std::endl;
 				printf( "FindBinary() FORWARD1 0x%llX - 0x%llX\n" , current_offset , current_offset+search_step);
 			#endif
-			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 
-			if(found >= 0){//We found something
-				if( options & SEARCH_FINDALL ){
-					TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
-					parent->HighlightArray.Add(mytag);
-					current_offset += found+target.GetDataLen(); //Unprocessed bytes
-					readed=search_step; //to stay in loop
+			int fptr=0;
+		//	do{ //Reuse bufer
+				found = SearchAtBuffer( buffer+fptr, readed-fptr, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+
+				if(found >= 0){//We found something
+					if( options & SEARCH_FINDALL ){
+						TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+						parent->HighlightArray.Add(mytag);
+			//			fptr+=found+target.GetDataLen();
+						current_offset += found+target.GetDataLen(); //Unprocessed bytes remaining at buffer!!!
+						readed=search_step; //to stay in loop
+						}
+					else{
+						delete [] buffer;
+						return current_offset+found;
+						}
 					}
 				else{
-					delete [] buffer;
-					return current_offset+found;
+					int z = readed - target.GetDataLen() -1;
+					current_offset += (z <= 0 ? 1 : z); //for unprocessed bytes
 					}
-				}
-			else{
-				int z = readed - target.GetDataLen() -1;
-				current_offset += (z <= 0 ? 1 : z); //Unprocessed bytes
-				}
+			//}while( found >= 0);
 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
-					read_speed=0;
+					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*(current_offset-read_speed_offset)/MB) + wxT("\n");
+					read_speed_offset = current_offset;
 					}
 
 			totalread += readed; // We need this on step 2
@@ -892,6 +902,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	}
 
 void FindDialog::OnFindAll( bool internal ){
+	for( int i=0; i < parent->HighlightArray.Count(); i++ )
+		delete parent->HighlightArray.Item(i);
 	parent->HighlightArray.Clear();
 
 	unsigned options = SEARCH_FINDALL; //fill continue search until file and with this option.
@@ -899,6 +911,7 @@ void FindDialog::OnFindAll( bool internal ){
 	options |= chkWrapAround->GetValue() ? SEARCH_WRAPAROUND : 0;
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 
+	//Text Search
 	if(options & SEARCH_TEXT) {
 		PrepareComboBox( true );
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
@@ -912,6 +925,7 @@ void FindDialog::OnFindAll( bool internal ){
 			FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1 , options );
 		}
 
+	//Hexadecimal / Binary Search
 	else {
 		wxString hexval = m_comboBoxSearch->GetValue();
 		//parent->Goto(0);

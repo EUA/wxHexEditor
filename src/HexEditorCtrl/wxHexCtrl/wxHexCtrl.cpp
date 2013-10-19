@@ -115,7 +115,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 }
 wxHexCtrl::~wxHexCtrl()
 {
-   m_text.Clear();
+   Clear();
+   //m_text.Clear();
    wxCaretSuspend cs(this);
    wxBufferedPaintDC dc( this );
    PrepareDC( dc );
@@ -125,7 +126,6 @@ wxHexCtrl::~wxHexCtrl()
 	wxBrush bbrush( HexDefaultAttr.GetBackgroundColour() );
    dc.SetBackground(bbrush );
    dc.Clear();
-	TagArray.Clear();
 }
 
 void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
@@ -133,15 +133,8 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 	if( cursor_reset )
 		SetInsertionPoint(0);
 	OnTagHideAll();
-	//*BUG!!!*/
-
 	ClearSelection( RePaint );
-	}
-
-void wxHexCtrl::ClearTAGs(){
-	for( int i=0; i < TagArray.Count(); i++ )
-		delete TagArray.Item(i);
-	TagArray.Clear();
+	WX_CLEAR_ARRAY(TagArray);
 	}
 
 void wxHexCtrl::CreateCaret(){

@@ -334,33 +334,36 @@ void TagPanel::OnTagSelect(wxCommandEvent& event) {
 	//HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor(); //if detached, parent changes!
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
-	if( MyHexEditor->MainTagArray.Count() >= selection )
-		MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( selection )->start );
+
+	if( MyHexEditor != NULL )
+		if( MyHexEditor->MainTagArray.Count() >= selection )
+			MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( selection )->start );
 	}
 
 void SearchPanel::OnClear( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	TagPanelList->Clear();
 
-	for( int i=0; i < MyHexEditor->HighlightArray.Count(); i++ )
-		delete MyHexEditor->HighlightArray.Item(i);
-	MyHexEditor->HighlightArray.Clear();
-
-	MyHexEditor->Reload();
+	if( MyHexEditor != NULL ){
+		WX_CLEAR_ARRAY(MyHexEditor->HighlightArray);
+		MyHexEditor->Reload();
+		}
 	}
 
 void SearchPanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
-	if( MyHexEditor->HighlightArray.Count() >= selection )
-		MyHexEditor->Goto( MyHexEditor->HighlightArray.Item( selection )->start , true);
+	if( MyHexEditor != NULL )
+		if( MyHexEditor->HighlightArray.Count() >= selection )
+			MyHexEditor->Goto( MyHexEditor->HighlightArray.Item( selection )->start , true);
 	}
 
 void ComparePanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
-	if( MyHexEditor->CompareArray.Count() >= selection )
-		MyHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start , true);
+	if( MyHexEditor != NULL )
+		if( MyHexEditor->CompareArray.Count() >= selection )
+			MyHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start , true);
 	}
 
 void DisassemblerPanel::Set( wxMemoryBuffer buff ){

@@ -65,6 +65,10 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 	WX_CLEAR_ARRAY(HighlightArray)
    WX_CLEAR_ARRAY(CompareArray)
 
+   MainTagArray.Shrink();
+   HighlightArray.Shrink();
+   CompareArray.Shrink();
+
 	delete select;
 	delete offset_scroll;
 	}
@@ -355,20 +359,22 @@ void inline HexEditorCtrl::ClearPaint( void ){
 	text_ctrl->ClearSelection();
 	}
 
-void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
+
+// TODO (death#1#): Accelerate PreparePaintTags here!
+ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagHideAll();
 	WX_CLEAR_ARRAY(hex_ctrl->TagArray);
 	WX_CLEAR_ARRAY(text_ctrl->TagArray);
 
-	MainTagArray.Sort( TagElement::TagCompare );
+	//MainTagArray.Sort( TagElement::TagCompare );
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ )	//Painting all TAGs here.
 		PushTAGToControls(MainTagArray.Item(i));
 
-	HighlightArray.Sort( TagElement::TagCompare );
+	//HighlightArray.Sort( TagElement::TagCompare );
 	for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ )	//Just highlighting required sections.
 		PushTAGToControls(HighlightArray.Item(i));
 
-	CompareArray.Sort( TagElement::TagCompare );
+	//CompareArray.Sort( TagElement::TagCompare );
 	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ )	//Just highlighting diff sections.
 		PushTAGToControls(CompareArray.Item(i));
 	}

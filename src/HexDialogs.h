@@ -28,12 +28,13 @@
 #include "HexEditor.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorGui.h"
-
+#include <vector>
 #ifdef WX_GCH
 	#include <wx_pch.h>
 #else
 	#include <wx/wx.h>
 #endif
+
 bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent=NULL);
 
 //ComboBox Filler from stored Registry values
@@ -81,6 +82,7 @@ virtual void EventHandler( wxCommandEvent& event );
 		uint64_t FindText( wxString target, uint64_t start_from, unsigned oper=SEARCH_TEXT);
 		int SearchAtBufferMultiThread( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
 		int SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
+		int MultiSearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper, std::vector<int> *ret_ptr );
 		bool SearchAtBufferUnitTest();
 		void FindSomeBytes( void );
 		class HexEditor* parent;

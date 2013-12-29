@@ -1,9 +1,7 @@
 WXCONFIG = wx-config
-CC = `$(WXCONFIG) --cc`
-CXX = `$(WXCONFIG) --cxx`
-CFLAGS = -O2
-CXXFLAGS = -O2
-WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -O2 -c ${OPTFLAGS}
+CC ?= `$(WXCONFIG) --cc`
+CXX ?= `$(WXCONFIG) --cxx`
+WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD
 WXLDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
@@ -52,7 +50,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lgomp -o $@
 
 .cpp.o: $(LIBS)
-	$(CXX) $(WXCXXFLAGS) ${CXXFLAGS} $< -o $@
+	$(CXX) -c $(WXCXXFLAGS) $(OPTFLAGS) $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@
@@ -64,11 +62,11 @@ langs: $(MOBJECTS)
 
 udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./autogen.sh
-	cd udis86;./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}"
+	cd udis86;./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
-	cd mhash; ./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}"
+	cd mhash; ./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 	cd mhash; $(MAKE) $(MFLAGS)
 
 win: $(RESOURCES) $(EXECUTABLE_WIN)

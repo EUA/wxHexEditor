@@ -63,6 +63,10 @@ void SetStackLimit(void){
 bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent) {
    if( hexval.Len() < 2 )
       return false;
+   //Remove all space chars and update the Search value
+   while( hexval.find(' ') != -1 )
+      hexval.Remove( hexval.find(' '),1);
+
 
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
       if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
@@ -70,11 +74,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
          wxBell();
          return false;
          }
-   //Remove all space chars and update the Search value
-   while( hexval.find(' ') != -1 )
-      hexval.Remove( hexval.find(' '),1);
-
-   //there is odd hex value, must be even digit for search!
+      //there is odd hex value, must be even digit for search!
    if( hexval.Len() % 2 ) {
       OSXwxMessageBox( _("Value must be even digit!"), _("Format Error!"), wxOK, parent );
       wxBell();

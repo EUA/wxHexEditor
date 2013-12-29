@@ -106,7 +106,7 @@ Fixed XORView check on file selections.
 Added Hexadecimal key support at XORView dialog.
 Added old value memory to all dialogs.
 Replaced hash calculation init with for looped one.
-Added MD/RIPEMD/SHA/TIGER/HAVAL/CRC/ADLER/GOST/WHRILPOOL/SNEFRU checksum
+Added MD/RIPEMD/SHA/TIGER/HAVAL/CRC/ADLER/GOST/WHIRLPOOL/SNEFRU checksum
 functions.
 Added OpenMP acceleration to Checksum calculation.
 Added Devices SubMenu categorization.

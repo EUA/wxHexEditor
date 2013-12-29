@@ -1581,7 +1581,7 @@ msgid "File To Hash:"
 msgstr ""
 
 #: src/HexEditorGui.cpp:1200
-msgid "Curent File"
+msgid "Current File"
 msgstr ""
 
 #: src/HexEditorGui.cpp:1218
@@ -1701,7 +1701,7 @@ msgid "CRC32B"
 msgstr ""
 
 #: src/HexEditorGui.cpp:1319
-msgid "WHRILPOOL"
+msgid "WHIRLPOOL"
 msgstr ""
 
 #: src/HexEditorGui.cpp:1322

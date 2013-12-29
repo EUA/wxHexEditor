@@ -1197,7 +1197,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizerDiler;
 	bSizerDiler = new wxBoxSizer( wxVERTICAL );
 	
-	chkFile = new wxCheckBox( this, wxID_ANY, _("Curent File"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkFile = new wxCheckBox( this, wxID_ANY, _("Current File"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkFile->Enable( false );
 	
 	bSizerDiler->Add( chkFile, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -1316,7 +1316,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	chkCRC32B = new wxCheckBox( this, wxID_ANY, _("CRC32B"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkCRC32B, 0, 0, 5 );
 	
-	chkWHIRLPOOL = new wxCheckBox( this, wxID_ANY, _("WHRILPOOL"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkWHIRLPOOL = new wxCheckBox( this, wxID_ANY, _("WHIRLPOOL"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkWHIRLPOOL, 0, 0, 5 );
 	
 	chkGOST = new wxCheckBox( this, wxID_ANY, _("GOST"), wxDefaultPosition, wxDefaultSize, 0 );

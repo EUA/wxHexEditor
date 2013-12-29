@@ -1612,7 +1612,7 @@ msgid "File To Hash:"
 msgstr "Parmak İzi Dosyası:"
 
 #: src/HexEditorGui.cpp:1200
-msgid "Curent File"
+msgid "Current File"
 msgstr "Şu Anki Dosya"
 
 #: src/HexEditorGui.cpp:1218
@@ -1732,7 +1732,7 @@ msgid "CRC32B"
 msgstr ""
 
 #: src/HexEditorGui.cpp:1319
-msgid "WHRILPOOL"
+msgid "WHIRLPOOL"
 msgstr ""
 
 #: src/HexEditorGui.cpp:1322

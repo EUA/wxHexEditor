@@ -3,8 +3,9 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Guntram Blohm <gbl@bso2001.com>, 2013
 # bibo <bibo@wordy-rappinghood.net>, 2013
+# Guntram Blohm <gbl@bso2001.com>, 2013
+# fri <pavelfric@seznam.cz>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: wxHexEditor\n"
@@ -12,89 +13,89 @@ msgstr ""
 "POT-Creation-Date: 2013-06-26 18:21+0300\n"
 "PO-Revision-Date: 2013-12-30 08:14+0000\n"
 "Last-Translator: EUA <spamjunkeater@gmail.com>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/wxhexeditor/language/de/)\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/wxhexeditor/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: src/HexDialogs.h:68 src/HexEditorGui.h:298 src/HexEditorFrame.cpp:285
 #: src/HexEditorGui.cpp:133 src/HexEditorGui.cpp:916
 msgid "Find"
-msgstr "Suchen"
+msgstr "Najít"
 
 #: src/HexDialogs.h:95
 msgid "Find & Replace"
-msgstr "Suchen & Ersetzen"
+msgstr "Najít a nahradit"
 
 #: src/HexEditorGui.h:121
 msgid "wxHexEditor Alpha Development version"
-msgstr "wxHexEditor Alpha Entwicklungs-Version"
+msgstr "Vývojová verze  wxHexEditoru alfa"
 
 #: src/HexEditorGui.h:261 src/HexEditorGui.cpp:143
 msgid "Go to Offset"
-msgstr "Gehe zu Offset"
+msgstr "Jít na místo"
 
 #: src/HexEditorGui.h:322
 msgid "New wxHexEditor Version!"
-msgstr "Neue Version von wxHexEditor!"
+msgstr "Nová verze wxHexEditoru!"
 
 #: src/HexEditorGui.h:360 src/HexEditorGui.cpp:209
 msgid "Compare Files"
-msgstr "Vergleiche Dateien"
+msgstr "Porovnat soubory"
 
 #: src/HexEditorGui.h:413 src/HexEditorGui.cpp:205
 msgid "Calculate Checksum"
-msgstr "Berechne Prüfsumme"
+msgstr "Spočítat kontrolní součet"
 
 #: src/HexEditorGui.h:444
 msgid "Copy Selected Block As"
-msgstr "Kopiere markierten Block als"
+msgstr "Kopírovat vybraný blok jako"
 
 #: src/HexEditorGui.h:471
 msgid "XORView Thru Warning!"
-msgstr "XOR Durchsichtsmodus Warnung!"
+msgstr "Varování prohlížecího režimu XOR!"
 
 #: src/HexEditorGui.h:518 src/HexEditorGui.cpp:276
 msgid "Preferences"
-msgstr "Einstellungen"
+msgstr "Nastavení"
 
 #: src/HexEditorGui.h:544
 msgid "Disk/Partition Backup Tool"
-msgstr "Platten/Partitions-Sicherung"
+msgstr "Zálohovací nástroj pro disky/diskové oddíly"
 
 #: src/HexEditorGui.h:570
 msgid "Disk/Partition Restore Tool"
-msgstr "Platten/Partitions-Wiederherstellung"
+msgstr "Obnovovací nástroj pro disky/diskové oddíly"
 
 #: src/HexEditorGui.h:595
 msgid "Disk/Partition Erase Tool"
-msgstr "Platten/Partitions-Löschwerkzeug"
+msgstr "Mazací nástroj pro disky/diskové oddíly"
 
 #: src/HexEditorGui.h:612
 msgid "Debug Log"
-msgstr "Debug Log"
+msgstr "Zápis o ladění"
 
 #: src/HexEditor.h:195 src/HexEditor.h:215
 msgid "Clipboard could not be opened."
-msgstr "Zwischenablage konnte nicht geöffnet werden"
+msgstr "Schránku se nepodařilo otevřít."
 
 #: src/HexEditor.h:195 src/HexEditor.h:215 src/HexEditor.cpp:1364
 msgid "Operation cancelled!"
-msgstr "Operation abgebrochen"
+msgstr "Operace zrušena!"
 
 #: src/HexEditor.h:195 src/HexEditor.h:215 src/HexEditor.cpp:1364
 msgid "Copy To Clipboard Error"
-msgstr "Fehler beim Kopieren in Zwischenablage"
+msgstr "Chyba při kopírování do schránky"
 
 #: src/FAL.cpp:123 src/FAL.cpp:160 src/FAL.cpp:215
 msgid "File is not readable by permissions."
-msgstr "Fehlende Datei-Lesezugriffsrechte"
+msgstr "Chybí přístupová práva pro čtení souboru."
 
 #: src/FAL.cpp:123 src/FAL.cpp:215
 msgid "Please change file permissons or run this program with root privileges"
-msgstr "Bitte ändern Sie die Dateirechte oder starten Sie das Programm mit entsprechenden Zugriffsrechten"
+msgstr "Změňte, prosím, práva k souboru, nebo tento program spusťte s odpovídajícími přístupovými právy"
 
 #: src/FAL.cpp:123 src/FAL.cpp:142 src/FAL.cpp:154 src/FAL.cpp:160
 #: src/FAL.cpp:170 src/FAL.cpp:204 src/FAL.cpp:215 src/FAL.cpp:234
@@ -105,71 +106,71 @@ msgstr "Bitte ändern Sie die Dateirechte oder starten Sie das Programm mit ents
 #: src/HexEditorFrame.cpp:584 src/HexEditorFrame.cpp:588
 #: src/HexEditorFrame.cpp:1121
 msgid "Error"
-msgstr "Fehler"
+msgstr "Chyba"
 
 #: src/FAL.cpp:142 src/FAL.cpp:204
 msgid "Process cannot open."
-msgstr "Prozess kann nicht öffnen."
+msgstr "Proces nelze otevřít."
 
 #: src/FAL.cpp:154
 msgid "File does not exists at path:"
-msgstr "Datei existiert nicht in Dateipfad "
+msgstr "Soubor neexistuje v souborové cestě:"
 
 #: src/FAL.cpp:160
 msgid "Do you want to own the file?"
-msgstr "Wollen Sie die Eigentümerrechte übernehmen?"
+msgstr "Chcete převzít vlastnická práva?"
 
 #: src/FAL.cpp:170
 msgid "Unknown error on \"stat -c %U"
-msgstr "Unbekannter Fehler bei Ermittlung der Attribute von %U"
+msgstr "Neznámá chyba při sdělení vlastnosti %U"
 
 #: src/FAL.cpp:234
 msgid "File cannot open."
-msgstr "Datei kann nicht öffnen."
+msgstr "Soubor nelze otevřít."
 
 #: src/FAL.cpp:289
 msgid ""
 "File load error!.\n"
 "File closed but not opened while access change. For avoid corruption close the program"
-msgstr "Fehler beim Laden der Datei!.\nDatei geschlossen aber nicht geöffnet bei Zugriffsrechtewechsel. Bitte das Programm schließen um Korruption zu vermeiden"
+msgstr "Chyba při nahrávání souboru!.\nSoubor zavřen ale při změně přístupových práv neotevřen. Zavřete, prosím, program, abyste se vyhnuli poškození"
 
 #: src/FAL.cpp:297
 msgid "File cannot open in this mode : "
-msgstr "Datei kann nicht in diesem Modus geöffnet werden : "
+msgstr "Soubor nelze otevřít v tomto režimu: "
 
 #: src/FAL.cpp:312
 msgid "Access Invalid"
-msgstr "Zugriff ungültig"
+msgstr "Přístup neplatný"
 
 #: src/FAL.cpp:326 src/FAL.cpp:336 src/FAL.cpp:346
 msgid "Not Enought RAM"
-msgstr "Nicht genügend RAM"
+msgstr "Není dostatek RAM"
 
 #: src/FAL.cpp:431
 msgid "Error on Write operation to Process RAM"
-msgstr "Fehler beim Schreiben in den Prozessspeicher"
+msgstr "Chyba při zápisu do procesové paměti"
 
 #: src/FAL.cpp:431
 msgid "FATAL ERROR"
-msgstr "FATALER FEHLER"
+msgstr "VÁŽNÁ CHYBA"
 
 #: src/HexDialogs.cpp:69
 msgid "Value is not hexadecimal!"
-msgstr "Wert ist nicht hexadezimal"
+msgstr "Hodnota není šestnáctková!"
 
 #: src/HexDialogs.cpp:69 src/HexDialogs.cpp:79
 msgid "Format Error!"
-msgstr "Formatfehler"
+msgstr "Chyba formátu!"
 
 #: src/HexDialogs.cpp:79
 msgid "Value must be even digit!"
-msgstr "Wert muß eine gerade Zahl an Ziffern sein"
+msgstr "Hodnota musí být sudé číslo!"
 
 #: src/HexDialogs.cpp:161 src/HexEditorGui.cpp:713 src/HexEditorGui.cpp:719
 #: src/HexEditorCtrl/HexEditorCtrl.cpp:41
 #: src/HexEditorCtrl/HexEditorCtrlGui.cpp:33
 msgid "Offset"
-msgstr "Offset"
+msgstr "Posun"
 
 #: src/HexDialogs.cpp:167 src/HexEditorGui.cpp:719
 msgid "Sector"
@@ -177,79 +178,79 @@ msgstr "Sektor"
 
 #: src/HexDialogs.cpp:444
 msgid "Finding Some Bytes... "
-msgstr "Finde Bytes... "
+msgstr "Hledají se byty... "
 
 #: src/HexDialogs.cpp:446 src/HexDialogs.cpp:624
 msgid "wxHexEditor Searching"
-msgstr "wxHexEditor sucht"
+msgstr "Hledá se"
 
 #: src/HexDialogs.cpp:481 src/HexDialogs.cpp:689 src/HexDialogs.cpp:741
 #: src/HexDialogs.cpp:822 src/HexDialogs.cpp:876
 #, c-format
 msgid "Search Speed : %.2f MB/s"
-msgstr "Suchgeschwindigkeit: %.2f MB/s"
+msgstr "Rychlost hledání: %.2f MB/s"
 
 #: src/HexDialogs.cpp:519 src/HexDialogs.cpp:920
 msgid "Search"
-msgstr "Suche"
+msgstr "Hledat"
 
 #: src/HexDialogs.cpp:536 src/HexDialogs.cpp:928
 msgid "Search value not found"
-msgstr "gesuchter Wert nicht gefunden"
+msgstr "Hledaná hodnota nenalezena"
 
 #: src/HexDialogs.cpp:536 src/HexDialogs.cpp:928
 msgid "Nothing found!"
-msgstr "Nichts gefunden!"
+msgstr "Nic nenalezeno!"
 
 #: src/HexDialogs.cpp:622
 msgid "Finding matches... "
-msgstr "Suche Übereinstimmungen"
+msgstr "Hledají se shody... "
 
 #: src/HexDialogs.cpp:939
 #, c-format
 msgid "Found %d matches."
-msgstr "%d Übereinstimmungen gefunden"
+msgstr "Nalezeno %d shod."
 
 #: src/HexDialogs.cpp:939
 msgid "Find All Done!"
-msgstr "Suche beendet!"
+msgstr "Hledání skončeno!"
 
 #: src/HexDialogs.cpp:1148 src/HexDialogs.cpp:1173
 msgid ""
 "Search and Replace sizes are not equal!\n"
 "Replacing with different size are not supported yet."
-msgstr "Such- und Ersetzlängen sind nicht gleich.\nSuchen/Ersetzen mit unterschiedlichen Längen noch nicht unterstützt."
+msgstr "Délky hledání a nahrazení nejsou stejné.\nHledání/Nahrazování s rozdílnými délkami ještě není podporováno."
 
 #: src/HexDialogs.cpp:1148 src/HexDialogs.cpp:1173 src/HexDialogs.cpp:1498
 #: src/HexEditor.cpp:127
 msgid "Error!"
-msgstr "Fehler!"
+msgstr "Chyba!"
 
 #: src/HexDialogs.cpp:1156 src/HexDialogs.cpp:1194 src/HexEditorFrame.cpp:286
 #: src/HexEditorGui.cpp:138 src/HexEditorGui.cpp:933
 msgid "Replace"
-msgstr "Ersetzen"
+msgstr "Nahradit"
 
 #: src/HexDialogs.cpp:1215
 #, c-format
 msgid "%d records changed."
-msgstr "%d Änderungen"
+msgstr "%d změn."
 
 #: src/HexDialogs.cpp:1215 src/HexEditor.cpp:1372 src/HexEditorFrame.cpp:689
 msgid "Info"
-msgstr "Information"
+msgstr "Informace"
 
 #: src/HexDialogs.cpp:1263
 msgid "Not Available"
-msgstr "Nicht verfügbar"
+msgstr "Nedostupné"
 
 #: src/HexDialogs.cpp:1269
 msgid "Raw Hex"
-msgstr "Roh Hex"
+msgstr "Nezpracovaný Hex"
 
 #: src/HexDialogs.cpp:1270
 msgid "With Space"
-msgstr "Mit Leerzeichen"
+msgstr "S mezerami"
 
 #: src/HexDialogs.cpp:1271
 msgid "Quad Hex"
@@ -257,467 +258,467 @@ msgstr "Quad Hex"
 
 #: src/HexDialogs.cpp:1272
 msgid "with 0x"
-msgstr "mit 0x"
+msgstr "s 0x"
 
 #: src/HexDialogs.cpp:1273
 msgid "with 0x and period"
-msgstr "mit 0x und Punkt"
+msgstr "s 0x a bodem"
 
 #: src/HexDialogs.cpp:1280
 msgid "HTML format"
-msgstr "HTML Format"
+msgstr "Formát HTML"
 
 #: src/HexDialogs.cpp:1281
 msgid "HTML with TAGs"
-msgstr "HTML mit Tags"
+msgstr "HTML se značkami (TAG)"
 
 #: src/HexDialogs.cpp:1282
 msgid "phpBB forum style"
-msgstr "phpBB Forum Stil"
+msgstr "Styl fóra phpBB"
 
 #: src/HexDialogs.cpp:1283
 msgid "WiKi format"
-msgstr "Wiki Format"
+msgstr "Formát Wiki"
 
 #: src/HexDialogs.cpp:1284
 msgid "WiKi with TAGs"
-msgstr "Wiki mit Tags"
+msgstr "Wiki se značkami (TAG)"
 
 #: src/HexDialogs.cpp:1290
 msgid "8bit - Byte "
-msgstr "8bit - Byte "
+msgstr "8bit - Byty "
 
 #: src/HexDialogs.cpp:1291
 msgid "16bit - Words"
-msgstr "16bit - Worte"
+msgstr "16bit - Slova"
 
 #: src/HexDialogs.cpp:1292
 msgid "32bit - Dwords"
-msgstr "32bit - DWorte"
+msgstr "32bit - DSlova"
 
 #: src/HexDialogs.cpp:1293
 msgid "64bit - Qwords"
-msgstr "64bit - QWorte"
+msgstr "64bit - QSlova"
 
 #: src/HexDialogs.cpp:1498
 msgid "Selected block bigger than limit."
-msgstr "Gewählter Block größer als Limit"
+msgstr "Vybraný blok větší než omezení."
 
 #: src/HexDialogs.cpp:1686
 msgid "File #1 is not readable."
-msgstr "Datei #1 ist nicht lesbar."
+msgstr "Soubor #1 není čitelný."
 
 #: src/HexDialogs.cpp:1690
 msgid "File #2 is not readable."
-msgstr "Datei #2 ist nicht lesbar."
+msgstr "Soubor #2 není čitelný."
 
 #: src/HexDialogs.cpp:1702
 msgid "Error, File #1 cannot open."
-msgstr "Fehler, Datei #1 kann nicht geöffnet werden."
+msgstr "Chyba, Soubor #1 nelze otevřít."
 
 #: src/HexDialogs.cpp:1706
 msgid "Error, File #2 cannot open."
-msgstr "Fehler, Datei #2 kann nicht geöffnet werden."
+msgstr "Chyba, Soubor #2 nelze otevřít."
 
 #: src/HexDialogs.cpp:1712
 msgid "Error, Save File cannot open."
-msgstr "Fehler, kann Datei nicht schreiben"
+msgstr "Chyba, Soubor nelze zapsat."
 
 #: src/HexDialogs.cpp:1715
 msgid "Compare Progress"
-msgstr "Vergleichsfortschritt"
+msgstr "Postup porovnávání"
 
 #: src/HexDialogs.cpp:1715
 msgid "Comparison in progress"
-msgstr "Vergleich läuft"
+msgstr "Probíhá porovnávání"
 
 #: src/HexDialogs.cpp:1741
 msgid "Sorry, this program supports up to 500K differences."
-msgstr "Tut mir leid, dieses Programm unterstützt maximal 500K Unterschiede."
+msgstr "Promiňte, tento program podporuje nejvíce 500K rozdílů."
 
 #: src/HexDialogs.cpp:1741
 msgid "Remaining differences not shown."
-msgstr "Restliche Unterschiede werden nicht angezeigt."
+msgstr "Zbývající rozdíly nejsou ukázány."
 
 #: src/HexDialogs.cpp:1741
 msgid "Error on Comparison"
-msgstr "Vergleichsfehler"
+msgstr "Chyba při porovnávání"
 
 #: src/HexDialogs.cpp:1804
 msgid "File #1 : "
-msgstr "Datei #1 : "
+msgstr "Soubor #1 : "
 
 #: src/HexDialogs.cpp:1804
 msgid "File #2 : "
-msgstr "Datei #2 : "
+msgstr "Soubor #2 : "
 
 #: src/HexDialogs.cpp:1838 src/HexDialogs.cpp:1842
 msgid "This part doesn't exist at compared file"
-msgstr "Dieser Teil existiert in der verglichenen Datei nicht"
+msgstr "Tato část v porovnávaném souboru neexistuje"
 
 #: src/HexDialogs.cpp:1883
 msgid "Error, Save File is not selected."
-msgstr "Fehler, Datei zum Speichern nicht ausgewählt"
+msgstr "Chyba, soubor k uložení není vybrán."
 
 #: src/HexDialogs.cpp:2025
 msgid "File: "
-msgstr "Datei: "
+msgstr "Soubor: "
 
 #: src/HexDialogs.cpp:2026
 msgid "Notice: Checksum includes non-saved changes."
-msgstr "Anmerkung: Prüfsumme beinhaltet nicht gesicherte Änderungen."
+msgstr "Poznámka: Kontrolní součet obsahuje neuložené změny."
 
 #: src/HexDialogs.cpp:2035
 msgid "Results copied to the clipboard."
-msgstr "Ergebnisse ins Clibboard kopiert."
+msgstr "Výsledky zkopírovány do schránky."
 
 #: src/HexDialogs.cpp:2035
 msgid "Checksum Results"
-msgstr "Prüfsummen Ergebnisse"
+msgstr "Výsledky kontrolních součtů"
 
 #: src/HexDialogs.cpp:2064 src/HexEditor.cpp:136
 msgid "Please wait while calculating checksum."
-msgstr "Bitte warten Sie während die Prüfsumme berechnet wird."
+msgstr "Počkejte, prosím, zatímco se počítá kontrolní součet."
 
 #: src/HexDialogs.cpp:2065 src/HexEditor.cpp:137
 msgid "Calculating Checksum"
-msgstr "Berechne Prüfsumme"
+msgstr "Počítá se kontrolní součet"
 
 #: src/HexDialogs.cpp:2109 src/HexEditor.cpp:158
 #, c-format
 msgid "Hash Speed : %.2f MB/s"
-msgstr "Hash Geschwindigkeit : %.2f MB/s"
+msgstr "Rychlost Hash: %.2f MB/s"
 
 #: src/HexDialogs.cpp:2473
 msgid "Do you sure about resetting colours?"
-msgstr "Wollen Sie die Farben wirklich zurücksetzen?"
+msgstr "Jste si jistý, že chcete barvy nastavit znovu?"
 
 #: src/HexDialogs.cpp:2473
 msgid "Resetting Hex Colours"
-msgstr "Setze Hex Farben zurück"
+msgstr "Nastavují se znovu šestnáctkové barvy (Hex)"
 
 #: src/HexDialogs.cpp:2520
 msgid "Please wait while backing up disk/partition image."
-msgstr "Bitte warten Sie während das Platten/Partitionsabbild gesichert wird."
+msgstr "Počkejte, prosím, zatímco se zálohuje obraz disku/diskového oddílu."
 
 #: src/HexDialogs.cpp:2521
 msgid "Disk/Partition Backup"
-msgstr "Platten/Partitionssicherung"
+msgstr "Záloha disku/diskového oddílu"
 
 #: src/HexDialogs.cpp:2540
 msgid "Error on writing to backup image."
-msgstr "Fehler beim Schreiben des Sicherungsabbilds"
+msgstr "Chyba při zápisu obrazu disku/diskového oddílu."
 
 #: src/HexDialogs.cpp:2540 src/HexDialogs.cpp:2602
 msgid "ERROR!"
-msgstr "FEHLER!"
+msgstr "CHYBA!"
 
 #: src/HexDialogs.cpp:2548
 #, c-format
 msgid "Backup Speed : %.2f MB/s"
-msgstr "Sicherungsgeschwindigkeit : %.2f MB/s"
+msgstr "Rychlost zálohování: %.2f MB/s"
 
 #: src/HexDialogs.cpp:2572
 msgid "Backup operation completed."
-msgstr "Sicherung abgeschlossen."
+msgstr "Zálohování dokončeno."
 
 #: src/HexDialogs.cpp:2572 src/HexDialogs.cpp:2643 src/HexDialogs.cpp:2707
 msgid "Operation Complete"
-msgstr "Operation abgeschlossen."
+msgstr "Operace dokončena"
 
 #: src/HexDialogs.cpp:2598 src/HexDialogs.cpp:2662
 msgid "WARNING! THIS OPERATION WILL DESTROY EVERY INFORMATION AT :\n"
-msgstr "VORSICHT! DIESE OPERATION WIRD ALLE DATEN ZERSTÖREN AN :\n"
+msgstr "TATO OPERACE ZNIČÍ VEŠKERÁ DATA :\n"
 
 #: src/HexDialogs.cpp:2598 src/HexDialogs.cpp:2662
 msgid "ARE YOU SURE?"
-msgstr "SIND SIE SICHER?"
+msgstr "JSTE SI JISTÝ?"
 
 #: src/HexDialogs.cpp:2598 src/HexDialogs.cpp:2607 src/HexDialogs.cpp:2662
 msgid "WARNING!"
-msgstr "WARNUNG!"
+msgstr "VAROVÁNÍ!"
 
 #: src/HexDialogs.cpp:2602
 msgid "ERROR!: Disk space is smaller than the image file."
-msgstr "FEHLER!: Plattenplatz ist geringer als die Abbilddatei."
+msgstr "CHYBA!: Místo na disku je menší než obraz souboru."
 
 #: src/HexDialogs.cpp:2607
 msgid ""
 "WARNING!: Disk space is bigger than the image file. \n"
 "Remaining space will remain untouched."
-msgstr "WARNUNG!: Plattenplatz ist größer als die Abbilddatei. \nRestlicher Platz bleibt unverändert."
+msgstr "VAROVÁNÍ!: Místo na disku je větší než obraz souboru. \nZbývající místo zůstane nezměněno."
 
 #: src/HexDialogs.cpp:2611
 msgid "Please wait while restoring disk/partition."
-msgstr "Bitte warten Sie solange die Platte/Partition zurückgesichert wird."
+msgstr "Počkejte, prosím, zatímco se obnovuje disk/diskový oddíl."
 
 #: src/HexDialogs.cpp:2612
 msgid "Disk/Partition Restore"
-msgstr "Platte/Partition zurücksichern"
+msgstr "Obnova disku/diskového oddílu"
 
 #: src/HexDialogs.cpp:2635
 #, c-format
 msgid "Restore Speed : %.2f MB/s"
-msgstr "Rücksicherungsgeschwindigkeit : %.2f MB/s"
+msgstr "Rychlost obnovování: %.2f MB/s"
 
 #: src/HexDialogs.cpp:2643 src/HexDialogs.cpp:2707
 msgid "Restore operation completed."
-msgstr "Rücksicherung beendet."
+msgstr "Obnova dokončena."
 
 #: src/HexDialogs.cpp:2665
 msgid "Please wait while erasing disk/partition image."
-msgstr "Bitte warten Sie solange das Platten/Partitionsabbild gelöscht wird."
+msgstr "Počkejte, prosím, zatímco se obnovuje obraz disku/diskového oddílu."
 
 #: src/HexDialogs.cpp:2666
 msgid "Disk/Partition Erase"
-msgstr "Platte/Partition löschen"
+msgstr "Smazání disku/diskového oddílu"
 
 #: src/HexDialogs.cpp:2700
 #, c-format
 msgid "Erase Speed : %.2f MB/s"
-msgstr "Löschgeschwindigkeit: %.2f MB/s"
+msgstr "Rychlost mazání: %.2f MB/s"
 
 #: src/HexEditor.cpp:127
 msgid "Cannot read hash file!"
-msgstr "Kann Hash-Datei nicht lesen!"
+msgstr "Nelze přečíst hash soubor!"
 
 #: src/HexEditor.cpp:171
 msgid "File Corrupt!"
-msgstr "Datei verfälscht!"
+msgstr "Soubor poškozen!"
 
 #: src/HexEditor.cpp:171
 msgid "File Hash:"
-msgstr "Datei Hash:"
+msgstr "Hash souboru:"
 
 #: src/HexEditor.cpp:174
 msgid "Hash File:"
-msgstr "Hash Datei:"
+msgstr "Soubor hash:"
 
 #: src/HexEditor.cpp:175 src/HexEditor.cpp:179
 msgid "Hash Result"
-msgstr "Hash Ergebnis"
+msgstr "Výsledek hash"
 
 #: src/HexEditor.cpp:179
 msgid "File Verified."
-msgstr "Datei überprüft."
+msgstr "Soubor přezkoušen."
 
 #: src/HexEditor.cpp:186
 msgid "Critical Error. File pointer is not empty!"
-msgstr "Kritischer Fehler. Dateizeiger ist nicht leer!"
+msgstr "Vážná chyba. Ukazatel souboru není prázdný!"
 
 #: src/HexEditor.cpp:206 src/HexEditorFrame.cpp:501
 msgid "File cannot open!"
-msgstr "Kann Datei nicht öffnen!"
+msgstr "Soubor nelze otevřít!"
 
 #: src/HexEditor.cpp:294
 msgid ""
 "For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-"
 "saved changes will discarded."
-msgstr "Um den XOR-Durchsichtsmodus zu aktivieren, werden alle Undo/Redo Puffer zurückgesetzt und nicht gespeicherte Änderungen werden ignoriert."
+msgstr "Pro zapnutí prohlížecího režimu XOR budou znovu nastaveny vyrovnávací paměti pro všechny kroky zpět/znovu a neuložené změny budou zahozeny."
 
 #: src/HexEditor.cpp:294
 msgid "XORView Thru Warning"
-msgstr "XOR-Durchsichtsmodus Warnung"
+msgstr "Varování prohlížecího režimu XOR"
 
 #: src/HexEditor.cpp:314
 msgid "File in Read Only mode. Cannot save file."
-msgstr "Datei im nur-Lese-Modus. Kann Datei nicht speichern."
+msgstr "Soubor v režimu pouze pro čtení. Soubor nelze uložit."
 
 #: src/HexEditor.cpp:314 src/HexEditor.cpp:323 src/HexEditor.cpp:339
 msgid "File Save"
-msgstr "Datei speichern"
+msgstr "Uložit soubor"
 
 #: src/HexEditor.cpp:318
 msgid ""
 "File has some insertion/deletions. You cannot save this file-self (yet). "
 "Please use SaveAs."
-msgstr "Datei hat einige Einfügugen/Löschungen. Sie können diese Datei nur unter einem anderen Namen speicher. Bitte verwenden Sie Speichern Unter."
+msgstr "Soubor má několik vložení/smazání. Můžete tento soubor uložit jen pod jiným názvem. Použijte, prosím, Uložit jako."
 
 #: src/HexEditor.cpp:318
 msgid "File Save Error."
-msgstr "Fehler beim Speichern."
+msgstr "Chyba při ukládání souboru."
 
 #: src/HexEditor.cpp:323
 msgid "Do you want to save this file?"
-msgstr "Wollen Sie diese Datei speichern?"
+msgstr "Chcete tento soubor uložit?"
 
 #: src/HexEditor.cpp:328
 msgid "File cannot saved. Operation Cancelled"
-msgstr "Datei kann nicht gespeichert werden. Operation abgebrochen."
+msgstr "Soubor nelze uložit. Operace zrušena"
 
 #: src/HexEditor.cpp:328
 msgid "File Save Error"
-msgstr "Fehler beim Speichern"
+msgstr "Chyba při ukládání souboru"
 
 #: src/HexEditor.cpp:339
 msgid "File is not changed. Nothing to save.\n"
-msgstr "Datei ist nicht geändert. Nichts zu speichern.\n"
+msgstr "Soubor nebyl změněn. Nic k uložení.\n"
 
 #: src/HexEditor.cpp:350
 msgid "File save in progress"
-msgstr "Datei Speichern läuft"
+msgstr "Probíhá ukládání souboru"
 
 #: src/HexEditor.cpp:352
 msgid "Saving file"
-msgstr "Speichere Datei"
+msgstr "Ukládá se soubor"
 
 #: src/HexEditor.cpp:369
 #, c-format
 msgid ""
 "\n"
 "Write Speed : %.2f MB/s"
-msgstr "\nSchreibgeschwindigkeit : %.2f MB/s"
+msgstr "\nRychlost ukládání: %.2f MB/s"
 
 #: src/HexEditor.cpp:387
 msgid "Do you want to save file?\n"
-msgstr "Wollen Sie die Datei speichern?\n"
+msgstr "Chcete soubor uložit?\n"
 
 #: src/HexEditor.cpp:387
 msgid "File Has Changed!"
-msgstr "Datei wurde geändert!"
+msgstr "Soubor byl změněn!"
 
 #: src/HexEditor.cpp:402
 msgid ""
 "TAG file cannot save to default location.\n"
 "Do you want to Export TAGs file?"
-msgstr "TAG-Datei kann nicht an der normalen Stelle gespeichert werden.\nWollen Sie die TAG-Datei exportieren?"
+msgstr "Soubor se značkami (TAG) nelze ve výchozím umístění uložit.\nChcete vyvést soubor se značkami (TAG)?"
 
 #: src/HexEditor.cpp:402
 msgid "TAGs Cannot Saved!!"
-msgstr "TAGs können nicht gespeichert werden!!"
+msgstr "Značky (TAG) nelze uložit!!"
 
 #: src/HexEditor.cpp:404 src/HexEditorFrame.cpp:574
 msgid "Choose a file for export TAGs"
-msgstr "Wählen Sie eine Datei um die Tags zu exportieren"
+msgstr "Vyberte soubor pro vyvedení značek (TAG)"
 
 #: src/HexEditor.cpp:414
 msgid "TAGs cannot exported to file : "
-msgstr "TAGs können nicht exportiert werden in Datei : "
+msgstr "Značky (TAG) nelze vyvést do souboru: "
 
 #: src/HexEditor.cpp:514
 msgid "Enter hex value(s) for fill"
-msgstr "Geben Sie die Hexwerte zum füllen ein"
+msgstr "Zadejte šestnáctkovou hodnotu k vyplnění"
 
 #: src/HexEditor.cpp:514
 msgid "Fill Dialog"
-msgstr "Füll-Dialog"
+msgstr "Dialog pro vyplnění"
 
 #: src/HexEditor.cpp:515
 msgid "Fill"
-msgstr "Füllen"
+msgstr "Vyplnění"
 
 #: src/HexEditor.cpp:533
 msgid "Choose a file for saving dump"
-msgstr "Wählen Sie eine Datei um den Dump zu speichern"
+msgstr "Vyberte soubor pro uložení výpisu"
 
 #: src/HexEditor.cpp:554
 msgid "Dump cannot saved as "
-msgstr "Dump kann nicht gespeichert werden als"
+msgstr "Výpis nelze uložit jako "
 
 #: src/HexEditor.cpp:566 src/HexEditor.cpp:1203
 msgid "Showing Page: %"
-msgstr "Zeige Seite: %"
+msgstr "Ukazuje se strana: %"
 
 #: src/HexEditor.cpp:579
 msgid "File cannot read!"
-msgstr "Datei kann nicht gelesen werden!"
+msgstr "Soubor nelze přečíst!"
 
 #: src/HexEditor.cpp:933 src/HexEditor.cpp:1211
 msgid "Selected Block: N/A"
-msgstr "Gewählter Block: N/A"
+msgstr "Vybraný blok: N/A"
 
 #: src/HexEditor.cpp:934 src/HexEditor.cpp:1212
 msgid "Block Size: N/A"
-msgstr "Blockgröße: N/A"
+msgstr "Velikost bloku: N/A"
 
 #: src/HexEditor.cpp:972 src/HexEditorFrame.cpp:292 src/HexEditorGui.cpp:91
 #: src/HexEditorGui.cpp:1517
 msgid "Copy"
-msgstr "Kopieren"
+msgstr "Kopírovat"
 
 #: src/HexEditor.cpp:973
 msgid "CopyAs"
-msgstr "Kopieren als"
+msgstr "Kopírovat jako"
 
 #: src/HexEditor.cpp:974 src/HexEditorGui.cpp:101
 msgid "Save As Dump"
-msgstr "Als Dump speichern"
+msgstr "Uložit jako výpis"
 
 #: src/HexEditor.cpp:975 src/HexEditorFrame.cpp:293 src/HexEditorGui.cpp:111
 msgid "Paste"
-msgstr "Einfügen"
+msgstr "Vložit"
 
 #: src/HexEditor.cpp:978 src/HexEditorGui.cpp:121
 msgid "Delete"
-msgstr "Löschen"
+msgstr "Smazat"
 
 #: src/HexEditor.cpp:979 src/HexEditorFrame.cpp:297 src/HexEditorGui.cpp:126
 msgid "Insert"
-msgstr "Einsetzen"
+msgstr "Vložit"
 
 #: src/HexEditor.cpp:980 src/HexEditorGui.cpp:106
 msgid "Cut"
-msgstr "Ausschneiden"
+msgstr "Vyjmout"
 
 #: src/HexEditor.cpp:989
 msgid "Fill Selecton"
-msgstr "Auswahl füllen"
+msgstr "Vyplnit výběr"
 
 #: src/HexEditor.cpp:991
 msgid "Set Selection Block Start"
-msgstr "Auswahlblockstart setzen"
+msgstr "Nastavit začátek bloku výběru"
 
 #: src/HexEditor.cpp:993
 msgid "Set Selection Block End"
-msgstr "Auswahlblockende setzen"
+msgstr "Nastavit konec bloku výběru"
 
 #: src/HexEditor.cpp:995
 msgid "Quick Tag"
-msgstr "Schnelltag"
+msgstr "Rychlá značka (TAG)"
 
 #: src/HexEditor.cpp:995
 msgid "Creates empty tag with Random Color."
-msgstr "Leeren Tag mit Zufallsfarbe erzeugen"
+msgstr "Vytvořit prázdnou značku (TAG) s náhodnou barvou."
 
 #: src/HexEditor.cpp:996
 msgid "New Tag"
-msgstr "Neuer Tag"
+msgstr "Nová značka"
 
 #: src/HexEditor.cpp:997
 msgid "Tag Edit"
-msgstr "Tag bearbeiten"
+msgstr "Upravit značku"
 
 #: src/HexEditor.cpp:1204
 msgid "Cursor Offset: "
-msgstr "Cursoroffset"
+msgstr "Posun ukazatele: "
 
 #: src/HexEditor.cpp:1208
 #, c-format
 msgid "Cursor Value: %u"
-msgstr "Cursor Wert: %u"
+msgstr "Hodnota ukazatele: %u"
 
 #: src/HexEditor.cpp:1215
 msgid "Selected Block: %"
-msgstr "Gewählter Block: %"
+msgstr "Vybraný blok: %"
 
 #: src/HexEditor.cpp:1216
 msgid "Block Size: %"
-msgstr "Blockgröße: %"
+msgstr "Velikost bloku: %"
 
 #: src/HexEditor.cpp:1293
 #, c-format
 msgid ""
 "Notice!: This command will increase the file size and will generate too much overhead on file save.\n"
 "How many bytes do you want to inject to location to offset location %lld?"
-msgstr "Achtung!: Dieses Kommando wird die Dateigröße verändern und das Speichern deutlich verlangsamen.\nWieviele Bytes wollen Sie an Stelle %lld einsetzen?"
+msgstr "Pozor!: Tento příkaz změní velikost souboru (zvětší ji) a zřetelně zpomalí ukládání.\nKolik bytů chcete vsadit na místo %lld?"
 
 #: src/HexEditor.cpp:1294
 msgid "Bytes"
-msgstr "Bytes"
+msgstr "Bytů"
 
 #: src/HexEditor.cpp:1294
 msgid "Injection!"
-msgstr "Einsetzung!"
+msgstr "Vsazení!"
 
 #: src/HexEditor.cpp:1353
 msgid ""
@@ -727,562 +728,562 @@ msgid ""
 "\n"
 "If copying to another file in wxHexEditor you\n"
 "should copy from the Hex pane, not the text pane"
-msgstr "WARNUNG:\nDer Text, den Sie kopieren, enthält ein Nullbyte\n(00 in der Hexanzeige) und wird abgeschnitten!\n\nWenn Sie in eine andere Datei in wxHexEditor kopieren\nsollten Sie aus der Hexanzeige, nicht der Textanzeige kopieren."
+msgstr "Varování:\nText, jejž kopírujete, zahrnuje nulový byt\n(00 v šestnáctkovém zobrazení) a bude zkrácen!\n\nKdyž v wxHexEditoru kopírujete do jiného souboru,\nměl byste kopírovat z pole se šestnáctkovým zobrazením, ne z pole s textovým zobrazením."
 
 #: src/HexEditor.cpp:1358
 msgid "Warning"
-msgstr "Warnung"
+msgstr "Varování"
 
 #: src/HexEditor.cpp:1364
 msgid "You have no RAM to copy this data."
-msgstr "Sie haben nicht genügen RAM um diese Daten zu kopieren."
+msgstr "Nemáte dostatek RAM, abyste mohl kopírovat tato data."
 
 #: src/HexEditor.cpp:1369
 msgid ""
 "You are tried to copy data more than 10 MB.\n"
 "Copying above 10 MB to clipboard is not allowed.\n"
 "Only internal copy buffer used!"
-msgstr "Sie versuchen mehr als 10 MB zu kopieren.\nMehr als 10 MB können nicht in die Zwischenablage kopiert werden,\nes wird nur der interne Puffer verwendet."
+msgstr "Pokoušíte se zkopírovat data větší než 10 MB.\nVíce než 10 MB nelze do schránky zkopírovat.\nPoužívá se pouze vnitřní vyrovnávací paměť."
 
 #: src/HexEditorFrame.cpp:184
 msgid "License Agreement"
-msgstr "Lizenzvereinbarung"
+msgstr "Povolení"
 
 #: src/HexEditorFrame.cpp:279
 msgid "New File"
-msgstr "Neue Datei"
+msgstr "Nový soubor"
 
 #: src/HexEditorFrame.cpp:279
 msgid "New file"
-msgstr "Neue Datei"
+msgstr "Nový soubor"
 
 #: src/HexEditorFrame.cpp:280
 msgid "Open File"
-msgstr "Datei öffnen"
+msgstr "Otevřít soubor"
 
 #: src/HexEditorFrame.cpp:280
 msgid "Open"
-msgstr "Öffnen"
+msgstr "Otevřít"
 
 #: src/HexEditorFrame.cpp:281
 msgid "Save File"
-msgstr "Datei sichern"
+msgstr "Uložit soubor"
 
 #: src/HexEditorFrame.cpp:281 src/HexEditorGui.cpp:1782
 #: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:56
 msgid "Save"
-msgstr "Sichern"
+msgstr "Uložit"
 
 #: src/HexEditorFrame.cpp:282
 msgid "SaveAs File"
-msgstr "Datei sichern als"
+msgstr "Soubor uložit jako"
 
 #: src/HexEditorFrame.cpp:282
 msgid "Save as"
-msgstr "Sichern als"
+msgstr "Uložit jako"
 
 #: src/HexEditorFrame.cpp:283
 msgid "Close File"
-msgstr "Datei schließen"
+msgstr "Zavřít soubor"
 
 #: src/HexEditorFrame.cpp:283
 msgid "Close"
-msgstr "Schließen"
+msgstr "Zavřít"
 
 #: src/HexEditorFrame.cpp:286
 msgid "Find and replace"
-msgstr "Suchen und Ersetzen"
+msgstr "Najít a nahradit"
 
 #: src/HexEditorFrame.cpp:287
 msgid "GoTo"
-msgstr "Gehe zu"
+msgstr "Jít na"
 
 #: src/HexEditorFrame.cpp:287
 msgid "Go to offset"
-msgstr "Gehe zu Stelle"
+msgstr "Jít na místo"
 
 #: src/HexEditorFrame.cpp:289
 msgid "Undo"
-msgstr "Rückgängig machen"
+msgstr "Zpět"
 
 #: src/HexEditorFrame.cpp:290
 msgid "Redo"
-msgstr "Wiederholen"
+msgstr "Znovu"
 
 #: src/HexEditorFrame.cpp:292
 msgid "Copy Block"
-msgstr "Block kopieren"
+msgstr "Kopírovat blok"
 
 #: src/HexEditorFrame.cpp:293
 msgid "Paste Block"
-msgstr "Block einfügen"
+msgstr "Vložit blok"
 
 #: src/HexEditorFrame.cpp:295
 msgid "Cut Block"
-msgstr "Block ausschneiden"
+msgstr "Vyjmout blok"
 
 #: src/HexEditorFrame.cpp:295
 msgid "Cuts selected block and copies to clipboard"
-msgstr "Schneidet den gewählten Block aus und kopiert ihn in die Zwischenablage"
+msgstr "Vyjme vybraný blok a zkopíruje jej do schránky"
 
 #: src/HexEditorFrame.cpp:296
 msgid "Delete Block"
-msgstr "Block löschen"
+msgstr "Smazat blok"
 
 #: src/HexEditorFrame.cpp:296
 msgid "Deletes selected block"
-msgstr "Löscht den gewählten Block"
+msgstr "Smaže vybraný blok"
 
 #: src/HexEditorFrame.cpp:297
 msgid "Insert Block"
-msgstr "Block einsetzen"
+msgstr "Vložit blok"
 
 #: src/HexEditorFrame.cpp:328
 msgid "Search Results"
-msgstr "Suchergebnisse"
+msgstr "Výsledky hledání"
 
 #: src/HexEditorFrame.cpp:339
 msgid "Comparison Results"
-msgstr "Vergleichsergebnisse"
+msgstr "Výsledky porovnávání"
 
 #: src/HexEditorFrame.cpp:348 src/HexEditorGui.cpp:155
 msgid "Toolbar"
-msgstr "Toolbar"
+msgstr "Nástrojový pruh"
 
 #: src/HexEditorFrame.cpp:354
 msgid "DataInterpreter"
-msgstr "Daten-Interpreter"
+msgstr "Překladač dat"
 
 #: src/HexEditorFrame.cpp:364 src/HexEditorGui.cpp:159
 msgid "InfoPanel"
-msgstr "Infoanzeige"
+msgstr "Informace"
 
 #: src/HexEditorFrame.cpp:443
 msgid "MD5 File detected. Do you request MD5 verification?"
-msgstr "MD5 Datei erkannt. Soll die MD5 geprüft werden?"
+msgstr "Zjištěn soubor MD5. Má se MD5 přezkoušet?"
 
 #: src/HexEditorFrame.cpp:443 src/HexEditorFrame.cpp:446
 #: src/HexEditorFrame.cpp:449
 msgid "Checksum File Detected"
-msgstr "Prüfsummendatei erkannt"
+msgstr "Zjištěn soubor s kontrolním součtem"
 
 #: src/HexEditorFrame.cpp:446
 msgid "SHA1 File detected. Do you request SHA1 verification?"
-msgstr "SHA1 Datei erkannt. Soll die SHA1 geprüft werden?"
+msgstr "Zjištěn soubor SHA1. Má se SHA1 přezkoušet?"
 
 #: src/HexEditorFrame.cpp:449
 msgid "SHA256 File detected. Do you request SHA256 verification?"
-msgstr "SHA256 Datei erkannt. Soll die SHA256 geprüft werden?"
+msgstr "Zjištěn soubor SHA256. Má se SHA256 přezkoušet?"
 
 #: src/HexEditorFrame.cpp:473
 msgid "Please indicate file size in decimal."
-msgstr "Bitte Dateigröße in dezimal angeben."
+msgstr "zadejte, prosím, velikost souboru desítkově."
 
 #: src/HexEditorFrame.cpp:474
 msgid "Enter File Size:"
-msgstr "Dateigröße angeben:"
+msgstr "Zadat velikost souboru:"
 
 #: src/HexEditorFrame.cpp:481
 #, c-format
 msgid "Wrong input: %d please retry..."
-msgstr "Eingabefehler (%d), bitte wiederholen ..."
+msgstr "Chyba vstupu (%d), zopakujte, prosím, ..."
 
 #: src/HexEditorFrame.cpp:485 src/HexEditorFrame.cpp:540
 msgid "Choose a file for save as"
-msgstr "Datei zum speichern aussuchen"
+msgstr "Vybrat soubor k uložení jako"
 
 #: src/HexEditorFrame.cpp:497
 msgid "File cannot create!"
-msgstr "Kann Datei nicht erzeugen"
+msgstr "Soubor nelze vytvořit!"
 
 #: src/HexEditorFrame.cpp:515
 msgid "Choose a file for editing"
-msgstr "Datei zum Bearbeiten aussuchen"
+msgstr "Vybrat soubor pro úpravy"
 
 #: src/HexEditorFrame.cpp:548
 msgid "File cannot save as "
-msgstr "Kann Datei nicht speichern unter "
+msgstr "Soubor nelze uložit jako "
 
 #: src/HexEditorFrame.cpp:561
 msgid "Choose a file for import TAGs"
-msgstr "Datei für den Tagimport aussuchen"
+msgstr "Vybrat soubor pro zavedení značek (TAG)"
 
 #: src/HexEditorFrame.cpp:569
 msgid "TAGS cannot imported from "
-msgstr "Tags können nicht importiert werden von "
+msgstr "Značky (TAG) nelze zavést z "
 
 #: src/HexEditorFrame.cpp:584
 msgid "TAGs cannot exported to "
-msgstr "Tags können nicht exportiert werden nach "
+msgstr "Značky (TAG) nelze vyvést do "
 
 #: src/HexEditorFrame.cpp:588
 msgid "There is no TAGs to Export in current active file!"
-msgstr "In der aktiven Datei gibt es keine TAGs zu exportieren"
+msgstr "V činném souboru není žádná značka (TAG) k vyvedení"
 
 #: src/HexEditorFrame.cpp:653
 msgid "Please enter process identification number."
-msgstr "Bitte die Prozessnummer eingeben."
+msgstr "Zadejte, prosím, číslo procesu."
 
 #: src/HexEditorFrame.cpp:653
 msgid "Enter PID:"
-msgstr "PID eingeben:"
+msgstr "Zadat PID:"
 
 #: src/HexEditorFrame.cpp:653 src/HexEditorGui.cpp:232
 msgid "Open Process RAM"
-msgstr "Prozessspeicher öffnen"
+msgstr "Otevřít paměť procesu"
 
 #: src/HexEditorFrame.cpp:689
 msgid "Please restart program for changes."
-msgstr "Bitte das Programm für Änderungen neu starten."
+msgstr "Spusťte, prosím, program kvůli změnám znovu."
 
 #: src/HexEditorFrame.cpp:712
 msgid "This mode will write changes every change to file DIRECTLY."
-msgstr "Dieser Modus wird jede Änderung sofort speichern."
+msgstr "Tento režim bude každou změnu ukládat IHNED."
 
 #: src/HexEditorFrame.cpp:712
 msgid "Warning!"
-msgstr "Warnung!"
+msgstr "Varování!"
 
 #: src/HexEditorFrame.cpp:740
 msgid "Error on quit!"
-msgstr "Fehler beim Beenden!"
+msgstr "Chyba při ukončování!"
 
 #: src/HexEditorFrame.cpp:811
 msgid "wxHexEditor is a hex editor for HUGE files and devices."
-msgstr "wxHexEditor ist ein Hexeditor für GROSSE Dateien und Geräte."
+msgstr "wxHexEditor je šestnáctkový editor pro VELKÉ soubory a zařízení."
 
 #: src/HexEditorFrame.cpp:902
 msgid "You needed administration privileges to see available devices"
-msgstr "Sie brauchen Administrationsrechte um verfügbare Geräte zu sehen"
+msgstr "Potřebujete oprávnění správce, abyste mohl vidět dostupná zařízení"
 
 #: src/HexEditorFrame.cpp:1121
 msgid "Cannot open dropped file: "
-msgstr "Kann gelöschte Datei nicht öffnen: "
+msgstr "Nelze otevřít smazaný soubor: "
 
 #: src/HexEditorFrame.cpp:1140 src/HexEditorGui.cpp:1010
 #, c-format
 msgid "New wxHexEditor version %s is available!"
-msgstr "Neue wxHexEditor Version %s ist verfügbar!"
+msgstr "Je dostupná nová verze wxHexEditoru %s!"
 
 #: src/HexEditorGui.cpp:29
 msgid "&New"
-msgstr "&Neu"
+msgstr "&Nový"
 
 #: src/HexEditorGui.cpp:29
 msgid "CTRL+N"
-msgstr "STRG+N"
+msgstr "Ctrl+N"
 
 #: src/HexEditorGui.cpp:29
 msgid "Creates a new file"
-msgstr "Erzeugt eine neue Datei"
+msgstr "Vytvořit nový soubor"
 
 #: src/HexEditorGui.cpp:33
 msgid "&Open"
-msgstr "&Öffnen"
+msgstr "&Otevřít"
 
 #: src/HexEditorGui.cpp:33
 msgid "CTRL+O"
-msgstr "STRG+O"
+msgstr "Ctrl+O"
 
 #: src/HexEditorGui.cpp:33
 msgid "Open a file"
-msgstr "Öffnet eine Datei"
+msgstr "Otevřít soubor"
 
 #: src/HexEditorGui.cpp:38
 msgid "No Recent File"
-msgstr "Keine kürzlich verwendete Datei"
+msgstr "Žádný nedávno používaný soubor"
 
 #: src/HexEditorGui.cpp:42
 msgid "Open &Recent"
-msgstr "Öffne kü&rzlich verwendete Datei"
+msgstr "Otevřít &nedávný"
 
 #: src/HexEditorGui.cpp:45
 msgid "&Save"
-msgstr "&Speichern"
+msgstr "&Uložit"
 
 #: src/HexEditorGui.cpp:45
 msgid "CTRL+S"
-msgstr "STRG+S"
+msgstr "Ctrl+S"
 
 #: src/HexEditorGui.cpp:45
 msgid "Save modifications"
-msgstr "Änderungen speichern"
+msgstr "Uložit změny"
 
 #: src/HexEditorGui.cpp:50
 msgid "Save &As"
-msgstr "Speichern &als"
+msgstr "Uložit &jako..."
 
 #: src/HexEditorGui.cpp:50
 msgid "SHIFT+CTRL+S"
-msgstr "SHIFT+STRG+S"
+msgstr "Shift+Ctrl+S"
 
 #: src/HexEditorGui.cpp:50
 msgid "Save current file as..."
-msgstr "Speichere aktuelle Datei unter ..."
+msgstr "Uložit nynější soubor jako ..."
 
 #: src/HexEditorGui.cpp:55
 msgid "&Close"
-msgstr "S&chließen"
+msgstr "&Zavřít"
 
 #: src/HexEditorGui.cpp:55
 msgid "CTRL+W"
-msgstr "STRG+W"
+msgstr "Ctrl+W"
 
 #: src/HexEditorGui.cpp:55
 msgid "Close current file"
-msgstr "Aktuelle Datei schließen"
+msgstr "Zavřít nynější soubor"
 
 #: src/HexEditorGui.cpp:62
 msgid "Import TAGs"
-msgstr "TAGs importieren"
+msgstr "Zavést značky"
 
 #: src/HexEditorGui.cpp:66
 msgid "Export TAGs"
-msgstr "Tags exportieren"
+msgstr "Vyvést značky"
 
 #: src/HexEditorGui.cpp:72
 msgid "&Quit"
-msgstr "Be&enden"
+msgstr "&Ukončit"
 
 #: src/HexEditorGui.cpp:72
 msgid "CTRL+Q"
-msgstr "STRG+Q"
+msgstr "Ctrl+Q"
 
 #: src/HexEditorGui.cpp:72
 msgid "Quit the application"
-msgstr "Anwendung beenden"
+msgstr "Ukončit program"
 
 #: src/HexEditorGui.cpp:75
 msgid "&File"
-msgstr "&Datei"
+msgstr "&Soubor"
 
 #: src/HexEditorGui.cpp:79
 msgid "&Undo"
-msgstr "&Rückgängig"
+msgstr "&Zpět"
 
 #: src/HexEditorGui.cpp:79
 msgid "CTRL+Z"
-msgstr "STRG+Z"
+msgstr "Ctrl+Z"
 
 #: src/HexEditorGui.cpp:79
 msgid "Undo last operation"
-msgstr "Letzte Änderung rückgängig machen"
+msgstr "Vrátit zpět poslední provedenou změnu"
 
 #: src/HexEditorGui.cpp:84
 msgid "&Redo"
-msgstr "&Wiederholen"
+msgstr "&Znovu"
 
 #: src/HexEditorGui.cpp:84
 msgid "CTRL+Y"
-msgstr "STRG+Y"
+msgstr "Ctrl+Y"
 
 #: src/HexEditorGui.cpp:84
 msgid "Reverts last undo"
-msgstr "Letztes Rückgängigmachen zurücknehmen"
+msgstr "Vrátit poslední provedenou změnu vrácenou zpět"
 
 #: src/HexEditorGui.cpp:91
 msgid "CTRL+C"
-msgstr "STRG+C"
+msgstr "Ctrl+C"
 
 #: src/HexEditorGui.cpp:91
 msgid "Copies selection"
-msgstr "Auswahl kopieren"
+msgstr "Kopírovat výběr"
 
 #: src/HexEditorGui.cpp:96
 msgid "Copy As"
-msgstr "Kopieren als"
+msgstr "Kopírovat jako"
 
 #: src/HexEditorGui.cpp:96
 msgid "CTRL+SHIFT+C"
-msgstr "STRG+SHIFT+C"
+msgstr "Ctrl+Shift+C"
 
 #: src/HexEditorGui.cpp:96
 msgid "Copies selection in special format"
-msgstr "Auswahl kopieren & Format festlegen"
+msgstr "Kopírovat výběr a určit formát"
 
 #: src/HexEditorGui.cpp:101
 msgid "CTRL+ALT+S"
-msgstr "STRG+ALT+S"
+msgstr "Ctrl+Alt+S"
 
 #: src/HexEditorGui.cpp:101
 msgid "Save selections as a file"
-msgstr "Auswahl als Datei speichern"
+msgstr "Uložit výběr jako soubor"
 
 #: src/HexEditorGui.cpp:106
 msgid "CTRL+X"
-msgstr "STRG+X"
+msgstr "Ctrl+X"
 
 #: src/HexEditorGui.cpp:106
 msgid "Cuts a selection"
-msgstr "Auswahl ausschneiden"
+msgstr "Vyjmout výběr"
 
 #: src/HexEditorGui.cpp:111
 msgid "CTRL+V"
-msgstr "STRG+V"
+msgstr "Ctrl+V"
 
 #: src/HexEditorGui.cpp:111
 msgid "Paste clipboard to cursor location"
-msgstr "Zwischenablage an Cursorposition einfügen"
+msgstr "Vložit schránku  v poloze ukazatele"
 
 #: src/HexEditorGui.cpp:116
 msgid "Fill Selection"
-msgstr "Auswahl füllen"
+msgstr "Vyplnit výběr"
 
 #: src/HexEditorGui.cpp:116
 msgid "Fill selection blocks"
-msgstr "Ausgewählte Blöcke füllen"
+msgstr "Vyplnit vybrané bloky"
 
 #: src/HexEditorGui.cpp:121
 msgid "Deletes selection"
-msgstr "Auswahl löschen"
+msgstr "Smazat výběr"
 
 #: src/HexEditorGui.cpp:126
 msgid "Inserts new bytes to cursor location"
-msgstr "Neue Bytes an Cursorposition einsetzen"
+msgstr "Vložit nové byty v poloze ukazatele"
 
 #: src/HexEditorGui.cpp:133
 msgid "CTRL+F"
-msgstr "STRG+F"
+msgstr "Ctrl+F"
 
 #: src/HexEditorGui.cpp:138
 msgid "CTRL+R"
-msgstr "STRG+R"
+msgstr "Ctrl+R"
 
 #: src/HexEditorGui.cpp:143
 msgid "CTRL+G"
-msgstr "STRG+G"
+msgstr "Ctrl+G"
 
 #: src/HexEditorGui.cpp:143
 msgid "Branches the given location"
-msgstr "Verzweigt zur angegebenen Stelle"
+msgstr "Rozvětvit zadané místo"
 
 #: src/HexEditorGui.cpp:147
 msgid "&Edit"
-msgstr "&Bearbeiten"
+msgstr "Úp&ravy"
 
 #: src/HexEditorGui.cpp:151
 msgid "Data Interpreter"
-msgstr "Dateninterpreter"
+msgstr "Překladač dat"
 
 #: src/HexEditorGui.cpp:163
 msgid "TAG Panel"
-msgstr "Taganzeige"
+msgstr "Zobrazení značek"
 
 #: src/HexEditorGui.cpp:167
 msgid "Disassembler Panel"
-msgstr "Disassembleranzeige"
+msgstr "Zobrazení disassembleru"
 
 #: src/HexEditorGui.cpp:171
 msgid "Search Panel"
-msgstr "Suchanzeige"
+msgstr "Zobrazení hledání"
 
 #: src/HexEditorGui.cpp:175
 msgid "Comparison Panel"
-msgstr "Vergleichsanzeige"
+msgstr "Zobrazení porovnání"
 
 #: src/HexEditorGui.cpp:181
 msgid "Zebra Striping"
-msgstr "Zebrastreifen"
+msgstr "Zebří pruhy"
 
 #: src/HexEditorGui.cpp:187
 msgid "Offset Control"
-msgstr "Offsetkontrolle"
+msgstr "Kontrola posunu"
 
 #: src/HexEditorGui.cpp:192
 msgid "Hex Control"
-msgstr "Hexkontrolle"
+msgstr "Šestnáctková kontrola"
 
 #: src/HexEditorGui.cpp:197
 msgid "Text Control"
-msgstr "Textkontrolle"
+msgstr "Textová kontrola"
 
 #: src/HexEditorGui.cpp:201
 msgid "&View"
-msgstr "&Ansicht"
+msgstr "&Pohled"
 
 #: src/HexEditorGui.cpp:213
 msgid "XORView Thru"
-msgstr "XOR Durchsichtsmodus"
+msgstr "Prohlížecí režim XOR"
 
 #: src/HexEditorGui.cpp:213
 msgid "View your XOR encrypted file without decrypting!"
-msgstr "XOR-verschlüsselte Datei ohne Entschlüsselung anschauen"
+msgstr "Prohlížejte svůj zašifrovaný soubor XOR bez dešifrování"
 
 #: src/HexEditorGui.cpp:216
 msgid "Tools"
-msgstr "Werkzeuge"
+msgstr "Nástroje"
 
 #: src/HexEditorGui.cpp:220
 msgid "Open RAM Device"
-msgstr "RAM-Gerät öffnen"
+msgstr "Otevřít zařízení RAM"
 
 #: src/HexEditorGui.cpp:226
 msgid "N/A on this OS (yet)"
-msgstr "(noch) nicht auf diesem Betriebssystem verfügbar"
+msgstr "(ještě) nedostupné na tomto operačním systému"
 
 #: src/HexEditorGui.cpp:229
 msgid "Open Disk Device"
-msgstr "Festplattengerät öffnen"
+msgstr "Otevřít zařízení disku"
 
 #: src/HexEditorGui.cpp:240 src/HexEditorGui.cpp:1858
 msgid "Backup"
-msgstr "Datensicherung"
+msgstr "Záloha"
 
 #: src/HexEditorGui.cpp:244 src/HexEditorGui.cpp:1919
 msgid "Restore"
-msgstr "Sicherung zurückspielen"
+msgstr "Obnovit"
 
 #: src/HexEditorGui.cpp:248 src/HexEditorGui.cpp:1979
 msgid "Erase"
-msgstr "Löschen"
+msgstr "Smazat"
 
 #: src/HexEditorGui.cpp:251
 msgid "Device Image Tools"
-msgstr "Geräteabbild-Werkzeuge"
+msgstr "Nástroje pro obraz zařízení"
 
 #: src/HexEditorGui.cpp:253
 msgid "Devices"
-msgstr "Geräte"
+msgstr "Zařízení"
 
 #: src/HexEditorGui.cpp:258
 msgid "Read Only"
-msgstr "Nur-Lesen"
+msgstr "Pouze pro čtení"
 
 #: src/HexEditorGui.cpp:264
 msgid "Writeable"
-msgstr "Schreibbar"
+msgstr "Zapisovatelný"
 
 #: src/HexEditorGui.cpp:269
 msgid "Direct Write"
-msgstr "Direktes Schreiben"
+msgstr "Přímý zápis"
 
 #: src/HexEditorGui.cpp:273
 msgid "File Mode"
-msgstr "Dateimodus"
+msgstr "Souborový režim"
 
 #: src/HexEditorGui.cpp:279 src/HexEditorGui.cpp:890
 msgid "Options"
-msgstr "Optionen"
+msgstr "Volby"
 
 #: src/HexEditorGui.cpp:283
 msgid "Donate"
-msgstr "Spenden"
+msgstr "Darovat"
 
 #: src/HexEditorGui.cpp:283
 msgid "Donate some money to author as a return!"
-msgstr "Eine kleine Spende für den Author als Anerkennung"
+msgstr "Malý dar autorovi jako jeho ocenění!"
 
 #: src/HexEditorGui.cpp:287
 msgid "Bug Reporting"
-msgstr "Fehlerbericht"
+msgstr "Hlášení chyb"
 
 #: src/HexEditorGui.cpp:287
 msgid "Report bugs for smashing them!"
-msgstr "Dem Kammerjäger Arbeit beschaffen!"
+msgstr "Nahlásit chyby pro jejich opravení!"
 
 #: src/HexEditorGui.cpp:291
 msgid "&About"
-msgstr "&Über"
+msgstr "&O programu"
 
 #: src/HexEditorGui.cpp:291
 msgid "F1"
@@ -1290,15 +1291,15 @@ msgstr "F1"
 
 #: src/HexEditorGui.cpp:291
 msgid "Show info about this application"
-msgstr "Information über diese Anwendung anzeigen"
+msgstr "Ukázat informace o tomto programu"
 
 #: src/HexEditorGui.cpp:294
 msgid "&Help"
-msgstr "&Hilfe"
+msgstr "Nápo&věda"
 
 #: src/HexEditorGui.cpp:450
 msgid "Unsigned"
-msgstr "Vorzeichenlos"
+msgstr "Bez znaménka"
 
 #: src/HexEditorGui.cpp:451
 msgid "Sans"
@@ -1306,11 +1307,11 @@ msgstr "Sans?"
 
 #: src/HexEditorGui.cpp:455
 msgid "Big Endian"
-msgstr "Big Endian"
+msgstr "Velký endian"
 
 #: src/HexEditorGui.cpp:468
 msgid "Binary"
-msgstr "Binär"
+msgstr "Dvojkový"
 
 #: src/HexEditorGui.cpp:477
 msgid "00000000"
@@ -1318,19 +1319,19 @@ msgstr "00000000"
 
 #: src/HexEditorGui.cpp:480
 msgid "Press enter to make changes!"
-msgstr "Eingabe drücken um zu Ändern!"
+msgstr "Stiskněte Enter pro dělání změn!"
 
 #: src/HexEditorGui.cpp:484
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr "Upravit"
 
 #: src/HexEditorGui.cpp:486
 msgid "Allow editing by Data Interpreter Panel"
-msgstr "Bearbeiten über die Dateninterpreteranzeige erlauben"
+msgstr "Povolit úpravy přes zobrazení překladače dat"
 
 #: src/HexEditorGui.cpp:493
 msgid "8 bit"
-msgstr "8 bit"
+msgstr "8 bitů"
 
 #: src/HexEditorGui.cpp:499 src/HexEditorGui.cpp:510 src/HexEditorGui.cpp:521
 #: src/HexEditorGui.cpp:532 src/HexEditorGui.cpp:543 src/HexEditorGui.cpp:554
@@ -1339,27 +1340,27 @@ msgstr "0"
 
 #: src/HexEditorGui.cpp:504
 msgid "16 bit"
-msgstr "16 bit"
+msgstr "16 bitů"
 
 #: src/HexEditorGui.cpp:515
 msgid "32 bit"
-msgstr "32 bit"
+msgstr "32 bitů"
 
 #: src/HexEditorGui.cpp:526
 msgid "64 bit"
-msgstr "64 bit"
+msgstr "64 bitů"
 
 #: src/HexEditorGui.cpp:537
 msgid "Float"
-msgstr "Fließkomma"
+msgstr "Pohyblivá řadová čára"
 
 #: src/HexEditorGui.cpp:548
 msgid "Double"
-msgstr "Doppelte Genauigkeit"
+msgstr "Dvojitá přesnost"
 
 #: src/HexEditorGui.cpp:603
 msgid "Clear"
-msgstr "Löschen"
+msgstr "Smazat"
 
 #: src/HexEditorGui.cpp:652 src/HexEditorGui.cpp:661
 msgid "INTEL"
@@ -1371,7 +1372,7 @@ msgstr "AMD"
 
 #: src/HexEditorGui.cpp:657
 msgid "CPU Vendor"
-msgstr "CPU Hersteller"
+msgstr "Výrobce CPU"
 
 #: src/HexEditorGui.cpp:661
 msgid "AT&T"
@@ -1379,23 +1380,23 @@ msgstr "AT&T"
 
 #: src/HexEditorGui.cpp:665
 msgid "Assembly Type"
-msgstr "Assembler Art"
+msgstr "Druh assembleru"
 
 #: src/HexEditorGui.cpp:669
 msgid "16Bit"
-msgstr "16 Bit"
+msgstr "16 bitů"
 
 #: src/HexEditorGui.cpp:669
 msgid "32Bit"
-msgstr "32 Bit"
+msgstr "32 bitů"
 
 #: src/HexEditorGui.cpp:669
 msgid "64Bit"
-msgstr "64 Bit"
+msgstr "64 bitů"
 
 #: src/HexEditorGui.cpp:673
 msgid "Disassembly Bit Mode"
-msgstr "Disassembler Bit Modus"
+msgstr "Bitový režim disassembleru"
 
 #: src/HexEditorGui.cpp:726 src/HexEditorGui.cpp:727 src/HexEditorGui.cpp:728
 #: src/HexEditorGui.cpp:729 src/HexEditorGui.cpp:730 src/HexEditorGui.cpp:731
@@ -1408,51 +1409,51 @@ msgstr "Disassembler Bit Modus"
 #: src/HexEditorGui.cpp:864 src/HexEditorGui.cpp:865 src/HexEditorGui.cpp:866
 #: src/HexEditorGui.cpp:867 src/HexEditorGui.cpp:868 src/HexEditorGui.cpp:869
 msgid " "
-msgstr " "
+msgstr "  "
 
 #: src/HexEditorGui.cpp:738
 msgid "Decimal"
-msgstr "Dezimal"
+msgstr "Desítkový"
 
 #: src/HexEditorGui.cpp:742 src/HexEditorGui.cpp:883 src/HexEditorGui.cpp:1571
 msgid "Hex"
-msgstr "Hex"
+msgstr "Šestnáctkový"
 
 #: src/HexEditorGui.cpp:751
 msgid "Previous Sector"
-msgstr "Vorheriger Sektor"
+msgstr "Předchozí sektor"
 
 #: src/HexEditorGui.cpp:756
 msgid "Next Sector"
-msgstr "Folgesektor"
+msgstr "Další sektor"
 
 #: src/HexEditorGui.cpp:767
 msgid "From beginning"
-msgstr "vom Anfang"
+msgstr "Od začátku"
 
 #: src/HexEditorGui.cpp:767
 msgid "From here"
-msgstr "von hier"
+msgstr "Odtud"
 
 #: src/HexEditorGui.cpp:767
 msgid "From end"
-msgstr "vom Ende"
+msgstr "Od konce"
 
 #: src/HexEditorGui.cpp:769
 msgid "Type of branch"
-msgstr "Art der Verzweigung"
+msgstr "Druh rozvětvení"
 
 #: src/HexEditorGui.cpp:773
 msgid "Go!"
-msgstr "Los!"
+msgstr "Do toho!"
 
 #: src/HexEditorGui.cpp:836
 msgid "Search: "
-msgstr "Suche: "
+msgstr "Hledat: "
 
 #: src/HexEditorGui.cpp:853
 msgid "Replace: "
-msgstr "Ersetzen: "
+msgstr "Nahradit: "
 
 #: src/HexEditorGui.cpp:883
 msgid "Text"
@@ -1460,41 +1461,41 @@ msgstr "Text"
 
 #: src/HexEditorGui.cpp:885
 msgid "Search as"
-msgstr "Suche als"
+msgstr "Hledat jako"
 
 #: src/HexEditorGui.cpp:892
 msgid "Match Case"
-msgstr "Groß/Kleinschreibung beachten"
+msgstr "Rozlišovat velká a malá písmena"
 
 #: src/HexEditorGui.cpp:895
 msgid "Search backwards"
-msgstr "Rückwärtssuche"
+msgstr "Hledat nazpět"
 
 #: src/HexEditorGui.cpp:898
 msgid "Wrap around"
-msgstr "Anfang/Ende umbrechen"
+msgstr "Pokračovat od začátku/konce"
 
 #: src/HexEditorGui.cpp:901
 msgid "As UTF-8"
-msgstr "Als UTF-8"
+msgstr "Jako UTF-8"
 
 #: src/HexEditorGui.cpp:920
 msgid "Find All"
-msgstr "Alles finden"
+msgstr "Najít vše"
 
 #: src/HexEditorGui.cpp:923
 msgid "Find Some Bytes"
-msgstr "Einige Bytes finden"
+msgstr "Najít nějaké byty"
 
 #: src/HexEditorGui.cpp:924
 msgid ""
 "This function finds some different values at file. Usefull for finding non-"
 "null sections at disks."
-msgstr "Diese Funktion sucht unterschiedliche Werte. Sinnvoll um nicht-Null-Blöcke auf Platten zu suchen."
+msgstr "tato funkce hledá rozdílné hodnoty. Má smysl pro hledání nenulových bloků na disku."
 
 #: src/HexEditorGui.cpp:938
 msgid "Replace All"
-msgstr "alles ersetzen"
+msgstr "Nahradit vše"
 
 #: src/HexEditorGui.cpp:943 src/HexEditorGui.cpp:1135
 #: src/HexEditorGui.cpp:1340 src/HexEditorGui.cpp:1514
@@ -1502,11 +1503,11 @@ msgstr "alles ersetzen"
 #: src/HexEditorGui.cpp:1861 src/HexEditorGui.cpp:1922
 #: src/HexEditorGui.cpp:1982
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Zrušit"
 
 #: src/HexEditorGui.cpp:1014
 msgid "Download new wxHexEditor"
-msgstr "neue Version von wxHexEditor downloaden"
+msgstr "Stáhnout novou verzi wxHexEditoru"
 
 #: src/HexEditorGui.cpp:1014
 msgid "http://wxhexeditor.sourceforge.net"
@@ -1514,17 +1515,17 @@ msgstr "http://wxhexeditor.sourceforge.net"
 
 #: src/HexEditorGui.cpp:1017
 msgid "Do not show this again."
-msgstr "Dies nicht wieder anzeigen"
+msgstr "Toto znovu neukazovat."
 
 #: src/HexEditorGui.cpp:1052
 msgid "File #1"
-msgstr "Datei #1"
+msgstr "Soubor #1"
 
 #: src/HexEditorGui.cpp:1056 src/HexEditorGui.cpp:1063
 #: src/HexEditorGui.cpp:1124 src/HexEditorGui.cpp:1205
 #: src/HexEditorGui.cpp:1849 src/HexEditorGui.cpp:1901
 msgid "Select a file"
-msgstr "Datei wählen"
+msgstr "Vybrat soubor"
 
 #: src/HexEditorGui.cpp:1056 src/HexEditorGui.cpp:1063
 #: src/HexEditorGui.cpp:1205 src/HexEditorGui.cpp:1849
@@ -1534,39 +1535,39 @@ msgstr "*"
 
 #: src/HexEditorGui.cpp:1059
 msgid "File #2"
-msgstr "Datei #2"
+msgstr "Soubor #2"
 
 #: src/HexEditorGui.cpp:1070
 msgid "Search For"
-msgstr "Suche nach"
+msgstr "Vyhledat"
 
 #: src/HexEditorGui.cpp:1072
 msgid "Different bytes"
-msgstr "unterschiedlichen Bytes"
+msgstr "Rozdílné byty"
 
 #: src/HexEditorGui.cpp:1076
 msgid "Same bytes"
-msgstr "gleichen Bytes"
+msgstr "Stejné byty"
 
 #: src/HexEditorGui.cpp:1085
 msgid "Stop comparison after"
-msgstr "Beende Vergleich nach"
+msgstr "Porovnávání zastavit po"
 
 #: src/HexEditorGui.cpp:1093
 msgid "hits."
-msgstr "Treffern."
+msgstr "nálezů."
 
 #: src/HexEditorGui.cpp:1103
 msgid "Merge sections if close as"
-msgstr "Verbinde Bereiche wenn näher als"
+msgstr "Spojit oblasti, pokud jsou blíže než"
 
 #: src/HexEditorGui.cpp:1111
 msgid "bytes."
-msgstr "bytes."
+msgstr "bytů."
 
 #: src/HexEditorGui.cpp:1121
 msgid "Save Results to File"
-msgstr "Ergebnisse in Datei speichern"
+msgstr "Uložit výsledky do souboru"
 
 #: src/HexEditorGui.cpp:1124
 msgid "*.txt"
@@ -1574,11 +1575,11 @@ msgstr "*.txt"
 
 #: src/HexEditorGui.cpp:1138
 msgid "Compare"
-msgstr "Vergleiche"
+msgstr "Porovnat"
 
 #: src/HexEditorGui.cpp:1193
 msgid "File To Hash:"
-msgstr "Datei mit Hash"
+msgstr "Soubor s hash"
 
 #: src/HexEditorGui.cpp:1200
 msgid "Current File"
@@ -1686,7 +1687,7 @@ msgstr "TIGER192"
 
 #: src/HexEditorGui.cpp:1308
 msgid "Others"
-msgstr "Others"
+msgstr "Ostatní"
 
 #: src/HexEditorGui.cpp:1310
 msgid "ADLER32"
@@ -1718,19 +1719,19 @@ msgstr "SNEFRU256"
 
 #: src/HexEditorGui.cpp:1343
 msgid "Calculate"
-msgstr "Berechne"
+msgstr "Spočítat"
 
 #: src/HexEditorGui.cpp:1443
 msgid "Copy As :"
-msgstr "Kopiere als :"
+msgstr "Kopírovat jako:"
 
 #: src/HexEditorGui.cpp:1447
 msgid "Full Text"
-msgstr "Volltext"
+msgstr "Plný text"
 
 #: src/HexEditorGui.cpp:1447
 msgid "Special Hex"
-msgstr "Speziell Hex"
+msgstr "Zvláštní šestnáctkový"
 
 #: src/HexEditorGui.cpp:1447
 msgid "Internet"
@@ -1738,23 +1739,23 @@ msgstr "Internet"
 
 #: src/HexEditorGui.cpp:1447
 msgid "C/C++ Source"
-msgstr "C/C++ Quellcode"
+msgstr "Zdrojový kód C/C++"
 
 #: src/HexEditorGui.cpp:1447
 msgid "Assembler Source"
-msgstr "Assembler Quellcode"
+msgstr "Zdrojový kód assembleru"
 
 #: src/HexEditorGui.cpp:1453
 msgid "Option:"
-msgstr "Option:"
+msgstr "Volba:"
 
 #: src/HexEditorGui.cpp:1473
 msgid "As BigEndian"
-msgstr "als Big Endian"
+msgstr "Jako Big Endian"
 
 #: src/HexEditorGui.cpp:1479
 msgid "Bytes Per Line"
-msgstr "Bytes pro Zeile"
+msgstr "Bytů na řádek"
 
 #: src/HexEditorGui.cpp:1481
 msgid "16"
@@ -1762,25 +1763,25 @@ msgstr "16"
 
 #: src/HexEditorGui.cpp:1493
 msgid "Include Offset Part"
-msgstr "Offset-Teil einbinden"
+msgstr "Zahrnout část s posunem"
 
 #: src/HexEditorGui.cpp:1497
 msgid "Include Hex Part"
-msgstr "Hex-Teil einbinden"
+msgstr "Zahrnout šestnáctkovou část"
 
 #: src/HexEditorGui.cpp:1501
 msgid "Include Text Part"
-msgstr "Text-Teil einbinden"
+msgstr "Zahrnout textovou část"
 
 #: src/HexEditorGui.cpp:1556
 msgid ""
 "For switching XORView Thru mode, all Undo&Redo buffer will reset and non-saved changes will discarded.\n"
 "Also you can't use methods that changes file size (like delete and inject) with XORView Thru mode enabled."
-msgstr "Um den XOR-Durchsichtsmodus zu aktivieren, werden alle Undo/Redo Puffer zurückgesetzt und nicht gespeicherte Änderungen werden ignoriert.\nAußerdem können keine Methoden verwendet werden die die Dateigröße ändern während der XOR-Durchsichtsmodus aktiv ist."
+msgstr "Pro zapnutí prohlížecího režimu XOR budou znovu nastaveny vyrovnávací paměti pro všechny kroky zpět/znovu a neuložené změny budou zahozeny.."
 
 #: src/HexEditorGui.cpp:1563
 msgid "Please enter XOR key as "
-msgstr "Bitte XOR Schlüssel eingeben "
+msgstr "Zadejte, prosím, klíč XOR jako "
 
 #: src/HexEditorGui.cpp:1567
 msgid "ASCII"
@@ -1792,63 +1793,63 @@ msgstr "OK"
 
 #: src/HexEditorGui.cpp:1625
 msgid "Colours"
-msgstr "Farben"
+msgstr "Barvy"
 
 #: src/HexEditorGui.cpp:1632
 msgid "Hex Colors:"
-msgstr "Hex Farben:"
+msgstr "Šestnáctkové barvy:"
 
 #: src/HexEditorGui.cpp:1637
 msgid "Foreground Colour"
-msgstr "Vordergrundfarbe"
+msgstr "Barva popředí"
 
 #: src/HexEditorGui.cpp:1642
 msgid "Background Colour"
-msgstr "Hintergrundfarbe"
+msgstr "Barva pozadí"
 
 #: src/HexEditorGui.cpp:1647
 msgid "Zebra Colour"
-msgstr "Zebra Farbe"
+msgstr "Barva zebry"
 
 #: src/HexEditorGui.cpp:1651
 msgid "Selection Colours:"
-msgstr "Auswahlfarben:"
+msgstr "Barvy výběru:"
 
 #: src/HexEditorGui.cpp:1656
 msgid "Selection Foreground Colour"
-msgstr "Auswahl-Vordergrund Farbe"
+msgstr "Barva popředí výběru"
 
 #: src/HexEditorGui.cpp:1661
 msgid "Selection Colour"
-msgstr "Auswahlfarbe"
+msgstr "Barva výběru"
 
 #: src/HexEditorGui.cpp:1665
 msgid "Reset"
-msgstr "Zurücksetzen"
+msgstr "Nastavit znovu"
 
 #: src/HexEditorGui.cpp:1666
 msgid "Reset Colour Values to Default"
-msgstr "Farbwerte auf Standard zurücksetzen"
+msgstr "Obnovit výchozí hodnoty barev"
 
 #: src/HexEditorGui.cpp:1679
 msgid "Language:"
-msgstr "Sprache:"
+msgstr "Jazyk:"
 
 #: src/HexEditorGui.cpp:1694
 msgid "Character Encoding Family:"
-msgstr "Zeichenkodierungsgruppe:"
+msgstr "Skupina kódování znaků:"
 
 #: src/HexEditorGui.cpp:1709
 msgid "Character Encoding:"
-msgstr "Zeichencodierung"
+msgstr "Kódování znaků:"
 
 #: src/HexEditorGui.cpp:1718 src/HexPanels.cpp:211
 msgid "Size:"
-msgstr "Größe:"
+msgstr "Velikost:"
 
 #: src/HexEditorGui.cpp:1729
 msgid "Custom Hex Formating"
-msgstr "Angepasste Hexformatierung"
+msgstr "Vlastní šestnáctkové formátování"
 
 #: src/HexEditorGui.cpp:1737
 msgid "xx "
@@ -1868,28 +1869,28 @@ msgstr "xxxx xxxx xxxx xxxx  "
 
 #: src/HexEditorGui.cpp:1742
 msgid "Recursive custom hex format pattern"
-msgstr "Rekursives angepasstes Hex-Formatmuster"
+msgstr "Rekurzivní vlastní vzor pro šestnáctkový formát"
 
 #: src/HexEditorGui.cpp:1746
 msgid "Enable"
-msgstr "aktivieren"
+msgstr "Povolit"
 
 #: src/HexEditorGui.cpp:1755
 msgid "Bytes Per Line Limit"
-msgstr "Max. Bytes pro Zeile"
+msgstr "Nejvíce bytů na řádek"
 
 #: src/HexEditorGui.cpp:1772
 msgid "Auto show tag panel if tags detected."
-msgstr "Taganzeige automatisch einblenden wenn Tags erkannt werden"
+msgstr "Automaticky ukázat značky (TAG), když jsou značky rozpoznány."
 
 #: src/HexEditorGui.cpp:1836 src/HexEditorGui.cpp:1897
 msgid "Source :"
-msgstr "Quelle :"
+msgstr "Zdroj :"
 
 #: src/HexEditorGui.cpp:1845 src/HexEditorGui.cpp:1904
 #: src/HexEditorGui.cpp:1958
 msgid "Destination :"
-msgstr "Ziel :"
+msgstr "Cíl :"
 
 #: src/HexEditorGui.cpp:1970
 msgid "0x00"
@@ -1901,43 +1902,43 @@ msgstr "0xFF"
 
 #: src/HexEditorGui.cpp:1970
 msgid "0xRANDOM"
-msgstr "0xZUFALL"
+msgstr "0xNÁHODNÝ"
 
 #: src/HexEditorGui.cpp:1972
 msgid "Erase With "
-msgstr "Löschen mit "
+msgstr "Vymazat s "
 
 #: src/HexPanels.cpp:209
 msgid "Name:"
-msgstr "Name:"
+msgstr "Název:"
 
 #: src/HexPanels.cpp:210
 msgid "Path:"
-msgstr "Pfad:"
+msgstr "Cesta:"
 
 #: src/HexPanels.cpp:212
 msgid "Access:"
-msgstr "Zugriff:"
+msgstr "Přístup:"
 
 #: src/HexPanels.cpp:213
 msgid "Device:"
-msgstr "Gerät:"
+msgstr "Zařízení:"
 
 #: src/HexPanels.cpp:213
 msgid "FILE"
-msgstr "DATEI"
+msgstr "SOUBOR"
 
 #: src/HexPanels.cpp:214
 msgid "DIRECTORY"
-msgstr "ORDNER"
+msgstr "ADRESÁŘ"
 
 #: src/HexPanels.cpp:215
 msgid "CHARACTER"
-msgstr "ZEICHEN"
+msgstr "ZNAK"
 
 #: src/HexPanels.cpp:216
 msgid "BLOCK"
-msgstr "BLOCK"
+msgstr "BLOK"
 
 #: src/HexPanels.cpp:217
 msgid "FIFO"
@@ -1953,15 +1954,15 @@ msgstr "SOCKET"
 
 #: src/HexPanels.cpp:252
 msgid "Sector Size: "
-msgstr "Sektorgröße: "
+msgstr "Velikost sektoru: "
 
 #: src/HexPanels.cpp:253
 msgid "Sector Count: "
-msgstr "Sektoranzahl: "
+msgstr "Počet sektorů: "
 
 #: src/HexPanels.cpp:258
 msgid "XORKey:"
-msgstr "XOR-Schlüssel:"
+msgstr "Klíč XOR:"
 
 #: src/HexEditorCtrl/HexEditorCtrlGui.cpp:35
 #: src/HexEditorCtrl/HexEditorCtrlGui.cpp:41
@@ -1973,24 +1974,24 @@ msgstr "sans?"
 
 #: src/HexEditorCtrl/HexEditorCtrlGui.cpp:39
 msgid "Address"
-msgstr "Adresse"
+msgstr "Adresa"
 
 #: src/HexEditorCtrl/HexEditorCtrlGui.cpp:45
 msgid "Byte View"
-msgstr "Byteansicht"
+msgstr "Pohled na byty"
 
 #: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:37
 msgid "Font Color :"
-msgstr "Zeichenfarbe :"
+msgstr "Barva písma :"
 
 #: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:44
 msgid "Note Color :"
-msgstr "Notizfarbe :"
+msgstr "Barva poznámky:"
 
 #: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:60
 msgid "Remove"
-msgstr "Löschen"
+msgstr "Odstranit"
 
 #: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.h:49
 msgid "Tag Dialog"
-msgstr "Tag Dialog"
+msgstr "Dialog pro značku"

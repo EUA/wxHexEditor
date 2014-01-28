@@ -566,6 +566,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 												if(wxID_OK == filediag.ShowModal())
 													if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
 														wxMessageBox( wxString(_( "TAGS cannot imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+													else
+														MyTagPanel->Set( MyHexEditor->MainTagArray );
 												break;
 												}
 					case idExportTAGs:	{

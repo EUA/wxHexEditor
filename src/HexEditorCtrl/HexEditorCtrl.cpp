@@ -203,8 +203,9 @@ void HexEditorCtrl::HexCharReplace(long hex_location, const wxChar chr){
 //-----MENUS--------//
 
 void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
+	//Non operational code... HexEditor::ShowContextMenu() used instead
 	wxMenu menu;
-	unsigned TagPosition=0;
+	uint64_t TagPosition=0;
 	if( event.GetEventObject() == hex_ctrl )
 		TagPosition = page_offset + (hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) / 2);
 	if( event.GetEventObject() == text_ctrl )

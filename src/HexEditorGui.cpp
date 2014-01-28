@@ -666,7 +666,7 @@ DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, con
 	
 	bSizerTop->Add( m_choiceASMType, 1, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	wxString m_choiceBitModeChoices[] = { _("16Bit"), _("32Bit"), _("64Bit") };
+	wxString m_choiceBitModeChoices[] = { _("16 Bit"), _("32 Bit"), _("64 Bit") };
 	int m_choiceBitModeNChoices = sizeof( m_choiceBitModeChoices ) / sizeof( wxString );
 	m_choiceBitMode = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBitModeNChoices, m_choiceBitModeChoices, 0 );
 	m_choiceBitMode->SetSelection( 1 );

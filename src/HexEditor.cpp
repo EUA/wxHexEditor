@@ -963,7 +963,7 @@ void HexEditor::OnMouseRight( wxMouseEvent& event ) {
 
 void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	wxMenu menu;
-	unsigned TagPosition=0;
+	uint64_t TagPosition=0;
 	if( event.GetEventObject() == hex_ctrl )
 		TagPosition = page_offset + (hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) / 2);
 	else if( event.GetEventObject() == text_ctrl )

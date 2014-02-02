@@ -1188,9 +1188,10 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 	std::cout << "mutex Update Locking..." << std::endl;
 #endif
 	if( update.TryLock()==wxMUTEX_NO_ERROR ) {
-		if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ) {
-			SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
-			}
+/// This leads recursion!
+//		if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ) {
+//			SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
+//			}
 
 		if( interpreter != NULL ) {
 			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );

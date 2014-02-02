@@ -36,6 +36,9 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 			wxBell();
 			Clear();
 			mutexset.Unlock();
+#ifdef _DEBUG_MUTEX_
+		std::cout << "DataInterpeter Set() Mutex UnLocked" << std::endl;
+#endif
 			return;
 			}
 		if( unidata.raw != NULL )
@@ -230,32 +233,12 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 			or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
 #endif
 			){
-			/*
-			int block_size=0;
-			uint64_t block_count=0;
-		#ifdef __WXGTK__
-			ioctl(FD, BLKSSZGET, &block_size);
-			ioctl(FD, BLKGETSIZE64, &block_count);
-		#elif defined (__WXMAC__)
-			ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
-			ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
-		#elif defined (__WXMSW__)
-			DWORD dwResult;
-			DISK_GEOMETRY driveInfo;
-			DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
-			block_size=driveInfo.BytesPerSector;
-			block_count=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
-		#endif
-			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), block_size);
-			info_string += _("Sector Count: ") + wxString::Format(wxT("%" wxLongLongFmtSpec "u"), block_count/block_size);
-			*/
 			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), FDtoBlockSize( FD ));
-			info_string += _("Sector Count: ") + wxString::Format(wxT("%" wxLongLongFmtSpec "u"), FDtoBlockCount( FD ));
-
+			info_string += _("Sector Count: ") + wxString::Format(wxT("%" wxLongLongFmtSpec "u\n"), FDtoBlockCount( FD ));
 			}
 
 		if(XORKey != wxEmptyString)
-			info_string += wxString(_("XORKey:")) + wxT("\t") + XORKey;
+			info_string += wxString(_("XORKey:")) + wxT("\t") + XORKey + wxT("\n");
 
 		m_InfoPanelText->SetLabel( info_string );
 

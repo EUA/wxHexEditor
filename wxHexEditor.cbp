@@ -154,6 +154,7 @@
 					<Add option="-g" />
 					<Add option="$($(WXCONFIG) --cflags)" />
 					<Add option="-D_DEBUG_=6" />
+					<Add option="-D_DEBUG_MUTEX_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

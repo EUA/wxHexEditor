@@ -575,11 +575,12 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 																					wxT("*.tags"),
 																					wxFD_OPEN|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
-												if(wxID_OK == filediag.ShowModal())
+												if(wxID_OK == filediag.ShowModal()){
 													if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
 														wxMessageBox( wxString(_( "TAGS cannot imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 													else
 														MyTagPanel->Set( MyHexEditor->MainTagArray );
+													}
 												break;
 												}
 					case idExportTAGs:	{
@@ -695,7 +696,7 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 
 		if ( ! wxConfig::Get()->Read(_T("Language")).IsEmpty() ) {
 			int lang = wxConfigBase::Get()->Read(_T("Language"), -1) ;
-			int z=wxGetLocale()->GetLanguage();
+			wxGetLocale()->GetLanguage();
 			if ( lang != -1 )
 				if ( wxGetLocale()->GetLanguage() != lang) {
 					if( lang == 0 && wxGetLocale()->GetSystemLanguage() == wxGetLocale()->GetLanguage() )	//prevents default redraw

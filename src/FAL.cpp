@@ -42,6 +42,18 @@
 
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
+bool IsBlockDev( int FD ){
+	struct stat *sbufptr = new struct stat;
+   fstat( FD, sbufptr );
+   if(S_ISBLK( sbufptr->st_mode )
+#ifdef __WXMSW__
+		or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
+#endif
+		)
+		return true;
+	return false;
+	}
+
 int FDtoBlockSize( int FD ){
 	int block_size=0;
 #ifdef __WXGTK__
@@ -226,14 +238,17 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 		else
 			Open(myfilename.GetFullPath(), wxFile::read_write);
 
-		if( ForceBlockRW )
-			BlockRWCount=wxFile::Length()/ForceBlockRW;
-
 		if(not IsOpened()){
 			file_access_mode = AccessInvalid;
 			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 			return false;
 			}
+		if( IsBlockDev( wxFile::fd() )){
+			BlockRWSize=FDtoBlockSize( wxFile::fd() );
+			BlockRWCount=FDtoBlockCount( wxFile::fd() );
+			}
+		else if( ForceBlockRW )
+			BlockRWCount=wxFile::Length()/ForceBlockRW;
 
 		return true;
 		}

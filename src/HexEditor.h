@@ -239,7 +239,6 @@ class scrollthread:wxThreadHelper {
 			}
 
 		void *Entry() {
-			static int mycounterdebug=0;
 			while( !(GetThread()->TestDestroy()) ) {
 				if(speed == 0)
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
@@ -251,15 +250,8 @@ class scrollthread:wxThreadHelper {
 					parent->page_offset = FileLength - parent->ByteCapacity();
 					parent->page_offset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 					}
-#if 1
-				wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
-				wxMutexGuiEnter();
-				::wxPostEvent(parent, eventx );
-				wxMutexGuiLeave();
 
-				GetThread()->Sleep(sleeper);
-
-#elif 0//wxWidgets 3
+#if wxCHECK_VERSION(3, 0, 0)
 				wxCommandEvent *eventx=new wxCommandEvent( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
 				::wxQueueEvent( parent, eventx );
 				wxYield();
@@ -267,6 +259,13 @@ class scrollthread:wxThreadHelper {
 				while(not eventx->GetSkipped())
 					GetThread()->Sleep(sleeper);
 				//delete eventx;
+#else			//Old versions
+				wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
+				wxMutexGuiEnter();
+				::wxPostEvent(parent, eventx );
+				wxMutexGuiLeave();
+
+				GetThread()->Sleep(sleeper);
 #endif
 
 				if( parent->page_offset == 0 ||

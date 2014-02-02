@@ -1763,7 +1763,7 @@ void CopyAsDialog::Copy( void ){
 //					case 1: cb+= wxString::Format( wxT("0x%02X, "), *reinterpret_cast<unsigned char*>(	buff.GetData()+current_offset*HexSize )); break;
 //					case 2: cb+= wxString::Format( wxT("0x%04X, "), *reinterpret_cast<unsigned short*>(	buff.GetData()+current_offset*HexSize )); break;
 //					case 4: cb+= wxString::Format( wxT("0x%08X, "), *reinterpret_cast<unsigned int*>(	buff.GetData()+current_offset*HexSize )); break;
-//					case 8: cb+= wxString::Format( wxT("0x%016"wxLongLongFmtSpec"X, "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
+//					case 8: cb+= wxString::Format( wxT("0x%016" wxLongLongFmtSpec "X, "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
 //					}
 				if(( (current_offset+1) % (BytePerLine/HexSize)==0 ) and current_offset not_eq count)
 						cb += wxT("" wxNewline "  ");
@@ -1799,7 +1799,7 @@ void CopyAsDialog::Copy( void ){
 //					case 1: cb+= wxString::Format( wxT("0%02Xh "), *reinterpret_cast<unsigned char*>(	buff.GetData()+current_offset*HexSize )); break;
 //					case 2: cb+= wxString::Format( wxT("0%04Xh "), *reinterpret_cast<unsigned short*>(	buff.GetData()+current_offset*HexSize )); break;
 //					case 4: cb+= wxString::Format( wxT("0%08Xh "), *reinterpret_cast<unsigned int*>(	buff.GetData()+current_offset*HexSize )); break;
-//					case 8: cb+= wxString::Format( wxT("0%016"wxLongLongFmtSpec"Xh "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
+//					case 8: cb+= wxString::Format( wxT("0%016" wxLongLongFmtSpec "Xh "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
 //					}
 				}
 			cb+=wxT('\n');
@@ -1981,16 +1981,16 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		fs.Write( ln );
 		wxString line;
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
-			line = wxString::Format( wxT("%s found %"wxLongLongFmtSpec"u - %"wxLongLongFmtSpec"u \t Total : %"wxLongLongFmtSpec"u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
+			line = wxString::Format( wxT("%s found %" wxLongLongFmtSpec "u - %" wxLongLongFmtSpec "u \t Total : %" wxLongLongFmtSpec "u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
 			fs.Write( line );
 			}
 
 		if( f1.Length() not_eq f2.Length() ){
 			if( f1.Length() > f2.Length() )
-				line =  wxString::Format( wxT("\nFile #2 ends at offset %"wxLongLongFmtSpec"u. File #1 has extra %"wxLongLongFmtSpec"u bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
+				line =  wxString::Format( wxT("\nFile #2 ends at offset %" wxLongLongFmtSpec "u. File #1 has extra %" wxLongLongFmtSpec "u bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
 
 			else
-				line =  wxString::Format( wxT("\nFile #1 ends at offset %"wxLongLongFmtSpec"u. File #2 has extra %"wxLongLongFmtSpec"u bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
+				line =  wxString::Format( wxT("\nFile #1 ends at offset %" wxLongLongFmtSpec "u. File #2 has extra %" wxLongLongFmtSpec "u bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
 
 			fs.Write( line );
 			}

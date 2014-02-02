@@ -186,13 +186,13 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit8 ));
 			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit16 ));
 			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit32 ));
-			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"u"),*X->ubit64 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%" wxLongLongFmtSpec "u"),*X->ubit64 ));
 			}
 		else {
 			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%i"),  *X->bit8 ));
 			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit16 ));
 			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit32 ));
-			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%"wxLongLongFmtSpec"d"),*X->bit64 ));
+			m_textctrl_64bit->ChangeValue( wxString::Format(wxT("%" wxLongLongFmtSpec "d"),*X->bit64 ));
 			}
 		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
 		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
@@ -247,10 +247,10 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 			block_count=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 		#endif
 			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), block_size);
-			info_string += _("Sector Count: ") + wxString::Format(wxT("%"wxLongLongFmtSpec"u"), block_count/block_size);
+			info_string += _("Sector Count: ") + wxString::Format(wxT("%" wxLongLongFmtSpec "u"), block_count/block_size);
 			*/
 			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), FDtoBlockSize( FD ));
-			info_string += _("Sector Count: ") + wxString::Format(wxT("%"wxLongLongFmtSpec"u"), FDtoBlockCount( FD ));
+			info_string += _("Sector Count: ") + wxString::Format(wxT("%" wxLongLongFmtSpec "u"), FDtoBlockCount( FD ));
 
 			}
 
@@ -319,7 +319,7 @@ void TagPanel::Set( ArrayOfTAG& TagArray ){
 	wxArrayString str;
 	for(unsigned i = 0 ; i < TagArray.Count() ; i++)
 		str.Add( TagArray.Item(i)->tag.IsEmpty() ?
-// TODO (death#1#): wxLongLongFmtSpec need here!!!					wxString::Format(wxT("%d. Offset %"wxLongLongFmtSpec"u"),i+1, TagArray.Item(i)->start )
+// TODO (death#1#): wxLongLongFmtSpec need here!!!					wxString::Format(wxT("%d. Offset %" wxLongLongFmtSpec "u"),i+1, TagArray.Item(i)->start )
 					: TagArray.Item(i)->tag );
 
 	TagPanelList->Clear();

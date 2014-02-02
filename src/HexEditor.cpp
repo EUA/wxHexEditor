@@ -68,6 +68,9 @@ HexEditor::~HexEditor() {
 	}
 
 void HexEditor::Dynamic_Connector() {
+	Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( HexEditor::ThreadPaint ), NULL, this );
+//   Bind(THREAD_UPDATE_EVENT, &HexEditor::ThreadPaint, this);
+
 	hex_ctrl ->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	//this is not up arrow key, just means release of key press.
@@ -90,6 +93,7 @@ void HexEditor::Dynamic_Connector() {
 	}
 
 void HexEditor::Dynamic_Disconnector() {
+
 	hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	//this is not up arrow key, just means release of key press.
@@ -563,7 +567,7 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 	UpdateCursorLocation();
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL )
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %"wxLongLongFmtSpec"u"), page_offset/BytePerLine() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/BytePerLine() ), 0);
 #endif
 		wxYieldIfNeeded();
 	}
@@ -582,6 +586,22 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint) 
 		}
 	ReadFromBuffer( position, readedbytes, buffer, cursor_reset, paint );
 	delete [] buffer;
+	}
+
+void HexEditor::ThreadPaint(wxCommandEvent& event){
+	if( event.GetId()==THREAD_UPDATE_EVENT){
+		LoadFromOffset( page_offset, false, false );
+	//	SetLocalHexInsertionPoint(cursor);
+		Selector();
+		PaintSelection();
+		UpdateCursorLocation( true );
+
+///	Offset scroll automated at HexEditorCTRL::ReadFromBuffer
+//		if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
+//			parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
+
+		event.Skip(true);
+		}
 	}
 
 void HexEditor::Reload( void ) {
@@ -1212,8 +1232,8 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 				statusbar->SetStatusText(_("Block Size: N/A") ,4);
 				}
 			else {
-				statusbar->SetStatusText(wxString::Format(_("Selected Block: %"wxLongLongFmtSpec"u -> %"wxLongLongFmtSpec"u"),select->GetStart(),select->GetEnd()), 3);
-				statusbar->SetStatusText(wxString::Format(_("Block Size: %"wxLongLongFmtSpec"u"), select->GetSize()), 4);
+				statusbar->SetStatusText(wxString::Format(_("Selected Block: %" wxLongLongFmtSpec "u -> %" wxLongLongFmtSpec "u"),select->GetStart(),select->GetEnd()), 3);
+				statusbar->SetStatusText(wxString::Format(_("Block Size: %" wxLongLongFmtSpec "u"), select->GetSize()), 4);
 				}
 			}
 

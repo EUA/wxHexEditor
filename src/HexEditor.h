@@ -47,7 +47,7 @@
 class scrollthread;
 class copy_maker;
 
-class HexEditor: public HexEditorCtrl { /*, protected FAL*/
+class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 	public:
 		HexEditor(wxWindow* parent,
 		          int id,
@@ -69,6 +69,7 @@ class HexEditor: public HexEditorCtrl { /*, protected FAL*/
 		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
 		void Reload();	//loads file from current page offset; refresh
 		void ReDraw();
+		void ThreadPaint(wxCommandEvent& event); //This class created for remove scroolthread update functions with MutexGui Lock mechanism.
 
 		bool IsFileUsingXORKey( void );
 		void FileSetXORKey( bool enable );
@@ -238,6 +239,7 @@ class scrollthread:wxThreadHelper {
 			}
 
 		void *Entry() {
+			static int mycounterdebug=0;
 			while( !(GetThread()->TestDestroy()) ) {
 				if(speed == 0)
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
@@ -249,22 +251,24 @@ class scrollthread:wxThreadHelper {
 					parent->page_offset = FileLength - parent->ByteCapacity();
 					parent->page_offset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 					}
+#if 1
+				wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
 				wxMutexGuiEnter();
-
-				parent->LoadFromOffset( parent->page_offset, false, false );
-
-				parent->SetLocalHexInsertionPoint(cursor);	//KILLs MACOSX via Calling UpdateCursorLocation()
-				parent->Selector();							//KILLs MACOSX
-				parent->PaintSelection();					//Assets time because of Caret suspending from thread
-				parent->UpdateCursorLocation( true );	//KILLs MACOSX
-
-//				Offset scroll automated at HexEditorCTRL::ReadFromBuffer
-//				if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
-//					parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
-
-				//	wxYieldIfNeeded();
+				::wxPostEvent(parent, eventx );
 				wxMutexGuiLeave();
+
 				GetThread()->Sleep(sleeper);
+
+#elif 0//wxWidgets 3
+				wxCommandEvent *eventx=new wxCommandEvent( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
+				::wxQueueEvent( parent, eventx );
+				wxYield();
+
+				while(not eventx->GetSkipped())
+					GetThread()->Sleep(sleeper);
+				//delete eventx;
+#endif
+
 				if( parent->page_offset == 0 ||
 				      parent->page_offset + parent->ByteCapacity() >= FileLength )
 					GetThread()->Pause();

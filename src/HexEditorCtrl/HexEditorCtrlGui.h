@@ -1,13 +1,15 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Mar  8 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __HexEditorCtrlGui__
-#define __HexEditorCtrlGui__
+#ifndef __HEXEDITORCTRLGUI_H__
+#define __HEXEDITORCTRLGUI_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 class wxHexCtrl;
 class wxHexOffsetCtrl;
 class wxHexTextCtrl;
@@ -34,10 +36,10 @@ class wxHexTextCtrl;
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorCtrlGui
 ///////////////////////////////////////////////////////////////////////////////
-class HexEditorCtrlGui : public wxPanel
+class HexEditorCtrlGui : public wxPanel 
 {
 	private:
-
+	
 	protected:
 		wxStaticText* m_static_offset;
 		wxStaticText* m_static_address;
@@ -46,19 +48,19 @@ class HexEditorCtrlGui : public wxPanel
 		wxHexOffsetCtrl* offset_ctrl;
 		wxHexCtrl* hex_ctrl;
 		wxHexTextCtrl* text_ctrl;
-
+		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnKeyboardChar( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnResize( wxSizeEvent& event ) { event.Skip(); }
 		virtual void OnOffsetScroll( wxScrollEvent& event ) { event.Skip(); }
-
-
+		
+	
 	public:
 		wxScrollBar* offset_scroll_real;
-
-		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		
+		HexEditorCtrlGui( wxWindow* parent, wxWindowID id = ID_DEFAULT, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
 		~HexEditorCtrlGui();
-
+	
 };
 
-#endif //__HexEditorCtrlGui__
+#endif //__HEXEDITORCTRLGUI_H__

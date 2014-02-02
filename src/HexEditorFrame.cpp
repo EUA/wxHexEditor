@@ -124,9 +124,6 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 		 w = pConfig->Read(_T("ScreenW"), 600),
 		 h = pConfig->Read(_T("ScreenH"), 400);
 
-	bool fullScreen;
-	pConfig->Read(_T("ScreenFullScreen"), &fullScreen, false);
-
 	// Normalizing for avoid screen disapperaring
 	wxSize dsz = wxGetDisplaySize();
 	x = x < 0 ? 0 : x < dsz.x ? x : dsz.x - w;
@@ -136,8 +133,9 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	Move(x, y);
 	SetClientSize(w, h);
 
+	bool fullScreen;
+	pConfig->Read(_T("ScreenFullScreen"), &fullScreen, false);
 	Maximize(fullScreen);
-
 
 #if defined __WXMAC__ || defined __WXMSW__
 	wxArtProvider::Push(new HexEditorArtProvider); //Using similar MacOSX icons. Much more better than wx ones...
@@ -236,6 +234,13 @@ HexEditorFrame::~HexEditorFrame(){
 	pConfig->Write(_T("ScreenW"), (long) w);
 	pConfig->Write(_T("ScreenH"), (long) h);
 	pConfig->Write(_T("ScreenFullScreen"), IsMaximized());
+
+	pConfig->Write(_T("PanelToolbar"), MyAUI->GetPane(Toolbar).IsShown());
+	pConfig->Write(_T("PanelTAG"), MyAUI->GetPane(MyTagPanel).IsShown());
+	pConfig->Write(_T("PanelDisassembler"), MyAUI->GetPane(MyDisassemblerPanel).IsShown());
+	pConfig->Write(_T("PanelDataInterpreter"), MyAUI->GetPane(MyInterpreter).IsShown());
+	pConfig->Write(_T("PanelInfo"), MyAUI->GetPane(MyInfoPanel).IsShown());
+
 	pConfig->Flush();
 
 	MyNotebook->Destroy();
@@ -298,8 +303,17 @@ void HexEditorFrame::PrepareAUI( void ){
 
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
    Toolbar->Realize();
-	mbar->Check( idToolbar, true );
 
+   bool RegRead;
+	wxConfigBase::Get()->Read(_T("PanelToolbar"), &RegRead, true);
+	MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
+                  Name(wxT("ToolBar")).Caption(_("Toolbar")).
+                  ToolbarPane().Top().
+						Show(RegRead).
+                  LeftDockable(false).RightDockable(false));
+	mbar->Check( idToolbar, RegRead );
+
+   wxConfigBase::Get()->Read(_T("PanelTAG"), &RegRead, false);
 	MyTagPanel = new TagPanel( this, -1 );
 	MyAUI -> AddPane( MyTagPanel, wxAuiPaneInfo().
 					Caption(wxT("TagPanel")).
@@ -307,10 +321,11 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
-					Show(false).
+					Show(RegRead).
 					Right().Layer(1) );
-	mbar->Check( idTagPanel, true );
+	mbar->Check( idTagPanel, RegRead );
 
+	wxConfigBase::Get()->Read(_T("PanelDisassembler"), &RegRead, false);
 	MyDisassemblerPanel = new DisassemblerPanel( this, -1 );
 	MyAUI -> AddPane( MyDisassemblerPanel, wxAuiPaneInfo().
 					Caption(wxT("Disassembler Panel")).
@@ -318,9 +333,9 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
-					Show(false).
+					Show(RegRead).
 					Right().Layer(1) );
-	mbar->Check( idTagPanel, true );
+	mbar->Check( idTagPanel, RegRead );
 
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
@@ -344,11 +359,7 @@ void HexEditorFrame::PrepareAUI( void ){
 				Show(false).
 				Right().Layer(1) );
 
-   MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
-                  Name(wxT("ToolBar")).Caption(_("Toolbar")).
-                  ToolbarPane().Top().
-                  LeftDockable(false).RightDockable(false));
-
+	wxConfigBase::Get()->Read(_T("PanelDataInterpreter"), &RegRead, true);
 	MyInterpreter = new DataInterpreter( this, -1 );
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
 					Caption(_("DataInterpreter")).
@@ -356,20 +367,21 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					BestSize(wxSize(174,218)).
 					Resizable(false).
+					Show(RegRead).
 					Left().Layer(1).Position(0) );
-	mbar->Check( idInterpreter, true );
+	mbar->Check( idInterpreter, RegRead );
 
+	wxConfigBase::Get()->Read(_T("PanelInfo"), &RegRead, true);
 	MyInfoPanel = new InfoPanel( this, -1 );
 	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
 					Caption(_("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).
 					BestSize(wxSize(140,140)).
+					Show(RegRead).
 					//Resizable(false).
 					Left().Layer(1).Position(1) );
-	mbar->Check( idInfoPanel, true );
-
-
+	mbar->Check( idInfoPanel, RegRead );
 
 	ActionDisabler();
 	MyNotebook->SetDropTarget( new DnDFile( this ) );

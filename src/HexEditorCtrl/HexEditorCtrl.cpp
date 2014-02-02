@@ -880,8 +880,10 @@ void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 
 bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 	if( MainTagArray.Count() ==  0){
-		if( wxFileName::FileName( flnm.GetFullPath() << wxT(".tags") ).FileExists() )
-			wxRemoveFile( flnm.GetFullPath() << wxT(".tags") );
+		if( wxFileName::FileName( flnm.GetFullPath() ).FileExists() )
+			wxRemoveFile( flnm.GetFullPath() );
+//		if( wxFileName::FileName( flnm.GetFullPath() << wxT(".tags") ).FileExists() )
+//			wxRemoveFile( flnm.GetFullPath() << wxT(".tags") );
 		return false;
 		}
 	else{
@@ -907,15 +909,15 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			wxXmlNode *element_TagText		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("tag_text"), TAG->tag, NULL, element_FontColour);
 			new wxXmlNode( element_TagText, wxXML_TEXT_NODE, wxT("tag_text"), TAG->tag, NULL, NULL);
 
-			wxXmlNode *element_End 			= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("end_offset"), wxString::Format(wxT("%ld"),TAG->end ) , NULL, element_TagText);
+			wxXmlNode *element_End 			= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("end_offset"), wxString::Format(wxT("" wxLongLongFmtSpec),TAG->end ) , NULL, element_TagText);
 			new wxXmlNode( element_End, wxXML_TEXT_NODE, wxT("end_offset"), wxString::Format(wxT("%ld"),TAG->end ) , NULL, NULL);
 
-			wxXmlNode *element_Start		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("start_offset"), wxString::Format(wxT("%ld"), TAG->start ), NULL, element_End);
+			wxXmlNode *element_Start		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("start_offset"), wxString::Format(wxT("" wxLongLongFmtSpec), TAG->start ), NULL, element_End);
 			new wxXmlNode( element_Start, wxXML_TEXT_NODE, wxT("start_offset"), wxString::Format(wxT("%ld"), TAG->start ), NULL, NULL);
 			}
 		doc.SetFileEncoding( wxT("UTF-8") );
 		doc.SetRoot( node_Root );
-		return doc.Save(flnm.GetFullPath().Append(wxT(".tags")));
+		return doc.Save(flnm.GetFullPath());
 		}
 	}
 

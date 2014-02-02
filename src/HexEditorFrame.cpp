@@ -579,9 +579,11 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
 													if(wxID_OK == filediag.ShowModal()){
-														if( wxFileNameFromPath(filediag.GetPath()).Lower().EndsWith(wxT(".tags.tags")) )
-															filediag.SetPath( filediag.GetPath().RemoveLast( 4 ));
-														if( !MyHexEditor->SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
+														wxFileName flnm=wxFileNameFromPath(filediag.GetPath());
+
+														if( not flnm.GetFullName().Lower().EndsWith(wxT(".tags")) )
+															flnm.SetFullName( flnm.GetFullName() + wxT(".tags"));
+														if( !MyHexEditor->SaveTAGS( flnm ) )
 															wxMessageBox( wxString(_( "TAGs cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 														}
 													}

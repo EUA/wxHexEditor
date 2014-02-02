@@ -292,7 +292,7 @@ int wxHexCtrl::ToVisiblePosition( int InternalPosition ){	// I mean for this str
 		if( i - denied == x )
 			return ( i + y * m_Window.x );
 		}
-	wxLogError(wxString::Format(_T("Fatal error at fx ToVisiblePosition(%d)"),InternalPosition));
+	//wxLogError(wxString::Format(_T("Fatal error at fx ToVisiblePosition(%d)"),InternalPosition));
 	return 0;
 	}
 

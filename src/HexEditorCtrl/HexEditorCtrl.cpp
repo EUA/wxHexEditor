@@ -880,10 +880,10 @@ void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 
 bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 	if( MainTagArray.Count() ==  0){
-		if( wxFileName::FileName( flnm.GetFullPath() ).FileExists() )
-			wxRemoveFile( flnm.GetFullPath() );
-//		if( wxFileName::FileName( flnm.GetFullPath() << wxT(".tags") ).FileExists() )
-//			wxRemoveFile( flnm.GetFullPath() << wxT(".tags") );
+//		if( wxFileName::FileName( flnm.GetFullPath() ).FileExists() )
+//			wxRemoveFile( flnm.GetFullPath() );
+		if( wxFileName::FileName( flnm.GetFullPath() << wxT(".tags") ).FileExists() )
+			wxRemoveFile( flnm.GetFullPath() << wxT(".tags") );
 		return false;
 		}
 	else{
@@ -917,6 +917,8 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			}
 		doc.SetFileEncoding( wxT("UTF-8") );
 		doc.SetRoot( node_Root );
+		if( not flnm.GetFullName().Lower().EndsWith(wxT(".tags")) )
+			return doc.Save(flnm.GetFullPath() + wxT(".tags"));
 		return doc.Save(flnm.GetFullPath());
 		}
 	}

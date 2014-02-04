@@ -1090,7 +1090,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	
 	bSizerStopAfter->Add( spinStopCompare, 0, wxALL, 5 );
 	
-	m_staticTextHits = new wxStaticText( this, wxID_ANY, wxT("hits."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextHits = new wxStaticText( this, wxID_ANY, wxT("hits"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextHits->Wrap( -1 );
 	bSizerStopAfter->Add( m_staticTextHits, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -1108,7 +1108,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	
 	bSizerMerger->Add( spinMergeSection, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_staticTextBytes = new wxStaticText( this, wxID_ANY, wxT("bytes."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBytes = new wxStaticText( this, wxID_ANY, wxT("bytes"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextBytes->Wrap( -1 );
 	bSizerMerger->Add( m_staticTextBytes, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -1128,6 +1128,17 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	
 	
 	bSizerMain->Add( bSizerSave, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizerSave1;
+	bSizerSave1 = new wxBoxSizer( wxHORIZONTAL );
+	
+	checkConnectFiles = new wxCheckBox( this, wxID_ANY, wxT("Connect files for scrolling"), wxDefaultPosition, wxDefaultSize, 0 );
+	checkConnectFiles->SetToolTip( wxT("With this option enabled, compared files will always show same address location.") );
+	
+	bSizerSave1->Add( checkConnectFiles, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	
+	bSizerMain->Add( bSizerSave1, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerButtons;
 	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
@@ -1160,6 +1171,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	checkMergeSection->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	checkSaveResults->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	filePickSave->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::filePickSaveOnFileChanged ), NULL, this );
+	checkConnectFiles->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	btnCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	btnCompare->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 }
@@ -1175,6 +1187,7 @@ CompareDialogGui::~CompareDialogGui()
 	checkMergeSection->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	checkSaveResults->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	filePickSave->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( CompareDialogGui::filePickSaveOnFileChanged ), NULL, this );
+	checkConnectFiles->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	btnCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	btnCompare->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CompareDialogGui::EventHandler ), NULL, this );
 	
@@ -1769,7 +1782,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizerTags;
 	bSizerTags = new wxBoxSizer( wxVERTICAL );
 	
-	chkAutoShowTagPanel = new wxCheckBox( this, wxID_ANY, wxT("Auto show tag panel if tags detected."), wxDefaultPosition, wxDefaultSize, 0 );
+	chkAutoShowTagPanel = new wxCheckBox( this, wxID_ANY, wxT("Auto show tag panel if tags detected"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkAutoShowTagPanel->SetValue(true); 
 	bSizerTags->Add( chkAutoShowTagPanel, 0, wxALL, 5 );
 	

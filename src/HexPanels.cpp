@@ -345,8 +345,11 @@ void ComparePanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
 	if( MyHexEditor != NULL )
-		if( MyHexEditor->CompareArray.Count() >= selection )
+		if( MyHexEditor->CompareArray.Count() >= selection ){
 			MyHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start , true);
+			//MyHexEditor->ComparatorHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start , true);
+			}
+
 	}
 
 void DisassemblerPanel::Set( wxMemoryBuffer buff ){

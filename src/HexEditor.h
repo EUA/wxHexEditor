@@ -64,9 +64,10 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		friend class scrollthread;
 		friend class ChecksumDialog;
 		//friend class FindDialog;
-		void Goto( int64_t goto_offset=-1 , bool set_focus=false);
+		HexEditor *ComparatorHexEditor;
+		void Goto( int64_t goto_offset=-1, bool set_focus=false, bool from_comparator=false );
 		void OnOffsetScroll(wxScrollEvent &event);
-		void LoadFromOffset(int64_t position, bool cursor_reset = false, bool paint = true );	//loads file from position
+		void LoadFromOffset(int64_t position, bool cursor_reset=false, bool paint=true, bool from_comparator=false );	//loads file from position
 		void Reload();	//loads file from current page offset; refresh
 		void ReDraw();
 		void ThreadPaint(wxCommandEvent& event); //This class created for remove scroolthread update functions with MutexGui Lock mechanism.
@@ -131,7 +132,7 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 
 		void UpdateCursorLocation( bool force=false );
 	protected:
-		void SetLocalHexInsertionPoint( int hex_location );
+		void SetLocalHexInsertionPoint( int hex_location, bool from_comparator=false );
 		void OnKeyboardChar(wxKeyEvent& event);
 		void OnKeyboardInput(wxKeyEvent& event);
 		void OnKeyboardSelector( wxKeyEvent& event );

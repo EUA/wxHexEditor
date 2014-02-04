@@ -346,6 +346,7 @@ class CompareDialogGui : public wxDialog
 		wxStaticText* m_staticTextBytes;
 		wxCheckBox* checkSaveResults;
 		wxFilePickerCtrl* filePickSave;
+		wxCheckBox* checkConnectFiles;
 		wxButton* btnCancel;
 		wxButton* btnCompare;
 		

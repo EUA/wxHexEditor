@@ -124,7 +124,7 @@ class CompareDialog : public CompareDialogGui{
 		~CompareDialog();
 
 	private:
-		enum{OPT_CMP_SEARCH_DIFF=0x01,OPT_CMP_STOP_AFTER=0x02, OPT_CMP_MERGE_SECTION=0x04, OPT_CMP_SAVE=0x8};
+		enum{OPT_CMP_SEARCH_DIFF=0x01,OPT_CMP_STOP_AFTER=0x02, OPT_CMP_MERGE_SECTION=0x04, OPT_CMP_SAVE=0x8, OPT_CMP_CONNECT=0x10};
 		class HexEditorFrame* parent;
 		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
       void EventHandler( wxCommandEvent& event );

@@ -44,7 +44,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 	infopanel(infopanel_),
 	tagpanel(tagpanel_),
 	dasmpanel(dasmpanel_) {
-
+	ComparatorHexEditor=NULL;
 	// Here, code praying to the GOD for protecting our open file from wxHexEditor's bugs and other things.
 	// This is really crucial step! Be adviced to not remove it, even if you don't believer.
 	printf("Rahman ve Rahim olan Allah'ın adıyla.\n");
@@ -62,6 +62,11 @@ HexEditor::HexEditor(	wxWindow* parent,
 HexEditor::~HexEditor() {
 	//FileClose();
 	Dynamic_Disconnector();
+
+	if(ComparatorHexEditor!=NULL){
+		ComparatorHexEditor->ComparatorHexEditor=NULL;
+		ComparatorHexEditor=NULL;
+		}
 
 	// Free resources
 	delete copy_mark;
@@ -477,7 +482,11 @@ void HexEditor::DoRedo( void ) {
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
+void HexEditor::Goto( int64_t cursor_offset, bool set_focus, bool from_comparator ) {
+	//For file compare mode
+	if(ComparatorHexEditor!=NULL and not from_comparator)
+		ComparatorHexEditor->Goto(cursor_offset, false, true);
+
 	if( cursor_offset == -1 ) {
 		LoadFromOffset( page_offset, false, true );	//Refresh
 		return;
@@ -572,10 +581,14 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 		wxYieldIfNeeded();
 	}
 
-void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint) {
+void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint, bool from_comparator) {
 #ifdef _DEBUG_FILE_
 	std::cout << "\nLoadFromOffset() : " << position << std::endl;
 #endif
+	//For file compare mode
+	if(ComparatorHexEditor!=NULL and not from_comparator)
+		ComparatorHexEditor->LoadFromOffset(position, cursor_reset, true, true);
+
 	myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
@@ -591,7 +604,7 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint) 
 void HexEditor::ThreadPaint(wxCommandEvent& event){
 	if( event.GetId()==THREAD_UPDATE_EVENT){
 		LoadFromOffset( page_offset, false, false );
-	//	SetLocalHexInsertionPoint(cursor);
+//		SetLocalHexInsertionPoint(cursor);
 		Selector();
 		PaintSelection();
 		UpdateCursorLocation( true );
@@ -941,7 +954,10 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-void HexEditor::SetLocalHexInsertionPoint( int hex_location ) {
+void HexEditor::SetLocalHexInsertionPoint( int hex_location, bool from_comparator ) {
+	if(ComparatorHexEditor!=NULL and not from_comparator)
+		ComparatorHexEditor->SetLocalHexInsertionPoint( hex_location, true);
+
 	HexEditorCtrl::SetLocalHexInsertionPoint( hex_location );
 	UpdateCursorLocation();
 	}

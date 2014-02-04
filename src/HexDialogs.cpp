@@ -972,12 +972,11 @@ void FindDialog::OnFindAll( bool internal ){
 		OSXwxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 		}
 	else {
-		//Is selection needed to show first tag?
-		parent->Reload(); //To highlighting current screen
-		parent->UpdateCursorLocation( parent->HighlightArray.Item(0)->start );
+		parent->Goto( parent->HighlightArray.Item(0)->start );
 
 		wxUpdateUIEvent eventx( SEARCH_CHANGE_EVENT );
-		parent->GetEventHandler()->ProcessEvent( eventx );
+		wxPostEvent(parent, eventx );
+
 		if( not internal ){
 			this->Hide();
 			OSXwxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, parent );
@@ -1317,7 +1316,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				parent->select->SetState( false );
 				parent->Reload();
 				wxUpdateUIEvent eventx( UNREDO_EVENT );
-				parent->GetEventHandler()->ProcessEvent( eventx );
+				wxPostEvent(parent, eventx );
 				return 1;
 				}
 			else{
@@ -1342,7 +1341,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 				parent->select->SetState( false );
 				parent->Reload();
 				wxUpdateUIEvent eventx( UNREDO_EVENT );
-				parent->GetEventHandler()->ProcessEvent( eventx );
+				wxPostEvent( parent, eventx);
 				return 1;
 				}
 			else{
@@ -1387,7 +1386,7 @@ void ReplaceDialog::OnReplaceAll( void ){
 		parent->Refresh();
 		this->Hide();
 		wxUpdateUIEvent eventx( UNREDO_EVENT );
-		parent->GetEventHandler()->ProcessEvent( eventx );
+		wxPostEvent( parent, eventx);
 		OSXwxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info"), wxOK, parent);
 		Destroy();
 		}
@@ -1831,9 +1830,22 @@ CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 
 		Fit();
 		}
 
+		//Not working on linux somehow???
+//	else{
+//		wxString tmp;
+//		wxConfigBase::Get()->Read( _T("CompareFile1"), &tmp );
+//		filePick1->SetLabel( tmp );
+//		filePick1->SetPath( tmp );
+//
+//		wxConfigBase::Get()->Read( _T("CompareFile2"), &tmp );
+//		filePick2->SetLabel( tmp );
+//		filePick2->SetPath( tmp );
+//		filePick2->UpdateTextCtrlFromPicker();
+//		}
+
 	int options=0;
 	wxConfigBase::Get()->Read( _T("CompareOptions"), &options );
-
+	checkConnectFiles->SetValue( options & OPT_CMP_CONNECT );
 	checkMergeSection->SetValue( options & OPT_CMP_MERGE_SECTION );
 	spinMergeSection->Enable( options & OPT_CMP_MERGE_SECTION );
 	checkStopCompare->SetValue( options & OPT_CMP_STOP_AFTER );
@@ -1866,6 +1878,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		wxMessageBox( _("File #2 is not readable."), _("Error") );
 		return false;
 		}
+
+	wxConfigBase::Get()->Write( _T("CompareFile1"), fl1.GetFullPath() );
+	wxConfigBase::Get()->Write( _T("CompareFile2"), fl2.GetFullPath() );
+   wxConfigBase::Get()->Flush();
 //	if( flsave not_eq wxEmptyString ){
 //		if(not flsave.IsFileWritable() )
 //			wxMessageBox( _("Error, Save File is not writeable.") );
@@ -2003,6 +2019,12 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 	HexEditor* hexeditor1 = parent->OpenFile( fl1 );
 	HexEditor* hexeditor2 = parent->OpenFile( fl2 );
+
+	if(checkConnectFiles->GetValue()){
+		hexeditor1->ComparatorHexEditor=hexeditor2;
+		hexeditor2->ComparatorHexEditor=hexeditor1;
+		}
+
 	if(hexeditor1 != NULL and hexeditor2 != NULL){
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
 			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
@@ -2088,6 +2110,7 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 		filePickSave->Enable(event.IsChecked());
 
 	int options=0;
+	options|=checkConnectFiles->GetValue() ? OPT_CMP_CONNECT : 0;
 	options|=checkMergeSection->GetValue() ? OPT_CMP_MERGE_SECTION : 0;
 	options|=checkStopCompare->GetValue() ? OPT_CMP_STOP_AFTER : 0;
 	options|=checkSaveResults->GetValue() ? OPT_CMP_SAVE : 0;
@@ -2569,7 +2592,7 @@ void PreferencesDialog::SpinEventHandler( wxSpinEvent& event ) {
 	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
    wxConfigBase::Get()->Flush();
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
-	GetParent()->GetEventHandler()->ProcessEvent( eventx );
+	wxPostEvent( GetParent(), eventx );
 	}
 
 void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
@@ -2617,7 +2640,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
    wxConfigBase::Get()->Flush();
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
-	GetParent()->GetEventHandler()->ProcessEvent( eventx );
+	wxPostEvent( GetParent(), eventx );
 	}
 
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {
@@ -2644,7 +2667,7 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    wxConfigBase::Get()->Flush();
 
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
-	GetParent()->GetEventHandler()->ProcessEvent( eventx );
+	wxPostEvent( GetParent(), eventx );
    Close();
    }
 
@@ -2658,7 +2681,7 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 		wxConfigBase::Get()->Flush();
 
 		wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
-		GetParent()->GetEventHandler()->ProcessEvent( eventx );
+		wxPostEvent( GetParent(), eventx );
 		Close();
 		}
 	}

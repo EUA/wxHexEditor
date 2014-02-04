@@ -35,6 +35,9 @@
 #include <wx/msgdlg.h>
 #include <wx/dynarray.h>
 #include <stdint.h>
+#if wxCHECK_VERSION( 2,9,0 )
+	#include <wx/fswatcher.h>
+#endif
 
 #ifdef __WXMAC__
 	#include <sys/disk.h>
@@ -107,7 +110,11 @@ class DiffNode{
 
 WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
-class FAL : private wxFile{
+class FAL : private wxFile
+#if wxCHECK_VERSION( 2,9,0 )
+				,public wxFileSystemWatcher
+#endif
+				{
 	public:
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, ForcedReadOnly, AccessInvalid };
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);

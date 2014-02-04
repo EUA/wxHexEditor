@@ -100,6 +100,9 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	ProcessID=-1;
 	get_ptr = put_ptr = 0;
 	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
+#if wxCHECK_VERSION( 2,9,0 )
+	::wxFileSystemWatcher::Add( myfilename.GetFullPath(), wxFSW_EVENT_MODIFY );
+#endif
 	}
 
 #ifdef __WXMSW__

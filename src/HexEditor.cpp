@@ -74,7 +74,6 @@ HexEditor::~HexEditor() {
 
 void HexEditor::Dynamic_Connector() {
 	Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( HexEditor::ThreadPaint ), NULL, this );
-//   Bind(THREAD_UPDATE_EVENT, &HexEditor::ThreadPaint, this);
 
 	hex_ctrl ->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
@@ -268,6 +267,9 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
 		LoadFromOffset(0, true);
 		SetLocalHexInsertionPoint(0);
+#if wxCHECK_VERSION( 2,9,0 )
+		myfile->Connect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
+#endif
 		return true;
 		}
 	else {
@@ -391,6 +393,9 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	}
 
 bool HexEditor::FileClose( bool WithoutChange ) {
+#if wxCHECK_VERSION( 2,9,0 )
+	myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
+#endif
 	if( myfile != NULL ) {
 		if( myfile->IsChanged() and not WithoutChange) {
 			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
@@ -616,6 +621,13 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 		event.Skip(true);
 		}
 	}
+
+#if wxCHECK_VERSION( 2,9,0 )
+void HexEditor::OnFileModify(wxFileSystemWatcherEvent &event){
+	if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
+		Reload();
+	}
+#endif
 
 void HexEditor::Reload( void ) {
 	myfile->Seek(page_offset, wxFromStart);

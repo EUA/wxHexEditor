@@ -146,7 +146,9 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
-
+#if wxCHECK_VERSION( 2,9,0 )
+		void OnFileModify( wxFileSystemWatcherEvent& event );
+#endif
 		void ShowContextMenu( const wxMouseEvent& event );
 		void ScrollNoThread( int speed );
 

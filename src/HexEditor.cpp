@@ -487,11 +487,7 @@ void HexEditor::DoRedo( void ) {
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-void HexEditor::Goto( int64_t cursor_offset, bool set_focus, bool from_comparator ) {
-	//For file compare mode
-	if(ComparatorHexEditor!=NULL and not from_comparator)
-		ComparatorHexEditor->Goto(cursor_offset, false, true);
-
+void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
 	if( cursor_offset == -1 ) {
 		LoadFromOffset( page_offset, false, true );	//Refresh
 		return;
@@ -630,11 +626,12 @@ void HexEditor::OnFileModify(wxFileSystemWatcherEvent &event){
 #endif
 
 void HexEditor::Reload( void ) {
-	myfile->Seek(page_offset, wxFromStart);
-	char *buffer = new char[ ByteCapacity() ];
-	int readedbytes = myfile->Read(buffer, ByteCapacity());
-	ReadFromBuffer( page_offset, readedbytes, buffer, false, true );
-	delete [] buffer;
+	LoadFromOffset( page_offset, false, true, false );
+//	myfile->Seek(page_offset, wxFromStart);
+//	char *buffer = new char[ ByteCapacity() ];
+//	int readedbytes = myfile->Read(buffer, ByteCapacity());
+//	ReadFromBuffer( page_offset, readedbytes, buffer, false, true );
+//	delete [] buffer;
 	}
 
 void HexEditor::ReDraw(){

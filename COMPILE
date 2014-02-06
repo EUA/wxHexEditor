@@ -1,43 +1,57 @@
-For Linux, be sure about you are installed wxWidgets.
-Than extract the wxHexEditor
+-----------------------------------------------------
+LINUX
+-----------------------------------------------------
+For Linux, make sure you have installed wxWidgets.
+Use this command for ubuntu like distros:
+
+apt-get install libwxgtk<version>-dev
+
+or use your need to use this one for distros like OpenSuSE...
+
+zypper in wxWidgets-devel
+
+Then extract the wxHexEditor:
+
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 make OPTFLAGS="-fopenmp"
 
 -----------------------------------------------------
-
-For Windows, I use Linux to cross-compile Windows executable via MinGW.
+WINDOWS
+-----------------------------------------------------
+For Windows, I use Linux to cross-compile a Windows executable via MinGW.
 This is how I compile.
-Firstly I compile wxWidgets library with cross compiler:
+First, I compile the wxWidgets library with a cross compiler:
 
-tar xvf wxWidgets-2.8.12.tar.bz2
+tar xvf wxWidgets-<version>.tar.bz2
 cd wxWidgets
 mkdir release
 cd release
 ../configure --enable-{monolithic,static,unicode} --disable-{debug,shared} --host=i686-w64-mingw32
 make
 
-Than extract the wxHexEditor
+Then I extract the wxHexEditor:
 
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
 
 -----------------------------------------------------
+OS X
+-----------------------------------------------------
+For OS X, you need to compile wxWidgets with:
 
-For MacOSX, you need to compile wxWidgets via:
-
-tar xvf wxWidgets-2.8.12.tar.bz2
+tar xvf wxWidgets-<version>.tar.bz2
 cd wxWidgets
 mkdir release
 cd release
 arch_flags="-arch i386"
 ../configure CFLAGS="$arch_flags" CXXFLAGS="$arch_flags" CPPFLAGS="$arch_flags" LDFLAGS="$arch_flags" OBJCFLAGS="$arch_flags" OBJCXXFLAGS="$arch_flags" --with-macosx-version-min=10.6 --with-macosx-sdk=/Volumes/Xcode/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/ --enable-monolithic --enable-static --disable-debug --disable-shared --with-regex=builtin --with-expat=builtin --enable-unicode
 
-than extract the wxHexEditor as: 
+Then extract the wxHexEditor as: 
 
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 make mac WXCONFIG=<wx-config path> OPTFLAGS="-arch i386"
 
-Thats all.
+That's all.

@@ -133,6 +133,11 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	Move(x, y);
 	SetClientSize(w, h);
 
+	//	int startup_number=1;
+//	pConfig->Read(_T("Startup"), &startup_number, 1);
+//	pConfig->Write(_T("Startup"), &startup_number, 1);
+//
+
 	bool fullScreen;
 	pConfig->Read(_T("ScreenFullScreen"), &fullScreen, false);
 	Maximize(fullScreen);

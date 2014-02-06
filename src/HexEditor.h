@@ -65,7 +65,7 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		friend class ChecksumDialog;
 		//friend class FindDialog;
 		HexEditor *ComparatorHexEditor;
-		void Goto( int64_t goto_offset=-1, bool set_focus=false, bool from_comparator=false );
+		void Goto( int64_t goto_offset=-1, bool set_focus=false );
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset=false, bool paint=true, bool from_comparator=false );	//loads file from position
 		void Reload();	//loads file from current page offset; refresh

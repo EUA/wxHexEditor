@@ -119,7 +119,7 @@ class FAL : private wxFile
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, ForcedReadOnly, AccessInvalid };
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		~FAL();
-//		friend class FindDialog;
+
 		wxString oldOwner;
 
 		bool SetAccessMode( FileAccessMode fam );

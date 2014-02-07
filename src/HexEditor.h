@@ -63,7 +63,7 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		~HexEditor( void );
 		friend class scrollthread;
 		friend class ChecksumDialog;
-		//friend class FindDialog;
+
 		HexEditor *ComparatorHexEditor;
 		void Goto( int64_t goto_offset=-1, bool set_focus=false );
 		void OnOffsetScroll(wxScrollEvent &event);

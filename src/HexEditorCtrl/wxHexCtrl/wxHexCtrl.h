@@ -44,11 +44,13 @@ inline wxChar CP473toUnicode( unsigned char ch );
 inline wxString CP473toUnicode( wxString& line );
 int atoh( const char );
 
-WX_DEFINE_ARRAY(TagElement *, ArrayOfTAG);
+WX_DEFINE_ARRAY(TagElement*, ArrayOfTAG);
+
 class wxHexCtrl : public wxScrolledWindow{
 	public:
 //		wxHexCtrl() { }
 		wxHexCtrl( wxWindow *parent ){};
+
 		wxHexCtrl( wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,

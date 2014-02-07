@@ -49,6 +49,7 @@ class TagElementData{
 
 //class TagElement:public wxPopupWindow{
 //class TagElement:public TagElementData{
+
 class TagElement{
 	public:
 		TagElement();
@@ -70,14 +71,16 @@ class TagElement{
 		void print(void);
 		wxColour SoftColour(wxColour);
 		static int TagCompare(TagElement **first, TagElement **second);
-//		bool operator<( TagElement a, TagElement b){ return a.start < b.start }
-//		bool operator>( TagElement a, TagElement b){ return a.start > b.start }
+//		bool operator<( TagElement a ){ return start < a.start; }
+//		bool operator>( TagElement a ){ return start > a.start; }
 
 //		void OnKillFocus( wxFocusEvent& event );
 #ifndef __WXMAC__
 		wxPopupWindow *wxP;
 #endif	//wxPopupWindows is not yet implemented in MacOSX
 	};
+
+int TagElementSort( TagElement **a, TagElement **b );
 
 class TagDialog : public TagDialogGui{
 	public:

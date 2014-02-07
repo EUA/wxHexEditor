@@ -894,6 +894,7 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 		wxXmlProperty *prop_filename = new wxXmlProperty( wxT("path"), flnm.GetFullPath(), NULL);
 		wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), flnm.GetFullPath(), prop_filename , NULL);
 
+		MainTagArray.Sort(TagElementSort);
 		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 			TagElement *TAG = MainTagArray.Item(i);
 

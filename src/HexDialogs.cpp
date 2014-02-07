@@ -2018,7 +2018,8 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	fs.Close();
 
 	HexEditor* hexeditor1 = parent->OpenFile( fl1 );
-	HexEditor* hexeditor2 = parent->OpenFile( fl2 );
+	HexEditor* hexeditor2 = parent->OpenFile( fl2 , true);
+//	parent->MyNotebook.Split(-1, wxRIGHT); //Not available due protected wxNotepad. Changed OpenFile function instead.
 
 	if(checkConnectFiles->GetValue()){
 		hexeditor1->ComparatorHexEditor=hexeditor2;

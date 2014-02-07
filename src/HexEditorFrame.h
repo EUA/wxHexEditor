@@ -64,7 +64,7 @@ class HexEditorFrame : public HexEditorGui {
 		HexEditorFrame(	wxWindow* parent, wxWindowID id = wxID_ANY );
 		~HexEditorFrame();
 		void TagHideAll();
-		class HexEditor* OpenFile(wxFileName flname);
+		class HexEditor* OpenFile(wxFileName flname, bool openAtRight=false);
 
 		class HexEditor* GetActiveHexEditor(void);
 

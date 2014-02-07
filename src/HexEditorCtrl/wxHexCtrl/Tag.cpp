@@ -23,6 +23,9 @@
 
 #include "Tag.h"
 #include "wxHexCtrl.h"
+int TagElementSort( TagElement **a, TagElement **b ){
+	return (*a)->start - (*b)->start;
+	}
 TagElement::TagElement(){
 	visible = false;
 	start = end = 0;

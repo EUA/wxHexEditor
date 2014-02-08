@@ -73,7 +73,7 @@ class FindDialog : public FindDialogGui{
 		void OnChar( wxKeyEvent& event );
 virtual void EventHandler( wxCommandEvent& event );
 		bool OnFindEvents( wxCommandEvent& event );
-		char UTF8SpeedHack[2];
+		char UTF8SpeedHackChrs[2];
 
 	protected:
 		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2, SEARCH_UTF8=0x4, SEARCH_UTF16=0x8,

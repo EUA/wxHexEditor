@@ -337,8 +337,8 @@ bool FindDialog::SearchAtBufferUnitTest(void){
 		//bzero(buff, MB);
 		unsigned sz = i + strlen(src) > STEP ? STEP-i : strlen(src);
 		memcpy( buff+i, src, sz );
-		UTF8SpeedHack[0]=toupper(src[0]);
-		UTF8SpeedHack[1]=toupper(src[1]);
+		UTF8SpeedHackChrs[0]=toupper(src[0]);
+		UTF8SpeedHackChrs[1]=toupper(src[1]);
 		//Manully change OPTIONS for testing!
 		int f = SearchAtBuffer( buff, STEP, src, strlen(src), SEARCH_TEXT|SEARCH_MATCHCASE );
 		//int f = SearchAtBufferMultiThread( buff, STEP, src, strlen(src), SEARCH_TEXT);
@@ -544,9 +544,8 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 	#endif
 	wxMemoryBuffer textsrc;
 	if(not (options & SEARCH_MATCHCASE)){
+		//!Compare with lowered characters
 		target = target.Lower();
-		//!Bad speed hack here.
-		UTF8SpeedHack[0]=target.Upper()[0];
 		}
 
 	if( target.IsAscii() ){
@@ -561,11 +560,13 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		while(b[i++] not_eq 0);					//Find stream size
 		textsrc.AppendData( a , i-1 );//-1 for discard null termination char
 
-		//!!Ugly hack here.
+		///Since we cannot convert whole buffer to UTF8 for issuing upper() function on it,
+		///we just need "search string" upper & lower versions.
+		// First 2 byte will be searched and if matches, full comparison will made.
 		if(not (options & SEARCH_MATCHCASE)){//If non-matchcase operation
 			wxCharBuffer a = target.Upper().ToUTF8().data(); 	//Calculate Uppercase variant of first character
-			UTF8SpeedHack[0]=a.data()[0];								//This will be huge speed up but needed to handled differently on
-			UTF8SpeedHack[1]=a.data()[1];								//SearchAtBuffer stack!
+			UTF8SpeedHackChrs[0]=a.data()[0];						//This will be huge speed up but needed to handled differently on
+			UTF8SpeedHackChrs[1]=a.data()[1];						//SearchAtBuffer stack!
 			}
 		return FindBinary( textsrc, start_from, options|SEARCH_UTF8 );
 		}
@@ -611,6 +612,7 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	return false;
 	}
 
+#define _MULTI_SEARCH_
 // TODO (death#1#): FindDialog::FindBinaryUnitTest()
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
 	#ifdef _DEBUG_
@@ -648,9 +650,188 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		processfootprint = parent->ProcessRAM_GetFootPrint();
 	uint64_t totalread=0;
 
+	if(( options & SEARCH_FINDALL ) or not (options & SEARCH_BACKWARDS) ){
+		if( options & SEARCH_FINDALL )
+			current_offset=0;
+		//Search step 1: From cursor to file end.
 
-// TODO (death#1#): MemorySearch Backward.
-	if( options & SEARCH_BACKWARDS and not ( options & SEARCH_FINDALL ) ){ //SEARCH_FINDALL forces Forward searching
+#ifdef _MULTI_SEARCH_
+		std::vector< int > partial_results;
+		std::vector< uint64_t > results;
+#endif // _MULTI_SEARCH_
+		do{
+			//Skipping unmapped regions if ProcessRAM operation
+			if( findfile->IsProcess() ){
+				search_step=BlockSz;
+				//if( SkipRAM( current_offset, target.GetDataLen(), search_step ) ) //SkipRAM adjust current_offset and search_step
+				//	break;
+				uint64_t map_start,map_end;
+				if( not parent->ProcessRAM_FindMap( current_offset, map_start, map_end ) ){
+					#ifdef _DEBUG_
+					printf( "Skipping from: 0x%llX to", current_offset) ;
+					#endif
+					current_offset = parent->ProcessRAM_FindNextMap(current_offset);
+					#ifdef _DEBUG_
+					printf( "0x%llX\n", current_offset) ;
+					#endif
+					if( current_offset == 0 ) break;
+					}
+/*
+				if( map_end - current_offset < search_step )
+					search_step = map_end - current_offset;
+
+				if( search_step < search_size){
+					#ifdef _DEBUG_
+					std::cout << "Skipping due StepSize: " << current_offset <<  " to " ;
+					#endif
+					current_offset = parent->ProcessRAM_FindNextMap(current_offset);
+					#ifdef _DEBUG_
+					std::cout << current_offset << std::ios::dec << std::endl;
+					#endif
+					}
+*/
+				}
+
+			findfile->Seek( current_offset, wxFromStart );
+			readed = findfile->Read( buffer , search_step );
+			//read_speed += readed;
+
+			#ifdef _DEBUG_
+				std::cout << "Readed: " << readed << std::endl;
+				printf( "FindBinary() FORWARD1 0x%llX - 0x%llX\n" , current_offset , current_offset+search_step);
+			#endif
+
+#ifndef _MULTI_SEARCH_
+			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+			if(found >= 0){//We found something
+				if( options & SEARCH_FINDALL ){
+					TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+					parent->HighlightArray.Add(mytag);
+					current_offset += found+target.GetDataLen(); //Unprocessed bytes remaining at buffer!!!
+					readed=search_step; //to stay in loop
+					}
+				else{
+					delete [] buffer;
+					return current_offset+found;
+					}
+				}
+			else{
+				int z = readed - target.GetDataLen() -1;
+				current_offset += (z <= 0 ? 1 : z); //for unprocessed bytes
+				}
+#else
+				partial_results.clear();
+				found = MultiSearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
+				if( partial_results.size() > 0 ){// Houston, We found something!
+					if( options & SEARCH_FINDALL ){
+						for(int i=0 ; i < partial_results.size() ; i++ )
+							results.push_back( partial_results[i] + current_offset );
+						current_offset +=  partial_results.back()+target.GetDataLen();
+					}
+					//If only searching one result, throw first one.
+					else{
+						delete [] buffer;
+						return current_offset+partial_results.front();
+						}
+				}
+				else{
+
+					int z = readed - target.GetDataLen() -1;
+					current_offset += (z <= 0 ? 1 : z); //for unprocessed bytes
+					}
+#endif
+
+			///Progress dialog and while loop from now...
+			time(&te);
+			if(ts != te ){
+					ts=te;
+					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*(current_offset-read_speed_offset)/MB) + wxT("\n");
+					read_speed_offset = current_offset;
+					}
+
+			totalread += readed; // We need this on step 2
+			if( findfile->IsProcess() ){
+				#ifdef _DEBUG_
+				printf( "ProcessRAM Virtual Offset: 0x%llX, \t Offset:0x%llX,  \tFootPrint: 0x%llX\n", parent->ProcessRAM_GetVirtualOffset( current_offset ),
+								current_offset, processfootprint);
+				#endif
+				percentage = parent->ProcessRAM_GetVirtualOffset( current_offset )*1000/processfootprint;
+				}
+
+			else
+				percentage = ( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ))
+													? (current_offset-from)*1000/(parent->FileLength())
+													: (current_offset-from)*1000/(parent->FileLength()-from+1);//+1 to avoid error
+
+			if( ! progress_gauge.Update( percentage, emsg))		// update progress and break on abort
+				break;
+
+			}while(readed == search_step); //indicate also file end.
+
+#ifdef _MULTI_SEARCH_
+			//Create tags from results and put them into HighlightArray
+			for(int i=0 ; i < results.size() and  i < 400000 ; i++ ){
+				TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+				parent->HighlightArray.Add(mytag);
+				}
+
+			partial_results.clear();
+			results.clear();
+
+			//WX_CLEAR_ARRAY( parent->HighlightArray )
+			//parent->HighlightArray.Shrink();
+#endif // _NORMAL_SEARCH_
+
+		//Search step 2: From start to "from" location.
+		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
+			current_offset = 0;
+			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
+			#ifdef _DEBUG_
+				std::cout << "FindBinary() FORWARD2 " << current_offset << "-" << current_offset+search_step<< std::endl;
+			#endif
+			do{
+				if( findfile->IsProcess() ){
+					search_step=BlockSz;
+					//if( SkipRAM( current_offset, target.GetDataLen(), search_step ) )
+					//	break;
+					}
+				findfile->Seek(current_offset, wxFromStart );
+				readed = findfile->Read( buffer , search_step );
+				read_speed += readed;
+				if( readed + current_offset > from )
+					search_step = readed + current_offset - from - 1;
+				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+				if(found >= 0){
+					delete [] buffer;
+					return current_offset+found;
+					}
+				else{
+					int z= readed - target.GetDataLen() -1;
+					current_offset += (z <= 0 ? 1 : z); //Unprocessed bytes
+					}
+
+				time(&te);
+				if(ts != te ){
+						ts=te;
+						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
+						read_speed=0;
+						}
+
+				totalread += readed;
+				if( findfile->IsProcess() )
+					percentage = totalread*1000 / processfootprint;
+				else
+					percentage = (current_offset+parent->FileLength()-from)*1000/parent->FileLength();
+
+				if( ! progress_gauge.Update( percentage, emsg))	// update progress and break on abort
+					break;
+
+				}while(current_offset + readed < from); //Search until cursor
+			}
+		}
+
+	// TODO (death#1#): MemorySearch Backward.
+	else{ //SEARCH_FINDALL forces Forward searching
 		//BACKWARD SEARCH!
 		uint64_t current_offset = from;
 		uint64_t backward_offset = current_offset;
@@ -753,182 +934,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				}while( current_offset >= from );
 			}
 		}
-	else{
-		if( options & SEARCH_FINDALL )
-			current_offset=0;
-		//Search step 1: From cursor to file end.
-#define _MULTI_SEARCH_
-#ifdef _MULTI_SEARCH_
-		std::vector< int > partial_results;
-		std::vector< uint64_t > results;
-#endif // _MULTI_SEARCH_
-		do{
-			//Skipping unmapped regions if ProcessRAM operation
-			if( findfile->IsProcess() ){
-				search_step=BlockSz;
-				//if( SkipRAM( current_offset, target.GetDataLen(), search_step ) ) //SkipRAM adjust current_offset and search_step
-				//	break;
-				uint64_t map_start,map_end;
-				if( not parent->ProcessRAM_FindMap( current_offset, map_start, map_end ) ){
-					#ifdef _DEBUG_
-					printf( "Skipping from: 0x%llX to", current_offset) ;
-					#endif
-					current_offset = parent->ProcessRAM_FindNextMap(current_offset);
-					#ifdef _DEBUG_
-					printf( "0x%llX\n", current_offset) ;
-					#endif
-					if( current_offset == 0 ) break;
-					}
-/*
-				if( map_end - current_offset < search_step )
-					search_step = map_end - current_offset;
 
-				if( search_step < search_size){
-					#ifdef _DEBUG_
-					std::cout << "Skipping due StepSize: " << current_offset <<  " to " ;
-					#endif
-					current_offset = parent->ProcessRAM_FindNextMap(current_offset);
-					#ifdef _DEBUG_
-					std::cout << current_offset << std::ios::dec << std::endl;
-					#endif
-					}
-*/
-				}
-
-			findfile->Seek( current_offset, wxFromStart );
-			readed = findfile->Read( buffer , search_step );
-			//read_speed += readed;
-
-			#ifdef _DEBUG_
-				std::cout << "Readed: " << readed << std::endl;
-				printf( "FindBinary() FORWARD1 0x%llX - 0x%llX\n" , current_offset , current_offset+search_step);
-			#endif
-
-#ifndef _MULTI_SEARCH_
-			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
-			if(found >= 0){//We found something
-				if( options & SEARCH_FINDALL ){
-					TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
-					parent->HighlightArray.Add(mytag);
-					current_offset += found+target.GetDataLen(); //Unprocessed bytes remaining at buffer!!!
-					readed=search_step; //to stay in loop
-					}
-				else{
-					delete [] buffer;
-					return current_offset+found;
-					}
-				}
-			else{
-				int z = readed - target.GetDataLen() -1;
-				current_offset += (z <= 0 ? 1 : z); //for unprocessed bytes
-				}
-#else
-				partial_results.clear();
-				found = MultiSearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
-				if( partial_results.size() > 0 ){// Houston, We found something!
-					if( options & SEARCH_FINDALL ){
-						for(int i=0 ; i < partial_results.size() ; i++ )
-							results.push_back( partial_results[i] + current_offset );
-						current_offset +=  partial_results.back()+target.GetDataLen();
-					}
-					else{
-						delete [] buffer;
-						return current_offset+partial_results.back();
-						}
-				}
-				else{
-					int z = readed - target.GetDataLen() -1;
-					current_offset += (z <= 0 ? 1 : z); //for unprocessed bytes
-					}
-#endif
-
-
-			time(&te);
-			if(ts != te ){
-					ts=te;
-					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*(current_offset-read_speed_offset)/MB) + wxT("\n");
-					read_speed_offset = current_offset;
-					}
-
-			totalread += readed; // We need this on step 2
-			if( findfile->IsProcess() ){
-				#ifdef _DEBUG_
-				printf( "ProcessRAM Virtual Offset: 0x%llX, \t Offset:0x%llX,  \tFootPrint: 0x%llX\n", parent->ProcessRAM_GetVirtualOffset( current_offset ),
-								current_offset, processfootprint);
-				#endif
-				percentage = parent->ProcessRAM_GetVirtualOffset( current_offset )*1000/processfootprint;
-				}
-
-			else
-				percentage = ( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ))
-													? (current_offset-from)*1000/(parent->FileLength())
-													: (current_offset-from)*1000/(parent->FileLength()-from+1);//+1 to avoid error
-
-			if( ! progress_gauge.Update( percentage, emsg))		// update progress and break on abort
-				break;
-
-			}while(readed == search_step); //indicate also file end.
-
-#ifdef _MULTI_SEARCH_
-			partial_results.clear();
-			for(int i=0 ; i < results.size() and  i < 400000 ; i++ ){
-				TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
-				parent->HighlightArray.Add(mytag);
-				}
-
-			results.clear();
-
-			//WX_CLEAR_ARRAY( parent->HighlightArray )
-			//parent->HighlightArray.Shrink();
-#endif // _NORMAL_SEARCH_
-
-		//Search step 2: From start to file end.
-		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
-			current_offset = 0;
-			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
-			#ifdef _DEBUG_
-				std::cout << "FindBinary() FORWARD2 " << current_offset << "-" << current_offset+search_step<< std::endl;
-			#endif
-			do{
-				if( findfile->IsProcess() ){
-					search_step=BlockSz;
-					//if( SkipRAM( current_offset, target.GetDataLen(), search_step ) )
-					//	break;
-					}
-				findfile->Seek(current_offset, wxFromStart );
-				readed = findfile->Read( buffer , search_step );
-				read_speed += readed;
-				if( readed + current_offset > from )
-					search_step = readed + current_offset - from - 1;
-				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
-				if(found >= 0){
-					delete [] buffer;
-					return current_offset+found;
-					}
-				else{
-					int z= readed - target.GetDataLen() -1;
-					current_offset += (z <= 0 ? 1 : z); //Unprocessed bytes
-					}
-
-				time(&te);
-				if(ts != te ){
-						ts=te;
-						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
-						read_speed=0;
-						}
-
-				totalread += readed;
-				if( findfile->IsProcess() )
-					percentage = totalread*1000 / processfootprint;
-				else
-					percentage = (current_offset+parent->FileLength()-from)*1000/parent->FileLength();
-
-				if( ! progress_gauge.Update( percentage, emsg))	// update progress and break on abort
-					break;
-
-				}while(current_offset + readed < from); //Search until cursor
-			}
-		}
 	delete [] buffer;
 	return NANINT;
 	}
@@ -949,12 +955,17 @@ void FindDialog::OnFindAll( bool internal ){
 		options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 		options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
 
+		///FindAll discards SEARCH_BACKWARDS and SEARCH_WRAPAROUND options.
+		FindText( m_comboBoxSearch->GetValue(), 0, options );
+
+		/*
 		if( options & SEARCH_WRAPAROUND )
 			FindText( m_comboBoxSearch->GetValue(), 0, options );
 		else if( options & SEARCH_BACKWARDS )
 			FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset() , options );
 		else
 			FindText( m_comboBoxSearch->GetValue(), parent->CursorOffset()+1 , options );
+		*/
 		}
 
 	//Hexadecimal / Binary Search
@@ -1033,100 +1044,101 @@ inline int FindDialog::SearchAtBufferMultiThread( char *bfr, int bfr_size, char*
 inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned options, std::vector<int> *ret_ptr ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
 	if( bfr_size < search_size )
 		return -1;
-/*
+
 	///SEARCH_FINDALL operation supersedes SEARCH_BACKWARDS
 
-	///*TODO*UTF with no matched case handled here !!!SLOW!!!
-	if(options & SEARCH_UTF8 and options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
-		//!!!DIRTY HACK HANDLING HERE
-		/// Our "search" is now in "searchSEARCH" format.
-		/// Compare code twice and viola!
-
+	///UTF with no matched case handled here !!!SLOW!!!
+	if((options & SEARCH_UTF8) and (options & SEARCH_TEXT) and not (options & SEARCH_MATCHCASE) ){
+		//!!!UTF8 Search Speed Hack handling here!!!
 		// TODO (death#1#): Have doubts if thish lead Segmentation fault or works OK every time? Need unit test for this fx
 		//For UTF2, search_size must be > 2. Than, we are in the safe! :)
 		if(1){
 			wxString ucode;
 			wxCharBuffer ubuf;
-			if( options & SEARCH_BACKWARDS and not (options & SEARCH_FINDALL)){ //Backward Search!
-				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
+
+			if( (options & SEARCH_FINDALL) or not (options & SEARCH_BACKWARDS) )
+				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
+					//Compare buffer's first and second bytes with search(lower version) and UTF8SpeedHackChrs (upper version)
 					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHack[0] and bfr[i+1]==UTF8SpeedHack[1] )  // Safe due UTF8??
-						){//if match found
+						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+						){
+						//Partial match found!
+						//Now generate UTF8 Lower binary from buffer for full comparison.
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
-							return i;
+							ret_ptr->push_back(i);
 						}
 					}
-				}
-			else
-				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
+			else //Backward Search!
+				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
 					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHack[0] and bfr[i+1]==UTF8SpeedHack[1] )  // Safe due UTF8??
-						){//if match found
+						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+						){
+						//Partial match found!
+						//Now generate UTF8 Lower binary from buffer for full comparison.
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
-							return i;
+							ret_ptr->push_back(i);
 						}
 					}
 			}
 		else{//Old and deadly slow code
 			wxString ucode;
 			wxCharBuffer ubuf;
-			if(( options & SEARCH_BACKWARDS) and not (options & SEARCH_FINDALL)) //Backward Search!
-				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					ucode = wxString::FromUTF8(bfr+i, search_size);
-					ubuf = ucode.Lower().ToUTF8();
-					if(! memcmp( ubuf, search, search_size ))	//if match found
-						return i;
-					}
-			else //Normal Operation
+			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Backward Search!
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
-						return i;
+						ret_ptr->push_back(i);
+					}
+			else //Backward Search!
+				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
+					ucode = wxString::FromUTF8(bfr+i, search_size);
+					ubuf = ucode.Lower().ToUTF8();
+					if(! memcmp( ubuf, search, search_size ))	//if match found
+						ret_ptr->push_back(i);
 					}
 			}
 		return -1;
 		}
 
-	///*TODO*
-	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
+	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE)){
 		if(1){//Speedy code
 			//Search at no match case ASCII handled here
 			///Search text already lowered at FindText()
 //			char topSearch[search_size];
 //			for( int i = 0 ; i < search_size; i++)
 //				topSearch[i]=tolower(search[i]);
-			if( options & SEARCH_BACKWARDS and not (options & SEARCH_FINDALL)) //Backward Search!
-				for( int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHack[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHack[1] ) //You cant know if search_size >= 2
+			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Normal Operation
+				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
+					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
+						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
 						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
 							bfr[j]=tolower(bfr[j]);
 						if(! memcmp( bfr+i, search, search_size ))	//if match found
-							return i;
+							ret_ptr->push_back(i);
 						}
 					}
-			else //Normal Operation
-				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHack[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHack[1] ) //You cant know if search_size >= 2
+			else //Backward Search!
+				for( int i=bfr_size - search_size ; i >= 0 ; i-- ){
+					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
+						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
 						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
 							bfr[j]=tolower(bfr[j]);
 						if(! memcmp( bfr+i, search, search_size ))	//if match found
-							return i;
+							ret_ptr->push_back(i);
 						}
 					}
 			return -1;
 			}
-		else{	//Make buffer lower for comparing with standard comparison loop.
+		else{	//Make buffer lower for comparing with standard HEX comparison loop.
 			///Search text already lowered at FindText()
 //			for( int i = 0 ; i < search_size; i++)
 //				search[i]=tolower(search[i]);
@@ -1135,55 +1147,65 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 			//#pragma omp parallel for schedule(static)// num_threads(4)
 			for( int i = 0 ; i < bfr_size; i++)
 				bfr[i]=tolower(bfr[i]);
+			//code goes to std hex comparison...
 			}
 		}
 
-	///*TODO*Search at buffer
-	if( options & SEARCH_BACKWARDS and not (options & SEARCH_FINDALL) ){ //Backward Search!
+	//Search as HEX
+	if((options & SEARCH_FINDALL) or not(options & SEARCH_BACKWARDS)){
+		//#pragma omp parallel for schedule(static)
+		for(int i=0 ; i <= bfr_size - search_size ; i++ )
+			if( bfr[i] == search[0] )
+				if(! memcmp( bfr+i, search, search_size ))	//if match found
+					ret_ptr->push_back(i);
+		}
+	else{ //Backward Search!
 		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					return i;
-		}
-	else{
-		//#pragma omp parallel for schedule(static)
-*/
-	int ret = -1;
-		for(int i=0 ; i <= bfr_size - search_size ; i++ )
-			if( bfr[i] == search[0] )
-				if(! memcmp( bfr+i, search, search_size )){	//if match found
-					//return i;
-					//Add to vector baby.
-					//ret_ptr->Add( i );
 					ret_ptr->push_back(i);
-					ret++;
-					}
-//		}
-	return ret;
+		}
+
+	return ret_ptr->size();
 	}
 
 inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned options ){	// Dummy search algorithm\ Yes yes I know there are better ones but I think this enought for now.
 	if( bfr_size < search_size )
 		return -1;
 
-	///SEARCH_FINDALL operation supersedes SEARCH_BACKWARDS
+	///SEARCH_FINDALL operation supersedes SEARCH_BACKWARDS and SEARCH_WRAPAROUND
 
 	//UTF with no matched case handled here !!!SLOW!!!
 	if(options & SEARCH_UTF8 and options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
-		//!!!DIRTY HACK HANDLING HERE
-		/// Our "search" is now in "searchSEARCH" format.
-		/// Compare code twice and viola!
+		//!!!UTF8 Search Speed Hack handling here!!!
 
 		// TODO (death#1#): Have doubts if thish lead Segmentation fault or works OK every time? Need unit test for this fx
-		//For UTF2, search_size must be > 2. Than, we are in the safe! :)
+		//For UTF8, search_size must be > 2. Than, we are in the safe! :)
 		if(1){
 			wxString ucode;
 			wxCharBuffer ubuf;
-			if( options & SEARCH_BACKWARDS and not (options & SEARCH_FINDALL)){ //Backward Search!
+
+			if( (options & SEARCH_FINDALL) or not (options & SEARCH_BACKWARDS) )
+				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
+					//Compare buffer's first and second bytes with search(lower version) and UTF8SpeedHackChrs (upper version)
+					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
+						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+						){
+						//Partial match found!
+						//Now generate UTF8 Lower binary from buffer for full comparison.
+						ucode = wxString::FromUTF8(bfr+i, search_size);
+						ubuf = ucode.Lower().ToUTF8();
+						if(! memcmp( ubuf, search, search_size))	//if match found
+							return i;
+						}
+					}
+			else //Backward Search!
 				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
 					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHack[0] and bfr[i+1]==UTF8SpeedHack[1] )  // Safe due UTF8??
-						){//if match found
+						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+						){
+						//Partial match found!
+						//Now generate UTF8 Lower binary from buffer for full comparison.
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
@@ -1191,30 +1213,20 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						}
 					}
 				}
-			else
-				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
-					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHack[0] and bfr[i+1]==UTF8SpeedHack[1] )  // Safe due UTF8??
-						){//if match found
-						ucode = wxString::FromUTF8(bfr+i, search_size);
-						ubuf = ucode.Lower().ToUTF8();
-						if(! memcmp( ubuf, search, search_size))	//if match found
-							return i;
-						}
-					}
-			}
+
+
 		else{//Old and deadly slow code
 			wxString ucode;
 			wxCharBuffer ubuf;
-			if(( options & SEARCH_BACKWARDS) and not (options & SEARCH_FINDALL)) //Backward Search!
-				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
+			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Backward Search!
+				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
 						return i;
 					}
-			else //Normal Operation
-				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
+			else //Backward Search!
+				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
@@ -1224,18 +1236,17 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		return -1;
 		}
 
-
-	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
+	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE)){
 		if(1){//Speedy code
 			//Search at no match case ASCII handled here
 			///Search text already lowered at FindText()
 //			char topSearch[search_size];
 //			for( int i = 0 ; i < search_size; i++)
 //				topSearch[i]=tolower(search[i]);
-			if( options & SEARCH_BACKWARDS and not (options & SEARCH_FINDALL)) //Backward Search!
-				for( int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHack[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHack[1] ) //You cant know if search_size >= 2
+			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Normal Operation
+				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
+					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
+						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
 						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
@@ -1244,10 +1255,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							return i;
 						}
 					}
-			else //Normal Operation
-				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHack[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHack[1] ) //You cant know if search_size >= 2
+			else //Backward Search!
+				for( int i=bfr_size - search_size ; i >= 0 ; i-- ){
+					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
+						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
 						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
@@ -1270,20 +1281,21 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 			}
 		}
 
-	//Search at buffer
-	if( options & SEARCH_BACKWARDS and not (options & SEARCH_FINDALL) ){ //Backward Search!
-		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
-			if( bfr[i] == search[0] )
-				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					return i;
-		}
-	else{
+	//Search as HEX
+	if((options & SEARCH_FINDALL) or not(options & SEARCH_BACKWARDS)){
 		//#pragma omp parallel for schedule(static)
 		for(int i=0 ; i <= bfr_size - search_size ; i++ )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
 					return i;
 		}
+	else{ //Backward Search!
+		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
+			if( bfr[i] == search[0] )
+				if(! memcmp( bfr+i, search, search_size ))	//if match found
+					return i;
+		}
+
 	return -1;
 	}
 

@@ -247,7 +247,7 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 			return false;
 			}
-		if( IsBlockDev( wxFile::fd() )){
+		if(IsBlockDev( wxFile::fd() )){
 			BlockRWSize=FDtoBlockSize( wxFile::fd() );
 			BlockRWCount=FDtoBlockCount( wxFile::fd() );
 			}
@@ -639,7 +639,25 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 	///Getting Data from bellow layer.
 	if( PatchIndice == 0 )	//Deepest layer
 		{
-		if ( BlockRWSize > 0 ){
+		//Block Read/Write mechanism.
+		//if( 0 )//for debugging
+
+#ifdef __WXGTK__ //Linux file read speed up hack for Block devices.
+		//Block read code just allowed for memory devices under linux.
+		//Because you can read arbitrary locations from block devices at linux.
+		//Kernel handle the job...
+		//This hack increase reading speed from 164MB to 196MB on my SSD with using read 4MB buffer due use of memcmp.
+		//(Max disk rw is 230MB/s)
+		if( ProcessID >=0 )
+#else
+		if( BlockRWSize > 0 )
+#endif // __WXGTK__
+			{
+			///NOTE:This function just read +1 more sectors and copies to buffer via memcpy, thus inefficient, at least for SSD's.
+			///TODO:Need to read 1 sector at start to bfs, than read to buffer directly and read one more sector to bfr.
+			///Than we could copy readed sectors via memcpy which supposed to increase copy speed some percent.
+
+			//Start & end sector and shift calculation.
 			uint64_t StartSector = from / BlockRWSize;
 			unsigned StartShift = from - (from / BlockRWSize)*BlockRWSize;
 			uint64_t EndSector = (from + size)/BlockRWSize;
@@ -650,6 +668,8 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 		   int rd_size = (EndSector - StartSector + 1)*BlockRWSize; //+1 for read least one sector
 			char *bfr = new char[rd_size];
 			int rd=0;
+
+			//If reading from a process memory
 			if ( ProcessID >=0 ){
 				long word=0;
 				//unsigned long *ptr = (unsigned long *) buffer;
@@ -661,10 +681,13 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 					}
 				#endif
 				}
-			else{
+			//Reading from a file
+			else
+				{
 				wxFile::Seek(StartSector*BlockRWSize);
 				rd = wxFile::Read( bfr, rd_size);
 				}
+			//Here, we adjust shifting by copying bfr to buffer. Inefficient but easy to programe.
 			memcpy(buffer, bfr+StartShift, wxMin(wxMin( rd, rd_size-StartShift) , size)); //wxMin protects file ends.
 			delete [] bfr;
 			return wxMin(wxMin( rd, rd_size-StartShift), size);

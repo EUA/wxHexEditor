@@ -142,7 +142,8 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 	File->Seek(0);
 
 	wxString msg = _("Please wait while calculating checksum.");
-	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxString emsg = wxT("\n");
+	wxProgressDialog mypd(_("Calculating Checksum"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
 	MHASH myhash=mhash_init(hash_alg);
@@ -152,7 +153,6 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 	int rd=rdBlockSz;
 
 	uint64_t readfrom=0,readspeed=0, range=File->Length();
-	wxString emsg = msg;
 	time_t ts,te;
 	time (&ts);
 
@@ -359,8 +359,8 @@ bool HexEditor::FileSave( wxString savefilename ) {
 		myfile->Seek( 0, wxFromStart);
 		uint64_t range = myfile->Length();
 		wxString msg = _("File save in progress");
-		wxString emsg = msg;
-		wxProgressDialog mpd( _("Saving file"),msg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
+		wxString emsg = wxT("\n");
+		wxProgressDialog mpd( _("Saving file"),msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
 		mpd.Show();
 		int BlockSz = 128*1024;
 		char *buffer = new char[BlockSz];
@@ -377,7 +377,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 			time(&te);
 			if(ts != te ){
 				ts=te;
-				emsg = msg + wxString::Format(_("\nWrite Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+				emsg = msg + wxT("\n") + wxString::Format(_("Write Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
 				readspeed=readfrom;
 				}
 			if( not mpd.Update( (readfrom*1000)/range, emsg) ){

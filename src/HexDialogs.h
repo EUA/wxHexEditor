@@ -78,11 +78,13 @@ virtual void EventHandler( wxCommandEvent& event );
 	protected:
 		enum search_options{ SEARCH_HEX=0x1, SEARCH_TEXT=0x2, SEARCH_UTF8=0x4, SEARCH_UTF16=0x8,
 									SEARCH_MATCHCASE=0x10, SEARCH_BACKWARDS=0x20, SEARCH_WRAPAROUND=0x40, SEARCH_FINDALL=0x80 } searchtype;
+		bool FindBinaryUnitTest( void );
 		uint64_t FindBinary( wxMemoryBuffer target, uint64_t start_from, unsigned oper=SEARCH_HEX );
 		uint64_t FindText( wxString target, uint64_t start_from, unsigned oper=SEARCH_TEXT);
 		int SearchAtBufferMultiThread( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
 		int SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper );
 		int MultiSearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper, std::vector<int> *ret_ptr );
+		int MultiThreadMultiSearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned oper, std::vector<int> *ret_ptr );
 		bool SearchAtBufferUnitTest();
 		void FindSomeBytes( void );
 		class HexEditor* parent;

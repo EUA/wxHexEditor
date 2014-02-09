@@ -1,7 +1,7 @@
 WXCONFIG = wx-config
 CC ?= `$(WXCONFIG) --cc`
 CXX ?= `$(WXCONFIG) --cxx`
-WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD
+WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp
 WXLDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64

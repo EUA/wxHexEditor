@@ -443,15 +443,15 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 void FindDialog::FindSomeBytes( void ){
-	wxString msg= _("Finding Some Bytes... ");
-	wxString emsg;
-	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
+	wxString msg= _("Finding Some Bytes...");
+	wxString emsg=wxT("\n");
+	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg+emsg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
 	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
 // TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = parent->CursorOffset();
-	int BlockSz= 10*1024*1024;
+	unsigned BlockSz= 10*1024*1024;
 	int search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
@@ -479,7 +479,7 @@ void FindDialog::FindSomeBytes( void ){
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
+				emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB);
 				read_speed=0;
 				}
 		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
@@ -494,6 +494,8 @@ bool FindDialog::OnFind( bool internal ){
 	#ifdef _DEBUG_
 		std::cout << "FindDialog::OnFind() " << std::endl;
 	#endif
+	return FindBinaryUnitTest();
+
 	uint64_t found = NANINT;
 	uint64_t search_size = 0;
 	//prepare Operator
@@ -613,7 +615,47 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	}
 
 #define _MULTI_SEARCH_
-// TODO (death#1#): FindDialog::FindBinaryUnitTest()
+// TODO (death#1#):
+bool FindDialog::FindBinaryUnitTest( void ){
+//	#ifdef _DEBUG_
+//		std::cout << "FindDialog::FindBinaryUnitTest() " << std::endl;
+//	#endif
+//	FAL *swp=findfile;
+//   wxFileName a(wxT("tempfile-deleteable"));
+//   wxFile b(a.GetFullPath(),wxFile::write );
+//
+//	int fs=1024*1024*10;
+//	char *buff= new char[fs];
+//	memset( buff, 0, fs );
+//	b.Write( buff, fs );
+//   b.Close();
+//
+//	FAL tmpfile(a, FAL::ReadWrite ) ;
+//	char* teststr="testStr";
+//	wxMemoryBuffer target;
+//	target.AppendData( teststr, 7);
+//	for(int i=0; i <fs; i++ ){
+//		tmpfile.Seek( i );
+//		tmpfile.Write( teststr, 7 );
+//
+//
+//		findfile=&tmpfile;
+//		//int f = FindBinary( target, 0, SEARCH_TEXT | SEARCH_MATCHCASE );
+//		int f = FindBinary( target, tmpfile.Length()-1, SEARCH_TEXT | SEARCH_MATCHCASE | SEARCH_BACKWARDS);
+//		findfile=swp;
+//
+//		if( f not_eq i ){
+//			std::cout << "For key at : "<< i << "\t result = " << f  << std::endl;
+//			wxSleep(100);
+//			}
+//		else
+//			std::cout << "Searching key at: " << i << " OK\n";
+//		std::cout.flush();
+//
+//		}
+
+	}
+
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){
 	#ifdef _DEBUG_
 		std::cout << "FindDialog::FindBinary() From:" << from << std::endl;
@@ -622,22 +664,26 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		OSXwxMessageBox( wxT("FindBinary() function called with Empty Target!\n"), _("Error"), wxOK, this);
 		return NANINT;
 		}
-	wxString msg= _("Finding matches... ");
-	wxString emsg;
-	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
+	wxString msg= _("Finding matches...");
+	wxString emsg=wxT("\n");
+	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg+emsg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
 	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
 // TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = from;
-	unsigned BlockSz= 1024*1024;
+	unsigned BlockSz= 1024*1024*3;
 	unsigned search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
+
 	if(buffer == NULL) return NANINT;
 	// TODO (death#6#): insert error check message here
 	int found = -1;
-	int readed = 0;
+	int readed = -1;
+
+   char* buffer_prefetch = new char [search_step];
+	int readed_prefetch = -1;
 
 	time_t ts,te;
 	time (&ts);
@@ -650,6 +696,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		processfootprint = parent->ProcessRAM_GetFootPrint();
 	uint64_t totalread=0;
 
+	//SEARCH_FINDALL forces Forward searching
 	if(( options & SEARCH_FINDALL ) or not (options & SEARCH_BACKWARDS) ){
 		if( options & SEARCH_FINDALL )
 			current_offset=0;
@@ -692,8 +739,15 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 */
 				}
 
-			findfile->Seek( current_offset, wxFromStart );
-			readed = findfile->Read( buffer , search_step );
+			if(readed_prefetch>0){//PreLoad file, +%50 speed on SSD buffers.
+			   readed=readed_prefetch;
+				std::swap(buffer, buffer_prefetch);
+				}
+			else{
+				findfile->Seek( current_offset, wxFromStart );
+				readed = findfile->Read( buffer , search_step );
+				}
+
 			//read_speed += readed;
 
 			#ifdef _DEBUG_
@@ -721,23 +775,47 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				}
 #else
 				partial_results.clear();
-				found = MultiSearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
+#define _READ_PREFETCH_
+#ifdef _READ_PREFETCH_
+				#pragma omp parallel sections
+				{
+					//this preloads next data to swap buffer.
+					#pragma omp section
+					{
+					//precalculate next read location
+					findfile->Seek( current_offset+readed-target.GetDataLen()+1, wxFromStart );
+					readed_prefetch=findfile->Read( buffer_prefetch , search_step );
+					}
+
+					#pragma omp section
+					{
+					//found = MultiThreadMultiSearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
+					found = MultiSearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
+					}
+				}
+#else	 //code without prefetching
+				found = /*MultiThread*/MultiSearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
+#endif //_READ_PREFETCH_
 				if( partial_results.size() > 0 ){// Houston, We found something!
 					if( options & SEARCH_FINDALL ){
 						for(int i=0 ; i < partial_results.size() ; i++ )
 							results.push_back( partial_results[i] + current_offset );
-						current_offset +=  partial_results.back()+target.GetDataLen();
+						//current_offset +=  partial_results.back()+target.GetDataLen();
+						current_offset +=  readed-target.GetDataLen()+1;
 					}
 					//If only searching one result, throw first one.
 					else{
 						delete [] buffer;
+						delete [] buffer_prefetch;
 						return current_offset+partial_results.front();
 						}
 				}
 				else{
-
-					int z = readed - target.GetDataLen() -1;
-					current_offset += (z <= 0 ? 1 : z); //for unprocessed bytes
+					int offset_increase = readed - target.GetDataLen() +1;
+					current_offset += (offset_increase <= 0 ? 1 : offset_increase); //for unprocessed bytes
+					#ifdef _DEBUG_
+						std::cout << "Offset Increased: " << offset_increase << std::endl;
+					#endif
 					}
 #endif
 
@@ -745,15 +823,14 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*(current_offset-read_speed_offset)/MB) + wxT("\n");
+					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*(current_offset-read_speed_offset)/MB);
 					read_speed_offset = current_offset;
 					}
 
 			totalread += readed; // We need this on step 2
 			if( findfile->IsProcess() ){
 				#ifdef _DEBUG_
-				printf( "ProcessRAM Virtual Offset: 0x%llX, \t Offset:0x%llX,  \tFootPrint: 0x%llX\n", parent->ProcessRAM_GetVirtualOffset( current_offset ),
-								current_offset, processfootprint);
+				printf( "ProcessRAM Virtual Offset: 0x%llX, \t Offset:0x%llX,  \tFootPrint: 0x%llX\n", parent->ProcessRAM_GetVirtualOffset( current_offset ),	current_offset, processfootprint);
 				#endif
 				percentage = parent->ProcessRAM_GetVirtualOffset( current_offset )*1000/processfootprint;
 				}
@@ -769,22 +846,23 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			}while(readed == search_step); //indicate also file end.
 
 #ifdef _MULTI_SEARCH_
-			//Create tags from results and put them into HighlightArray
-			for(int i=0 ; i < results.size() and  i < 400000 ; i++ ){
-				TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
-				parent->HighlightArray.Add(mytag);
-				}
+		//Create tags from results and put them into HighlightArray
+		for(int i=0 ; i < results.size() and  i < 400000 ; i++ ){
+			TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+			parent->HighlightArray.Add(mytag);
+			}
 
-			partial_results.clear();
-			results.clear();
+		partial_results.clear();
+		results.clear();
 
-			//WX_CLEAR_ARRAY( parent->HighlightArray )
-			//parent->HighlightArray.Shrink();
-#endif // _NORMAL_SEARCH_
+		//WX_CLEAR_ARRAY( parent->HighlightArray )
+		//parent->HighlightArray.Shrink();
+#endif
 
 		//Search step 2: From start to "from" location.
 		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
 			current_offset = 0;
+			readed_prefetch = 0;
 			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 			#ifdef _DEBUG_
 				std::cout << "FindBinary() FORWARD2 " << current_offset << "-" << current_offset+search_step<< std::endl;
@@ -795,21 +873,53 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 					//if( SkipRAM( current_offset, target.GetDataLen(), search_step ) )
 					//	break;
 					}
-				findfile->Seek(current_offset, wxFromStart );
-				readed = findfile->Read( buffer , search_step );
+
+				if(readed_prefetch>0){//PreLoad file, +%50 speed on SSD buffers.
+					readed=readed_prefetch;
+					std::swap(buffer, buffer_prefetch);
+					}
+				else{
+					findfile->Seek( current_offset, wxFromStart );
+					readed = findfile->Read( buffer , search_step );
+					}
+
 				read_speed += readed;
 				if( readed + current_offset > from )
 					search_step = readed + current_offset - from - 1;
-				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+
+#ifdef _READ_PREFETCH_
+				#pragma omp parallel sections
+				{
+					//this preloads next data to swap buffer.
+					#pragma omp section
+					{
+					//precalculate next read location
+					findfile->Seek( current_offset+readed-target.GetDataLen()+1, wxFromStart );
+					readed_prefetch=findfile->Read( buffer_prefetch , search_step );
+					}
+
+					#pragma omp section
+					{
+					//we do not need MultiSearch here. Because it's not a SEARCH_FINDALL
+					found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );
+					}
+				}
+#else	 //code without prefetching
+				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );
+#endif //_READ_PREFETCH_
+
+
 				if(found >= 0){
 					delete [] buffer;
+					delete [] buffer_prefetch;
 					return current_offset+found;
 					}
 				else{
-					int z= readed - target.GetDataLen() -1;
-					current_offset += (z <= 0 ? 1 : z); //Unprocessed bytes
+					int offset_increase = readed - target.GetDataLen() +1;
+					current_offset += (offset_increase <= 0 ? 1 : offset_increase); //for unprocessed bytes
 					}
 
+				//Progress window processing..
 				time(&te);
 				if(ts != te ){
 						ts=te;
@@ -831,12 +941,13 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		}
 
 	// TODO (death#1#): MemorySearch Backward.
-	else{ //SEARCH_FINDALL forces Forward searching
+	else{
 		//BACKWARD SEARCH!
 		uint64_t current_offset = from;
 		uint64_t backward_offset = current_offset;
 		//Search Step 1: Backward search
-		int first_search=1;
+		bool first_search=true;
+		readed_prefetch=0;
 		do{
 			if( findfile->IsProcess() ){
 				search_step=BlockSz;
@@ -845,20 +956,59 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				}
 			backward_offset = current_offset < search_step ? 0 : current_offset-search_step;
 			search_step = backward_offset + search_step > current_offset ? current_offset-backward_offset : search_step;
-			findfile->Seek( backward_offset, wxFromStart );
+
 			#ifdef _DEBUG_
 				std::cout << "FindBinary() BACKWARD1 " << backward_offset << "-" << current_offset << " \t " << "SearchStep:" << search_step<< std::endl;
 			#endif
-			if(first_search--)
+			if(readed_prefetch>0){//PreLoad file, +%50 speed on SSD buffers.
+				readed=readed_prefetch;
+				std::swap(buffer, buffer_prefetch);
+				}
+			else if(first_search){
+				first_search=0;
+				findfile->Seek( backward_offset, wxFromStart );
 				readed=findfile->Read( buffer , search_step+target.GetDataLen()-1 );
-			else
-				readed=findfile->Read( buffer , search_step ); //Up TO FROM!!!
+				}
+			else{
+				findfile->Seek( backward_offset, wxFromStart );
+				readed=findfile->Read( buffer , search_step );//Up TO FROM!!!
+				}
+
 			read_speed += readed;
 
-			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+#ifdef _READ_PREFETCH_
+			#pragma omp parallel sections
+			{
+				//this preloads next data to swap buffer.
+				#pragma omp section
+				{
+				//precalculate next read location from original functions:
+				//current_offset = backward_offset + target.GetDataLen();
+				//backward_offset = current_offset < search_step ? 0 : current_offset-search_step;
+				//search_step = backward_offset + search_step > current_offset ? current_offset-backward_offset : search_step;
+
+				uint64_t current_offset_prefecth = backward_offset + target.GetDataLen();
+				uint64_t backward_offset_prefetch = current_offset_prefecth < search_step ? 0 : current_offset_prefecth-search_step;
+				unsigned search_step_prefetch = backward_offset_prefetch + search_step > current_offset_prefecth ? current_offset_prefecth-backward_offset_prefetch : search_step;
+
+				findfile->Seek( backward_offset_prefetch, wxFromStart );
+				readed_prefetch=findfile->Read( buffer_prefetch , search_step_prefetch );
+				}
+
+				#pragma omp section
+				{
+				//we do not need MultiSearch here. Because it's not a SEARCH_FINDALL
+				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );
+				}
+			}
+#else	 //code without prefetching
+			//Since it's not possible SEARCH_FINDALL and SEARCH_BACKWARD flags same time, we don't need MultiSearchAtBufer function.
+			found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );
+#endif //_READ_PREFETCH_
 
 			if(found >= 0){
 				delete [] buffer;
+				delete [] buffer_prefetch;
 				return backward_offset+found;
 				}
 			else
@@ -883,7 +1033,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 									? (parent->FileLength()-(from-current_offset))*1000/(parent->FileLength())
 									: current_offset*1000/(1+from);  //+1 to avoid error
 
-			if( ! progress_gauge.Update( percentage, msg))		// update progress and break on abort
+			if( ! progress_gauge.Update( percentage, emsg))		// update progress and break on abort
 				break;
 
 			}while(current_offset > target.GetDataLen());
@@ -892,6 +1042,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
 			current_offset = findfile->Length();
 			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
+			readed_prefetch=0;
 			do{
 				if( findfile->IsProcess() ){
 					search_step=BlockSz;
@@ -903,13 +1054,50 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				#ifdef _DEBUG_
 					std::cout << "FindBinary() BACKWARD2 " << backward_offset << "-" << current_offset << " \t " << "SearchStep:" << search_step<< std::endl;
 				#endif
-				findfile->Seek( backward_offset, wxFromStart );
-				readed=findfile->Read( buffer , search_step ); //Up TO FROM!!!
+				if(readed_prefetch>0){//PreLoad file, +%50 speed on SSD buffers.
+					readed=readed_prefetch;
+					std::swap(buffer, buffer_prefetch);
+					}
+				else{
+					findfile->Seek( backward_offset, wxFromStart );
+					readed=findfile->Read( buffer , search_step );//Up TO FROM!!!
+					}
+
 				read_speed += readed;
-				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
+
+#ifdef _READ_PREFETCH_
+				#pragma omp parallel sections
+				{
+					//this preloads next data to swap buffer.
+					#pragma omp section
+					{
+					//precalculate next read location from original functions:
+					//current_offset = backward_offset + target.GetDataLen();
+					//backward_offset = current_offset - search_step < from ? from : current_offset-search_step;
+					//search_step = backward_offset + search_step > current_offset ? current_offset-backward_offset : search_step;
+
+					uint64_t current_offset_prefecth = backward_offset + target.GetDataLen();
+					uint64_t backward_offset_prefetch = current_offset_prefecth - search_step < from ? from : current_offset_prefecth-search_step;
+					unsigned search_step_prefetch = backward_offset_prefetch + search_step > current_offset ? current_offset-backward_offset_prefetch : search_step;
+
+					findfile->Seek( backward_offset_prefetch, wxFromStart );
+					readed_prefetch=findfile->Read( buffer_prefetch , search_step_prefetch );
+					}
+
+					#pragma omp section
+					{
+					//we do not need MultiSearch here. Because it's not a SEARCH_FINDALL
+					found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );
+					}
+				}
+#else	 //code without prefetching
+				//Since it's not possible SEARCH_FINDALL and SEARCH_BACKWARD flags same time, we don't need MultiSearchAtBufer function.
+				found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );
+#endif //_READ_PREFETCH_
 
 				if(found >= 0){
 					delete [] buffer;
+					delete [] buffer_prefetch;
 					return backward_offset+found;
 					}
 				else{
@@ -920,7 +1108,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
+						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB);
 						read_speed=0;
 						}
 				totalread += readed;
@@ -994,6 +1182,68 @@ void FindDialog::OnFindAll( bool internal ){
 			Destroy();
 			}
 		}
+	}
+
+inline int FindDialog::MultiThreadMultiSearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned options, std::vector<int> *ret_ptr ){
+#define _DUAL_THREAD_SEARCH_
+#ifdef _DUAL_THREAD_SEARCH_
+	///DualThread
+	std::vector<int> v1,v2;
+	#pragma omp parallel sections // starts a new team
+	{
+		#pragma omp section
+		{MultiSearchAtBuffer( bfr, bfr_size/2, search, search_size, options, &v1 );}
+		#pragma omp section
+		{MultiSearchAtBuffer( bfr+ bfr_size-bfr_size/2-search_size+1,bfr_size/2+search_size-1, search, search_size, options , &v2);}
+	}
+	int cnt;
+	cnt=v1.size();
+	for( int i=0; i<cnt; i++)
+		ret_ptr->push_back(v1[i]);
+	cnt=v2.size();
+	for( int i=0; i<cnt; i++)
+		ret_ptr->push_back(v2[i]+bfr_size-bfr_size/2-search_size+1);
+
+	return ret_ptr->size();
+
+#else
+///QuadThread
+	int ztep=bfr_size/4;
+	std::vector<int> v1,v2,v3,v4;;
+/*
+	#ifndef OMP_H
+	return SearchAtBufferSingleThread( bfr, bfr_size, search, search_size, options );
+	#else
+*/
+	if( ztep < search_size*128 )	//For safety & avoid overhead
+		return MultiSearchAtBuffer( bfr, bfr_size, search, search_size, options, ret_ptr );
+	#pragma omp parallel sections // starts a new team
+		{
+			{ MultiSearchAtBuffer( bfr, bfr_size/2, search, search_size, options, &v1); }
+			#pragma omp section
+			{ MultiSearchAtBuffer( bfr+ztep-search_size+1, ztep+search_size-1, search, search_size, options, &v2); }
+			#pragma omp section
+			{ MultiSearchAtBuffer( bfr+(ztep*2)-search_size+1, ztep+search_size-1, search, search_size, options, &v3); }
+			#pragma omp section
+			{ MultiSearchAtBuffer( bfr+(ztep*3)-search_size+1, bfr_size-ztep*3+search_size-1, search, search_size, options, &v4); }
+		}
+
+	int cnt;
+	cnt=v1.size();
+	for( int i=0; i<cnt; i++)
+		ret_ptr->push_back(v1[i]);
+	cnt=v2.size();
+	for( int i=0; i<cnt; i++)
+		ret_ptr->push_back(v2[i]+ztep-search_size+1);
+	cnt=v3.size();
+	for( int i=0; i<cnt; i++)
+		ret_ptr->push_back(v3[i]+(ztep*2)-search_size+1);
+	cnt=v4.size();
+	for( int i=0; i<cnt; i++)
+		ret_ptr->push_back(v4[i]+(ztep*3)-search_size+1);
+
+	return ret_ptr->size();
+#endif
 	}
 
 //This function will slow down searching process due overhead of OpenMP
@@ -2277,7 +2527,8 @@ void ChecksumDialog::OnFileChange( wxFileDirPickerEvent& event ){
 wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 	f.Seek(0);
 	wxString msg = _("Please wait while calculating checksum.");
-	wxProgressDialog mypd(_("Calculating Checksum"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxString emsg = wxT("\n");
+	wxProgressDialog mypd(_("Calculating Checksum"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 	//checksum_options_strings = { "MD5","SHA1","SHA256","SHA384","SHA512" };
 
@@ -2298,36 +2549,58 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		if( options & (1 << algs[j] ))
 			myhash[i++]= mhash_init(algs[j]);
 
-	unsigned rdBlockSz=20*128*1024;
-	unsigned char buff[rdBlockSz];
-	int rd=rdBlockSz;
+	unsigned rdBlockSz=1024*1024;
+	unsigned char *buffer = new unsigned char[rdBlockSz];
+	unsigned char *buffer_prefetch = new unsigned char[rdBlockSz];
+	int readed=rdBlockSz;
+	int readed_prefetch=0;
 
 	uint64_t readfrom=0,read_speed=0, range=f.Length();
-	wxString emsg = msg;
 	time_t ts,te;
 	time (&ts);
 
-	while(rd == rdBlockSz){
-		rd = f.Read( buff, rdBlockSz );
-		read_speed+=rd;
-		readfrom+=rd;
+	do{
+		if(readed_prefetch>0){//PreLoad file, +%50 speed on SSD buffers.
+			readed=readed_prefetch;
+			std::swap(buffer, buffer_prefetch);
+			}
+		else{
+			readed=f.Read( buffer, rdBlockSz );
+			}
+
+		readfrom+=readed;
+		read_speed+=readed;
 
 		//Paralelize with OpenMP
-		#pragma omp parallel for schedule(dynamic)
-		for( i = 0 ; i < NumBits ; i++){
-			mhash( myhash[i], buff, rd);
-			}
+		#pragma omp parallel sections
+		{
+			//this preloads next data to swap buffer.
+			#pragma omp task
+			{readed_prefetch=f.Read( buffer, rdBlockSz );}
+
+			//Due prefetch, we cant use OpenMP for optimizations
+//			#pragma omp parallel for schedule(dynamic)
+			for( i = 0 ; i < NumBits ; i++){
+				mhash( myhash[i], buffer, readed);
+				}
+		}
+
 
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxT("\n") + wxString::Format(_("Hash Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			emsg = msg + wxT("\n") + wxString::Format(_("Hash Speed2 : %.2f MB/s"), 1.0*(read_speed)/MB);
 			read_speed=0;
 			}
-		if(not mypd.Update((readfrom*1000)/range, emsg ))
-		return wxEmptyString;
-		}
+		if(not mypd.Update((readfrom*1000)/range, emsg )){
+			delete [] buffer;
+			delete [] buffer_prefetch;
+			return wxEmptyString;
+			}
+		}while(readed == rdBlockSz);
 
+	delete [] buffer;
+	delete [] buffer_prefetch;
 	wxString results;
 	i=0;
 
@@ -2733,7 +3006,8 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 	wxFFile dst_fl(dst.GetFullPath(), wxT("wb"));
 
 	wxString msg = _("Please wait while backing up disk/partition image.");
-	wxProgressDialog mypd(_("Disk/Partition Backup"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxString emsg = wxT("\n");
+	wxProgressDialog mypd(_("Disk/Partition Backup"), msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
 	MHASH myhash = mhash_init( MHASH_MD5 );
@@ -2743,7 +3017,6 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 	int rd=rdBlockSz;
 
 	uint64_t readfrom=0,read_speed=0, range=src_fl.Length();
-	wxString emsg = msg;
 	time_t ts,te;
 	time (&ts);
 
@@ -2824,7 +3097,8 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 		}
 
 	wxString msg = _("Please wait while restoring disk/partition.");
-	wxProgressDialog mypd(_("Disk/Partition Restore"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxString emsg = wxT("\n");
+	wxProgressDialog mypd(_("Disk/Partition Restore"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
 	unsigned rdBlockSz=1024*1024;
@@ -2832,7 +3106,6 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 	int rd=rdBlockSz;
 
 	uint64_t readfrom=0,read_speed=0, range=src_fl.Length();
-	wxString emsg = msg;
 	time_t ts,te;
 	time (&ts);
 
@@ -2878,7 +3151,8 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 		return;
 
 	wxString msg = _("Please wait while erasing disk/partition image.");
-	wxProgressDialog mypd(_("Disk/Partition Erase"), msg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
+	wxString emsg = wxT("\n");
+	wxProgressDialog mypd(_("Disk/Partition Erase"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
 	unsigned rdBlockSz=1024*1024;
@@ -2886,7 +3160,6 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 	int rd=rdBlockSz;
 
 	uint64_t readfrom=0,read_speed=0, range=dst_fl.Length();
-	wxString emsg = msg;
 	time_t ts,te;
 	time (&ts);
 

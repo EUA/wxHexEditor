@@ -59,14 +59,22 @@ HexEditor::HexEditor(	wxWindow* parent,
 	BlockSelectOffset = -1;
 	}
 
-HexEditor::~HexEditor() {
-	//FileClose();
-	Dynamic_Disconnector();
+void HexEditor::ConnectScroll(HexEditor* connection){
+	ComparatorHexEditor=connection;
+	connection->ComparatorHexEditor=this;
+	}
 
+void HexEditor::DisconnectScroll( void ){
 	if(ComparatorHexEditor!=NULL){
 		ComparatorHexEditor->ComparatorHexEditor=NULL;
 		ComparatorHexEditor=NULL;
 		}
+	}
+
+HexEditor::~HexEditor() {
+	DisconnectScroll();
+	//FileClose();
+	Dynamic_Disconnector();
 
 	// Free resources
 	delete copy_mark;
@@ -436,6 +444,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 //		delete myscroll;
 //		delete copy_mark;
 		Clear( true );
+		DisconnectScroll();
 		myfile->Close();
 		delete myfile;
 		myfile = NULL;

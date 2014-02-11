@@ -131,6 +131,8 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		void GotoDialog( void );
 
 		void UpdateCursorLocation( bool force=false );
+		void ConnectScroll(HexEditor* connection);
+		void DisconnectScroll( void );
 	protected:
 		void SetLocalHexInsertionPoint( int hex_location, bool from_comparator=false );
 		void OnKeyboardChar(wxKeyEvent& event);

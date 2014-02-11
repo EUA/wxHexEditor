@@ -2166,10 +2166,18 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 			wxMessageBox( _("Error, Save File cannot open." ) );
 			return false;
 			}
-	wxProgressDialog pdlg( _("Compare Progress"), _("Comparison in progress"), 100, this, wxPD_AUTO_HIDE | wxPD_APP_MODAL|wxPD_CAN_ABORT/*|wxPD_CAN_SKIP*/|wxPD_REMAINING_TIME); //SKIP not ready and Buggy
+	wxString msg= _("Comparing files...");
+	wxString emsg=wxT("\n");
+	wxProgressDialog pdlg( _("wxHexEditor Comparing"), msg+emsg, 1000, this, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_APP_MODAL|wxPD_CAN_ABORT/*|wxPD_CAN_SKIP*/|wxPD_REMAINING_TIME); //SKIP not ready and Buggy
+	pdlg.SetWindowStyleFlag( pdlg.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
 	pdlg.Show();
 
-	wxMemoryBuffer buff1,buff2;
+	time_t ts,te;
+	time (&ts);
+	te=ts;
+	unsigned read_speed=0;
+
+
 	uint64_t diffBuff[1*MB]; //up to 500K differences.
 	//Structure is : even indices for difference start offset, odd indices for end offsets
 	int diffHit = 0;
@@ -2184,65 +2192,138 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		compare_range=spinMergeSection->GetValue();
 
 	bool BreakDoubleFor=false;
-	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof() or BreakDoubleFor) ; mb+=MB){
-		buff1.UngetWriteBuf( f1.Read(buff1.GetWriteBuf( MB ),MB) );
-		buff2.UngetWriteBuf( f2.Read(buff2.GetWriteBuf( MB ),MB) );
+	int rdBlockSz=4*MB;
+
+	int rd1,rd2;
+	char *buffer1=new char[rdBlockSz];
+	char *buffer2=new char[rdBlockSz];
+	char *buffer1_prefetch=new char[rdBlockSz];
+	char *buffer2_prefetch=new char[rdBlockSz];
+	int* bfr_int1;
+	int* bfr_int2;
+   int rd1_prefetch=0,rd2_prefetch=0;
+//	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof() or BreakDoubleFor) ; mb+=rdBlockSz){
+	for( uint64_t mb = 0 ; mb<wxMin(f1.Length(),f2.Length()) and not BreakDoubleFor ; mb+=rdBlockSz){
+		if(rd1_prefetch==0){
+//			buffer1.UngetWriteBuf( f1.Read(buffer1.GetWriteBuf( rdBlockSz ),rdBlockSz) );
+//			buffer2.UngetWriteBuf( f2.Read(buffer2.GetWriteBuf( rdBlockSz ),rdBlockSz) );
+			rd1=f1.Read(buffer1,rdBlockSz);
+			rd2=f2.Read(buffer2,rdBlockSz);
+			}
+		else{
+			std::swap(buffer1, buffer1_prefetch);
+			std::swap(buffer2, buffer2_prefetch);
+			rd1=rd1_prefetch;
+			rd2=rd2_prefetch;
+			}
 #ifdef _DEBUG_
 		std::cout << "Diff Compare Offset: " << mb << std::endl;
 #endif
-		for( unsigned i = 0 ; i < wxMin( buff1.GetDataLen(), buff2.GetDataLen()); i ++ ){
-			if(diffHit >= 500000){
-				wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
-				BreakDoubleFor = true;
-				break;
-				}
 
-			if((buff1[i] not_eq buff2[i]) == SearchForDiff){
-				if(not diff){//Set difference start
-#ifdef _DEBUG_
-					std::cout << "Diff Start " << mb+i << " to " ;
-#endif
-					diff=true;
-					if( ( (mb+i)-diffBuff[diffHit-1] ) <= compare_range and
-						compare_range > 0 and diffHit>1){
-						diffHit--; //re-push old diff ending to stack
-						StopAfterNMatch++;//and count 2 difference as 1
-						}
-					else
-						diffBuff[diffHit++]=mb+i;
-					}
-
-				//this adds latest diff stream to array if one file ends
-				if(f1.Eof() or f2.Eof() )
-					if(i+1 == wxMin( buff1.GetDataLen(), buff2.GetDataLen()))
-						diffBuff[diffHit++]=mb+i;
-				}
-
-			else{//bytes are eq.
-				if(diff){//Set difference end
-#ifdef _DEBUG_
-			std::cout << mb+i-1 << std::endl;
-#endif
-						diff=false;
-						diffBuff[diffHit++]=mb+i-1;
-//						}
-
-					//Some says we do not use goto in a good program.
-					//But I don't know better way to break double for loop.
-					//Might be better to use f1.Seek() to end with break...
-					if( --StopAfterNMatch == 0 ){
-#ifdef _DEBUG_
-						std::cout << "Break comparison due StopAfterNMatch." << std::endl ;
-#endif
-						BreakDoubleFor=true;
-						break;
-						}
-					}
-				}
+//Not enabled due f1.Eof() loop. If read last byte, for loop get out immeditialy!
+#ifdef _READ_PREFETCH_
+		#pragma omp parallel sections
+		{
+			//this preloads next data to swap buffer.
+			#pragma omp section
+			{
+				//precalculate next read location
+//				buffer1_prefetch.UngetWriteBuf( f1.Read(buffer1_prefetch.GetWriteBuf( rdBlockSz ),rdBlockSz) );
+//				buffer2_prefetch.UngetWriteBuf( f2.Read(buffer2_prefetch.GetWriteBuf( rdBlockSz ),rdBlockSz) );
+				rd1_prefetch=f1.Read(buffer1_prefetch,rdBlockSz);
+				rd2_prefetch=f2.Read(buffer2_prefetch,rdBlockSz);
 			}
-		bool skip=false;
 
-		if( not pdlg.Update( (mb*100)/drange, wxEmptyString, &skip) ){
+			#pragma omp section
+			{
+//				bfr_int1 = static_cast<int*>(buffer1.GetData());
+//				bfr_int2 = static_cast<int*>(buffer2.GetData());
+				bfr_int1 = reinterpret_cast<int*>(buffer1);
+				bfr_int2 = reinterpret_cast<int*>(buffer2);
+
+//				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) and not BreakDoubleFor; i ++ ){
+				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) and not BreakDoubleFor; i ++ ){
+					if(diffHit >= 500000){
+						wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
+						BreakDoubleFor = true;
+						//break; //not possible to use under OpenMP, instead use continue
+						continue;
+						}
+
+					//Here we made the comparison as INTEGER for speedup
+					if( bfr_int1[i/sizeof(int)]==bfr_int2[i/sizeof(int)]  ){
+						//bytes are eq.
+						if(diff){//Set difference end
+							diff=false;
+							diffBuff[diffHit++]=mb+i-1;
+							}
+
+						if( --StopAfterNMatch == 0 ){
+							BreakDoubleFor=true;
+							break;
+							//continue; //not possible to use under OpenMP, instead use continue
+							}
+						i+=sizeof(int)-1;
+						continue;
+						}
+
+					//Here we made the comparison as byte
+					if((buffer1[i] not_eq buffer2[i]) == SearchForDiff){
+						if(not diff){//Set difference start
+		#ifdef _DEBUG_
+							std::cout << "Diff Start " << mb+i << " to " ;
+		#endif
+							diff=true;
+							if( ( (mb+i)-diffBuff[diffHit-1] ) <= compare_range and
+								compare_range > 0 and diffHit>1){
+								diffHit--; //re-push old diff ending to stack
+								StopAfterNMatch++;//and count 2 difference as 1
+								}
+							else
+								diffBuff[diffHit++]=mb+i;
+							}
+
+						//this adds latest diff stream to array if one file ends
+						if(f1.Eof() or f2.Eof() )
+							if(i+1 == wxMin( rd1, rd2))
+								diffBuff[diffHit++]=mb+i;
+						}
+
+						else{			//bytes are eq.
+							if(diff){//Set difference end
+		#ifdef _DEBUG_
+					std::cout << mb+i-1 << std::endl;
+		#endif
+							diff=false;
+							diffBuff[diffHit++]=mb+i-1;
+							}
+
+						if( --StopAfterNMatch == 0 ){
+		#ifdef _DEBUG_
+								std::cout << "Break comparison due StopAfterNMatch." << std::endl ;
+		#endif
+							BreakDoubleFor=true;
+							break;
+							//continue;//not possible to use under OpenMP, instead use continue
+							}
+						}
+					}
+			}
+		}//omp parallel sections
+
+#endif // _READ_PREFETCH_
+
+		bool skip=false;
+		read_speed++; //1MB at a time.
+		//Progress window processing..
+		time(&te);
+		if(ts != te ){
+				ts=te;
+				emsg = msg + wxT("\n") + wxString::Format(_("Comparison Speed : %.2f MB/s"), 4.0*read_speed) + wxT("\n");
+				read_speed=0;
+				}
+
+		if( not pdlg.Update( (mb*1000)/drange, emsg, &skip) ){
 			f1.Close();
 			f2.Close();
 			return false;
@@ -2251,6 +2332,11 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		if(skip)
 			break;
 		}//End of for loops / comparison
+
+	delete [] buffer1;
+	delete [] buffer2;
+	delete [] buffer1_prefetch;
+	delete [] buffer2_prefetch;
 
 	pdlg.Show( false );
 
@@ -2284,8 +2370,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 //	parent->MyNotebook.Split(-1, wxRIGHT); //Not available due protected wxNotepad. Changed OpenFile function instead.
 
 	if(checkConnectFiles->GetValue()){
-		hexeditor1->ComparatorHexEditor=hexeditor2;
-		hexeditor2->ComparatorHexEditor=hexeditor1;
+		hexeditor1->ConnectScroll( hexeditor2 );
 		}
 
 	if(hexeditor1 != NULL and hexeditor2 != NULL){
@@ -2306,10 +2391,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				}
 			}
 		//Show first tag
-		if( hexeditor1->CompareArray.Count() > 0 ){
+		if( hexeditor1->CompareArray.Count() > 0 )
 			hexeditor1->Goto( hexeditor1->CompareArray.Item(0)->start, true );
+		if( hexeditor2->CompareArray.Count() > 0 ) //This check is needed if files are identical but one file has bigger than other.
 			hexeditor2->Goto( hexeditor2->CompareArray.Item(0)->start, false );
-			}
 
 		//Generate event to show compare panel
 		wxUpdateUIEvent eventx( COMPARE_CHANGE_EVENT );

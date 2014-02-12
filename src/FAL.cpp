@@ -727,10 +727,10 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 	* first partition                     = xxx *
 	********************************************/
 	if( PatchArray->Item(PatchIndice-1) -> size > 0 and PatchArray->Item(PatchIndice-1)->flag_inject ){
-		DiffNode *Inject_Node = PatchArray->Item(PatchIndice-1);	//For easy reading of code
+		DiffNode *Inject_Node = PatchArray->Item(PatchIndice-1);	//For easy debugging
 		///If injection starts behind, so we needed to read bytes from before to show correct location.
 		///State ...().,,,[...]..... -> ...(...).[,,,].
-		if( Inject_Node->end_offset() < current_location ){
+		if( Inject_Node->end_offset() <= current_location ){
 			return ReadR( data, size, current_location - Inject_Node->size, PatchArray, PatchIndice-1 );
 			}
 		///State ...(),,,[....]..... -> ...(..[xx),,],..
@@ -742,10 +742,10 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 				int first_part = Inject_Node->end_offset() - current_location; // First part size
 				memcpy( data, Inject_Node->new_data + movement, first_part );  // Copy first part to buffer
 				int read_size = ReadR( data+first_part, size-first_part, Inject_Node->start_offset, PatchArray, PatchIndice-1 ); //Than copy second part.
-				return read_size+first_part;
+				return wxMin(read_size+first_part, size);
 			}
 
-		///State ...(),,,[...].).... -> ...(...[...].),,,
+		///State ...(),,,[...]..... -> ...(...[...].),,,
 		else if( Inject_Node->start_offset <= current_location
 					and Inject_Node->end_offset() >= current_location + size
 					){
@@ -762,7 +762,7 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 				int read_size = ReadR( data, first_part, current_location, PatchArray, PatchIndice-1 ); //Read First Part from lower layer
 				memcpy( data+first_part, Inject_Node->new_data, Inject_Node->size );  // Copy second part to buffer
 				read_size += ReadR( data+first_part+Inject_Node->size, size-(first_part+Inject_Node->size), current_location+first_part, PatchArray, PatchIndice-1 ); //Read latest chunk
-				return read_size+Inject_Node->size;
+				return wxMin( read_size+Inject_Node->size , size );
 			}
 		///State ...[...(),,,]... -> ...[xx(...]...),,,...
 		else if( Inject_Node->start_offset > current_location
@@ -772,7 +772,7 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 				int first_part = Inject_Node->start_offset - current_location; // First part size
 				int read_size = ReadR( data, first_part, current_location, PatchArray, PatchIndice-1 ); //Read First Part from lower layer
 				memcpy( data+first_part, Inject_Node->new_data, size-first_part );  // Copy second part to buffer
-				return read_size+Inject_Node->size;
+				return wxMin(read_size+Inject_Node->size, size);
 			}
 		///State ...[...]...(...)... -> ...[...]...()...
 		else{
@@ -792,7 +792,7 @@ long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int si
 	* first partition                    = xxx *
 	*******************************************/
 	if( PatchArray->Item(PatchIndice-1) -> size < 0 ){
-		DiffNode *Delete_Node = PatchArray->Item(PatchIndice-1);	//For easy reading of code
+		DiffNode *Delete_Node = PatchArray->Item(PatchIndice-1);	//For easy debugging
 		///If deletion starts behind, so we needed to read bytes from after to show correct location.
 		///State ...(...)...[...],,,. -> ...()......[,,,].
 		///State ...(..[..).].,,,.... -> ...()..[,,,]....
@@ -801,7 +801,7 @@ long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int si
 			return ReadR( data, size, current_location - Delete_Node->size, PatchArray, PatchIndice-1 );
 			}
 		///State ...[xxx(...)...],,,... -> ...[xxx()...,,,]...
-		///State ...[xxx(...]...),,,... -> ...[xxx()...,,,]...
+		///State ...[xxx(...]...),,,... -> ...[xxx(),,,...]...
 		else if( Delete_Node->start_offset > current_location and Delete_Node->start_offset < current_location + size ){
 			int first_part_size = Delete_Node->start_offset - current_location;
 			int read_size=0;

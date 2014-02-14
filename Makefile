@@ -1,6 +1,9 @@
 WXCONFIG = wx-config
-CC ?= `$(WXCONFIG) --cc`
-CXX ?= `$(WXCONFIG) --cxx`
+#CC ?= `$(WXCONFIG) --cc`    #this doesn't look working here properly :(
+#CXX ?= `$(WXCONFIG) --cxx`
+CC = `$(WXCONFIG) --cc`
+CXX = `$(WXCONFIG) --cxx`
+LDFLAGS += -lgomp
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp
 WXLDFLAGS = `$(WXCONFIG) --libs`
 RC = `$(WXCONFIG) --rescomp`
@@ -47,7 +50,7 @@ $(OBJECTS): $(LIBS) $(SOURCES)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lgomp -o $@
+	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -o $@
 
 .cpp.o: $(LIBS)
 	$(CXX) -c $(WXCXXFLAGS) $(OPTFLAGS) $(CXXFLAGS) $(CPPFLAGS) $< -o $@
@@ -73,10 +76,10 @@ win: $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
+	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -static -lwinpthread -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -lgomp -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
+	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
 mac: maclink langs
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents

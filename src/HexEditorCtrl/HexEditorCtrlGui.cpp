@@ -30,21 +30,21 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	fgSizerMain->AddGrowableRow( 2 );
 	fgSizerMain->SetFlexibleDirection( wxBOTH );
 	
-	m_static_offset = new wxStaticText( this, ID_DEFAULT, wxT("Offset"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+	m_static_offset = new wxStaticText( this, ID_DEFAULT, _("Offset"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	m_static_offset->Wrap( -1 );
-	m_static_offset->SetFont( wxFont( 10, 70, 90, 90, false, wxT("sans") ) );
+	m_static_offset->SetFont( wxFont( 10, 70, 90, 90, false, _("sans") ) );
 	
 	fgSizerMain->Add( m_static_offset, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 0 );
 	
-	m_static_address = new wxStaticText( this, ID_DEFAULT, wxT("Address"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+	m_static_address = new wxStaticText( this, ID_DEFAULT, _("Address"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_address->Wrap( -1 );
-	m_static_address->SetFont( wxFont( 10, 70, 90, 90, false, wxT("sans") ) );
+	m_static_address->SetFont( wxFont( 10, 70, 90, 90, false, _("sans") ) );
 	
 	fgSizerMain->Add( m_static_address, 1, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 2 );
 	
-	m_static_byteview = new wxStaticText( this, ID_DEFAULT, wxT("Byte View"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+	m_static_byteview = new wxStaticText( this, ID_DEFAULT, _("Byte View"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	m_static_byteview->Wrap( -1 );
-	m_static_byteview->SetFont( wxFont( 10, 70, 90, 90, false, wxT("sans") ) );
+	m_static_byteview->SetFont( wxFont( 10, 70, 90, 90, false, _("sans") ) );
 	
 	fgSizerMain->Add( m_static_byteview, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 0 );
 	
@@ -53,7 +53,7 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	fgSizerMain->Add( m_static_null, 0, 0, 5 );
 	
 	offset_ctrl = new wxHexOffsetCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	offset_ctrl->SetFont( wxFont( 10, 70, 90, 90, false, wxT("sans") ) );
+	offset_ctrl->SetFont( wxFont( 10, 70, 90, 90, false, _("sans") ) );
 	offset_ctrl->SetMinSize( wxSize( 104,100 ) );
 	
 	fgSizerMain->Add( offset_ctrl, 1, wxEXPAND|wxLEFT, 0 );
@@ -64,7 +64,7 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	fgSizerMain->Add( hex_ctrl, 1, wxEXPAND, 2 );
 	
 	text_ctrl = new wxHexTextCtrl( this, ID_TEXTBOX, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	text_ctrl->SetFont( wxFont( 10, 70, 90, 90, false, wxT("sans") ) );
+	text_ctrl->SetFont( wxFont( 10, 70, 90, 90, false, _("sans") ) );
 	text_ctrl->SetMinSize( wxSize( 45,100 ) );
 	
 	fgSizerMain->Add( text_ctrl, 1, wxEXPAND|wxRIGHT, 2 );

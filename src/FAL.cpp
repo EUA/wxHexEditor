@@ -101,7 +101,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	get_ptr = put_ptr = 0;
 	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
 #if wxCHECK_VERSION( 2,9,0 )
-	if(not myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
+	if(not myfilename.GetFullPath().Lower().StartsWith( wxT("-pid=")))
 	::wxFileSystemWatcher::Add( myfilename.GetFullPath(), wxFSW_EVENT_MODIFY );
 #endif
 	}
@@ -128,7 +128,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		BlockRWSize=driveInfo.BytesPerSector;
 		BlockRWCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 
-		int fd = _open_osfhandle((long) hDevice, 0);
+		int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hDevice), 0);
 	#ifdef _DEBUG_
 		std::cout<< "Win Device Info:\n" << "Bytes per sector = " <<  BlockRWSize << "\nTotal number of bytes = " << BlockRWCount << std::endl;
 	#endif

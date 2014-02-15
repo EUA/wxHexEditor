@@ -494,7 +494,9 @@ bool FindDialog::OnFind( bool internal ){
 	#ifdef _DEBUG_
 		std::cout << "FindDialog::OnFind() " << std::endl;
 	#endif
+	#ifdef _DEBUG_FIND_UNIT_TEST_
 	return FindBinaryUnitTest();
+	#endif // _DEBUG_FIND_UNIT_TEST_
 
 	uint64_t found = NANINT;
 	uint64_t search_size = 0;

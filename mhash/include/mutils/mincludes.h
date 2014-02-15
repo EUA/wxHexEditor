@@ -1,9 +1,9 @@
 /*
  *    Copyright (C) 2005 Jonathan Day, Nikos Mavroyanopoulos
  *
- *    This library is free software; you can redistribute it and/or modify it 
- *    under the terms of the GNU Library General Public License as published 
- *    by the Free Software Foundation; either version 2 of the License, or 
+ *    This library is free software; you can redistribute it and/or modify it
+ *    under the terms of the GNU Library General Public License as published
+ *    by the Free Software Foundation; either version 2 of the License, or
  *    (at your option) any later version.
  *
  *    This library is distributed in the hope that it will be useful,
@@ -29,6 +29,12 @@
 
 #if !defined(__MINCLUDES_H)
 #define __MINCLUDES_H
+
+// Added to satisfy OS X
+#if !defined(_Bool)
+#define _Bool bool
+#endif
+// End custom addition
 
 #if defined(MUTILS_USE_MHASH_CONFIG)
 #include <mutils/mhash_config.h>

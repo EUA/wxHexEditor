@@ -1142,8 +1142,8 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if defined( __WXMAC__ ) || defined ( __WXMSW__ ) //WXMSW Stuck sometimes if thread on
-		ScrollNoThread( spd );			//MAC has problem with GuiMutex so useing safe scroll function
+#if defined ( __WXMSW__ ) //WXMSW Stuck sometimes if thread on
+		ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
 	#endif

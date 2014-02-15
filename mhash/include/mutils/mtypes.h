@@ -21,6 +21,14 @@
 #if !defined(__MTYPES_H)
 #define __MTYPES_H
 
+// Added to satisfy OS X
+#if defined( __WXOSX__ )
+#if !defined(_Bool)
+#define _Bool bool
+#endif
+#endif
+// End custom addition
+
 #include <mutils/mutils.h>
 
 typedef struct __KEYGEN

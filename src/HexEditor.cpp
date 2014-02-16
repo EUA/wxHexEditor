@@ -1142,7 +1142,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if defined ( __WXMSW__ ) //WXMSW Stuck sometimes if thread on
+#if (defined( __WXOSX__ ) && not wxCHECK_VERSION(3,0,0) ) //WXMSW Stuck sometimes if thread on
 		ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;

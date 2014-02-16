@@ -567,11 +567,11 @@ void wxHexCtrl::RePaint( void ){
 		delete gc;
 #else
 
-#ifdef HAVE_CARBON //wxCarbon needs +2 patch on both axis somehow.
+#ifdef WXOSX_CARBON  //wxCarbon needs +2 patch on both axis somehow.
 		dc.Blit(2, 2, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
 #else
 		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
-#endif //HAVE_CARBON
+#endif //WXOSX_CARBON
 
 #endif //_Use_Graphics_Contex_
 

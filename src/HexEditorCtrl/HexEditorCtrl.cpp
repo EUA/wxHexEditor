@@ -228,7 +228,7 @@ void HexEditorCtrl::ShowContextMenu( const wxMouseEvent& event ){
 	wxPoint pos = event.GetPosition();
 	wxWindow *scr = static_cast<wxWindow*>( event.GetEventObject() );
 	pos += scr->GetPosition();
-    PopupMenu(&menu, pos);
+   PopupMenu(&menu, pos);
 	}
 
 //-----VISUAL FUNCTIONS------//
@@ -692,6 +692,7 @@ void HexEditorCtrl::OnMouseSelectionEnd( wxMouseEvent& event ){
 	}
 
 void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
+	//Not used code. HexEditor::OnMouseRight( wxMouseEvent& event ) used instead.
 	if(event.GetEventObject() == hex_ctrl)
 		LastRightClickAt = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() )/2;
 	else if(event.GetEventObject() == text_ctrl)

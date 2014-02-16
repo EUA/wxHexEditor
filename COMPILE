@@ -1,3 +1,8 @@
+
+For compiling wxHexEditor, you cannot use C::B directly even if you installed wxWidgets development kits because of missing libraries. You also have to build internal udis and mhash libraries. They are automatically compiled when you run make command. Than you could edit wxHexEditor codes with C::B.
+
+Please follow those directives under your OS to compile wxHexEditor.
+
 -----------------------------------------------------
 LINUX
 -----------------------------------------------------

@@ -94,6 +94,7 @@ void HexEditor::Dynamic_Connector() {
 	text_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	offset_ctrl->Connect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Connect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
@@ -117,6 +118,7 @@ void HexEditor::Dynamic_Disconnector() {
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	offset_ctrl->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
@@ -1009,10 +1011,20 @@ void HexEditor::OnMouseRight( wxMouseEvent& event ) {
 		LastRightClickAt = page_offset + hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() )/2;
 	else if(event.GetEventObject() == text_ctrl)
 		LastRightClickAt = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
-	else
-		std::cout << "Right click captured without ctrl!\n";
+	else if( event.GetEventObject() == offset_ctrl){
+
+		offset_ctrl->OnMouseRight( event );
+		int x,y;
+		DoGetSize(&x,&y);
+		wxSizeEvent mevent(wxSize(x,y));
+		OnResize(mevent);
+		UpdateCursorLocation();
+		return;//to avoid ShowContextMenu
+		}
+
 	ShowContextMenu( event );
-	event.Skip(false);
+
+	event.Skip(false); //Disables HexEditorCtrl::OnMouseRight
 	}
 
 void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {

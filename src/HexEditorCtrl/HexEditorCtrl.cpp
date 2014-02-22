@@ -584,6 +584,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 
 	//Preparing Sizer
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
+#if 1
 	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 5 );
 	fgSizer1->Add( m_static_address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
 	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
@@ -593,7 +594,20 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( offset_scroll_real, 0, wxEXPAND, 0 );
 
-//	offset_ctrl->BytePerLine = BytePerLine(); //Not needed, Updated via ReadFromBuffer
+#else
+	fgSizer1->Add( m_static_offset, 0, wxALIGN_CENTER|wxLEFT, 0 );
+	fgSizer1->Add( m_static_address, 0, wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL|wxLEFT, 0 );
+	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 0 );
+	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL, 0 );
+	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( offset_scroll_real, 0, wxEXPAND, 0 );
+
+
+	fgSizer1->AddGrowableCol(1,1);
+//	fgSizer1->AddGrowableRow(1,1);
+#endif
 
 	this->SetSizer( fgSizer1 );
 	this->Layout();
@@ -607,23 +621,19 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 
 	//Formating Hex and byteview column labels
 	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
-	wxString address,byteview;
+	wxString address,byteview,temp_address;
 
-	int h=0;
 	for( int j = 0 ; j < ByteShownPerLine ; j++ ){
 		byteview << wxString::Format( wxT("%01X"), j%0x10 );
-
-		while(hex_ctrl->IsDenied(h)){
-			address << wxT(" ");
-			h++;
-			}
-
-		address << wxString::Format( wxT("%02X"), j%0x100 );
-		h+=2;
+		temp_address << wxString::Format( wxT("%02X"), j%0x100 );
 		}
 
-	if(address.Last()==' ')
-		address.RemoveLast();	//Remove last ' ' for unwrap
+	//Adjusting custom hex formatting bar - Converting 00010203 -> 00 01 02 03 for "xx " format.
+	for( int x = 0, i=0 ; x < hex_x and i < temp.Len() ; x++ )
+		if(hex_ctrl->IsDenied(x))
+			address << wxT(" ");
+		else
+			address << temp_address[i++];
 
 	m_static_address->SetLabel(address);
 	m_static_byteview->SetLabel( byteview );
@@ -855,6 +865,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 						}
 					child = child->GetNext();
 					}
+				MainTagArray.Sort(TagElementSort);
 				PreparePaintTAGs();
 				ClearPaint();
 				text_ctrl->RePaint();
@@ -896,7 +907,8 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 		wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), flnm.GetFullPath(), prop_filename , NULL);
 
 		MainTagArray.Sort(TagElementSort);
-		for(unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
+		for(signed i = MainTagArray.Count()-1 ; i>=0 ; i-- ){
+			//Used reverse order for make XML offsets increasing.
 			TagElement *TAG = MainTagArray.Item(i);
 
 			wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );

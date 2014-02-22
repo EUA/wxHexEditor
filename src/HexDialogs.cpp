@@ -1816,26 +1816,33 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 		}
 	}
 
-void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, wxString startup=wxEmptyString ){
+void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, wxString startup, wxString ending, wxString blank ){
+	int selection = chcOption->GetSelection();
+	bool TAGenable=true;
+
+	wxString x3Blank=blank+blank+blank;
+
 	unsigned BytePerLine = spnBytePerLine->GetValue();
 	wxString last_color_hex,last_color_text;
-	cb += startup+wxT("TAG List:")+wxNewline;
-	for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){
-		TagElement *tag = MainTagArray->Item(i);
-		if(( tag->start <  select->GetStart() and tag->end   >= select->GetStart() ) or
-			( tag->start >= select->GetStart() and tag->start <= select->GetEnd() ) or
-			( tag->end   >= select->GetStart() and tag->end   <= select->GetEnd() ) ){
+	if(TAGenable){
+		cb += startup+wxT("TAG List:")+ending;
+		for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){
+			TagElement *tag = MainTagArray->Item(i);
+			if(( tag->start <  select->GetStart() and tag->end   >= select->GetStart() ) or
+				( tag->start >= select->GetStart() and tag->start <= select->GetEnd() ) or
+				( tag->end   >= select->GetStart() and tag->end   <= select->GetEnd() ) ){
 
-			cb += startup+wxT("<span style=\"background-color:") + tag->SoftColour( tag->NoteClrData.GetColour() ).GetAsString(wxC2S_HTML_SYNTAX) +
-					wxT(";color:") + tag->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX) +  wxT(";\">") + tag->tag +wxT("</span>")+wxNewline;
+				cb += startup+wxT("<span style=\"background-color:") + tag->SoftColour( tag->NoteClrData.GetColour() ).GetAsString(wxC2S_HTML_SYNTAX) +
+						wxT(";color:") + tag->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX) +  wxT(";\">") + tag->tag +wxT("</span>")+ending;
+				}
 			}
+		cb += startup+ending;
 		}
-	cb += startup+wxNewline;
 
 	for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset += BytePerLine){
 		if(chkOffset->GetValue()){
 			cb += startup + parent->GetFormatedOffsetString( select->GetStart() + current_offset );
-			cb += wxT("   ");
+			cb += x3Blank;
 			}
 
 		if(chkHex->GetValue()){
@@ -1854,17 +1861,18 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 			for(unsigned i = 0 ; i < BytePerLine ; i++){
 
 				//TAG Paint Loop
-				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-					TagElement *tg = MainTagArray->Item(j);
-					if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
-						last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-						cb += wxT("<span style=\"background-color:") + last_color_hex + wxT(";\">");
+				if(TAGenable)
+					for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+						TagElement *tg = MainTagArray->Item(j);
+						if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+							last_color_hex = tg->SoftColour(tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+							cb += wxT("<span style=\"background-color:") + last_color_hex + wxT(";\">");
+							}
+						if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart() ){
+							cb += wxT("</span>");
+							last_color_hex = wxEmptyString;
+							}
 						}
-					if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart() ){
-						cb += wxT("</span>");
-						last_color_hex = wxEmptyString;
-						}
-					}
 
 				if( i + current_offset < select->GetSize())
 					cb+= wxString::Format( wxT("%02X "), (unsigned char)buff[ current_offset + i] );
@@ -1872,13 +1880,14 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 					if(last_color_hex.Len() )
 						cb += wxT("</span>");
 					last_color_hex = wxEmptyString;
-					cb+= wxT("   "); //fill with zero to make text area at proper location
+					cb+= x3Blank; //fill with zero to make text area at proper location
 					}
 				//This avoid to paint text section.
 				if(last_color_hex.Len() and i==BytePerLine-1)
 					cb += wxT("</span>");
 				}
-		cb += wxT("  "); //Why only 2 ? Because we got extra 1 space from Hex
+		//cb += wxT("  "); //Why only 2 ? Because we got extra 1 space from Hex
+		cb += blank+blank; //Why only 2 ? Because we got extra 1 space from Hex
 		}
 
 		if(chkText->GetValue()){
@@ -1897,18 +1906,19 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
 
-								//TAG Paint Loop
-				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-					TagElement *tg = MainTagArray->Item(j);
-					if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
-						last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-						cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
+				//TAG Paint Loop
+				if(TAGenable)
+					for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+						TagElement *tg = MainTagArray->Item(j);
+						if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+							last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+							cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
+							}
+						if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
+							cb += wxT("</span>");
+							last_color_text = wxEmptyString;
+							}
 						}
-					if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
-						cb += wxT("</span>");
-						last_color_text = wxEmptyString;
-						}
-					}
 
 					//Char filter for ascii
 					chr = buff[ current_offset + i];
@@ -1921,13 +1931,12 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 					cb += wxT("</span>");
 				}
 			}
-		cb += wxNewline;
+		cb += ending;
 		}
-	cb += startup + wxNewline;
+	cb += startup + ending;
 }
 
 void CopyAsDialog::Copy( void ){
-	chcOption->GetSelection();
 	if( select->GetState() ) {
 		int BytePerLine = spnBytePerLine->GetValue();
 		wxString cb;
@@ -1980,7 +1989,7 @@ void CopyAsDialog::Copy( void ){
 
 			else if( chcOption->GetSelection() == 1 ){ //HTML with Tags
 				cb += wxT("<pre><code style=\"color:#000000;\">");
-				PrepareFullTextWithTAGs( cb, buff );
+				PrepareFullTextWithTAGs( cb, buff, wxT(""), wxT("<br\>"), wxT("&nbsp;") );
 				cb += wxT("</code></pre><font size=\"-3\">Generated by <a href=\"http://www.wxHexEditor.org\">wxHexEditor</a></font>");
 				}
 
@@ -1996,7 +2005,7 @@ void CopyAsDialog::Copy( void ){
 				cb += wxT("</pre> Generated by [http://www.wxHexEditor.org/ wxHexEditor]" wxNewline);
 				}
 			else if( chcOption->GetSelection() == 4 ){ //WiKi with TAGs
-				PrepareFullTextWithTAGs( cb, buff, wxT(" ") );
+				PrepareFullTextWithTAGs( cb, buff, wxT(" "),wxT("\n"),wxT(" ") );
 				cb += wxT(" Generated by [http://www.wxHexEditor.org/ wxHexEditor]" wxNewline);
 				}
 			}

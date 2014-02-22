@@ -32,6 +32,7 @@
 #include <wx/config.h>
 #include <wx/dcbuffer.h>
 #include <wx/clipbrd.h>
+
 #include "Tag.h"
 
 #define __idTagAddSelect__ 1500

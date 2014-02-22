@@ -33,8 +33,11 @@
 #ifndef WXHEXEDITORAPP_H
 #define WXHEXEDITORAPP_H
 
-#define _VERSION_ "0.22"
-#define _VERSION_S_ _VERSION_ " Beta"
+#ifndef _VERSION_
+#define _VERSION_ "0.23"
+#define _VERSION_S_ _VERSION_ " Beta Development"
+#endif // _VERSION_
+
 #ifdef __WXMSW__
 	#define _VERSION_STR_ _VERSION_S_ " for Windows"
 #elif defined(__WXOSX__)

@@ -115,7 +115,7 @@ class CopyAsDialog : public CopyAsDialogGui{
       void Copy( void );
       void PrepareOptions( int SelectedFunction );
       void PrepareFullText( wxString& , wxMemoryBuffer& );
-      void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& , wxString startup);
+      void PrepareFullTextWithTAGs( wxString& , wxMemoryBuffer& , wxString startup, wxString ending, wxString blank);
       wxString GetDigitFormat( void );
 	};
 

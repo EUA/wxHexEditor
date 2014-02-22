@@ -41,7 +41,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.22 Beta
+VERSION = 0.23 Beta Development
 
 all:$(EXECUTABLE) langs
 

@@ -1681,10 +1681,10 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	fgSizerColours->Add( btnResetColours, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	
-	sbSizerColour->Add( fgSizerColours, 1, wxEXPAND, 5 );
+	sbSizerColour->Add( fgSizerColours, 1, wxEXPAND|wxALL, 5 );
 	
 	
-	bSizerMain->Add( sbSizerColour, 1, wxEXPAND, 5 );
+	bSizerMain->Add( sbSizerColour, 1, wxEXPAND|wxALL, 5 );
 	
 	wxBoxSizer* bSizerLang;
 	bSizerLang = new wxBoxSizer( wxHORIZONTAL );

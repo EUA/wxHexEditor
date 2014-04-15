@@ -12785,7 +12785,7 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -12854,7 +12854,7 @@
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND</property>
+                    <property name="flag">wxEXPAND|wxALL</property>
                     <property name="proportion">1</property>
                     <object class="wxStaticBoxSizer" expanded="0">
                         <property name="id">wxID_ANY</property>
@@ -12866,7 +12866,7 @@
                         <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND</property>
+                            <property name="flag">wxEXPAND|wxALL</property>
                             <property name="proportion">1</property>
                             <object class="wxFlexGridSizer" expanded="0">
                                 <property name="cols">4</property>
@@ -12874,7 +12874,7 @@
                                 <property name="growablecols"></property>
                                 <property name="growablerows"></property>
                                 <property name="hgap">0</property>
-                                <property name="minimum_size"></property>
+                                <property name="minimum_size">-1,-1</property>
                                 <property name="name">fgSizerColours</property>
                                 <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                 <property name="permission">none</property>
@@ -13311,7 +13311,7 @@
                                     <property name="border">5</property>
                                     <property name="flag">wxALL</property>
                                     <property name="proportion">0</property>
-                                    <object class="wxColourPickerCtrl" expanded="0">
+                                    <object class="wxColourPickerCtrl" expanded="1">
                                         <property name="BottomDockable">1</property>
                                         <property name="LeftDockable">1</property>
                                         <property name="RightDockable">1</property>
@@ -13394,11 +13394,11 @@
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
-                                <object class="sizeritem" expanded="0">
+                                <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL</property>
                                     <property name="proportion">0</property>
-                                    <object class="wxColourPickerCtrl" expanded="0">
+                                    <object class="wxColourPickerCtrl" expanded="1">
                                         <property name="BottomDockable">1</property>
                                         <property name="LeftDockable">1</property>
                                         <property name="RightDockable">1</property>
@@ -13481,11 +13481,11 @@
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
-                                <object class="sizeritem" expanded="0">
+                                <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND</property>
                                     <property name="proportion">0</property>
-                                    <object class="wxButton" expanded="0">
+                                    <object class="wxButton" expanded="1">
                                         <property name="BottomDockable">1</property>
                                         <property name="LeftDockable">1</property>
                                         <property name="RightDockable">1</property>
@@ -13520,7 +13520,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="min_size"></property>
                                         <property name="minimize_button">0</property>
-                                        <property name="minimum_size"></property>
+                                        <property name="minimum_size">-1,-1</property>
                                         <property name="moveable">1</property>
                                         <property name="name">btnResetColours</property>
                                         <property name="pane_border">1</property>

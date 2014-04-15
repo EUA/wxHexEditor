@@ -36,7 +36,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`wx-config  --cflags`" />
+					<Add option="`wx-config  --cflags` -fopenmp" />
 					<Add option="-D_DEBUG_" />
 					<Add option="-D_DEBUG_FILE_x" />
 					<Add option="-D_DEBUG_SELECT_x" />
@@ -50,6 +50,7 @@
 					<Add option="`wx-config --libs`" />
 					<Add library="udis86/libudis86/.libs/libudis86.a" />
 					<Add library="mhash/lib/.libs/libmhash.a" />
+					<Add library="gomp" />
 				</Linker>
 			</Target>
 			<Target title="MacOS-Release">
@@ -152,7 +153,7 @@
 					<Add option="-std=c++0x" />
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="$($(WXCONFIG) --cflags) -fopenmp" />
 					<Add option="-D_DEBUG_=6" />
 					<Add option="-D_DEBUG_MUTEX_" />
 				</Compiler>
@@ -161,6 +162,7 @@
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add library="udis86/libudis86/.libs/libudis86.a" />
 					<Add library="mhash/lib/.libs/libmhash.a" />
+					<Add library="gomp" />
 				</Linker>
 				<Environment>
 					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.0/release/wx-config" />

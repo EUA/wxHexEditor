@@ -498,7 +498,7 @@ void HexEditor::DoRedo( void ) {
 	GetEventHandler()->ProcessEvent( eventx );
 	}
 
-void HexEditor::Goto( int64_t cursor_offset, bool set_focus ) {
+void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
 	if( cursor_offset == -1 ) {
 		LoadFromOffset( page_offset, false, true );	//Refresh
 		return;

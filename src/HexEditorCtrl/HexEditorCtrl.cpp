@@ -117,7 +117,6 @@ void HexEditorCtrl::Dynamic_Disconnector(){
 	}
 
 //-----READ/WRITE FUNCTIONS-------//
-
 void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset, bool paint ){
 	if( lenght==4294967295LL ){
 		std::cout << "Buffer has no data!" << std::endl;
@@ -629,7 +628,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Adjusting custom hex formatting bar - Converting 00010203 -> 00 01 02 03 for "xx " format.
-	for( int x = 0, i=0 ; x < hex_x and i < temp.Len() ; x++ )
+	for( int x = 0, i=0 ; x < hex_x and i < temp_address.Len() ; x++ )
 		if(hex_ctrl->IsDenied(x))
 			address << wxT(" ");
 		else
@@ -1126,3 +1125,4 @@ void wxHugeScrollBar::OnOffsetScroll( wxScrollEvent& event ){
 #endif
 	event.Skip();
 	}
+

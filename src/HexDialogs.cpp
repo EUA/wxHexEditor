@@ -481,7 +481,7 @@ void FindDialog::FindSomeBytes( void ){
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB);
+				emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 				read_speed=0;
 				}
 		if( ! progress_gauge.Update(current_offset*1000/parent->FileLength(), emsg))		// update progress and break on abort
@@ -831,7 +831,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*(current_offset-read_speed_offset)/MB);
+					emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*(current_offset-read_speed_offset)/MB) + _("MB/s");
 					read_speed_offset = current_offset;
 					}
 
@@ -931,7 +931,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB) + wxT("\n");
+						emsg = msg + wxT("\n") + _("Search Speed :") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 						read_speed=0;
 						}
 
@@ -1026,7 +1026,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			time(&te);
 			if(ts != te ){
 					ts=te;
-					emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s") , 1.0*read_speed/MB) + wxT("\n");
+					emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 					read_speed=0;
 					}
 			totalread += readed;
@@ -1116,7 +1116,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				time(&te);
 				if(ts != te ){
 						ts=te;
-						emsg = msg + wxT("\n") + wxString::Format(_("Search Speed : %.2f MB/s"), 1.0*read_speed/MB);
+						emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 						read_speed=0;
 						}
 				totalread += readed;
@@ -2336,7 +2336,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxT("\n") + wxString::Format(_("Comparison Speed : %.2f MB/s"), 4.0*read_speed) + wxT("\n");
+				emsg = msg + wxT("\n") + _("Comparison Speed : ") + wxString::Format( wxT("%.2f "), 4.0*read_speed) + _("MB/s");
 				read_speed=0;
 				}
 
@@ -2697,7 +2697,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxT("\n") + wxString::Format(_("Hash Speed2 : %.2f MB/s"), 1.0*(read_speed)/MB);
+			emsg = msg + wxT("\n") + _("Hash Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg )){
@@ -3141,7 +3141,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxT("\n") + wxString::Format(_("Backup Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			emsg = msg + wxT("\n") + _("Backup Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
 
@@ -3233,7 +3233,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxT("\n") + wxString::Format(_("Restore Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			emsg = msg + wxT("\n") + _("Restore Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))
@@ -3296,7 +3296,7 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxT("\n") + wxString::Format(_("Erase Speed : %.2f MB/s"), 1.0*(read_speed)/MB);
+			emsg = msg + wxT("\n") + _("Erase Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))

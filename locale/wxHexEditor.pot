@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-18 04:31+0300\n"
+"POT-Creation-Date: 2014-04-19 01:17+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,10 +191,16 @@ msgstr ""
 msgid "wxHexEditor Searching"
 msgstr ""
 
+#: src/HexDialogs.cpp:485 src/HexDialogs.cpp:836 src/HexDialogs.cpp:1031
+#: src/HexDialogs.cpp:1121
+msgid "Search Speed : "
+msgstr ""
+
 #: src/HexDialogs.cpp:485 src/HexDialogs.cpp:836 src/HexDialogs.cpp:936
-#: src/HexDialogs.cpp:1031 src/HexDialogs.cpp:1121
-#, c-format
-msgid "Search Speed : %.2f MB/s"
+#: src/HexDialogs.cpp:1031 src/HexDialogs.cpp:1121 src/HexDialogs.cpp:2341
+#: src/HexDialogs.cpp:2702 src/HexDialogs.cpp:3146 src/HexDialogs.cpp:3238
+#: src/HexDialogs.cpp:3301 src/HexEditor.cpp:176 src/HexEditor.cpp:390
+msgid "MB/s"
 msgstr ""
 
 #: src/HexDialogs.cpp:527 src/HexDialogs.cpp:1173
@@ -211,6 +217,10 @@ msgstr ""
 
 #: src/HexDialogs.cpp:675
 msgid "Finding matches..."
+msgstr ""
+
+#: src/HexDialogs.cpp:936
+msgid "Search Speed :"
 msgstr ""
 
 #: src/HexDialogs.cpp:1191
@@ -352,8 +362,7 @@ msgid "Error on Comparison"
 msgstr ""
 
 #: src/HexDialogs.cpp:2341
-#, c-format
-msgid "Comparison Speed : %.2f MB/s"
+msgid "Comparison Speed : "
 msgstr ""
 
 #: src/HexDialogs.cpp:2363
@@ -400,9 +409,8 @@ msgstr ""
 msgid "Calculating Checksum"
 msgstr ""
 
-#: src/HexDialogs.cpp:2702
-#, c-format
-msgid "Hash Speed2 : %.2f MB/s"
+#: src/HexDialogs.cpp:2702 src/HexEditor.cpp:176
+msgid "Hash Speed : "
 msgstr ""
 
 #: src/HexDialogs.cpp:3071
@@ -430,8 +438,7 @@ msgid "ERROR!"
 msgstr ""
 
 #: src/HexDialogs.cpp:3146
-#, c-format
-msgid "Backup Speed : %.2f MB/s"
+msgid "Backup Speed : "
 msgstr ""
 
 #: src/HexDialogs.cpp:3175
@@ -473,8 +480,7 @@ msgid "Disk/Partition Restore"
 msgstr ""
 
 #: src/HexDialogs.cpp:3238
-#, c-format
-msgid "Restore Speed : %.2f MB/s"
+msgid "Restore Speed : "
 msgstr ""
 
 #: src/HexDialogs.cpp:3246
@@ -490,8 +496,7 @@ msgid "Disk/Partition Erase"
 msgstr ""
 
 #: src/HexDialogs.cpp:3301
-#, c-format
-msgid "Erase Speed : %.2f MB/s"
+msgid "Erase Speed : "
 msgstr ""
 
 #: src/HexDialogs.cpp:3308
@@ -500,11 +505,6 @@ msgstr ""
 
 #: src/HexEditor.cpp:145
 msgid "Cannot read hash file!"
-msgstr ""
-
-#: src/HexEditor.cpp:176
-#, c-format
-msgid "Hash Speed : %.2f MB/s"
 msgstr ""
 
 #: src/HexEditor.cpp:189
@@ -588,8 +588,7 @@ msgid "Saving file"
 msgstr ""
 
 #: src/HexEditor.cpp:390
-#, c-format
-msgid "Write Speed : %.2f MB/s"
+msgid "Write Speed : "
 msgstr ""
 
 #: src/HexEditor.cpp:411

@@ -173,7 +173,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 		time(&te);
 		if(ts != te ){
 			ts=te;
-			emsg = msg + wxT("\n") + wxString::Format(_("Hash Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+			emsg = msg + wxT("\n") + _("Hash Speed : ") + wxString::Format( wxT("%.2f "), 1.0*(readfrom-readspeed)/MB) + _("MB/s");
 			readspeed=readfrom;
 			}
 		if(not mypd.Update((readfrom*1000)/range, emsg ))
@@ -387,7 +387,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 			time(&te);
 			if(ts != te ){
 				ts=te;
-				emsg = msg + wxT("\n") + wxString::Format(_("Write Speed : %.2f MB/s"), 1.0*(readfrom-readspeed)/MB);
+				emsg = msg + wxT("\n") + _("Write Speed : ") + wxString::Format( wxT("%.2f "), 1.0*(readfrom-readspeed)/MB) + _("MB/s");
 				readspeed=readfrom;
 				}
 			if( not mpd.Update( (readfrom*1000)/range, emsg) ){

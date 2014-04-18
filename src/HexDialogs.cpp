@@ -443,6 +443,8 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 	}
 
 void FindDialog::FindSomeBytes( void ){
+	if( parent->FileLength() == 0)
+		return;
 	wxString msg= _("Finding Some Bytes...");
 	wxString emsg=wxT("\n");
 	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg+emsg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
@@ -666,6 +668,9 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		OSXwxMessageBox( wxT("FindBinary() function called with Empty Target!\n"), _("Error"), wxOK, this);
 		return NANINT;
 		}
+	//Disabling search on empty files and if fileLength smaller than file size.
+	if( parent->FileLength() == 0 or parent->FileLength() < target.GetDataLen() )
+		return NANINT;
 	wxString msg= _("Finding matches...");
 	wxString emsg=wxT("\n");
 	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg+emsg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
@@ -676,6 +681,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	uint64_t current_offset = from;
 	unsigned BlockSz= 1024*1024*3;
 	unsigned search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
+
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
 
@@ -1169,7 +1175,7 @@ void FindDialog::OnFindAll( bool internal ){
 		FindBinary( wxHexCtrl::HexToBin( m_comboBoxSearch->GetValue()), 0 ,options );
 		}
 
-	if(parent->HighlightArray.GetCount()==0 and not internal) {
+	if(parent->HighlightArray.GetCount()==0){
 		OSXwxMessageBox(_("Search value not found"), _("Nothing found!"), wxOK, this );
 		}
 	else {
@@ -2579,6 +2585,11 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 		else if( filePick->GetPath() not_eq wxEmptyString ){
 			wxFileName fl( filePick->GetPath() );
 			F= new FAL( fl );
+			}
+      std::cout << F->Length() << std::endl;
+		if( F->Length() == 0 ){
+			wxMessageBox(_("Cannot calculate checksum of an empty file."), _("Error"));
+			return;
 			}
 
 		msg = CalculateChecksum( *F, options );

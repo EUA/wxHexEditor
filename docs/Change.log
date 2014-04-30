@@ -1,3 +1,22 @@
+wxHexEditor v0.23 Beta  XX/05/2013
+Added many languages!
+Fixed many bugs that leads to crash and memory leaks.
+Implemented prefetched functions. (SSD buster!)
+Fixed some cosmetic errors.
+Added Sorted Tag Saving / Loading
+Fixed Injection function.
+Implemented file change detection reload ( on wxWidgets > 2.9 )
+Implemented file compare connector to scroll 2 files at once.
+Added remember last panel states.
+Fixed TagEdit enabling code for addesses > 0xFFFFFFFFh.
+Added MultiSearchAtBinary function, allows faster search on FindAll.
+Fixed logical sectors start. Now starts from 0 instead of 1.
+Added AutoShowTag option to preferences menu.
+Added auto tag panel popup with Process RAM open.
+Fixed Process RAM seeking.
+Added Report a Bug & Donation menu items :)
+Find Some Bytes button doesn't close find dialog anymore.
+
 wxHexEditor v0.22 Beta  09/05/2013
 Implemented auto tag panel popup with Process RAM open.
 Fixed Process RAM seeking.

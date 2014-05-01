@@ -87,30 +87,29 @@ bool wxHexEditorApp::OnInit() {
 
 void wxHexEditorApp::SetLanguage(void){
 	wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );
-	if ( not lang.IsEmpty() ){
-		//int langid = wxConfigBase::Get()->Read( _T("Language"), -1 );
-		int langid = wxLocale::FindLanguageInfo( lang )->Language;
-		if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING) ){
-			wxLogError(_T("This language is not supported by the system."));
-			return;
-			}
+	if ( lang.IsEmpty() or
+		wxLocale::FindLanguageInfo( lang ) == NULL ){
+		lang=wxT("English"); //Defaulting to english.
+		wxConfigBase::Get()->Write( _T("Language"), _T("English") );
+		wxConfigBase::Get()->Flush();
+		}
 
-			wxFileName flnm(argv[0]); //take current path and search "locale" directory
-			myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) + _T("locale") );
+	int langid = wxLocale::FindLanguageInfo( lang )->Language;
+	if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING) ){
+		wxLogError(_T("This language is not supported by the system."));
+		return;
+		}
+
+	wxFileName flnm(argv[0]); //take current path and search "locale" directory
+	myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) + _T("locale") );
 //#ifdef _UNIX_
 //			myLocale.AddCatalogLookupPathPrefix( _T("/usr/local/share/locale/") );
 //#endif
 #ifdef __WXMAC__
-			myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) +
-			_T("..") + wxFileName::GetPathSeparator() + _T("Resources") + wxFileName::GetPathSeparator() + _T("locale") );
+	myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) +
+	_T("..") + wxFileName::GetPathSeparator() + _T("Resources") + wxFileName::GetPathSeparator() + _T("locale") );
 #endif
-			myLocale.AddCatalog(_T("wxHexEditor"));
-		}
-	else{ //( lang.IsEmpty() )
-			lang=wxT("English"); //Defaulting to english.
-			wxConfigBase::Get()->Write( _T("Language"), _T("English") );
-			wxConfigBase::Get()->Flush();
-			}
+	myLocale.AddCatalog(_T("wxHexEditor"));
 	}
 
 #ifdef _DEBUG__EVENTS_

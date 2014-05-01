@@ -85,14 +85,14 @@ bool wxHexEditorApp::OnInit() {
    return true;
    }
 
-bool wxHexEditorApp::SetLanguage(void){
-	if ( ! wxConfigBase::Get()->Read(_T("Language")).IsEmpty() ){
+void wxHexEditorApp::SetLanguage(void){
+	wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );
+	if ( not lang.IsEmpty() ){
 		//int langid = wxConfigBase::Get()->Read( _T("Language"), -1 );
-		wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );
 		int langid = wxLocale::FindLanguageInfo( lang )->Language;
 		if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING) ){
-				wxLogError(_T("This language is not supported by the system."));
-				return false;
+			wxLogError(_T("This language is not supported by the system."));
+			return;
 			}
 
 			wxFileName flnm(argv[0]); //take current path and search "locale" directory
@@ -105,9 +105,12 @@ bool wxHexEditorApp::SetLanguage(void){
 			_T("..") + wxFileName::GetPathSeparator() + _T("Resources") + wxFileName::GetPathSeparator() + _T("locale") );
 #endif
 			myLocale.AddCatalog(_T("wxHexEditor"));
-		return true;
 		}
-	return false;
+	else{ //( lang.IsEmpty() )
+			lang=wxT("English"); //Defaulting to english.
+			wxConfigBase::Get()->Write( _T("Language"), _T("English") );
+			wxConfigBase::Get()->Flush();
+			}
 	}
 
 #ifdef _DEBUG__EVENTS_

@@ -53,7 +53,7 @@
 class wxHexEditorApp : public wxApp {
    public:
       virtual bool OnInit();
-      bool SetLanguage(void);
+      void SetLanguage(void);
 #ifdef _DEBUG_EVENTS_
       int FilterEvent(wxEvent &evt);
       void OnMouseMove(wxMouseEvent &event);

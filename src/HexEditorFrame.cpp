@@ -693,26 +693,18 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 
 void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 	if( event.GetId() == wxID_PREFERENCES){
+		wxString OldLang = wxConfig::Get()->Read(_T("Language"), wxEmptyString);
 		PreferencesDialog *prefdlg = new PreferencesDialog( this );
 		prefdlg->ShowModal();
 		prefdlg->Destroy();
 
-		if ( ! wxConfig::Get()->Read(_T("Language")).IsEmpty() ) {
-			int lang = wxConfigBase::Get()->Read(_T("Language"), -1) ;
-			wxGetLocale()->GetLanguage();
-			if ( lang != -1 )
-				if ( wxGetLocale()->GetLanguage() != lang) {
-					if( lang == 0 && wxGetLocale()->GetSystemLanguage() == wxGetLocale()->GetLanguage() )	//prevents default redraw
-						return;
-					else {
-						wxMessageBox( _("Please restart program for changes."), _("Info") );
+		if ( ! wxConfig::Get()->Read(_T("Language")) != OldLang ) {
+			wxMessageBox( _("Please restart program for changes."), _("Info") );
 //						delete single_inst_checker;
 //						single_inst_checker=NULL;
 //						wxGetApp().ReCreateGui();
 //						Destroy();
-						}
-					}
-			}
+				}
 	}
 	HexEditor *MyHexEditor = GetActiveHexEditor();
 	if( MyHexEditor != NULL ) {

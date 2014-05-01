@@ -3053,7 +3053,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    //wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
    //wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Language );
-   wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description );
+   wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description ); //Saves string into configuration file.
 
 
    wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );

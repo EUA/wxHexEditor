@@ -87,12 +87,15 @@ bool wxHexEditorApp::OnInit() {
 
 bool wxHexEditorApp::SetLanguage(void){
 	if ( ! wxConfigBase::Get()->Read(_T("Language")).IsEmpty() ){
-		int langid = wxConfigBase::Get()->Read( _T("Language"), -1 );
+		//int langid = wxConfigBase::Get()->Read( _T("Language"), -1 );
+		wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );
+		int langid = wxLocale::FindLanguageInfo( lang )->Language;
 		if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING) ){
 				wxLogError(_T("This language is not supported by the system."));
 				return false;
 			}
-			wxFileName flnm(argv[0]);
+
+			wxFileName flnm(argv[0]); //take current path and search "locale" directory
 			myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) + _T("locale") );
 //#ifdef _UNIX_
 //			myLocale.AddCatalogLookupPathPrefix( _T("/usr/local/share/locale/") );

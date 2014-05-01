@@ -2775,10 +2775,23 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	GetInstalledLanguages( LangNames, LangIds );
 
 	chcLang->Clear();
+	LangNames.Sort();
 	chcLang->Append( LangNames );
-
 	wxConfigBase *pConfig = wxConfigBase::Get();
 
+	if ( ! pConfig->Read(_T("Language")).IsEmpty() ){
+		wxString lang = pConfig->Read(_T("Language"), wxEmptyString) ;
+		if ( not lang.IsEmpty() )
+			for( unsigned i = 0 ; i < LangNames.Count() ; i++)
+				if( lang == LangNames.Item(i)){
+					chcLang->SetSelection(i);
+					break;
+					}
+		}
+	else
+		chcLang->SetSelection(0);
+
+/*
 	if ( ! pConfig->Read(_T("Language")).IsEmpty() ){
 		int lang = pConfig->Read(_T("Language"), -1) ;
 		if ( lang != -1 )
@@ -2790,7 +2803,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 		}
 	else
 		chcLang->SetSelection(0);
-
+*/
 	wxString TempString;
 	bool TempBool;
 	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );
@@ -3038,7 +3051,10 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	}
 
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {
-   wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+   //wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+   //wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Language );
+   wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description );
+
 
    wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
    wxConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );

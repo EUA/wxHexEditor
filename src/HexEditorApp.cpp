@@ -95,7 +95,7 @@ void wxHexEditorApp::SetLanguage(void){
 		}
 
 	int langid = wxLocale::FindLanguageInfo( lang )->Language;
-	if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING) ){
+	if ( !myLocale.Init( langid ) ){
 		wxLogError(_T("This language is not supported by the system."));
 		return;
 		}

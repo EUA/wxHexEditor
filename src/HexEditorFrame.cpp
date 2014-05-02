@@ -266,6 +266,8 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().
 			CaptionVisible(false).
+			Name(wxT("Notebook")).
+			Caption(wxT("Notebook")).
 			MinSize(wxSize(150,100)).
 			CloseButton(false).
 			Center().Layer(1) );
@@ -310,19 +312,13 @@ void HexEditorFrame::PrepareAUI( void ){
 //  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
    Toolbar->Realize();
 
-   bool RegRead;
-
-	wxConfigBase::Get()->Read(_T("PanelToolbar"), &RegRead, true);
 	//MyAUI->LoadPerspective()???
 	MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(wxT("Toolbar")).
 						Caption(_("Toolbar")).
                   ToolbarPane().Top().
-						Show(RegRead).
                   LeftDockable(false).RightDockable(false));
-	mbar->Check( idToolbar, RegRead );
 
-   wxConfigBase::Get()->Read(_T("PanelTAG"), &RegRead, false);
 	MyTagPanel = new TagPanel( this, -1 );
 	MyAUI -> AddPane( MyTagPanel, wxAuiPaneInfo().
 					Name(wxT("TagPanel")).
@@ -331,11 +327,9 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
-					Show(RegRead).
+					Show(false).
 					Right().Layer(1) );
-	mbar->Check( idTagPanel, RegRead );
 
-	wxConfigBase::Get()->Read(_T("PanelDisassembler"), &RegRead, false);
 	MyDisassemblerPanel = new DisassemblerPanel( this, -1 );
 	MyAUI -> AddPane( MyDisassemblerPanel, wxAuiPaneInfo().
 					Name(wxT("Disassembler Panel")).
@@ -344,9 +338,8 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
 					BestSize(wxSize(140,100)).
-					Show(RegRead).
+					Show(false).
 					Right().Layer(1) );
-	mbar->Check( idTagPanel, RegRead );
 
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
@@ -372,7 +365,6 @@ void HexEditorFrame::PrepareAUI( void ){
 				Show(false).
 				Right().Layer(1) );
 
-	wxConfigBase::Get()->Read(_T("PanelDataInterpreter"), &RegRead, true);
 	MyInterpreter = new DataInterpreter( this, -1 );
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
 					Name(wxT("DataInterpreter")).
@@ -381,11 +373,9 @@ void HexEditorFrame::PrepareAUI( void ){
 					BottomDockable(false).
 					BestSize(wxSize(174,218)).
 					Resizable(false).
-					Show(RegRead).
+					Show(true).
 					Left().Layer(1).Position(0) );
-	mbar->Check( idInterpreter, RegRead );
 
-	wxConfigBase::Get()->Read(_T("PanelInfo"), &RegRead, true);
 	MyInfoPanel = new InfoPanel( this, -1 );
 	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
 					Name(wxT("InfoPanel")).
@@ -393,10 +383,9 @@ void HexEditorFrame::PrepareAUI( void ){
 					TopDockable(false).
 					BottomDockable(false).
 					BestSize(wxSize(140,140)).
-					Show(RegRead).
+					Show(true).
 					//Resizable(false).
 					Left().Layer(1).Position(1) );
-	mbar->Check( idInfoPanel, RegRead );
 
    wxString tempStr;
    wxConfigBase::Get()->Read(_T("LastPerspective"), &tempStr, wxEmptyString);

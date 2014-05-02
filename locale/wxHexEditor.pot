@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-19 01:17+0300\n"
+"POT-Creation-Date: 2014-05-02 07:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgstr ""
 #: src/HexEditor.cpp:224 src/HexEditor.cpp:438 src/HexEditor.cpp:579
 #: src/HexEditor.cpp:608 src/HexEditorFrame.cpp:567 src/HexEditorFrame.cpp:588
 #: src/HexEditorFrame.cpp:604 src/HexEditorFrame.cpp:608
-#: src/HexEditorFrame.cpp:1141
+#: src/HexEditorFrame.cpp:1133
 msgid "Error"
 msgstr ""
 
@@ -198,8 +198,8 @@ msgstr ""
 
 #: src/HexDialogs.cpp:485 src/HexDialogs.cpp:836 src/HexDialogs.cpp:936
 #: src/HexDialogs.cpp:1031 src/HexDialogs.cpp:1121 src/HexDialogs.cpp:2341
-#: src/HexDialogs.cpp:2702 src/HexDialogs.cpp:3146 src/HexDialogs.cpp:3238
-#: src/HexDialogs.cpp:3301 src/HexEditor.cpp:176 src/HexEditor.cpp:390
+#: src/HexDialogs.cpp:2702 src/HexDialogs.cpp:3162 src/HexDialogs.cpp:3254
+#: src/HexDialogs.cpp:3317 src/HexEditor.cpp:176 src/HexEditor.cpp:390
 msgid "MB/s"
 msgstr ""
 
@@ -253,7 +253,7 @@ msgstr ""
 msgid "%d records changed."
 msgstr ""
 
-#: src/HexDialogs.cpp:1662 src/HexEditor.cpp:1439 src/HexEditorFrame.cpp:709
+#: src/HexDialogs.cpp:1662 src/HexEditor.cpp:1439 src/HexEditorFrame.cpp:703
 msgid "Info"
 msgstr ""
 
@@ -413,93 +413,93 @@ msgstr ""
 msgid "Hash Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3071
+#: src/HexDialogs.cpp:3087
 msgid "Do you sure about resetting colours?"
 msgstr ""
 
-#: src/HexDialogs.cpp:3071
+#: src/HexDialogs.cpp:3087
 msgid "Resetting Hex Colours"
 msgstr ""
 
-#: src/HexDialogs.cpp:3118
+#: src/HexDialogs.cpp:3134
 msgid "Please wait while backing up disk/partition image."
 msgstr ""
 
-#: src/HexDialogs.cpp:3120
+#: src/HexDialogs.cpp:3136
 msgid "Disk/Partition Backup"
 msgstr ""
 
-#: src/HexDialogs.cpp:3138
+#: src/HexDialogs.cpp:3154
 msgid "Error on writing to backup image."
 msgstr ""
 
-#: src/HexDialogs.cpp:3138 src/HexDialogs.cpp:3205
+#: src/HexDialogs.cpp:3154 src/HexDialogs.cpp:3221
 msgid "ERROR!"
 msgstr ""
 
-#: src/HexDialogs.cpp:3146
+#: src/HexDialogs.cpp:3162
 msgid "Backup Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3175
+#: src/HexDialogs.cpp:3191
 msgid "Backup operation completed."
 msgstr ""
 
-#: src/HexDialogs.cpp:3175 src/HexDialogs.cpp:3246 src/HexDialogs.cpp:3308
+#: src/HexDialogs.cpp:3191 src/HexDialogs.cpp:3262 src/HexDialogs.cpp:3324
 msgid "Operation Complete"
 msgstr ""
 
-#: src/HexDialogs.cpp:3201 src/HexDialogs.cpp:3263
+#: src/HexDialogs.cpp:3217 src/HexDialogs.cpp:3279
 msgid "WARNING! THIS OPERATION WILL DESTROY EVERY INFORMATION AT :\n"
 msgstr ""
 
-#: src/HexDialogs.cpp:3201 src/HexDialogs.cpp:3263
+#: src/HexDialogs.cpp:3217 src/HexDialogs.cpp:3279
 msgid "ARE YOU SURE?"
 msgstr ""
 
-#: src/HexDialogs.cpp:3201 src/HexDialogs.cpp:3210 src/HexDialogs.cpp:3263
+#: src/HexDialogs.cpp:3217 src/HexDialogs.cpp:3226 src/HexDialogs.cpp:3279
 msgid "WARNING!"
 msgstr ""
 
-#: src/HexDialogs.cpp:3205
+#: src/HexDialogs.cpp:3221
 msgid "ERROR!: Disk space is smaller than the image file."
 msgstr ""
 
-#: src/HexDialogs.cpp:3210
+#: src/HexDialogs.cpp:3226
 msgid ""
 "WARNING!: Disk space is bigger than the image file. \n"
 "Remaining space will remain untouched."
 msgstr ""
 
-#: src/HexDialogs.cpp:3214
+#: src/HexDialogs.cpp:3230
 msgid "Please wait while restoring disk/partition."
 msgstr ""
 
-#: src/HexDialogs.cpp:3216
+#: src/HexDialogs.cpp:3232
 msgid "Disk/Partition Restore"
 msgstr ""
 
-#: src/HexDialogs.cpp:3238
+#: src/HexDialogs.cpp:3254
 msgid "Restore Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3246
+#: src/HexDialogs.cpp:3262
 msgid "Restore operation completed."
 msgstr ""
 
-#: src/HexDialogs.cpp:3266
+#: src/HexDialogs.cpp:3282
 msgid "Please wait while erasing disk/partition image."
 msgstr ""
 
-#: src/HexDialogs.cpp:3268
+#: src/HexDialogs.cpp:3284
 msgid "Disk/Partition Erase"
 msgstr ""
 
-#: src/HexDialogs.cpp:3301
+#: src/HexDialogs.cpp:3317
 msgid "Erase Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3308
+#: src/HexDialogs.cpp:3324
 msgid "Erase operation completed."
 msgstr ""
 
@@ -955,35 +955,35 @@ msgstr ""
 msgid "Open Process RAM"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:709
+#: src/HexEditorFrame.cpp:703
 msgid "Please restart program for changes."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:732
+#: src/HexEditorFrame.cpp:724
 msgid "This mode will write changes every change to file DIRECTLY."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:732
+#: src/HexEditorFrame.cpp:724
 msgid "Warning!"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:760
+#: src/HexEditorFrame.cpp:752
 msgid "Error on quit!"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:831
+#: src/HexEditorFrame.cpp:823
 msgid "wxHexEditor is a hex editor for HUGE files and devices."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:922
+#: src/HexEditorFrame.cpp:914
 msgid "You needed administration privileges to see available devices"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1141
+#: src/HexEditorFrame.cpp:1133
 msgid "Cannot open dropped file: "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1160 src/HexEditorGui.cpp:1010
+#: src/HexEditorFrame.cpp:1152 src/HexEditorGui.cpp:1010
 #, c-format
 msgid "New wxHexEditor version %s is available!"
 msgstr ""

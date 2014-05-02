@@ -239,12 +239,13 @@ HexEditorFrame::~HexEditorFrame(){
 	pConfig->Write(_T("ScreenW"), (long) w);
 	pConfig->Write(_T("ScreenH"), (long) h);
 	pConfig->Write(_T("ScreenFullScreen"), IsMaximized());
-
 	pConfig->Write(_T("PanelToolbar"), MyAUI->GetPane(Toolbar).IsShown());
 	pConfig->Write(_T("PanelTAG"), MyAUI->GetPane(MyTagPanel).IsShown());
 	pConfig->Write(_T("PanelDisassembler"), MyAUI->GetPane(MyDisassemblerPanel).IsShown());
 	pConfig->Write(_T("PanelDataInterpreter"), MyAUI->GetPane(MyInterpreter).IsShown());
 	pConfig->Write(_T("PanelInfo"), MyAUI->GetPane(MyInfoPanel).IsShown());
+
+	pConfig->Write(wxT("LastPerspective"), MyAUI->SavePerspective() );
 
 	pConfig->Flush();
 
@@ -310,9 +311,12 @@ void HexEditorFrame::PrepareAUI( void ){
    Toolbar->Realize();
 
    bool RegRead;
+
 	wxConfigBase::Get()->Read(_T("PanelToolbar"), &RegRead, true);
+	//MyAUI->LoadPerspective()???
 	MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
-                  Name(wxT("ToolBar")).Caption(_("Toolbar")).
+                  Name(wxT("Toolbar")).
+						Caption(_("Toolbar")).
                   ToolbarPane().Top().
 						Show(RegRead).
                   LeftDockable(false).RightDockable(false));
@@ -321,7 +325,8 @@ void HexEditorFrame::PrepareAUI( void ){
    wxConfigBase::Get()->Read(_T("PanelTAG"), &RegRead, false);
 	MyTagPanel = new TagPanel( this, -1 );
 	MyAUI -> AddPane( MyTagPanel, wxAuiPaneInfo().
-					Caption(wxT("TagPanel")).
+					Name(wxT("TagPanel")).
+					Caption(_("TagPanel")).
 					TopDockable(false).
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
@@ -333,7 +338,8 @@ void HexEditorFrame::PrepareAUI( void ){
 	wxConfigBase::Get()->Read(_T("PanelDisassembler"), &RegRead, false);
 	MyDisassemblerPanel = new DisassemblerPanel( this, -1 );
 	MyAUI -> AddPane( MyDisassemblerPanel, wxAuiPaneInfo().
-					Caption(wxT("Disassembler Panel")).
+					Name(wxT("Disassembler Panel")).
+					Caption(_("Disassembler Panel")).
 					TopDockable(false).
 					BottomDockable(false).
 					MinSize(wxSize(70,100)).
@@ -345,6 +351,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
+				Name(wxT("Search Results")).
 				Caption(_("Search Results")).
 				TopDockable(false).
 				BottomDockable(false).
@@ -356,6 +363,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyComparePanel = new ComparePanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
+				Name(wxT("Comparison Results")).
 				Caption(_("Comparison Results")).
 				TopDockable(false).
 				BottomDockable(false).
@@ -367,6 +375,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	wxConfigBase::Get()->Read(_T("PanelDataInterpreter"), &RegRead, true);
 	MyInterpreter = new DataInterpreter( this, -1 );
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
+					Name(wxT("DataInterpreter")).
 					Caption(_("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
@@ -379,6 +388,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	wxConfigBase::Get()->Read(_T("PanelInfo"), &RegRead, true);
 	MyInfoPanel = new InfoPanel( this, -1 );
 	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
+					Name(wxT("InfoPanel")).
 					Caption(_("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).
@@ -387,6 +397,10 @@ void HexEditorFrame::PrepareAUI( void ){
 					//Resizable(false).
 					Left().Layer(1).Position(1) );
 	mbar->Check( idInfoPanel, RegRead );
+
+   wxString tempStr;
+   wxConfigBase::Get()->Read(_T("LastPerspective"), &tempStr, wxEmptyString);
+	MyAUI->LoadPerspective( tempStr );
 
 	ActionDisabler();
 	MyNotebook->SetDropTarget( new DnDFile( this ) );
@@ -843,13 +857,22 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 	std::cout << "HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event) ID " << event.GetId() << "\n" ;
 #endif
 // TODO (death#1#): Add idBased approach to decrease overhead!! This slowdowns cursor movement!!!
-	mbar->Check(idInterpreter, MyInterpreter->IsShown());
-	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
-	mbar->Check(idTagPanel, MyTagPanel->IsShown());
-	mbar->Check(idDisassemblerPanel, MyDisassemblerPanel->IsShown());
-	mbar->Check(idSearchPanel, MySearchPanel->IsShown());
-	mbar->Check(idComparePanel, MyComparePanel->IsShown());
-	mbar->Check(idToolbar, Toolbar->IsShown());
+
+	mbar->Check(idInterpreter,	(MyAUI->GetPane(MyInterpreter).IsFloating()	? MyAUI->GetPane(MyInterpreter).frame->IsShown() : MyInterpreter->IsShown()) );
+	mbar->Check(idInfoPanel,	(MyAUI->GetPane(MyInfoPanel).IsFloating() 	? MyAUI->GetPane(MyInfoPanel).frame->IsShown() : MyInfoPanel->IsShown()) );
+	mbar->Check(idTagPanel,		(MyAUI->GetPane(MyTagPanel).IsFloating()		? MyAUI->GetPane(MyTagPanel).frame->IsShown() : MyTagPanel->IsShown()) );
+	mbar->Check(idDisassemblerPanel,(MyAUI->GetPane(MyDisassemblerPanel).IsFloating() ? MyAUI->GetPane(MyDisassemblerPanel).frame->IsShown() : MyDisassemblerPanel->IsShown()) );
+	mbar->Check(idSearchPanel,	(MyAUI->GetPane(MySearchPanel).IsFloating()	? MyAUI->GetPane(MySearchPanel).frame->IsShown() : MySearchPanel->IsShown()) );
+	mbar->Check(idComparePanel,(MyAUI->GetPane(MyComparePanel).IsFloating()	? MyAUI->GetPane(MyComparePanel).frame->IsShown() : MyComparePanel->IsShown()) );
+	mbar->Check(idToolbar,		(MyAUI->GetPane(Toolbar).IsFloating()			? MyAUI->GetPane(Toolbar).frame->IsShown() : Toolbar->IsShown()) );
+
+//	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
+//	mbar->Check(idTagPanel, MyTagPanel->IsShown());
+//	mbar->Check(idDisassemblerPanel, MyDisassemblerPanel->IsShown());
+//	mbar->Check(idSearchPanel, MySearchPanel->IsShown());
+//	mbar->Check(idComparePanel, MyComparePanel->IsShown());
+//	mbar->Check(idToolbar, Toolbar->IsShown());
+
 	mbar->Check(idXORView, (MyNotebook->GetPageCount() and GetActiveHexEditor()->IsFileUsingXORKey()));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowOffset, MyNotebook->GetPageCount() );

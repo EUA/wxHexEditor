@@ -2424,8 +2424,10 @@ void wxHexTextCtrl::ChangeValue( const wxString& value, bool paint ){
 void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 	m_text.Clear();
 	if(FontEnc!=wxFONTENCODING_ALTERNATIVE){
-		if(not wxFontMapper::Get()->IsEncodingAvailable( FontEnc ) )
-			wxMessageBox(wxT("Encoding is not available!"), wxT("Error!"), wxOK|wxCENTRE );
+		///only shows the annoying pop-up and does not do anything else.
+		//if(not wxFontMapper::Get()->IsEncodingAvailable( FontEnc ) )
+		//	wxMessageBox(wxT("Encoding is not available!"), wxT("Error!"), wxOK|wxCENTRE );
+
 		m_text << FilterMBBuffer(buffer,len,FontEnc);
 		}
 	else

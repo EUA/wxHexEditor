@@ -2684,9 +2684,9 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		{
 			//this preloads next data to swap buffer.
 			#pragma omp task
-			{readed_prefetch=f.Read( buffer, rdBlockSz );}
+			{readed_prefetch=f.Read( buffer_prefetch, rdBlockSz );}
 
-			//Due prefetch, we cant use OpenMP for optimizations
+			///Due prefetch, we cant use OpenMP for optimizations
 //			#pragma omp parallel for schedule(dynamic)
 			for( i = 0 ; i < NumBits ; i++){
 				mhash( myhash[i], buffer, readed);

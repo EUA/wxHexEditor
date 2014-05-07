@@ -701,7 +701,7 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 		prefdlg->ShowModal();
 		prefdlg->Destroy();
 
-		if ( ! wxConfig::Get()->Read(_T("Language")) != OldLang ) {
+		if ( wxConfig::Get()->Read(_T("Language")) != OldLang ) {
 			wxMessageBox( _("Please restart program for changes."), _("Info") );
 //						delete single_inst_checker;
 //						single_inst_checker=NULL;

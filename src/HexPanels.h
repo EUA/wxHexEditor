@@ -129,7 +129,7 @@ class ComparePanel : public TagPanel{
 
 class DisassemblerPanel : public DisassemblerPanelGUI{
 	public:
-	DisassemblerPanel( class HexEditorFrame* parent_, int id = -1 )
+	DisassemblerPanel( class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 	:DisassemblerPanelGUI( (wxWindow*) parent_, id ){};
 	void Set( wxMemoryBuffer buffer );
 	void OnUpdate(wxCommandEvent& event);

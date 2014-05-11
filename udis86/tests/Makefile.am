@@ -1,122 +1,98 @@
 #
-# Automake definitions for ud/tests
+# Automake definitions for udis86 tests
 #
 check_PROGRAMS = \
-    test_dis \
-    ovrrun
+    symresolve \
+    bufoverrun \
+    libcheck
 
-test_dis_SOURCES    = test_dis.c
-test_dis_LDADD      = $(top_builddir)/libudis86/libudis86.la
-test_dis_CFLAGS     = -I$(top_srcdir)/libudis86 -I$(top_srcdir)
+bufoverrun_SOURCES  = bufoverrun.c
+bufoverrun_LDADD    = $(top_builddir)/libudis86/libudis86.la
+bufoverrun_CFLAGS   = -I$(top_srcdir)/libudis86 -I$(top_srcdir)
 
-ovrrun_SOURCES      = bufovrrun.c
-ovrrun_LDADD        = $(top_builddir)/libudis86/libudis86.la
-ovrrun_CFLAGS       = -I$(top_srcdir)/libudis86 -I$(top_srcdir)
+symresolve_SOURCES = symresolve.c
+symresolve_LDADD   = $(top_builddir)/libudis86/libudis86.la
+symresolve_CFLAGS  = -I$(top_srcdir)/libudis86 -I$(top_srcdir)
 
-YASM   = @YASM@
-PYTHON = @PYTHON@
+libcheck_SOURCES  = libcheck.c
+libcheck_LDADD    = $(top_builddir)/libudis86/libudis86.la
+libcheck_CFLAGS   = -I$(top_srcdir)/libudis86 -I$(top_srcdir)
 
-export UD_SCRIPT_DIR
+MAINTAINERCLEANFILES = Makefile.in
 
-dist_check_DATA = \
-    test16.asm \
-    test32.asm \
-    test64.asm \
-    testjmp.asm \
-    testjmp.ref \
-    testobscure.asm \
-    testobscure.ref \
-    testcorner.asm \
-    testcorner.ref \
-    testgen.py \
-    testgen_opr.py
+DISTCLEANFILES = difftest.sh
 
-yasm_tests = \
-    test16 \
-    test32 \
-    test64 \
-    testjmp \
-    testobscure \
-    testcorner \
-    testgen16 \
-    testgen32 \
-    testgen64
+YASM    = @YASM@
+PYTHON  = @PYTHON@
+TESTDIS = $(top_builddir)/udcli/udcli
 
-no_yasm_tests = \
-    testoverrun
+EXTRA_DIST = \
+ 	$(srcdir)/asm \
+	$(srcdir)/oprgen.py \
+	$(srcdir)/symresolve.ref \
+	$(srcdir)/installcheck.c \
+	$(srcdir)/libcheck.c
 
 if HAVE_YASM
-  ud_TESTS = $(yasm_tests) $(no_yasm_tests)
+tests: difftest test-buf-overrun test-sym-resolver test-libcheck
 else
-  ud_TESTS = $(no_yasm_tests) warn_no_yasm
+tests: warn_no_yasm test-buf-overrun test-sym-resolver test-libcheck
 endif
 
-.PHONY: $(yasm_tests) $(no_yasm_tests) warn_no_yasm
+SEED = 1984
 
-check-local: tests
 
-SEED = 1
+.PHONY: test-buf-overrun
+test-buf-overrun: bufoverrun
+	@./bufoverrun && echo "$@: passed"
 
-tests: $(ud_TESTS)
 
-yasm_asm = $(YASM) -f bin -o $(1).bin $(1).asm
+.PHONY: test-sym-resolver
+test-sym-resolver: symresolve
+	@$(top_builddir)/tests/$< > $@.out
+	@diff -w $(srcdir)/symresolve.ref $@.out && echo "$@: passed."
 
-asm_compare = \
-    @$(YASM) -f bin -o $(1).bin $(top_srcdir)/tests/$(1).asm \
-	&& echo "[bits $(2)]" > $(1).out \
-	&& $(top_builddir)/tests/test_dis -$(2) $(1).bin >> $(1).out \
-	&& diff -w $(top_srcdir)/tests/$(1).$(3) $(1).out \
-    && echo "$@: passed."
+.PHONY: test-libcheck
+test-libcheck: libcheck
+	@./libcheck && echo "$@: passed"
 
-test16: test_dis
-	$(call asm_compare,test16,16,asm)
+#
+# generate operand tests
+#
+oprtest_generate = \
+	outdir=$(builddir)/_results/asm/$(1) && \
+	mkdir -p $${outdir} && \
+	PYTHONPATH=$(top_srcdir)/scripts $(PYTHON) $(top_srcdir)/tests/oprgen.py \
+        $(top_srcdir)/docs/x86/optable.xml $(SEED) $(1) >$${outdir}/oprtest.asm
 
-test32: test_dis
-	$(call asm_compare,test32,32,asm)
+.PHONY: oprtest
+oprtest: oprgen.py
+	@echo "Generating operand tests."
+	@$(call oprtest_generate,64)
+	@$(call oprtest_generate,32)
+	@$(call oprtest_generate,16)
 
-test64: test_dis
-	$(call asm_compare,test64,64,asm)
 
-testobscure: test_dis
-	$(call asm_compare,testobscure,32,ref)
+.PHONY: difftest
+difftest: oprtest $(builddir)/difftest.sh
+	@sh $(builddir)/difftest.sh
 
-testcorner: test_dis
-	$(call asm_compare,testcorner,32,ref)
 
-testjmp: $(top_builddir)/udcli/udcli
-	@$(YASM) -f bin -o testjmp.bin $(top_srcdir)/tests/testjmp.asm
-	@$(top_builddir)/udcli/udcli -64 testjmp.bin > testjmp.out
-	@diff -w $(top_srcdir)/tests/testjmp.ref testjmp.out && echo "$@: passed."
+.PHONY: difftest-refup
+difftest-refup: $(builddir)/difftest.sh
+	@sh $(builddir)/difftest.sh refup
 
-testgen_compare = \
-	@PYTHONPATH=$(top_srcdir)/scripts $(PYTHON) $(top_srcdir)/tests/testgen.py \
-        $(top_srcdir)/docs/x86/optable.xml $(SEED) $(1) > testgen__$(1).asm \
-	&& $(YASM) -f bin -o testgen__$(1).bin testgen__$(1).asm \
-    && echo "[bits $(1)]" > testgen__$(1).out \
-    && $(top_builddir)/tests/test_dis -$(1) testgen__$(1).bin >> testgen__$(1).out \
-    && diff -w testgen__$(1).asm testgen__$(1).out \
-    && echo "$@: passed."
 
-testgen64: testgen.py testgen_opr.py
-	$(call testgen_compare,64)
-
-testgen32: testgen.py testgen_opr.py
-	$(call testgen_compare,32)
-
-testgen16: testgen.py testgen_opr.py
-	$(call testgen_compare,16)
-
-testgen: testgen16 testgen32 testgen64
-
-testovrrun: ovrrun
-	@./ovrrun && echo "$@: passed"
-
+.PHONY: warn_no_yasm
 warn_no_yasm:
 	@echo "*** YASM NOT FOUND: Poor Test Coverage ***"
 
+check-local: tests
+
 installcheck-local:
-	@$(CC) $(srcdir)/test_dis.c -o test_installcheck.bin -I$(includedir) -L$(libdir) -ludis86
+	@$(CC) $(srcdir)/installcheck.c -o installcheck.bin -I$(includedir) -L$(libdir) -ludis86
 	@echo "$@: passed"
 
 clean-local:
-	rm -f *.bin *.out testgen__*.asm *.pyc
+	rm  -f $(builddir)/*.bin $(builddir)/*.out $(builddir)/*.pyc
+	rm -rf $(builddir)/_results

@@ -2,6 +2,7 @@ Makefile
 Makefile.in
 *.lo
 *.o
+.*.swp
 .deps
 .libs
 config.*
@@ -10,7 +11,8 @@ aclocal.m4
 autom4te.cache/
 build/
 configure
-docs/manual/manual.html
+docs/manual/html/
+docs/manual/udis86.info
 libtool
 libudis86/itab.c
 libudis86/itab.h
@@ -23,9 +25,46 @@ m4/lt~obsolete.m4
 stamp-h1
 tests/ovrrun
 tests/test_dis
+tests/sym_resolver
 tests/test_invalid_seg.asm
 tests/testjmp.out
 udcli/udcli
-tests/testgen__*
+tests/_results/
 tests/*.bin
 tests/*.out
+tests/libcheck
+tests/difftest.sh
+scripts/ud_asmtest*
+
+# Ignore C++ Builder history folders
+libudis86/__history/
+
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files built by Visual Studio
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.bak
+*.cache
+*.ilk
+*.log
+*.sdf
+[Ii]pch
+[Bb]uild
+[Bb]in
+[Dd]ebug*/
+*.sbr
+obj/
+Win32/
+x64/
+[Rr]elease*/
+_ReSharper*/
+*.tar.gz
+tests/bufoverrun
+tests/symresolve

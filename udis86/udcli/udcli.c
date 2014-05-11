@@ -1,6 +1,6 @@
 /* udis86 - udcli/udcli.c
  *
- * Copyright (c) 2002-2009 Vivek Thampi
+ * Copyright (c) 2002-2013 Vivek Thampi
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -27,13 +27,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#ifdef _MSC_VER
+#include "..\udis86.h"
+#define PACKAGE_STRING "udis86 pre-1.8"
+#else
 #include <udis86.h>
 #include <config.h>
+#endif
 
-#if defined(__amd64__) || defined(__x86_64__)
-#  define FMT "l"
-#else
-#  define FMT "ll"
+#if defined(__APPLE__)
+# define FMT64 "ll" 
+#elif defined(__amd64__) || defined(__x86_64__)
+# define FMT64 "l" 
+# else
+# define FMT64 "ll" 
 #endif
 
 #if defined(__DJGPP__) || defined(_WIN32)
@@ -62,7 +69,7 @@ static char help[] =
   "    -o <pc>  : Set the value of program counter to <pc>. (default = 0)\n"
   "    -s <n>   : Set the number of bytes to skip before disassembly to <n>.\n"
   "    -c <n>   : Set the number of bytes to disassemble to <n>.\n"
-  "    -x       : Set the input mode to whitespace seperated 8-bit numbers in\n"
+  "    -x       : Set the input mode to whitespace separated 8-bit numbers in\n"
   "               hexadecimal representation. Example: 0f 01 ae 00\n"
   "    -noff    : Do not display the offset of instructions.\n"
   "    -nohex   : Do not display the hexadecimal code of instructions.\n"
@@ -90,7 +97,6 @@ int main(int argc, char **argv)
   char *prog_path = *argv;
   char *s;
   ud_t ud_obj;
-  int mode = 0;
 
   /* initialize */
   ud_init(&ud_obj);
@@ -110,15 +116,15 @@ int main(int argc, char **argv)
 
   /* loop through the args */
   while(--argc > 0) {
-	if (strcmp(*argv,"-16") == 0) {
+    if (strcmp(*argv, "-h") == 0) {
+        printf(help, prog_path);
+        exit(EXIT_SUCCESS);
+    } else if (strcmp(*argv,"-16") == 0) {
 		ud_set_mode(&ud_obj, 16);
-		mode = 16;
 	} else if (strcmp(*argv,"-32") == 0) {
 		ud_set_mode(&ud_obj, 32);
-		mode = 32;
 	} else if (strcmp(*argv,"-64") == 0) {
 		ud_set_mode(&ud_obj, 64);
-		mode = 64;
 	} else if (strcmp(*argv,"-intel") == 0)
 		ud_set_syntax(&ud_obj, UD_SYN_INTEL);
 	else if (strcmp(*argv,"-att") == 0)
@@ -132,7 +138,7 @@ int main(int argc, char **argv)
 	else if (strcmp(*argv,"-s") == 0)
 		if (--argc) {
 			s = *(++argv);
-			if (sscanf(s, "%"  FMT "d", &o_skip) == 0)
+			if (sscanf(s, "%"  FMT64 "u", &o_skip) == 0)
 				fprintf(stderr, "Invalid value given for -s.\n");
 		} else { 
 			fprintf(stderr, "No value given for -s.\n");
@@ -143,7 +149,7 @@ int main(int argc, char **argv)
 		if (--argc) {
 			o_do_count= 1;
 			s = *(++argv);
-			if (sscanf(s, "%" FMT "d", &o_count) == 0)
+			if (sscanf(s, "%" FMT64 "u", &o_count) == 0)
 				fprintf(stderr, "Invalid value given for -c.\n");
 		} else { 
 			fprintf(stderr, "No value given for -c.\n");
@@ -164,7 +170,7 @@ int main(int argc, char **argv)
 		if (--argc) {
 			uint64_t pc = 0;
 			s = *(++argv);
-			if (sscanf(s, "%" FMT "x", &pc) == 0)
+			if (sscanf(s, "%" FMT64 "x", &pc) == 0)
 				fprintf(stderr, "Invalid value given for -o.\n");
 			ud_set_pc(&ud_obj, pc);
 		} else { 
@@ -206,16 +212,12 @@ int main(int argc, char **argv)
   /* disassembly loop */
   while (ud_disassemble(&ud_obj)) {
 	if (o_do_off)
-		printf("%016" FMT "x ", ud_insn_off(&ud_obj));
+		printf("%016" FMT64 "x ", ud_insn_off(&ud_obj));
 	if (o_do_hex) {
-		char* hex1, *hex2;
-		char c;
+		const char* hex1, *hex2;
 		hex1 = ud_insn_hex(&ud_obj);
 		hex2 = hex1 + 16;
-		c = hex1[16];
-		hex1[16] = 0;
-		printf("%-16s %-24s", hex1, ud_insn_asm(&ud_obj));
-		hex1[16] = c;
+		printf("%-16.16s %-24s", hex1, ud_insn_asm(&ud_obj));
 		if (strlen(hex1) > 16) {
 			printf("\n");
 			if (o_do_off)

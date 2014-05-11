@@ -239,11 +239,6 @@ HexEditorFrame::~HexEditorFrame(){
 	pConfig->Write(_T("ScreenW"), (long) w);
 	pConfig->Write(_T("ScreenH"), (long) h);
 	pConfig->Write(_T("ScreenFullScreen"), IsMaximized());
-	pConfig->Write(_T("PanelToolbar"), MyAUI->GetPane(Toolbar).IsShown());
-	pConfig->Write(_T("PanelTAG"), MyAUI->GetPane(MyTagPanel).IsShown());
-	pConfig->Write(_T("PanelDisassembler"), MyAUI->GetPane(MyDisassemblerPanel).IsShown());
-	pConfig->Write(_T("PanelDataInterpreter"), MyAUI->GetPane(MyInterpreter).IsShown());
-	pConfig->Write(_T("PanelInfo"), MyAUI->GetPane(MyInfoPanel).IsShown());
 
 	pConfig->Write(wxT("LastPerspective"), MyAUI->SavePerspective() );
 

@@ -2,10 +2,16 @@
 # udis86 autoconf
 #
 AC_PREREQ(2.59)
-AC_INIT([udis86], [pre-1.8], [vivek.mt@gmail.com])
+AC_INIT([udis86], [1.7.2], [vivek.mt@gmail.com])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_AUX_DIR(build)
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([build/m4])
+
+m4_include([m4/ax_compare_version.m4])
+m4_include([m4/ax_prog_sphinx_version.m4])
+m4_include([m4/ax_prog_yasm_version.m4])
+m4_include([m4/ax_with_prog.m4])
+m4_include([m4/ax_with_python.m4])
 
 # Make sure $ACLOCAL_FLAGS are used during a rebuild.
 AC_SUBST([ACLOCAL_AMFLAGS], ["-I $ac_macro_dir \${ACLOCAL_FLAGS}"])
@@ -25,7 +31,7 @@ case "$host_os" in
 esac
 
 # Initialize the automake subsystem.
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([1.11 -Wall -Wno-portability -Wno-extra-portability -Werror foreign])
 
 #
 # In case we have a Windows build, we pass a 
@@ -38,8 +44,6 @@ AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 AC_ENABLE_SHARED
 AM_PROG_CC_C_O
-m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
-LT_INIT
 
 # If this is a gnu compiler, pass -Wall
 if test "$ac_cv_c_compiler_gnu" = "yes"; then
@@ -52,11 +56,17 @@ if test "x$PYTHON" = "x"; then
     AC_MSG_ERROR( [Python not found. Use --with-python to specify path to python binary] )
 fi
 
-# Yasm for testing
+# Yasm (>= 1.2.0)  for testing
 AX_WITH_PROG(YASM,yasm)
-AM_CONDITIONAL(HAVE_YASM, [test ! -z "$YASM"])
+AX_PROG_YASM_VERSION([1.2.0],[ac_have_yasm_version=1],[])
+AM_CONDITIONAL(HAVE_YASM, [test -n "$ac_have_yasm_version"])
 
-AC_CHECK_HEADERS([assert.h])
+# Sphinx (>= 1.1.3) for documentation
+AX_WITH_PROG(SPHINX_BUILD,sphinx-build)
+AX_PROG_SPHINX([1.1.3],[ac_have_sphinx_version=1],[])
+AM_CONDITIONAL(HAVE_SPHINX_DOC, [test -n "$ac_have_sphinx_version"])
+
+AC_CHECK_HEADERS([assert.h stdio.h])
 
 AC_CONFIG_FILES([
     Makefile
@@ -67,6 +77,7 @@ AC_CONFIG_FILES([
     docs/Makefile
     docs/manual/Makefile
     docs/x86/Makefile
+    tests/difftest.sh
 ])
 
 AC_OUTPUT

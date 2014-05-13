@@ -2657,7 +2657,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		if( options & (1 << algs[j] ))
 			myhash[i++]= mhash_init(algs[j]);
 
-	unsigned rdBlockSz=1024*1024;
+	unsigned rdBlockSz=1024*1024*2;
 	unsigned char *buffer = new unsigned char[rdBlockSz];
 	unsigned char *buffer_prefetch = new unsigned char[rdBlockSz];
 	int readed=rdBlockSz;
@@ -2680,18 +2680,19 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		read_speed+=readed;
 
 		//Paralelize with OpenMP
-		#pragma omp parallel sections
+		#pragma omp parallel shared(myhash) private(i)
 		{
 			//this preloads next data to swap buffer.
-			#pragma omp task
+			#pragma omp single
 			{readed_prefetch=f.Read( buffer_prefetch, rdBlockSz );}
 
-			///Due prefetch, we cant use OpenMP for optimizations
-//			#pragma omp parallel for schedule(dynamic)
+			//Use OpenMP for hash many cores at once.
+			#pragma omp for schedule(dynamic)
 			for( i = 0 ; i < NumBits ; i++){
 				mhash( myhash[i], buffer, readed);
 				}
 		}
+
 
 
 		time(&te);

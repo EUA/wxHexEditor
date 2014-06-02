@@ -96,7 +96,7 @@ typedef unsigned char mutils_word8;
  * value anyway? Because.
  */
 
-#if defined(HAVE__BOOL)
+#if defined(HAVE__BOOL) && !defined(__APPLE__)
 #define mutils_boolean _Bool
 #else
 typedef char mutils_boolean;

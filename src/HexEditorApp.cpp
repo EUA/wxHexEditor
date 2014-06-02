@@ -87,12 +87,15 @@ bool wxHexEditorApp::OnInit() {
 
 void wxHexEditorApp::SetLanguage(void){
 	wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );
-	if ( lang.IsEmpty() or
-		wxLocale::FindLanguageInfo( lang ) == NULL ){
+
+	if ( lang.IsEmpty() )
+		lang= wxLocale::GetLanguageName( wxLocale::GetSystemLanguage() );
+
+	if ( wxLocale::FindLanguageInfo( lang ) == NULL )
 		lang=wxT("English"); //Defaulting to english.
-		wxConfigBase::Get()->Write( _T("Language"), _T("English") );
-		wxConfigBase::Get()->Flush();
-		}
+
+	wxConfigBase::Get()->Write( _T("Language"), lang );
+	wxConfigBase::Get()->Flush();
 
 	int langid = wxLocale::FindLanguageInfo( lang )->Language;
 

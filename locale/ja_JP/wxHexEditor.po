@@ -1,0 +1,2061 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+# Translators:
+# k725 <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: wxHexEditor\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-05-02 07:01+0300\n"
+"PO-Revision-Date: 2014-06-06 19:48+0900\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.6.5\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: src/HexDialogs.h:69 src/HexEditorGui.h:298 src/HexEditorFrame.cpp:295
+#: src/HexEditorGui.cpp:133 src/HexEditorGui.cpp:916
+msgid "Find"
+msgstr "検索"
+
+#: src/HexDialogs.h:99
+msgid "Find & Replace"
+msgstr "検索 & 置換"
+
+#: src/HexEditorGui.h:121
+msgid "wxHexEditor Alpha Development version"
+msgstr "wxHexEditor アルファ 開発版"
+
+#: src/HexEditorGui.h:261 src/HexEditorGui.cpp:143
+msgid "Go to Offset"
+msgstr "オフセットへ行く"
+
+#: src/HexEditorGui.h:322
+msgid "New wxHexEditor Version!"
+msgstr "新しいバージョンのwxHexEditor !"
+
+#: src/HexEditorGui.h:361 src/HexEditorGui.cpp:209
+msgid "Compare Files"
+msgstr "ファイルの比較"
+
+#: src/HexEditorGui.h:414 src/HexEditorGui.cpp:205
+msgid "Calculate Checksum"
+msgstr "チェックサムを計算する"
+
+#: src/HexEditorGui.h:445
+msgid "Copy Selected Block As"
+msgstr "選択したブロックとしてコピー"
+
+#: src/HexEditorGui.h:472
+msgid "XORView Thru Warning!"
+msgstr ""
+
+#: src/HexEditorGui.h:519 src/HexEditorGui.cpp:276
+msgid "Preferences"
+msgstr "環境設定"
+
+#: src/HexEditorGui.h:545
+msgid "Disk/Partition Backup Tool"
+msgstr "ディスク/パーティション バックアップツール"
+
+#: src/HexEditorGui.h:571
+msgid "Disk/Partition Restore Tool"
+msgstr "ディスク/パーティション 復元ツール"
+
+#: src/HexEditorGui.h:596
+msgid "Disk/Partition Erase Tool"
+msgstr "ディスク/パーティション 削除ツール"
+
+#: src/HexEditorGui.h:613
+msgid "Debug Log"
+msgstr "デバッグログ"
+
+#: src/HexEditor.h:201 src/HexEditor.h:221
+msgid "Clipboard could not be opened."
+msgstr "クリップボードを開けませんでした。"
+
+#: src/HexEditor.h:201 src/HexEditor.h:221 src/HexEditor.cpp:1431
+msgid "Operation cancelled!"
+msgstr "操作はキャンセルされました!"
+
+#: src/HexEditor.h:201 src/HexEditor.h:221 src/HexEditor.cpp:1431
+msgid "Copy To Clipboard Error"
+msgstr "エラーをクリップボードにコピー"
+
+#: src/FAL.cpp:139 src/FAL.cpp:176 src/FAL.cpp:235
+msgid "File is not readable by permissions."
+msgstr "ファイルは読み取り可能ではありません。"
+
+#: src/FAL.cpp:139 src/FAL.cpp:177
+msgid "Please change file permissons or run this program with root privileges."
+msgstr ""
+"ファイルのパーミッションを変更したり、root権限でこのプログラムを実行してくだ"
+"さい。"
+
+#: src/FAL.cpp:139 src/FAL.cpp:158 src/FAL.cpp:170 src/FAL.cpp:179
+#: src/FAL.cpp:190 src/FAL.cpp:224 src/FAL.cpp:235 src/FAL.cpp:251
+#: src/FAL.cpp:312 src/FAL.cpp:320 src/HexDialogs.cpp:669
+#: src/HexDialogs.cpp:2155 src/HexDialogs.cpp:2159 src/HexDialogs.cpp:2593
+#: src/HexEditor.cpp:224 src/HexEditor.cpp:438 src/HexEditor.cpp:579
+#: src/HexEditor.cpp:608 src/HexEditorFrame.cpp:567 src/HexEditorFrame.cpp:588
+#: src/HexEditorFrame.cpp:604 src/HexEditorFrame.cpp:608
+#: src/HexEditorFrame.cpp:1133
+msgid "Error"
+msgstr "エラー"
+
+#: src/FAL.cpp:158 src/FAL.cpp:224
+msgid "Process cannot open."
+msgstr "プロセスを開くことが出来ません"
+
+#: src/FAL.cpp:170
+msgid "File does not exists at path:"
+msgstr "ファイルが存在しません パス:"
+
+#: src/FAL.cpp:178
+msgid ""
+"You can also try to own the file temporarily (requires root's password.)"
+msgstr ""
+"あなたも一時的にファイルを所有することができます (rootのパスワードが必要)"
+
+#: src/FAL.cpp:179
+msgid "Do you want to own the file?"
+msgstr "ファイルを所有したいですか?"
+
+#: src/FAL.cpp:190
+msgid "Unknown error on \"stat -c %U"
+msgstr "不明なエラーが発生 \"stat -c %U"
+
+#: src/FAL.cpp:235
+msgid "Please change file permissons or run this program with root privileges"
+msgstr ""
+"ファイルのパーミッションを変更したり、root権限でこのプログラムを実行してくだ"
+"さい。"
+
+#: src/FAL.cpp:251
+msgid "File cannot open."
+msgstr "ファイルを開くことができません。"
+
+#: src/FAL.cpp:312
+msgid ""
+"File load error!.\n"
+"File closed but not opened while access change. For avoid corruption close "
+"the program"
+msgstr ""
+
+#: src/FAL.cpp:320
+msgid "File cannot open in this mode : "
+msgstr "ファイルはこのモードで開くことができません :"
+
+#: src/FAL.cpp:335
+msgid "Access Invalid"
+msgstr "アクセスが無効です"
+
+#: src/FAL.cpp:349 src/FAL.cpp:359 src/FAL.cpp:369
+msgid "Not Enought RAM"
+msgstr "RAMが十分ではありません"
+
+#: src/FAL.cpp:454
+msgid "Error on Write operation to Process RAM"
+msgstr "プロセスRAMへの書き込み操作エラー"
+
+#: src/FAL.cpp:454
+msgid "FATAL ERROR"
+msgstr "致命的なエラー"
+
+#: src/HexDialogs.cpp:73
+msgid "Value is not hexadecimal!"
+msgstr "値は16進数ではありません!"
+
+#: src/HexDialogs.cpp:73 src/HexDialogs.cpp:79
+msgid "Format Error!"
+msgstr "フォーマットエラー!"
+
+#: src/HexDialogs.cpp:79
+msgid "Value must be even digit!"
+msgstr "値は偶数でなければなりません!"
+
+#: src/HexDialogs.cpp:161 src/HexEditorGui.cpp:713 src/HexEditorGui.cpp:719
+#: src/HexEditorCtrl/HexEditorCtrl.cpp:41
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:33
+msgid "Offset"
+msgstr "オフセット"
+
+#: src/HexDialogs.cpp:167 src/HexEditorGui.cpp:719
+msgid "Sector"
+msgstr "セクター"
+
+#: src/HexDialogs.cpp:448
+msgid "Finding Some Bytes..."
+msgstr "数バイトを検索中…"
+
+#: src/HexDialogs.cpp:450 src/HexDialogs.cpp:677
+msgid "wxHexEditor Searching"
+msgstr "wxHexEditor 検索中"
+
+#: src/HexDialogs.cpp:485 src/HexDialogs.cpp:836 src/HexDialogs.cpp:1031
+#: src/HexDialogs.cpp:1121
+msgid "Search Speed : "
+msgstr "検索速度 :"
+
+#: src/HexDialogs.cpp:485 src/HexDialogs.cpp:836 src/HexDialogs.cpp:936
+#: src/HexDialogs.cpp:1031 src/HexDialogs.cpp:1121 src/HexDialogs.cpp:2341
+#: src/HexDialogs.cpp:2702 src/HexDialogs.cpp:3162 src/HexDialogs.cpp:3254
+#: src/HexDialogs.cpp:3317 src/HexEditor.cpp:176 src/HexEditor.cpp:390
+msgid "MB/s"
+msgstr "MB/秒"
+
+#: src/HexDialogs.cpp:527 src/HexDialogs.cpp:1173
+msgid "Search"
+msgstr "検索"
+
+#: src/HexDialogs.cpp:544 src/HexDialogs.cpp:1181
+msgid "Search value not found"
+msgstr "検索した値が見つかりません"
+
+#: src/HexDialogs.cpp:544 src/HexDialogs.cpp:1181
+msgid "Nothing found!"
+msgstr "何か見つかりました!"
+
+#: src/HexDialogs.cpp:675
+msgid "Finding matches..."
+msgstr "一致するものを検索中..."
+
+#: src/HexDialogs.cpp:936
+msgid "Search Speed :"
+msgstr "検索速度 :"
+
+#: src/HexDialogs.cpp:1191
+#, c-format
+msgid "Found %d matches."
+msgstr "一致が%d件見つかりました。"
+
+#: src/HexDialogs.cpp:1191
+msgid "Find All Done!"
+msgstr "検索がすべて完了しました!"
+
+#: src/HexDialogs.cpp:1595 src/HexDialogs.cpp:1620
+msgid ""
+"Search and Replace sizes are not equal!\n"
+"Replacing with different size are not supported yet."
+msgstr ""
+"検索と置換の文字数が等しくありません! \n"
+"異なる文字数での置き換えはまだサポートされていません。"
+
+#: src/HexDialogs.cpp:1595 src/HexDialogs.cpp:1620 src/HexDialogs.cpp:1954
+#: src/HexEditor.cpp:145
+msgid "Error!"
+msgstr "エラー!"
+
+#: src/HexDialogs.cpp:1603 src/HexDialogs.cpp:1641 src/HexEditorFrame.cpp:296
+#: src/HexEditorGui.cpp:138 src/HexEditorGui.cpp:933
+msgid "Replace"
+msgstr "置換"
+
+#: src/HexDialogs.cpp:1662
+#, c-format
+msgid "%d records changed."
+msgstr "%d のレコードが変更されました。"
+
+#: src/HexDialogs.cpp:1662 src/HexEditor.cpp:1439 src/HexEditorFrame.cpp:703
+msgid "Info"
+msgstr "情報"
+
+#: src/HexDialogs.cpp:1710
+msgid "Not Available"
+msgstr "使用できない"
+
+#: src/HexDialogs.cpp:1716
+msgid "Raw Hex"
+msgstr "生16進数"
+
+#: src/HexDialogs.cpp:1717
+msgid "With Space"
+msgstr "スペースを含める"
+
+#: src/HexDialogs.cpp:1718
+msgid "Quad Hex"
+msgstr "4つ区切りの16進数"
+
+#: src/HexDialogs.cpp:1719
+msgid "with 0x"
+msgstr "0xを含める"
+
+#: src/HexDialogs.cpp:1720
+msgid "with 0x and period"
+msgstr "0xとピリオドを含める"
+
+#: src/HexDialogs.cpp:1727
+msgid "HTML format"
+msgstr "HTMLフォーマット"
+
+#: src/HexDialogs.cpp:1728
+msgid "HTML with TAGs"
+msgstr "HTMLのタグ"
+
+#: src/HexDialogs.cpp:1729
+msgid "phpBB forum style"
+msgstr "phpBBフォーラムスタイル"
+
+#: src/HexDialogs.cpp:1730
+msgid "WiKi format"
+msgstr "Wikiフォーマット"
+
+#: src/HexDialogs.cpp:1731
+msgid "WiKi with TAGs"
+msgstr "Wikiのタグ"
+
+#: src/HexDialogs.cpp:1737
+msgid "8bit - Byte "
+msgstr "8bit - Byte "
+
+#: src/HexDialogs.cpp:1738
+msgid "16bit - Words"
+msgstr "16bit - Words"
+
+#: src/HexDialogs.cpp:1739
+msgid "32bit - Dwords"
+msgstr "32bit - Dwords"
+
+#: src/HexDialogs.cpp:1740
+msgid "64bit - Qwords"
+msgstr "64bit - Qwords"
+
+#: src/HexDialogs.cpp:1954
+msgid "Selected block bigger than limit."
+msgstr "選択されたブロックは制限よりも大きいです。"
+
+#: src/HexDialogs.cpp:2155
+msgid "File #1 is not readable."
+msgstr "ファイル #1 を読み取ることができません。"
+
+#: src/HexDialogs.cpp:2159
+msgid "File #2 is not readable."
+msgstr "ファイル #2 を読み取ることができません。"
+
+#: src/HexDialogs.cpp:2175
+msgid "Error, File #1 cannot open."
+msgstr "エラー ファイル #1 は開くことができません。"
+
+#: src/HexDialogs.cpp:2179
+msgid "Error, File #2 cannot open."
+msgstr "エラー ファイル #2 は開くことができません。"
+
+#: src/HexDialogs.cpp:2185
+msgid "Error, Save File cannot open."
+msgstr "エラー 保存したファイルは開くことができません。"
+
+#: src/HexDialogs.cpp:2188
+msgid "Comparing files..."
+msgstr "ファイルの比較..."
+
+#: src/HexDialogs.cpp:2190
+msgid "wxHexEditor Comparing"
+msgstr "wxHexEditor 比較"
+
+#: src/HexDialogs.cpp:2266
+msgid "Sorry, this program supports up to 500K differences."
+msgstr "申し訳ありませんがこのプログラムでは500Kまでの違いをサポートします。"
+
+#: src/HexDialogs.cpp:2266
+msgid "Remaining differences not shown."
+msgstr "残りの違いが示されていないません。"
+
+#: src/HexDialogs.cpp:2266
+msgid "Error on Comparison"
+msgstr "比較のエラー"
+
+#: src/HexDialogs.cpp:2341
+msgid "Comparison Speed : "
+msgstr "比較速度 :"
+
+#: src/HexDialogs.cpp:2363
+msgid "File #1 : "
+msgstr "ファイル #1 :"
+
+#: src/HexDialogs.cpp:2363
+msgid "File #2 : "
+msgstr "ファイル #2 :"
+
+#: src/HexDialogs.cpp:2404 src/HexDialogs.cpp:2408
+msgid "This part doesn't exist at compared file"
+msgstr "この部分は比較したファイルが存在しません。"
+
+#: src/HexDialogs.cpp:2451
+msgid "Error, Save File is not selected."
+msgstr "エラー 保存するファイルが選択されていません。"
+
+#: src/HexDialogs.cpp:2593
+msgid "Cannot calculate checksum of an empty file."
+msgstr "空のファイルのチェックサムを計算することはできません。"
+
+#: src/HexDialogs.cpp:2599
+msgid "File: "
+msgstr "ファイル :"
+
+#: src/HexDialogs.cpp:2600
+msgid "Notice: Checksum includes non-saved changes."
+msgstr "注意 : チェックサムは保存されていない変更が含まれています。"
+
+#: src/HexDialogs.cpp:2618
+msgid "Results copied to the clipboard."
+msgstr "結果をクリップボードにコピーしました。"
+
+#: src/HexDialogs.cpp:2618
+msgid "Checksum Results"
+msgstr "チェックサムの結果"
+
+#: src/HexDialogs.cpp:2639 src/HexEditor.cpp:154
+msgid "Please wait while calculating checksum."
+msgstr "チェックサムを計算しています しばらくお待ちください。"
+
+#: src/HexDialogs.cpp:2641 src/HexEditor.cpp:156
+msgid "Calculating Checksum"
+msgstr "チェックサムを計算"
+
+#: src/HexDialogs.cpp:2702 src/HexEditor.cpp:176
+msgid "Hash Speed : "
+msgstr "ハッシュ速度 :"
+
+#: src/HexDialogs.cpp:3087
+msgid "Do you sure about resetting colours?"
+msgstr "色を再設定してもよろしいですか?"
+
+#: src/HexDialogs.cpp:3087
+msgid "Resetting Hex Colours"
+msgstr "16進数色のリセット"
+
+#: src/HexDialogs.cpp:3134
+msgid "Please wait while backing up disk/partition image."
+msgstr ""
+"ディスク/パーティションイメージをバックアップしています しばらくお待ちくださ"
+"い。"
+
+#: src/HexDialogs.cpp:3136
+msgid "Disk/Partition Backup"
+msgstr "ディスク/パーティション バックアップ"
+
+#: src/HexDialogs.cpp:3154
+msgid "Error on writing to backup image."
+msgstr "バックアップイメージへの書き込み時にエラー。"
+
+#: src/HexDialogs.cpp:3154 src/HexDialogs.cpp:3221
+msgid "ERROR!"
+msgstr "エラ－!"
+
+#: src/HexDialogs.cpp:3162
+msgid "Backup Speed : "
+msgstr "バックアップ速度 :"
+
+#: src/HexDialogs.cpp:3191
+msgid "Backup operation completed."
+msgstr "バックアップ操作が完了しました。"
+
+#: src/HexDialogs.cpp:3191 src/HexDialogs.cpp:3262 src/HexDialogs.cpp:3324
+msgid "Operation Complete"
+msgstr "操作を完了"
+
+#: src/HexDialogs.cpp:3217 src/HexDialogs.cpp:3279
+msgid "WARNING! THIS OPERATION WILL DESTROY EVERY INFORMATION AT :\n"
+msgstr "警告! この操作はすべての情報を破壊します : \n"
+
+#: src/HexDialogs.cpp:3217 src/HexDialogs.cpp:3279
+msgid "ARE YOU SURE?"
+msgstr "本当に?"
+
+#: src/HexDialogs.cpp:3217 src/HexDialogs.cpp:3226 src/HexDialogs.cpp:3279
+msgid "WARNING!"
+msgstr "警告!"
+
+#: src/HexDialogs.cpp:3221
+msgid "ERROR!: Disk space is smaller than the image file."
+msgstr "エラー : ディスクの空き領域はイメージファイルよりも小さいです。"
+
+#: src/HexDialogs.cpp:3226
+msgid ""
+"WARNING!: Disk space is bigger than the image file. \n"
+"Remaining space will remain untouched."
+msgstr ""
+"警告! : ディスクの空き容量よりも大きいイメージ ファイル。\n"
+"残りのスペースはそのままです。"
+
+#: src/HexDialogs.cpp:3230
+msgid "Please wait while restoring disk/partition."
+msgstr "ディスク/パーティションを復元するまでお待ちください。"
+
+#: src/HexDialogs.cpp:3232
+msgid "Disk/Partition Restore"
+msgstr "ディスク/パーティション 復元"
+
+#: src/HexDialogs.cpp:3254
+msgid "Restore Speed : "
+msgstr "復元速度 :"
+
+#: src/HexDialogs.cpp:3262
+msgid "Restore operation completed."
+msgstr "復元操作が完了しました。"
+
+#: src/HexDialogs.cpp:3282
+msgid "Please wait while erasing disk/partition image."
+msgstr "ディスク/パーティションイメージを消去するまでお待ちください。"
+
+#: src/HexDialogs.cpp:3284
+msgid "Disk/Partition Erase"
+msgstr "ディスク/パーティション 消去"
+
+#: src/HexDialogs.cpp:3317
+msgid "Erase Speed : "
+msgstr "消去速度 :"
+
+#: src/HexDialogs.cpp:3324
+msgid "Erase operation completed."
+msgstr "消去操作が完了しました。"
+
+#: src/HexEditor.cpp:145
+msgid "Cannot read hash file!"
+msgstr "ハッシュファイルを読み取ることができません!"
+
+#: src/HexEditor.cpp:189
+msgid "File Corrupt!"
+msgstr "破損ファイル!"
+
+#: src/HexEditor.cpp:189
+msgid "File Hash:"
+msgstr "ファイルハッシュ :"
+
+#: src/HexEditor.cpp:192
+msgid "Hash File:"
+msgstr "ハッシュファイル :"
+
+#: src/HexEditor.cpp:193 src/HexEditor.cpp:197
+msgid "Hash Result"
+msgstr "ハッシュ結果"
+
+#: src/HexEditor.cpp:197
+msgid "File Verified."
+msgstr "検証済みファイル。"
+
+#: src/HexEditor.cpp:204
+msgid "Critical Error. File pointer is not empty!"
+msgstr "重大なエラーが発生しました ファイルポインタは空ではありません!"
+
+#: src/HexEditor.cpp:224 src/HexEditorFrame.cpp:520
+msgid "File cannot open!"
+msgstr "ファイルを開くことができません！"
+
+#: src/HexEditor.cpp:315
+msgid ""
+"For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-"
+"saved changes will discarded."
+msgstr ""
+
+#: src/HexEditor.cpp:315
+msgid "XORView Thru Warning"
+msgstr ""
+
+#: src/HexEditor.cpp:335
+msgid "File in Read Only mode. Cannot save file."
+msgstr "ファイルは読み取り専用モードです ファイルを保存することができません。"
+
+#: src/HexEditor.cpp:335 src/HexEditor.cpp:344 src/HexEditor.cpp:360
+msgid "File Save"
+msgstr "ファイルを保存"
+
+#: src/HexEditor.cpp:339
+msgid ""
+"File has some insertion/deletions. You cannot save this file-self (yet). "
+"Please use SaveAs."
+msgstr ""
+"ファイルはいくつかの挿入/削除を持っています。このファイル自身を（まだ）保存す"
+"ることはできません。名前を付けて保存を使用してください。"
+
+#: src/HexEditor.cpp:339
+msgid "File Save Error."
+msgstr "ファイル保存エラー。"
+
+#: src/HexEditor.cpp:344
+msgid "Do you want to save this file?"
+msgstr "このファイルを保存しますか?"
+
+#: src/HexEditor.cpp:349
+msgid "File cannot saved. Operation Cancelled"
+msgstr "ファイルは保存できません 操作はキャンセルされました。"
+
+#: src/HexEditor.cpp:349
+msgid "File Save Error"
+msgstr "ファイル保存エラー"
+
+#: src/HexEditor.cpp:360
+msgid "File is not changed. Nothing to save.\n"
+msgstr "ファイルは変更されていません 保存するものがありません。\n"
+
+#: src/HexEditor.cpp:371
+msgid "File save in progress"
+msgstr "ファイル保存の進行中"
+
+#: src/HexEditor.cpp:373
+msgid "Saving file"
+msgstr "ファイルに保存中"
+
+#: src/HexEditor.cpp:390
+msgid "Write Speed : "
+msgstr "書き込み速度 :"
+
+#: src/HexEditor.cpp:411
+msgid "Do you want to save file?\n"
+msgstr "ファイルを保存しますか?\n"
+
+#: src/HexEditor.cpp:411
+msgid "File Has Changed!"
+msgstr "ファイルが変更されました!"
+
+#: src/HexEditor.cpp:426
+msgid ""
+"TAG file cannot save to default location.\n"
+"Do you want to Export TAGs file?"
+msgstr ""
+"タグのファイルを既定の場所に保存できません。\n"
+"タグファイルのエクスポートをしますか?"
+
+#: src/HexEditor.cpp:426
+msgid "TAGs Cannot Saved!!"
+msgstr "タグが保存されていない!"
+
+#: src/HexEditor.cpp:428 src/HexEditorFrame.cpp:596
+msgid "Choose a file for export TAGs"
+msgstr "タグエクスポート用のファイルを選択してください"
+
+#: src/HexEditor.cpp:438
+msgid "TAGs cannot exported to file : "
+msgstr "タグをファイルにエクスポートできません :"
+
+#: src/HexEditor.cpp:539
+msgid "Enter hex value(s) for fill"
+msgstr "埋める用の16進数(複数可)を入力してください"
+
+#: src/HexEditor.cpp:539
+msgid "Fill Dialog"
+msgstr "埋める"
+
+#: src/HexEditor.cpp:540
+msgid "Fill"
+msgstr "埋める"
+
+#: src/HexEditor.cpp:558
+msgid "Choose a file for saving dump"
+msgstr "ダンプを保存するファイルを選択してください"
+
+#: src/HexEditor.cpp:579
+msgid "Dump cannot saved as "
+msgstr "ダンプとして保存することはできません"
+
+#: src/HexEditor.cpp:591 src/HexEditor.cpp:1270
+msgid "Showing Page: %"
+msgstr "表示ページ : %"
+
+#: src/HexEditor.cpp:608
+msgid "File cannot read!"
+msgstr "ファイルを読み取ることが出来ません。"
+
+#: src/HexEditor.cpp:989 src/HexEditor.cpp:1278
+msgid "Selected Block: N/A"
+msgstr "選択したブロック : N/A"
+
+#: src/HexEditor.cpp:990 src/HexEditor.cpp:1279
+msgid "Block Size: N/A"
+msgstr "ブロックサイス : N/A"
+
+#: src/HexEditor.cpp:1038 src/HexEditorFrame.cpp:302 src/HexEditorGui.cpp:91
+#: src/HexEditorGui.cpp:1530
+msgid "Copy"
+msgstr "コピー"
+
+#: src/HexEditor.cpp:1039
+msgid "CopyAs"
+msgstr "形式を指定してコピー"
+
+#: src/HexEditor.cpp:1040 src/HexEditorGui.cpp:101
+msgid "Save As Dump"
+msgstr "ダンプとして保存"
+
+#: src/HexEditor.cpp:1041 src/HexEditorFrame.cpp:303 src/HexEditorGui.cpp:111
+msgid "Paste"
+msgstr "貼り付け"
+
+#: src/HexEditor.cpp:1044 src/HexEditorGui.cpp:121
+msgid "Delete"
+msgstr "削除"
+
+#: src/HexEditor.cpp:1045 src/HexEditorFrame.cpp:307 src/HexEditorGui.cpp:126
+msgid "Insert"
+msgstr "挿入"
+
+#: src/HexEditor.cpp:1046 src/HexEditorGui.cpp:106
+msgid "Cut"
+msgstr "切り取り"
+
+#: src/HexEditor.cpp:1055
+msgid "Fill Selecton"
+msgstr "選択した箇所を埋める"
+
+#: src/HexEditor.cpp:1057
+msgid "Set Selection Block Start"
+msgstr "選択ブロックの開始を設定"
+
+#: src/HexEditor.cpp:1059
+msgid "Set Selection Block End"
+msgstr "選択ブロックの終了を設定"
+
+#: src/HexEditor.cpp:1061
+msgid "Quick Tag"
+msgstr "クイックタグ"
+
+#: src/HexEditor.cpp:1061
+msgid "Creates empty tag with Random Color."
+msgstr "ランダムな色と空のタグが作成されます。"
+
+#: src/HexEditor.cpp:1062
+msgid "New Tag"
+msgstr "新しいタグ"
+
+#: src/HexEditor.cpp:1063
+msgid "Tag Edit"
+msgstr "タグ編集"
+
+#: src/HexEditor.cpp:1271
+msgid "Cursor Offset: "
+msgstr "カーソルオフセット :"
+
+#: src/HexEditor.cpp:1275
+#, c-format
+msgid "Cursor Value: %u"
+msgstr "カーソル値 : %u"
+
+#: src/HexEditor.cpp:1282
+msgid "Selected Block: %"
+msgstr "選択したブロック : %"
+
+#: src/HexEditor.cpp:1283
+msgid "Block Size: %"
+msgstr "ブロックサイス : %"
+
+#: src/HexEditor.cpp:1360
+#, c-format
+msgid ""
+"Notice!: This command will increase the file size and will generate too much "
+"overhead on file save.\n"
+"How many bytes do you want to inject to location to offset location %lld?"
+msgstr ""
+"注意 : このコマンドを実行するとファイルサイズが大きくなります ファイルを保存"
+"する上で多くのオーバーヘッドが発生します。\n"
+"あなたは位置 %lld にどれだけのバイトを注入したいですか?"
+
+#: src/HexEditor.cpp:1361
+msgid "Bytes"
+msgstr "バイト"
+
+#: src/HexEditor.cpp:1361
+msgid "Injection!"
+msgstr "インジェクション!"
+
+#: src/HexEditor.cpp:1420
+msgid ""
+"WARNING:\n"
+"The text you are copying includes a null character\n"
+"(00 in the hex pane) and will be truncated!\n"
+"\n"
+"If copying to another file in wxHexEditor you\n"
+"should copy from the Hex pane, not the text pane"
+msgstr ""
+
+#: src/HexEditor.cpp:1425
+msgid "Warning"
+msgstr "警告"
+
+#: src/HexEditor.cpp:1431
+msgid "You have no RAM to copy this data."
+msgstr "このデータをコピーするRAMがありません。"
+
+#: src/HexEditor.cpp:1436
+msgid ""
+"You are tried to copy data more than 10 MB.\n"
+"Copying above 10 MB to clipboard is not allowed.\n"
+"Only internal copy buffer used!"
+msgstr ""
+"10MB以上のデータをコピーしようとしています。\n"
+"10MBを超えるクリップボードへのコピーは許可されていません \n"
+"内部でのみコピーバッファが使用されます!"
+
+#: src/HexEditorFrame.cpp:187
+msgid "License Agreement"
+msgstr "使用許諾契約書"
+
+#: src/HexEditorFrame.cpp:289
+msgid "New File"
+msgstr "新しいファイル"
+
+#: src/HexEditorFrame.cpp:289
+msgid "New file"
+msgstr "新しいファイル"
+
+#: src/HexEditorFrame.cpp:290
+msgid "Open File"
+msgstr "ファイルを開く"
+
+#: src/HexEditorFrame.cpp:290
+msgid "Open"
+msgstr "開く"
+
+#: src/HexEditorFrame.cpp:291
+msgid "Save File"
+msgstr "ファイルの保存"
+
+#: src/HexEditorFrame.cpp:291 src/HexEditorGui.cpp:1795
+#: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:56
+msgid "Save"
+msgstr "保存"
+
+#: src/HexEditorFrame.cpp:292
+msgid "SaveAs File"
+msgstr "ファイルに保存"
+
+#: src/HexEditorFrame.cpp:292
+msgid "Save as"
+msgstr "名前を付けて保存"
+
+#: src/HexEditorFrame.cpp:293
+msgid "Close File"
+msgstr "ファイルを閉じる"
+
+#: src/HexEditorFrame.cpp:293
+msgid "Close"
+msgstr "閉じる"
+
+#: src/HexEditorFrame.cpp:296
+msgid "Find and replace"
+msgstr "検索して置換"
+
+#: src/HexEditorFrame.cpp:297
+msgid "GoTo"
+msgstr ""
+
+#: src/HexEditorFrame.cpp:297
+msgid "Go to offset"
+msgstr "オフセットに行く"
+
+#: src/HexEditorFrame.cpp:299
+msgid "Undo"
+msgstr "取り消す"
+
+#: src/HexEditorFrame.cpp:300
+msgid "Redo"
+msgstr "やり直す"
+
+#: src/HexEditorFrame.cpp:302
+msgid "Copy Block"
+msgstr "ブロックをコピー"
+
+#: src/HexEditorFrame.cpp:303
+msgid "Paste Block"
+msgstr "ブロックを貼り付"
+
+#: src/HexEditorFrame.cpp:305
+msgid "Cut Block"
+msgstr "ブロックを切り取り"
+
+#: src/HexEditorFrame.cpp:305
+msgid "Cuts selected block and copies to clipboard"
+msgstr "ブロックを選択して切り取り、クリップボードにコピー"
+
+#: src/HexEditorFrame.cpp:306
+msgid "Delete Block"
+msgstr "ブロックの削除"
+
+#: src/HexEditorFrame.cpp:306
+msgid "Deletes selected block"
+msgstr "選択したブロックを削除"
+
+#: src/HexEditorFrame.cpp:307
+msgid "Insert Block"
+msgstr "ブロックの挿入"
+
+#: src/HexEditorFrame.cpp:315 src/HexEditorGui.cpp:155
+msgid "Toolbar"
+msgstr "ツールバー"
+
+#: src/HexEditorFrame.cpp:348
+msgid "Search Results"
+msgstr "検索結果"
+
+#: src/HexEditorFrame.cpp:359
+msgid "Comparison Results"
+msgstr "比較結果"
+
+#: src/HexEditorFrame.cpp:370
+msgid "DataInterpreter"
+msgstr "データインタープリタ"
+
+#: src/HexEditorFrame.cpp:382 src/HexEditorGui.cpp:159
+msgid "InfoPanel"
+msgstr "情報パネル"
+
+#: src/HexEditorFrame.cpp:462
+msgid "MD5 File detected. Do you request MD5 verification?"
+msgstr "MD5ファイルが検出されました MD5の検証を要求していますか?"
+
+#: src/HexEditorFrame.cpp:462 src/HexEditorFrame.cpp:465
+#: src/HexEditorFrame.cpp:468
+msgid "Checksum File Detected"
+msgstr "検出されたチェックサムファイル"
+
+#: src/HexEditorFrame.cpp:465
+msgid "SHA1 File detected. Do you request SHA1 verification?"
+msgstr "SHA1ファイルが検出されました SHA1の検証を要求していますか?"
+
+#: src/HexEditorFrame.cpp:468
+msgid "SHA256 File detected. Do you request SHA256 verification?"
+msgstr "SHA256ファイルが検出されました SHA256の検証を要求していますか?"
+
+#: src/HexEditorFrame.cpp:492
+msgid "Please indicate file size in decimal."
+msgstr "10進数でファイルサイズを入力してください。"
+
+#: src/HexEditorFrame.cpp:493
+msgid "Enter File Size:"
+msgstr "ファイルサイズを入力 :"
+
+#: src/HexEditorFrame.cpp:500
+#, c-format
+msgid "Wrong input: %d please retry..."
+msgstr "間違った入力 : %d 再試行してください..."
+
+#: src/HexEditorFrame.cpp:504 src/HexEditorFrame.cpp:559
+msgid "Choose a file for save as"
+msgstr "名前を付けて保存するファイルを選択してください"
+
+#: src/HexEditorFrame.cpp:516
+msgid "File cannot create!"
+msgstr "ファイルが作成できません!"
+
+#: src/HexEditorFrame.cpp:534
+msgid "Choose a file for editing"
+msgstr "編集するファイルを選択してください"
+
+#: src/HexEditorFrame.cpp:567
+msgid "File cannot save as "
+msgstr "ファイルとして保存することはできません"
+
+#: src/HexEditorFrame.cpp:580
+msgid "Choose a file for import TAGs"
+msgstr "インポートタグ用のファイルを選択してください"
+
+#: src/HexEditorFrame.cpp:588
+msgid "TAGS cannot imported from "
+msgstr "タグからインポートすることはできません"
+
+#: src/HexEditorFrame.cpp:604
+msgid "TAGs cannot exported to "
+msgstr "タグにエクスポートすることはできません"
+
+#: src/HexEditorFrame.cpp:608
+msgid "There is no TAGs to Export in current active file!"
+msgstr "現在アクティブなファイルにエクスポートするタグがありません!"
+
+#: src/HexEditorFrame.cpp:673
+msgid "Please enter process identification number."
+msgstr "プロセスIDを入力してください。"
+
+#: src/HexEditorFrame.cpp:673
+msgid "Enter PID:"
+msgstr "プロセスIDを入力 :"
+
+#: src/HexEditorFrame.cpp:673 src/HexEditorGui.cpp:232
+msgid "Open Process RAM"
+msgstr "プロセスのRAMを開く"
+
+#: src/HexEditorFrame.cpp:703
+msgid "Please restart program for changes."
+msgstr "変更を有効にするためにプログラムを再起動してください。"
+
+#: src/HexEditorFrame.cpp:724
+msgid "This mode will write changes every change to file DIRECTLY."
+msgstr "このモードでは、すべての変更内容を直接ファイルに書き込みます。"
+
+#: src/HexEditorFrame.cpp:724
+msgid "Warning!"
+msgstr "警告!"
+
+#: src/HexEditorFrame.cpp:752
+msgid "Error on quit!"
+msgstr "終了時にエラー!"
+
+#: src/HexEditorFrame.cpp:823
+msgid "wxHexEditor is a hex editor for HUGE files and devices."
+msgstr "wxHexEditorは巨大なファイルやデバイス用のバイナリエディタです。"
+
+#: src/HexEditorFrame.cpp:914
+msgid "You needed administration privileges to see available devices"
+msgstr "利用可能なデバイスを表示するには管理者権限が必要です"
+
+#: src/HexEditorFrame.cpp:1133
+msgid "Cannot open dropped file: "
+msgstr "ドロップされたファイルを開くことができません :"
+
+#: src/HexEditorFrame.cpp:1152 src/HexEditorGui.cpp:1010
+#, c-format
+msgid "New wxHexEditor version %s is available!"
+msgstr "wxHexEditor バージョン %s が利用可能です!"
+
+#: src/HexEditorGui.cpp:29
+msgid "&New"
+msgstr "新規"
+
+#: src/HexEditorGui.cpp:29
+msgid "CTRL+N"
+msgstr "CTRL+N"
+
+#: src/HexEditorGui.cpp:29
+msgid "Creates a new file"
+msgstr "新しいファイルを作成"
+
+#: src/HexEditorGui.cpp:33
+msgid "&Open"
+msgstr "開く"
+
+#: src/HexEditorGui.cpp:33
+msgid "CTRL+O"
+msgstr "CTRL+O"
+
+#: src/HexEditorGui.cpp:33
+msgid "Open a file"
+msgstr "ファイルを開く"
+
+#: src/HexEditorGui.cpp:38
+msgid "No Recent File"
+msgstr "最近のファイルがありません"
+
+#: src/HexEditorGui.cpp:42
+msgid "Open &Recent"
+msgstr "最近使ったファイルを開く"
+
+#: src/HexEditorGui.cpp:45
+msgid "&Save"
+msgstr "保存"
+
+#: src/HexEditorGui.cpp:45
+msgid "CTRL+S"
+msgstr "CTRL+S"
+
+#: src/HexEditorGui.cpp:45
+msgid "Save modifications"
+msgstr "変更を保存"
+
+#: src/HexEditorGui.cpp:50
+msgid "Save &As"
+msgstr "名前を付けて保存"
+
+#: src/HexEditorGui.cpp:50
+msgid "SHIFT+CTRL+S"
+msgstr "SHIFT+CTRL+S"
+
+#: src/HexEditorGui.cpp:50
+msgid "Save current file as..."
+msgstr "現在のファイルを名前を付けて保存"
+
+#: src/HexEditorGui.cpp:55
+msgid "&Close"
+msgstr "閉じる"
+
+#: src/HexEditorGui.cpp:55
+msgid "CTRL+W"
+msgstr "CTRL+W"
+
+#: src/HexEditorGui.cpp:55
+msgid "Close current file"
+msgstr "現在のファイルを閉じる"
+
+#: src/HexEditorGui.cpp:62
+msgid "Import TAGs"
+msgstr "タグのインポート"
+
+#: src/HexEditorGui.cpp:66
+msgid "Export TAGs"
+msgstr "タグのエクスポート"
+
+#: src/HexEditorGui.cpp:72
+msgid "&Quit"
+msgstr "終了"
+
+#: src/HexEditorGui.cpp:72
+msgid "CTRL+Q"
+msgstr "CTRL+Q"
+
+#: src/HexEditorGui.cpp:72
+msgid "Quit the application"
+msgstr "アプリケーションを終了する"
+
+#: src/HexEditorGui.cpp:75
+msgid "&File"
+msgstr "ファイル"
+
+#: src/HexEditorGui.cpp:79
+msgid "&Undo"
+msgstr "取り消す"
+
+#: src/HexEditorGui.cpp:79
+msgid "CTRL+Z"
+msgstr "CTRL+Z"
+
+#: src/HexEditorGui.cpp:79
+msgid "Undo last operation"
+msgstr "最後の操作を元に戻す"
+
+#: src/HexEditorGui.cpp:84
+msgid "&Redo"
+msgstr "やり直し"
+
+#: src/HexEditorGui.cpp:84
+msgid "CTRL+Y"
+msgstr "CTRL+Y"
+
+#: src/HexEditorGui.cpp:84
+msgid "Reverts last undo"
+msgstr "最後の元に戻すを取り消す"
+
+#: src/HexEditorGui.cpp:91
+msgid "CTRL+C"
+msgstr "CTRL+C"
+
+#: src/HexEditorGui.cpp:91
+msgid "Copies selection"
+msgstr "選択領域をコピー"
+
+#: src/HexEditorGui.cpp:96
+msgid "Copy As"
+msgstr "形式を指定してコピー"
+
+#: src/HexEditorGui.cpp:96
+msgid "CTRL+SHIFT+C"
+msgstr "CTRL+SHIFT+C"
+
+#: src/HexEditorGui.cpp:96
+msgid "Copies selection in special format"
+msgstr "特殊な形式で選択領域をコピー"
+
+#: src/HexEditorGui.cpp:101
+msgid "CTRL+ALT+S"
+msgstr "CTRL+ALT+S"
+
+#: src/HexEditorGui.cpp:101
+msgid "Save selections as a file"
+msgstr "ファイルとして選択を保存"
+
+#: src/HexEditorGui.cpp:106
+msgid "CTRL+X"
+msgstr "CTRL+X"
+
+#: src/HexEditorGui.cpp:106
+msgid "Cuts a selection"
+msgstr "選択範囲を切り取ります"
+
+#: src/HexEditorGui.cpp:111
+msgid "CTRL+V"
+msgstr "CTRL+V"
+
+#: src/HexEditorGui.cpp:111
+msgid "Paste clipboard to cursor location"
+msgstr "カーソルの位置にクリップボードの内容を貼り付け"
+
+#: src/HexEditorGui.cpp:116
+msgid "Fill Selection"
+msgstr "選択領域を埋める"
+
+#: src/HexEditorGui.cpp:116
+msgid "Fill selection blocks"
+msgstr "選択したブロックを埋める"
+
+#: src/HexEditorGui.cpp:121
+msgid "Deletes selection"
+msgstr "選択範囲を削除"
+
+#: src/HexEditorGui.cpp:126
+msgid "Inserts new bytes to cursor location"
+msgstr "カーソル位置に新しいバイトを挿入します"
+
+#: src/HexEditorGui.cpp:133
+msgid "CTRL+F"
+msgstr "CTRL+F"
+
+#: src/HexEditorGui.cpp:138
+msgid "CTRL+R"
+msgstr "CTRL+R"
+
+#: src/HexEditorGui.cpp:143
+msgid "CTRL+G"
+msgstr "CTRL+G"
+
+#: src/HexEditorGui.cpp:143
+msgid "Branches the given location"
+msgstr ""
+
+#: src/HexEditorGui.cpp:147
+msgid "&Edit"
+msgstr "編集"
+
+#: src/HexEditorGui.cpp:151
+msgid "Data Interpreter"
+msgstr "データインタープリタ"
+
+#: src/HexEditorGui.cpp:163
+msgid "TAG Panel"
+msgstr "タグパネル"
+
+#: src/HexEditorGui.cpp:167
+msgid "Disassembler Panel"
+msgstr "逆アセンブラパネル"
+
+#: src/HexEditorGui.cpp:171
+msgid "Search Panel"
+msgstr "検索パネル"
+
+#: src/HexEditorGui.cpp:175
+msgid "Comparison Panel"
+msgstr "比較パネル"
+
+#: src/HexEditorGui.cpp:181
+msgid "Zebra Striping"
+msgstr "ゼブラストライプ"
+
+#: src/HexEditorGui.cpp:187
+msgid "Offset Control"
+msgstr "オフセットコントロール"
+
+#: src/HexEditorGui.cpp:192
+msgid "Hex Control"
+msgstr "16進数コントロール"
+
+#: src/HexEditorGui.cpp:197
+msgid "Text Control"
+msgstr "テキストコントロール"
+
+#: src/HexEditorGui.cpp:201
+msgid "&View"
+msgstr "表示"
+
+#: src/HexEditorGui.cpp:213
+msgid "XORView Thru"
+msgstr ""
+
+#: src/HexEditorGui.cpp:213
+msgid "View your XOR encrypted file without decrypting!"
+msgstr "復号化せずにXOR暗号化されたファイルを表示します!"
+
+#: src/HexEditorGui.cpp:216
+msgid "Tools"
+msgstr "ツール"
+
+#: src/HexEditorGui.cpp:220
+msgid "Open RAM Device"
+msgstr "RAMデバイスを開く"
+
+#: src/HexEditorGui.cpp:226
+msgid "N/A on this OS (yet)"
+msgstr ""
+
+#: src/HexEditorGui.cpp:229
+msgid "Open Disk Device"
+msgstr "ディスクデバイスを開く"
+
+#: src/HexEditorGui.cpp:240 src/HexEditorGui.cpp:1871
+msgid "Backup"
+msgstr "バックアップ"
+
+#: src/HexEditorGui.cpp:244 src/HexEditorGui.cpp:1932
+msgid "Restore"
+msgstr "復元"
+
+#: src/HexEditorGui.cpp:248 src/HexEditorGui.cpp:1992
+msgid "Erase"
+msgstr "消去"
+
+#: src/HexEditorGui.cpp:251
+msgid "Device Image Tools"
+msgstr "デバイスイメージツール"
+
+#: src/HexEditorGui.cpp:253
+msgid "Devices"
+msgstr "デバイス"
+
+#: src/HexEditorGui.cpp:258
+msgid "Read Only"
+msgstr "読み取り専用"
+
+#: src/HexEditorGui.cpp:264
+msgid "Writeable"
+msgstr "書き込み可能"
+
+#: src/HexEditorGui.cpp:269
+msgid "Direct Write"
+msgstr "直接書き込み"
+
+#: src/HexEditorGui.cpp:273
+msgid "File Mode"
+msgstr "ファイルモード"
+
+#: src/HexEditorGui.cpp:279 src/HexEditorGui.cpp:890
+msgid "Options"
+msgstr "オプション"
+
+#: src/HexEditorGui.cpp:283
+msgid "Donate"
+msgstr "寄付"
+
+#: src/HexEditorGui.cpp:283
+msgid "Donate some money to author as a return!"
+msgstr "作者へのリターンとしていくらかのお金を寄付してください!"
+
+#: src/HexEditorGui.cpp:287
+msgid "Bug Reporting"
+msgstr "バグ報告"
+
+#: src/HexEditorGui.cpp:287
+msgid "Report bugs for smashing them!"
+msgstr "バグを粉々に砕くためにバグを報告してください!"
+
+#: src/HexEditorGui.cpp:291
+msgid "&About"
+msgstr "このソフトウェアについて"
+
+#: src/HexEditorGui.cpp:291
+msgid "F1"
+msgstr "F1"
+
+#: src/HexEditorGui.cpp:291
+msgid "Show info about this application"
+msgstr "このアプリケーションに関する情報を表示する"
+
+#: src/HexEditorGui.cpp:294
+msgid "&Help"
+msgstr "ヘルプ"
+
+#: src/HexEditorGui.cpp:450
+msgid "Unsigned"
+msgstr "符号なし"
+
+#: src/HexEditorGui.cpp:451
+msgid "Sans"
+msgstr "無し"
+
+#: src/HexEditorGui.cpp:455
+msgid "Big Endian"
+msgstr "ビッグエンディアン"
+
+#: src/HexEditorGui.cpp:468
+msgid "Binary"
+msgstr "バイナリ"
+
+#: src/HexEditorGui.cpp:477
+msgid "00000000"
+msgstr "00000000"
+
+#: src/HexEditorGui.cpp:480
+msgid "Press enter to make changes!"
+msgstr "変更を加えるためにEnterキーを押してください!"
+
+#: src/HexEditorGui.cpp:484
+msgid "Edit"
+msgstr "編集"
+
+#: src/HexEditorGui.cpp:486
+msgid "Allow editing by Data Interpreter Panel"
+msgstr "データインタープリタパネルで編集が可能です"
+
+#: src/HexEditorGui.cpp:493
+msgid "8 bit"
+msgstr "8 bit"
+
+#: src/HexEditorGui.cpp:499 src/HexEditorGui.cpp:510 src/HexEditorGui.cpp:521
+#: src/HexEditorGui.cpp:532 src/HexEditorGui.cpp:543 src/HexEditorGui.cpp:554
+msgid "0"
+msgstr "0"
+
+#: src/HexEditorGui.cpp:504
+msgid "16 bit"
+msgstr "16 bit"
+
+#: src/HexEditorGui.cpp:515
+msgid "32 bit"
+msgstr "32 bit"
+
+#: src/HexEditorGui.cpp:526
+msgid "64 bit"
+msgstr "64 bit"
+
+#: src/HexEditorGui.cpp:537
+msgid "Float"
+msgstr "Float"
+
+#: src/HexEditorGui.cpp:548
+msgid "Double"
+msgstr "Double"
+
+#: src/HexEditorGui.cpp:603
+msgid "Clear"
+msgstr "クリアー"
+
+#: src/HexEditorGui.cpp:652 src/HexEditorGui.cpp:661
+msgid "INTEL"
+msgstr "INTEL"
+
+#: src/HexEditorGui.cpp:652
+msgid "AMD"
+msgstr "AMD"
+
+#: src/HexEditorGui.cpp:657
+msgid "CPU Vendor"
+msgstr "CPUのベンダー"
+
+#: src/HexEditorGui.cpp:661
+msgid "AT&T"
+msgstr "AT&T"
+
+#: src/HexEditorGui.cpp:665
+msgid "Assembly Type"
+msgstr "アセンブリの種類"
+
+#: src/HexEditorGui.cpp:669
+msgid "16 Bit"
+msgstr "16 Bit"
+
+#: src/HexEditorGui.cpp:669
+msgid "32 Bit"
+msgstr "32 Bit"
+
+#: src/HexEditorGui.cpp:669
+msgid "64 Bit"
+msgstr "64 Bit"
+
+#: src/HexEditorGui.cpp:673
+msgid "Disassembly Bit Mode"
+msgstr "逆アセンブリ ビットモード"
+
+#: src/HexEditorGui.cpp:726 src/HexEditorGui.cpp:727 src/HexEditorGui.cpp:728
+#: src/HexEditorGui.cpp:729 src/HexEditorGui.cpp:730 src/HexEditorGui.cpp:731
+#: src/HexEditorGui.cpp:732 src/HexEditorGui.cpp:733 src/HexEditorGui.cpp:734
+#: src/HexEditorGui.cpp:735 src/HexEditorGui.cpp:841 src/HexEditorGui.cpp:842
+#: src/HexEditorGui.cpp:843 src/HexEditorGui.cpp:844 src/HexEditorGui.cpp:845
+#: src/HexEditorGui.cpp:846 src/HexEditorGui.cpp:847 src/HexEditorGui.cpp:848
+#: src/HexEditorGui.cpp:849 src/HexEditorGui.cpp:850 src/HexEditorGui.cpp:860
+#: src/HexEditorGui.cpp:861 src/HexEditorGui.cpp:862 src/HexEditorGui.cpp:863
+#: src/HexEditorGui.cpp:864 src/HexEditorGui.cpp:865 src/HexEditorGui.cpp:866
+#: src/HexEditorGui.cpp:867 src/HexEditorGui.cpp:868 src/HexEditorGui.cpp:869
+msgid " "
+msgstr " "
+
+#: src/HexEditorGui.cpp:738
+msgid "Decimal"
+msgstr "10進数"
+
+#: src/HexEditorGui.cpp:742 src/HexEditorGui.cpp:883 src/HexEditorGui.cpp:1584
+msgid "Hex"
+msgstr "16進数"
+
+#: src/HexEditorGui.cpp:751
+msgid "Previous Sector"
+msgstr "前のセクター"
+
+#: src/HexEditorGui.cpp:756
+msgid "Next Sector"
+msgstr "次のセクター"
+
+#: src/HexEditorGui.cpp:767
+msgid "From beginning"
+msgstr "最初から"
+
+#: src/HexEditorGui.cpp:767
+msgid "From here"
+msgstr "ここから"
+
+#: src/HexEditorGui.cpp:767
+msgid "From end"
+msgstr "橋から"
+
+#: src/HexEditorGui.cpp:769
+msgid "Type of branch"
+msgstr "ブランチの種類"
+
+#: src/HexEditorGui.cpp:773
+msgid "Go!"
+msgstr "ゴー!"
+
+#: src/HexEditorGui.cpp:836
+msgid "Search: "
+msgstr "検索 :"
+
+#: src/HexEditorGui.cpp:853
+msgid "Replace: "
+msgstr "置換 :"
+
+#: src/HexEditorGui.cpp:883
+msgid "Text"
+msgstr "テキスト"
+
+#: src/HexEditorGui.cpp:885
+msgid "Search as"
+msgstr "検索対象"
+
+#: src/HexEditorGui.cpp:892
+msgid "Match Case"
+msgstr "大文字と小文字を区別する"
+
+#: src/HexEditorGui.cpp:895
+msgid "Search backwards"
+msgstr "後方検索"
+
+#: src/HexEditorGui.cpp:898
+msgid "Wrap around"
+msgstr "ラップアラウンド"
+
+#: src/HexEditorGui.cpp:901
+msgid "As UTF-8"
+msgstr "UTF-8として"
+
+#: src/HexEditorGui.cpp:920
+msgid "Find All"
+msgstr "すべて検索"
+
+#: src/HexEditorGui.cpp:923
+msgid "Find Some Bytes"
+msgstr "一部のバイトを検索"
+
+#: src/HexEditorGui.cpp:924
+msgid ""
+"This function finds some different values at file. Usefull for finding non-"
+"null sections at disks."
+msgstr ""
+"この関数はファイルの異なった値を検索します ディスクにnull以外の部分を見つける"
+"のに便利。"
+
+#: src/HexEditorGui.cpp:938
+msgid "Replace All"
+msgstr "すべて置換"
+
+#: src/HexEditorGui.cpp:943 src/HexEditorGui.cpp:1146
+#: src/HexEditorGui.cpp:1353 src/HexEditorGui.cpp:1527
+#: src/HexEditorGui.cpp:1597 src/HexEditorGui.cpp:1798
+#: src/HexEditorGui.cpp:1874 src/HexEditorGui.cpp:1935
+#: src/HexEditorGui.cpp:1995
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/HexEditorGui.cpp:1014
+msgid "Download new wxHexEditor"
+msgstr "新しいwxHexEditorをダウンロード"
+
+#: src/HexEditorGui.cpp:1014
+msgid "http://wxhexeditor.sourceforge.net"
+msgstr "http://wxhexeditor.sourceforge.net"
+
+#: src/HexEditorGui.cpp:1017
+msgid "Do not show this again."
+msgstr "これを再び表示しない。"
+
+#: src/HexEditorGui.cpp:1052
+msgid "File #1"
+msgstr "ファイル #1"
+
+#: src/HexEditorGui.cpp:1056 src/HexEditorGui.cpp:1063
+#: src/HexEditorGui.cpp:1124 src/HexEditorGui.cpp:1218
+#: src/HexEditorGui.cpp:1862 src/HexEditorGui.cpp:1914
+msgid "Select a file"
+msgstr "ファイルを選択します"
+
+#: src/HexEditorGui.cpp:1056 src/HexEditorGui.cpp:1063
+#: src/HexEditorGui.cpp:1218 src/HexEditorGui.cpp:1862
+#: src/HexEditorGui.cpp:1914
+msgid "*"
+msgstr "*"
+
+#: src/HexEditorGui.cpp:1059
+msgid "File #2"
+msgstr "ファイル #2"
+
+#: src/HexEditorGui.cpp:1070
+msgid "Search For"
+msgstr "検索対象"
+
+#: src/HexEditorGui.cpp:1072
+msgid "Different bytes"
+msgstr "別のバイト"
+
+#: src/HexEditorGui.cpp:1076
+msgid "Same bytes"
+msgstr "同じバイト"
+
+#: src/HexEditorGui.cpp:1085
+msgid "Stop comparison after"
+msgstr "後の比較を停止する"
+
+#: src/HexEditorGui.cpp:1093
+msgid "hits"
+msgstr "ヒット"
+
+#: src/HexEditorGui.cpp:1103
+msgid "Merge sections if close as"
+msgstr "マージセクションを閉じた場合"
+
+#: src/HexEditorGui.cpp:1111
+msgid "bytes"
+msgstr "バイト"
+
+#: src/HexEditorGui.cpp:1121
+msgid "Save Results to File"
+msgstr "結果をファイルに保存"
+
+#: src/HexEditorGui.cpp:1124
+msgid "*.txt"
+msgstr "*.txt"
+
+#: src/HexEditorGui.cpp:1135
+msgid "Connect files for scrolling"
+msgstr "スクロールするのにファイルを接続"
+
+#: src/HexEditorGui.cpp:1136
+msgid ""
+"With this option enabled, compared files will always show same address "
+"location."
+msgstr ""
+"このオプションを有効にすると比較したファイルは常に同じアドレスが表示されま"
+"す。"
+
+#: src/HexEditorGui.cpp:1149
+msgid "Compare"
+msgstr "比較する"
+
+#: src/HexEditorGui.cpp:1206
+msgid "File To Hash:"
+msgstr "計算するファイル :"
+
+#: src/HexEditorGui.cpp:1213
+msgid "Current File"
+msgstr "現在のファイル"
+
+#: src/HexEditorGui.cpp:1231
+msgid "MD"
+msgstr "MD"
+
+#: src/HexEditorGui.cpp:1233
+msgid "MD2 (slow!)"
+msgstr "MD2 (遅い!)"
+
+#: src/HexEditorGui.cpp:1236
+msgid "MD4"
+msgstr "MD4"
+
+#: src/HexEditorGui.cpp:1239
+msgid "MD5"
+msgstr "MD5"
+
+#: src/HexEditorGui.cpp:1246
+msgid "SHA"
+msgstr "SHA"
+
+#: src/HexEditorGui.cpp:1248
+msgid "SHA1"
+msgstr "SHA1"
+
+#: src/HexEditorGui.cpp:1251
+msgid "SHA224"
+msgstr "SHA224"
+
+#: src/HexEditorGui.cpp:1254
+msgid "SHA256"
+msgstr "SHA256"
+
+#: src/HexEditorGui.cpp:1257
+msgid "SHA384"
+msgstr "SHA384"
+
+#: src/HexEditorGui.cpp:1260
+msgid "SHA512"
+msgstr "SHA512"
+
+#: src/HexEditorGui.cpp:1267
+msgid "RipeMD"
+msgstr "RipeMD"
+
+#: src/HexEditorGui.cpp:1269
+msgid "RipeMD128"
+msgstr "RipeMD128"
+
+#: src/HexEditorGui.cpp:1272
+msgid "RipeMD160"
+msgstr "RipeMD160"
+
+#: src/HexEditorGui.cpp:1275
+msgid "RipeMD256"
+msgstr "RipeMD256"
+
+#: src/HexEditorGui.cpp:1278
+msgid "RipeMD320"
+msgstr "RipeMD320"
+
+#: src/HexEditorGui.cpp:1285
+msgid "HAVAL"
+msgstr "HAVAL"
+
+#: src/HexEditorGui.cpp:1287
+msgid "HAVAL128"
+msgstr "HAVAL128"
+
+#: src/HexEditorGui.cpp:1290
+msgid "HAVAL160"
+msgstr "HAVAL160"
+
+#: src/HexEditorGui.cpp:1293
+msgid "HAVAL192"
+msgstr "HAVAL192"
+
+#: src/HexEditorGui.cpp:1296
+msgid "HAVAL224"
+msgstr "HAVAL224"
+
+#: src/HexEditorGui.cpp:1299
+msgid "HAVAL256"
+msgstr "HAVAL256"
+
+#: src/HexEditorGui.cpp:1306
+msgid "TIGER"
+msgstr "TIGER"
+
+#: src/HexEditorGui.cpp:1308
+msgid "TIGER128"
+msgstr "TIGER128"
+
+#: src/HexEditorGui.cpp:1311
+msgid "TIGER160"
+msgstr "TIGER160"
+
+#: src/HexEditorGui.cpp:1314
+msgid "TIGER192"
+msgstr "TIGER192"
+
+#: src/HexEditorGui.cpp:1321
+msgid "Others"
+msgstr "その他"
+
+#: src/HexEditorGui.cpp:1323
+msgid "ADLER32"
+msgstr "ADLER32"
+
+#: src/HexEditorGui.cpp:1326
+msgid "CRC32"
+msgstr "CRC32"
+
+#: src/HexEditorGui.cpp:1329
+msgid "CRC32B"
+msgstr "CRC32B"
+
+#: src/HexEditorGui.cpp:1332
+msgid "WHIRLPOOL"
+msgstr "WHIRLPOOL"
+
+#: src/HexEditorGui.cpp:1335
+msgid "GOST"
+msgstr "GOST"
+
+#: src/HexEditorGui.cpp:1338
+msgid "SNEFRU128"
+msgstr "SNEFRU128"
+
+#: src/HexEditorGui.cpp:1341
+msgid "SNEFRU256"
+msgstr "SNEFRU256"
+
+#: src/HexEditorGui.cpp:1356
+msgid "Calculate"
+msgstr "計算する"
+
+#: src/HexEditorGui.cpp:1456
+msgid "Copy As :"
+msgstr "コピー :"
+
+#: src/HexEditorGui.cpp:1460
+msgid "Full Text"
+msgstr "全文"
+
+#: src/HexEditorGui.cpp:1460
+msgid "Special Hex"
+msgstr "特殊16進数"
+
+#: src/HexEditorGui.cpp:1460
+msgid "Internet"
+msgstr "インターネット"
+
+#: src/HexEditorGui.cpp:1460
+msgid "C/C++ Source"
+msgstr "C/C++ ソース"
+
+#: src/HexEditorGui.cpp:1460
+msgid "Assembler Source"
+msgstr "アセンブラソース"
+
+#: src/HexEditorGui.cpp:1466
+msgid "Option:"
+msgstr "オプション :"
+
+#: src/HexEditorGui.cpp:1486
+msgid "As BigEndian"
+msgstr "ビッグエンディアンとして"
+
+#: src/HexEditorGui.cpp:1492
+msgid "Bytes Per Line"
+msgstr "行あたりのバイト数"
+
+#: src/HexEditorGui.cpp:1494
+msgid "16"
+msgstr "16"
+
+#: src/HexEditorGui.cpp:1506
+msgid "Include Offset Part"
+msgstr "オフセット部を含める"
+
+#: src/HexEditorGui.cpp:1510
+msgid "Include Hex Part"
+msgstr "16進数を一部を含む"
+
+#: src/HexEditorGui.cpp:1514
+msgid "Include Text Part"
+msgstr "テキストを一部含む"
+
+#: src/HexEditorGui.cpp:1569
+msgid ""
+"For switching XORView Thru mode, all Undo&Redo buffer will reset and non-"
+"saved changes will discarded.\n"
+"Also you can't use methods that changes file size (like delete and inject) "
+"with XORView Thru mode enabled."
+msgstr ""
+
+#: src/HexEditorGui.cpp:1576
+msgid "Please enter XOR key as "
+msgstr ""
+
+#: src/HexEditorGui.cpp:1580
+msgid "ASCII"
+msgstr "ASCII"
+
+#: src/HexEditorGui.cpp:1600 src/HexEditorGui.cpp:2063
+msgid "OK"
+msgstr "OK"
+
+#: src/HexEditorGui.cpp:1638
+msgid "Colours"
+msgstr "色"
+
+#: src/HexEditorGui.cpp:1645
+msgid "Hex Colors:"
+msgstr "16進数色 :"
+
+#: src/HexEditorGui.cpp:1650
+msgid "Foreground Colour"
+msgstr "前景色"
+
+#: src/HexEditorGui.cpp:1655
+msgid "Background Colour"
+msgstr "背景色"
+
+#: src/HexEditorGui.cpp:1660
+msgid "Zebra Colour"
+msgstr "ゼブラカラー"
+
+#: src/HexEditorGui.cpp:1664
+msgid "Selection Colours:"
+msgstr "選択色 :"
+
+#: src/HexEditorGui.cpp:1669
+msgid "Selection Foreground Colour"
+msgstr "選択範囲の前景色"
+
+#: src/HexEditorGui.cpp:1674
+msgid "Selection Colour"
+msgstr "選択色"
+
+#: src/HexEditorGui.cpp:1678
+msgid "Reset"
+msgstr "リセット"
+
+#: src/HexEditorGui.cpp:1679
+msgid "Reset Colour Values to Default"
+msgstr "カラーをデフォルトにリセット"
+
+#: src/HexEditorGui.cpp:1692
+msgid "Language:"
+msgstr "言語"
+
+#: src/HexEditorGui.cpp:1707
+msgid "Character Encoding Family:"
+msgstr "文字エンコーディングファミリー :"
+
+#: src/HexEditorGui.cpp:1722
+msgid "Character Encoding:"
+msgstr "文字エンコーディング :"
+
+#: src/HexEditorGui.cpp:1731 src/HexPanels.cpp:214
+msgid "Size:"
+msgstr "サイズ :"
+
+#: src/HexEditorGui.cpp:1742
+msgid "Custom Hex Formating"
+msgstr "カスタム16進数フォーマット"
+
+#: src/HexEditorGui.cpp:1750
+msgid "xx "
+msgstr "xx "
+
+#: src/HexEditorGui.cpp:1751
+msgid "xxxx "
+msgstr "xxxx "
+
+#: src/HexEditorGui.cpp:1752
+msgid "xx xx xx xx xx xx xx xx  "
+msgstr "xx xx xx xx xx xx xx xx  "
+
+#: src/HexEditorGui.cpp:1753
+msgid "xxxx xxxx xxxx xxxx  "
+msgstr "xxxx xxxx xxxx xxxx  "
+
+#: src/HexEditorGui.cpp:1755
+msgid "Recursive custom hex format pattern"
+msgstr "再帰的なカスタム16進数フォーマットパターン"
+
+#: src/HexEditorGui.cpp:1759
+msgid "Enable"
+msgstr "有効"
+
+#: src/HexEditorGui.cpp:1768
+msgid "Bytes Per Line Limit"
+msgstr "バイトごとの行制限"
+
+#: src/HexEditorGui.cpp:1785
+msgid "Auto show tag panel if tags detected"
+msgstr "タグ自動表示タグパネルが検出されました"
+
+#: src/HexEditorGui.cpp:1849 src/HexEditorGui.cpp:1910
+msgid "Source :"
+msgstr "ソース :"
+
+#: src/HexEditorGui.cpp:1858 src/HexEditorGui.cpp:1917
+#: src/HexEditorGui.cpp:1971
+msgid "Destination :"
+msgstr "保存先 :"
+
+#: src/HexEditorGui.cpp:1983
+msgid "0x00"
+msgstr "0x00"
+
+#: src/HexEditorGui.cpp:1983
+msgid "0xFF"
+msgstr "0xFF"
+
+#: src/HexEditorGui.cpp:1983
+msgid "0xRANDOM"
+msgstr "0xRANDOM"
+
+#: src/HexEditorGui.cpp:1985
+msgid "Erase With "
+msgstr "消去する"
+
+#: src/HexPanels.cpp:212
+msgid "Name:"
+msgstr "名前 :"
+
+#: src/HexPanels.cpp:213
+msgid "Path:"
+msgstr "パス :"
+
+#: src/HexPanels.cpp:215
+msgid "Access:"
+msgstr "アクセス :"
+
+#: src/HexPanels.cpp:216
+msgid "Device:"
+msgstr "デバイス :"
+
+#: src/HexPanels.cpp:216
+msgid "FILE"
+msgstr "FILE"
+
+#: src/HexPanels.cpp:217
+msgid "DIRECTORY"
+msgstr "DIRECTORY"
+
+#: src/HexPanels.cpp:218
+msgid "CHARACTER"
+msgstr "CHARACTER"
+
+#: src/HexPanels.cpp:219
+msgid "BLOCK"
+msgstr "BLOCK"
+
+#: src/HexPanels.cpp:220
+msgid "FIFO"
+msgstr "FIFO"
+
+#: src/HexPanels.cpp:222
+msgid "LINK"
+msgstr "LINK"
+
+#: src/HexPanels.cpp:223
+msgid "SOCKET"
+msgstr "SOCKET"
+
+#: src/HexPanels.cpp:236
+msgid "Sector Size: "
+msgstr "セクターサイズ :"
+
+#: src/HexPanels.cpp:237
+msgid "Sector Count: "
+msgstr "セクターカウント :"
+
+#: src/HexPanels.cpp:241
+msgid "XORKey:"
+msgstr ""
+
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:35
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:41
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:47
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:56
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:67
+msgid "sans"
+msgstr "無し"
+
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:39
+msgid "Address"
+msgstr "アドレス"
+
+#: src/HexEditorCtrl/HexEditorCtrlGui.cpp:45
+msgid "Byte View"
+msgstr "バイト表示"
+
+#: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:37
+msgid "Font Color :"
+msgstr "フォントカラー :"
+
+#: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:44
+msgid "Note Color :"
+msgstr "ノートカラー :"
+
+#: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:60
+msgid "Remove"
+msgstr "削除する"
+
+#: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.h:49
+msgid "Tag Dialog"
+msgstr "タグダイアログ"

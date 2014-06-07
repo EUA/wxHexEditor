@@ -2684,7 +2684,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		{
 			//Use OpenMP for hash many cores at once.
 			#pragma omp for schedule(dynamic) nowait
-			for( i = 0 ; i < NumBits ; i++){
+			for( unsigned i = 0 ; i < NumBits ; i++){
 				mhash( myhash[i], buffer, readed);
 				}
 

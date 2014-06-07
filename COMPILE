@@ -44,13 +44,17 @@ make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
 -----------------------------------------------------
 OS X
 -----------------------------------------------------
+Note: Due wxWidgets issues, OSX version of wxHexEditor is experimental.
+Please use wxWidgets 2.8.12 version or wxWidgets 3.0 with carbon.
+wxWidgets 3.0 cocoa version has full of bugs results not usable wxHexEditor.
+
 For OS X, you need to compile wxWidgets with:
 
 tar xvf wxWidgets-<version>.tar.bz2
 cd wxWidgets
 mkdir release
 cd release
-arch_flags="-arch i386"
+export arch_flags="-arch i386"
 ../configure CFLAGS="$arch_flags" CXXFLAGS="$arch_flags" CPPFLAGS="$arch_flags" LDFLAGS="$arch_flags" OBJCFLAGS="$arch_flags" OBJCXXFLAGS="$arch_flags" --with-macosx-version-min=10.6 --with-macosx-sdk=/Volumes/Xcode/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/ --enable-monolithic --enable-static --disable-debug --disable-shared --with-regex=builtin --with-expat=builtin --enable-unicode
 
 Then extract the wxHexEditor as: 

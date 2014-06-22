@@ -670,6 +670,9 @@ bool wxHexCtrl::IsAllowedChar(const char& chr){
 	}
 
 void wxHexCtrl::OnChar( wxKeyEvent &event ){
+#ifdef _DEBUG_
+   std::cout << "wxHexCtrl::OnChar" << std::endl;
+#endif
 	switch (event.GetKeyCode()){
 		case WXK_LEFT:case WXK_NUMPAD_LEFT:			PrevChar();			break;
 		case WXK_RIGHT:case WXK_NUMPAD_RIGHT:		NextChar();			break;

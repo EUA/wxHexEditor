@@ -157,7 +157,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	PrepareAUI();
 
 	MyAUI->Update();
-	this->Connect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+   this->Connect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
@@ -1067,6 +1067,7 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 	if( MyNotebook->GetPageCount() ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( event.GetSelection() ) );
 		if( MyHexEditor != NULL ){
+		   MyHexEditor->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditorFrame::OnKeyDown)  ,NULL, this);
 			if( MyHexEditor->FileClose() ){
 				MyNotebook->DeletePage( event.GetSelection() );
 				// delete MyHexEditor; not neccessery, DeletePage also delete this

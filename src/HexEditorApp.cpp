@@ -124,7 +124,7 @@ void wxHexEditorApp::SetLanguage(void){
 
 	}
 
-#ifdef _DEBUG__EVENTS_
+#ifdef _DEBUG_EVENTS_
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){
 	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
 		{

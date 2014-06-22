@@ -690,16 +690,20 @@ void HexEditor::OnKeyboardSelector(wxKeyEvent& event) {
 	if( event.ShiftDown() ){
 		Selector();
 		}
+	else if( event.ControlDown() || event.AltDown() ){
+		//do nothing!
+		}
 	else if( select->GetState() ) //Only SetState if there is a selection to decrease OnUpdateUI event overhead!
 		select->SetState( false );
-
 	}
 
 // TODO (death#1#): BUG: Remove Text Selection when UNDO (CTRL+SHIFT)
-// TODO (death#1#): BUG: Hex-Text Selection at release shift action
 // TODO (death#5#): File Name star'in * when file changed & saved
 
 void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
+#ifdef _DEBUG_
+		std::cout << "Received KeyCode : " << std::hex << event.GetKeyCode() << std::endl;
+#endif
 	if(myfile != NULL) {
 		wxHexCtrl *myctrl = static_cast<wxHexCtrl*>(event.GetEventObject());
 		//Keyboard Selection Code
@@ -714,10 +718,6 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 		      event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
 		  )
 			OnKeyboardSelector(event);	//Selection Starter call
-
-#ifdef _DEBUG_
-		std::cout << "Received KeyCode : " << std::hex << event.GetKeyCode() << std::endl;
-#endif
 
 		switch (event.GetKeyCode()) {
 			case (WXK_UP):
@@ -854,45 +854,46 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 				break;
 
 			default: {
-					if( event.ControlDown() )
-						switch( event.GetKeyCode() ) {
-							case( 0x5a ):		// CTRL+Z = UNDO
-								if(event.ShiftDown())
-									DoRedo();	// UNDO with shift = REDO
-								else
-									DoUndo();
-								break;
-							case( 0x59 ):		// CTRL+Y = REDO
-								DoRedo();
-								break;
-							case( 0x53 ): {	// CTRL+S = SAVE
-									FileSave();
-									// TODO (death#1#): File Name star'in * when file changed & saved
-									}
-								break;
-							case( 0x41 ):		// CTRL+A = ALL
-								Select(0, FileLength());
-								break;
-							case( 0x58 ):		// CTRL+X = CUT
-								wxBell();
-								break;
-							case( 0x43 ):		// CTRL+C = COPY
-								CopySelection();
-								break;
-							case( 0x56 ):		// CTRL+V = PASTE
-								PasteFromClipboard();
-								break;
-							case( 0x46 ):		// CTRL+F = FIND
-								//finddlg();
-								break;
-							case( 0x4f ):		// CTRL+O = OPEN
-								wxBell();
-								break;
-							default:
-								event.Skip();// ->OnKeyboardChar( event );
-								break;
-							}
-					else
+////This part handled by wxMenuItem shortcuts.
+////					if( event.ControlDown() )
+////						switch( event.GetKeyCode() ) {
+////							case( 0x5a ):		// CTRL+Z = UNDO
+////								if(event.ShiftDown())
+////									DoRedo();	// UNDO with shift = REDO
+////								else
+////									DoUndo();
+////								break;
+////							case( 0x59 ):		// CTRL+Y = REDO
+////								DoRedo();
+////								break;
+////							case( 0x53 ): {	// CTRL+S = SAVE
+////									FileSave();
+////									// TODO (death#1#): File Name star'in * when file changed & saved
+////									}
+////								break;
+////							case( 0x41 ):		// CTRL+A = ALL
+////								Select(0, FileLength());
+////								break;
+////							case( 0x58 ):		// CTRL+X = CUT
+////								wxBell();
+////								break;
+////							case( 0x43 ):		// CTRL+C = COPY
+////								CopySelection();
+////								break;
+////							case( 0x56 ):		// CTRL+V = PASTE
+////								PasteFromClipboard();
+////								break;
+////							case( 0x46 ):		// CTRL+F = FIND
+////							   FindDialog();
+////								break;
+////							case( 0x4f ):		// CTRL+O = OPEN
+////								wxBell();
+////								break;
+////							default:
+////								event.Skip();// ->OnKeyboardChar( event );
+////								break;
+////							}
+////					else if ( not event.AltDown() )
 						event.Skip();// ->OnKeyboardChar( event );
 					}
 
@@ -905,7 +906,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 	}
 
 void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
-	if(myfile != NULL) {
+	if(myfile != NULL ) {
 		wxChar chr = event.GetKeyCode();
 
 		if( event.GetEventObject() == hex_ctrl ) {
@@ -972,6 +973,9 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 #endif
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
+
+	if( event.AltDown() or event.ControlDown() ) //Control if CTRL or ALT true otherwise evet.skip will also run wxHex::OnChar which makes artefacts.
+	   event.Skip(); //This required for ALT+F or CTRL+X...
 	}
 
 void HexEditor::SetLocalHexInsertionPoint( int hex_location, bool from_comparator ) {

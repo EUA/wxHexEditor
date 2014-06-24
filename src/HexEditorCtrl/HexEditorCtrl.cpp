@@ -649,7 +649,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	select->SetState( false );
-	ClearPaint();
+
 	if( event.GetEventObject() == hex_ctrl ){
 		hex_ctrl->SetFocus();
 		focus=HEX_CTRL;
@@ -663,6 +663,8 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	else if( event.GetEventObject() == offset_ctrl ){
 		event.Skip(); //to lower level for copy offset to clipboard
 		}
+
+	ClearPaint(); //redraw cursor shadow after movement.
 	}
 
 void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
@@ -957,6 +959,7 @@ void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets positi
 #endif // _DEBUG_CARET_
 	text_ctrl->SetInsertionPoint( hex_location/2 );
 	hex_ctrl->SetInsertionPoint( hex_location );
+
 	}
 uint64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalInsertionPoint() + page_offset;

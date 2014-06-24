@@ -138,10 +138,10 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 	}
 
 void wxHexCtrl::CreateCaret(){
-    wxCaret *caret = new wxCaret(this, m_CharSize.x, m_CharSize.y);
-    SetCaret(caret);
-    caret->Move(m_Margin.x, m_Margin.x);
-    caret->Show();
+   wxCaret *caret = new wxCaret(this, m_CharSize.x, m_CharSize.y);
+   SetCaret(caret);
+   caret->Move(m_Margin.x, m_Margin.x);
+   caret->Show();
 	}
 
 void wxHexCtrl::FirstLine( bool MoveCaret ){

@@ -404,7 +404,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 
 bool HexEditor::FileClose( bool WithoutChange ) {
 #if wxCHECK_VERSION( 2,9,0 )
-	myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
+myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
 #endif
 	if( myfile != NULL ) {
 		if( myfile->IsChanged() and not WithoutChange) {
@@ -441,12 +441,14 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 				}
 
 		MainTagArray.Empty();
+		CompareArray.Empty();
+		HighlightArray.Empty();
 		//myscroll->GetMyThread()->Delete();
 //		myscroll->GetMyThread()->Wait();
 //		delete myscroll;
 //		delete copy_mark;
 		Clear( true );
-		DisconnectScroll();
+		DisconnectScroll(); //disconnects file from scroll link if available
 		myfile->Close();
 		delete myfile;
 		myfile = NULL;

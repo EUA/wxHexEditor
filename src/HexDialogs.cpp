@@ -2209,7 +2209,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		compare_range=spinMergeSection->GetValue();
 
 	bool BreakDoubleFor=false;
-	int rdBlockSz=4*MB;
+	int rdBlockSz=1*MB;
 
 	int rd1,rd2;
 	char *buffer1=new char[rdBlockSz];
@@ -2220,7 +2220,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	int* bfr_int2;
    int rd1_prefetch=0,rd2_prefetch=0;
 //	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof() or BreakDoubleFor) ; mb+=rdBlockSz){
-	for( uint64_t mb = 0 ; mb<wxMin(f1.Length(),f2.Length()) and not BreakDoubleFor ; mb+=rdBlockSz){
+	for( uint64_t mb = 0 ; mb < wxMin(f1.Length(),f2.Length()) and not BreakDoubleFor ; mb+=rdBlockSz){
 		if(rd1_prefetch==0){
 //			buffer1.UngetWriteBuf( f1.Read(buffer1.GetWriteBuf( rdBlockSz ),rdBlockSz) );
 //			buffer2.UngetWriteBuf( f2.Read(buffer2.GetWriteBuf( rdBlockSz ),rdBlockSz) );
@@ -2234,7 +2234,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 			rd2=rd2_prefetch;
 			}
 #ifdef _DEBUG_
-		std::cout << "Diff Compare Offset: " << mb << std::endl;
+		std::cout << "Diff Compare Start Offset: " << mb << std::endl;
 #endif
 
 //Not enabled due f1.Eof() loop. If read last byte, for loop get out immeditialy!
@@ -2267,7 +2267,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 						continue;
 						}
 
-					//Here we made the comparison as INTEGER for speedup
+					//Here we made the comparison on INTEGER for speedup
 					if( bfr_int1[i/sizeof(int)]==bfr_int2[i/sizeof(int)]  ){
 						//bytes are eq.
 						if(diff){//Set difference end
@@ -2284,7 +2284,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 						continue;
 						}
 
-					//Here we made the comparison as byte
+					//If integer comparison is failed, here we made the comparison in byte
 					if((buffer1[i] not_eq buffer2[i]) == SearchForDiff){
 						if(not diff){//Set difference start
 		#ifdef _DEBUG_
@@ -2302,8 +2302,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 						//this adds latest diff stream to array if one file ends
 						if(f1.Eof() or f2.Eof() )
-							if(i+1 == wxMin( rd1, rd2))
-								diffBuff[diffHit++]=mb+i;
+							if( i+1 == wxMin( rd1, rd2) )
+								//avoid false file ends at using prefetches!
+								if( wxMin(rd1_prefetch,rd2_prefetch) <= 0 )
+									diffBuff[diffHit++]=mb+i;
 						}
 
 						else{			//bytes are eq.
@@ -2324,23 +2326,23 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 							//continue;//not possible to use under OpenMP, instead use continue
 							}
 						}
-					}
+					}// Buffer comparison block for loop end
 			}
 		}//omp parallel sections
 
 #endif // _READ_PREFETCH_
 
 		bool skip=false;
-		read_speed++; //1MB at a time.
+		read_speed+=rdBlockSz;
 		//Progress window processing..
 		time(&te);
 		if(ts != te ){
 				ts=te;
-				emsg = msg + wxT("\n") + _("Comparison Speed : ") + wxString::Format( wxT("%.2f "), 4.0*read_speed) + _("MB/s");
+				emsg = msg + wxT("\n") + _("Comparison Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 				read_speed=0;
 				}
 
-		if( not pdlg.Update( (mb*1000)/drange, emsg, &skip) ){
+		if( not pdlg.Update( mb/drange, emsg, &skip ) ){
 			f1.Close();
 			f2.Close();
 			return false;

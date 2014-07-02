@@ -430,7 +430,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 	if(x->FileOpen( filename )){
-		MyNotebook->AddPage( x, x->GetFileName().GetFullPath(), true );
+		MyNotebook->AddPage( x, x->GetFileName().GetName(), true );
 		x->Show();
 		if(openAtRight)
 			MyNotebook->Split( MyNotebook->GetSelection() , wxRIGHT);

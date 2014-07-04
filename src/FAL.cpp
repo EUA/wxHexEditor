@@ -100,9 +100,9 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	ProcessID=-1;
 	get_ptr = put_ptr = 0;
 	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
-#if wxCHECK_VERSION( 2,9,0 )
+#if wxCHECK_VERSION( 2,9,0 ) and defined( __WXGTK__) //Only GTK port is working good on detect changes of file.
 	if(not myfilename.GetFullPath().Lower().StartsWith( wxT("-pid=")))
-	::wxFileSystemWatcher::Add( myfilename.GetFullPath(), wxFSW_EVENT_MODIFY );
+	  wxFileSystemWatcher::Add( myfilename.GetFullPath(), wxFSW_EVENT_MODIFY );
 #endif
 	}
 

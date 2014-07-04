@@ -378,6 +378,7 @@ void inline HexEditorCtrl::ClearPaint( void ){
 	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ )	//Just highlighting diff sections.
 		PushTAGToControls(CompareArray.Item(i));
 	}
+// TODO (death#1#): Optimization required!
 
 //This functions move tags to local hex and text ctrls.
 void HexEditorCtrl::PushTAGToControls( TagElement* TAG){

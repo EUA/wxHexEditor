@@ -2147,7 +2147,6 @@ CompareDialog::~CompareDialog(void){
 	filePick2->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
 	}
 
-
 bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff, int StopAfterNMatch, wxFileName flsave ){
 	if(not fl1.IsFileReadable()){
 		wxMessageBox( _("File #1 is not readable."), _("Error") );
@@ -2219,6 +2218,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	int* bfr_int1;
 	int* bfr_int2;
    int rd1_prefetch=0,rd2_prefetch=0;
+//#ifdef _DEBUG_
+		std::cout << "StopAfterNMatch:" << StopAfterNMatch << std::endl;
+//#endif
+
 //	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof() or BreakDoubleFor) ; mb+=rdBlockSz){
 	for( uint64_t mb = 0 ; mb < wxMin(f1.Length(),f2.Length()) and not BreakDoubleFor ; mb+=rdBlockSz){
 		if(rd1_prefetch==0){
@@ -2259,7 +2262,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				bfr_int2 = reinterpret_cast<int*>(buffer2);
 
 //				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) and not BreakDoubleFor; i ++ ){
-				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) and not BreakDoubleFor; i ++ ){
+				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) and not BreakDoubleFor; ){
 					if(diffHit >= 500000){
 						wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
 						BreakDoubleFor = true;
@@ -2269,32 +2272,27 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 					//Here we made the comparison on INTEGER for speedup
 					if( bfr_int1[i/sizeof(int)]==bfr_int2[i/sizeof(int)]  ){
-						//bytes are eq.
-						if(diff){//Set difference end
-							diff=false;
-							diffBuff[diffHit++]=mb+i-1;
+						//bytes are eq, goto check next integer
+						if( not diff ){
+							i+=sizeof(int);
+							continue;
 							}
-
-						if( --StopAfterNMatch == 0 ){
-							BreakDoubleFor=true;
-							break;
-							//continue; //not possible to use under OpenMP, instead use continue
-							}
-						i+=sizeof(int)-1;
-						continue;
 						}
 
 					//If integer comparison is failed, here we made the comparison in byte
 					if((buffer1[i] not_eq buffer2[i]) == SearchForDiff){
 						if(not diff){//Set difference start
-		#ifdef _DEBUG_
+#ifdef _DEBUG_
 							std::cout << "Diff Start " << mb+i << " to " ;
-		#endif
+#endif
 							diff=true;
 							if( ( (mb+i)-diffBuff[diffHit-1] ) <= compare_range and
 								compare_range > 0 and diffHit>1){
 								diffHit--; //re-push old diff ending to stack
-								StopAfterNMatch++;//and count 2 difference as 1
+								//StopAfterNMatch++;//and count 2 difference as 1
+#ifdef _DEBUG_
+								std::cout << "StopAfterNMatch:" << StopAfterNMatch << std::endl;
+#endif
 								}
 							else
 								diffBuff[diffHit++]=mb+i;
@@ -2304,28 +2302,30 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 						if(f1.Eof() or f2.Eof() )
 							if( i+1 == wxMin( rd1, rd2) )
 								//avoid false file ends at using prefetches!
-								if( wxMin(rd1_prefetch,rd2_prefetch) <= 0 )
+								//if( wxMin(rd1_prefetch,rd2_prefetch) <= 0 )
 									diffBuff[diffHit++]=mb+i;
 						}
 
 						else{			//bytes are eq.
 							if(diff){//Set difference end
-		#ifdef _DEBUG_
+#ifdef _DEBUG_
 					std::cout << mb+i-1 << std::endl;
-		#endif
+#endif
 							diff=false;
 							diffBuff[diffHit++]=mb+i-1;
-							}
 
-						if( --StopAfterNMatch == 0 ){
-		#ifdef _DEBUG_
-								std::cout << "Break comparison due StopAfterNMatch." << std::endl ;
-		#endif
-							BreakDoubleFor=true;
-							break;
-							//continue;//not possible to use under OpenMP, instead use continue
+
+							if( --StopAfterNMatch == 0 ){
+#ifdef _DEBUG_
+									std::cout << "Break comparison due StopAfterNMatch." << std::endl ;
+#endif
+								BreakDoubleFor=true;
+								break;
+								//continue;//not possible to use under OpenMP, instead use continue
+								}
 							}
 						}
+					i++;
 					}// Buffer comparison block for loop end
 			}
 		}//omp parallel sections

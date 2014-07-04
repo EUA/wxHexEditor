@@ -78,6 +78,7 @@
 #include <unistd.h>
 #endif
 
+#ifndef __WXMSW__
 #if defined(HAVE_VALUES_H)
 #include <values.h>
 #endif
@@ -85,6 +86,7 @@
 #if defined(HAVE_SYS_MMAN_H)
 #include <sys/mman.h>
 #endif
+#endif //__WXMSW__
 
 #if defined(HAVE_ERRNO_H)
 #include <errno.h>

@@ -157,11 +157,11 @@
 					<Add option="-D_DEBUG_=9" />
 					<Add option="-D_DEBUG_MUTEX_x" />
 					<Add option="-D_DEBUG_FILE_x" />
-					<Add option="-D_DEBUG_SELECT_" />
+					<Add option="-D_DEBUG_SELECT_x" />
 					<Add option="-D_DEBUG_SIZE_x" />
 					<Add option="-D_DEBUG_SCROLL_x" />
-					<Add option="-D_DEBUG_CARET_" />
-					<Add option="-D_DEBUG_MOUSE_" />
+					<Add option="-D_DEBUG_CARET_x" />
+					<Add option="-D_DEBUG_MOUSE_x" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 				</Compiler>
 				<Linker>

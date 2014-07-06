@@ -6,18 +6,6 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin/Debug/udis86" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="obj/Debug/" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-Wall" />
-					<Add option="-g" />
-				</Compiler>
-			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/udis86" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
@@ -33,19 +21,34 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="Debug">
+				<Option output="bin/Debug/udis86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
 		</Build>
-		<ExtraCommands>
-			<Add before="python scripts/ud_itab.py docs/x86/optable.xml libudis86/" />
-		</ExtraCommands>
 		<Unit filename="libudis86/decode.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="libudis86/decode.h" />
-		<Unit filename="libudis86/extern.h" />
+		<Unit filename="libudis86/decode.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="libudis86/extern.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="libudis86/itab.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="libudis86/itab.h" />
+		<Unit filename="libudis86/itab.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="libudis86/syn-att.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -55,9 +58,15 @@
 		<Unit filename="libudis86/syn.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="libudis86/syn.h" />
-		<Unit filename="libudis86/types.h" />
-		<Unit filename="libudis86/udint.h" />
+		<Unit filename="libudis86/syn.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="libudis86/types.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="libudis86/udint.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="libudis86/udis86.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -3,6 +3,11 @@
 	<Workspace title="Workspace">
 		<Project filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cbp" />
 		<Project filename="src/HexEditorCtrl/HexEditorCtrl.cbp" />
-		<Project filename="wxHexEditor.cbp" />
+		<Project filename="wxHexEditor.cbp">
+			<Depends filename="mhash/mhash.cbp" />
+			<Depends filename="udis86/udis86.cbp" />
+		</Project>
+		<Project filename="mhash/mhash.cbp" />
+		<Project filename="udis86/udis86.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

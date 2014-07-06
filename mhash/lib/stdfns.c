@@ -2,9 +2,9 @@
  *    Copyright (C) 1998 Nikos Mavroyanopoulos
  *    Copyright (C) 1999,2000 Sascha Schumman, Nikos Mavroyanopoulos
  *
- *    This library is free software; you can redistribute it and/or modify it 
- *    under the terms of the GNU Library General Public License as published 
- *    by the Free Software Foundation; either version 2 of the License, or 
+ *    This library is free software; you can redistribute it and/or modify it
+ *    under the terms of the GNU Library General Public License as published
+ *    by the Free Software Foundation; either version 2 of the License, or
  *    (at your option) any later version.
  *
  *    This library is distributed in the hope that it will be useful,
@@ -20,7 +20,7 @@
 
 
 /*
-   $Id: stdfns.c,v 1.2 2006/01/10 03:47:18 imipak Exp $ 
+   $Id: stdfns.c,v 1.2 2006/01/10 03:47:18 imipak Exp $
  */
 
 #include "libdefs.h"
@@ -44,7 +44,11 @@ int mutils_mlock(__const void *addr, __const mutils_word32 len)
 	}
 
 #if defined(HAVE_MLOCK)
+#ifndef _WIN32
 	ret = mlock(addr, len);
+#else
+	ret = VirtualLock(addr, len);
+#endif
 #endif
 
 	return(ret);
@@ -62,7 +66,11 @@ int mutils_munlock(__const void *addr, __const mutils_word32 len)
 	}
 
 #if defined(HAVE_MLOCK)
+#ifndef _WIN32
 	ret = munlock(addr, len);
+#else
+	ret = VirtualUnlock(addr, len);
+#endif
 #endif
 
 	return(ret);
@@ -224,7 +232,7 @@ mutils_memcpy(void *dest, __const void *src, __const mutils_word32 n)
 	ptr2 = dest;
 
 	/* copy byte-by-byte for small and/or unaligned copies */
-	if ((n < 16) || ((mutils_word32)ptr1 & 0x3) || ((mutils_word32)ptr2 
+	if ((n < 16) || ((mutils_word32)ptr1 & 0x3) || ((mutils_word32)ptr2
 & 0x3))
 	{
 		mutils_memcpy8(ptr2, ptr1, n);
@@ -444,7 +452,7 @@ mutils_strcat(mutils_word8 *dest, __const mutils_word8 *src)
 	if (src == NULL)
 	{
 		return(dest);
-	}	
+	}
 	while (*src != 0)
 	{
 		*ptrOut = *ptrIn;

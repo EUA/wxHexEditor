@@ -6,16 +6,6 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="Debug/bin/wxHexCtrl" prefix_auto="1" extension_auto="1" />
-				<Option object_output="Debug/obj/" />
-				<Option type="0" />
-				<Option compiler="gcc" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-g" />
-				</Compiler>
-			</Target>
 			<Target title="Release">
 				<Option output="Release/bin/wxHexCtrl" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/obj/" />
@@ -29,6 +19,16 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="Debug">
+				<Option output="Debug/bin/wxHexCtrl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -38,16 +38,26 @@
 			<Add option="`wx-config --libs`" />
 		</Linker>
 		<Unit filename="Tag.cpp" />
-		<Unit filename="Tag.h" />
+		<Unit filename="Tag.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="TagDialog.fbp" />
 		<Unit filename="TagDialogGui.cpp" />
-		<Unit filename="TagDialogGui.h" />
+		<Unit filename="TagDialogGui.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="app.cpp" />
-		<Unit filename="app.h" />
+		<Unit filename="app.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
+		<Unit filename="main.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="wxHexCtrl.cpp" />
-		<Unit filename="wxHexCtrl.h" />
+		<Unit filename="wxHexCtrl.h">
+			<Option target="Debug" />
+		</Unit>
 		<Extensions>
 			<envvars />
 			<code_completion />

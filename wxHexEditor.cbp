@@ -49,93 +49,6 @@
 					<Add library="gomp" />
 				</Linker>
 			</Target>
-			<Target title="MacOS-Release">
-				<Option platforms="Mac;" />
-				<Option output="Release/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
-				<Option object_output="Release/obj/" />
-				<Option type="0" />
-				<Option compiler="gcc" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-Wall" />
-					<Add option="$($(WXCONFIG) --cflags)" />
-				</Compiler>
-				<Linker>
-					<Add option="$($(WXCONFIG) --libs) -lexpat" />
-				</Linker>
-				<Environment>
-					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
-				</Environment>
-			</Target>
-			<Target title="MacOS-Debug">
-				<Option platforms="Mac;" />
-				<Option output="Debug/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
-				<Option object_output="Debug/obj/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
-				<Option projectCompilerOptionsRelation="1" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags)" />
-					<Add option="-D_DEBUG2_" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg" />
-					<Add option="$($(WXCONFIG) --libs) -lexpat" />
-				</Linker>
-				<Environment>
-					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
-				</Environment>
-			</Target>
-			<Target title="Release Cross-Win32">
-				<Option output="Release/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output="Release/obj/" />
-				<Option type="0" />
-				<Option compiler="mingw32_gcc_compiler" />
-				<Option projectCompilerOptionsRelation="0" />
-				<Option projectLinkerOptionsRelation="0" />
-				<Option projectIncludeDirsRelation="0" />
-				<Option projectResourceIncludeDirsRelation="0" />
-				<Option projectLibDirsRelation="0" />
-				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
-				</Environment>
-				<MakeCommands>
-					<Build command="" />
-					<CompileFile command="" />
-					<Clean command="" />
-					<DistClean command="" />
-					<AskRebuildNeeded command="" />
-					<SilentBuild command=" &gt; $(CMD_NULL)" />
-				</MakeCommands>
-			</Target>
-			<Target title="Debug Cross-Win32">
-				<Option output="Debug/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output="Release/obj/" />
-				<Option type="0" />
-				<Option compiler="mingw32_gcc_compiler" />
-				<Option projectCompilerOptionsRelation="1" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-march=athlon64" />
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags)" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="$($(WXCONFIG) --libs)" />
-					<Add option="-static-libgcc" />
-					<Add option="-static-libstdc++" />
-				</Linker>
-				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
-				</Environment>
-			</Target>
 			<Target title="Custom Debug">
 				<Option platforms="Unix;" />
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
@@ -169,6 +82,186 @@
 					<Variable name="WXCONFIG" value="/run/media/death/ext4/compile/wxWidgets-3.0.0/release/wx-config" />
 				</Environment>
 			</Target>
+			<Target title="CrossWin32 Release ">
+				<Option output="Release/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="mingw32_gcc_compiler" />
+				<Option projectCompilerOptionsRelation="0" />
+				<Option projectLinkerOptionsRelation="0" />
+				<Option projectIncludeDirsRelation="0" />
+				<Option projectResourceIncludeDirsRelation="0" />
+				<Option projectLibDirsRelation="0" />
+				<Environment>
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
+				</Environment>
+				<MakeCommands>
+					<Build command="" />
+					<CompileFile command="" />
+					<Clean command="" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command=" &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="CrossWin32 Debug">
+				<Option output="Debug/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="mingw32_gcc_compiler" />
+				<Option projectCompilerOptionsRelation="1" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-march=athlon64" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-g" />
+					<Add option="$($(WXCONFIG) --cflags)" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
+				</Environment>
+			</Target>
+			<Target title="Win32 Release">
+				<Option platforms="Windows;" />
+				<Option output="wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wall" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="($wxdir)/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="($wxdir)/include" />
+					<Add directory="($wxdir)/include/lib/gcc_lib/mswu" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-mthreads" />
+					<Add library="wxmsw30u" />
+					<Add library="wxmsw30u_gl" />
+					<Add library="wxjpeg" />
+					<Add library="wxpng" />
+					<Add library="wxtiff" />
+					<Add library="wxzlib" />
+					<Add library="wxregexu" />
+					<Add library="wxscintilla" />
+					<Add library="wxexpat" />
+					<Add library="uuid" />
+					<Add library="ole32" />
+					<Add library="oleaut32" />
+					<Add library="comctl32" />
+					<Add library="ws2_32" />
+					<Add library="winspool" />
+					<Add library="kernel32" />
+					<Add library="user32" />
+					<Add library="gdi32" />
+					<Add library="advapi32" />
+					<Add library="shell32" />
+					<Add library="comdlg32" />
+					<Add directory="($wxdir)/lib/gcc_lib" />
+				</Linker>
+				<Environment>
+					<Variable name="wxdir" value="C:/wxWidgets-3.0.1" />
+				</Environment>
+			</Target>
+			<Target title="Win32 Debug">
+				<Option platforms="Windows;" />
+				<Option output="wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="($wxdir)/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="($wxdir)/include" />
+					<Add directory="($wxdir)/include/lib/gcc_lib/mswu" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-mthreads" />
+					<Add library="wxjpeg" />
+					<Add library="wxpng" />
+					<Add library="wxtiff" />
+					<Add library="wxzlib" />
+					<Add library="wxregexu" />
+					<Add library="wxmsw30u" />
+					<Add library="wxmsw30u_gl" />
+					<Add library="wxscintilla" />
+					<Add library="wxexpat" />
+					<Add library="uuid" />
+					<Add library="ole32" />
+					<Add library="oleaut32" />
+					<Add library="comctl32" />
+					<Add library="ws2_32" />
+					<Add library="winspool" />
+					<Add library="kernel32" />
+					<Add library="user32" />
+					<Add library="gdi32" />
+					<Add library="advapi32" />
+					<Add library="shell32" />
+					<Add library="comdlg32" />
+					<Add directory="($wxdir)/lib/gcc_lib" />
+				</Linker>
+			</Target>
+			<Target title="MacOS Release">
+				<Option platforms="Mac;" />
+				<Option output="Release/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="$($(WXCONFIG) --cflags)" />
+				</Compiler>
+				<Linker>
+					<Add option="$($(WXCONFIG) --libs) -lexpat" />
+				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
+				</Environment>
+			</Target>
+			<Target title="MacOS Debug">
+				<Option platforms="Mac;" />
+				<Option output="Debug/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option projectCompilerOptionsRelation="1" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="-D_DEBUG2_" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+					<Add option="$($(WXCONFIG) --libs) -lexpat" />
+				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
+				</Environment>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -178,43 +271,84 @@
 			<Add library="mhash/bin/Release/libmhash.a" />
 			<Add library="udis86/bin/Release/libudis86.a" />
 		</Linker>
-		<Unit filename="HexEditorGui.fbp" />
-		<Unit filename="Makefile" />
-		<Unit filename="resources/osx/png2c.h" />
-		<Unit filename="resources/resource.rc">
-			<Option target="Release Cross-Win32" />
-			<Option target="Debug Cross-Win32" />
+		<Unit filename="HexEditorGui.fbp">
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="resources/wxHexEditor.desktop" />
-		<Unit filename="resources/wxHexEditor.png" />
-		<Unit filename="resources/wxhex.xpm" />
+		<Unit filename="Makefile">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="resources/osx/png2c.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="resources/resource.rc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="resources/wxHexEditor.desktop">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="resources/wxHexEditor.png">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="resources/wxhex.xpm">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/FAL.cpp" />
-		<Unit filename="src/FAL.h" />
-		<Unit filename="src/HDwin.h" />
+		<Unit filename="src/FAL.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/HDwin.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexDialogs.cpp" />
-		<Unit filename="src/HexDialogs.h" />
+		<Unit filename="src/HexDialogs.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditor.cpp" />
-		<Unit filename="src/HexEditor.h" />
+		<Unit filename="src/HexEditor.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorApp.cpp" />
-		<Unit filename="src/HexEditorApp.h" />
+		<Unit filename="src/HexEditorApp.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.cpp" />
-		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.fbp" />
-		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.h" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.fbp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrl.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorCtrl/HexEditorCtrlGui.cpp" />
-		<Unit filename="src/HexEditorCtrl/HexEditorCtrlGui.h" />
+		<Unit filename="src/HexEditorCtrl/HexEditorCtrlGui.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorCtrl/wxHexCtrl/Tag.cpp" />
-		<Unit filename="src/HexEditorCtrl/wxHexCtrl/Tag.h" />
-		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialog.fbp" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/Tag.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialog.fbp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp" />
-		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialogGui.h" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/TagDialogGui.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.cpp" />
-		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h" />
+		<Unit filename="src/HexEditorCtrl/wxHexCtrl/wxHexCtrl.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorFrame.cpp" />
-		<Unit filename="src/HexEditorFrame.h" />
+		<Unit filename="src/HexEditorFrame.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexEditorGui.cpp" />
-		<Unit filename="src/HexEditorGui.h" />
+		<Unit filename="src/HexEditorGui.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/HexPanels.cpp" />
-		<Unit filename="src/HexPanels.h" />
+		<Unit filename="src/HexPanels.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Extensions>
 			<envvars />
 			<code_completion />

@@ -1,9 +1,9 @@
 /*
  *    Copyright (C) 2005 Jonathan Day, Nikos Mavroyanopoulos
  *
- *    This library is free software; you can redistribute it and/or modify it 
- *    under the terms of the GNU Library General Public License as published 
- *    by the Free Software Foundation; either version 2 of the License, or 
+ *    This library is free software; you can redistribute it and/or modify it
+ *    under the terms of the GNU Library General Public License as published
+ *    by the Free Software Foundation; either version 2 of the License, or
  *    (at your option) any later version.
  *
  *    This library is distributed in the hope that it will be useful,
@@ -78,7 +78,7 @@
 #include <unistd.h>
 #endif
 
-#ifndef __WXMSW__
+#ifndef _WIN32
 #if defined(HAVE_VALUES_H)
 #include <values.h>
 #endif
@@ -86,7 +86,7 @@
 #if defined(HAVE_SYS_MMAN_H)
 #include <sys/mman.h>
 #endif
-#endif //__WXMSW__
+#endif //_WIN32
 
 #if defined(HAVE_ERRNO_H)
 #include <errno.h>

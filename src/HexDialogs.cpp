@@ -2239,13 +2239,16 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 #ifdef _DEBUG_
 		std::cout << "Diff Compare Start Offset: " << mb << std::endl;
 #endif
-
+		bool show_limit_message=false;
 //Not enabled due f1.Eof() loop. If read last byte, for loop get out immeditialy!
 #ifdef _READ_PREFETCH_
 		#pragma omp parallel sections
+//		#pragma omp parallel
+//		#pragma omp single nowait
 		{
 			//this preloads next data to swap buffer.
 			#pragma omp section
+			//#pragma omp task shared(f1,f2,rd1_prefetch,rd2_prefetch)
 			{
 				//precalculate next read location
 //				buffer1_prefetch.UngetWriteBuf( f1.Read(buffer1_prefetch.GetWriteBuf( rdBlockSz ),rdBlockSz) );
@@ -2253,8 +2256,8 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				rd1_prefetch=f1.Read(buffer1_prefetch,rdBlockSz);
 				rd2_prefetch=f2.Read(buffer2_prefetch,rdBlockSz);
 			}
-
 			#pragma omp section
+			//#pragma omp task
 			{
 //				bfr_int1 = static_cast<int*>(buffer1.GetData());
 //				bfr_int2 = static_cast<int*>(buffer2.GetData());
@@ -2264,7 +2267,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 //				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) and not BreakDoubleFor; i ++ ){
 				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) and not BreakDoubleFor; ){
 					if(diffHit >= 500000){
-						wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
+						show_limit_message=true;
 						BreakDoubleFor = true;
 						//break; //not possible to use under OpenMP, instead use continue
 						continue;
@@ -2281,6 +2284,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 					//If integer comparison is failed, here we made the comparison in byte
 					if((buffer1[i] not_eq buffer2[i]) == SearchForDiff){
+						//Different bytes found.
 						if(not diff){//Set difference start
 #ifdef _DEBUG_
 							std::cout << "Diff Start " << mb+i << " to " ;
@@ -2299,11 +2303,14 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 							}
 
 						//this adds latest diff stream to array if one file ends
-						if(f1.Eof() or f2.Eof() )
-							if( i+1 == wxMin( rd1, rd2) )
+						if( i+1 == wxMin( rd1, rd2) ){
+							//#pragma omp taskwait
+							if(f1.Eof() or f2.Eof() ){
 								//avoid false file ends at using prefetches!
-								//if( wxMin(rd1_prefetch,rd2_prefetch) <= 0 )
+								if( wxMin(rd1_prefetch,rd2_prefetch) <= 0 )
 									diffBuff[diffHit++]=mb+i;
+								}
+							}
 						}
 
 						else{			//bytes are eq.
@@ -2328,7 +2335,10 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 					i++;
 					}// Buffer comparison block for loop end
 			}
-		}//omp parallel sections
+		}//omp parallel end
+
+		if(show_limit_message)
+			wxMessageBox( wxString(_("Sorry, this program supports up to 500K differences."))+wxT("\n")+_("Remaining differences not shown."), _("Error on Comparison"));
 
 #endif // _READ_PREFETCH_
 

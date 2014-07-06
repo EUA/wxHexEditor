@@ -139,6 +139,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void ClearPaint( void );
 		void PaintSelection( void );
 		void PreparePaintTAGs( void );
+		void PaintTAGsPrefilter( ArrayOfTAG& Arr );
 		void PushTAGToControls( TagElement* TAG);
 //		void TagPaint( void );
 		bool TAGMutex;

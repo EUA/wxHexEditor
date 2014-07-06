@@ -1037,7 +1037,7 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				MyInfoPanel->Set( MyHexEditor->GetFileName(), MyHexEditor->FileLength(), MyHexEditor->GetFileAccessModeString(), MyHexEditor->GetFD(), MyHexEditor->FileGetXORKey() );
 				MyTagPanel->Set( MyHexEditor->MainTagArray );
 				MySearchPanel->Set( MyHexEditor->HighlightArray );
-				MyComparePanel->Set( MyHexEditor->CompareArray );
+				//MyComparePanel->Set( MyHexEditor->CompareArray );
 
 				//Updates visible panels checks
 				mbar->Check( idShowOffset, GetActiveHexEditor()->ControlIsShown( HexEditorCtrl::OFFSET_CTRL ) );

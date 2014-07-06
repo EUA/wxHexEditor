@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option platforms="Unix;" />
+				<Option platforms="Windows;Unix;" />
 				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
@@ -20,13 +20,11 @@
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
-					<Add library="udis86/libudis86/.libs/libudis86.a" />
-					<Add library="mhash/lib/.libs/libmhash.a" />
 					<Add library="gomp" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
-				<Option platforms="Unix;" />
+				<Option platforms="Windows;Unix;" />
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
@@ -48,8 +46,6 @@
 				<Linker>
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
-					<Add library="udis86/libudis86/.libs/libudis86.a" />
-					<Add library="mhash/lib/.libs/libmhash.a" />
 					<Add library="gomp" />
 				</Linker>
 			</Target>
@@ -167,8 +163,6 @@
 				<Linker>
 					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --libs)" />
-					<Add library="udis86/libudis86/.libs/libudis86.a" />
-					<Add library="mhash/lib/.libs/libmhash.a" />
 					<Add library="gomp" />
 				</Linker>
 				<Environment>
@@ -180,6 +174,10 @@
 			<Add option="-Wall" />
 			<Add directory="mhash/include" />
 		</Compiler>
+		<Linker>
+			<Add library="mhash/bin/Release/libmhash.a" />
+			<Add library="udis86/bin/Release/libudis86.a" />
+		</Linker>
 		<Unit filename="HexEditorGui.fbp" />
 		<Unit filename="Makefile" />
 		<Unit filename="resources/osx/png2c.h" />

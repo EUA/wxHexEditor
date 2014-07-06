@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="mhash" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/mhash" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add directory="mhash-0.9.9/include" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/mhash" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wall" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="include" />
+			<Add directory="lib" />
+			<Add directory="mhash-0.9.9/include" />
+		</Compiler>
+		<Unit filename="lib/Makefile.am" />
+		<Unit filename="lib/Makefile.in" />
+		<Unit filename="lib/adler32.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/crc32.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/gosthash.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/haval.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/keygen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/keygen.h" />
+		<Unit filename="lib/keygen_asis.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/keygen_hex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/keygen_mcrypt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/keygen_s2k.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/libdefs.h" />
+		<Unit filename="lib/libmhash.sym" />
+		<Unit filename="lib/md2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/md4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/mhash.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/mhash_adler32.h" />
+		<Unit filename="lib/mhash_crc32.h" />
+		<Unit filename="lib/mhash_gost.h" />
+		<Unit filename="lib/mhash_haval.h" />
+		<Unit filename="lib/mhash_int.h" />
+		<Unit filename="lib/mhash_md2.h" />
+		<Unit filename="lib/mhash_md4.h" />
+		<Unit filename="lib/mhash_md5.h" />
+		<Unit filename="lib/mhash_ripemd.h" />
+		<Unit filename="lib/mhash_sha1.h" />
+		<Unit filename="lib/mhash_sha256.h" />
+		<Unit filename="lib/mhash_sha256_sha224.h" />
+		<Unit filename="lib/mhash_sha512_sha384.h" />
+		<Unit filename="lib/mhash_snefru.h" />
+		<Unit filename="lib/mhash_tiger.h" />
+		<Unit filename="lib/mhash_whirlpool.h" />
+		<Unit filename="lib/ripemd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/sha1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/sha256.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/sha256_sha224.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/sha512_sha384.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/snefru.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/stdfns.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/tiger.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/tiger_sboxes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/whirlpool.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

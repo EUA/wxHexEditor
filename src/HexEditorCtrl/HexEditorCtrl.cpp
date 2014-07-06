@@ -359,26 +359,44 @@ void inline HexEditorCtrl::ClearPaint( void ){
 	text_ctrl->ClearSelection();
 	}
 
-
-// TODO (death#1#): Accelerate PreparePaintTags here!
- void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
+void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	TagHideAll();
 	WX_CLEAR_ARRAY(hex_ctrl->TagArray);
 	WX_CLEAR_ARRAY(text_ctrl->TagArray);
 
 	//MainTagArray.Sort( TagElement::TagCompare );
-	for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ )	//Painting all TAGs here.
-		PushTAGToControls(MainTagArray.Item(i));
+	//for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ )	//Painting all TAGs here.
+	//	PushTAGToControls(MainTagArray.Item(i));
+	PaintTAGsPrefilter( MainTagArray );
 
 	//HighlightArray.Sort( TagElement::TagCompare );
-	for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ )	//Just highlighting required sections.
-		PushTAGToControls(HighlightArray.Item(i));
+   //for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ )	//Just highlighting required sections.
+	//  PushTAGToControls(HighlightArray.Item(i));
+	PaintTAGsPrefilter( HighlightArray );
 
 	//CompareArray.Sort( TagElement::TagCompare );
-	for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ )	//Just highlighting diff sections.
-		PushTAGToControls(CompareArray.Item(i));
+	//for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ )	//Just highlighting diff sections.
+	//	PushTAGToControls(CompareArray.Item(i));
+	PaintTAGsPrefilter( CompareArray );
 	}
-// TODO (death#1#): Optimization required!
+
+void HexEditorCtrl::PaintTAGsPrefilter( ArrayOfTAG& Arr ){
+	unsigned c = Arr.Count();
+	if( c==0 )
+		return;
+
+	unsigned s = 0;
+	if (c>0)
+	for( ; page_offset > (Arr.Item(s))->end and s<c-1; s++ );
+	unsigned e=s;
+	if (c>0)
+	for( ; page_offset + GetByteCount() > Arr.Item(e)->start and e<c-1 ; e++ );
+//#ifdef _DEBUG_
+	std::cout << "Tags needed between : " << s << " - " << e << std::endl;
+//#endif //_DEBUG_
+	for( unsigned i=s; i<=e ;i++)
+		PushTAGToControls( Arr.Item(i) );
+	}
 
 //This functions move tags to local hex and text ctrls.
 void HexEditorCtrl::PushTAGToControls( TagElement* TAG){

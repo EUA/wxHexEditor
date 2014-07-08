@@ -80,11 +80,13 @@ $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 maclink: $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
-mac: maclink langs
+mac: prepmacdir maclink
+	install -m 755 wxHexEditor $(EXECUTABLE_DIR_MAC)/Contents/MacOS/
+
+prepmacdir: langs
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/MacOS
 	mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources
-	install -m 755 wxHexEditor $(EXECUTABLE_DIR_MAC)/Contents/MacOS/
 	install -m 644 resources/wxHexEditor.icns $(EXECUTABLE_DIR_MAC)/Contents/Resources/
 	printf "APPLHexE" > $(EXECUTABLE_DIR_MAC)/Contents/PkgInfo
 	printf "\
@@ -105,7 +107,7 @@ mac: maclink langs
 \t<string>wxHexEditor.icns</string>\n\
 \
 \t<key>CFBundleIdentifier</key>\n\
-\t<string>net.sourceforge.wxhexeditor</string>\n\
+\t<string>org.wxhexeditor.www</string>\n\
 \
 \t<key>CFBundleShortVersionString</key>\n\
 \t<string>v$(VERSION)</string>\n\
@@ -126,7 +128,7 @@ mac: maclink langs
 \t<string>1.0.0</string>\n\
 \
 \t<key>DRURLs</key>\n\
-\t<string>http://wxhexeditor.sourceforge.net</string>\n\
+\t<string>http://www.wxhexeditor.org</string>\n\
 \
 \t<key>NSMainNibFile</key>\n\
 \t<string>wxHexEditor</string>\n\
@@ -140,11 +142,11 @@ mac: maclink langs
 </dict>\n\
 </plist>\n\n" > $(EXECUTABLE_DIR_MAC)/Contents/Info.plist
 	@for i in $(LANGUAGEDIRS); do \
-		echo "mkdir -p wxHexEditor.app/Contents/Resources/locale/$$i/"; \
-		mkdir -p wxHexEditor.app/Contents/Resources/locale/$$i; done
+		echo "mkdir -p $(EXECUTABLE_DIR_MAC)p/Contents/Resources/locale/$$i/"; \
+		mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i; done
 	@for i in $(LANGUAGEDIRS); do \
-		echo "cp locale/$$i/wxHexEditor.mo wxHexEditor.app/Contents/Resources/locale/$$i/"; \
-		cp locale/$$i/wxHexEditor.mo wxHexEditor.app/Contents/Resources/locale/$$i/; done
+		echo "cp locale/$$i/wxHexEditor.mo $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i/"; \
+		cp locale/$$i/wxHexEditor.mo $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i/; done
 
 install:
 	install -D -m 755 $(EXECUTABLE) $(DESTDIR)/$(BINDIR)/$(EXECUTABLE)

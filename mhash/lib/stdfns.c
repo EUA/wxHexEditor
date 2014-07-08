@@ -47,7 +47,8 @@ int mutils_mlock(__const void *addr, __const mutils_word32 len)
 #ifndef _WIN32
 	ret = mlock(addr, len);
 #else
-	ret = VirtualLock(addr, len);
+// disabled due undefined reference of VirtualLock errir even linked with kernel32 ?
+//	ret = VirtualLock(addr, len);
 #endif
 #endif
 
@@ -69,7 +70,8 @@ int mutils_munlock(__const void *addr, __const mutils_word32 len)
 #ifndef _WIN32
 	ret = munlock(addr, len);
 #else
-	ret = VirtualUnlock(addr, len);
+// disabled due undefined reference of VirtualLock errir even linked with kernel32 ?
+//	ret = VirtualUnlock(addr, len);
 #endif
 #endif
 

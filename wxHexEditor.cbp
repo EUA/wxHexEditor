@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option platforms="Windows;Unix;" />
+				<Option platforms="Unix;" />
 				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
@@ -21,10 +21,12 @@
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add library="gomp" />
+					<Add library="mhash/bin/Release/libmhash.a" />
+					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
-				<Option platforms="Windows;Unix;" />
+				<Option platforms="Unix;" />
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
@@ -47,6 +49,8 @@
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add library="gomp" />
+					<Add library="mhash/bin/Debug/libmhash.a" />
+					<Add library="udis86/bin/Debug/libudis86.a" />
 				</Linker>
 			</Target>
 			<Target title="Custom Debug">
@@ -55,7 +59,6 @@
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Option parameters="testfile.swp" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
@@ -77,60 +80,17 @@
 					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add library="gomp" />
+					<Add library="mhash/bin/Release/libmhash.a" />
+					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
 					<Variable name="WXCONFIG" value="/run/media/death/ext4/compile/wxWidgets-3.0.0/release/wx-config" />
 				</Environment>
 			</Target>
-			<Target title="CrossWin32 Release ">
-				<Option output="Release/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output="Release/obj/" />
-				<Option type="0" />
-				<Option compiler="mingw32_gcc_compiler" />
-				<Option projectCompilerOptionsRelation="0" />
-				<Option projectLinkerOptionsRelation="0" />
-				<Option projectIncludeDirsRelation="0" />
-				<Option projectResourceIncludeDirsRelation="0" />
-				<Option projectLibDirsRelation="0" />
-				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
-				</Environment>
-				<MakeCommands>
-					<Build command="" />
-					<CompileFile command="" />
-					<Clean command="" />
-					<DistClean command="" />
-					<AskRebuildNeeded command="" />
-					<SilentBuild command=" &gt; $(CMD_NULL)" />
-				</MakeCommands>
-			</Target>
-			<Target title="CrossWin32 Debug">
-				<Option output="Debug/bin/wxHexEditor.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output="Release/obj/" />
-				<Option type="0" />
-				<Option compiler="mingw32_gcc_compiler" />
-				<Option projectCompilerOptionsRelation="1" />
-				<Option projectLinkerOptionsRelation="2" />
-				<Compiler>
-					<Add option="-march=athlon64" />
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags)" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="$($(WXCONFIG) --libs)" />
-					<Add option="-static-libgcc" />
-					<Add option="-static-libstdc++" />
-				</Linker>
-				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.11/release-mingw32/wx-config" />
-				</Environment>
-			</Target>
 			<Target title="Win32 Release">
 				<Option platforms="Windows;" />
-				<Option output="wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -171,6 +131,8 @@
 					<Add library="advapi32" />
 					<Add library="shell32" />
 					<Add library="comdlg32" />
+					<Add library="mhash/bin/Release/libmhash.a" />
+					<Add library="udis86/bin/Release/libudis86.a" />
 					<Add directory="($wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>
@@ -179,8 +141,9 @@
 			</Target>
 			<Target title="Win32 Debug">
 				<Option platforms="Windows;" />
-				<Option output="wxHexEditor" prefix_auto="1" extension_auto="1" />
-				<Option type="0" />
+				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
@@ -218,6 +181,8 @@
 					<Add library="advapi32" />
 					<Add library="shell32" />
 					<Add library="comdlg32" />
+					<Add library="mhash/bin/Debug/libmhash.a" />
+					<Add library="udis86/bin/Debug/libudis86.a" />
 					<Add directory="($wxdir)/lib/gcc_lib" />
 				</Linker>
 			</Target>
@@ -229,14 +194,21 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-Wall" />
-					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="$($(WXCONFIG) --cflags) -mtune=native -march=native -fopenmp" />
 				</Compiler>
 				<Linker>
-					<Add option="$($(WXCONFIG) --libs) -lexpat" />
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add option="$($(WXCONFIG) --libs aui)" />
+					<Add option="-lexpat" />
+					<Add library="gomp" />
+					<Add library="mhash/bin/Release/libmhash.a" />
+					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="make prepmacdir EXECUTABLE_DIR_MAC=$(TARGET_OUTPUT_DIR)../../" />
+				</ExtraCommands>
 				<Environment>
-					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
+					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="MacOS Debug">
@@ -251,15 +223,24 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="$($(WXCONFIG) --cflags) -fopenmp" />
 					<Add option="-D_DEBUG2_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="$($(WXCONFIG) --libs) -lexpat" />
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add option="$($(WXCONFIG) --libs aui)" />
+					<Add option="-lexpat" />
+					<Add library="gomp" />
+					<Add library="mhash/bin/Debug/libmhash.a" />
+					<Add library="udis86/bin/Debug/libudis86.a" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="make prepmacdir" />
+					<Add after="cp -r wxHexEditor.app $(TARGET_OUTPUT_DIR)../../../" />
+				</ExtraCommands>
 				<Environment>
-					<Variable name="WXCONFIG" value="/Volumes/COMPILE/wxWidgets-2.8.11/release/wx-config" />
+					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
 				</Environment>
 			</Target>
 		</Build>
@@ -267,10 +248,6 @@
 			<Add option="-Wall" />
 			<Add directory="mhash/include" />
 		</Compiler>
-		<Linker>
-			<Add library="mhash/bin/Release/libmhash.a" />
-			<Add library="udis86/bin/Release/libudis86.a" />
-		</Linker>
 		<Unit filename="HexEditorGui.fbp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

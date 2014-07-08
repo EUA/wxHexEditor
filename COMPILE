@@ -1,8 +1,10 @@
+You can compile wxHexEditor with Code::Blocks (C::B) easily.
+All you need to install C::B for your OS, required compilation toolset (gcc) and wxHexEditor library for compilation.
 
-For compiling wxHexEditor, you cannot use C::B directly even if you installed wxWidgets development kits because of missing libraries. You also have to build internal udis and mhash libraries. They are automatically compiled when you run make command. Than you could edit wxHexEditor codes with C::B.
+But you can also build wxHexEditor from your shell.
+For compiling wxHexEditor, without C::B you have to build internal udis and mhash libraries. They are automatically compiled when you run make command.
 
 Please follow those directives under your OS to compile wxHexEditor.
-
 -----------------------------------------------------
 LINUX
 -----------------------------------------------------
@@ -24,7 +26,10 @@ make OPTFLAGS="-fopenmp"
 -----------------------------------------------------
 WINDOWS
 -----------------------------------------------------
-For Windows, I use Linux to cross-compile a Windows executable via MinGW.
+For generating Windows executables, I use Linux to cross-compile a Windows executable via MinGW.
+If you have cygwin, than good luck to build this with make command. But you are better to use C::B.
+
+If you have Linux installation and want to build Win32/Win64 build of wxHexEditor, follow this guide.
 This is how I compile.
 First, I compile the wxWidgets library with a cross compiler:
 
@@ -46,7 +51,8 @@ OS X
 -----------------------------------------------------
 Note: Due wxWidgets issues, OSX version of wxHexEditor is experimental.
 Please use wxWidgets 2.8.12 version or wxWidgets 3.0 with carbon.
-wxWidgets 3.0 cocoa version has full of bugs results not usable wxHexEditor.
+wxWidgets 3.0 cocoa version has full of bugs results not quite usable wxHexEditor, yet.
+Also you need to have gcc tools and xcode_4.3.3_for_lion.dmg disk image mounted/installed on your Mac.
 
 For OS X, you need to compile wxWidgets with:
 

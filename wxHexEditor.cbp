@@ -88,7 +88,7 @@
 				</Environment>
 			</Target>
 			<Target title="Win32 Release">
-				<Option platforms="Windows;" />
+				<Option platforms="Windows;Unix;" />
 				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
@@ -187,16 +187,18 @@
 				</Linker>
 			</Target>
 			<Target title="MacOS Release">
-				<Option platforms="Mac;" />
+				<Option platforms="Unix;Mac;" />
 				<Option output="Release/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="$($(WXCONFIG) --cflags) -mtune=native -march=native -fopenmp" />
+					<Add option="-O3" />
+					<Add option="$($(WXCONFIG) --cflags) -mtune=native -fopenmp" />
 				</Compiler>
 				<Linker>
+					<Add option="-s" />
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add option="$($(WXCONFIG) --libs aui)" />
 					<Add option="-lexpat" />
@@ -212,7 +214,7 @@
 				</Environment>
 			</Target>
 			<Target title="MacOS Debug">
-				<Option platforms="Mac;" />
+				<Option platforms="Unix;Mac;" />
 				<Option output="Debug/bin/wxHexEditor.app/Contents/MacOS/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
@@ -236,8 +238,7 @@
 					<Add library="udis86/bin/Debug/libudis86.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="make prepmacdir" />
-					<Add after="cp -r wxHexEditor.app $(TARGET_OUTPUT_DIR)../../../" />
+					<Add after="make prepmacdir EXECUTABLE_DIR_MAC=$(TARGET_OUTPUT_DIR)../../" />
 				</ExtraCommands>
 				<Environment>
 					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />

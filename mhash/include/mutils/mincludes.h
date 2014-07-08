@@ -78,7 +78,6 @@
 #include <unistd.h>
 #endif
 
-#ifndef _WIN32
 #if defined(HAVE_VALUES_H)
 #include <values.h>
 #endif
@@ -86,7 +85,6 @@
 #if defined(HAVE_SYS_MMAN_H)
 #include <sys/mman.h>
 #endif
-#endif //_WIN32
 
 #if defined(HAVE_ERRNO_H)
 #include <errno.h>

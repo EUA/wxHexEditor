@@ -112,9 +112,9 @@ WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
 class FAL : private wxFile
 #if wxCHECK_VERSION( 2,9,0 )
-				,public wxFileSystemWatcher
+				,public wxFileSystemWatcher //This will generate assertion due not created at active loop, but it's working on wxGTK and easier to do like that :)
 #endif
-				{
+	{
 	public:
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, ForcedReadOnly, AccessInvalid };
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
@@ -186,7 +186,6 @@ virtual	long Read( unsigned char* buffer, int size );
 		uint64_t put_ptr,get_ptr;
 		wxMemoryBuffer XORview;
 //		DiffNode *head,*tail;	//linked list holds modification record
-
-};
+	};
 
 #endif // FAL_H

@@ -24,9 +24,6 @@
 
 #include "HexEditor.h"
 
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_OBJARRAY(wxArrayUINT64);
-
 HexEditor::HexEditor(	wxWindow* parent,
                         int id,
                         wxStatusBar *statbar_,

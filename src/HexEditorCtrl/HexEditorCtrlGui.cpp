@@ -27,7 +27,7 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	fgSizerMain = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizerMain->AddGrowableCol( 1 );
 	fgSizerMain->AddGrowableCol( 2 );
-	fgSizerMain->AddGrowableRow( 2 );
+	fgSizerMain->AddGrowableRow( 1 );
 	fgSizerMain->SetFlexibleDirection( wxBOTH );
 	
 	m_static_offset = new wxStaticText( this, ID_DEFAULT, _("Offset"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
@@ -67,7 +67,7 @@ HexEditorCtrlGui::HexEditorCtrlGui( wxWindow* parent, wxWindowID id, const wxPoi
 	text_ctrl->SetFont( wxFont( 10, 70, 90, 90, false, _("sans") ) );
 	text_ctrl->SetMinSize( wxSize( 45,100 ) );
 	
-	fgSizerMain->Add( text_ctrl, 1, wxEXPAND|wxRIGHT, 2 );
+	fgSizerMain->Add( text_ctrl, 1, wxRIGHT|wxEXPAND, 2 );
 	
 	offset_scroll_real = new wxScrollBar( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL );
 	offset_scroll_real->Enable( false );

@@ -80,7 +80,7 @@
                 <property name="cols">4</property>
                 <property name="flexible_direction">wxBOTH</property>
                 <property name="growablecols">1,2</property>
-                <property name="growablerows">2</property>
+                <property name="growablerows">1</property>
                 <property name="hgap">0</property>
                 <property name="minimum_size"></property>
                 <property name="name">fgSizerMain</property>
@@ -604,7 +604,7 @@
                 </object>
                 <object class="sizeritem" expanded="0">
                     <property name="border">2</property>
-                    <property name="flag">wxEXPAND|wxRIGHT</property>
+                    <property name="flag">wxRIGHT|wxEXPAND</property>
                     <property name="proportion">1</property>
                     <object class="wxTextCtrl" expanded="0">
                         <property name="BottomDockable">1</property>

@@ -63,7 +63,6 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-std=c++0x" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="$($(WXCONFIG) --cflags) -fopenmp" />
 					<Add option="-D_DEBUG_=9" />
@@ -73,18 +72,17 @@
 					<Add option="-D_DEBUG_SIZE_x" />
 					<Add option="-D_DEBUG_SCROLL_x" />
 					<Add option="-D_DEBUG_CARET_x" />
-					<Add option="-D_DEBUG_MOUSE_x" />
+					<Add option="-D_DEBUG_MOUSE_" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add library="gomp" />
 					<Add library="mhash/bin/Release/libmhash.a" />
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/run/media/death/ext4/compile/wxWidgets-3.0.0/release/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.1/debug/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Release">

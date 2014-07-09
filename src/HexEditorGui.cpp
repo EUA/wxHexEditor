@@ -461,7 +461,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	mainSizer->Add( optionSizer, 0, wxEXPAND, 4 );
 	
 	wxFlexGridSizer* numSizer;
-	numSizer = new wxFlexGridSizer( 2, 2, 0, 0 );
+	numSizer = new wxFlexGridSizer( 7, 2, 0, 0 );
 	numSizer->AddGrowableCol( 1 );
 	numSizer->SetFlexibleDirection( wxHORIZONTAL );
 	

@@ -245,6 +245,7 @@ HexEditorFrame::~HexEditorFrame(){
 	pConfig->Flush();
 
 	MyNotebook->Destroy();
+	MyAUI->UnInit();
 	}
 
 void HexEditorFrame::PrepareAUI( void ){

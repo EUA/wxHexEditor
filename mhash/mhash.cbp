@@ -43,7 +43,7 @@
 				</ExtraCommands>
 			</Target>
 			<Target title="Win32 Release">
-				<Option platforms="Windows;Unix;" />
+				<Option platforms="Windows;" />
 				<Option output="bin/Release/mhash" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Release/" />
@@ -58,11 +58,11 @@
 					<Add option="-s" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="cmd /c copy include\mutils\mhash_config.win.h include\mutils\mhash_config.h" />
+					<Add before="cmd /c copy include\mutils\mhash_config.win32.h include\mutils\mhash_config.h" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Win32 Debug">
-				<Option platforms="Windows;Unix;" />
+				<Option platforms="Windows;" />
 				<Option output="bin/Debug/mhash" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
@@ -75,7 +75,7 @@
 					<Add directory="mhash-0.9.9/include" />
 				</Compiler>
 				<ExtraCommands>
-					<Add before="cmd /c copy include\mutils\mhash_config.win.h include\mutils\mhash_config.h" />
+					<Add before="cmd /c copy include\mutils\mhash_config.win32.h include\mutils\mhash_config.h" />
 				</ExtraCommands>
 			</Target>
 			<Target title="MacOS Release">

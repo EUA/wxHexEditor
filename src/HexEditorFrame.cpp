@@ -87,9 +87,10 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
 	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
-	debugFrame = new DebugFrame(NULL, wxID_ANY);
-	debugFrame->Show();
-	debugRedirector = new wxStreamToTextRedirector(debugFrame->m_textCtrl);
+	int no = AttachConsole(ATTACH_PARENT_PROCESS); //doesn't work!, don't know why....
+	///Use LDFLAGS="Wl,--subsystem,console -mconsole" to have debug window
+	//wxMessageBox( wxString::Format(" Attach %d", no)    , "none" );
+	//AllocConsole();
 	#endif
 
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
@@ -201,13 +202,6 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	}
 
 HexEditorFrame::~HexEditorFrame(){
-	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
-	if( debugFrame not_eq NULL )
-		debugFrame->Destroy();
-	if(debugRedirector not_eq NULL)
-		delete debugRedirector;
-	#endif
-
 	this->Disconnect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );

@@ -599,24 +599,6 @@ class DeviceEraseDialogGui : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class DebugFrame
-///////////////////////////////////////////////////////////////////////////////
-class DebugFrame : public wxFrame 
-{
-	private:
-	
-	protected:
-	
-	public:
-		wxTextCtrl* m_textCtrl;
-		
-		DebugFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug Log"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 686,425 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-		
-		~DebugFrame();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
 /// Class OSXMessageDialogGui
 ///////////////////////////////////////////////////////////////////////////////
 class OSXMessageDialogGui : public wxDialog 

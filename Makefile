@@ -4,6 +4,7 @@ WXCONFIG = wx-config
 CC = `$(WXCONFIG) --cc`
 CXX = `$(WXCONFIG) --cxx`
 LDFLAGS += -lgomp
+#add  "-Wl,--subsystem,console -mconsole" for win-debug
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
 RC = `$(WXCONFIG) --rescomp`

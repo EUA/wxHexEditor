@@ -148,7 +148,7 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
-#if wxCHECK_VERSION( 2,9,0 )
+#if _FSWATCHER_
 		void OnFileModify( wxFileSystemWatcherEvent& event );
 #endif
 		void ShowContextMenu( const wxMouseEvent& event );
@@ -156,7 +156,7 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 
 		wxStatusBar* statusbar;
 		FAL *myfile;
-		scrollthread *myscroll;
+		scrollthread *myscrollthread;
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
 		TagPanel *tagpanel;
@@ -244,20 +244,31 @@ class scrollthread:wxThreadHelper {
 			}
 
 		void *Entry() {
+			int64_t newoffset=0;
 			while( !(GetThread()->TestDestroy()) ) {
 				if(speed == 0)
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
+#if _DEBUG_THREAD_SCROLL_
+				std::cout << "scrollthread speed : " << speed;
+#endif
 				int64_t FileLength = parent->FileLength();
-				parent->page_offset += ( parent->BytePerLine() )*speed;
-				if( parent->page_offset < 0 )
-					parent->page_offset = 0;
-				else if( parent->page_offset + parent->ByteCapacity() >= FileLength ) {
-					parent->page_offset = FileLength - parent->ByteCapacity();
-					parent->page_offset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
+				newoffset = parent->page_offset + ( parent->BytePerLine() )*speed;
+				if( newoffset < 0 )
+					newoffset = 0;
+				else if( newoffset + parent->ByteCapacity() >= FileLength ) {
+					newoffset = FileLength - parent->ByteCapacity();
+					newoffset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 					}
 
+				parent->page_offset=newoffset;
+
+
+#if _DEBUG_THREAD_SCROLL_
+				std::cout << " \t- offset : " << newoffset;
+#endif
 #if wxCHECK_VERSION(3, 0, 0)
 				wxCommandEvent *eventx=new wxCommandEvent( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
+				//eventx->SetInt(newoffset);
 				::wxQueueEvent( parent, eventx );
 				wxYield();
 
@@ -266,19 +277,23 @@ class scrollthread:wxThreadHelper {
 				//delete eventx;
 #else			//Old versions
 				wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
-				wxMutexGuiEnter();
+				//eventx.SetInt(newoffset);
 				::wxPostEvent(parent, eventx );
-				wxMutexGuiLeave();
+				wxYield();
 
 				GetThread()->Sleep(sleeper);
 #endif
 
-				if( parent->page_offset == 0 ||
-				      parent->page_offset + parent->ByteCapacity() >= FileLength )
-					GetThread()->Pause();
+#if _DEBUG_THREAD_SCROLL_
+				std::cout << " \t done." << std::endl;
+#endif
 				}
+#if _DEBUG_THREAD_SCROLL_
+				std::cout << "scrollthread got testDestroy!" << std::endl;
+#endif
 			return NULL;
 			}
+
 		void UpdateSpeed(int new_speed, int sleeptime = 25) {
 			if (new_speed == 0 and speed == 0 )
 				return;
@@ -289,6 +304,11 @@ class scrollthread:wxThreadHelper {
 			speed = new_speed;
 			sleeper = sleeptime;
 			cursor = parent->GetLocalHexInsertionPoint();
+			}
+		void Exit(void){
+			if( GetThread()->IsRunning() )
+				GetThread()->Pause();
+			GetThread()->Delete();
 			}
 	};
 

@@ -72,7 +72,8 @@ HexEditor::~HexEditor() {
 	DisconnectScroll();
 	//FileClose();
 	Dynamic_Disconnector();
-
+	myscrollthread->Exit();
+	delete myscrollthread;
 	// Free resources
 	delete copy_mark;
 	}
@@ -209,7 +210,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){
 		myfile = new FAL( myfilename ); //OpenDevice
 		if(myfile->IsOpened()) {
-			myscroll = new scrollthread(0,this);
+			myscrollthread = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 			offset_ctrl->SetOffsetLimit( myfile->Length() );
 			sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
@@ -231,7 +232,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		myfile = new FAL( myfilename );
 
 	if(myfile->IsOpened()) {
-		myscroll = new scrollthread(0,this);
+		myscrollthread = new scrollthread(0,this);
 //			copy_mark = new copy_maker();
 
 		if( myfile->IsProcess() ){
@@ -274,7 +275,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
 		LoadFromOffset(0, true);
 		SetLocalHexInsertionPoint(0);
-#if wxCHECK_VERSION( 2,9,0 )
+#if _FSWATCHER_
 		myfile->Connect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
 #endif
 		return true;
@@ -400,7 +401,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	}
 
 bool HexEditor::FileClose( bool WithoutChange ) {
-#if wxCHECK_VERSION( 2,9,0 )
+#if _FSWATCHER_
 myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
 #endif
 	if( myfile != NULL ) {
@@ -440,9 +441,9 @@ myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::
 		MainTagArray.Empty();
 		CompareArray.Empty();
 		HighlightArray.Empty();
-		//myscroll->GetMyThread()->Delete();
-//		myscroll->GetMyThread()->Wait();
-//		delete myscroll;
+		//myscrollthread->GetMyThread()->Delete();
+		//myscrollthread->GetMyThread()->Wait();
+//		delete myscrollthread;
 //		delete copy_mark;
 		Clear( true );
 		DisconnectScroll(); //disconnects file from scroll link if available
@@ -615,7 +616,7 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint, 
 void HexEditor::ThreadPaint(wxCommandEvent& event){
 	if( event.GetId()==THREAD_UPDATE_EVENT){
 		LoadFromOffset( page_offset, false, false );
-//		SetLocalHexInsertionPoint(cursor);
+		SetLocalHexInsertionPoint(GetLocalHexInsertionPoint());
 		Selector();
 		PaintSelection();
 		UpdateCursorLocation( true );
@@ -628,7 +629,7 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 		}
 	}
 
-#if wxCHECK_VERSION( 2,9,0 )
+#if _FSWATCHER_
 void HexEditor::OnFileModify(wxFileSystemWatcherEvent &event){
 	if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
 		Reload();
@@ -1157,7 +1158,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if (defined( __WXOSX__ ) && not wxCHECK_VERSION(3,0,0) ) //WXMSW Stuck sometimes if thread on
+#if (defined( __WXOSX__ ) && not wxCHECK_VERSION(3,0,0) ) or defined(__WXMSW__)//WXMSW Stuck sometimes if thread on
 		ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
@@ -1168,7 +1169,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 	if( myfile->IsProcess() )
 		ScrollNoThread( spd );
 	else
-		myscroll->UpdateSpeed(spd);
+		myscrollthread->UpdateSpeed(spd);
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Thread) Speed = " << spd << std::endl;
 	#endif
@@ -1213,11 +1214,11 @@ void HexEditor::ScrollNoThread( int speed ) {
 
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ) {
 	HexEditorCtrl::OnMouseSelectionEnd( event );
-	myscroll->UpdateSpeed( 0 );
+	myscrollthread->UpdateSpeed( 0 );
 	if( MouseCapture ) {
-#ifdef _DEBUG_MOUSE_
+#if defined( _DEBUG_ ) and defined(__WXGTK__)
 		std::cout << "ReleaseMouse()\n" ;
-		GetCapture()->ReleaseMouse();//this is proper one but breaks optimizations! Also make problem on debug mode.
+		GetCapture()->ReleaseMouse();//this is proper one but breaks optimizations!
 #else
 		ReleaseMouse();
 #endif
@@ -1236,65 +1237,62 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 #ifdef _DEBUG_MUTEX_
 	std::cout << "mutex Update Locking..." << std::endl;
 #endif
-	if( update.TryLock()==wxMUTEX_NO_ERROR ) {
+	if( update.TryLock()!=wxMUTEX_NO_ERROR ){
+		std::cout << "mutex update cannot lock..." << std::endl;
+		return;
+		}
+
 /// This leads recursion!
 //		if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ) {
 //			SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
 //			}
 
-		if( interpreter != NULL ) {
+	if( interpreter != NULL ) {
+		myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
+		wxMemoryBuffer bfr;
+		int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
+		bfr.UngetWriteBuf( size );
+		interpreter->Set( bfr );
+		}
+	if( dasmpanel != NULL ) {
+		wxMemoryBuffer bfr;
+		if( select->GetState() ){ //If there is a selection, use selection
+			myfile->Seek( select->GetStart(), wxFromStart );
+			//Take just first 100 bytes!
+			int sz = select->GetSize() > 100 ? 100 : select->GetSize();
+			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
+			bfr.UngetWriteBuf( size );
+			dasmpanel->Set( bfr );
+			}
+		else{ //Take 8 bytes from cursor location
 			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
-			wxMemoryBuffer bfr;
 			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
 			bfr.UngetWriteBuf( size );
-			interpreter->Set( bfr );
+			dasmpanel->Set( bfr );
 			}
-
-		if( dasmpanel != NULL ) {
-			wxMemoryBuffer bfr;
-			if( select->GetState() ){ //If there is a selection, use selection
-				myfile->Seek( select->GetStart(), wxFromStart );
-				//Take just first 100 bytes!
-				int sz = select->GetSize() > 100 ? 100 : select->GetSize();
-				int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
-				bfr.UngetWriteBuf( size );
-				dasmpanel->Set( bfr );
-				}
-			else{ //Take 8 bytes from cursor location
-				myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
-				int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
-				bfr.UngetWriteBuf( size );
-				dasmpanel->Set( bfr );
-				}
-			}
-
+		}
 #if wxUSE_STATUSBAR
-		if( statusbar != NULL ) {
-			statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
-			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
-			uint8_t ch;
-			myfile->Seek( CursorOffset() );
-			myfile->Read( reinterpret_cast<char*>(&ch), 1);
-			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
-
-			if( not select->GetState() ) {
-				statusbar->SetStatusText(_("Selected Block: N/A"), 3);
-				statusbar->SetStatusText(_("Block Size: N/A") ,4);
-				}
-			else {
-				statusbar->SetStatusText(wxString::Format(_("Selected Block: %" wxLongLongFmtSpec "u -> %" wxLongLongFmtSpec "u"),select->GetStart(),select->GetEnd()), 3);
-				statusbar->SetStatusText(wxString::Format(_("Block Size: %" wxLongLongFmtSpec "u"), select->GetSize()), 4);
-				}
+	if( statusbar != NULL ) {
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
+		uint8_t ch;
+		myfile->Seek( CursorOffset() );
+		myfile->Read( reinterpret_cast<char*>(&ch), 1);
+		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
+		if( not select->GetState() ) {
+			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
+			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
-
+		else {
+			statusbar->SetStatusText(wxString::Format(_("Selected Block: %" wxLongLongFmtSpec "u -> %" wxLongLongFmtSpec "u"),select->GetStart(),select->GetEnd()), 3);
+			statusbar->SetStatusText(wxString::Format(_("Block Size: %" wxLongLongFmtSpec "u"), select->GetSize()), 4);
+			}
+		}
 #endif // wxUSE_STATUSBAR
 #ifdef _DEBUG_MUTEX_
-		std::cout << "mutex Update UnLocking..." << std::endl;
+	std::cout << "mutex Update UnLocking..." << std::endl;
 #endif
-		update.Unlock();
-		}
-	else
-		std::cout << "mutex update cannot lock..." << std::endl;
+	update.Unlock();
 	}
 
 void HexEditor::OnMouseTest( wxMouseEvent& event ) {

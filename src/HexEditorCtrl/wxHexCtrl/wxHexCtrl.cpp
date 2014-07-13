@@ -38,7 +38,7 @@ BEGIN_EVENT_TABLE(wxHexCtrl,wxScrolledWindow )
 	EVT_MENU( __idTagEdit__, wxHexCtrl::OnTagEdit )
 	EVT_MOTION( wxHexCtrl::OnMouseMove )
 	EVT_SET_FOCUS( wxHexCtrl::OnFocus )
-	//EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus )
+	//EVT_KILL_FOCUS( wxHexCtrl::OnKillFocus ) //Not needed
 END_EVENT_TABLE()
 
 
@@ -873,13 +873,16 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	}
 //------------EVENT HANDLERS---------------//
 void wxHexCtrl::OnFocus(wxFocusEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "wxHexCtrl::OnFocus()" << std::endl;
+#endif
 	wxCaret *caret = GetCaret();
    if ( caret )
 		caret->Show(true);
 	}
 
 void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
-#ifdef _DEBUG_MOUSE_
+#ifdef _DEBUG_
 	std::cout << "wxHexCtrl::OnKillFocus()" << std::endl;
 #endif
 	wxCaretSuspend cs(this);
@@ -887,11 +890,13 @@ void wxHexCtrl::OnKillFocus(wxFocusEvent& event ){
    if ( caret )
 		caret->Show(false);
 
-	if( *TagMutex ){
-		for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
-			TagArray.Item(i)->Hide();
-		*TagMutex = false;
-		}
+	if( TagMutex!=NULL )
+		if( *TagMutex ){
+			for( unsigned i = 0 ; i < TagArray.Count() ; i++ )
+				TagArray.Item(i)->Hide();
+			*TagMutex = false;
+			}
+
 	event.Skip();
 	}
 
@@ -926,9 +931,9 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 		for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
 			TAX = TagArray.Item(i);
 			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) ){	//end not included!
-				if( not (*TagMutex) and  wxTheApp->IsActive() ) {
+				if( not (*TagMutex) and wxTheApp->IsActive() ) {
 					*TagMutex=true;
-					TAX->Show( event.GetPosition()+(static_cast<wxWindow*>( event.GetEventObject() ))->ClientToScreen(wxPoint(0,0)) , this );
+					TAX->Show( this->ClientToScreen(event.GetPosition() ) , this );
 					}
 				break;
 				}

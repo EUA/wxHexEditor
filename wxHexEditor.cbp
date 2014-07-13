@@ -15,7 +15,7 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
+					<Add option="-O2" />
 					<Add option="`wx-config --cflags` -mtune=native -march=native -fopenmp" />
 				</Compiler>
 				<Linker>
@@ -72,8 +72,9 @@
 					<Add option="-D_DEBUG_SIZE_x" />
 					<Add option="-D_DEBUG_SCROLL_x" />
 					<Add option="-D_DEBUG_CARET_x" />
-					<Add option="-D_DEBUG_MOUSE_" />
+					<Add option="-D_DEBUG_MOUSE_x" />
 					<Add option="-D_DEBUG_EVENTS_x" />
+					<Add option="-D_DEBUG_THREAD_SCROLL_" />
 				</Compiler>
 				<Linker>
 					<Add option="$($(WXCONFIG) --libs)" />
@@ -92,7 +93,7 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O3" />
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
@@ -138,7 +139,7 @@
 				</Environment>
 			</Target>
 			<Target title="Win32 Debug">
-				<Option platforms="Windows;" />
+				<Option platforms="Windows;Unix;" />
 				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug/obj/" />
 				<Option type="1" />
@@ -150,6 +151,15 @@
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
+					<Add option="-D_DEBUG_=9" />
+					<Add option="-D_DEBUG_MUTEX_x" />
+					<Add option="-D_DEBUG_FILE_x" />
+					<Add option="-D_DEBUG_SELECT_x" />
+					<Add option="-D_DEBUG_SIZE_x" />
+					<Add option="-D_DEBUG_SCROLL_x" />
+					<Add option="-D_DEBUG_CARET_x" />
+					<Add option="-D_DEBUG_MOUSE_" />
+					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add directory="($wxdir)/include" />
 				</Compiler>
 				<ResourceCompiler>
@@ -158,13 +168,13 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-mthreads" />
+					<Add library="wxmsw30u" />
+					<Add library="wxmsw30u_gl" />
 					<Add library="wxjpeg" />
 					<Add library="wxpng" />
 					<Add library="wxtiff" />
 					<Add library="wxzlib" />
 					<Add library="wxregexu" />
-					<Add library="wxmsw30u" />
-					<Add library="wxmsw30u_gl" />
 					<Add library="wxscintilla" />
 					<Add library="wxexpat" />
 					<Add library="uuid" />
@@ -192,7 +202,7 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-O3" />
+					<Add option="-O2" />
 					<Add option="$($(WXCONFIG) --cflags) -mtune=native -fopenmp" />
 				</Compiler>
 				<Linker>
@@ -224,7 +234,15 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="$($(WXCONFIG) --cflags) -fopenmp" />
-					<Add option="-D_DEBUG2_" />
+					<Add option="-D_DEBUG_=9" />
+					<Add option="-D_DEBUG_MUTEX_x" />
+					<Add option="-D_DEBUG_FILE_x" />
+					<Add option="-D_DEBUG_SELECT_x" />
+					<Add option="-D_DEBUG_SIZE_x" />
+					<Add option="-D_DEBUG_SCROLL_x" />
+					<Add option="-D_DEBUG_CARET_x" />
+					<Add option="-D_DEBUG_MOUSE_" />
+					<Add option="-D_DEBUG_EVENTS_x" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

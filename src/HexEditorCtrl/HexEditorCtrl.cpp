@@ -84,6 +84,9 @@ void HexEditorCtrl::Dynamic_Connector(){
 	this->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 	hex_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
 	text_ctrl->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnKillFocus),NULL, this);
+	hex_ctrl->Connect( wxEVT_SET_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnFocus),NULL, this);
+	text_ctrl->Connect( wxEVT_SET_FOCUS, wxFocusEventHandler(HexEditorCtrl::OnFocus),NULL, this);
+
 
 	offset_ctrl->Connect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseRight),NULL, this);
 	offset_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditorCtrl::OnMouseLeft),NULL, this);
@@ -306,8 +309,10 @@ bool HexEditorCtrl::Selector(){
 	if( not (FocusAt == hex_ctrl || FocusAt == text_ctrl) ){		//Checks If selecton from hex or text control
 		#ifdef _DEBUG_
 		std::cout << "Selector without focus captured." << std::endl;
+		std::cout << "use last focus as a work-a-round." << std::endl;
 		#endif
-		return false;
+		FocusAt=LastFocused;
+		//return false;
 		}
 	#ifdef _DEBUG_SELECT_
 	std::cout << "Selector captured at CursorOffset()=" << std::dec << CursorOffset() << "\t select->StartOffset:" <<  select->StartOffset << std::endl;
@@ -746,9 +751,19 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 	ShowContextMenu( event );
 	}
 
+void HexEditorCtrl::OnFocus( wxFocusEvent& event){
+#ifdef _DEBUG_
+	std::cout << "HexEditorCtrl::OnFocus( wxFocusEvent& event ) \n" ;
+#endif
+	if( event.GetWindow() == hex_ctrl or
+		 event.GetWindow() == text_ctrl  )
+		LastFocused=event.GetWindow();
+	event.Skip();//let wxHexCtrl::Focus set the cursor
+	}
+
 void HexEditorCtrl::OnKillFocus( wxFocusEvent& event){
-#ifdef _DEBUG_MOUSE_
-	std::cout << "HexEditorCtrl::OnKillFocus( wxMouseEvent& event ) \n" ;
+#ifdef _DEBUG_
+	std::cout << "HexEditorCtrl::OnKillFocus( wxFocusEvent& event ) \n" ;
 #endif
 	TagHideAll();
 	event.Skip();
@@ -851,7 +866,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 
 				while (child) {
 					if (child->GetName() == wxT("TAG")) {
-						wxString propvalue = child->GetPropVal(wxT("id"), wxT("default-value"));
+						wxString propvalue = child->GetPropVal(wxT("id"), wxEmptyString);
 	#ifdef _DEBUG_TAG_
 						std::cout << "TAG ID:" << propvalue.ToAscii() << " readed.\n";
 	#endif

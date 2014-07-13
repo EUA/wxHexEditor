@@ -164,10 +164,12 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void OnTagAddSelection( wxCommandEvent& event );
 		void OnTagQuick( wxCommandEvent& event );
 		void OnTagEdit( wxCommandEvent& event );
+		void OnFocus( wxFocusEvent& event );
 		void OnKillFocus( wxFocusEvent& event );
 		void UpdateUI(wxUpdateUIEvent& event);
 
 		uint64_t LastRightClickAt;
+		wxWindow* LastFocused;
 		//----ADAPTERS----//
 	public:
 		void TagHideAll( void );

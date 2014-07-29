@@ -160,6 +160,7 @@
 					<Add option="-D_DEBUG_CARET_x" />
 					<Add option="-D_DEBUG_MOUSE_" />
 					<Add option="-D_DEBUG_EVENTS_x" />
+					<Add option="-D_DEBUG_THREAD_SCROLL_" />
 					<Add directory="($wxdir)/include" />
 				</Compiler>
 				<ResourceCompiler>

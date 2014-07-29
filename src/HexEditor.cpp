@@ -496,6 +496,7 @@ void HexEditor::DoRedo( void ) {
 			}
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
+
 	}
 
 void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
@@ -521,7 +522,7 @@ void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
 		}
 //	UpdateCursorLocation();
 //	UpdateScrollOffset(); Moved to HexEditorCtrl::ReadFromBuffer code
-	if( set_focus)
+	if( set_focus )
 		hex_ctrl->SetFocus();
 	}
 
@@ -1183,8 +1184,8 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 
 void HexEditor::ScrollNoThread( int speed ) {
 	while( (!wxTheApp->Pending() and speed != 0 )
-	       and ( ((speed > 0) and (page_offset + ByteCapacity() < FileLength()))
-	             or ( (speed < 0) and (page_offset > 0) ))
+	     and ( ((speed > 0) and (page_offset + ByteCapacity() < FileLength()))
+			or ( (speed < 0) and (page_offset > 0) ))
 	     ) {
 #ifdef _DEBUG_MOUSE_
 		std::cout << "Loop Scroll speed  :" << speed << std::endl;

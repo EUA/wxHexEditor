@@ -319,8 +319,10 @@ void TagPanel::OnTagSelect(wxCommandEvent& event) {
 	unsigned selection = TagPanelList->GetSelection();
 
 	if( MyHexEditor != NULL )
-		if( MyHexEditor->MainTagArray.Count() >= selection )
+		if( MyHexEditor->MainTagArray.Count() >= selection ){
 			MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( selection )->start );
+			MyHexEditor->ReDraw(); //To clear artefacts and move actual cursor shadow.
+			}
 	}
 
 void SearchPanel::OnClear( wxCommandEvent& event ){
@@ -337,16 +339,20 @@ void SearchPanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
 	if( MyHexEditor != NULL )
-		if( MyHexEditor->HighlightArray.Count() >= selection )
-			MyHexEditor->Goto( MyHexEditor->HighlightArray.Item( selection )->start , true);
+		if( MyHexEditor->HighlightArray.Count() >= selection ){
+			MyHexEditor->Goto( MyHexEditor->HighlightArray.Item( selection )->start );
+			MyHexEditor->ReDraw(); //To clear artefacts and move actual cursor shadow.
+			}
 	}
 
 void ComparePanel::OnTagSelect(wxCommandEvent& event) {
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
 	if( MyHexEditor != NULL )
-		if( MyHexEditor->CompareArray.Count() >= selection )
-			MyHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start , true);
+		if( MyHexEditor->CompareArray.Count() >= selection ){
+			MyHexEditor->Goto( MyHexEditor->CompareArray.Item( selection )->start );
+			MyHexEditor->ReDraw(); //To clear artefacts and move actual cursor shadow.
+			}
 	}
 
 void DisassemblerPanel::Set( wxMemoryBuffer buff ){

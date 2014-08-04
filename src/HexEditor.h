@@ -246,8 +246,10 @@ class scrollthread:wxThreadHelper {
 		void *Entry() {
 			int64_t newoffset=0;
 			while( !(GetThread()->TestDestroy()) ) {
-				if(speed == 0)
+				if(speed == 0){
+					usleep( 10 );
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
+					}
 #if _DEBUG_THREAD_SCROLL_
 				std::cout << "scrollthread speed : " << speed;
 #endif
@@ -278,7 +280,9 @@ class scrollthread:wxThreadHelper {
 #else			//Old versions
 				wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
 				//eventx.SetInt(newoffset);
+				wxMutexGuiEnter(); //wxMutexGuiEnter & Leave fundtions are required because wxPostEvent will run under Thread
 				::wxPostEvent(parent, eventx );
+				wxMutexGuiLeave();
 				wxYield();
 
 				GetThread()->Sleep(sleeper);
@@ -306,9 +310,10 @@ class scrollthread:wxThreadHelper {
 			cursor = parent->GetLocalHexInsertionPoint();
 			}
 		void Exit(void){
-			if( GetThread()->IsRunning() )
-				GetThread()->Pause();
+			//if( GetThread()->IsRunning() )
+			//	GetThread()->Pause();
 			GetThread()->Delete();
+			GetThread()->Wait();
 			}
 	};
 

@@ -298,8 +298,13 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddTool(wxID_CUT, _("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR), _("Cuts selected block and copies to clipboard"));
 	Toolbar->AddTool(wxID_DELETE, _("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR), _("Deletes selected block"));
 	Toolbar->AddTool(idInsert, _("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _("Insert"));
-
-//  Toolbar->SetCustomOverflowItems(prepend_items, append_items);
+/*
+#ifdef _WX_AUIBAR_H_
+	Toolbar->AddStretchSpacer();
+#else
+	Toolbar->AddStretchableSpacer();
+#endif
+*/
    Toolbar->Realize();
 
 	//MyAUI->LoadPerspective()???
@@ -519,7 +524,6 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			OpenFile( flname );
 			filediag->Destroy();
 			}
-		return; // Without this, wxID_NEW retriggers this function again under wxMSW
 		}
 	else if( event.GetId() == wxID_OPEN ){
 		wxFileDialog filediag(this,
@@ -534,14 +538,13 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			OpenFile( flname );
 			filediag.Destroy();
 			}
-		return; // Without this, wxID_OPEN retriggers this function again under wxMSW
 		}
 	else if( event.GetId() >= MyFileHistory->GetBaseId() and event.GetId() <= MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1){
 		wxString filename = MyFileHistory->GetHistoryFile( event.GetId() - MyFileHistory->GetBaseId() );
 		OpenFile( filename );
 		}
-	else{
-		if( MyNotebook->GetPageCount() ){
+	//If there some file(s) are open
+	else if( MyNotebook->GetPageCount() ){
 			HexEditor *MyHexEditor = GetActiveHexEditor();
 			if( MyHexEditor != NULL ){
 				switch( event.GetId() ){
@@ -623,9 +626,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					}
 				}
 			}
-		return; // Without this, the event retriggers this function again under wxMSW
-		}
-	event.Skip();
+	event.Skip(false);
 	}
 
 void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){

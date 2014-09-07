@@ -72,9 +72,9 @@ HexEditor::~HexEditor() {
 	DisconnectScroll();
 	//FileClose();
 	Dynamic_Disconnector();
+	// Free resources
 	myscrollthread->Exit();
 	delete myscrollthread;
-	// Free resources
 	delete copy_mark;
 	}
 
@@ -1159,7 +1159,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if (defined( __WXOSX__ ) && not wxCHECK_VERSION(3,0,0) ) or defined(__WXMSW__)//WXMSW Stuck sometimes if thread on
+#if (DO_NOT_USE_THREAD_FOR_SCROLL)//WXMSW Stuck sometimes if thread on
 		ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
@@ -1199,7 +1199,7 @@ void HexEditor::ScrollNoThread( int speed ) {
 			page_offset += BytePerLine() - (page_offset % BytePerLine()) ; //cosmetic
 			}
 		LoadFromOffset( page_offset, false, false );
-//		SetLocalHexInsertionPoint(cursor);
+	//	SetLocalHexInsertionPoint(cursor); //to update cursor location on WXMSW!
 		Selector();
 		PaintSelection();
 		UpdateCursorLocation( true );

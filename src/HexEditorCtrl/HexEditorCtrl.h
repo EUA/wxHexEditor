@@ -24,6 +24,15 @@
 #ifndef __wxHexEditorCtrl__
 #define __wxHexEditorCtrl__
 
+#if defined( __WXOSX__ )
+	#if not wxCHECK_VERSION(3,0,0)
+		#define DO_NOT_USE_THREAD_FOR_SCROLL
+	#endif
+//#elif defined( __WXMSW ) //WXMSW Stuck sometimes if thread on
+//	#define DO_NOT_USE_THREAD_FOR_SCROLL
+#endif
+
+
 #include <wx/xml/xml.h>
 #include <wx/filename.h>
 #include <wx/event.h>

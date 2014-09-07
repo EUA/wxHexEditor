@@ -100,11 +100,13 @@
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
-					<Add directory="($wxdir)/include" />
+					<Add option="-DNDEBUG" />
+					<Add directory="$(wxdir)/include" />
+					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="($wxdir)/include" />
-					<Add directory="($wxdir)/include/lib/gcc_lib/mswu" />
+					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
@@ -161,11 +163,12 @@
 					<Add option="-D_DEBUG_MOUSE_" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_" />
-					<Add directory="($wxdir)/include" />
+					<Add directory="$(wxdir)/include" />
+					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="($wxdir)/include" />
-					<Add directory="($wxdir)/include/lib/gcc_lib/mswu" />
+					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-mthreads" />
@@ -192,7 +195,7 @@
 					<Add library="comdlg32" />
 					<Add library="mhash/bin/Debug/libmhash.a" />
 					<Add library="udis86/bin/Debug/libudis86.a" />
-					<Add directory="($wxdir)/lib/gcc_lib" />
+					<Add directory="$(wxdir)/lib/gcc_lib" />
 				</Linker>
 			</Target>
 			<Target title="MacOS Release">

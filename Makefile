@@ -4,7 +4,7 @@ WXCONFIG = wx-config
 CC = `$(WXCONFIG) --cc`
 CXX = `$(WXCONFIG) --cxx`
 LDFLAGS += -lgomp
-#add  "-Wl,--subsystem,console -mconsole" for win-debug
+#add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
 RC = `$(WXCONFIG) --rescomp`
@@ -50,7 +50,7 @@ $(OBJECTS): $(LIBS) $(SOURCES)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -o $@
+	$(CXX) ${LDFLAGS} $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -o $@
 
 .cpp.o: $(LIBS)
 	$(CXX) -c $(WXCXXFLAGS) $(OPTFLAGS) $(CXXFLAGS) $(CPPFLAGS) $< -o $@
@@ -76,10 +76,10 @@ win: $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -static -lwinpthread -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
+	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -static ${LDFLAGS} -lpthread -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
+	$(CXX) ${LDFLAGS} $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
 mac: prepmacdir maclink
 	install -m 755 wxHexEditor $(EXECUTABLE_DIR_MAC)/Contents/MacOS/

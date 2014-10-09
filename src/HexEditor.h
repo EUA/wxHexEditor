@@ -156,7 +156,9 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 
 		wxStatusBar* statusbar;
 		FAL *myfile;
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 		scrollthread *myscrollthread;
+#endif
 		DataInterpreter *interpreter;
 		InfoPanel *infopanel;
 		TagPanel *tagpanel;
@@ -310,6 +312,7 @@ class scrollthread:wxThreadHelper {
 			cursor = parent->GetLocalHexInsertionPoint();
 			}
 		void Exit(void){
+			//__WXMSW__ ISSUE
 			//if( GetThread()->IsRunning() )
 			//	GetThread()->Pause();
 			GetThread()->Delete();

@@ -101,6 +101,7 @@
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
 					<Add option="-DNDEBUG" />
+					<Add option="-DwxDEBUG_LEVEL=0" />
 					<Add directory="$(wxdir)/include" />
 					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
 				</Compiler>
@@ -153,6 +154,8 @@
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DwxDEBUG_LEVEL=0" />
 					<Add option="-D_DEBUG_=9" />
 					<Add option="-D_DEBUG_MUTEX_x" />
 					<Add option="-D_DEBUG_FILE_x" />
@@ -197,6 +200,9 @@
 					<Add library="udis86/bin/Debug/libudis86.a" />
 					<Add directory="$(wxdir)/lib/gcc_lib" />
 				</Linker>
+				<Environment>
+					<Variable name="wxdir" value="C:/wxWidgets-3.0.1" />
+				</Environment>
 			</Target>
 			<Target title="MacOS Release">
 				<Option platforms="Unix;Mac;" />

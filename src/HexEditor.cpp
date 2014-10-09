@@ -73,8 +73,10 @@ HexEditor::~HexEditor() {
 	//FileClose();
 	Dynamic_Disconnector();
 	// Free resources
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 	myscrollthread->Exit();
 	delete myscrollthread;
+#endif
 	delete copy_mark;
 	}
 
@@ -210,7 +212,9 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){
 		myfile = new FAL( myfilename ); //OpenDevice
 		if(myfile->IsOpened()) {
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 			myscrollthread = new scrollthread(0,this);
+#endif
 //			copy_mark = new copy_maker();
 			offset_ctrl->SetOffsetLimit( myfile->Length() );
 			sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
@@ -232,7 +236,9 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		myfile = new FAL( myfilename );
 
 	if(myfile->IsOpened()) {
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 		myscrollthread = new scrollthread(0,this);
+#endif
 //			copy_mark = new copy_maker();
 
 		if( myfile->IsProcess() ){
@@ -1042,13 +1048,12 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	menu.Append(wxID_COPY, _("Copy"));
 	menu.Append(idCopyAs, _("CopyAs"));
-	menu.Append(idSaveAsDump, _("Save As Dump"));
 	menu.Append(wxID_PASTE, _("Paste"));
 	if(not IsFileUsingXORKey()){
 		menu.AppendSeparator();
+		menu.Append(wxID_CUT, _("Cut"));
 		menu.Append(wxID_DELETE, _("Delete"));
 		menu.Append(idInjection, _("Insert"));
-		menu.Append(wxID_CUT, _("Cut"));
 		}
 //	if(XORKey == wxEmptyString){//Disable injection on XORkey
 //		menu.Enable( idInjection, select->IsState( select->SELECT_FALSE) );
@@ -1057,6 +1062,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 //		}
 
 	menu.AppendSeparator();
+	menu.Append(idSaveAsDump, _("Save As Dump"));
 	menu.Append(idFillSelection, _("Fill Selecton"));
 	if( BlockSelectOffset == -1 )
 		menu.Append(idBlockSelect, _("Set Selection Block Start"));
@@ -1159,7 +1165,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
 			}
-#if (DO_NOT_USE_THREAD_FOR_SCROLL)//WXMSW Stuck sometimes if thread on
+#ifdef DO_NOT_USE_THREAD_FOR_SCROLL //WXMSW Stuck sometimes if thread on
 		ScrollNoThread( spd );
 	#ifdef _DEBUG_MOUSE_
 		std::cout << "Scroll (Non-Thread) Speed = " << spd << std::endl;
@@ -1215,7 +1221,9 @@ void HexEditor::ScrollNoThread( int speed ) {
 
 void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ) {
 	HexEditorCtrl::OnMouseSelectionEnd( event );
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 	myscrollthread->UpdateSpeed( 0 );
+#endif
 	if( MouseCapture ) {
 #if defined( _DEBUG_ ) and defined(__WXGTK__)
 		std::cout << "ReleaseMouse()\n" ;

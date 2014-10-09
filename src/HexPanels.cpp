@@ -87,28 +87,32 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 void DataInterpreter::OnCheckEdit( wxCommandEvent& event ){
 	if( event.IsChecked() ){
 		m_textctrl_binary->SetFocus();
-		m_textctrl_binary->SetInsertionPoint(0);
+		//m_textctrl_binary->SetInsertionPoint(0); //I think this is not needd
+
 // TODO (death#1#): Needed to activate INSERT mode when pressed to Edit check
-//		wxKeyEvent emulate_insert(WXK_INSERT);
-//		OnTextEdit( emulate_insert );
-//
+// TODO (death#1#): Instead change bits by mouse click!
+		wxKeyEvent emulate_insert(WXK_INSERT);
+		OnTextEdit( emulate_insert );
+
+		///Requires wxTE_MULTILINE!
+
 //		wxTextAttr at;
 //		m_textctrl_binary->GetStyle( 0, at );
 //		at.SetTextColour( *wxGREEN );
-//		//m_textctrl_binary->SetStyle( 0,8, at );
+//		m_textctrl_binary->SetStyle( 0,8, at );
 //		m_textctrl_binary->SetDefaultStyle( at );
 //		m_textctrl_binary->SetValue(m_textctrl_binary->GetValue());
 		}
 	else{
 //		wxTextAttr at;
 //		m_textctrl_binary->GetStyle( 0, at );
-//		at.SetBackgroundColour( *wxBLACK );
-//		//m_textctrl_binary->SetStyle( 0,8, at );
+//		at.SetBackgroundColour( *wxRED );
+//		m_textctrl_binary->SetStyle( 0,8, at );
 //		m_textctrl_binary->SetDefaultStyle( at );
 //		m_textctrl_binary->SetValue(m_textctrl_binary->GetValue());
 		}
-
 	}
+
 void DataInterpreter::OnTextMouse( wxMouseEvent& event ){
 	if( event.ButtonDown() ) //Just allowed left mouse, setted up by wxFormBuilder.
 		wxBell();
@@ -159,6 +163,9 @@ void DataInterpreter::OnTextEdit( wxKeyEvent& event ){
 
 			hx->FileAddDiff( hx->CursorOffset(), &newbyte, 1);						// add write node to file
 			hx->Reload();	//Updates hex editor to show difference.
+
+			wxUpdateUIEvent eventx( UNREDO_EVENT );
+			GetEventHandler()->ProcessEvent( eventx );
 			}
 	else
 		wxBell();

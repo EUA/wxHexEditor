@@ -51,12 +51,10 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-O3" />
 					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add directory="mhash-0.9.9/include" />
 				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
 				<ExtraCommands>
 					<Add before="cmd /c copy include\mutils\mhash_config.win32.h include\mutils\mhash_config.h" />
 				</ExtraCommands>
@@ -268,6 +266,7 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

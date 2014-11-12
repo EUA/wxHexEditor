@@ -25,6 +25,7 @@
 #define __wxHexEditorCtrl__
 
 #ifdef __WXOSX__
+   #include <wx/version.h>
 	#if not wxCHECK_VERSION(3,0,0)
 		#define DO_NOT_USE_THREAD_FOR_SCROLL
 	#endif

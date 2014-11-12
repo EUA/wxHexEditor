@@ -118,6 +118,7 @@ wxHexCtrl::~wxHexCtrl()
    Clear();
    //m_text.Clear();
    wxCaretSuspend cs(this);
+   /*
    wxBufferedPaintDC dc( this );
    PrepareDC( dc );
    dc.SetFont( HexDefaultAttr.GetFont() );
@@ -126,6 +127,7 @@ wxHexCtrl::~wxHexCtrl()
 	wxBrush bbrush( HexDefaultAttr.GetBackgroundColour() );
    dc.SetBackground(bbrush );
    dc.Clear();
+   */
 }
 
 void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){

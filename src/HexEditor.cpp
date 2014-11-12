@@ -766,15 +766,26 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 						wxBell();
 					else {
 						LoadFromOffset( page_offset - BytePerLine() );
-						SetLocalHexInsertionPoint( HexPerLine() - 1 );
+						SetLocalHexInsertionPoint( HexPerLine() - ((myctrl == hex_ctrl) ? 1 : 2) );
 						}
 					}
 				else
 					SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - ((myctrl == hex_ctrl) ? 1 : 2) );
 				break;
 			case (WXK_RIGHT):
-			case (WXK_NUMPAD_RIGHT):
-				if( myctrl->GetInsertionPoint() >= myctrl->GetLastPosition() ) {
+			case (WXK_NUMPAD_RIGHT):{
+				wxHexTextCtrl *mytxtctrl = dynamic_cast<wxHexTextCtrl*>(event.GetEventObject());
+				int a=0, b=0;
+				if( mytxtctrl ){
+				   a = mytxtctrl->GetInsertionPoint();
+				   b = mytxtctrl->GetLastPosition();
+					}
+				else{
+					a = myctrl->GetInsertionPoint();
+				   b = myctrl->GetLastPosition();
+				   }
+
+				if( a >= b ) {
 					if(page_offset + ByteCapacity() < myfile->Length() ) {	//Checks if its EOF or not
 						LoadFromOffset( page_offset + BytePerLine() );
 						SetLocalHexInsertionPoint( (LineCount() - 1) * HexPerLine() );
@@ -785,7 +796,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 				else
 					SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() +  ((myctrl == hex_ctrl)? 1 : 2) );
 				break;
-
+				}
 			case (WXK_HOME):
 			case(WXK_NUMPAD_HOME): {
 					SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - GetLocalHexInsertionPoint() % HexPerLine() );

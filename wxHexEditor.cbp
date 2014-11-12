@@ -83,7 +83,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.1/debug/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.2/debug/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Release">

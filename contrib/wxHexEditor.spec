@@ -10,8 +10,8 @@
 %define _prefix	/usr
 
 Name:			wxHexEditor
-Summary:		A hex editor for view / edit huge files and devices.
-Version:		0.22
+Summary:		A hex editor for view / edit huge files and devices
+Version:		0.23
 Release:		1
 License:		GPL
 Group:			Editors
@@ -25,9 +25,9 @@ BuildRequires:  wxWidgets-devel
 %else
 BuildRequires:  wxGTK-devel >= 2.8.9
 %endif
-#%if 0%{?suse_version}
-#BuildRequires:  fdupes update-desktop-files
-#%endif
+%if 0%{?suse_version}
+BuildRequires:  fdupes update-desktop-files libtool pkg-config
+%endif
 
 %description
 wxHexEditor is another GUI hex editor for open HUGE files and devices
@@ -81,15 +81,18 @@ it's writen by cross-platform API, wxWidgets.
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
-* Thu May 09 2013 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.22-
-- Updated to version v0.22, dropped openSUSE 11 version support and lowers.
-* Wed Dec 12 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.21-
+* Thu Nov 29 2014 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.23-0
+- Updated to version v0.23, fixed build requirements for udis86 compilation
+* Thu May 09 2013 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.22-0
+- Updated to version v0.22, dropped openSUSE 11 version support and lowers
+* Wed Dec 12 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.21-0
 - Updated to version v0.21
-* Wed Feb 29 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.20-
+* Wed Feb 29 2012 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.20-0
 - Updated to version v0.20
-* Sat Mar 19 2011 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.10-
+* Sat Mar 19 2011 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.10-0
 - fixed OpenSUSE 11.4 compilation
 * Fri Apr 23 2010 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.09-0
 - closing to final
 * Tue Feb 9 2009 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.08-0
 - initial release of rpm
+

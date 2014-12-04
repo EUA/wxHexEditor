@@ -41,7 +41,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.23 Beta Development
+VERSION = 0.23 Beta
 
 all:$(EXECUTABLE) langs
 
@@ -65,11 +65,11 @@ langs: $(MOBJECTS)
 
 udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./autogen.sh
-	cd udis86;./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	cd udis86;./configure --host=$(HOST) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
-	cd mhash; ./configure --host=$(HOST) CC=$(CC) CXX=$(CXX) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	cd mhash; ./configure --host=$(HOST) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 	cd mhash; $(MAKE) $(MFLAGS)
 
 win: $(RESOURCES) $(EXECUTABLE_WIN)

@@ -29,6 +29,8 @@ WINDOWS
 For generating Windows executables, I use Linux to cross-compile a Windows executable via MinGW.
 If you have cygwin, than good luck to build this with make command. But you are better to use C::B.
 
+On Linux Cross-Compiling To WINDOWS
+-----------------------------------------------------
 If you have Linux installation and want to build Win32/Win64 build of wxHexEditor, follow this guide.
 This is how I compile.
 First, I compile the wxWidgets library with a cross compiler:
@@ -45,6 +47,10 @@ Then I extract the wxHexEditor:
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
+
+PS: If you face with " _rpl_malloc " error, you can use 
+
+ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
 
 -----------------------------------------------------
 OS X

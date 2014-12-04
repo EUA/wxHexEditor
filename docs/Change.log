@@ -1,9 +1,10 @@
-wxHexEditor v0.23 Beta  XX/05/2013
+wxHexEditor v0.23 Beta  04/12/2014
 Added many languages!
 Fixed many bugs that leads to crash and memory leaks.
 Implemented prefetched functions. (SSD buster!)
 Fixed some cosmetic errors.
-Added Sorted Tag Saving / Loading
+Fixed C::B compilation for all OS'es.
+Added Sorted Tag Saving / Loading.
 Fixed Injection function.
 Implemented file change detection reload ( on wxWidgets > 2.9 )
 Implemented file compare connector to scroll 2 files at once.

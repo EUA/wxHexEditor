@@ -170,7 +170,7 @@ virtual void ChangeSize();	// update the geometry
 		wxPoint   m_Window;	// the size (in text coords) of the window
 		wxString  m_text;
 		wxTextAttr HexDefaultAttr;
-		wxMutex MutexResize;
+		wxMutex PaintMutex;
 		//wxTextAttr HexSelectAttr;
 
 		wxSize  m_CharSize;	// size (in pixels) of one character

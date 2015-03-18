@@ -559,6 +559,7 @@ void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset 
 	}
 
 void wxHexCtrl::RePaint( void ){
+	PaintMutex.Lock();
 	wxCaretSuspend cs(this);
 	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
@@ -579,9 +580,11 @@ void wxHexCtrl::RePaint( void ){
 
 		///delete dcTemp;
 		}
+	PaintMutex.Unlock();
 	}
 
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
+	PaintMutex.Lock();
 	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
 		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
@@ -594,6 +597,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 #endif
 		///delete dcTemp;
 		}
+	PaintMutex.Unlock();
 	}
 
 void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){

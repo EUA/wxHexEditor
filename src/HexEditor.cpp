@@ -1239,8 +1239,8 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ) {
 #if defined( _DEBUG_ )
 		std::cout << "GetCapture()->ReleaseMouse()\n" ;
 #endif
-		GetCapture()->ReleaseMouse();//this is proper one but breaks -O3 optimizations!
-		//ReleaseMouse(); //this one popup dragging issues, program crash under windows.
+      //ReleaseMouse(); //this one popup dragging issues, program crash under windows.
+		GetCapture()->ReleaseMouse();//this is proper one but breaks -O3 optimizations (working OK with g++ >= 4.8.3)
 		MouseCapture = false;
 		}
 	}

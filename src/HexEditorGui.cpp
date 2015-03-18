@@ -678,7 +678,6 @@ DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, con
 	mainSizer->Add( bSizerTop, 0, wxEXPAND, 5 );
 	
 	m_dasmCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP|wxTE_MULTILINE|wxTE_READONLY );
-	m_dasmCtrl->SetMaxLength( 0 ); 
 	mainSizer->Add( m_dasmCtrl, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	

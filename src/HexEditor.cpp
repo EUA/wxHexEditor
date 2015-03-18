@@ -1236,12 +1236,11 @@ void HexEditor::OnMouseSelectionEnd( wxMouseEvent& event ) {
 	myscrollthread->UpdateSpeed( 0 );
 #endif
 	if( MouseCapture ) {
-#if defined( _DEBUG_ ) and defined(__WXGTK__)
-		std::cout << "ReleaseMouse()\n" ;
-		GetCapture()->ReleaseMouse();//this is proper one but breaks optimizations!
-#else
-		ReleaseMouse();
+#if defined( _DEBUG_ )
+		std::cout << "GetCapture()->ReleaseMouse()\n" ;
 #endif
+		GetCapture()->ReleaseMouse();//this is proper one but breaks -O3 optimizations!
+		//ReleaseMouse(); //this one popup dragging issues, program crash under windows.
 		MouseCapture = false;
 		}
 	}

@@ -60,7 +60,12 @@ class wxHexCtrl : public wxScrolledWindow{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator);
 		~wxHexCtrl();
-		wxChar CharAt(int offset){ return m_text.GetChar(offset); }
+		wxChar CharAt(int offset){
+			if( offset >= m_text.Len() ){
+			   std::cout << "Buff lower for offset : " << offset << std::endl;
+			   return 0;
+				}
+		return m_text.GetChar(offset);}
 
 		// Operations
 		void SetFormat( wxString fmt );

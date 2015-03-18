@@ -635,6 +635,10 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	wxPoint _end_   = InternalPositionToVisibleCoord( end );
 	wxPoint _temp_  = _start_;
 
+#ifdef _DEBUG_
+   std::cout << "Tag paint from : " << start << " to " << end << std::endl;
+#endif
+
 	//char bux[1024];//++//
 	for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
 		wxString line;

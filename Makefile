@@ -50,7 +50,7 @@ $(OBJECTS): $(LIBS) $(SOURCES)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) ${LDFLAGS} $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -o $@
+	$(CXX) $(OBJECTS) ${LDFLAGS} $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -o $@
 
 .cpp.o: $(LIBS)
 	$(CXX) -c $(WXCXXFLAGS) $(OPTFLAGS) $(CXXFLAGS) $(CPPFLAGS) $< -o $@
@@ -65,11 +65,11 @@ langs: $(MOBJECTS)
 
 udis86/libudis86/.libs/libudis86.a:
 	cd udis86;./autogen.sh
-	cd udis86;./configure --host=$(HOST) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	cd udis86;./configure --host=$(HOST) CFLAGS="$(CFLAGS) ${OPTFLAGS}" CXXFLAGS="$(CXXFLAGS) ${OPTFLAGS}" CPPFLAGS="$(CPPFLAGS)"
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
 mhash/lib/.libs/libmhash.a:
-	cd mhash; ./configure --host=$(HOST) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	cd mhash; ./configure --host=$(HOST) CFLAGS="$(CFLAGS) ${OPTFLAGS}" CXXFLAGS="$(CXXFLAGS) ${OPTFLAGS}" CPPFLAGS="$(CPPFLAGS)"
 	cd mhash; $(MAKE) $(MFLAGS)
 
 win: $(RESOURCES) $(EXECUTABLE_WIN)
@@ -79,7 +79,7 @@ $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
 	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -static ${LDFLAGS} -lpthread -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
-	$(CXX) ${LDFLAGS} $(OBJECTS) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
+	$(CXX) $(OBJECTS) ${LDFLAGS} $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)
 
 mac: prepmacdir maclink
 	install -m 755 wxHexEditor $(EXECUTABLE_DIR_MAC)/Contents/MacOS/

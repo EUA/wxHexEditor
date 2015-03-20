@@ -74,20 +74,26 @@ bool wxHexEditorApp::OnInit() {
 			return true;
 			}
 
+#if !_FSWATCHER_
    for(int ii = 1; ii < argc; ++ii) {
       wxString str(argv[ii]);
       wxFileName fn = wxFileName(str);
-
  //  if(fn.FileExists() or str.Lower().StartsWith(wxT("-pid")))
       frame->OpenFile(fn.GetFullPath());
       }
-
+#endif
    return true;
    }
 
 #if _FSWATCHER_
 void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)){
       frame->CreateFileWatcher();
+		for(int ii = 1; ii < argc; ++ii) {
+			wxString str(argv[ii]);
+			wxFileName fn = wxFileName(str);
+			//  if(fn.FileExists() or str.Lower().StartsWith(wxT("-pid")))
+			frame->OpenFile(fn.GetFullPath());
+			}
 		}
 #endif // _FSWATCHER_
 

@@ -476,6 +476,9 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 				file_watcher->Add( filename.GetFullPath(), wxFSW_EVENT_MODIFY );
 				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, x);
 				}
+			else{
+				std::cout << "File_watcher event is null! File Watcher is not working!" << std::endl;
+				}
 			}
 #endif // _FSWATCHER_
 		ActionEnabler();
@@ -1119,9 +1122,8 @@ bool HexEditorFrame::CreateFileWatcher(){
 }
 
 void HexEditorFrame::OnFileSystemEvent(wxFileSystemWatcherEvent &event){
-	if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
-		//Reload();
-		wxMessageBox("Captured Change event on frame!");
+	//if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
+	//	wxMessageBox("Captured Change event on frame!");
 	event.Skip(true);
 	}
 #endif

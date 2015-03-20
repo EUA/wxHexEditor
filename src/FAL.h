@@ -36,16 +36,6 @@
 #include <wx/dynarray.h>
 #include <stdint.h>
 
-#if wxCHECK_VERSION( 2,9,0 ) and defined( __WXGTK__)
-#define _FSWATCHER_  1
-#else
-#define _FSWATCHER_  0
-#endif
-
-#if _FSWATCHER_
-	#include <wx/fswatcher.h>
-#endif
-
 #ifdef __WXMAC__
 	#include <sys/disk.h>
 #endif
@@ -118,9 +108,6 @@ class DiffNode{
 WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 
 class FAL : private wxFile
-#if _FSWATCHER_
-				,public wxFileSystemWatcher //This will generate assertion due not created at active loop, but it's working on wxGTK and easier to do like that :)
-#endif
 	{
 	public:
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, ForcedReadOnly, AccessInvalid };

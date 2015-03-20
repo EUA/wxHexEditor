@@ -92,7 +92,9 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	//wxMessageBox( wxString::Format(" Attach %d", no)    , "none" );
 	//AllocConsole();
 	#endif
-
+	#if _FSWATCHER_
+   file_watcher=NULL;
+	#endif // _FSWATCHER_
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 	license=_T("wxHexEditor is a hex editor for HUGE files and devices.\n"
@@ -240,6 +242,9 @@ HexEditorFrame::~HexEditorFrame(){
 
 	MyNotebook->Destroy();
 	MyAUI->UnInit();
+#if _FSWATCHER_
+	delete file_watcher;
+#endif // _FSWATCHER_
 	}
 
 void HexEditorFrame::PrepareAUI( void ){
@@ -465,7 +470,14 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".sha256")) ) )
 			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( filename.GetFullPath().Append(wxT(".sha256")) );
-
+#if _FSWATCHER_
+		if(not filename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
+			if(file_watcher!=NULL){
+				file_watcher->Add( filename.GetFullPath(), wxFSW_EVENT_MODIFY );
+				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, x);
+				}
+			}
+#endif // _FSWATCHER_
 		ActionEnabler();
 		return x;
 		}
@@ -1065,6 +1077,13 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 		if( MyHexEditor != NULL ){
 		   MyHexEditor->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditorFrame::OnKeyDown)  ,NULL, this);
 			if( MyHexEditor->FileClose() ){
+#if _FSWATCHER_
+				if(not MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid=")))
+					if(file_watcher!=NULL){
+						file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
+						Disconnect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
+						}
+#endif // _FSWATCHER_
 				MyNotebook->DeletePage( event.GetSelection() );
 				// delete MyHexEditor; not neccessery, DeletePage also delete this
 				}
@@ -1088,6 +1107,24 @@ void HexEditorFrame::TagHideAll( void ){
 			MyHexEditor->TagHideAll();
 		}
 	}
+
+#if _FSWATCHER_
+bool HexEditorFrame::CreateFileWatcher(){
+   if (file_watcher)
+		return false;
+	file_watcher = new wxFileSystemWatcher();
+   file_watcher->SetOwner(this);
+	Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
+   return true;
+}
+
+void HexEditorFrame::OnFileSystemEvent(wxFileSystemWatcherEvent &event){
+	if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
+		//Reload();
+		wxMessageBox("Captured Change event on frame!");
+	event.Skip(true);
+	}
+#endif
 
 wxBitmap HexEditorArtProvider::CreateBitmap(const wxArtID& id, const wxArtClient& client, const wxSize& WXUNUSED(size)){
 	if ( client == wxART_TOOLBAR ){

@@ -26,6 +26,7 @@
 #define __HexEditorDialogs__
 
 #include "HexEditor.h"
+#include "FAL.h"
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorGui.h"
 #include <vector>

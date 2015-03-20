@@ -39,6 +39,13 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
 
+#if wxCHECK_VERSION( 2,9,0 ) and defined( __WXGTK__)
+	#define _FSWATCHER_  1
+	#include <wx/fswatcher.h>
+#else
+	#define _FSWATCHER_  0
+#endif
+
 #define idInjection 3000
 #define idBlockSelect 3001
 
@@ -47,7 +54,9 @@
 class scrollthread;
 class copy_maker;
 
-class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
+class HexEditor: public HexEditorCtrl
+   /*, protected FAL*/
+   {
 	public:
 		HexEditor(wxWindow* parent,
 		          int id,
@@ -133,6 +142,11 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		void UpdateCursorLocation( bool force=false );
 		void ConnectScroll(HexEditor* connection);
 		void DisconnectScroll( void );
+
+#if _FSWATCHER_
+		void OnFileModify(wxFileSystemWatcherEvent &event);
+#endif // _FSWATCHER_
+
 	protected:
 		void SetLocalHexInsertionPoint( int hex_location, bool from_comparator=false );
 		void OnKeyboardChar(wxKeyEvent& event);
@@ -148,9 +162,7 @@ class HexEditor: public HexEditorCtrl{ /*, protected FAL*/
 		void OnOffsetMouseFocus( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
-#if _FSWATCHER_
-		void OnFileModify( wxFileSystemWatcherEvent& event );
-#endif
+
 		void ShowContextMenu( const wxMouseEvent& event );
 		void ScrollNoThread( int speed );
 

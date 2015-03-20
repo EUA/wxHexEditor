@@ -34,8 +34,8 @@
 #define WXHEXEDITORAPP_H
 
 #ifndef _VERSION_
-#define _VERSION_ "0.23"
-#define _VERSION_S_ _VERSION_ " Beta"
+#define _VERSION_ "0.24"
+#define _VERSION_S_ _VERSION_ " Beta Development"
 #endif // _VERSION_
 
 #ifdef __WXMSW__
@@ -50,6 +50,7 @@
 
 #include <wx/app.h>
 #include "HexEditorFrame.h"
+
 class wxHexEditorApp : public wxApp {
    public:
       virtual bool OnInit();
@@ -61,6 +62,11 @@ class wxHexEditorApp : public wxApp {
    private:
       class HexEditorFrame* frame;
       wxLocale myLocale;
+
+#if _FSWATCHER_
+    // create the file system watcher here, because it needs an active loop
+   virtual void OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop));
+#endif // _FSWATCHER_
    };
 
 DECLARE_APP(wxHexEditorApp)

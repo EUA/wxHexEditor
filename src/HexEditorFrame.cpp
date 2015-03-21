@@ -1111,13 +1111,27 @@ void HexEditorFrame::TagHideAll( void ){
 		}
 	}
 
-#if _FSWATCHER_
+#if //_FSWATCHER_
 bool HexEditorFrame::CreateFileWatcher(){
    if (file_watcher)
 		return false;
 	file_watcher = new wxFileSystemWatcher();
    file_watcher->SetOwner(this);
 	Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
+
+	//Reconnecting already open files (open by argument) to FSWATCHER event.
+	for( int i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
+		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( i ) );
+		if(not MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid="))){
+			if(file_watcher!=NULL){
+				file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
+				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
+				}
+			else{
+				std::cout << "File_watcher event is null! File Watcher is not working!" << std::endl;
+				}
+			}
+		}
    return true;
 }
 

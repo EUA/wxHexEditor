@@ -21,7 +21,10 @@ Then extract the wxHexEditor:
 
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
-make OPTFLAGS="-fopenmp"
+make
+
+you can also use OPTFLAGS and WXCONFIG flags if you have different wx-config name like
+make WXCONFIG=wx-config-3.0 OPTFLAGS="-O3 -march-native"
 
 -----------------------------------------------------
 WINDOWS

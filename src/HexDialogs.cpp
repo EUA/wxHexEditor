@@ -3094,7 +3094,7 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
    }
 
 void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
-	if( wxOK == wxMessageBox( _("Do you sure about resetting colours?"), _("Resetting Hex Colours"), wxOK|wxCANCEL) ){
+	if( wxOK == wxMessageBox( _("Are you sure about resetting colours?"), _("Resetting Hex Colours"), wxOK|wxCANCEL) ){
 		wxConfigBase::Get()->DeleteEntry(_T("ColourHexForeground"));
 		wxConfigBase::Get()->DeleteEntry(_T("ColourHexBackground"));
 		wxConfigBase::Get()->DeleteEntry(_T("ColourHexBackgroundZebra"));

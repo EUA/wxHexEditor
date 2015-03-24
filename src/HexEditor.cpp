@@ -313,7 +313,7 @@ void HexEditor::FileSetXORKey( bool enable ){
 			}
 		}
 	else{
-		if( wxMessageBox( _("For switching XORView Thru mode, all Undo&Redo buffer will be reset and non-saved changes will discarded."), _("XORView Thru Warning"), wxOK | wxCANCEL | wxICON_EXCLAMATION ) == wxCANCEL)
+		if( wxMessageBox( _("Switching to XORView Thru mode will reset Undo&Redo buffer. Unsaved changes will be discarded.\n Note also that you can't use methods that change file size (like delete and inject) while XORView Thru mode is active."), _("XORView Thru Warning"), wxOK | wxCANCEL | wxICON_EXCLAMATION ) == wxCANCEL)
 			return;
 		FileReOpen();
 		}
@@ -424,7 +424,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 				}
 			}
 		if( !SaveTAGS( myfile->GetFileName() ) and MainTagArray.Count() not_eq 0 )
-			while( wxYES == wxMessageBox( _( "TAG file cannot save to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Saved!!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) )
+			while( wxYES == wxMessageBox( _( "TAG file cannot be saved to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Be Saved!!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) )
 				{
 				wxFileDialog filediag(this,_("Choose a file for export TAGs"),
 													wxEmptyString,
@@ -436,7 +436,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 						if( SaveTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
 							break;
 						else
-							wxMessageBox( wxString(_( "TAGs cannot exported to file : ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+							wxMessageBox( wxString(_( "TAGs cannot be exported to file : ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 				else
 					break;
 				}
@@ -1457,7 +1457,7 @@ bool HexEditor::CopySelection( void ) {
 				}
 			}
 		else {
-			wxMessageBox(_( "You are tried to copy data more than 10 MB.\n"\
+			wxMessageBox(_( "You have tried to copy more than 10 MB of data.\n"\
 			                "Copying above 10 MB to clipboard is not allowed.\n"\
 			                "Only internal copy buffer used!"),
 			             _("Info"), wxOK|wxICON_INFORMATION, this);

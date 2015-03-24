@@ -595,7 +595,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 																					wxDefaultPosition);
 												if(wxID_OK == filediag.ShowModal()){
 													if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
-														wxMessageBox( wxString(_( "TAGS cannot imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+														wxMessageBox( wxString(_( "TAGS cannot be imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 													else
 														MyTagPanel->Set( MyHexEditor->MainTagArray );
 													}
@@ -611,7 +611,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 																					wxDefaultPosition);
 													if(wxID_OK == filediag.ShowModal()){
 														if( !MyHexEditor->SaveTAGS( filediag.GetPath() ) )
-															wxMessageBox( wxString(_( "TAGs cannot exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+															wxMessageBox( wxString(_( "TAGs cannot be exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
 														}
 													}
 												else
@@ -1111,7 +1111,7 @@ void HexEditorFrame::TagHideAll( void ){
 		}
 	}
 
-#if //_FSWATCHER_
+#if _FSWATCHER_
 bool HexEditorFrame::CreateFileWatcher(){
    if (file_watcher)
 		return false;
@@ -1134,13 +1134,12 @@ bool HexEditorFrame::CreateFileWatcher(){
 		}
    return true;
 }
-
 void HexEditorFrame::OnFileSystemEvent(wxFileSystemWatcherEvent &event){
 	//if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
 	//	wxMessageBox("Captured Change event on frame!");
 	event.Skip(true);
 	}
-#endif
+#endif // _FSWATCHER_
 
 wxBitmap HexEditorArtProvider::CreateBitmap(const wxArtID& id, const wxArtClient& client, const wxSize& WXUNUSED(size)){
 	if ( client == wxART_TOOLBAR ){

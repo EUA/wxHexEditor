@@ -568,10 +568,8 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	bool use_BytesPerLineLimit;
 	wxConfig::Get()->Read( wxT("UseBytesPerLineLimit"), &use_BytesPerLineLimit, false );
 	if( use_BytesPerLineLimit ){
-		long int BytesPerLineLimit=8; //just non-sense default value
-		wxString s;
-		if( wxConfig::Get()->Read( wxT("BytesPerLineLimit"), &s)	)
-			s.ToLong(&BytesPerLineLimit,10);
+		int BytesPerLineLimit;
+		wxConfig::Get()->Read( wxT("BytesPerLineLimit"), &BytesPerLineLimit, 16);
 
 		//Downsizing is available
 		if( available_space*cnt_chr > BytesPerLineLimit )

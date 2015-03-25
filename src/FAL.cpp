@@ -642,6 +642,9 @@ bool FAL::IsInjected( void ){
 ///State of the Art Read Function
 //Only recursion could handle such a complex operation. Comes my mind while I am trying to sleep.
 long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
+#ifdef _DEBUG_FILE_
+	std::cout << "ReadR from:" << std::dec << from << "\t size:" << size << "\t PtchIndice" << PatchIndice << std::endl;
+#endif // _DEBUG_FILE_
 	///Getting Data from bellow layer.
 	if( PatchIndice == 0 )	//Deepest layer
 		{
@@ -720,6 +723,13 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			ModificationPatcher( from, buffer, size, patch );
 			}
 		}
+	if( from + readsize > Length() ){
+		//Injection fills all buffer as requested. So we need truncate it for avoid random memory on file end.
+		readsize = Length()-from;
+		}
+#ifdef _DEBUG_FILE_
+	std::cout << "Read Size:" << readsize << std::endl;
+#endif // _DEBUG_FILE_
  	return readsize;
 	}
 

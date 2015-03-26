@@ -1468,6 +1468,9 @@ bool HexEditor::CopySelection( void ) {
 				myfile->Seek( select->GetStart() , wxFromStart );
 				myfile->Read( static_cast<char*>(buff), select->GetSize());
 				copy_mark->m_buffer.UngetWriteBuf( select->GetSize() );
+				wxString CopyString = wxString("wxHexEditor Internal Buffer Object : ");
+				CopyString += wxString::Format(wxT("%p"), (copy_mark->m_buffer.GetData()) );
+				copy_mark->SetClipboardData( CopyString );
 				return true;
 				}
 			else {
@@ -1484,19 +1487,21 @@ bool HexEditor::CopySelection( void ) {
 
 bool HexEditor::PasteFromClipboard( void ) {
 	bool ret = false;
-	if( focus==HEX_CTRL ) {
-		wxString str = copy_mark->GetClipboardData();
-		if( ! str.IsEmpty() ) {
+	wxString str = copy_mark->GetClipboardData();
+		if( str.IsEmpty() )
+			wxMessageBox("No data available at clipboad!");
+		else if( str.StartsWith(wxT("wxHexEditor Internal Buffer Object : "))){
+			wxMessageBox("Note: Used internal binary copy buffer.");
+			myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->m_buffer.GetDataLen(), 0 );
+			}
+		else if( focus==HEX_CTRL ) {
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
 			select->SetState( false );
 			Goto( CursorOffset() + mymem.GetDataLen());
 			ret = true;
 			}
-		}
-	else if ( focus==TEXT_CTRL ) {
-		wxString str = copy_mark->GetClipboardData();
-		if( ! str.IsEmpty() ) {
+		else if ( focus==TEXT_CTRL ) {
 			char *ch = new char [str.Len()];
 			for( unsigned i=0; i<str.Len(); i++ )
 				ch[i] = str[i];
@@ -1505,9 +1510,8 @@ bool HexEditor::PasteFromClipboard( void ) {
 			Goto( CursorOffset() + str.Len() );
 			ret = true;
 			}
-		}
-	else
-		wxMessageBox(wxT( "There is no focus!"), wxT("Paste Error"), wxOK|wxICON_ERROR, this);
+		else
+			wxMessageBox(wxT( "There is no focus!"), wxT("Paste Error"), wxOK|wxICON_ERROR, this);
 
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;

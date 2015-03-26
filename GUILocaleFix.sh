@@ -2,5 +2,6 @@ for x in ./src/HexEditorGui.cpp ./src/HexEditorGui.h ./src/HexEditorCtrl/HexEdit
 do
    sed -i 's/wxT(/_(/g' $x;
    sed -i "s/_('\\\t')/wxT('\\\t')/g" $x;
+   sed -i "s/_(\"sans\")/wxT(\"sans\")/g" $x;
 done;
                            

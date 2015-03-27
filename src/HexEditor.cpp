@@ -1438,8 +1438,10 @@ bool HexEditor::CopySelection( void ) {
 				else if( focus == TEXT_CTRL )
 					{
 					copy_mark->m_buffer.AppendByte('\0');
-					CopyString << wxString::FromAscii( static_cast<const
-					                                   char*>(copy_mark->m_buffer.GetData()) );
+
+					//CopyString << wxString::FromAscii( static_cast<const char*>(copy_mark->m_buffer.GetData()) );
+					CopyString << wxString::From8BitData( static_cast<const char*>(copy_mark->m_buffer.GetData()) );
+
 					if( select->GetSize() > CopyString.size() ) {
 						wxMessageBox(_( "WARNING:\n"\
 						                "The text you are copying includes a null character\n"\

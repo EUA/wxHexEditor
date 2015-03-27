@@ -1806,17 +1806,20 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 
 		if(chkText->GetValue()){
 		//Add 16 Ascii rep
-			unsigned char chr;
-			for(unsigned i = 0 ; i < BytePerLine ; i++){
-				if( i + current_offset < select->GetSize()){
-					//Char filter for ascii
-					chr = buff[ current_offset + i];
-					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
-						cb+= wxString::FromAscii( buff[ current_offset + i] );
-					else
-						cb+= wxString::FromAscii( '.' );
-					}
-				}
+//			unsigned char chr;
+//			for(unsigned i = 0 ; i < BytePerLine ; i++){
+//				if( i + current_offset < select->GetSize()){
+//					chr = buff[ current_offset + i];
+//					//Char filter for ascii
+//					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
+//						cb+= wxString::FromAscii( buff[ current_offset + i]%0x7F);
+//					else
+//					cb+= '.';
+//					}
+//				}
+			cb += wxString::From8BitData( &buff[current_offset],
+																(current_offset+BytePerLine > select->GetSize()) ?
+																	select->GetSize()-current_offset : BytePerLine);
 			}
 		cb += wxNewline;
 		}
@@ -1927,11 +1930,12 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 						}
 
 					//Char filter for ascii
-					chr = buff[ current_offset + i];
-					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
-						cb+= wxString::FromAscii( buff[ current_offset + i] );
-					else
-						cb+= wxString::FromAscii( '.' );
+//					chr = buff[ current_offset + i];
+//					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
+//						cb+= wxString::FromAscii( buff[ current_offset + i] );
+//					else
+//						cb+= wxString::FromAscii( '.' );
+					cb += wxString::From8BitData( &buff[ current_offset + i], 1 );
 					}
 				if(last_color_text.Len() and i==BytePerLine-1)
 					cb += wxT("</span>");

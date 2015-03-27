@@ -96,6 +96,7 @@ class HexEditorFrame : public HexEditorGui {
 		void ActionDisabler( void );
 		void OnNotebookTabSelection( wxAuiNotebookEvent& event );
 		void OnNotebookTabClose( wxAuiNotebookEvent& event );
+		void OnFloatingPaneClosed( wxAuiManagerEvent& event );
 
 		void CompareDialogx( void );
 		void ChecksumDialogx( void );

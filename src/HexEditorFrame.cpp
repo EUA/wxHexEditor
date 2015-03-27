@@ -181,6 +181,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
+	MyAUI->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler( HexEditorFrame::OnFloatingPaneClosed ), NULL, this );
 
 	bool update_enable = false;
 	if ( not wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
@@ -258,7 +259,6 @@ void HexEditorFrame::PrepareAUI( void ){
 //											wxAUI_NB_MIDDLE_CLICK_CLOSE|
 //											wxAUI_NB_SCROLL_BUTTONS|
 //											wxAUI_NB_WINDOWLIST_BUTTON);
-
 	MyAUI -> AddPane( MyNotebook, wxAuiPaneInfo().
 			CaptionVisible(false).
 			Name(wxT("Notebook")).
@@ -1094,6 +1094,12 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 				ActionDisabler();
 			}
 		}
+	}
+
+void HexEditorFrame::OnFloatingPaneClosed( wxAuiManagerEvent& event ){
+	event.Veto();				 //Avoid destruction of the object.
+	event.GetPane()->Hide(); //Hide Pane
+	MyAUI->Update();			 //Update Manager
 	}
 
 void HexEditorFrame::OnActivate( wxActivateEvent& event ){

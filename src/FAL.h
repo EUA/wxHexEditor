@@ -36,6 +36,10 @@
 #include <wx/dynarray.h>
 #include <stdint.h>
 
+#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+	#include <sys/param.h>		// for BSD
+#endif
+
 #ifdef __WXMAC__
 	#include <sys/disk.h>
 #endif
@@ -64,17 +68,22 @@
 #ifdef __WXGTK__
 	#include <sys/ioctl.h>
 	//#include <dev/disk.h>
-	#include <linux/fs.h>
+	
+	#ifdef BSD
+		#include <sys/ptrace.h>
+		#include <sys/disk.h>
+	#else
+		#include <linux/fs.h>
+	#endif
 
-//#include <link.h>
-//#include <elf.h>
-//#include <sys/ptrace.h>
-//#include <stdlib.h>
-//#include <string.h>
-#include <sys/wait.h>
-//#include <sys/types.h>
-//#include <stdio.h>
-//#include <errno.h>
+	//#include <link.h>
+	//#include <elf.h>
+	//#include <stdlib.h>
+	//#include <string.h>
+	#include <sys/wait.h>
+	//#include <sys/types.h>
+	//#include <stdio.h>
+	//#include <errno.h>
 
 #endif
 

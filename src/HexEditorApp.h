@@ -42,8 +42,10 @@
 	#define _VERSION_STR_ _VERSION_S_ " for Windows"
 #elif defined(__WXOSX__)
 	#define _VERSION_STR_ _VERSION_S_ " for Mac"
-#elif defined(__WXGTK__)
+#elif defined(__WXGTK__) && defined(__linux__)
 	#define _VERSION_STR_ _VERSION_S_ " for Linux"
+#elif defined(__WXGTK__) && defined(BSD)
+	#define _VERSION_STR_ _VERSION_S_ " for BSD"
 #else
 	#define _VERSION_STR_ _VERSION_S_
 #endif

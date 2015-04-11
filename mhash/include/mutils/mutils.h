@@ -27,6 +27,10 @@
 #define __const const
 #endif 
 
+#ifdef __unix__
+	#include <sys/param.h>		// for BSD
+#endif
+
 /*
  * The vast majority of user code won't care about mutils, so changes to
  * this helper library API should not result in a change to the MHASH API
@@ -96,7 +100,7 @@ typedef unsigned char mutils_word8;
  * value anyway? Because.
  */
 
-#if defined(HAVE__BOOL) && !defined(__APPLE__)
+#if defined(HAVE__BOOL) && !defined(__APPLE__) && !defined(BSD)
 #define mutils_boolean _Bool
 #else
 typedef char mutils_boolean;

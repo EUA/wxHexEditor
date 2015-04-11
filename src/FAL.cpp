@@ -32,11 +32,16 @@
 	#include <sys/ptrace.h> //No ptrace at windows
 #endif
 
-#ifdef __WXMAC__
+#if defined(__WXMAC__) || defined(BSD)
 	#define PTRACE_ATTACH PT_ATTACH
 	#define PTRACE_DETACH PT_DETACH
 	#define PTRACE_PEEKTEXT PT_READ_I
 	#define PTRACE_POKETEXT PT_WRITE_I
+#endif
+
+#ifdef BSD
+	#define DKIOCGETBLOCKSIZE DIOCGSECTORSIZE	/* Get the sector size of the device in bytes */
+	#define DKIOCGETBLOCKCOUNT DIOCGMEDIASIZE	/* Get media size in bytes */
 #endif
 
 
@@ -56,9 +61,9 @@ bool IsBlockDev( int FD ){
 
 int FDtoBlockSize( int FD ){
 	int block_size=0;
-#ifdef __WXGTK__
+#if defined(__WXGTK__) && !defined(BSD)
 	ioctl(FD, BLKSSZGET, &block_size);
-#elif defined (__WXMAC__)
+#elif defined (__WXMAC__) || defined(BSD)
 	ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
 #elif defined (__WXMSW__)
 	struct stat *sbufptr = new struct stat;
@@ -79,10 +84,10 @@ int FDtoBlockSize( int FD ){
 
 uint64_t FDtoBlockCount( int FD ) {
 	uint64_t block_count=0;
-#ifdef __WXGTK__
+#if defined(__WXGTK__) && !defined(BSD)
 	ioctl(FD, BLKGETSIZE64, &block_count);
 	block_count/=FDtoBlockSize( FD );
-#elif defined (__WXMAC__)
+#elif defined (__WXMAC__) || defined(BSD)
 	ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
 #elif defined (__WXMSW__)
 	DWORD dwResult;

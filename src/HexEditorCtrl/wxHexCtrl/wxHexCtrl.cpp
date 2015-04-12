@@ -78,6 +78,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 
 	HexFormat = wxT("xx ");
 
+	mycaret=NULL;
 	SetSelectionStyle( HexDefaultAttr );
 
 	HexDefaultAttr = wxTextAttr(
@@ -108,9 +109,9 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 
   //  ChangeSize();
 
-   wxCaret *caret = GetCaret();
-   if ( caret )
-		caret->Show(false);
+   //wxCaret *caret = GetCaret();
+   if ( mycaret )
+		mycaret->Show(false);
 
 }
 wxHexCtrl::~wxHexCtrl()
@@ -141,6 +142,10 @@ void wxHexCtrl::Clear( bool RePaint, bool cursor_reset ){
 
 void wxHexCtrl::CreateCaret(){
    wxCaret *caret = new wxCaret(this, m_CharSize.x, m_CharSize.y);
+   mycaret = caret;
+#ifdef _DEBUG_CARET_
+	std::cout << "Caret = 0x"<< (intptr_t) caret <<  " - mycaret= 0x" << (intptr_t) mycaret << "m_charSize.x" << m_CharSize.x << std::endl;
+#endif
    SetCaret(caret);
    caret->Move(m_Margin.x, m_Margin.x);
    caret->Show();
@@ -341,13 +346,16 @@ wxString wxHexCtrl::GetFormat( void ){
 void wxHexCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
 	HexDefaultAttr = new_attr;
 
-    wxClientDC dc(this);
-    dc.SetFont( HexDefaultAttr.GetFont() );
-    SetFont( HexDefaultAttr.GetFont() );
-    m_CharSize.y = dc.GetCharHeight();
-    m_CharSize.x = dc.GetCharWidth();
+   wxClientDC dc(this);
+   dc.SetFont( HexDefaultAttr.GetFont() );
+   SetFont( HexDefaultAttr.GetFont() );
+   m_CharSize.y = dc.GetCharHeight();
+   m_CharSize.x = dc.GetCharWidth();
 
-    wxCaret *caret = GetCaret();
+   wxCaret *caret = GetCaret();
+#ifdef _DEBUG_CARET_
+	std::cout << "Caret = 0x"<< (intptr_t) caret <<  " - mycaret= 0x" << (intptr_t) mycaret << "m_charSize.x" << m_CharSize.x << std::endl;
+#endif
     if ( caret )
 		caret->SetSize(m_CharSize.x, m_CharSize.y);
 	RePaint();
@@ -395,6 +403,9 @@ void wxHexCtrl::MoveCaret(int x){
 
 void wxHexCtrl::DoMoveCaret(){
    wxCaret *caret = GetCaret();
+#ifdef _DEBUG_CARET_
+	std::cout << "Caret = 0x"<< (intptr_t) caret <<  " - mycaret= 0x" << (intptr_t) mycaret << "m_charSize.x" << m_CharSize.x << std::endl;
+#endif
    if ( caret )
 		caret->Move(m_Margin.x + m_Caret.x * m_CharSize.x,
                     m_Margin.x + m_Caret.y * m_CharSize.y);
@@ -426,6 +437,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 #ifdef _DEBUG_SIZE_
 		std::cout << "wxHexCtrl::Update Sizes: " << this->GetSize().GetWidth() << ":" << this->GetSize().GetHeight() << std::endl;
 #endif
+
 	dcTemp->SetFont( HexDefaultAttr.GetFont() );
 	dcTemp->SetTextForeground( HexDefaultAttr.GetTextColour() );
 	dcTemp->SetTextBackground( HexDefaultAttr.GetBackgroundColour() ); //This will be overriden by Zebra stripping
@@ -537,7 +549,6 @@ inline void wxHexCtrl::DrawCursorShadow(wxDC* dcTemp){
 	dcTemp->DrawRectangle(x,y,m_CharSize.x*2+1,m_CharSize.y);
 	}
 
-
 void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset ){
 #ifdef _DEBUG_
 		std::cout << "DrawSeperatıonLineAfterChar(" <<  seperationoffset << ")" << std::endl;
@@ -561,6 +572,7 @@ void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset 
 void wxHexCtrl::RePaint( void ){
 	PaintMutex.Lock();
 	wxCaretSuspend cs(this);
+
 	wxDC* dcTemp = UpdateDC();
 	if( dcTemp != NULL ){
 		wxClientDC dc( this );
@@ -612,8 +624,6 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	//wxBrush sbrush(wxBrush(wxColour(255,0,0,128),wxBRUSHSTYLE_TRANSPARENT ));
 	DC->SetBackground( sbrush );
 	DC->SetBackgroundMode( wxSOLID ); // overwrite old value
-	m_CharSize.y = DC->GetCharHeight();
-	m_CharSize.x = DC->GetCharWidth();
 
 	int start = TG.start;
 	int end = TG.end;
@@ -635,7 +645,7 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	wxPoint _end_   = InternalPositionToVisibleCoord( end );
 	wxPoint _temp_  = _start_;
 
-#ifdef _DEBUG_
+#ifdef _DEBUG_PAINT_
    std::cout << "Tag paint from : " << start << " to " << end << std::endl;
 #endif
 
@@ -887,6 +897,9 @@ void wxHexCtrl::OnFocus(wxFocusEvent& event ){
 	std::cout << "wxHexCtrl::OnFocus()" << std::endl;
 #endif
 	wxCaret *caret = GetCaret();
+#ifdef _DEBUG_CARET_
+	std::cout << "Caret = 0x"<< (intptr_t) caret <<  " - mycaret= 0x" << (intptr_t) mycaret << "m_charSize.x" << m_CharSize.x << std::endl;
+#endif
    if ( caret )
 		caret->Show(true);
 	}
@@ -1165,40 +1178,40 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				}
 			else if( ch >= 0xF5 and ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
 			}
-
+/*
 	else if(fontenc==wxFONTENCODING_UTF16){
 		for( int i=0 ; i< Len-1 ; i+=2){
-			z+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16), 2)+wxT(" ");
-			if( z.Len() > 0){
+			z=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);
+			if( not z.IsEmpty() and not (str+i==0 and (str+i+1==0))  )
 				ret+=z;
-				if( z.Len() == 1 )
-					ret+=' ';
-					i+=1;
-					}
 			else
-				ret += wxT("  ");
+				ret+=wxT(".");
 			}
 		}
+*/
+	else if(fontenc==wxFONTENCODING_UTF16)
+		for( int i=0 ; i< Len-1 ; i+=2)
+			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);
 
 	else if(fontenc==wxFONTENCODING_UTF16LE)
-		for( int i=0 ; i< Len-1 ; i+=2){
-			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16LE), 2)+wxT(" ");
-		}
+		for( int i=0 ; i< Len-1 ; i+=2)
+			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16LE), 2);
 
 	else if(fontenc==wxFONTENCODING_UTF16BE)
 		for( int i=0 ; i< Len-1 ; i+=2)
-			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16BE), 2)+wxT(" ");
-
+			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16BE), 2);
 
 	else if(fontenc==wxFONTENCODING_UTF32)
 		for( int i=0 ; i< Len-3 ; i+=4)
-			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF32), 4)+wxT("   ");
+			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF32), 4);
 
-	else if(fontenc==wxFONTENCODING_UTF32LE){
-		}
+	else if(fontenc==wxFONTENCODING_UTF32LE)
+		for( int i=0 ; i< Len-3 ; i+=4)
+			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF32LE), 4);
 
-	else if(fontenc==wxFONTENCODING_UTF32BE){
-		}
+	else if(fontenc==wxFONTENCODING_UTF32BE)
+		for( int i=0 ; i< Len-3 ; i+=4)
+			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF32BE), 4);
 
 	else if(fontenc==wxFONTENCODING_UNICODE){
 		}
@@ -2420,7 +2433,6 @@ cpformat(a)
 	return CodepageTable=newCP;
 	}
 
-
 void wxHexTextCtrl::Replace(unsigned text_location, const wxChar& value, bool paint){
 	if( text_location < m_text.Length() )
 		m_text[text_location] = Filter(value);
@@ -2441,6 +2453,7 @@ void wxHexTextCtrl::ChangeValue( const wxString& value, bool paint ){
 
 void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 	m_text.Clear();
+
 	if(FontEnc!=wxFONTENCODING_ALTERNATIVE){
 		///only shows the annoying pop-up and does not do anything else.
 		//if(not wxFontMapper::Get()->IsEncodingAvailable( FontEnc ) )
@@ -2468,10 +2481,15 @@ void wxHexTextCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
 	SetFont( HexDefaultAttr.GetFont() );
 	m_CharSize.y = dc.GetCharHeight();
 	m_CharSize.x = dc.GetCharWidth();
+	if( FontEnc == wxFONTENCODING_UTF16 )
+	   m_CharSize.x += 5;
 
 	wxCaret *caret = GetCaret();
+#ifdef _DEBUG_CARET_
+	std::cout << "Caret = 0x"<< (intptr_t) caret <<  " - mycaret= 0x" << (intptr_t) mycaret << "m_charSize.x" << m_CharSize.x << std::endl;
+#endif
 	if ( caret )
-		caret->SetSize(1, m_CharSize.y);
+		caret->SetSize(m_CharSize.x, m_CharSize.y);
 
 	RePaint();
 }
@@ -2521,7 +2539,7 @@ void wxHexTextCtrl::DrawCursorShadow(wxDC* dcTemp){
 		return;
 
 	#ifdef _DEBUG_CARET_
-	std::cout << "DrawCursorShadow(x,y) :" << m_Caret.x << ',' <<  m_Caret.y << std::endl;
+	std::cout << "wxHexTextCtrl::DrawCursorShadow(x,y) - charsize(x,y) :" << m_Caret.x << ',' <<  m_Caret.y << " - " << m_CharSize.x << ',' << m_CharSize.y << std::endl;
 	#endif // _DEBUG_CARET_
 
 	int y=m_CharSize.y*( m_Caret.y ) + m_Margin.y;

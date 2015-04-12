@@ -89,6 +89,7 @@ virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true
 		void WriteHex( const wxString& text_value );
 
 		// Caret Movement
+		wxCaret* mycaret;
 		void Home( bool MoveCaret = true );
 		void End( bool MoveCaret = true );
 		void FirstLine( bool MoveCaret = true );
@@ -226,7 +227,8 @@ inline int GetByteCount( void ){ return m_text.Length(); }
 		void ChangeSize();
 		wxChar Filter(const unsigned char& chr);
 		wxString FilterMBBuffer(const char *str, int len, int fontenc);
-inline void DrawCursorShadow(wxDC* dcTemp);
+virtual inline void DrawCursorShadow(wxDC* dcTemp);
+
 	};
 
 class wxHexOffsetCtrl : public wxHexCtrl{

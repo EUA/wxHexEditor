@@ -468,7 +468,7 @@ void HexEditorCtrl::PaintSelection( void ){
 		start_byte -= page_offset;
 		end_byte   -= page_offset;
 
-		text_ctrl->SetSelection(start_byte, end_byte+1);
+		text_ctrl->SetSelection(start_byte/(GetCharToHexSize()/2), end_byte/(GetCharToHexSize()/2)+1);
 		hex_ctrl ->SetSelection(start_byte*2, (end_byte+1)*2);
 		}
 	else
@@ -530,6 +530,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	int x = event.GetSize().GetX();
 	int y = event.GetSize().GetY();
 	int charx = hex_ctrl->GetCharSize().GetX();
+	int chartx = text_ctrl->GetCharSize().GetX();
 	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize();// + 4;
 	offset_x = offset_ctrl->IsShown() ? offset_x : 0;
 
@@ -537,8 +538,6 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
    x -= offset_scroll_real->GetSize().GetX();//Remove Offset scroll size
    x -= 4*2;											//+x 4 pixel external borders (dark ones, 2 pix each size)
    y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
-
-	int div = 0;
 
 //AutoFill:
 	bool custom_hex_format;
@@ -557,12 +556,12 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 	cnt_chr/=2; // divide 2 for find byte per hex representation.
 
-
+	int hexchr=0,textchr = 0;
 	//Recalculate available area due hidden panels.
-	div+=hex_ctrl->IsShown() ? fmt.Len() : 0;
-	div+=text_ctrl->IsShown() ? cnt_chr : 0;
+	hexchr+=hex_ctrl->IsShown() ? fmt.Len() : 0;
+	textchr+=text_ctrl->IsShown() ? cnt_chr : 0;
 	int available_space=0;
-	available_space=x/(div*charx);
+	available_space=x/(hexchr*charx+textchr*chartx/(GetCharToHexSize()/2));
 
 	//Limiting Bytes Per Line
 	bool use_BytesPerLineLimit;
@@ -577,7 +576,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Calculation of available area for Hex and Text panels.
-	int text_x = charx*available_space*cnt_chr  +2 +4;
+	int text_x = chartx*available_space*cnt_chr/(GetCharToHexSize()/2)  +2 +4;
 	int hex_x = charx*available_space*fmt.Len()  +2 +4 - charx ; //no need for last gap;
 	int ByteShownPerLine=available_space*cnt_chr;
 
@@ -648,8 +647,10 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	wxString address,byteview,temp_address;
 
 	for( int j = 0 ; j < ByteShownPerLine ; j++ ){
-		byteview << wxString::Format( wxT("%01X"), j%0x10 );
 		temp_address << wxString::Format( wxT("%02X"), j%0x100 );
+		if(j >= ByteShownPerLine/(GetCharToHexSize()/2))
+			continue;
+		byteview << wxString::Format( wxT("%01X"), (j*(GetCharToHexSize()/2))%0x10 );
 		}
 
 	//Adjusting custom hex formatting bar - Converting 00010203 -> 00 01 02 03 for "xx " format.
@@ -671,6 +672,15 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 #endif
 }
 
+inline uint8_t HexEditorCtrl::GetCharToHexSize( void ){
+	if(text_ctrl->FontEnc == wxFONTENCODING_UTF16LE or
+		text_ctrl->FontEnc == wxFONTENCODING_UTF16BE )
+		return 4;
+	if(text_ctrl->FontEnc == wxFONTENCODING_UTF32LE or
+		text_ctrl->FontEnc == wxFONTENCODING_UTF32BE )
+		return 8;
+	return 2;
+}
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	select->SetState( false );
@@ -683,7 +693,7 @@ void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	else if( event.GetEventObject() == text_ctrl ){
 		text_ctrl->SetFocus();
 		focus=TEXT_CTRL;
-		SetLocalHexInsertionPoint( 2 * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
+		SetLocalHexInsertionPoint( GetCharToHexSize() * text_ctrl->PixelCoordToInternalPosition( event.GetPosition() ) );
 		}
 	else if( event.GetEventObject() == offset_ctrl ){
 		event.Skip(); //to lower level for copy offset to clipboard
@@ -697,8 +707,10 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 		int new_hex_location=0;								// initialize new_hex_location variable
 		if( event.GetEventObject() == hex_ctrl ) 		// if this event from hex_ctrl area
 			new_hex_location = hex_ctrl->PixelCoordToInternalPosition( event.GetPosition() ); //than take it's location on hex chars
-		else if ( event.GetEventObject() == text_ctrl ) //if we got this event from text area
-			new_hex_location = 2*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() )); //Than we needed to multiply with 2 for take it's hex location.
+		else if ( event.GetEventObject() == text_ctrl ){ //if we got this event from text area
+			new_hex_location = GetCharToHexSize()*(text_ctrl->PixelCoordToInternalPosition( event.GetPosition() )); //Than we needed to multiply with 2 for take it's hex location.
+			}
+
 		int old_hex_location = GetLocalHexInsertionPoint();	//requesting old hex location
 		if( new_hex_location != old_hex_location ){				//if hex selection addresses are different, start selection routine
 
@@ -981,20 +993,19 @@ void HexEditorCtrl::UpdateUI(wxUpdateUIEvent& event){
 //------ADAPTERS----------//
 	//returns position of Hex Cursor
 int HexEditorCtrl::GetLocalHexInsertionPoint(){
-	return (hex_ctrl->IsShown() ? hex_ctrl->GetInsertionPoint() : text_ctrl->GetInsertionPoint()*2 );
+	return (hex_ctrl->IsShown() ? hex_ctrl->GetInsertionPoint() : text_ctrl->GetInsertionPoint()*GetCharToHexSize() );
 	}
 	//returns position of Text Cursor
 int HexEditorCtrl::GetLocalInsertionPoint(){
-	return (FindFocus() == text_ctrl ? text_ctrl->GetInsertionPoint() : hex_ctrl->GetInsertionPoint()/2 );
+	return (FindFocus() == text_ctrl ? text_ctrl->GetInsertionPoint()*(GetCharToHexSize()/2) : hex_ctrl->GetInsertionPoint()/2 );
 	}
 
 void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets position of Hex Cursor
 #ifdef _DEBUG_CARET_
 	std::cout<< "Caret at Hex:" << std::dec << hex_location << std::endl;
 #endif // _DEBUG_CARET_
-	text_ctrl->SetInsertionPoint( hex_location/2 );
+	text_ctrl->SetInsertionPoint( hex_location/GetCharToHexSize() );
 	hex_ctrl->SetInsertionPoint( hex_location );
-
 	}
 uint64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalInsertionPoint() + page_offset;

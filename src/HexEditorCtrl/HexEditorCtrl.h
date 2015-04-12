@@ -155,6 +155,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 //		void TagPaint( void );
 		bool TAGMutex;
 		void MoveTAGS( uint64_t location, int64_t size );
+		uint8_t GetCharToHexSize();
 
 	public:
 		bool Selector( void );

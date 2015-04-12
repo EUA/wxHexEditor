@@ -490,11 +490,18 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 		}
 	else
 //*/
+	#define widechars 1
+   dcTemp->SetPen( wxNullPen );
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
 		line.Empty();
 
-		if (*ZebraStriping != -1 )
+		if (*ZebraStriping != -1 ){
 			dcTemp->SetTextBackground( (y+*ZebraStriping)%2 ? col_standart : col_zebra);
+			if(widechars){
+				dcTemp->SetBrush( wxBrush( (y+*ZebraStriping)%2 ? col_standart : col_zebra ));
+				dcTemp->DrawRectangle( m_Margin.x, m_Margin.y + y * m_CharSize.y, m_Window.x*m_CharSize.x, m_CharSize.y);
+				}
+			}
 
 		for ( int x = 0 ; x < m_Window.x; x++ ){
 			if( IsDenied(x)){
@@ -508,15 +515,11 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 			line += CharAt(textLenghtLimit++);
 			//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 			}
-/*
-		#ifndef __WXGTK__
-		//Error on WXGTK. Need test on other platforms.
-		line = wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_CP437), line.Len());
-		#else
-		//line = CP473toUnicode(line);
-		#endif
-*/
-		dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
+		if(widechars)
+			for( unsigned q = 0 ; q < line.Len() ;q++ )
+				dcTemp->DrawText( line[q], m_Margin.x + q*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+		else
+			dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
 		}
 
 	int TAC = TagArray.Count();
@@ -672,6 +675,7 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 //			DC->DrawText( wxString::FromAscii(ch), m_Margin.x + x*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 //#endif
 			}
+
 //#if !(wxCHECK_VERSION(2,9,0) & defined( __WXOSX__ )) //OSX DrawText bug
 
 		///Cannot convert from the charset 'Windows/DOS OEM (CP 437)'!
@@ -679,6 +683,13 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 		//line=wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_ALTERNATIVE),  line.Len());
 
 		//line=CP473toUnicode(line);
+		if(widechars){
+			DC->SetBrush( wxBrush(TG.NoteClrData.GetColour()));
+			DC->DrawRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
+			for( unsigned q = 0 ; q < line.Len() ;q++ )
+				DC->DrawText( line[q], m_Margin.x + (_temp_.x+q)*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
+			}
+		else
 		DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								m_Margin.x + _temp_.y * m_CharSize.y );
 //#endif
@@ -1178,17 +1189,17 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				}
 			else if( ch >= 0xF5 and ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
 			}
-/*
+
 	else if(fontenc==wxFONTENCODING_UTF16){
 		for( int i=0 ; i< Len-1 ; i+=2){
-			z=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);
-			if( not z.IsEmpty() and not (str+i==0 and (str+i+1==0))  )
+			z=wxString ( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);
+			if(not (str[i]==0 and str[i+1]==0))
 				ret+=z;
 			else
-				ret+=wxT(".");
+				ret+=wxT(" ");
 			}
 		}
-*/
+
 	else if(fontenc==wxFONTENCODING_UTF16)
 		for( int i=0 ; i< Len-1 ; i+=2)
 			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);

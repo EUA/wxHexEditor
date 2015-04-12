@@ -433,7 +433,7 @@ void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 
 	TagElement *TAX;//For debugging
 
-	TAX = new TagElement( start_byte, end_byte+1, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
+	TAX = new TagElement( start_byte/(GetCharToHexSize()/2), end_byte/(GetCharToHexSize()/2)+1, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
 	text_ctrl->TagArray.Add( TAX );
 	TAX = new TagElement( start_byte*2, (end_byte+1)*2, TAG->tag, TAG->FontClrData, TAG->NoteClrData );
 	hex_ctrl->TagArray.Add( TAX );

@@ -1189,17 +1189,17 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				}
 			else if( ch >= 0xF5 and ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
 			}
-
+/*
 	else if(fontenc==wxFONTENCODING_UTF16){
 		for( int i=0 ; i< Len-1 ; i+=2){
 			z=wxString ( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);
 			if(not (str[i]==0 and str[i+1]==0))
-				ret+=z;
+				ret+=z[0];
 			else
 				ret+=wxT(" ");
 			}
 		}
-
+*/
 	else if(fontenc==wxFONTENCODING_UTF16)
 		for( int i=0 ; i< Len-1 ; i+=2)
 			ret+=wxString( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);

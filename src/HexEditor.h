@@ -326,7 +326,7 @@ class scrollthread:wxThreadHelper {
 		void Exit(void){
 			//__WXMSW__ ISSUE
 			//if( GetThread()->IsRunning() )
-			//	GetThread()->Pause();
+				//GetThread()->Pause();
 			GetThread()->Delete();
 			GetThread()->Wait();
 			}

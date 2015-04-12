@@ -46,6 +46,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 	// This is really crucial step! Be adviced to not remove it, even if you don't believer.
 	printf("Rahman ve Rahim olan Allah'ın adıyla.\n");
 	myfile = NULL;
+	myscrollthread = NULL;
 	if( myfilename_ != NULL ) {
 		if( !FileOpen( *myfilename_ ) ) {
 			}
@@ -74,8 +75,10 @@ HexEditor::~HexEditor() {
 	Dynamic_Disconnector();
 	// Free resources
 #ifndef DO_NOT_USE_THREAD_FOR_SCROLL
-	myscrollthread->Exit();
-	delete myscrollthread;
+   if(myscrollthread != NULL ){
+		myscrollthread->Exit();
+		delete myscrollthread;
+		}
 #endif
 	delete copy_mark;
 	}

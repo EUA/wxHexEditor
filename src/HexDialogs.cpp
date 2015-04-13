@@ -3019,6 +3019,8 @@ void PreferencesDialog::SpinEventHandler( wxSpinEvent& event ) {
 	}
 
 void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
+	wxString PrevSelection;
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &PrevSelection );
 	if(event.GetId()==chcCharacterEncodingFamily->GetId()){
 		wxArrayString Encodings;
 		if( event.GetString()==wxT("Experimental") )
@@ -3057,12 +3059,29 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		if( not chcCharacterEncoding->SetStringSelection( Selection ) )
 			chcCharacterEncoding->SetSelection( 0 );
 		}
-
+/*
+	if(event.GetId()==chcCharacterEncoding->GetId()){
+		wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
+		wxConfigBase::Get()->Flush();
+		wxUpdateUIEvent eventx( REDRAW_EVENT );
+		wxPostEvent( GetParent(), eventx );
+		}
+*/
 	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+
    wxConfigBase::Get()->Flush();
-	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+   wxString CurrentSelection=chcCharacterEncoding->GetStringSelection();
+
+   //If old and new selection is UTF both or not than we do not need to use Resize because char width is same.
+   wxUpdateUIEvent eventx;
+   //if( ( PrevSelection.StartsWith( "UTF16") or PrevSelection.StartsWith( "UTF32") ) ==
+	//	 (CurrentSelection.StartsWith( "UTF16") or CurrentSelection.StartsWith( "UTF16") ) )
+	//	eventx.SetId( RESET_STYLE_EVENT );
+	//else
+		eventx.SetId( REDRAW_EVENT );
+
 	wxPostEvent( GetParent(), eventx );
 	}
 

@@ -490,14 +490,18 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 		}
 	else
 //*/
-	#define widechars 1
+
    dcTemp->SetPen( wxNullPen );
+   //Drawing line by line
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
 		line.Empty();
 
+		//Prepare for zebra stripping
 		if (*ZebraStriping != -1 ){
 			dcTemp->SetTextBackground( (y+*ZebraStriping)%2 ? col_standart : col_zebra);
-			if(widechars){
+
+			//This fills empty regions at Zebra Stripes when printed char with lower than defined
+			if(DrawCharByChar){
 				dcTemp->SetBrush( wxBrush( (y+*ZebraStriping)%2 ? col_standart : col_zebra ));
 				dcTemp->DrawRectangle( m_Margin.x, m_Margin.y + y * m_CharSize.y, m_Window.x*m_CharSize.x, m_CharSize.y);
 				}
@@ -515,7 +519,9 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 			line += CharAt(textLenghtLimit++);
 			//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 			}
-		if(widechars)
+
+		// For encodings that have variable font with, we need to write characters one by one.
+		if(DrawCharByChar)
 			for( unsigned q = 0 ; q < line.Len() ;q++ )
 				dcTemp->DrawText( line[q], m_Margin.x + q*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 		else
@@ -683,7 +689,9 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 		//line=wxString(line.To8BitData(), wxCSConv(wxFONTENCODING_ALTERNATIVE),  line.Len());
 
 		//line=CP473toUnicode(line);
-		if(widechars){
+
+		//Draw one character at a time to keep char with stable.
+		if(DrawCharByChar){
 			DC->SetBrush( wxBrush(TG.NoteClrData.GetColour()));
 			DC->DrawRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
 			for( unsigned q = 0 ; q < line.Len() ;q++ )
@@ -2469,7 +2477,6 @@ void wxHexTextCtrl::SetBinValue( char* buffer, int len, bool paint ){
 		///only shows the annoying pop-up and does not do anything else.
 		//if(not wxFontMapper::Get()->IsEncodingAvailable( FontEnc ) )
 		//	wxMessageBox(wxT("Encoding is not available!"), wxT("Error!"), wxOK|wxCENTRE );
-
 		m_text << FilterMBBuffer(buffer,len,FontEnc);
 		}
 	else
@@ -2492,8 +2499,16 @@ void wxHexTextCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
 	SetFont( HexDefaultAttr.GetFont() );
 	m_CharSize.y = dc.GetCharHeight();
 	m_CharSize.x = dc.GetCharWidth();
-	if( FontEnc == wxFONTENCODING_UTF16 )
+	if( FontEnc == wxFONTENCODING_UTF16LE or
+		 FontEnc == wxFONTENCODING_UTF16BE or
+		 FontEnc == wxFONTENCODING_UTF32LE or
+		 FontEnc == wxFONTENCODING_UTF32BE
+		 ){
 	   m_CharSize.x += 5;
+		DrawCharByChar=true;
+		}
+	else
+		DrawCharByChar=false;
 
 	wxCaret *caret = GetCaret();
 #ifdef _DEBUG_CARET_

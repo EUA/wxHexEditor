@@ -166,8 +166,8 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	this->Connect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Connect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
-
 	this->Connect( RESET_STYLE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Connect( REDRAW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 
 	this->Connect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
@@ -213,6 +213,7 @@ HexEditorFrame::~HexEditorFrame(){
    this->Disconnect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 
 	this->Disconnect( RESET_STYLE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Disconnect( REDRAW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 
    this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
@@ -952,6 +953,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 		if( event.GetId() == RESET_STYLE_EVENT ){
 			for(unsigned i=0 ; i < MyNotebook->GetPageCount() ; i++){
+				//reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetStyle();
 				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetFont();
 				#ifdef __WXMSW__ //Force redraw resize
 				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->ReDraw();
@@ -960,7 +962,15 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			MyNotebook->Layout();
 			}
 
-		if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){
+		else if(event.GetId() == REDRAW_EVENT ){
+			for(unsigned i=0 ; i < MyNotebook->GetPageCount() ; i++){
+				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->SetStyle();
+				reinterpret_cast<HexEditor*>(MyNotebook->GetPage(i))->ReDraw();
+				}
+			MyNotebook->Layout();
+			}
+
+		else if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){
 			#ifdef _DEBUG_SELECT_
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
@@ -993,7 +1003,8 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			Toolbar->Refresh();
 			}
 
-		if(event.GetId()==XORVIEW_EVENT){
+
+		else if(event.GetId()==XORVIEW_EVENT){
 			int sel = MyNotebook->GetSelection();
 			wxString S = MyNotebook->GetPageText(sel);
 			wxString XORViewStr = wxT(" (XORView)");
@@ -1007,7 +1018,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			MyNotebook->SetPageText(sel, S);
 			}
 
-		if(event.GetId() == UNREDO_EVENT ){
+		else if(event.GetId() == UNREDO_EVENT ){
 			#ifdef _DEBUG_FILE_
 				std::cout << "HexEditorFrame::UNREDO event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
@@ -1018,17 +1029,17 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			Toolbar->Refresh();
 			}
 
-		if(event.GetId() == TAG_CHANGE_EVENT ){
+		else if(event.GetId() == TAG_CHANGE_EVENT ){
 			MyTagPanel->Set( GetActiveHexEditor()->MainTagArray );
 			}
 
-		if(event.GetId() == SEARCH_CHANGE_EVENT ){
+		else if(event.GetId() == SEARCH_CHANGE_EVENT ){
 			MyAUI->GetPane(MySearchPanel).Show(true);
 			MyAUI->Update();
 			MySearchPanel->Set( GetActiveHexEditor()->HighlightArray );
 			}
 
-		if(event.GetId() == COMPARE_CHANGE_EVENT ){
+		else if(event.GetId() == COMPARE_CHANGE_EVENT ){
 			MyAUI->GetPane(MyComparePanel).Show(true);
 			MyAUI->Update();
 			MyComparePanel->Set( GetActiveHexEditor()->CompareArray );

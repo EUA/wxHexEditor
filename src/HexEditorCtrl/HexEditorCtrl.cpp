@@ -279,6 +279,9 @@ void HexEditorCtrl::SetStyle( ) {
    Style = wxTextAttr( Foreground, Background, stdfont );
    offset_ctrl->SetDefaultStyle( Style );
    hex_ctrl->SetDefaultStyle( Style );
+	wxString cp;
+	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS OEM") );
+	text_ctrl->PrepareCodepageTable(cp);
    text_ctrl->SetDefaultStyle( Style );
 
    //Selection style set
@@ -297,10 +300,6 @@ void HexEditorCtrl::SetStyle( ) {
    offset_ctrl->SetSelectionStyle( Style );
    hex_ctrl->SetSelectionStyle( Style );
    text_ctrl->SetSelectionStyle( Style );
-
-	wxString cp;
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS OEM") );
-	text_ctrl->PrepareCodepageTable(cp);
    }
 
 //Handles selection operations.

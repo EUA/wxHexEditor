@@ -62,7 +62,7 @@ class wxHexCtrl : public wxScrolledWindow{
 		~wxHexCtrl();
 		wxChar CharAt(int offset){
 			if( offset >= m_text.Len() ){
-			   std::cout << "Buff lower for offset : " << offset << std::endl;
+			   //std::cout << "Buff lower for offset : " << offset << std::endl;
 			   return 0;
 				}
 		return m_text.GetChar(offset);}
@@ -151,6 +151,7 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		wxMemoryDC* internalBufferDC;
 		wxBitmap*   internalBufferBMP;
 		wxString		HexFormat;
+		bool			DrawCharByChar=false;
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );

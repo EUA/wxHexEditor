@@ -219,7 +219,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			myscrollthread = new scrollthread(0,this);
 #endif
 //			copy_mark = new copy_maker();
-			offset_ctrl->SetOffsetLimit( myfile->Length() );
+			offset_ctrl->SetOffsetLimit( FileLength() );
 			sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
 			LoadFromOffset(0, true);
 			SetLocalHexInsertionPoint(0);
@@ -280,7 +280,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			//TODO This tagpanel->Show() code doesn't working good
 			//tagpanel->Show();
 			}
-		offset_ctrl->SetOffsetLimit(  myfile->Length() );
+		offset_ctrl->SetOffsetLimit(  FileLength() );
 		sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
 		LoadFromOffset(0, true);
 		SetLocalHexInsertionPoint(0);
@@ -371,7 +371,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	wxFFile savefile( savefilename, wxT("wb") );
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
-		uint64_t range = myfile->Length();
+		uint64_t range = FileLength();
 		wxString msg = _("File save in progress");
 		wxString emsg = wxT("\n");
 		wxProgressDialog mpd( _("Saving file"),msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
@@ -383,7 +383,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 
 		time_t ts,te;
 		time (&ts);
-		while( savefile.Tell() < myfile->Length() ) {
+		while( savefile.Tell() < FileLength() ) {
 			rd=myfile->Read( buffer, BlockSz );
 			readfrom+=rd;
 			savefile.Write( buffer, rd );
@@ -505,11 +505,7 @@ void HexEditor::DoRedo( void ) {
 
 	}
 
-void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
-	if( cursor_offset == -1 ) {
-		LoadFromOffset( page_offset, false, true );	//Refresh
-		return;
-		}
+void HexEditor::Goto( uint64_t cursor_offset, bool set_focus ){
 	if(page_offset <= cursor_offset &&
 	      page_offset+ByteCapacity() >= cursor_offset) {	//cursor_offset is in visible area
 		Reload();					//Reload data needed for undo - redo
@@ -668,7 +664,7 @@ void HexEditor::OnResize( wxSizeEvent &event ) {
 	if(myfile != NULL && 0 < BytePerLine()){
 		offset_scroll->SetScrollbar(page_offset / BytePerLine(),
 		                            LineCount(),
-		                            1 + myfile->Length() / BytePerLine(),
+		                            1 + FileLength() / BytePerLine(),
 		                            LineCount(),true
 		                           );
 		Reload();
@@ -745,7 +741,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 			case (WXK_DOWN):
 			case (WXK_NUMPAD_DOWN):
 				if ( ActiveLine() == LineCount() ) {			//If cursor at bottom of screen
-					if(page_offset + ByteCapacity() < myfile->Length() ) { //detects if another line is present or not
+					if(page_offset + ByteCapacity() < FileLength() ) { //detects if another line is present or not
 						int temp = GetLocalHexInsertionPoint();	//preserving cursor location
 						LoadFromOffset( page_offset + BytePerLine() );	//offset increasing one line and update text with new location, makes screen slide illusion
 						SetLocalHexInsertionPoint(temp);			//restoring cursor location
@@ -787,7 +783,7 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 				   }
 
 				if( a >= b ) {
-					if(page_offset + ByteCapacity() < myfile->Length() ) {	//Checks if its EOF or not
+					if(page_offset + ByteCapacity() < FileLength() ) {	//Checks if its EOF or not
 						LoadFromOffset( page_offset + BytePerLine() );
 						SetLocalHexInsertionPoint( (LineCount() - 1) * HexPerLine() );
 						}
@@ -826,14 +822,14 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 // TODO (death#5#): Add last byte problem. Also text ctrl has +1 issue
 			case (WXK_PAGEDOWN):
 			case (WXK_NUMPAD_PAGEDOWN):
-				if(page_offset + ByteCapacity()*2 < myfile->Length()) { //*2 for cosmetic
+				if(page_offset + ByteCapacity()*2 < FileLength()) { //*2 for cosmetic
 					int temp = GetLocalHexInsertionPoint();
 					LoadFromOffset( page_offset +  ByteCapacity() );
 					SetLocalHexInsertionPoint( temp );
 					}
 				else {
 					int temp = ( GetLocalHexInsertionPoint() %  HexPerLine() ) + ( LineCount()-1 ) * HexPerLine();
-					page_offset = myfile->Length() - ByteCapacity();
+					page_offset = FileLength() - ByteCapacity();
 					page_offset += BytePerLine() - page_offset % BytePerLine(); //cosmetic
 					Reload();
 					SetLocalHexInsertionPoint(temp);
@@ -937,7 +933,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 				FileAddDiff( CursorOffset(), &rdchr ,1);				// add node to file
 
 				if( hex_ctrl->GetInsertionPoint() >= hex_ctrl->GetLastPosition() ) {
-					if( CursorOffset() + ByteCapacity() <= myfile->Length() ) {	//Checks if its EOF or not
+					if( CursorOffset() + ByteCapacity() <= FileLength() ) {	//Checks if its EOF or not
 						LoadFromOffset( page_offset + BytePerLine() );
 						hex_ctrl->LastLine();
 						hex_ctrl->Home();
@@ -972,7 +968,7 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 				FileAddDiff( GLIP + page_offset, &rdchr ,1);						// add node to file
 
 				if( text_ctrl->GetInsertionPoint() >= text_ctrl->GetLastPosition() ) {
-					if( page_offset + ByteCapacity() <= myfile->Length() ) {	//Checks if its EOF or not
+					if( page_offset + ByteCapacity() <= FileLength() ) {	//Checks if its EOF or not
 						LoadFromOffset(page_offset + BytePerLine());
 						text_ctrl->LastLine();
 						text_ctrl->Home();
@@ -1147,7 +1143,7 @@ void HexEditor::OnMouseWhell( wxMouseEvent& event ) {
 			}
 		}
 	else if(event.GetWheelRotation() < 0 ) {	// Going to BOTTOM
-		if(page_offset + ByteCapacity() < myfile->Length() ) { //detects if another line is present or not
+		if(page_offset + ByteCapacity() < FileLength() ) { //detects if another line is present or not
 			LoadFromOffset( page_offset + BytePerLine() * event.GetLinesPerAction());	//offset increasing line as mouse whell rolls
 			if( ActiveLine() > event.GetLinesPerAction() )	//cursor at top GetLinesPerAction
 				SetLocalHexInsertionPoint( GetLocalHexInsertionPoint() - HexPerLine() * event.GetLinesPerAction() );	//restoring cursor location
@@ -1172,7 +1168,7 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 			spd = static_cast<int>(0 - pow(2, abs(event.GetY()) / 25));
 			(spd < -1024) ? (spd = -1024):(spd=spd);
 			}
-		else if(event.GetY()> hex_ctrl->GetSize().GetHeight() and page_offset + ByteCapacity() < myfile->Length()) {
+		else if(event.GetY()> hex_ctrl->GetSize().GetHeight() and page_offset + ByteCapacity() < FileLength()) {
 			int pointer_diff = event.GetY() - hex_ctrl->GetSize().GetHeight();
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
@@ -1473,7 +1469,7 @@ bool HexEditor::CopySelection( void ) {
 				myfile->Seek( select->GetStart() , wxFromStart );
 				myfile->Read( static_cast<char*>(buff), select->GetSize());
 				copy_mark->m_buffer.UngetWriteBuf( select->GetSize() );
-				wxString CopyString = wxString("wxHexEditor Internal Buffer Object : ");
+				wxString CopyString = wxT("wxHexEditor Internal Buffer Object : ");
 				CopyString += wxString::Format(wxT("%p"), (copy_mark->m_buffer.GetData()) );
 				copy_mark->SetClipboardData( CopyString );
 				return true;
@@ -1494,9 +1490,9 @@ bool HexEditor::PasteFromClipboard( void ) {
 	bool ret = false;
 	wxString str = copy_mark->GetClipboardData();
 		if( str.IsEmpty() )
-			wxMessageBox("No data available at clipboad!");
+			wxMessageBox(_("No data available at clipboad!"));
 		else if( str.StartsWith(wxT("wxHexEditor Internal Buffer Object : "))){
-			wxMessageBox("Note: Used internal binary copy buffer.");
+			wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
 			myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->m_buffer.GetDataLen(), 0 );
 			}
 		else if( focus==HEX_CTRL ) {

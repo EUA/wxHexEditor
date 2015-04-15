@@ -1137,7 +1137,7 @@ bool HexEditorFrame::CreateFileWatcher(){
 	Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
 
 	//Reconnecting already open files (open by argument) to FSWATCHER event.
-	for( int i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
+	for( unsigned i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( i ) );
 		if(not MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid="))){
 			if(file_watcher!=NULL){

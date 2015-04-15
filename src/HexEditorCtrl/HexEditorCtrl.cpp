@@ -407,8 +407,8 @@ void HexEditorCtrl::PaintTAGsPrefilter( ArrayOfTAG& Arr ){
 
 //This functions move tags to local hex and text ctrls.
 void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
-	int64_t start_byte = TAG->start;
-	int64_t end_byte = TAG->end;
+	uint64_t start_byte = TAG->start;
+	uint64_t end_byte = TAG->end;
 
 	if(start_byte > end_byte){							// swap if start > end
 		int64_t temp = start_byte;
@@ -441,8 +441,8 @@ void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 void HexEditorCtrl::PaintSelection( void ){
 	PreparePaintTAGs();
 	if( select->GetState() ){
-		int64_t start_byte = select->StartOffset;
-		int64_t end_byte = select->EndOffset;
+		uint64_t start_byte = select->StartOffset;
+		uint64_t end_byte = select->EndOffset;
 
 		if(start_byte > end_byte){	// swap if start > end
 			int64_t temp = start_byte;
@@ -548,26 +548,26 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 // TODO (death#1#): Move style engine somewhere else to speedy resizing.
 	hex_ctrl->SetFormat( fmt );
 
-	int cnt_chr=0; //Counted character at current format
+	unsigned cnt_chr=0; //Counted character at current format
 	for( unsigned i = 0 ; i <  fmt.Len() ; i++ ){
 		if( fmt[i]!=' ' )
 			cnt_chr++;
 		}
 	cnt_chr/=2; // divide 2 for find byte per hex representation.
 
-	int hexchr=0,textchr = 0;
+	unsigned hexchr=0,textchr = 0;
 	//Recalculate available area due hidden panels.
 	hexchr+=hex_ctrl->IsShown() ? fmt.Len() : 0;
 	textchr+=text_ctrl->IsShown() ? cnt_chr : 0;
-	int available_space=0;
+	unsigned available_space=0;
 	available_space=x/(hexchr*charx+textchr*chartx/(GetCharToHexSize()/2));
 
 	//Limiting Bytes Per Line
 	bool use_BytesPerLineLimit;
 	wxConfig::Get()->Read( wxT("UseBytesPerLineLimit"), &use_BytesPerLineLimit, false );
 	if( use_BytesPerLineLimit ){
-		int BytesPerLineLimit;
-		wxConfig::Get()->Read( wxT("BytesPerLineLimit"), &BytesPerLineLimit, 16);
+		unsigned BytesPerLineLimit;
+		wxConfig::Get()->Read( wxT("BytesPerLineLimit"), reinterpret_cast<int*>(&BytesPerLineLimit), 16);
 
 		//Downsizing is available
 		if( available_space*cnt_chr > BytesPerLineLimit )
@@ -575,9 +575,9 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Calculation of available area for Hex and Text panels.
-	int text_x = chartx*available_space*cnt_chr/(GetCharToHexSize()/2)  +2 +4;
-	int hex_x = charx*available_space*fmt.Len()  +2 +4 - charx ; //no need for last gap;
-	int ByteShownPerLine=available_space*cnt_chr;
+	unsigned text_x = chartx*available_space*cnt_chr/(GetCharToHexSize()/2)  +2 +4;
+	unsigned hex_x = charx*available_space*fmt.Len()  +2 +4 - charx ; //no need for last gap;
+	unsigned ByteShownPerLine=available_space*cnt_chr;
 
 	text_x = text_ctrl->IsShown() ? text_x : 0;
 	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
@@ -645,7 +645,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
 	wxString address,byteview,temp_address;
 
-	for( int j = 0 ; j < ByteShownPerLine ; j++ ){
+	for( unsigned j = 0 ; j < ByteShownPerLine ; j++ ){
 		temp_address << wxString::Format( wxT("%02X"), j%0x100 );
 		if(j >= ByteShownPerLine/(GetCharToHexSize()/2))
 			continue;
@@ -653,7 +653,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Adjusting custom hex formatting bar - Converting 00010203 -> 00 01 02 03 for "xx " format.
-	for( int x = 0, i=0 ; x < hex_x and i < temp_address.Len() ; x++ )
+	for( unsigned x = 0, i=0 ; x < hex_x and i < temp_address.Len() ; x++ )
 		if(hex_ctrl->IsDenied(x))
 			address << wxT(" ");
 		else

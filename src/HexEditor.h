@@ -74,7 +74,7 @@ class HexEditor: public HexEditorCtrl
 		friend class ChecksumDialog;
 
 		HexEditor *ComparatorHexEditor;
-		void Goto( int64_t goto_offset=-1, bool set_focus=false );
+		void Goto( uint64_t goto_offset, bool set_focus=false );
 		void OnOffsetScroll(wxScrollEvent &event);
 		void LoadFromOffset(int64_t position, bool cursor_reset=false, bool paint=true, bool from_comparator=false );	//loads file from position
 		void Reload();	//loads file from current page offset; refresh
@@ -102,7 +102,7 @@ class HexEditor: public HexEditorCtrl
 		bool PasteFromClipboard( void );
 
 		//----File Functions----//
-		int64_t FileLength( void ) {
+		uint64_t FileLength( void ) {
 			//if( myfile->IsProcess() )
 			//	return ProcessRAMMap.Last();
 			return myfile->Length();

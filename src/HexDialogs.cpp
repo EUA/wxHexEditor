@@ -67,7 +67,6 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
    while( hexval.find(' ') != -1 )
       hexval.Remove( hexval.find(' '),1);
 
-
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
       if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
          OSXwxMessageBox( _("Value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
@@ -806,7 +805,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 #endif //_READ_PREFETCH_
 				if( partial_results.size() > 0 ){// Houston, We found something!
 					if( options & SEARCH_FINDALL ){
-						for(int i=0 ; i < partial_results.size() ; i++ )
+						for(unsigned i=0 ; i < partial_results.size() ; i++ )
 							results.push_back( partial_results[i] + current_offset );
 						//current_offset +=  partial_results.back()+target.GetDataLen();
 						current_offset +=  readed-target.GetDataLen()+1;
@@ -855,7 +854,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 #ifdef _MULTI_SEARCH_
 		//Create tags from results and put them into HighlightArray
-		for(int i=0 ; i < results.size() and  i < 400000 ; i++ ){
+		for(unsigned i=0 ; i < results.size() and  i < 400000 ; i++ ){
 			TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
 			parent->HighlightArray.Add(mytag);
 			}
@@ -1136,7 +1135,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	}
 
 void FindDialog::OnFindAll( bool internal ){
-	for( int i=0; i < parent->HighlightArray.Count(); i++ )
+	for( unsigned i=0; i < parent->HighlightArray.Count(); i++ )
 		delete parent->HighlightArray.Item(i);
 	parent->HighlightArray.Clear();
 
@@ -2673,7 +2672,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 		if( options & (1 << algs[j] ))
 			myhash[i++]= mhash_init(algs[j]);
 
-	unsigned rdBlockSz=1024*1024;
+	int rdBlockSz=1024*1024;
 	unsigned char *buffer = new unsigned char[rdBlockSz];
 	unsigned char *buffer_prefetch = new unsigned char[rdBlockSz];
 	int readed=rdBlockSz;
@@ -2744,7 +2743,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 			results << wxT(" ");
 
 		hash = static_cast<unsigned char *>( mhash_end(myhash[i]) );
-		int hashblocksize=mhash_get_block_size( mhash_get_mhash_algo(myhash[i]));
+		unsigned hashblocksize=mhash_get_block_size( mhash_get_mhash_algo(myhash[i]));
 		for (unsigned k = 0; k < hashblocksize ; k++)
 			results << wxString::Format( wxT("%.2x"), hash[k]);
 
@@ -3074,14 +3073,8 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
    wxConfigBase::Get()->Flush();
    wxString CurrentSelection=chcCharacterEncoding->GetStringSelection();
 
-   //If old and new selection is UTF both or not than we do not need to use Resize because char width is same.
-   wxUpdateUIEvent eventx;
-   //if( ( PrevSelection.StartsWith( "UTF16") or PrevSelection.StartsWith( "UTF32") ) ==
-	//	 (CurrentSelection.StartsWith( "UTF16") or CurrentSelection.StartsWith( "UTF16") ) )
-	//	eventx.SetId( RESET_STYLE_EVENT );
-	//else
-		eventx.SetId( REDRAW_EVENT );
-
+   //Redrawing because we need to re-interpret the readed bytes.
+   wxUpdateUIEvent eventx( REDRAW_EVENT );
 	wxPostEvent( GetParent(), eventx );
 	}
 
@@ -3171,7 +3164,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 
 	MHASH myhash = mhash_init( MHASH_MD5 );
 
-	unsigned rdBlockSz=1024*1024;
+	int rdBlockSz=1024*1024;
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
@@ -3265,7 +3258,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 	wxProgressDialog mypd(_("Disk/Partition Restore"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	unsigned rdBlockSz=1024*1024;
+	int rdBlockSz=1024*1024;
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 

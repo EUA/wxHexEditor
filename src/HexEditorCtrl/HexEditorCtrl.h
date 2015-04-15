@@ -100,15 +100,15 @@ class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar
 
       void Enable( bool en ){ m_scrollbar->Enable(en); }
       wxSize GetSize( void ){ return m_scrollbar->GetSize(); }
-      int64_t GetRange( void ){ return m_range; };
-      int64_t GetThumbPosition( void ){ return m_thumb; }
+      uint64_t GetRange( void ){ return m_range; };
+      uint64_t GetThumbPosition( void ){ return m_thumb; }
       void SetThumbPosition(int64_t setpos);
       void SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint=true );
 		void OnOffsetScroll( wxScrollEvent& event );
 
    private:
-      int64_t m_range;
-      int64_t m_thumb;
+      uint64_t m_range;
+      uint64_t m_thumb;
       wxScrollBar *m_scrollbar;
    };
 
@@ -206,7 +206,7 @@ virtual void SetLocalHexInsertionPoint( int hex_location );
 		bool ProcessRAM_FindMap( uint64_t current_offset, uint64_t& start, uint64_t& end, bool backward=false);
 
 	protected:
-		int64_t page_offset;	//holds current start offset of file
+		uint64_t page_offset;	//holds current start offset of file
 /*
 virtual int ToExactPosition( int InternalPosition );
 virtual int ToInternalPosition( int ExactPosition );

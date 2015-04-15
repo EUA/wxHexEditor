@@ -591,7 +591,7 @@ void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 	UpdateCursorLocation();
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL )
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/BytePerLine() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
 #endif
 		wxYieldIfNeeded();
 	}

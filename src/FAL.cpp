@@ -143,7 +143,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 	if( not myfilename.IsFileReadable() ){
-		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges."),_("Error"), wxOK|wxICON_ERROR);
+		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with Windows UAC privileges."),_("Error"), wxOK|wxICON_ERROR);
 		return false;
 		}
 

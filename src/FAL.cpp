@@ -404,10 +404,7 @@ size_t FAL::BlockWrite( unsigned char* buffer, unsigned size ){
 
 	std::cout << "buffer write : " << size << "put_ptr :" << put_ptr << std::endl;
 	uint64_t StartSector = put_ptr / BlockRWSize;
-	unsigned StartShift = put_ptr - StartSector*BlockRWSize;
-	uint64_t EndSector = (put_ptr + size)/BlockRWSize;
 
-	int rd = 0;
 	wxFile::Seek(StartSector*BlockRWSize);
 	size_t ret = Write(buffer, size);//*= to make update success true or false
 	put_ptr+=size;

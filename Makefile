@@ -43,6 +43,8 @@ LOCALEDIR   = $(DATADIR)/locale
 
 VERSION = 0.23 Beta
 
+clang: $(eval CXX=clang++) all
+
 all:$(EXECUTABLE) langs
 
 $(OBJECTS): $(LIBS) $(SOURCES)

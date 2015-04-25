@@ -490,8 +490,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 		}
 	else
 //*/
-
-   dcTemp->SetPen( wxNullPen );
+	dcTemp->SetPen(*wxTRANSPARENT_PEN);
    //Drawing line by line
 	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
 		line.Empty();

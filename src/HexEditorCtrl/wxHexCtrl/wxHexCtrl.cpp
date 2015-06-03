@@ -1630,13 +1630,16 @@ cpformat(a)
 	wxString newCP;
 	FontEnc=wxFONTENCODING_ALTERNATIVE;
 	char bf[256];
-	if(codepage.Find(wxT("ASCII")) != wxNOT_FOUND){
+#ifndef _MSC_VER
+	if(codepage.Find(wxT("ASCII")) != wxNOT_FOUND)
+#endif
+		{
 		for (unsigned i=0; i<=0xFF ; i++){
 			if(i<0x20 || i>=0x7F)		newCP+='.';		  //Control chars replaced with dot
 			if(i>=0x20 && i<0x7F)		newCP+=wxChar(i);//ASCII region
 			}
 		}
-
+#ifndef _MSC_VER
 	else if(codepage.Find(wxT("ANSEL")) != wxNOT_FOUND){
 		for (unsigned i=0; i<0xA1 ; i++){
 			if(i<0x20 || i>=0x7F)		newCP+='.';		  //Control chars and voids replaced with dot
@@ -2448,6 +2451,7 @@ cpformat(a)
 	else if(codepage.Find(wxT("EUC-KR")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_CP949; //EUC-KR
 //	else if(codepage.StartsWith(wxT("EUC-CN")))		FontEnc=wxFONTENCODING_GB2312;
 //else if(codepage.Find(wxT("Linux Bulgarian")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_BULGARIAN;
+#endif // !_MSC_VER
 	return CodepageTable=newCP;
 	}
 

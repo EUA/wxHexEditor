@@ -220,21 +220,21 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 							_("Path:")+wxT("\t")+flnm.GetPath()+wxT("\n")+
 							_("Size:")+wxT("\t")+ wxFileName::GetHumanReadableSize( wxULongLong(lenght) ) +wxT("\n")+
 							_("Access:")+wxT("\t")+AccessMode +wxT("\n")+
-							_("Device:")+wxT("\t")+(S_ISREG( sbufptr->st_mode ) ? _("FILE") :
-															S_ISDIR( sbufptr->st_mode ) ? _("DIRECTORY") :
-															S_ISCHR( sbufptr->st_mode ) ? _("CHARACTER") :
-															S_ISBLK( sbufptr->st_mode ) ? _("BLOCK") :
-															S_ISFIFO( sbufptr->st_mode ) ? _("FIFO") :
-														#ifndef __WXMSW__ //Windows has no link and socket files
-															S_ISLNK( sbufptr->st_mode ) ? _("LINK") :
-															S_ISSOCK( sbufptr->st_mode ) ? _("SOCKET") :
-														#endif
-														#ifdef __WXMSW__ //S_ISBLK doesn't work on windows.
-															wxT("BLOCK")
-														#else
-															wxT("?")
-														#endif
-															)+wxT("\n");
+							_("Device:")+wxT("\t")+
+#ifdef __WXMSW__
+							(sbufptr->st_mode == 0 ? _("BLOCK") : _("FILE"))
+#else
+							(S_ISREG( sbufptr->st_mode ) ? _("FILE") :
+							S_ISDIR( sbufptr->st_mode ) ? _("DIRECTORY") :
+							S_ISCHR( sbufptr->st_mode ) ? _("CHARACTER") :
+							S_ISBLK( sbufptr->st_mode ) ? _("BLOCK") :
+							S_ISFIFO( sbufptr->st_mode ) ? _("FIFO") :
+							S_ISLNK( sbufptr->st_mode ) ? _("LINK") :
+							S_ISSOCK( sbufptr->st_mode ) ? _("SOCKET") :
+							wxT("?")
+							)
+#endif
+							+wxT("\n");
 #ifdef __WXMSW__
 		if(sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
 #else

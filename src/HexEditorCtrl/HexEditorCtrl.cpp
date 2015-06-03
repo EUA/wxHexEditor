@@ -1011,7 +1011,7 @@ uint64_t HexEditorCtrl::CursorOffset( void ){
 	}
 
 uint64_t HexEditorCtrl::ProcessRAM_GetFootPrint(){
-	uint64_t fp;
+	uint64_t fp = 0;
 	for( unsigned i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
 		fp += ProcessRAMMap.Item(i+1);
 		fp -= ProcessRAMMap.Item(i);

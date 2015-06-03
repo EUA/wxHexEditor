@@ -161,7 +161,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 
 	MHASH myhash=mhash_init(hash_alg);
 
-	int rdBlockSz=2*128*1024;
+	enum { rdBlockSz=2*128*1024 };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 

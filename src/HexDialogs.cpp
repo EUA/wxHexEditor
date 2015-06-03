@@ -328,7 +328,7 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 	}
 
 bool FindDialog::SearchAtBufferUnitTest(void){
-	unsigned STEP = 100000;
+	enum { STEP = 100000 };
 	char buff[STEP];
 	for(unsigned i=0;i<STEP;i++) buff[i]=0;
 	char src[] = "keyword";
@@ -3166,7 +3166,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 
 	MHASH myhash = mhash_init( MHASH_MD5 );
 
-	int rdBlockSz=1024*1024;
+	enum { rdBlockSz=1024*1024 };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
@@ -3260,7 +3260,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 	wxProgressDialog mypd(_("Disk/Partition Restore"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	int rdBlockSz=1024*1024;
+	enum { rdBlockSz=1024*1024 };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
@@ -3312,7 +3312,7 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 	wxProgressDialog mypd(_("Disk/Partition Erase"), msg+emsg , 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	unsigned rdBlockSz=1024*1024;
+	enum { rdBlockSz=1024*1024 };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 

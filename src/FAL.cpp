@@ -343,7 +343,7 @@ wxFileName FAL::GetFileName( void ){
 	}
 
 DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, bool inject ){
-	DiffNode* newnode = new struct DiffNode( start_byte, size, inject );
+	DiffNode* newnode = new DiffNode( start_byte, size, inject );
 	if( size < 0 ){//Deletion!
 		newnode->old_data = new unsigned char[-size];
 		if( newnode->old_data == NULL )

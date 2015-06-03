@@ -46,7 +46,9 @@ HexEditor::HexEditor(	wxWindow* parent,
 	// This is really crucial step! Be adviced to not remove it, even if you don't believer.
 	printf("Rahman ve Rahim olan Allah'ın adıyla.\n");
 	myfile = NULL;
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 	myscrollthread = NULL;
+#endif
 	if( myfilename_ != NULL ) {
 		if( !FileOpen( *myfilename_ ) ) {
 			}

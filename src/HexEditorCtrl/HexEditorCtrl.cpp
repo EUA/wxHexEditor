@@ -875,7 +875,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 
 				while (child) {
 					if (child->GetName() == wxT("TAG")) {
-						wxString propvalue = child->GetPropVal(wxT("id"), wxEmptyString);
+                        wxString propvalue = child->GetAttribute(wxT("id"), wxEmptyString);
 	#ifdef _DEBUG_TAG_
 						std::cout << "TAG ID:" << propvalue.ToAscii() << " readed.\n";
 	#endif
@@ -950,7 +950,7 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 
 		wxXmlNode *node_Root = new wxXmlNode( NULL, wxXML_ELEMENT_NODE, wxT("wxHexEditor_XML_TAG"), wxEmptyString, NULL , NULL);
 
-		wxXmlProperty *prop_filename = new wxXmlProperty( wxT("path"), flnm.GetFullPath(), NULL);
+		wxXmlAttribute *prop_filename = new wxXmlAttribute( wxT("path"), flnm.GetFullPath(), NULL);
 		wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), wxEmptyString, prop_filename , NULL);
 
 		MainTagArray.Sort(TagElementSort);
@@ -958,7 +958,7 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			//Used reverse order for make XML offsets increasing.
 			TagElement *TAG = MainTagArray.Item(i);
 
-			wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
+			wxXmlAttribute *ID = new wxXmlAttribute( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
 			wxXmlNode *node_Tag = new wxXmlNode( node_File, wxXML_ELEMENT_NODE, wxT("TAG"), wxEmptyString, ID , NULL);
 
 			wxXmlNode *element_NoteColour		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("note_colour"), wxEmptyString, NULL, NULL);

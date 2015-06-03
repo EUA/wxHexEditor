@@ -23,7 +23,7 @@
 
 #include <mutils/mincludes.h>
 
-#if defined(const)
+#if !defined(__const)
 #define __const const
 #endif 
 

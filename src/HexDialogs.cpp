@@ -448,7 +448,8 @@ void FindDialog::FindSomeBytes( void ){
 	wxString emsg=wxT("\n");
 	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg+emsg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
 	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
-// TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
+// TODO (death#1#): Search icon
+	//wxIcon search_ICON (?_xpm);
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = parent->CursorOffset();
@@ -674,7 +675,8 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	wxString emsg=wxT("\n");
 	wxProgressDialog progress_gauge(_("wxHexEditor Searching") , msg+emsg, 1000,  this, wxPD_SMOOTH|wxPD_REMAINING_TIME|wxPD_CAN_ABORT|wxPD_AUTO_HIDE );
 	progress_gauge.SetWindowStyleFlag( progress_gauge.GetWindowStyleFlag()|wxSTAY_ON_TOP|wxMINIMIZE_BOX );
-// TODO (death#1#): Search icon	//wxIcon search_ICON (?_xpm);
+// TODO (death#1#): Search icon
+	//wxIcon search_ICON (?_xpm);
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = from;

@@ -50,13 +50,11 @@ WX_DEFINE_OBJARRAY(ArrayOfNode);
 bool IsBlockDev( int FD ){
 	struct stat *sbufptr = new struct stat;
    fstat( FD, sbufptr );
-   if(S_ISBLK( sbufptr->st_mode )
 #ifdef __WXMSW__
-		or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
+	return sbufptr->st_mode==0;	//Enable block size detection code on windows targets,
+#else
+	return S_ISBLK( sbufptr->st_mode );
 #endif
-		)
-		return true;
-	return false;
 	}
 
 int FDtoBlockSize( int FD ){
@@ -68,11 +66,7 @@ int FDtoBlockSize( int FD ){
 #elif defined (__WXMSW__)
 	struct stat *sbufptr = new struct stat;
    fstat( FD, sbufptr );
-   if(S_ISBLK( sbufptr->st_mode )
-#ifdef __WXMSW__
-		or (sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
-#endif
-		){
+   if(sbufptr->st_mode==0){	//Enable block size detection code on windows targets,
 		DWORD dwResult;
 		DISK_GEOMETRY driveInfo;
 		DeviceIoControl ( (void*)_get_osfhandle(FD), IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);

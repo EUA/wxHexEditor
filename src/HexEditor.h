@@ -261,7 +261,7 @@ class scrollthread:wxThreadHelper {
 			int64_t newoffset=0;
 			while( !(GetThread()->TestDestroy()) ) {
 				if(speed == 0){
-					usleep( 10 );
+					wxMicroSleep( 10 );
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 					}
 #if _DEBUG_THREAD_SCROLL_

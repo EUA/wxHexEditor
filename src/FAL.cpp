@@ -102,7 +102,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 
 #if _FSWATCHER_ //Only GTK port is working good on detect changes of file.
 ///Moved to CreateFileWatcher();
-//	if(not myfilename.GetFullPath().Lower().StartsWith( wxT("-pid=")))
+//	if(! myfilename.GetFullPath().Lower().StartsWith( wxT("-pid=")))
 //	   file_watcher->Add( myfilename.GetFullPath(), wxFSW_EVENT_MODIFY );
 #endif
 	}
@@ -111,7 +111,7 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	//Windows special device opening
 	if(myfilename.GetFullPath().StartsWith( wxT(".:"))
-		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk")) ){
+		|| myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk")) ){
 
 		wxString devnm;
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
@@ -136,7 +136,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		wxFile::Attach( fd );
 		return true;
 		}
-	if( not myfilename.IsFileReadable() ){
+	if( !myfilename.IsFileReadable() ){
 		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with Windows UAC privileges."),_("Error"), wxOK|wxICON_ERROR);
 		return false;
 		}
@@ -167,13 +167,13 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 
-	else if(not DoFileExists){
+	else if(!DoFileExists){
 		wxMessageBox(wxString(_("File does not exists at path:"))+wxT("\n")+myfilename.GetFullPath(),_("Error"), wxOK|wxICON_ERROR);
 		return false;
 		}
 
 	//Owning file
-	else if( not myfilename.IsFileReadable() and DoFileExists ){ // "and myfilename.FileExist()" not used because it's for just plain files, not for block ones.
+	else if( !myfilename.IsFileReadable() && DoFileExists ){ // "and myfilename.FileExist()" not used because it's for just plain files, not for block ones.
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+ wxT("\n")+
 												        _("Please change file permissons or run this program with root privileges.")+wxT("\n")+
 												        _("You can also try to own the file temporarily (requires root's password.)")+wxT("\n")+wxT("\n")+
@@ -185,7 +185,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 		//Save old owner to update at file close...
 		wxExecute( wxT("stat -c %U ")+myfilename.GetFullPath(), output, errors, wxEXEC_SYNC );
-		if(output.Count()>0 and errors.Count()==0)
+		if(output.Count()>0 && errors.Count()==0)
 			oldOwner = output[0];//this return root generally :D
 		else{
 			wxMessageBox(_("Unknown error on \"stat -c %U")+myfilename.GetFullPath()+wxT("\""),_("Error"), wxOK|wxCANCEL|wxICON_ERROR);
@@ -232,7 +232,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 
-	if( not myfilename.IsFileReadable() ){
+	if( !myfilename.IsFileReadable() ){
 		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
 		return false;
 		}
@@ -247,7 +247,7 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 		else
 			Open(myfilename.GetFullPath(), wxFile::read_write);
 
-		if(not IsOpened()){
+		if(!IsOpened()){
 			file_access_mode = AccessInvalid;
 			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 			return false;
@@ -276,7 +276,7 @@ bool FAL::Close(){
 FAL::~FAL(){
 	Close();
 #ifndef __WXMSW__
-	if(not oldOwner.IsEmpty() ){
+	if(!oldOwner.IsEmpty() ){
 		//Will restore owner on file close.
 		wxString cmd;
 		if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
@@ -577,7 +577,7 @@ wxFileOffset FAL::Length( void ){
 		return -1;
 	wxFileOffset max_size=wxFile::Length();
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
-		if( DiffArray[i]->flag_undo and !DiffArray[i]->flag_commit )
+		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )
 			continue;
 		else if( DiffArray[i]->flag_inject )
 				max_size += DiffArray[i]->size;
@@ -612,7 +612,7 @@ long FAL::Read( unsigned char* buffer, int size ){
 	//Why did I calculate j here? To find active patch indice...
 	int j=0;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++)
-		if( DiffArray[i]->flag_undo and not DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
+		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )	// Allready committed to disk, nothing to do here
 			break;
 		else
 			j=i+1;
@@ -631,7 +631,7 @@ long FAL::Read( unsigned char* buffer, int size ){
 //Returns information that if file has some deletions or injections.
 bool FAL::IsInjected( void ){
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++)
-		if( DiffArray[i]->flag_undo and not DiffArray[i]->flag_commit )
+		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )
 			break;
 		else if( DiffArray.Item(i)->flag_inject )
 			return true;
@@ -709,7 +709,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 	//than process at current layer
 	if(PatchIndice != 0){
 		DiffNode* patch = PatchArray->Item(PatchIndice-1); //PatchIndice-1 means the last patch item! Don't confuse at upper code.
-		if( patch->flag_inject and patch->size < 0 ){//Deletion patch
+		if( patch->flag_inject && patch->size < 0 ){//Deletion patch
 			readsize = DeletionPatcher( from, buffer, size, PatchArray, PatchIndice );
 			}
 		else if( patch->flag_inject ){	//Injection patch
@@ -741,7 +741,7 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 	* data                                = ... *
 	* first partition                     = xxx *
 	********************************************/
-	if( PatchArray->Item(PatchIndice-1) -> size > 0 and PatchArray->Item(PatchIndice-1)->flag_inject ){
+	if( PatchArray->Item(PatchIndice-1) -> size > 0 && PatchArray->Item(PatchIndice-1)->flag_inject ){
 		DiffNode *Inject_Node = PatchArray->Item(PatchIndice-1);	//For easy debugging
 		///If injection starts behind, so we needed to read bytes from before to show correct location.
 		///State ...().,,,[...]..... -> ...(...).[,,,].
@@ -750,8 +750,8 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 			}
 		///State ...(),,,[....]..... -> ...(..[xx),,],..
 		else if( Inject_Node->start_offset <= current_location
-					and Inject_Node->end_offset() > current_location
-					and Inject_Node->end_offset() < current_location + size
+					&& Inject_Node->end_offset() > current_location
+					&& Inject_Node->end_offset() < current_location + size
 					){
 				int movement = current_location - Inject_Node->start_offset;   // This bytes discarded from injection
 				int first_part = Inject_Node->end_offset() - current_location; // First part size
@@ -762,7 +762,7 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 
 		///State ...(),,,[...]..... -> ...(...[...].),,,
 		else if( Inject_Node->start_offset <= current_location
-					and Inject_Node->end_offset() >= current_location + size
+					&& Inject_Node->end_offset() >= current_location + size
 					){
 				int movement = current_location - Inject_Node->start_offset;	// This bytes discarded from injection
 				memcpy( data, Inject_Node->new_data + movement, size );			// Copy first part to buffer
@@ -770,8 +770,8 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 			}
 		///State ...[...(),,,]... -> ...[xx(...)...],,,...
 		else if( Inject_Node->start_offset > current_location
-					and Inject_Node->start_offset < current_location + size
-					and Inject_Node->end_offset() < current_location + size
+					&& Inject_Node->start_offset < current_location + size
+					&& Inject_Node->end_offset() < current_location + size
 					){
 				int first_part = Inject_Node->start_offset - current_location; // First part size
 				int read_size = ReadR( data, first_part, current_location, PatchArray, PatchIndice-1 ); //Read First Part from lower layer
@@ -781,8 +781,8 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 			}
 		///State ...[...(),,,]... -> ...[xx(...]...),,,...
 		else if( Inject_Node->start_offset > current_location
-					and Inject_Node->start_offset < current_location + size
-					and Inject_Node->end_offset() > current_location + size
+					&& Inject_Node->start_offset < current_location + size
+					&& Inject_Node->end_offset() > current_location + size
 					){
 				int first_part = Inject_Node->start_offset - current_location; // First part size
 				int read_size = ReadR( data, first_part, current_location, PatchArray, PatchIndice-1 ); //Read First Part from lower layer
@@ -817,7 +817,7 @@ long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int si
 			}
 		///State ...[xxx(...)...],,,... -> ...[xxx()...,,,]...
 		///State ...[xxx(...]...),,,... -> ...[xxx(),,,...]...
-		else if( Delete_Node->start_offset > current_location and Delete_Node->start_offset < current_location + size ){
+		else if( Delete_Node->start_offset > current_location && Delete_Node->start_offset < current_location + size ){
 			int first_part_size = Delete_Node->start_offset - current_location;
 			int read_size=0;
 			read_size += ReadR( data,						first_part_size,				current_location,															PatchArray,  PatchIndice-1 );

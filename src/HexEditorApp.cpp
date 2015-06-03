@@ -60,7 +60,7 @@ bool wxHexEditorApp::OnInit() {
 				wxArrayString cfiles;
 				for(int j = 1; j < argc; ++j){
 					wxString str(argv[j]);
-					if(not str.Lower().StartsWith(wxT("--compare")) )
+					if(!str.Lower().StartsWith(wxT("--compare")) )
 						cfiles.Add(str);
 					}
 
@@ -77,7 +77,7 @@ bool wxHexEditorApp::OnInit() {
    for(int ii = 1; ii < argc; ++ii) {
       wxString str(argv[ii]);
       wxFileName fn = wxFileName(str);
- //  if(fn.FileExists() or str.Lower().StartsWith(wxT("-pid")))
+ //  if(fn.FileExists() || str.Lower().StartsWith(wxT("-pid")))
       frame->OpenFile(fn.GetFullPath());
       }
 

@@ -68,7 +68,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
       hexval.Remove( hexval.find(' '),1);
 
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
-      if( !isxdigit( hexval[i] ) or hexval == ' ' ) { //Not hexadecimal!
+      if( !isxdigit( hexval[i] ) || hexval == ' ' ) { //Not hexadecimal!
          OSXwxMessageBox( _("Value is not hexadecimal!"), _("Format Error!"), wxOK, parent );
          wxBell();
          return false;
@@ -97,14 +97,14 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 
 	wxString AddNewString = CurrentBox->GetValue();
 	//Adds New String
-	if( AddString and (AddNewString not_eq wxEmptyString) ){
-		if( SearchStrings.Index( AddNewString ) not_eq wxNOT_FOUND )
+	if( AddString && (AddNewString != wxEmptyString) ){
+		if( SearchStrings.Index( AddNewString ) != wxNOT_FOUND )
 			SearchStrings.Remove( AddNewString );
 		else if( SearchStrings.Count() >= 10 )
 			SearchStrings.RemoveAt(0);
 		SearchStrings.Add( AddNewString );
 
-		for( unsigned i = 0 ; i < 10 and i < SearchStrings.Count(); i ++){
+		for( unsigned i = 0 ; i < 10 && i < SearchStrings.Count(); i ++){
 			#ifdef _DEBUG_
 			std::cout << "ComboBoxFill Write (" << i << ") : " << SearchStrings.Item(i).ToAscii() << std::endl;
 			#endif
@@ -164,7 +164,7 @@ GotoDialog::GotoDialog( wxWindow* _parent, uint64_t& _offset, uint64_t _cursor_o
 		BlockSize=1;
 	else{
 		m_choiceMode->Append(_("Sector") );
-		if(not (options & OPT_OFFSET_MODE)){
+		if(!(options & OPT_OFFSET_MODE)){
 			m_button_next->Show();
 			m_button_prev->Show();
 			Fit();
@@ -179,7 +179,7 @@ GotoDialog::GotoDialog( wxWindow* _parent, uint64_t& _offset, uint64_t _cursor_o
 
 void GotoDialog::EventHandler( wxCommandEvent& event ){
 //	if( event.GetId() == m_dec->GetId()
-//		or event.GetId() == m_hex->GetId()
+//		|| event.GetId() == m_hex->GetId()
 //		)
 //		OnConvert( event );
 
@@ -207,7 +207,7 @@ void GotoDialog::EventHandler( wxCommandEvent& event ){
 
 wxString GotoDialog::Filter( wxString text ){
 	for( unsigned i = 0 ; i < text.Length() ; i++ ){
-		if( not (m_dec->GetValue() ? isdigit( text.GetChar( i ) ) : isxdigit( text.GetChar( i ) )))
+		if( !(m_dec->GetValue() ? isdigit( text.GetChar( i ) ) : isxdigit( text.GetChar( i ) )))
 			text.Remove( i--, 1);
 		}
 	return text;
@@ -216,7 +216,7 @@ wxString GotoDialog::Filter( wxString text ){
 void GotoDialog::OnInput( wxCommandEvent& event ){
  	wxString OldValue = m_comboBoxOffset->GetValue();
  	wxString NewValue = Filter( OldValue );
- 	if( OldValue not_eq NewValue ){
+ 	if( OldValue != NewValue ){
 		m_comboBoxOffset->SetValue( NewValue );
 		m_comboBoxOffset->SetInsertionPointEnd();
 		wxBell();
@@ -226,22 +226,22 @@ void GotoDialog::OnInput( wxCommandEvent& event ){
 
 void GotoDialog::OnChar( wxKeyEvent& event ){
 	if(	( event.GetKeyCode() == WXK_BACK )
-		or ( event.GetKeyCode() == WXK_RETURN )
-		or ( event.GetKeyCode() == WXK_LEFT )
-		or ( event.GetKeyCode() == WXK_RIGHT )
-		or ( event.GetKeyCode() == WXK_DELETE )
-		or ( event.GetKeyCode() == WXK_TAB )
-		or ( event.GetKeyCode() == WXK_END )
-		or ( event.GetKeyCode() == WXK_HOME )
-		or ( event.GetKeyCode() == WXK_CAPITAL )
-		or ( event.GetKeyCode() == WXK_RETURN )
-		or ( event.ControlDown() and (
+		|| ( event.GetKeyCode() == WXK_RETURN )
+		|| ( event.GetKeyCode() == WXK_LEFT )
+		|| ( event.GetKeyCode() == WXK_RIGHT )
+		|| ( event.GetKeyCode() == WXK_DELETE )
+		|| ( event.GetKeyCode() == WXK_TAB )
+		|| ( event.GetKeyCode() == WXK_END )
+		|| ( event.GetKeyCode() == WXK_HOME )
+		|| ( event.GetKeyCode() == WXK_CAPITAL )
+		|| ( event.GetKeyCode() == WXK_RETURN )
+		|| ( event.ControlDown() && (
 					 event.GetKeyCode()==1 			// CTRL+A
-				 or event.GetKeyCode()==24	 		// CTRL+X
-				 or event.GetKeyCode()==3			// CTRL+C
-				 or event.GetKeyCode()==22 		// CTRL+V
+				 || event.GetKeyCode()==24	 		// CTRL+X
+				 || event.GetKeyCode()==3			// CTRL+C
+				 || event.GetKeyCode()==22 		// CTRL+V
 				 ))
-		or	( m_dec->GetValue() ? isdigit(event.GetKeyCode()) : isxdigit( event.GetKeyCode()) )
+		||	( m_dec->GetValue() ? isdigit(event.GetKeyCode()) : isxdigit( event.GetKeyCode()) )
 			)
 		event.Skip(true);
 	else{
@@ -274,7 +274,7 @@ void GotoDialog::OnGo( wxCommandEvent& event ){
 		return;
 		}
 	wxULongLong_t wxul = 0;
-	if( not m_comboBoxOffset->GetValue().ToULongLong( &wxul, m_dec->GetValue() ? 10 : 16 ))//Mingw32/64 workaround
+	if( !m_comboBoxOffset->GetValue().ToULongLong( &wxul, m_dec->GetValue() ? 10 : 16 ))//Mingw32/64 workaround
 		wxul = strtoull( m_comboBoxOffset->GetValue().ToAscii(), 0, m_dec->GetValue() ? 10 : 16 );
 	*offset = wxul;
 
@@ -342,7 +342,7 @@ bool FindDialog::SearchAtBufferUnitTest(void){
 		int f = SearchAtBuffer( buff, STEP, src, strlen(src), SEARCH_TEXT|SEARCH_MATCHCASE );
 		//int f = SearchAtBufferMultiThread( buff, STEP, src, strlen(src), SEARCH_TEXT);
 		#ifdef _DEBUG_
-		if( f not_eq i )
+		if( f != i )
 			std::cout << "For key at : "<< i << "\t result = " << f << "\t sz: " << sz << std::endl;
 		else
 			std::cout << "Searching key at: " << i << " OK\r";
@@ -363,22 +363,22 @@ void FindDialog::PrepareComboBox( bool AddString ){
 void FindDialog::OnChar( wxKeyEvent& event ){
 	if( m_searchtype->GetSelection()==1 ){ //Just for Hex Mode
 		if(	( event.GetKeyCode() == WXK_BACK )
-			or ( event.GetKeyCode() == WXK_RETURN )
-			or ( event.GetKeyCode() == WXK_LEFT )
-			or ( event.GetKeyCode() == WXK_RIGHT )
-			or ( event.GetKeyCode() == WXK_DELETE )
-			or ( event.GetKeyCode() == WXK_TAB )
-			or ( event.GetKeyCode() == WXK_END )
-			or ( event.GetKeyCode() == WXK_HOME )
-			or ( event.GetKeyCode() == WXK_CAPITAL )
-			or ( event.GetKeyCode() == WXK_RETURN )
-			or ( event.ControlDown() and (
+			|| ( event.GetKeyCode() == WXK_RETURN )
+			|| ( event.GetKeyCode() == WXK_LEFT )
+			|| ( event.GetKeyCode() == WXK_RIGHT )
+			|| ( event.GetKeyCode() == WXK_DELETE )
+			|| ( event.GetKeyCode() == WXK_TAB )
+			|| ( event.GetKeyCode() == WXK_END )
+			|| ( event.GetKeyCode() == WXK_HOME )
+			|| ( event.GetKeyCode() == WXK_CAPITAL )
+			|| ( event.GetKeyCode() == WXK_RETURN )
+			|| ( event.ControlDown() && (
 						event.GetKeyCode()==1 			// CTRL+A
-					 or event.GetKeyCode()==24	 		// CTRL+X
-					 or event.GetKeyCode()==3			// CTRL+C
-					 or event.GetKeyCode()==22 		// CTRL+V
+					 || event.GetKeyCode()==24	 		// CTRL+X
+					 || event.GetKeyCode()==3			// CTRL+C
+					 || event.GetKeyCode()==22 		// CTRL+V
 					 ))
-			or	( isxdigit( event.GetKeyCode()) )
+			||	( isxdigit( event.GetKeyCode()) )
 				)
 			event.Skip(true);
 		else{
@@ -411,7 +411,7 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 		if( event.GetEventType() == 10041)//Handles ENTER key
 			OnFind();
 		else
-			chkUTF8->SetValue( not m_comboBoxSearch->GetValue().IsAscii() );
+			chkUTF8->SetValue( !m_comboBoxSearch->GetValue().IsAscii() );
 		}
 	else if( event.GetId() == m_searchtype->GetId()){
 		chkMatchCase->Enable(m_searchtype->GetSelection() == 0);
@@ -428,7 +428,7 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 
 	//Disables chkUTF8 setting by user.
 	else if( event.GetId() == chkUTF8->GetId() ){
-		chkUTF8->SetValue( not chkUTF8->GetValue( ));
+		chkUTF8->SetValue( !chkUTF8->GetValue( ));
 		wxBell();
 		}
 
@@ -522,7 +522,7 @@ bool FindDialog::OnFind( bool internal ){
 	else { //SEARCH_HEX
 		//Hex Validation and Format
 		wxString hexval = m_comboBoxSearch->GetValue();
-		if(not HexVerifyAndPrepare( hexval, _("Search"), this ) )
+		if(!HexVerifyAndPrepare( hexval, _("Search"), this ) )
             return false;
 		m_comboBoxSearch->SetValue(hexval.Upper());
 
@@ -548,7 +548,7 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		std::cout << "FindText() from: " << start_from << "\t Search Length " << target.Len() << std::endl;
 	#endif
 	wxMemoryBuffer textsrc;
-	if(not (options & SEARCH_MATCHCASE)){
+	if(!(options & SEARCH_MATCHCASE)){
 		//!Compare with lowered characters
 		target = target.Lower();
 		}
@@ -562,13 +562,13 @@ uint64_t FindDialog::FindText( wxString target, uint64_t start_from, unsigned op
 		wxCharBuffer a = target.ToUTF8().data(); //Convert to UTF8 Binary
 		int i=0;
 		char *b=a.data();							//Silences errors
-		while(b[i++] not_eq 0);					//Find stream size
+		while(b[i++] != 0);					//Find stream size
 		textsrc.AppendData( a , i-1 );//-1 for discard null termination char
 
 		///Since we cannot convert whole buffer to UTF8 for issuing upper() function on it,
 		///we just need "search string" upper & lower versions.
 		// First 2 byte will be searched and if matches, full comparison will made.
-		if(not (options & SEARCH_MATCHCASE)){//If non-matchcase operation
+		if(!(options & SEARCH_MATCHCASE)){//If non-matchcase operation
 			wxCharBuffer a = target.Upper().ToUTF8().data(); 	//Calculate Uppercase variant of first character
 			UTF8SpeedHackChrs[0]=a.data()[0];						//This will be huge speed up but needed to handled differently on
 			UTF8SpeedHackChrs[1]=a.data()[1];						//SearchAtBuffer stack!
@@ -583,7 +583,7 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	#ifdef _DEBUG_
 	printf( "SkipRAM() Processing from 0x%llX, %s\n", current_offset, (backward ? "Backward": ""));
 	#endif
-	if( not parent->ProcessRAM_FindMap( current_offset, map_start, map_end, backward ) ){
+	if( !parent->ProcessRAM_FindMap( current_offset, map_start, map_end, backward ) ){
 		current_offset = parent->ProcessRAM_FindNextMap(current_offset, backward);
 		#ifdef _DEBUG_
 		printf( "Skipping to 0x%llX\n", current_offset);
@@ -609,7 +609,7 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	std::cout << "Step size:" << search_step << std::endl;
 	#endif
 
-	if( map_start <= current_offset and map_end >= current_offset ){
+	if( map_start <= current_offset && map_end >= current_offset ){
 		std::cout << "ProcessRAM_FindMap pass\n" << std::endl;
 		}
 	if( current_offset == 0 ) //means memory map ends
@@ -647,7 +647,7 @@ bool FindDialog::FindBinaryUnitTest( void ){
 //		int f = FindBinary( target, tmpfile.Length()-1, SEARCH_TEXT | SEARCH_MATCHCASE | SEARCH_BACKWARDS);
 //		findfile=swp;
 //
-//		if( f not_eq i ){
+//		if( f != i ){
 //			std::cout << "For key at : "<< i << "\t result = " << f  << std::endl;
 //			wxSleep(100);
 //			}
@@ -668,7 +668,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		return NANINT;
 		}
 	//Disabling search on empty files and if fileLength smaller than file size.
-	if( parent->FileLength() == 0 or parent->FileLength() < target.GetDataLen() )
+	if( parent->FileLength() == 0 || parent->FileLength() < target.GetDataLen() )
 		return NANINT;
 	wxString msg= _("Finding matches...");
 	wxString emsg=wxT("\n");
@@ -704,7 +704,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	uint64_t totalread=0;
 
 	//SEARCH_FINDALL forces Forward searching
-	if(( options & SEARCH_FINDALL ) or not (options & SEARCH_BACKWARDS) ){
+	if(( options & SEARCH_FINDALL ) || !(options & SEARCH_BACKWARDS) ){
 		if( options & SEARCH_FINDALL )
 			current_offset=0;
 		//Search step 1: From cursor to file end.
@@ -720,7 +720,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				//if( SkipRAM( current_offset, target.GetDataLen(), search_step ) ) //SkipRAM adjust current_offset and search_step
 				//	break;
 				uint64_t map_start,map_end;
-				if( not parent->ProcessRAM_FindMap( current_offset, map_start, map_end ) ){
+				if( !parent->ProcessRAM_FindMap( current_offset, map_start, map_end ) ){
 					#ifdef _DEBUG_
 					printf( "Skipping from: 0x%llX to", current_offset) ;
 					#endif
@@ -843,7 +843,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				}
 
 			else
-				percentage = ( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ))
+				percentage = ( options & SEARCH_WRAPAROUND && !( options & SEARCH_FINDALL ))
 													? (current_offset-from)*1000/(parent->FileLength())
 													: (current_offset-from)*1000/(parent->FileLength()-from+1);//+1 to avoid error
 
@@ -854,7 +854,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 #ifdef _MULTI_SEARCH_
 		//Create tags from results and put them into HighlightArray
-		for(unsigned i=0 ; i < results.size() and  i < 400000 ; i++ ){
+		for(unsigned i=0 ; i < results.size() &&  i < 400000 ; i++ ){
 			TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
 			parent->HighlightArray.Add(mytag);
 			}
@@ -867,7 +867,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 #endif
 
 		//Search step 2: From start to "from" location.
-		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
+		if( options & SEARCH_WRAPAROUND && !( options & SEARCH_FINDALL ) ){
 			current_offset = 0;
 			readed_prefetch = 0;
 			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
@@ -1046,7 +1046,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			}while(current_offset > target.GetDataLen());
 
 		//Search step 2: From end to to current offset.
-		if( options & SEARCH_WRAPAROUND and not ( options & SEARCH_FINDALL ) ){
+		if( options & SEARCH_WRAPAROUND && !( options & SEARCH_FINDALL ) ){
 			current_offset = findfile->Length();
 			search_step = parent->FileLength() < BlockSz ? parent->FileLength() : BlockSz ;
 			readed_prefetch=0;
@@ -1167,7 +1167,7 @@ void FindDialog::OnFindAll( bool internal ){
 	else {
 		wxString hexval = m_comboBoxSearch->GetValue();
 		//parent->Goto(0);
-		if(not HexVerifyAndPrepare( hexval, _("Search"), this ) )
+		if(!HexVerifyAndPrepare( hexval, _("Search"), this ) )
             return;
 		m_comboBoxSearch->SetValue(hexval.Upper());
 		PrepareComboBox( true );
@@ -1183,7 +1183,7 @@ void FindDialog::OnFindAll( bool internal ){
 		wxUpdateUIEvent eventx( SEARCH_CHANGE_EVENT );
 		wxPostEvent(parent, eventx );
 
-		if( not internal ){
+		if( !internal ){
 			this->Hide();
 			OSXwxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, parent );
 			Destroy();
@@ -1305,7 +1305,7 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 	///SEARCH_FINDALL operation supersedes SEARCH_BACKWARDS
 
 	///UTF with no matched case handled here !!!SLOW!!!
-	if((options & SEARCH_UTF8) and (options & SEARCH_TEXT) and not (options & SEARCH_MATCHCASE) ){
+	if((options & SEARCH_UTF8) && (options & SEARCH_TEXT) && !(options & SEARCH_MATCHCASE) ){
 		//!!!UTF8 Search Speed Hack handling here!!!
 		// TODO (death#1#): Have doubts if thish lead Segmentation fault or works OK every time? Need unit test for this fx
 		//For UTF2, search_size must be > 2. Than, we are in the safe! :)
@@ -1313,11 +1313,11 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 			wxString ucode;
 			wxCharBuffer ubuf;
 
-			if( (options & SEARCH_FINDALL) or not (options & SEARCH_BACKWARDS) )
+			if( (options & SEARCH_FINDALL) || !(options & SEARCH_BACKWARDS) )
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					//Compare buffer's first and second bytes with search(lower version) and UTF8SpeedHackChrs (upper version)
-					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+					if( ( bfr[i]==search[0] && bfr[i+1]==search[1] ) ||
+						 ( bfr[i]==UTF8SpeedHackChrs[0] && bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
 						){
 						//Partial match found!
 						//Now generate UTF8 Lower binary from buffer for full comparison.
@@ -1329,8 +1329,8 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 					}
 			else //Backward Search!
 				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+					if( ( bfr[i]==search[0] && bfr[i+1]==search[1] ) ||
+						 ( bfr[i]==UTF8SpeedHackChrs[0] && bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
 						){
 						//Partial match found!
 						//Now generate UTF8 Lower binary from buffer for full comparison.
@@ -1344,7 +1344,7 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 		else{//Old and deadly slow code
 			wxString ucode;
 			wxCharBuffer ubuf;
-			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Backward Search!
+			if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) //Backward Search!
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
@@ -1362,20 +1362,20 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 		return -1;
 		}
 
-	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE)){
+	else if(options & SEARCH_TEXT && !(options & SEARCH_MATCHCASE)){
 		if(1){//Speedy code
 			//Search at no match case ASCII handled here
 			///Search text already lowered at FindText()
 //			char topSearch[search_size];
 //			for( int i = 0 ; i < search_size; i++)
 //				topSearch[i]=tolower(search[i]);
-			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Normal Operation
+			if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) //Normal Operation
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
+					if(( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] )
+						//&& ( bfr[i+1] == search[1] || bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
-						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
+						for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 							bfr[j]=tolower(bfr[j]);
 						if(! memcmp( bfr+i, search, search_size ))	//if match found
 							ret_ptr->push_back(i);
@@ -1383,11 +1383,11 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 					}
 			else //Backward Search!
 				for( int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
+					if(( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] )
+						//&& ( bfr[i+1] == search[1] || bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
-						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
+						for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 							bfr[j]=tolower(bfr[j]);
 						if(! memcmp( bfr+i, search, search_size ))	//if match found
 							ret_ptr->push_back(i);
@@ -1409,7 +1409,7 @@ inline int FindDialog::MultiSearchAtBuffer( char *bfr, int bfr_size, char* searc
 		}
 
 	//Search as HEX
-	if((options & SEARCH_FINDALL) or not(options & SEARCH_BACKWARDS)){
+	if((options & SEARCH_FINDALL) || !(options & SEARCH_BACKWARDS)){
 		//#pragma omp parallel for schedule(static)
 		for(int i=0 ; i <= bfr_size - search_size ; i++ )
 			if( bfr[i] == search[0] )
@@ -1433,7 +1433,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 	///SEARCH_FINDALL operation supersedes SEARCH_BACKWARDS and SEARCH_WRAPAROUND
 
 	//UTF with no matched case handled here !!!SLOW!!!
-	if(options & SEARCH_UTF8 and options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE) ){
+	if(options & SEARCH_UTF8 && options & SEARCH_TEXT && !(options & SEARCH_MATCHCASE) ){
 		//!!!UTF8 Search Speed Hack handling here!!!
 
 		// TODO (death#1#): Have doubts if thish lead Segmentation fault or works OK every time? Need unit test for this fx
@@ -1442,11 +1442,11 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 			wxString ucode;
 			wxCharBuffer ubuf;
 
-			if( (options & SEARCH_FINDALL) or not (options & SEARCH_BACKWARDS) )
+			if( (options & SEARCH_FINDALL) || !(options & SEARCH_BACKWARDS) )
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					//Compare buffer's first and second bytes with search(lower version) and UTF8SpeedHackChrs (upper version)
-					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+					if( ( bfr[i]==search[0] && bfr[i+1]==search[1] ) ||
+						 ( bfr[i]==UTF8SpeedHackChrs[0] && bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
 						){
 						//Partial match found!
 						//Now generate UTF8 Lower binary from buffer for full comparison.
@@ -1458,8 +1458,8 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					}
 			else //Backward Search!
 				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					if( ( bfr[i]==search[0] and bfr[i+1]==search[1] ) or
-						 ( bfr[i]==UTF8SpeedHackChrs[0] and bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
+					if( ( bfr[i]==search[0] && bfr[i+1]==search[1] ) ||
+						 ( bfr[i]==UTF8SpeedHackChrs[0] && bfr[i+1]==UTF8SpeedHackChrs[1] )  // Safe due UTF8??
 						){
 						//Partial match found!
 						//Now generate UTF8 Lower binary from buffer for full comparison.
@@ -1475,7 +1475,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		else{//Old and deadly slow code
 			wxString ucode;
 			wxCharBuffer ubuf;
-			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Backward Search!
+			if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) //Backward Search!
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
@@ -1493,20 +1493,20 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		return -1;
 		}
 
-	else if(options & SEARCH_TEXT and not (options & SEARCH_MATCHCASE)){
+	else if(options & SEARCH_TEXT && !(options & SEARCH_MATCHCASE)){
 		if(1){//Speedy code
 			//Search at no match case ASCII handled here
 			///Search text already lowered at FindText()
 //			char topSearch[search_size];
 //			for( int i = 0 ; i < search_size; i++)
 //				topSearch[i]=tolower(search[i]);
-			if((options & SEARCH_FINDALL) or not ( options & SEARCH_BACKWARDS)) //Normal Operation
+			if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) //Normal Operation
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
+					if(( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] )
+						//&& ( bfr[i+1] == search[1] || bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
-						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
+						for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 							bfr[j]=tolower(bfr[j]);
 						if(! memcmp( bfr+i, search, search_size ))	//if match found
 							return i;
@@ -1514,11 +1514,11 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					}
 			else //Backward Search!
 				for( int i=bfr_size - search_size ; i >= 0 ; i-- ){
-					if(( bfr[i] == search[0] or bfr[i] == UTF8SpeedHackChrs[0] )
-						//and ( bfr[i+1] == search[1] or bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
+					if(( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] )
+						//&& ( bfr[i+1] == search[1] || bfr[i+1] == UTF8SpeedHackChrs[1] ) //You cant know if search_size >= 2
 						){
 						//partial lowering code
-						for( int j = i ; (j < bfr_size) and (j-i<search_size); j++)
+						for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 							bfr[j]=tolower(bfr[j]);
 						if(! memcmp( bfr+i, search, search_size ))	//if match found
 							return i;
@@ -1539,7 +1539,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		}
 
 	//Search as HEX
-	if((options & SEARCH_FINDALL) or not(options & SEARCH_BACKWARDS)){
+	if((options & SEARCH_FINDALL) || !(options & SEARCH_BACKWARDS)){
 		//#pragma omp parallel for schedule(static)
 		for(int i=0 ; i <= bfr_size - search_size ; i++ )
 			if( bfr[i] == search[0] )
@@ -1570,7 +1570,7 @@ ReplaceDialog::ReplaceDialog( wxWindow* parent, FAL *find_file, wxString title )
 	}
 
 int ReplaceDialog::OnReplace( bool internal ){
-	if( not parent->select->GetState() ) {
+	if( !parent->select->GetState() ) {
 		if( OnFind( internal ) == false )
 			return 0;
 		else
@@ -1597,7 +1597,7 @@ int ReplaceDialog::OnReplace( bool internal ){
 			//Hex Validation and Format
 			wxString hexval = m_comboBoxReplace->GetValue();
 
-			if( not HexVerifyAndPrepare( hexval, _("Replace"), this ) )
+			if( !HexVerifyAndPrepare( hexval, _("Replace"), this ) )
                 return 0;
 
 			m_comboBoxReplace->SetValue(hexval.Upper());
@@ -1635,7 +1635,7 @@ void ReplaceDialog::OnReplaceAll( void ){
 		else{ //hex search
 			//Hex Validation and Format
 			wxString hexval = m_comboBoxReplace->GetValue();
-			if(not HexVerifyAndPrepare( hexval, _("Replace"), this ) )
+			if(!HexVerifyAndPrepare( hexval, _("Replace"), this ) )
                 return;
 			m_comboBoxReplace->SetValue(hexval.Upper());
 			PrepareComboBox( true );
@@ -1744,7 +1744,7 @@ void CopyAsDialog::PrepareOptions( int SelectedFunction ){
 	chcOption->SetSelection( option );
 
 	//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
-	chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
+	chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 && chcOption->GetSelection() > 0 );
 
 	wxYield();
 	this->GetSizer()->Fit(this);
@@ -1776,7 +1776,7 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 		wxConfigBase::Get()->Write( _T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"), chcCopyAs->GetSelection()), chcOption->GetSelection() );
 
 		//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
-		chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 and chcOption->GetSelection() > 0 );
+		chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 && chcOption->GetSelection() > 0 );
 		}
 	else if( id == chkBigEndian->GetId() ){
 		wxConfigBase::Get()->Write( _T("CopyAsBigEndian"), chkBigEndian->GetValue() );
@@ -1836,9 +1836,9 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 		cb += startup+wxT("TAG List:")+ending;
 		for( unsigned i =0 ; i < MainTagArray->Count() ; i++ ){
 			TagElement *tag = MainTagArray->Item(i);
-			if(( tag->start <  select->GetStart() and tag->end   >= select->GetStart() ) or
-				( tag->start >= select->GetStart() and tag->start <= select->GetEnd() ) or
-				( tag->end   >= select->GetStart() and tag->end   <= select->GetEnd() ) ){
+			if(( tag->start <  select->GetStart() && tag->end   >= select->GetStart() ) ||
+				( tag->start >= select->GetStart() && tag->start <= select->GetEnd() ) ||
+				( tag->end   >= select->GetStart() && tag->end   <= select->GetEnd() ) ){
 
 				cb += startup+wxT("<span style=\"background-color:") + tag->SoftColour( tag->NoteClrData.GetColour() ).GetAsString(wxC2S_HTML_SYNTAX) +
 						wxT(";color:") + tag->FontClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX) +  wxT(";\">") + tag->tag +wxT("</span>")+ending;
@@ -1891,7 +1891,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 					cb+= x3Blank; //fill with zero to make text area at proper location
 					}
 				//This avoid to paint text section.
-				if(last_color_hex.Len() and i==BytePerLine-1)
+				if(last_color_hex.Len() && i==BytePerLine-1)
 					cb += wxT("</span>");
 				}
 		//cb += wxT("  "); //Why only 2 ? Because we got extra 1 space from Hex
@@ -1936,7 +1936,7 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 //						cb+= wxString::FromAscii( '.' );
 					cb += wxString::From8BitData( &buff[ current_offset + i], 1 );
 					}
-				if(last_color_text.Len() and i==BytePerLine-1)
+				if(last_color_text.Len() && i==BytePerLine-1)
 					cb += wxT("</span>");
 				}
 			}
@@ -1975,7 +1975,7 @@ void CopyAsDialog::Copy( void ){
 
 			for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset ++){
 				cb+= wxString::Format( HexFormat, (unsigned char)buff[ current_offset ] );
-				if( quad and ((current_offset+1)%2)==0)
+				if( quad && ((current_offset+1)%2)==0)
 					cb += wxT(" ");
 				if(( (current_offset+1) % BytePerLine)==0 )
 					cb += wxNewline;
@@ -2030,14 +2030,14 @@ void CopyAsDialog::Copy( void ){
 				}
 
 			cb+=wxString::Format( wxT(" hexData[0x%x] = {" wxNewline "  "), count );
-			bool bigEndianSwapReq = chkBigEndian->GetValue() and chcOption->GetSelection();//No big endian for 8 bit
+			bool bigEndianSwapReq = chkBigEndian->GetValue() && chcOption->GetSelection();//No big endian for 8 bit
 			int b;
 			int limit=(bigEndianSwapReq ? -1 : HexSize);
 			int incr = (bigEndianSwapReq ? -1 : +1);
 			for(unsigned current_offset = 0; current_offset < count ; current_offset ++){
 				b = (bigEndianSwapReq ? HexSize-1 : 0);
 				cb+= wxT("0x");
-				for(; b not_eq limit ; b+=incr)
+				for(; b != limit ; b+=incr)
 					cb+= wxString::Format( wxT("%02X"), reinterpret_cast<unsigned char*>( buff.GetData() )[current_offset*HexSize+b]);
 				cb+= wxT(", ");
 //				switch( HexSize ){
@@ -2046,7 +2046,7 @@ void CopyAsDialog::Copy( void ){
 //					case 4: cb+= wxString::Format( wxT("0x%08X, "), *reinterpret_cast<unsigned int*>(	buff.GetData()+current_offset*HexSize )); break;
 //					case 8: cb+= wxString::Format( wxT("0x%016" wxLongLongFmtSpec "X, "), *reinterpret_cast<uint64_t*>( buff.GetData()+current_offset*HexSize )); break;
 //					}
-				if(( (current_offset+1) % (BytePerLine/HexSize)==0 ) and current_offset not_eq count)
+				if(( (current_offset+1) % (BytePerLine/HexSize)==0 ) && current_offset != count)
 						cb += wxT("" wxNewline "  ");
 				}
 			cb=cb.BeforeLast(',')+wxT(" }" wxNewline);
@@ -2064,7 +2064,7 @@ void CopyAsDialog::Copy( void ){
 				case 8: HexFormat += wxT("" wxNewline "dq "); break;
 				}
 
-			bool bigEndianSwapReq = chkBigEndian->GetValue() and chcOption->GetSelection();//No big endian for 8 bit
+			bool bigEndianSwapReq = chkBigEndian->GetValue() && chcOption->GetSelection();//No big endian for 8 bit
 			int b;
 			int limit=(bigEndianSwapReq ? -1 : HexSize);
 			int incr = (bigEndianSwapReq ? -1 : +1);
@@ -2073,7 +2073,7 @@ void CopyAsDialog::Copy( void ){
 					cb += HexFormat;
 				b = (bigEndianSwapReq ? HexSize-1 : 0);
 				cb+= wxT("0");
-				for(; b not_eq limit ; b+=incr)
+				for(; b != limit ; b+=incr)
 					cb+= wxString::Format( wxT("%02X"), reinterpret_cast<unsigned char*>( buff.GetData() )[current_offset*HexSize+b]);
 				cb+= wxT("h ");
 //				switch( HexSize ){
@@ -2135,7 +2135,7 @@ CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 
 	checkSaveResults->SetValue( options & OPT_CMP_SAVE );
 	filePickSave->Enable( options & OPT_CMP_SAVE );
 	m_radioDifferent->SetValue( options & OPT_CMP_SEARCH_DIFF );
-	m_radioSame->SetValue( not (options & OPT_CMP_SEARCH_DIFF) );
+	m_radioSame->SetValue( !(options & OPT_CMP_SEARCH_DIFF) );
 
 	int tmp;
 	wxConfigBase::Get()->Read( _T("CompareOptionStopAfter"), &tmp );
@@ -2151,11 +2151,11 @@ CompareDialog::~CompareDialog(void){
 	}
 
 bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff, int StopAfterNMatch, wxFileName flsave ){
-	if(not fl1.IsFileReadable()){
+	if(!fl1.IsFileReadable()){
 		wxMessageBox( _("File #1 is not readable."), _("Error") );
 		return false;
 		}
-	if(not fl2.IsFileReadable() ){
+	if(!fl2.IsFileReadable() ){
 		wxMessageBox( _("File #2 is not readable."), _("Error") );
 		return false;
 		}
@@ -2163,25 +2163,25 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	wxConfigBase::Get()->Write( _T("CompareFile1"), fl1.GetFullPath() );
 	wxConfigBase::Get()->Write( _T("CompareFile2"), fl2.GetFullPath() );
    wxConfigBase::Get()->Flush();
-//	if( flsave not_eq wxEmptyString ){
-//		if(not flsave.IsFileWritable() )
+//	if( flsave != wxEmptyString ){
+//		if(!flsave.IsFileWritable() )
 //			wxMessageBox( _("Error, Save File is not writeable.") );
 //			return false;
 //		}
 
 	wxFFile f1,f2,fs;
 // TODO (death#1#): Why we dont use FAL at ALL?
-	if( not f1.Open( fl1.GetFullPath(), wxT("rb") ) ){
+	if( !f1.Open( fl1.GetFullPath(), wxT("rb") ) ){
 		wxMessageBox( _("Error, File #1 cannot open." ) );
 		return false;
 		}
-	if( not f2.Open( fl2.GetFullPath(), wxT("rb") ) ){
+	if( !f2.Open( fl2.GetFullPath(), wxT("rb") ) ){
 		wxMessageBox( _("Error, File #2 cannot open." ) );
 		return false;
 		}
 
-	if( flsave not_eq wxEmptyString )
-		if( not fs.Open( flsave.GetFullPath(), wxT("wb") ) ){
+	if( flsave != wxEmptyString )
+		if( !fs.Open( flsave.GetFullPath(), wxT("wb") ) ){
 			wxMessageBox( _("Error, Save File cannot open." ) );
 			return false;
 			}
@@ -2225,8 +2225,8 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		std::cout << "StopAfterNMatch:" << StopAfterNMatch << std::endl;
 //#endif
 
-//	for( uint64_t mb = 0 ; not (f1.Eof() or f2.Eof() or BreakDoubleFor) ; mb+=rdBlockSz){
-	for( uint64_t mb = 0 ; mb < wxMin(f1.Length(),f2.Length()) and not BreakDoubleFor ; mb+=rdBlockSz){
+//	for( uint64_t mb = 0 ; !(f1.Eof() || f2.Eof() || BreakDoubleFor) ; mb+=rdBlockSz){
+	for( uint64_t mb = 0 ; mb < wxMin(f1.Length(),f2.Length()) && !BreakDoubleFor ; mb+=rdBlockSz){
 		if(rd1_prefetch==0){
 //			buffer1.UngetWriteBuf( f1.Read(buffer1.GetWriteBuf( rdBlockSz ),rdBlockSz) );
 //			buffer2.UngetWriteBuf( f2.Read(buffer2.GetWriteBuf( rdBlockSz ),rdBlockSz) );
@@ -2267,8 +2267,8 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				bfr_int1 = reinterpret_cast<int*>(buffer1);
 				bfr_int2 = reinterpret_cast<int*>(buffer2);
 
-//				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) and not BreakDoubleFor; i ++ ){
-				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) and not BreakDoubleFor; ){
+//				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) && !BreakDoubleFor; i ++ ){
+				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) && !BreakDoubleFor; ){
 					if(diffHit >= 500000){
 						show_limit_message=true;
 						BreakDoubleFor = true;
@@ -2279,22 +2279,22 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 					//Here we made the comparison on INTEGER for speedup
 					if( bfr_int1[i/sizeof(int)]==bfr_int2[i/sizeof(int)]  ){
 						//bytes are eq, goto check next integer
-						if( not diff ){
+						if( !diff ){
 							i+=sizeof(int);
 							continue;
 							}
 						}
 
 					//If integer comparison is failed, here we made the comparison in byte
-					if((buffer1[i] not_eq buffer2[i]) == SearchForDiff){
+					if((buffer1[i] != buffer2[i]) == SearchForDiff){
 						//Different bytes found.
-						if(not diff){//Set difference start
+						if(!diff){//Set difference start
 #ifdef _DEBUG_
 							std::cout << "Diff Start " << mb+i << " to " ;
 #endif
 							diff=true;
-							if( ( (mb+i)-diffBuff[diffHit-1] ) <= compare_range and
-								compare_range > 0 and diffHit>1){
+							if( ( (mb+i)-diffBuff[diffHit-1] ) <= compare_range &&
+								compare_range > 0 && diffHit>1){
 								diffHit--; //re-push old diff ending to stack
 								//StopAfterNMatch++;//and count 2 difference as 1
 #ifdef _DEBUG_
@@ -2308,7 +2308,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 						//this adds latest diff stream to array if one file ends
 						if( i+1 == wxMin( rd1, rd2) ){
 							//#pragma omp taskwait
-							if(f1.Eof() or f2.Eof() ){
+							if(f1.Eof() || f2.Eof() ){
 								//avoid false file ends at using prefetches!
 								if( wxMin(rd1_prefetch,rd2_prefetch) <= 0 )
 									diffBuff[diffHit++]=mb+i;
@@ -2355,7 +2355,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				read_speed=0;
 				}
 
-		if( not pdlg.Update( mb/drange, emsg, &skip ) ){
+		if( !pdlg.Update( mb/drange, emsg, &skip ) ){
 			f1.Close();
 			f2.Close();
 			return false;
@@ -2372,7 +2372,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 	pdlg.Show( false );
 
-	if( flsave not_eq wxEmptyString ){
+	if( flsave != wxEmptyString ){
 		wxString ln = _("File #1 : ") + fl1.GetFullPath() + wxT("\n")+_("File #2 : ") + fl2.GetFullPath() + wxT("\n\n");
 		fs.Write( ln );
 		wxString line;
@@ -2381,7 +2381,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 			fs.Write( line );
 			}
 
-		if( f1.Length() not_eq f2.Length() ){
+		if( f1.Length() != f2.Length() ){
 			if( f1.Length() > f2.Length() )
 				line =  wxString::Format( "\nFile #2 ends at offset %" wxLongLongFmtSpec "u. File #1 has extra %" wxLongLongFmtSpec "u bytes.\n",f2.Length(), f1.Length() - f2.Length() );
 
@@ -2405,14 +2405,14 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		hexeditor1->ConnectScroll( hexeditor2 );
 		}
 
-	if(hexeditor1 != NULL and hexeditor2 != NULL){
+	if(hexeditor1 != NULL && hexeditor2 != NULL){
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
 			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
 			hexeditor1->CompareArray.Add(mytag);
 			mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
 			hexeditor2->CompareArray.Add(mytag);
 			}
-		if( file1size not_eq file2size ){
+		if( file1size != file2size ){
 			if( file1size > file2size ){
 				TagElement *mytag=new TagElement(file2size, file1size,_("This part doesn't exist at compared file"),*wxBLACK, *wxCYAN );
 				hexeditor1->CompareArray.Add(mytag);
@@ -2437,7 +2437,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	}
 
 void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ){
-	if( filePick1->GetPath() not_eq wxEmptyString and filePick2->GetPath() not_eq wxEmptyString)
+	if( filePick1->GetPath() != wxEmptyString && filePick2->GetPath() != wxEmptyString)
 		btnCompare->Enable(true);
 	else
 		btnCompare->Enable(false);
@@ -2445,7 +2445,7 @@ void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ){
 
 void CompareDialog::EventHandler2( wxDropFilesEvent& event ){
 	wxBell();
-	if( filePick1->GetPath() not_eq wxEmptyString and filePick2->GetPath() not_eq wxEmptyString)
+	if( filePick1->GetPath() != wxEmptyString && filePick2->GetPath() != wxEmptyString)
 		btnCompare->Enable(true);
 	else
 		btnCompare->Enable(false);
@@ -2459,8 +2459,8 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 	if(event.GetId() == wxID_CANCEL)
 		Destroy();
 	else if(event.GetId() == btnCompare->GetId()){
-		if( not filePick1->GetPath().IsEmpty() and not filePick2->GetPath().IsEmpty()){
-			if( checkSaveResults->GetValue() and filePickSave->GetPath().IsEmpty() ){
+		if( !filePick1->GetPath().IsEmpty() && !filePick2->GetPath().IsEmpty()){
+			if( checkSaveResults->GetValue() && filePickSave->GetPath().IsEmpty() ){
 				wxMessageBox( _("Error, Save File is not selected.") );
 				return;
 				}
@@ -2505,10 +2505,10 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 
 ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
-	bool active_hex = parent->GetActiveHexEditor() not_eq NULL;
+	bool active_hex = parent->GetActiveHexEditor() != NULL;
 	chkFile->Enable(active_hex);
 	chkFile->SetValue(active_hex);
-	filePick->Enable(not active_hex);
+	filePick->Enable(!active_hex);
 	btnCalculate->Enable( active_hex );
 
 	int options;
@@ -2597,7 +2597,7 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 		if( chkFile->GetValue() )
 			F=parent->GetActiveHexEditor()->myfile;
 
-		else if( filePick->GetPath() not_eq wxEmptyString ){
+		else if( filePick->GetPath() != wxEmptyString ){
 			wxFileName fl( filePick->GetPath() );
 			F= new FAL( fl );
 			}
@@ -2608,12 +2608,12 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 			}
 
 		msg = CalculateChecksum( *F, options );
-		if(msg not_eq wxEmptyString)
+		if(msg != wxEmptyString)
 			msg = _("File: ") + F->GetFileName().GetFullPath() + wxNewline
-								+(chkFile->GetValue() and F->IsChanged() ? _("Notice: Checksum includes non-saved changes.") + wxString(wxNewline) + wxNewline : wxNewline )
+								+(chkFile->GetValue() && F->IsChanged() ? _("Notice: Checksum includes non-saved changes.") + wxString(wxNewline) + wxNewline : wxNewline )
 								+ msg;
 
-		if(not chkFile->GetValue() and (F not_eq NULL)){
+		if(!chkFile->GetValue() && (F != NULL)){
 			F->Close();
 			delete F;
 			}
@@ -2633,10 +2633,10 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 		}
 
 	else if(event.GetId() == chkFile->GetId() ){
-		filePick->Enable( not event.IsChecked() );
+		filePick->Enable( !event.IsChecked() );
 		}
 
-	if( options == 0 or not ((filePick->GetPath() not_eq wxEmptyString) or chkFile->GetValue()) )
+	if( options == 0 || !((filePick->GetPath() != wxEmptyString) || chkFile->GetValue()) )
 		btnCalculate->Enable(false);
 	else
 		btnCalculate->Enable(true);
@@ -2715,7 +2715,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options){
 			emsg = msg + wxT("\n") + _("Hash Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
-		if(not mypd.Update((readfrom*1000)/range, emsg )){
+		if(!mypd.Update((readfrom*1000)/range, emsg )){
 			delete [] buffer;
 			delete [] buffer_prefetch;
 			return wxEmptyString;
@@ -2770,7 +2770,7 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 			}
 		if( radioHex->GetValue() ){
 			wxString hexval = XORtext->GetValue();
-			if(not HexVerifyAndPrepare( hexval, wxT("XOR"), this ) )
+			if(!HexVerifyAndPrepare( hexval, wxT("XOR"), this ) )
 				return;
 			wxMemoryBuffer z = wxHexCtrl::HexToBin( hexval );
 			XORKey->AppendData( z.GetData(), z.GetDataLen() );
@@ -2796,7 +2796,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 
 	if ( ! pConfig->Read(_T("Language")).IsEmpty() ){
 		wxString lang = pConfig->Read(_T("Language"), wxEmptyString) ;
-		if ( not lang.IsEmpty() )
+		if ( !lang.IsEmpty() )
 			for( unsigned i = 0 ; i < LangNames.Count() ; i++)
 				if( lang == LangNames.Item(i)){
 					chcLang->SetSelection(i);
@@ -2866,19 +2866,19 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 
 	ExperimentalEncodingsList.Clear();
 	for(unsigned i=0; i< AvailableEncodings.Count(); i++){
-		if(( AvailableEncodings.Item(i).Find( wxT("Industrial Standard") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("Arabic") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("Hebrew") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("ISCII") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("TSCII") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("ANSEL") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("AtariST") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("EUC") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("Big5") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("JIS") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("GBK") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("Thai") ) not_eq wxNOT_FOUND ) or
-			( AvailableEncodings.Item(i).Find( wxT("Iran") ) not_eq wxNOT_FOUND )
+		if(( AvailableEncodings.Item(i).Find( wxT("Industrial Standard") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("Arabic") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("Hebrew") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("ISCII") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("TSCII") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("ANSEL") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("AtariST") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("EUC") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("Big5") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("JIS") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("GBK") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("Thai") ) != wxNOT_FOUND ) ||
+			( AvailableEncodings.Item(i).Find( wxT("Iran") ) != wxNOT_FOUND )
 			)
 			ExperimentalEncodingsList.Add( AvailableEncodings.Item(i) );
 			}
@@ -2891,7 +2891,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString, wxT("OEM - IBM PC/DOS CP437 - MS-DOS Latin US" ));
 	if(TempString==wxT("Extended Binary Coded Decimal Interchange Code"))
 		TempString=wxT("EBCDIC");
-	if( not chcCharacterEncoding->SetStringSelection( TempString ) )
+	if( !chcCharacterEncoding->SetStringSelection( TempString ) )
 		chcCharacterEncoding->SetSelection( 0 );
 	}
 
@@ -3036,7 +3036,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 					wxString family=families.Item(f);
 					if(family==wxT("Extended Binary Coded Decimal Interchange Code"))
 						family=wxT("EBCDIC");
-					if( AvailableEncodings.Item(i).Find( family ) not_eq wxNOT_FOUND )
+					if( AvailableEncodings.Item(i).Find( family ) != wxNOT_FOUND )
 						Encodings.Remove( AvailableEncodings.Item(i) );
 					}
 			}
@@ -3045,7 +3045,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 				wxString family=event.GetString();
 				if(family==wxT("Extended Binary Coded Decimal Interchange Code"))
 					family=wxT("EBCDIC");
-				if(( AvailableEncodings.Item(i).Find( family ) not_eq wxNOT_FOUND ) and
+				if(( AvailableEncodings.Item(i).Find( family ) != wxNOT_FOUND ) &&
 					(	ExperimentalEncodingsList.Index( AvailableEncodings.Item(i) )==wxNOT_FOUND) )
 					Encodings.Add( AvailableEncodings.Item(i) );
 				}
@@ -3055,7 +3055,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		chcCharacterEncoding->Append( Encodings );
 		wxString Selection;
 		wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Selection );
-		if( not chcCharacterEncoding->SetStringSelection( Selection ) )
+		if( !chcCharacterEncoding->SetStringSelection( Selection ) )
 			chcCharacterEncoding->SetSelection( 0 );
 		}
 /*
@@ -3189,7 +3189,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 			read_speed=0;
 			}
 
-		if(not mypd.Update((readfrom*1000)/range, emsg )){
+		if(!mypd.Update((readfrom*1000)/range, emsg )){
 			src_fl.Close();
 			dst_fl.Close();
 			wxRemoveFile(dst.GetFullPath());
@@ -3280,7 +3280,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 			emsg = msg + wxT("\n") + _("Restore Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
-		if(not mypd.Update((readfrom*1000)/range, emsg ))
+		if(!mypd.Update((readfrom*1000)/range, emsg ))
 			return;
 		}
 	src_fl.Close();
@@ -3343,7 +3343,7 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 			emsg = msg + wxT("\n") + _("Erase Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
 			read_speed=0;
 			}
-		if(not mypd.Update((readfrom*1000)/range, emsg ))
+		if(!mypd.Update((readfrom*1000)/range, emsg ))
 			return;
 		}
 

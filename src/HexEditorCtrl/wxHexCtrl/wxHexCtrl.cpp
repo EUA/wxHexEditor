@@ -269,7 +269,7 @@ int wxHexCtrl::xCountDenied( int x ){		//Counts denied character locations (spac
 	}
 
 int wxHexCtrl::CharacterPerLine( bool NoCache ){	//Without spaces
-	if( not NoCache )
+	if( !NoCache )
 		return CPL;
 	int avoid=0;
 	for ( int x = 0 ; x < m_Window.x ; x++)
@@ -416,9 +416,9 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 //	wxMemoryDC *dcTemp = new wxMemoryDC();
 //	dcTemp->SelectObject(*bmp);
 //	return dcTemp;
-	if(internalBufferDC not_eq NULL)
+	if(internalBufferDC != NULL)
 		delete internalBufferDC;
-	if(internalBufferBMP not_eq NULL)
+	if(internalBufferBMP != NULL)
 		delete internalBufferBMP;
 
 	internalBufferBMP=new wxBitmap(this->GetSize().GetWidth(), this->GetSize().GetHeight());
@@ -478,7 +478,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	//		bux[x]=CharAt(z);//++//
 			chr = CharAt(textLenghtLimit++);
 
-			if( not (chrP++ % 2) )
+			if( !(chrP++ % 2) )
 			   chrC = (atoh( chr ) << 4) | atoh( CharAt(textLenghtLimit) );
 
 			unsigned char R=(chrC>>5)*0xFF/7;
@@ -545,7 +545,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 }
 
 inline void wxHexCtrl::DrawCursorShadow(wxDC* dcTemp){
-	if( m_Window.x <= 0 or
+	if( m_Window.x <= 0 ||
 		FindFocus()==this)
 		return;
 
@@ -571,7 +571,7 @@ void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset 
 
 		dcTemp->SetPen( *wxRED_PEN );
 		dcTemp->DrawLine( 0,y1,x1,y1);
-		if( z.x not_eq 0)
+		if( z.x != 0)
 			dcTemp->DrawLine( x1,y1,x1,y2);
 		dcTemp->DrawLine( x1,y2,x2,y2);
 		}
@@ -879,9 +879,9 @@ char wxHexCtrl::ReadByte( int byte_location ){
 	}
 
 int atoh(const char hex){
-	return ( hex >= '0' and hex <= '9' ) ? hex -'0' :
-			( hex >= 'a' and hex <= 'f' ) ? hex -'a' + 10:
-			( hex >= 'A' and hex <= 'F' ) ? hex -'A' + 10:
+	return ( hex >= '0' && hex <= '9' ) ? hex -'0' :
+			( hex >= 'a' && hex <= 'f' ) ? hex -'a' + 10:
+			( hex >= 'A' && hex <= 'F' ) ? hex -'A' + 10:
 			-1;
 			}
 
@@ -890,17 +890,17 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 	memodata.SetBufSize(HexValue.Length()/3+1);
 	char bfrL, bfrH;
 	for(unsigned int i=0 ; i < HexValue.Length() ; i+=2){
-		if( HexValue[i] == ' ' or HexValue[i] == ',' ){	//Removes space and period chars.
+		if( HexValue[i] == ' ' || HexValue[i] == ',' ){	//Removes space and period chars.
 			i--; //Means +1 after loop increament of +2. Don't put i++ due HexValue.Length() check
 			continue;
 			}
-		else if ((HexValue[i] == '0' and ( HexValue[i+1] == 'x' or HexValue[i+1] == 'X'))){ //Removes "0x" and "0X" strings.
+		else if ((HexValue[i] == '0' && ( HexValue[i+1] == 'x' || HexValue[i+1] == 'X'))){ //Removes "0x" and "0X" strings.
 			continue; //Means +2 by loop increament.
 			}
 		bfrH = atoh( HexValue[i] );
 		bfrL = atoh( HexValue[i+1] );
 		//Check for if it's Hexadecimal
-		if( not (bfrH < 16 and bfrL < 16 and bfrH >= 0 and bfrL >= 0 )){
+		if( !(bfrH < 16 && bfrL < 16 && bfrH >= 0 && bfrL >= 0 )){
 				wxBell();
 				return memodata;
 			}
@@ -972,7 +972,7 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 		for( unsigned i = 0 ; i < TagArray.Count() ; i++ ){
 			TAX = TagArray.Item(i);
 			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) ){	//end not included!
-				if( not (*TagMutex) and wxTheApp->IsActive() ) {
+				if( !(*TagMutex) && wxTheApp->IsActive() ) {
 					*TagMutex=true;
 					TAX->Show( this->ClientToScreen(event.GetPosition() ) , this );
 					}
@@ -1158,11 +1158,11 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch = str[i];
 			if(ch < 0x20) ret+='.';									// Control characters
-			else if( ch >= 0x20 and ch <= 0x7E ) ret+=ch;	// ASCII compatible part
+			else if( ch >= 0x20 && ch <= 0x7E ) ret+=ch;	// ASCII compatible part
 			else if( ch == 0x7F) ret+='.';						// Control character
-			else if( ch >= 0x80 and ch < 0xC0 ) ret+='.';	// 6 Bit Extension Region
-			else if( ch >= 0xC0 and ch < 0xC2 ) ret+='.';	// Invalid UTF8 2 byte codes
-			else if( ch >= 0xC2 and ch < 0xE0 ) {				// 2 Byte UTF Start Codes
+			else if( ch >= 0x80 && ch < 0xC0 ) ret+='.';	// 6 Bit Extension Region
+			else if( ch >= 0xC0 && ch < 0xC2 ) ret+='.';	// Invalid UTF8 2 byte codes
+			else if( ch >= 0xC2 && ch < 0xE0 ) {				// 2 Byte UTF Start Codes
 				z=wxString::FromUTF8( str+i, 2);
 				//z=wxString( str+i, wxCSConv(wxFONTENCODING_UTF8), 2);
 				if( z.Len() > 0){
@@ -1173,7 +1173,7 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				else
 					ret+='.';
 				}
-			else if( ch >= 0xE0 and ch < 0xF0 ){				// 3 Byte UTF Start Codes
+			else if( ch >= 0xE0 && ch < 0xF0 ){				// 3 Byte UTF Start Codes
 				z=wxString::FromUTF8( str+i, 3);
 				if( z.Len() > 0){
 					ret+=z;
@@ -1183,7 +1183,7 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				else
 					ret+='.';
 				}
-			else if( ch >= 0xF0 and ch < 0xF5 ){				// 4 Byte UTF Start Codes
+			else if( ch >= 0xF0 && ch < 0xF5 ){				// 4 Byte UTF Start Codes
 	//			ret+=wxString(str+i, wxConvUTF8, 4);
 				z=wxString::FromUTF8( str+i, 4);
 				if( z.Len() > 0){
@@ -1194,13 +1194,13 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				else
 					ret+='.';
 				}
-			else if( ch >= 0xF5 and ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
+			else if( ch >= 0xF5 && ch <=0xFF ) ret+='.'; // Invalid UTF8 4 byte codes
 			}
 /*
 	else if(fontenc==wxFONTENCODING_UTF16){
 		for( int i=0 ; i< Len-1 ; i+=2){
 			z=wxString ( str+i, wxCSConv(wxFONTENCODING_UTF16), 2);
-			if(not (str[i]==0 and str[i+1]==0))
+			if(!(str[i]==0 && str[i+1]==0))
 				ret+=z[0];
 			else
 				ret+=wxT(" ");
@@ -1240,15 +1240,15 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch = str[i];
 			if(ch < 0x20) ret+='.';									//Control characters
-			else if( (ch >= 0x20 and ch <= 0x7E) or			//ASCII
-						(ch > 0xA0 and ch < 0xE0 )){				//One-byte JIS X 0208 character
+			else if( (ch >= 0x20 && ch <= 0x7E) ||			//ASCII
+						(ch > 0xA0 && ch < 0xE0 )){				//One-byte JIS X 0208 character
 				ret+=wxString( str+i, SJISConv, 1);
 				//ret+='O';//for debug
 				}
-			else if(ch < 0x81 or ch >= 0xF0 or ch==0xA0) ret+='.';	// Void Characters
+			else if(ch < 0x81 || ch >= 0xF0 || ch==0xA0) ret+='.';	// Void Characters
 			else if(Len>i){ 											//First byte of a double-byte JIS X 0208 character
 				ch = str[i+1];											//Fetching second character.
-				if( ch>=0x40 and ch!=0x7F and ch<=0xFC ){		//Second byte of a double-byte JIS X 0208 character
+				if( ch>=0x40 && ch!=0x7F && ch<=0xFC ){		//Second byte of a double-byte JIS X 0208 character
 					z=wxString( str+i, SJISConv, 2);
 					if(z.Len()>0){
 						ret+=z + wxT(" ");
@@ -1268,10 +1268,10 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 	else if(fontenc==wxFONTENCODING_CP949){//"EUC-KR"
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch = str[i];
-			if(ch>=0x21 and ch<=0x7E)	ret+=wxChar(ch);		//ASCII part
-			else if(ch>=0xA1 and ch<=0xFE and Len>i ){ // KS X 1001 (G1, code set 1) is encoded as two bytes in GR (0xA1-0xFE)
+			if(ch>=0x21 && ch<=0x7E)	ret+=wxChar(ch);		//ASCII part
+			else if(ch>=0xA1 && ch<=0xFE && Len>i ){ // KS X 1001 (G1, code set 1) is encoded as two bytes in GR (0xA1-0xFE)
 				ch=str[i+1];
-				if(ch>=0xA1 and ch<=0xFE){
+				if(ch>=0xA1 && ch<=0xFE){
 					z=wxString( str+i, wxCSConv(wxFONTENCODING_CP949), 2);
 					if(z.Len()>0){
 						ret+=z + wxT(" ");
@@ -1295,13 +1295,13 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 //		Second byte 	0x40 to 0x7e, 0xa1 to 0xfe
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch = str[i];
-			if(ch<0x20 or ch==0x7F or ch==0x80 or ch==0xFF )
+			if(ch<0x20 || ch==0x7F || ch==0x80 || ch==0xFF )
 				ret+='.';
-			else if( (ch >= 0x81 and ch <= 0xFE) or	//1.st byte
-				 (ch >= 0xA1 and ch < 0xF9 ) ){
+			else if( (ch >= 0x81 && ch <= 0xFE) ||	//1.st byte
+				 (ch >= 0xA1 && ch < 0xF9 ) ){
 				ch = str[i+1];
-				if((ch >= 0x40 and ch <= 0x7E) or		//2.nd byte
-					(ch >= 0xA1 and ch <= 0xFE )){
+				if((ch >= 0x40 && ch <= 0x7E) ||		//2.nd byte
+					(ch >= 0xA1 && ch <= 0xFE )){
 					z=wxString(str+i, Big5Conv, 2);
 					if( z.Len() > 0){
 						ret+=z;
@@ -1332,19 +1332,19 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 ///	total: 												23,940 	21,897 	21,886 	21,791 	7,445
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch1 = str[i];
-			if(ch1>=0x21 and ch1<=0x7E)	ret+=wxChar(ch1); 	//ASCII part
-			else if(ch1>=0xA1 and ch1<=0xFE and Len>i ){ 	// KS X 1001 (G1, code set 1) is encoded as two bytes in GR (0xA1-0xFE)
+			if(ch1>=0x21 && ch1<=0x7E)	ret+=wxChar(ch1); 	//ASCII part
+			else if(ch1>=0xA1 && ch1<=0xFE && Len>i ){ 	// KS X 1001 (G1, code set 1) is encoded as two bytes in GR (0xA1-0xFE)
 				unsigned char ch2=str[i+1];
-		//		if(ch>=0x40 and ch<=0xFE){
+		//		if(ch>=0x40 && ch<=0xFE){
 				if(
-					(ch1>=0xA1 and ch1<=0xA9 and ch2>=0xA1 and ch2<=0xFE ) or //GBK/1
-					(ch1>=0xB0 and ch1<=0xF7 and ch2>=0xA1 and ch2<=0xFE ) or //GBK/2
-					(ch1>=0x81 and ch1<=0xA0 and ch2>=0x40 and ch2<=0xFE and ch2!=0x7F) or //GBK/3
-					(ch1>=0xAA and ch1<=0xFE and ch2>=0x40 and ch2<=0xA0 and ch2!=0x7F ) or //GBK/4
-					(ch1>=0xA8 and ch1<=0xA9 and ch2>=0x40 and ch2<=0xA0 and ch2!=0x7F ) or //GBK/5
-					(ch1>=0xAA and ch1<=0xAF and ch2>=0xA1 and ch2<=0xFE) or //user-defined
-					(ch1>=0xF8 and ch1<=0xFE and ch2>=0xA1 and ch2<=0xFE) or //user-defined
-					(ch1>=0xA1 and ch1<=0xA7 and ch2>=0x40 and ch2<=0xA0 and ch2!=0x7F) //user-defined
+					(ch1>=0xA1 && ch1<=0xA9 && ch2>=0xA1 && ch2<=0xFE ) || //GBK/1
+					(ch1>=0xB0 && ch1<=0xF7 && ch2>=0xA1 && ch2<=0xFE ) || //GBK/2
+					(ch1>=0x81 && ch1<=0xA0 && ch2>=0x40 && ch2<=0xFE && ch2!=0x7F) || //GBK/3
+					(ch1>=0xAA && ch1<=0xFE && ch2>=0x40 && ch2<=0xA0 && ch2!=0x7F ) || //GBK/4
+					(ch1>=0xA8 && ch1<=0xA9 && ch2>=0x40 && ch2<=0xA0 && ch2!=0x7F ) || //GBK/5
+					(ch1>=0xAA && ch1<=0xAF && ch2>=0xA1 && ch2<=0xFE) || //user-defined
+					(ch1>=0xF8 && ch1<=0xFE && ch2>=0xA1 && ch2<=0xFE) || //user-defined
+					(ch1>=0xA1 && ch1<=0xA7 && ch2>=0x40 && ch2<=0xA0 && ch2!=0x7F) //user-defined
 					){
 					z=wxString( str+i, wxCSConv(wxFONTENCODING_CP949), 2);
 					if(z.Len()>0){
@@ -1366,7 +1366,7 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 //		for( int i=0 ; i< Len ; i++){
 //			unsigned char ch = str[i];
 //			if(ch < 0x20) ret+='.';									// Control characters
-//			else if( ch >= 0x20 and ch <= 0x7E ) ret+=ch;	// ASCII compatible part
+//			else if( ch >= 0x20 && ch <= 0x7E ) ret+=ch;	// ASCII compatible part
 //			else if(ch < 0x80) ret+='.';							// Void Characters
 //			else { // 0x21 + 0x80
 //				z=wxString( str+i, wxCSConv(wxFONTENCODING_GB2312), 2);
@@ -1391,18 +1391,18 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
     ///A character from JIS-X-0212 (code set 3) is represented by three bytes, the first being 0x8F, the following two in the range 0xA1 – 0xFE.
 		for( int i=0 ; i< Len ; i++){
 			unsigned char ch = str[i];
-			if(ch<0x20 or ch==0x7F )			ret+='.';				//Control chars
-			else if(ch>=0x21 and ch<=0x7E)	ret+=wxChar(ch);		//ASCII part
-			else if(ch==0x8E and Len > i){								//half-width kana first byte
+			if(ch<0x20 || ch==0x7F )			ret+='.';				//Control chars
+			else if(ch>=0x21 && ch<=0x7E)	ret+=wxChar(ch);		//ASCII part
+			else if(ch==0x8E && Len > i){								//half-width kana first byte
 				ch = str[i+1];
-				if(ch>=0xA1 and ch<=0xDF)									//half-width kana second byte
+				if(ch>=0xA1 && ch<=0xDF)									//half-width kana second byte
 					ret+=wxString(str+i++, EUCJPConv, 2) + wxT(" ");
 				else
 					ret+='.';
 				}
-			else if(ch>=0xA1 and ch <=0xFE){		//JIS-X-0208 first byte
+			else if(ch>=0xA1 && ch <=0xFE){		//JIS-X-0208 first byte
 				ch = str[i+1];
-				if(ch>=0xA1 and ch <=0xFE){		//JIS-X-0208 second byte
+				if(ch>=0xA1 && ch <=0xFE){		//JIS-X-0208 second byte
 					z=wxString(str+i, EUCJPConv, 2);
 					if(z.Len()>0){
 						ret+=z + wxT(" ");
@@ -1414,11 +1414,11 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 				else
 					ret+='.';
 				}
-			else if(ch==0x8F and (Len>i+1)){	//JIS-X-0212 first byte
+			else if(ch==0x8F && (Len>i+1)){	//JIS-X-0212 first byte
 				unsigned char ch1=str[i+1];
 				unsigned char ch2=str[i+2];
-				if((ch1>=0xA1 and ch1<=0xFE) and
-					(ch2>=0xA1 and ch2<=0xFE)){	//JIS-X-0212 second byte
+				if((ch1>=0xA1 && ch1<=0xFE) &&
+					(ch2>=0xA1 && ch2<=0xFE)){	//JIS-X-0212 second byte
 					ret+=wxString(str+i, EUCJPConv, 3) + wxT("  ");
 					i+=2;
 					}
@@ -1453,10 +1453,10 @@ inline wxString wxHexTextCtrl::FilterMBBuffer( const char *str, int Len, int fon
 
 				if(i==0x82)	ret+=CodepageTable.Mid(i,4);
 				else if(i==0x87)					ret+=CodepageTable.Mid(i+p,3);
-				else if(i>=0x88 and i<=0x8B)	ret+=CodepageTable.Mid((i-0x88)*2+p,2);
+				else if(i>=0x88 && i<=0x8B)	ret+=CodepageTable.Mid((i-0x88)*2+p,2);
 				else if(i==0x8C)					ret+=CodepageTable.Mid(i+p,4);
-				else if(i>=0x99 and i<=0x9C)	ret+=CodepageTable.Mid((i-0x99)*2+p,2);
-				else if(i>=0xCA and i<=0xFD)	ret+=CodepageTable.Mid((i-0xCA)*2+p,2);
+				else if(i>=0x99 && i<=0x9C)	ret+=CodepageTable.Mid((i-0x99)*2+p,2);
+				else if(i>=0xCA && i<=0xFD)	ret+=CodepageTable.Mid((i-0xCA)*2+p,2);
 				else ret+=CodepageTable[p];
 				}
 			}
@@ -1630,17 +1630,17 @@ cpformat(a)
 	wxString newCP;
 	FontEnc=wxFONTENCODING_ALTERNATIVE;
 	char bf[256];
-	if(codepage.Find(wxT("ASCII")) not_eq wxNOT_FOUND){
+	if(codepage.Find(wxT("ASCII")) != wxNOT_FOUND){
 		for (unsigned i=0; i<=0xFF ; i++){
-			if(i<0x20 or i>=0x7F)		newCP+='.';		  //Control chars replaced with dot
-			if(i>=0x20 and i<0x7F)		newCP+=wxChar(i);//ASCII region
+			if(i<0x20 || i>=0x7F)		newCP+='.';		  //Control chars replaced with dot
+			if(i>=0x20 && i<0x7F)		newCP+=wxChar(i);//ASCII region
 			}
 		}
 
-	else if(codepage.Find(wxT("ANSEL")) not_eq wxNOT_FOUND){
+	else if(codepage.Find(wxT("ANSEL")) != wxNOT_FOUND){
 		for (unsigned i=0; i<0xA1 ; i++){
-			if(i<0x20 or i>=0x7F)		newCP+='.';		  //Control chars and voids replaced with dot
-			if(i>=0x20 and i<0x7F)		newCP+=wxChar(i);//ASCII region
+			if(i<0x20 || i>=0x7F)		newCP+='.';		  //Control chars and voids replaced with dot
+			if(i>=0x20 && i<0x7F)		newCP+=wxChar(i);//ASCII region
 			}
 		newCP+=wxT(	"\x0141\x00D8\x0110\x00DE\x00C6\x0152\x02B9\x00B7\x266D\x00AE\x00B1\x01A0\x01AF\x02BC."\
 						"\x02BB\x0142\x00F8\x0111\x00FE\x00E6\x0153\x02BA\x0131\x00A3\x00F0.\x01A1\x01B0.."\
@@ -1652,10 +1652,10 @@ cpformat(a)
 		}
 
 	//Indian Script Code for Information Interchange
-	else if(codepage.Find(wxT("ISCII")) not_eq wxNOT_FOUND){
+	else if(codepage.Find(wxT("ISCII")) != wxNOT_FOUND){
 		for (unsigned i=0; i<=0xA1 ; i++)
-			newCP+=wxChar((i<0x20 or i>=0x7F) ? '.' : i);
-		//Unicode eq of 0xD9 is \x25CC or \x00AD
+			newCP+=wxChar((i<0x20 || i>=0x7F) ? '.' : i);
+		//Unicode eq of 0xD9 is \x25CC || \x00AD
 		newCP+=wxT("\x0901\x0902\x0903\x0905\x0906\x0907\x0908\x0909\x090A\x090B"\
 					  "\x090E\x090F\x0910\x090D\x0912\x0913\x0914\x0911\x0915\x0916"\
 					  "\x0917\x0918\x0919\x091A\x091B\x091C\x091D\x091E\x091F\x0920"\
@@ -1668,7 +1668,7 @@ cpformat(a)
 		}
 
 	//Tamil Script Code for Information Interchange
-	else if(codepage.Find(wxT("TSCII")) not_eq wxNOT_FOUND){
+	else if(codepage.Find(wxT("TSCII")) != wxNOT_FOUND){
 		newCP=PrepareCodepageTable(wxT("ASCII")).Mid(0,0x80);
 		///		0x82 4Byte
 		///		0x87 3Byte
@@ -1696,7 +1696,7 @@ cpformat(a)
 						"\x0BB3\x0BCD\x0BB1\x0BCD\x0BA9\x0BCD\x0B87" );
 		}
 
-	else if(codepage.Find(wxT("VSCII")) not_eq wxNOT_FOUND){
+	else if(codepage.Find(wxT("VSCII")) != wxNOT_FOUND){
 		for (unsigned i=0; i<=0x7F ; i++)
 			if( i==0x02) newCP+=wxT("\x1EB2");
 			else if( i==0x05) newCP+=wxT("\x1EB4");
@@ -1704,7 +1704,7 @@ cpformat(a)
 			else if( i==0x14) newCP+=wxT("\x1EF6");
 			else if( i==0x19) newCP+=wxT("\x1EF8");
 			else if( i==0x1E) newCP+=wxT("\x1EF4");
-			else newCP+=wxChar((i<0x20 or i>=0x7F) ? '.' : i);
+			else newCP+=wxChar((i<0x20 || i>=0x7F) ? '.' : i);
 
 		newCP+=wxT(	"\x1EA0\x1EAE\x1EB0\x1EB6\x1EA4\x1EA6\x1EA8\x1EAC\x1EBC\x1EB8"\
 						"\x1EBE\x1EC0\x1EC2\x1EC4\x1EC6\x1ED0\x1ED2\x1ED4\x1ED6\x1ED8"\
@@ -1722,7 +1722,7 @@ cpformat(a)
 		}
 
 	// OEM PC/DOS
-	else if(codepage.Find(wxT("DOS")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("DOS")) != wxNOT_FOUND ){
 		//CP437 Control Symbols
 		newCP=wxT(  "\x20\x263A\x263B\x2665\x2666\x2663\x2660\x2022\x25D8\x25CB\x25D9"\
 						"\x2642\x2640\x266A\x266B\x263C\x25BA\x25C4\x2195\x203C\x00B6\x00A7"\
@@ -1737,8 +1737,8 @@ cpformat(a)
 		for (unsigned i=0x80; i<=0xFF ; i++)
 			bf[i-0x80] =  wxChar(i);
 
-		if((codepage.Find(wxT("CP437")) not_eq wxNOT_FOUND ) or //Extended ASCII region of CP437
-		  (codepage.Find(wxT("OEM")) not_eq wxNOT_FOUND ))
+		if((codepage.Find(wxT("CP437")) != wxNOT_FOUND ) || //Extended ASCII region of CP437
+		  (codepage.Find(wxT("OEM")) != wxNOT_FOUND ))
 //			newCP+=wxString( bf, wxCSConv(wxT("CP437")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xA2\xA3\xA5\x20A7\x0192"\
@@ -1749,7 +1749,7 @@ cpformat(a)
 							"\x03B1\xDF\x0393\x03C0\x03A3\x03C3\xB5\x03C4\x03A6\x0398\x03A9\x03B4\x221E\x03C6\x03B5\x2229"\
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP720")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP720")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP720")), 0x80);
 			newCP+=wxT(	"..\xE9\xE2.\xE0.\xE7\xEA\xEB\xE8\xEF\xEE..."\
 							".\x0651\x0652\xF4\xA4\x0640\xFB\xF9\x0621\x0622\x0623\x0624\xA3\x0625\x0626\x0627"\
@@ -1760,7 +1760,7 @@ cpformat(a)
 							"\x0636\x0637\x0638\x0639\x063A\x0641\xB5\x0642\x0643\x0644\x0645\x0646\x0647\x0648\x0649\x064A"\
 							"\x2261\x064B\x064C\x064D\x064E\x064F\x0650\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP737")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP737")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP737")), 0x80);
 			newCP+=wxT( "\x0391\x0392\x0393\x0394\x0395\x0396\x0397\x0398\x0399\x039A\x039B\x039C\x039D\x039E\x039F\x03A0"\
 							"\x03A1\x03A3\x03A4\x03A5\x03A6\x03A7\x03A8\x03A9\x03B1\x03B2\x03B3\x03B4\x03B5\x03B6\x03B7\x03B8"\
@@ -1771,7 +1771,7 @@ cpformat(a)
 							"\x03C9\x03AC\x03AD\x03AE\x03CA\x03AF\x03CC\x03CD\x03CB\x03CE\x0386\x0388\x0389\x038A\x038C\x038E"\
 							"\x038F\xB1\x2265\x2264\x03AA\x03AB\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP775")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP775")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP775")), 0x80);
 			newCP+=wxT( "\x0106\xFC\xE9\x0101\xE4\x0123\xE5\x0107\x0142\x0113\x0156\x0157\x012B\x0179\xC4\xC5"\
 							"\xC9\xE6\xC6\x014D\xF6\x0122\xA2\x015A\x015B\xD6\xDC\xF8\xA3\xD8\xD7\xA4"\
@@ -1782,7 +1782,7 @@ cpformat(a)
 							"\xD3\xDF\x014C\x0143\xF5\xD5\xB5\x0144\x0136\x0137\x013B\x013C\x0146\x0112\x0145\x2019"\
 							".\xB1\x201C\xBE\xB6\xA7\xF7\x201E\xB0\x2219\xB7\xB9\xB3\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP850")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP850")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP850")), 0x80);
 			newCP+=wxT( "\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xF8\xA3\xD8\xD7\x0192"\
@@ -1793,7 +1793,7 @@ cpformat(a)
 							"\xD3\xDF\xD4\xD2\xF5\xD5\xB5\xFE\xDE\xDA\xDB\xD9\xFD\xDD\xAF\xB4"\
 							".\xB1\x2017\xBE\xB6\xA7\xF7\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0");
 
-		else if(codepage.Find(wxT("CP852")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP852")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP852")), 0x80);
 			newCP+=wxT( "\xC7\xFC\xE9\xE2\xE4\x016F\x0107\xE7\x0142\xEB\x0150\x0151\xEE\x0179\xC4\x0106"\
 							"\xC9\x0139\x013A\xF4\xF6\x013D\x013E\x015A\x015B\xD6\xDC\x0164\x0165\x0141\xD7\x010D"\
@@ -1804,7 +1804,7 @@ cpformat(a)
 							"\xD3\xDF\xD4\x0143\x0144\x0148\x0160\x0161\x0154\xDA\x0155\x0170\xFD\xDD\x0163\xB4"\
 							".\x02DD\x02DB\x02C7\x02D8\xA7\xF7\xB8\xB0\xA8\x02D9\x0171\x0158\x0159\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP855")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP855")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP855")), 0x80);
 			newCP+=wxT(	"\x0452\x0402\x0453\x0403\x0451\x0401\x0454\x0404\x0455\x0405\x0456\x0406\x0457\x0407\x0458\x0408"\
 							"\x0459\x0409\x045A\x040A\x045B\x040B\x045C\x040C\x045E\x040E\x045F\x040F\x044E\x042E\x044A\x042A"\
@@ -1815,7 +1815,7 @@ cpformat(a)
 							"\x042F\x0440\x0420\x0441\x0421\x0442\x0422\x0443\x0423\x0436\x0416\x0432\x0412\x044C\x042C\x2116"\
 							".\x044B\x042B\x0437\x0417\x0448\x0428\x044D\x042D\x0449\x0429\x0447\x0427\xA7\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP856")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP856")) != wxNOT_FOUND )
 			//newCP+=wxString( bf, wxCSConv(wxT("CP856")), 0x80);
 			newCP+=wxT( "\x05D0\x05D1\x05D2\x05D3\x05D4\x05D5\x05D6\x05D7\x05D8\x05D9\x05DA\x05DB\x05DC\x05DD\x05DE\x05DF"\
 							"\x05E0\x05E1\x05E2\x05E3\x05E4\x05E5\x05E6\x05E7\x05E8\x05E9\x05EA.\xA3.\xD7."\
@@ -1826,7 +1826,7 @@ cpformat(a)
 							"......\xB5.......\xAF\xB4"\
 							".\xB1\x2017\xBE\xB6\xA7\xF7\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP857")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("CP857")) != wxNOT_FOUND ){
 //			bf[0xD5-0x80]=bf[0xE7-0x80]=bf[0xF2-0x80]='.';
 //			newCP+=wxString( bf, wxCSConv(wxT("CP857")), 0x80);
 //			newCP[0xD5]=wxChar(0x20AC); //Euro Sign
@@ -1841,12 +1841,12 @@ cpformat(a)
 							".\xB1.\xBE\xB6\xA7\xF7\xB8\xB0\xA8\xB7\xB9\xB3\xB2\x25A0\xA0" );
 		}
 
-		else if(codepage.Find(wxT("CP858")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("CP858")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("PC/DOS CP850"));
 			newCP[0xD5]=wxChar(0x20AC);
 			}
 
-		else if(codepage.Find(wxT("CP860")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP860")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP860")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE3\xE0\xC1\xE7\xEA\xCA\xE8\xCD\xD4\xEC\xC3\xC2"\
 							"\xC9\xC0\xC8\xF4\xF5\xF2\xDA\xF9\xCC\xD5\xDC\xA2\xA3\xD9\x20A7\xD3"\
@@ -1857,7 +1857,7 @@ cpformat(a)
 							"\x03B1\xDF\x0393\x03C0\x03A3\x03C3\xB5\x03C4\x03A6\x0398\x03A9\x03B4\x221E\x03C6\x03B5\x2229"\
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP861")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP861")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP861")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xD0\xF0\xDE\xC4\xC5"\
 							"\xC9\xE6\xC6\xF4\xF6\xFE\xFB\xDD\xFD\xD6\xDC\xF8\xA3\xD8\x20A7\x0192"\
@@ -1868,7 +1868,7 @@ cpformat(a)
 							"\x03B1\xDF\x0393\x03C0\x03A3\x03C3\xB5\x03C4\x03A6\x0398\x03A9\x03B4\x221E\x03C6\x03B5\x2229"\
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP862")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP862")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP862")), 0x80);
 			newCP+=wxT(	"\x05D0\x05D1\x05D2\x05D3\x05D4\x05D5\x05D6\x05D7\x05D8\x05D9\x05DA\x05DB\x05DC\x05DD\x05DE\x05DF"\
 							"\x05E0\x05E1\x05E2\x05E3\x05E4\x05E5\x05E6\x05E7\x05E8\x05E9\x05EA\xA2\xA3\xA5\x20A7\x0192"\
@@ -1879,7 +1879,7 @@ cpformat(a)
 							"\x03B1\xDF\x0393\x03C0\x03A3\x03C3\xB5\x03C4\x03A6\x0398\x03A9\x03B4\x221E\x03C6\x03B5\x2229"\
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0");
 
-		else if(codepage.Find(wxT("CP863")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP863")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP863")), 0x80);
 			newCP+=wxT(	"\xC7\xFC\xE9\xE2\xC2\xE0\xB6\xE7\xEA\xEB\xE8\xEF\xEE\x2017\xC0\xA7"\
 							"\xC9\xC8\xCA\xF4\xCB\xCF\xFB\xF9\xA4\xD4\xDC\xA2\xA3\xD9\xDB\x0192"\
@@ -1890,7 +1890,7 @@ cpformat(a)
 							"\x03B1\xDF\x0393\x03C0\x03A3\x03C3\xB5\x03C4\x03A6\x0398\x03A9\x03B4\x221E\x03C6\x03B5\x2229"\
 							"\x2261\xB1\x2265\x2264\x2320\x2321\xF7\x2248\xB0\x2219\xB7\x221A\x207F\xB2\x25A0\xA0");
 
-		else if(codepage.Find(wxT("CP864")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("CP864")) != wxNOT_FOUND ){
 			//0xA7 replaced with EUR
 //			newCP+=wxString( bf, wxCSConv(wxT("CP864")), 0x80);
 			newCP+=wxT(	"\xB0\xB7\x2219\x221A\x2592\x2500\x2502\x253C\x2524\x252C\x251C\x2534\x2510\x250C\x2514\x2518"\
@@ -1904,14 +1904,14 @@ cpformat(a)
 			newCP[0x25]=wxChar(0x066A); // ARABIC PERCENT SIGN ⟨٪⟩
 			}
 
-		else if(codepage.Find(wxT("CP865")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("CP865")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("PC/DOS CP437" ));
 			newCP[0x9B]=wxChar(0xF8);
 			newCP[0x9D]=wxChar(0xD8);
 			newCP[0xAF]=wxChar(0xA4);
 			}
 
-		else if(codepage.Find(wxT("CP866")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP866")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP866")), 0x80);
 			newCP+=wxT(	"\x0410\x0411\x0412\x0413\x0414\x0415\x0416\x0417\x0418\x0419\x041A\x041B\x041C\x041D\x041E\x041F"\
 							"\x0420\x0421\x0422\x0423\x0424\x0425\x0426\x0427\x0428\x0429\x042A\x042B\x042C\x042D\x042E\x042F"\
@@ -1922,7 +1922,7 @@ cpformat(a)
 							"\x0440\x0441\x0442\x0443\x0444\x0445\x0446\x0447\x0448\x0449\x044A\x044B\x044C\x044D\x044E\x044F"\
 							"\x0401\x0451\x0404\x0454\x0407\x0457\x040E\x045E\xB0\x2219\xB7\x221A\x2116\xA4\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP869")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP869")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP869")), 0x80);
 			newCP+=wxT(	"......\x0386.\xB7\xAC\xA6\x2018\x2019\x0388\x2015\x0389"\
 							"\x038A\x03AA\x038C..\x038E\x03AB\xA9\x038F\xB2\xB3\x03AC\xA3\x03AD\x03AE\x03AF"\
@@ -1933,7 +1933,7 @@ cpformat(a)
 							"\x03B6\x03B7\x03B8\x03B9\x03BA\x03BB\x03BC\x03BD\x03BE\x03BF\x03C0\x03C1\x03C3\x03C2\x03C4\x0384"\
 							".\xB1\x03C5\x03C6\x03C7\xA7\x03C8\x0385\xB0\xA8\x03C9\x03CB\x03B0\x03CE\x25A0\xA0" );
 
-		else if(codepage.Find(wxT("CP1006")) not_eq wxNOT_FOUND )
+		else if(codepage.Find(wxT("CP1006")) != wxNOT_FOUND )
 //			newCP+=wxString( bf, wxCSConv(wxT("CP1006")), 0x80);
 			newCP+=wxT(	"\xA0\x06F0\x06F1\x06F2\x06F3\x06F4\x06F5\x06F6\x06F7\x06F8\x06F9\x060C\x061B.\x061F\xFE81"\
 							"\xFE8D\xFE8E\xFE8E\xFE8F\xFE91\xFB56\xFB58\xFE93\xFE95\xFE97\xFB66\xFB68\xFE99\xFE9B\xFE9D\xFE9F"\
@@ -1942,7 +1942,7 @@ cpformat(a)
 							"\xFED3\xFED5\xFED7\xFED9\xFEDB\xFB92\xFB94\xFEDD\xFEDF\xFEE0\xFEE1\xFEE3\xFB9E\xFEE5\xFEE7\xFE85"\
 							"\xFEED\xFBA6\xFBA8\xFBA9\xFBAA\xFE80\xFE89\xFE8A\xFE8B\xFEF1\xFEF2\xFEF3\xFBB0\xFBAE\xFE7C\xFE7D" );
 
-		else if(codepage.Find(wxT("KZ-1048")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("KZ-1048")) != wxNOT_FOUND ){
 			newCP+=wxT( "\x0402\x0403\x201A\x0453\x201E\x2026\x2020\x2021\x20AC\x2030\x0409\x2039\x040A\x049A\x04BA\x040F"\
 							"\x0452\x2018\x2019\x201C\x201D\x2022\x2013\x2014.\x2122\x0459\x203A\x045A\x049B\x04BB\x045F"\
 							"\xA0\x04B0\x04B1\x04D8\xA4\x04E8\xA6\xA7\x0401\xA9\x0492\xAB\xAC.\xAE\x04AE"\
@@ -1954,7 +1954,7 @@ cpformat(a)
 //							"\x0430\x0431\x0432\x0433\x0434\x0435\x0436\x0437\x0438\x0439\x043A\x043B\x043C\x043D\x043E\x043F"\
 //							"\x0440\x0441\x0442\x0443\x0444\x0445\x0446\x0447\x0448\x0449\x044A\x044B\x044C\x044D\x044E\x044F" );
 			}
-		else if(codepage.Find(wxT("MIK")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("MIK")) != wxNOT_FOUND ){
 			for (unsigned i=0x80; i<0xC0 ; i++)
 				newCP += wxChar(i-0x80+0x0410);
 
@@ -1964,7 +1964,7 @@ cpformat(a)
 								"\x2261\x00B1\x2265\x2264\x2320\x2321\x00F7\x2248\x00B0\x2219\x00B7\x221A\x207F\x00B2\x25A0\x00A0" );
 			}
 
-		else if(codepage.Find(wxT("Kamenick")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("Kamenick")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("PC/DOS CP437" ));
 			newCP=newCP.Mid(0,0x80)+
 					+wxT(	"\x010C\x00FC\x00E9\x010F\x00E4\x010E\x0164\x010D\x011B\x011A\x0139\x00CD\x013E\x013A\x00C4\x00C1"\
@@ -1973,7 +1973,7 @@ cpformat(a)
 					+newCP.Mid(0xB0,0xFF-0xB0);
 			}
 
-		else if(codepage.Find(wxT("Mazovia")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("Mazovia")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("PC/DOS CP437" ));
 			newCP=newCP.Mid(0,0x80)+
 					+wxT(	"\x00C7\x00FC\x00E9\x00E2\x00E4\x00E0\x0105\x00E7\x00EA\x00EB\x00E8\x00EF\x00EE\x0107\x00C4\x0104"\
@@ -1981,7 +1981,7 @@ cpformat(a)
 							"\x0179\x017B\x00F3\x00D3\x0144\x0143\x017A\x017C\x00BF\x2310\x00AC\x00BD\x00BC\x00A1\x00AB\x00BB" )
 					+newCP.Mid(0xB0,0xFF-0xB0);
 			}
-		else if(codepage.Find(wxT("Iran")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("Iran")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("PC/DOS CP437" ));
 			newCP=newCP.Mid(0,0x80)+
 					+wxT(	"\x06F0\x06F1\x06F2\x06F3\x06F4\x06F5\x06F6\x06F7\x06F8\x06F9\x060C\x0640\x061F\xFE81\xFE8B\x0621"\
@@ -1992,8 +1992,8 @@ cpformat(a)
 
 		}
 
-	else	if(codepage.Find(wxT("ISO/IEC")) not_eq wxNOT_FOUND ){
-		if(codepage.Find(wxT("6937")) not_eq wxNOT_FOUND){
+	else	if(codepage.Find(wxT("ISO/IEC")) != wxNOT_FOUND ){
+		if(codepage.Find(wxT("6937")) != wxNOT_FOUND){
 			newCP=PrepareCodepageTable(wxT("ASCII")).Mid(0,0xA0);
 			//SHY replaced with dot (at 0xFF)
 			newCP+=wxT(	"\xA0\xA1\xA2\xA3.\xA5.\xA7\xA4\x2018\x201C\xAB\x2190\x2191\x2192\x2193"\
@@ -2008,7 +2008,7 @@ cpformat(a)
 
 		//Masking default area
 		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] =  (i< 0x20 or i==0x7F or i==0xAD or (i>=0x80 and i<=0x9F ))	? '.' : i;
+			bf[i] =  (i< 0x20 || i==0x7F || i==0xAD || (i>=0x80 && i<=0x9F ))	? '.' : i;
 
 		//Detecting exact encoding
 		int q=codepage.Find(wxT("8859-"))+5;
@@ -2063,21 +2063,21 @@ cpformat(a)
 		}
 
 	// Windows Code Pages
-	else if(codepage.Find(wxT("Windows")) not_eq wxNOT_FOUND ){
-		if(codepage.Find(wxT("CP874")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("Windows")) != wxNOT_FOUND ){
+		if(codepage.Find(wxT("CP874")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable(wxT("ISO/IEC 8859-11"));
 			unsigned char a[]="\x80\xB5\x91\x92\x93\x94\x95\x96\x97";  //Patch Index
 			wxString b=wxT("\x20AC\x2026\x2018\x2019\x201C\x201D\x2022\x2013\x2014");	//Patch Value
 			for(int i=0;i<9;i++)
 				newCP[a[i]]=b[i];
 			}
-		else if(codepage.Find(wxT("CP932")) not_eq wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP932;//ShiftJS
-		else if(codepage.Find(wxT("CP936")) not_eq wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP936;//GBK
-		else if(codepage.Find(wxT("CP949")) not_eq wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP949; //EUC-KR
-		else if(codepage.Find(wxT("CP950")) not_eq wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP950;//BIG5
+		else if(codepage.Find(wxT("CP932")) != wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP932;//ShiftJS
+		else if(codepage.Find(wxT("CP936")) != wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP936;//GBK
+		else if(codepage.Find(wxT("CP949")) != wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP949; //EUC-KR
+		else if(codepage.Find(wxT("CP950")) != wxNOT_FOUND ) FontEnc=wxFONTENCODING_CP950;//BIG5
 		else{
 			for (unsigned i=0; i<=0xFF ; i++)
-				bf[i] = (i< 0x20 or i==0x7F or i==0xAD) ? '.' : i;
+				bf[i] = (i< 0x20 || i==0x7F || i==0xAD) ? '.' : i;
 
 			//Detecting Encoding
 			char q=codepage[codepage.Find(wxT("CP125"))+5];
@@ -2130,7 +2130,7 @@ cpformat(a)
 			}
 		}
 
-	else if(codepage.Find(wxT("AtariST")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("AtariST")) != wxNOT_FOUND ){
 		newCP+=PrepareCodepageTable(wxT("ASCII")).Mid(0x0,0x80);
 		newCP+=PrepareCodepageTable(wxT("DOS CP437")).Mid(0x80,0x30);
 		newCP+=wxT(	"\x00E3\x00F5\x00D8\x00F8\x0153\x0152\x00C0\x00C3\x00D5\x00A8\x00B4\x2020\x00B6\x00A9\x00AE\x2122"
@@ -2145,7 +2145,7 @@ cpformat(a)
 		newCP[0xFF]=wxChar(0x00AF);
 		}
 
-	else if(codepage.Find(wxT("KOI7")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("KOI7")) != wxNOT_FOUND ){
 		newCP=PrepareCodepageTable(wxT("ASCII")).Mid(0,0x60);
 		newCP += wxT(	"\x042E\x0410\x0411\x0426\x0414\x0415\x0424\x0413\x0425\x0418\x0419\x041A\x041B\x041C\x041D\x041E"\
 							"\x041F\x042F\x0420\x0421\x0422\x0423\x0416\x0412\x042C\x042B\x0417\x0428\x042D\x0429\x0427.");
@@ -2153,32 +2153,32 @@ cpformat(a)
 			newCP += '.';
 		}
 
-	else if(codepage.Find(wxT("KOI8")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("KOI8")) != wxNOT_FOUND ){
 		for (unsigned i=0; i<=0xFF ; i++)
-			bf[i] = (i<0x20 or i==0x7F)	? '.' : i;
+			bf[i] = (i<0x20 || i==0x7F)	? '.' : i;
 		if(codepage.StartsWith(wxT("KOI8-R"))) newCP+=wxString( bf, wxCSConv(wxFONTENCODING_KOI8), 256);
 		if(codepage.StartsWith(wxT("KOI8-U"))) newCP+=wxString( bf, wxCSConv(wxFONTENCODING_KOI8_U), 256);
 		}
 
-	else if(codepage.Find(wxT("JIS X 0201")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("JIS X 0201")) != wxNOT_FOUND ){
 		for (unsigned i=0; i<0xFF ; i++)
 			if(i==0x5C)
 				newCP += wxChar(0xA5); //JPY
 			else if(i==0x7E)
 				newCP += wxChar(0x203E);//Overline
 			else if(i<0x80)
-				newCP += ((i<0x20 or i==0x7F)	? '.' : wxChar(i));
-			else if( i>=0xA1 and i<0xE0)
+				newCP += ((i<0x20 || i==0x7F)	? '.' : wxChar(i));
+			else if( i>=0xA1 && i<0xE0)
 				newCP += wxChar(i-0xA0+0xFF60);
 			else
 				newCP +='.';
 		}
 
-	else if(codepage.Find(wxT("TIS-620")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("TIS-620")) != wxNOT_FOUND ){
 		newCP=PrepareCodepageTable(wxT("ISO/IEC 8859-11")); //Identical
 		}
 
-	else if(codepage.Find(wxT("EBCDIC")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("EBCDIC")) != wxNOT_FOUND ){
 		//Control chars replaced with dot
 		for (unsigned i=0; i<0x40 ; i++)
 			newCP+=wxChar('.');
@@ -2199,18 +2199,18 @@ cpformat(a)
 						"\x5C\xF7\x53\x54\x55\x56\x57\x58\x59\x5A\xB2\xD4\xD6\xD2\xD3\xD5"\
 						"\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\xB3\xDB\xDC\xD9\xDA.");
 
-		if(codepage.Find(wxT("037")) not_eq wxNOT_FOUND ){
+		if(codepage.Find(wxT("037")) != wxNOT_FOUND ){
 			//This is EBCDIC 037	Already
 			}
 
-		else if(codepage.Find(wxT("285")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("285")) != wxNOT_FOUND ){
 			unsigned char a[]="\x4A\x5B\xA1\xB0\xB1\xBA\xBC";  //Patch Index
 			unsigned char b[]="\x24\xA3\xAF\xA2\x5B\x5E\x7E";	//Patch Value
 			for(int i=0;i<7;i++)
 				newCP[a[i]]=wxChar(b[i]);
 			}
 
-		else if(codepage.Find(wxT("424")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("424")) != wxNOT_FOUND ){
 			newCP.Clear();
 			for (unsigned i=0; i<0x40 ; i++)
 				newCP+=wxChar('.');
@@ -2230,14 +2230,14 @@ cpformat(a)
 			}
 
 
-		else if(codepage.Find(wxT("500")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("500")) != wxNOT_FOUND ){
 			unsigned char a[]="\x4A\x4F\x5A\x5F\xB0\xBA\xBB\xCA"; //Patch Index
 			unsigned char b[]="\x5B\x21\x5D\x5E\xA2\xAC\x7C\x2E";	//Patch Value
 			for(int i=0;i<8;i++)
 				newCP[a[i]]=wxChar(b[i]);
 			}
 
-		else if(codepage.Find(wxT("875")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("875")) != wxNOT_FOUND ){
 			newCP=wxEmptyString;
 			for (unsigned i=0; i<0x40 ; i++)
 				newCP+=wxChar('.');
@@ -2258,7 +2258,7 @@ cpformat(a)
 							"\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\xB3\xA9..\xBB.");
 			}
 
-		else if(codepage.Find(wxT("1026")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("1026")) != wxNOT_FOUND ){
 			newCP=wxEmptyString;
 			for (unsigned i=0; i<0x40 ; i++)
 				newCP+=wxChar('.');
@@ -2279,28 +2279,28 @@ cpformat(a)
 
 			}
 
-		else if(codepage.Find(wxT("1047")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("1047")) != wxNOT_FOUND ){
 			unsigned char a[]="\x8F\xAD\xB0\xBA\xBB\xBD";  //Patch Index
 			unsigned char b[]="\x5E\x5B\xAC\xDD\xA8\x5D";  //Patch Value
 			for(int i=0;i<6;i++)
 				newCP[a[i]]=wxChar(b[i]);
 			}
-		else if(codepage.Find(wxT("1040")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("1040")) != wxNOT_FOUND ){
 			newCP[0x9F]=wxChar(0x20AC);
 			}
 
-		else if(codepage.Find(wxT("1146")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("1146")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable( wxT("EBCDIC 285"));
 			newCP[0x9F]=wxChar(0x20AC);
 			}
 
-		else if(codepage.Find(wxT("1148")) not_eq wxNOT_FOUND ){
+		else if(codepage.Find(wxT("1148")) != wxNOT_FOUND ){
 			newCP=PrepareCodepageTable( wxT("EBCDIC 500"));
 			newCP[0x9F]=wxChar(0x20AC);
 			}
 		}
 
-	else if(codepage.Find(wxT("Macintosh")) not_eq wxNOT_FOUND ){
+	else if(codepage.Find(wxT("Macintosh")) != wxNOT_FOUND ){
 		//Control chars replaced with dot
 		for (unsigned i=0; i<0x20 ; i++)
 			newCP+=wxChar('.');
@@ -2309,7 +2309,7 @@ cpformat(a)
 			newCP += wxChar(i);
 		newCP+='.';//0xFF delete char
 
-		if( codepage.Find(wxT("CP10000")) not_eq wxNOT_FOUND )		//Macintosh Roman extension table
+		if( codepage.Find(wxT("CP10000")) != wxNOT_FOUND )		//Macintosh Roman extension table
 			newCP+=wxT(	"\xC4\xC5\xC7\xC9\xD1\xD6\xDC\xE1\xE0\xE2\xE4\xE3\xE5\xE7\xE9\xE8"\
 							"\xEA\xEB\xED\xEC\xEE\xEF\xF1\xF3\xF2\xF4\xF6\xF5\xFA\xF9\xFB\xFC"\
 							"\x2020\xB0\xA2\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\xB4\xA8\x2260\xC6\xD8"\
@@ -2319,7 +2319,7 @@ cpformat(a)
 							"\x2021\xB7\x201A\x201E\x2030\xC2\xCA\xC1\xCB\xC8\xCD\xCE\xCF\xCC\xD3\xD4"\
 							".\xD2\xDA\xDB\xD9\x0131\x02C6\x02DC\xAF\x02D8\x02D9\x02DA\xB8\x02DD\x02DB\x02C7" );
 
-		else if( codepage.Find(wxT("CP10029")) not_eq wxNOT_FOUND )		//Macintosh Latin2 extension table
+		else if( codepage.Find(wxT("CP10029")) != wxNOT_FOUND )		//Macintosh Latin2 extension table
 			newCP+=wxT( "\xC4\x0100\x0101\xC9\x0104\xD6\xDC\xE1\x0105\x010C\xE4\x010D\x0106\x0107\xE9\x0179"\
 							"\x017A\x010E\xED\x010F\x0112\x0113\x0116\xF3\x0117\xF4\xF6\xF5\xFA\x011A\x011B\xFC"\
 							"\x2020\xB0\x0118\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\x0119\xA8\x2260\x0123\x012E"\
@@ -2330,7 +2330,7 @@ cpformat(a)
 							"\x016B\x016E\xDA\x016F\x0170\x0171\x0172\x0173\xDD\xFD\x0137\x017B\x0141\x017C\x0122\x02C7" );
 
 
-		else if( codepage.Find(wxT("CP10079")) not_eq wxNOT_FOUND )		//Macintosh Icelandic extension table
+		else if( codepage.Find(wxT("CP10079")) != wxNOT_FOUND )		//Macintosh Icelandic extension table
 			newCP+=wxT(	"\xC4\xC5\xC7\xC9\xD1\xD6\xDC\xE1\xE0\xE2\xE4\xE3\xE5\xE7\xE9\xE8"\
 							"\xEA\xEB\xED\xEC\xEE\xEF\xF1\xF3\xF2\xF4\xF6\xF5\xFA\xF9\xFB\xFC"\
 							"\xDD\xB0\xA2\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\xB4\xA8\x2260\xC6\xD8"\
@@ -2341,7 +2341,7 @@ cpformat(a)
 							".\xD2\xDA\xDB\xD9\x0131\x02C6\x02DC\xAF\x02D8\x02D9\x02DA\xB8\x02DD\x02DB\x02C7" );
 
 
-		else if( codepage.Find(wxT("CP10006")) not_eq wxNOT_FOUND )		//Macintosh Greek CP10006 extension table
+		else if( codepage.Find(wxT("CP10006")) != wxNOT_FOUND )		//Macintosh Greek CP10006 extension table
 			newCP+=wxT(	"\xC4\xB9\xB2\xC9\xB3\xD6\xDC\x0385\xE0\xE2\xE4\x0384\xA8\xE7\xE9\xE8"\
 							"\xEA\xEB\xA3\x2122\xEE\xEF\x2022\xBD\x2030\xF4\xF6\xA6\xAD\xF9\xFB\xFC"\
 							"\x2020\x0393\x0394\x0398\x039B\x039E\x03A0\xDF\xAE\xA9\x03A3\x03AA\xA7\x2260\xB0\x0387"\
@@ -2351,7 +2351,7 @@ cpformat(a)
 							"\x03CD\x03B1\x03B2\x03C8\x03B4\x03B5\x03C6\x03B3\x03B7\x03B9\x03BE\x03BA\x03BB\x03BC\x03BD\x03BF"\
 							"\x03C0\x03CE\x03C1\x03C3\x03C4\x03B8\x03C9\x03C2\x03C7\x03C5\x03B6\x03CA\x03CB\x0390\x03B0." );
 
-		else if( codepage.Find(wxT("CP10007")) not_eq wxNOT_FOUND )//Macintosh Cyrillic extension table
+		else if( codepage.Find(wxT("CP10007")) != wxNOT_FOUND )//Macintosh Cyrillic extension table
 			newCP+=wxT( "\x0410\x0411\x0412\x0413\x0414\x0415\x0416\x0417\x0418\x0419\x041A\x041B\x041C\x041D\x041E\x041F"\
 							"\x0420\x0421\x0422\x0423\x0424\x0425\x0426\x0427\x0428\x0429\x042A\x042B\x042C\x042D\x042E\x042F"\
 							"\x2020\xB0\xA2\xA3\xA7\x2022\xB6\x0406\xAE\xA9\x2122\x0402\x0452\x2260\x0403\x0453"\
@@ -2361,7 +2361,7 @@ cpformat(a)
 							"\x0430\x0431\x0432\x0433\x0434\x0435\x0436\x0437\x0438\x0439\x043A\x043B\x043C\x043D\x043E\x043F"\
 							"\x0440\x0441\x0442\x0443\x0444\x0445\x0446\x0447\x0448\x0449\x044A\x044B\x044C\x044D\x044E\xA4" );
 
-		else if( codepage.Find(wxT("CP10081")) not_eq wxNOT_FOUND )		//Macintosh Turkish extension table
+		else if( codepage.Find(wxT("CP10081")) != wxNOT_FOUND )		//Macintosh Turkish extension table
 			newCP+=wxT(	"\xC4\xC5\xC7\xC9\xD1\xD6\xDC\xE1\xE0\xE2\xE4\xE3\xE5\xE7\xE9\xE8"\
 							"\xEA\xEB\xED\xEC\xEE\xEF\xF1\xF3\xF2\xF4\xF6\xF5\xFA\xF9\xFB\xFC"\
 							"\x2020\xB0\xA2\xA3\xA7\x2022\xB6\xDF\xAE\xA9\x2122\xB4\xA8\x2260\xC6\xD8"\
@@ -2374,54 +2374,54 @@ cpformat(a)
 		#ifdef __WXMAC__
 		else{
 			for (unsigned i=0; i<=0xFF ; i++)
-				bf[i] = (i<0x20 or i==0x7F)	? '.' : i;
-			if( codepage.Find(wxT("Arabic")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARABIC), 256);
-			if( codepage.Find(wxT("Arabic Ext")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARABICEXT), 256);
-			if( codepage.Find(wxT("Armanian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARMENIAN), 256);
-			if( codepage.Find(wxT("Bengali")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACBENGALI), 256);
-			if( codepage.Find(wxT("Burmese")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACBURMESE), 256);
-			if( codepage.Find(wxT("Celtic")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCELTIC), 256);
-			if( codepage.Find(wxT("Central European")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCENTRALEUR), 256);
-			if( codepage.Find(wxT("Chinese Imperial")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCHINESESIMP), 256);
-			if( codepage.Find(wxT("Chinese Traditional")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCHINESETRAD), 256);
-			if( codepage.Find(wxT("Croatian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCROATIAN), 256);
-			if( codepage.Find(wxT("Cyrillic")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCYRILLIC), 256);
-			if( codepage.Find(wxT("Devanagari")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACDEVANAGARI), 256);
-			if( codepage.Find(wxT("Dingbats")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACDINGBATS), 256);
-			if( codepage.Find(wxT("Ethiopic")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACETHIOPIC), 256);
-			if( codepage.Find(wxT("Gaelic")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGAELIC), 256);
-			if( codepage.Find(wxT("Georgian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGEORGIAN), 256);
-			if( codepage.Find(wxT("Greek")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGREEK), 256);
-			if( codepage.Find(wxT("Gujarati")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGUJARATI), 256);
-			if( codepage.Find(wxT("Gurmukhi")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGURMUKHI), 256);
-			if( codepage.Find(wxT("Hebrew")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACHEBREW), 256);
-			if( codepage.Find(wxT("Icelandic")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACICELANDIC), 256);
-			if( codepage.Find(wxT("Japanese")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACJAPANESE), 256);
-			if( codepage.Find(wxT("Kannada")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKANNADA), 256);
-			if( codepage.Find(wxT("Keyboard")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKEYBOARD), 256);
-			if( codepage.Find(wxT("Khmer")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKHMER), 256);
-			if( codepage.Find(wxT("Korean")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKOREAN), 256);
-			if( codepage.Find(wxT("Laotian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACLAOTIAN), 256);
-			if( codepage.Find(wxT("Malajalam")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMALAJALAM), 256);
-//			if( codepage.Find(wxT("Min")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMAX), 256);
-//			if( codepage.Find(wxT("Max")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMIN), 256);
-			if( codepage.Find(wxT("Mongolian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMONGOLIAN), 256);
-			if( codepage.Find(wxT("Oriya")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACORIYA), 256);
-			if( codepage.Find(wxT("Roman ")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACROMAN), 256);
-			if( codepage.Find(wxT("Romanian")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACROMANIAN), 256);
-			if( codepage.Find(wxT("Sinhalese")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACSINHALESE), 256);
-			if( codepage.Find(wxT("Symbol")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACSYMBOL), 256);
-			if( codepage.Find(wxT("Tamil")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTAMIL), 256);
-			if( codepage.Find(wxT("Telugu")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTELUGU), 256);
-			if( codepage.Find(wxT("Thai")) not_eq wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTHAI), 256);
-			if( codepage.Find(wxT("Tibetan")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTIBETAN), 256);
-			if( codepage.Find(wxT("Turkish")) not_eq wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTURKISH), 256);
-			if( codepage.Find(wxT("Viatnamese")) not_eq wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACVIATNAMESE), 256);
+				bf[i] = (i<0x20 || i==0x7F)	? '.' : i;
+			if( codepage.Find(wxT("Arabic")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARABIC), 256);
+			if( codepage.Find(wxT("Arabic Ext")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARABICEXT), 256);
+			if( codepage.Find(wxT("Armanian")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACARMENIAN), 256);
+			if( codepage.Find(wxT("Bengali")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACBENGALI), 256);
+			if( codepage.Find(wxT("Burmese")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACBURMESE), 256);
+			if( codepage.Find(wxT("Celtic")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCELTIC), 256);
+			if( codepage.Find(wxT("Central European")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCENTRALEUR), 256);
+			if( codepage.Find(wxT("Chinese Imperial")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCHINESESIMP), 256);
+			if( codepage.Find(wxT("Chinese Traditional")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCHINESETRAD), 256);
+			if( codepage.Find(wxT("Croatian")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCROATIAN), 256);
+			if( codepage.Find(wxT("Cyrillic")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACCYRILLIC), 256);
+			if( codepage.Find(wxT("Devanagari")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACDEVANAGARI), 256);
+			if( codepage.Find(wxT("Dingbats")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACDINGBATS), 256);
+			if( codepage.Find(wxT("Ethiopic")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACETHIOPIC), 256);
+			if( codepage.Find(wxT("Gaelic")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGAELIC), 256);
+			if( codepage.Find(wxT("Georgian")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGEORGIAN), 256);
+			if( codepage.Find(wxT("Greek")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGREEK), 256);
+			if( codepage.Find(wxT("Gujarati")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGUJARATI), 256);
+			if( codepage.Find(wxT("Gurmukhi")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACGURMUKHI), 256);
+			if( codepage.Find(wxT("Hebrew")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACHEBREW), 256);
+			if( codepage.Find(wxT("Icelandic")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACICELANDIC), 256);
+			if( codepage.Find(wxT("Japanese")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACJAPANESE), 256);
+			if( codepage.Find(wxT("Kannada")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKANNADA), 256);
+			if( codepage.Find(wxT("Keyboard")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKEYBOARD), 256);
+			if( codepage.Find(wxT("Khmer")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKHMER), 256);
+			if( codepage.Find(wxT("Korean")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACKOREAN), 256);
+			if( codepage.Find(wxT("Laotian")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACLAOTIAN), 256);
+			if( codepage.Find(wxT("Malajalam")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMALAJALAM), 256);
+//			if( codepage.Find(wxT("Min")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMAX), 256);
+//			if( codepage.Find(wxT("Max")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMIN), 256);
+			if( codepage.Find(wxT("Mongolian")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACMONGOLIAN), 256);
+			if( codepage.Find(wxT("Oriya")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACORIYA), 256);
+			if( codepage.Find(wxT("Roman ")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACROMAN), 256);
+			if( codepage.Find(wxT("Romanian")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACROMANIAN), 256);
+			if( codepage.Find(wxT("Sinhalese")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACSINHALESE), 256);
+			if( codepage.Find(wxT("Symbol")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACSYMBOL), 256);
+			if( codepage.Find(wxT("Tamil")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTAMIL), 256);
+			if( codepage.Find(wxT("Telugu")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTELUGU), 256);
+			if( codepage.Find(wxT("Thai")) != wxNOT_FOUND )			newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTHAI), 256);
+			if( codepage.Find(wxT("Tibetan")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTIBETAN), 256);
+			if( codepage.Find(wxT("Turkish")) != wxNOT_FOUND )		newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACTURKISH), 256);
+			if( codepage.Find(wxT("Viatnamese")) != wxNOT_FOUND )	newCP+=wxString( bf, wxCSConv(wxFONTENCODING_MACVIATNAMESE), 256);
 			}
 		#endif// __WXMAC__
 		}
 
-	else if( codepage.Find(wxT("DEC Multinational")) not_eq wxNOT_FOUND ){
+	else if( codepage.Find(wxT("DEC Multinational")) != wxNOT_FOUND ){
 		newCP=PrepareCodepageTable(wxT("ISO/IEC 8859-1 "));//Warning! Watch the space after last 1
 		unsigned char a[]="\xA0\xA4\xA6\xA8\xAC\xAD\xAE\xAF\xB4\xB8\xBE\xD0\xDE\xF0\xFD\xFE\xFF";  //Patch Index
 		unsigned char b[]="...\xA4..........\xFF..";	//Patch Value
@@ -2433,21 +2433,21 @@ cpformat(a)
 		newCP[0xF7]=wxChar(0x0153);
 		}
 
-	else if(codepage.Find(wxT("UTF8 ")) not_eq wxNOT_FOUND )		FontEnc=wxFONTENCODING_UTF8;
-	else if(codepage.Find(wxT("UTF16 ")) not_eq wxNOT_FOUND )		FontEnc=wxFONTENCODING_UTF16;
-	else if(codepage.Find(wxT("UTF16LE")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF16LE;
-	else if(codepage.Find(wxT("UTF16BE")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF16BE;
-	else if(codepage.Find(wxT("UTF32 ")) not_eq wxNOT_FOUND )		FontEnc=wxFONTENCODING_UTF32;
-	else if(codepage.Find(wxT("UTF32LE")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF32LE;
-	else if(codepage.Find(wxT("UTF32BE")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF32BE;
-	else if(codepage.Find(wxT("GB2312")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_GB2312;
-	else if(codepage.Find(wxT("GBK")) not_eq wxNOT_FOUND )		FontEnc=wxFONTENCODING_CP936;
-	else if(codepage.Find(wxT("Shift JIS")) not_eq wxNOT_FOUND )FontEnc=wxFONTENCODING_SHIFT_JIS;//CP932
-	else if(codepage.Find(wxT("Big5")) not_eq wxNOT_FOUND )		FontEnc=wxFONTENCODING_BIG5;//CP950
-	else if(codepage.Find(wxT("EUC-JP")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_EUC_JP;
-	else if(codepage.Find(wxT("EUC-KR")) not_eq wxNOT_FOUND )	FontEnc=wxFONTENCODING_CP949; //EUC-KR
+	else if(codepage.Find(wxT("UTF8 ")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_UTF8;
+	else if(codepage.Find(wxT("UTF16 ")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_UTF16;
+	else if(codepage.Find(wxT("UTF16LE")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF16LE;
+	else if(codepage.Find(wxT("UTF16BE")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF16BE;
+	else if(codepage.Find(wxT("UTF32 ")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_UTF32;
+	else if(codepage.Find(wxT("UTF32LE")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF32LE;
+	else if(codepage.Find(wxT("UTF32BE")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_UTF32BE;
+	else if(codepage.Find(wxT("GB2312")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_GB2312;
+	else if(codepage.Find(wxT("GBK")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_CP936;
+	else if(codepage.Find(wxT("Shift JIS")) != wxNOT_FOUND )FontEnc=wxFONTENCODING_SHIFT_JIS;//CP932
+	else if(codepage.Find(wxT("Big5")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_BIG5;//CP950
+	else if(codepage.Find(wxT("EUC-JP")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_EUC_JP;
+	else if(codepage.Find(wxT("EUC-KR")) != wxNOT_FOUND )	FontEnc=wxFONTENCODING_CP949; //EUC-KR
 //	else if(codepage.StartsWith(wxT("EUC-CN")))		FontEnc=wxFONTENCODING_GB2312;
-//else if(codepage.Find(wxT("Linux Bulgarian")) not_eq wxNOT_FOUND )		FontEnc=wxFONTENCODING_BULGARIAN;
+//else if(codepage.Find(wxT("Linux Bulgarian")) != wxNOT_FOUND )		FontEnc=wxFONTENCODING_BULGARIAN;
 	return CodepageTable=newCP;
 	}
 
@@ -2498,9 +2498,9 @@ void wxHexTextCtrl::SetDefaultStyle( wxTextAttr& new_attr ){
 	SetFont( HexDefaultAttr.GetFont() );
 	m_CharSize.y = dc.GetCharHeight();
 	m_CharSize.x = dc.GetCharWidth();
-	if( FontEnc == wxFONTENCODING_UTF16LE or
-		 FontEnc == wxFONTENCODING_UTF16BE or
-		 FontEnc == wxFONTENCODING_UTF32LE or
+	if( FontEnc == wxFONTENCODING_UTF16LE ||
+		 FontEnc == wxFONTENCODING_UTF16BE ||
+		 FontEnc == wxFONTENCODING_UTF32LE ||
 		 FontEnc == wxFONTENCODING_UTF32BE
 		 ){
 	   m_CharSize.x += 5;
@@ -2559,7 +2559,7 @@ void wxHexTextCtrl::ChangeSize(){
 	}
 
 void wxHexTextCtrl::DrawCursorShadow(wxDC* dcTemp){
-	if( m_Window.x <= 0 or
+	if( m_Window.x <= 0 ||
 		FindFocus()==this )
 		return;
 
@@ -2612,7 +2612,7 @@ wxString wxHexOffsetCtrl::GetFormatString( bool minimal ){
    if(offset_mode=='s'){
    	int sector_digit=0;
    	int offset_digit=0;
-   	if(not minimal){
+   	if(!minimal){
 			while((1+offset_limit/sector_size) > pow(10,++sector_digit));
 			while(sector_size > pow(10,++offset_digit));
 			}
@@ -2655,7 +2655,7 @@ void wxHexOffsetCtrl::OnMouseLeft( wxMouseEvent& event ){
 
 	if(wxTheClipboard->Open()) {
 		wxTheClipboard->Clear();
-		if( not wxTheClipboard->SetData( new wxTextDataObject( adr )) )
+		if( !wxTheClipboard->SetData( new wxTextDataObject( adr )) )
 			wxBell();
 		wxTheClipboard->Flush();
 		wxTheClipboard->Close();
@@ -2687,7 +2687,7 @@ unsigned wxHexOffsetCtrl::GetDigitCount( void ){
 
 unsigned wxHexOffsetCtrl::GetLineSize( void ){
         unsigned line_size = GetDigitCount();
-	    if( offset_mode=='X' or offset_mode=='o' )
+	    if( offset_mode=='X' || offset_mode=='o' )
             line_size++;
         return line_size;
         }

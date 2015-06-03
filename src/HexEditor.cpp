@@ -179,7 +179,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File){
 			emsg = msg + wxT("\n") + _("Hash Speed : ") + wxString::Format( wxT("%.2f "), 1.0*(readfrom-readspeed)/MB) + _("MB/s");
 			readspeed=readfrom;
 			}
-		if(not mypd.Update((readfrom*1000)/range, emsg ))
+		if(!mypd.Update((readfrom*1000)/range, emsg ))
 			return -1;
 		}
 
@@ -212,7 +212,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 #ifdef __WXMSW__
 	//if File is Windows device file! Let pass it and process under FAM
 	if( myfilename.GetFullPath().StartsWith( wxT(".:"))
-		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){
+		|| myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk") )){
 		myfile = new FAL( myfilename ); //OpenDevice
 		if(myfile->IsOpened()) {
 #ifndef DO_NOT_USE_THREAD_FOR_SCROLL
@@ -294,7 +294,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 	}
 
 bool HexEditor::IsFileUsingXORKey( void ){
-	return myfile->GetXORKey().GetDataLen() not_eq 0;
+	return myfile->GetXORKey().GetDataLen() != 0;
 	}
 
 wxString HexEditor::FileGetXORKey( void ){
@@ -394,7 +394,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 				emsg = msg + wxT("\n") + _("Write Speed : ") + wxString::Format( wxT("%.2f "), 1.0*(readfrom-readspeed)/MB) + _("MB/s");
 				readspeed=readfrom;
 				}
-			if( not mpd.Update( (readfrom*1000)/range, emsg) ){
+			if( !mpd.Update( (readfrom*1000)/range, emsg) ){
 				savefile.Close();
 				wxRemoveFile( savefilename );
 				return false;
@@ -411,7 +411,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 //myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
 #endif
 	if( myfile != NULL ) {
-		if( myfile->IsChanged() and not WithoutChange) {
+		if( myfile->IsChanged() && !WithoutChange) {
 			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 			switch(state) {
 				case(wxYES):
@@ -426,7 +426,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 					wxBell();
 				}
 			}
-		if( !SaveTAGS( myfile->GetFileName() ) and MainTagArray.Count() not_eq 0 )
+		if( !SaveTAGS( myfile->GetFileName() ) && MainTagArray.Count() != 0 )
 			while( wxYES == wxMessageBox( _( "TAG file cannot be saved to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Be Saved!!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) )
 				{
 				wxFileDialog filediag(this,_("Choose a file for export TAGs"),
@@ -540,7 +540,7 @@ void HexEditor::BlockSelect( void ){
 
 bool HexEditor::FillSelection( void ){
 	wxString hexval = wxGetTextFromUser(_( "Enter hex value(s) for fill"), _("Fill Dialog"), wxT("00"), this );
-	if(not HexVerifyAndPrepare( hexval, _("Fill"), this ) )
+	if(!HexVerifyAndPrepare( hexval, _("Fill"), this ) )
 		return false;
 	wxMemoryBuffer pattern = hex_ctrl->HexToBin( hexval );
 	wxMemoryBuffer buffer;
@@ -601,7 +601,7 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint, 
 	std::cout << "\nLoadFromOffset() : " << position << std::endl;
 #endif
 	//For file compare mode
-	if(ComparatorHexEditor!=NULL and not from_comparator)
+	if(ComparatorHexEditor!=NULL && !from_comparator)
 		ComparatorHexEditor->LoadFromOffset(position, cursor_reset, true, true);
 
 	myfile->Seek(position, wxFromStart);
@@ -634,7 +634,7 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 
 #if _FSWATCHER_
 void HexEditor::OnFileModify(wxFileSystemWatcherEvent &event){
-	if(event.GetChangeType()==wxFSW_EVENT_MODIFY and event.GetPath() == myfile->GetFileName().GetFullPath())
+	if(event.GetChangeType()==wxFSW_EVENT_MODIFY && event.GetPath() == myfile->GetFileName().GetFullPath())
 		Reload();
 	event.Skip(true);
 	}
@@ -989,12 +989,12 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 
-	if( event.AltDown() or event.ControlDown() ) //Control if CTRL or ALT true otherwise evet.skip will also run wxHex::OnChar which makes artefacts.
+	if( event.AltDown() || event.ControlDown() ) //Control if CTRL or ALT true otherwise evet.skip will also run wxHex::OnChar which makes artefacts.
 	   event.Skip(); //This required for ALT+F or CTRL+X...
 	}
 
 void HexEditor::SetLocalHexInsertionPoint( int hex_location, bool from_comparator ) {
-	if(ComparatorHexEditor!=NULL and not from_comparator)
+	if(ComparatorHexEditor!=NULL && !from_comparator)
 		ComparatorHexEditor->SetLocalHexInsertionPoint( hex_location, true);
 
 	HexEditorCtrl::SetLocalHexInsertionPoint( hex_location );
@@ -1057,7 +1057,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Append(wxID_COPY, _("Copy"));
 	menu.Append(idCopyAs, _("CopyAs"));
 	menu.Append(wxID_PASTE, _("Paste"));
-	if(not IsFileUsingXORKey()){
+	if(!IsFileUsingXORKey()){
 		menu.AppendSeparator();
 		menu.Append(wxID_CUT, _("Cut"));
 		menu.Append(wxID_DELETE, _("Delete"));
@@ -1098,11 +1098,11 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.Enable( idCopyAs, select->GetState() );
 	menu.Enable( idSaveAsDump, select->GetState() );
 	menu.Enable( idFillSelection, select->GetState() );
-	menu.Enable( wxID_PASTE, not select->GetState() );
+	menu.Enable( wxID_PASTE, !select->GetState() );
 
-	if( not IsBlockDevice() ){
+	if( !IsBlockDevice() ){
 		menu.Enable( wxID_DELETE, select->GetState());
-		menu.Enable( idInjection, not select->GetState());
+		menu.Enable( idInjection, !select->GetState());
 		menu.Enable( wxID_CUT, select->GetState());
 		}
 	else{
@@ -1164,11 +1164,11 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 #endif
 	if( event.LeftIsDown() ) {
 		int spd=0;
-		if( event.GetY() < 0 and page_offset != 0) {
+		if( event.GetY() < 0 && page_offset != 0) {
 			spd = static_cast<int>(0 - pow(2, abs(event.GetY()) / 25));
 			(spd < -1024) ? (spd = -1024):(spd=spd);
 			}
-		else if(event.GetY()> hex_ctrl->GetSize().GetHeight() and page_offset + ByteCapacity() < FileLength()) {
+		else if(event.GetY()> hex_ctrl->GetSize().GetHeight() && page_offset + ByteCapacity() < FileLength()) {
 			int pointer_diff = event.GetY() - hex_ctrl->GetSize().GetHeight();
 			spd = static_cast<int>(pow(2, pointer_diff / 25));
 			(spd > 1024) ? (spd = 1024):(spd=spd);
@@ -1197,9 +1197,9 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 	}
 
 void HexEditor::ScrollNoThread( int speed ) {
-	while( (!wxTheApp->Pending() and speed != 0 )
-	     and ( ((speed > 0) and (page_offset + ByteCapacity() < FileLength()))
-			or ( (speed < 0) and (page_offset > 0) ))
+	while( (!wxTheApp->Pending() && speed != 0 )
+	     && ( ((speed > 0) && (page_offset + ByteCapacity() < FileLength()))
+			|| ( (speed < 0) && (page_offset > 0) ))
 	     ) {
 #ifdef _DEBUG_MOUSE_
 		std::cout << "Loop Scroll speed  :" << speed << std::endl;
@@ -1301,7 +1301,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 		myfile->Seek( CursorOffset() );
 		myfile->Read( reinterpret_cast<char*>(&ch), 1);
 		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
-		if( not select->GetState() ) {
+		if( !select->GetState() ) {
 			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}

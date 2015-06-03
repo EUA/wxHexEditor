@@ -121,21 +121,21 @@ void DataInterpreter::OnTextMouse( wxMouseEvent& event ){
 	}
 void DataInterpreter::OnTextEdit( wxKeyEvent& event ){
 	if( ( event.GetKeyCode() == '0'
-			or event.GetKeyCode() == '1'
-			or event.GetKeyCode() == WXK_INSERT
-			//or event.GetKeyCode() == WXK_DELETE
-			or event.GetKeyCode() == WXK_END
-			or event.GetKeyCode() == WXK_HOME
-			or event.GetKeyCode() == WXK_LEFT
-			or event.GetKeyCode() == WXK_RIGHT
-			//or event.GetKeyCode() == WXK_BACK
+			|| event.GetKeyCode() == '1'
+			|| event.GetKeyCode() == WXK_INSERT
+			//|| event.GetKeyCode() == WXK_DELETE
+			|| event.GetKeyCode() == WXK_END
+			|| event.GetKeyCode() == WXK_HOME
+			|| event.GetKeyCode() == WXK_LEFT
+			|| event.GetKeyCode() == WXK_RIGHT
+			//|| event.GetKeyCode() == WXK_BACK
 			)
-		and m_check_edit->IsChecked() ){
+		&& m_check_edit->IsChecked() ){
 
 		event.Skip(); //make updates on binary text control
 
 		//if binary data filled properly, update other text controls
-		if(m_textctrl_binary->GetLineLength(0) == 8 and (event.GetKeyCode()=='1' or event.GetKeyCode()=='0')){
+		if(m_textctrl_binary->GetLineLength(0) == 8 && (event.GetKeyCode()=='1' || event.GetKeyCode()=='0')){
 			int cursorat = m_textctrl_binary->GetInsertionPoint();
 			if(event.GetKeyCode()=='1')
 				unidata.raw[0] |= (1 << (7-cursorat));
@@ -153,7 +153,7 @@ void DataInterpreter::OnTextEdit( wxKeyEvent& event ){
 			m_textctrl_binary->SetInsertionPoint( cursorat );
 			}
 		}
-	else if( event.GetKeyCode() == WXK_RETURN and m_textctrl_binary->GetLineLength(0) == 8 ){
+	else if( event.GetKeyCode() == WXK_RETURN && m_textctrl_binary->GetLineLength(0) == 8 ){
 		//Validation
 			unsigned long newlongbyte=0;
 			m_textctrl_binary->GetValue().ToULong( &newlongbyte, 2);

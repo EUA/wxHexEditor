@@ -2377,16 +2377,16 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		fs.Write( ln );
 		wxString line;
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
-			line = wxString::Format( wxT("%s found %" wxLongLongFmtSpec "u - %" wxLongLongFmtSpec "u \t Total : %" wxLongLongFmtSpec "u bytes.\n"), ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
+			line = wxString::Format( "%s found %" wxLongLongFmtSpec "u - %" wxLongLongFmtSpec "u \t Total : %" wxLongLongFmtSpec "u bytes.\n", ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i] , diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
 			fs.Write( line );
 			}
 
 		if( f1.Length() not_eq f2.Length() ){
 			if( f1.Length() > f2.Length() )
-				line =  wxString::Format( wxT("\nFile #2 ends at offset %" wxLongLongFmtSpec "u. File #1 has extra %" wxLongLongFmtSpec "u bytes.\n"),f2.Length(), f1.Length() - f2.Length() );
+				line =  wxString::Format( "\nFile #2 ends at offset %" wxLongLongFmtSpec "u. File #1 has extra %" wxLongLongFmtSpec "u bytes.\n",f2.Length(), f1.Length() - f2.Length() );
 
 			else
-				line =  wxString::Format( wxT("\nFile #1 ends at offset %" wxLongLongFmtSpec "u. File #2 has extra %" wxLongLongFmtSpec "u bytes.\n"),f1.Length(), f2.Length() - f1.Length() );
+				line =  wxString::Format( "\nFile #1 ends at offset %" wxLongLongFmtSpec "u. File #2 has extra %" wxLongLongFmtSpec "u bytes.\n",f1.Length(), f2.Length() - f1.Length() );
 
 			fs.Write( line );
 			}

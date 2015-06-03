@@ -971,10 +971,10 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			new wxXmlNode( element_TagText, wxXML_TEXT_NODE, wxT("tag_text"), TAG->tag, NULL, NULL);
 
 			wxXmlNode *element_End 			= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("end_offset"), wxEmptyString, NULL, element_TagText);
-			new wxXmlNode( element_End, wxXML_TEXT_NODE, wxT("end_offset"), wxString::Format(wxT("%" wxLongLongFmtSpec "u"),TAG->end ) , NULL, NULL);
+			new wxXmlNode( element_End, wxXML_TEXT_NODE, wxT("end_offset"), wxString::Format("%" wxLongLongFmtSpec "u",TAG->end ) , NULL, NULL);
 
 			wxXmlNode *element_Start		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("start_offset"), wxEmptyString, NULL, element_End);
-			new wxXmlNode( element_Start, wxXML_TEXT_NODE, wxT("start_offset"), wxString::Format(wxT("%" wxLongLongFmtSpec "u"), TAG->start ), NULL, NULL);
+			new wxXmlNode( element_Start, wxXML_TEXT_NODE, wxT("start_offset"), wxString::Format("%" wxLongLongFmtSpec "u", TAG->start ), NULL, NULL);
 			}
 		doc.SetFileEncoding( wxT("UTF-8") );
 		doc.SetRoot( node_Root );

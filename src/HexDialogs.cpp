@@ -658,6 +658,7 @@ bool FindDialog::FindBinaryUnitTest( void ){
 //
 //		}
 
+    return false;
 	}
 
 uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned options ){

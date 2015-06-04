@@ -57,6 +57,7 @@ HexEditor::HexEditor(	wxWindow* parent,
 	Dynamic_Connector();
 	copy_mark = new copy_maker( );
 	BlockSelectOffset = -1;
+	MouseCapture = false;
 	}
 
 void HexEditor::ConnectScroll(HexEditor* connection){

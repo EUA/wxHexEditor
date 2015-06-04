@@ -604,6 +604,11 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 //	text_ctrl->SetSize( wxSize( text_x, y ));
 	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 
+	// Destroy the sizer created by the form builder before adding the windows
+	// managed by it to another sizer, otherwise we would crash later when
+	// destroying the sizer as it wouldn't know about the windows it contains.
+	SetSizer(NULL);
+
 	//Preparing Sizer
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
 #if 1

@@ -637,7 +637,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
 					case wxID_CLOSE:
-						OnQuit( event );
+						Close();
 						break;
 					default: wxBell();
 					}
@@ -740,33 +740,18 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 	}
 
 void HexEditorFrame::OnClose( wxCloseEvent& event ){
-	wxCommandEvent evt;
-	OnQuit( evt );
-	event.Skip(false);
-	}
-
-void HexEditorFrame::OnQuit( wxCommandEvent& event ){
 	HexEditor *MyHexEditor;
-	for(;;){
-		if( MyNotebook->GetPageCount() ){
-			MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( 0 ) );
-			if( MyHexEditor != NULL ){
-				if( MyHexEditor->FileClose() ){
-					MyNotebook->DeletePage( 0 );
-					MyHexEditor = NULL;
-					}
-				else
-					break;
+	for( unsigned i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
+		MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( i ) );
+		if( MyHexEditor != NULL ){
+			if( !MyHexEditor->FileClose() ){
+				event.Veto();
+				return;
 				}
-			else
-				wxLogError(_("Error on quit!"));
-			}
-		else{
-			Destroy();
-			//event.Skip();//Makes error on OSX
-			return;
 			}
 		}
+
+	event.Skip();
 	}
 
 void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){

@@ -63,11 +63,8 @@ bool wxHexEditorApp::OnInit() {
 					cfiles.Add(str);
 				}
 
-			::CompareDialog *mcd = new CompareDialog( frame, cfiles[0], cfiles[1]);
-			mcd->ShowModal();
-			#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-			mcd->Destroy();
-			#endif
+			::CompareDialog mcd( frame, cfiles[0], cfiles[1]);
+			mcd.ShowModal();
 
 			return true;
 			}

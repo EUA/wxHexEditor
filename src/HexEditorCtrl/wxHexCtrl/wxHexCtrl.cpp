@@ -1055,7 +1055,6 @@ void wxHexCtrl::OnTagEdit( wxCommandEvent& event ){
 					break;
 				}
 			}
-		break;
 		}
 	}
 

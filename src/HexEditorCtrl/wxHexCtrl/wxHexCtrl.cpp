@@ -421,7 +421,11 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 	if(internalBufferBMP != NULL)
 		delete internalBufferBMP;
 
-	internalBufferBMP=new wxBitmap(this->GetSize().GetWidth(), this->GetSize().GetHeight());
+	// Note that creating a 0-sized bitmap would fail, so ensure that we create
+	// at least 1*1 one.
+	wxSize sizeBmp = GetSize();
+	sizeBmp.IncTo(wxSize(1, 1));
+	internalBufferBMP=new wxBitmap(sizeBmp);
 	internalBufferDC = new wxMemoryDC();
 	internalBufferDC->SelectObject(*internalBufferBMP);
 	return internalBufferDC;

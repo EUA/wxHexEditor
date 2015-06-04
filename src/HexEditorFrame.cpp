@@ -513,7 +513,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),lngt.ToULong( &size, 10 ) ) ,_T("Error!"), wxICON_ERROR, this );
 			}
 		//Save file
-		wxFileDialog* filediag = new wxFileDialog(this,
+		wxFileDialog filediag(this,
 									_("Choose a file for save as"),
 									wxEmptyString,
 									wxEmptyString,
@@ -521,8 +521,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 
-		if(wxID_OK == filediag->ShowModal()){
-			wxFileName flname(filediag->GetPath());
+		if(wxID_OK == filediag.ShowModal()){
+			wxFileName flname(filediag.GetPath());
 			//create file
 			wxFile crt;
 			if( !crt.Create( flname.GetFullPath(), true ) ){
@@ -538,7 +538,6 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			crt.Close();
 			//Openning the file with text editor.
 			OpenFile( flname );
-			filediag->Destroy();
 			}
 		}
 	else if( event.GetId() == wxID_OPEN ){
@@ -552,7 +551,6 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 		if(wxID_OK == filediag.ShowModal()){
 			wxFileName flname(filediag.GetPath());
 			OpenFile( flname );
-			filediag.Destroy();
 			}
 		}
 	else if( event.GetId() >= MyFileHistory->GetBaseId() && event.GetId() <= MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1){
@@ -652,18 +650,12 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	if( event.GetId() == idXORView )
 		GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
 	else if( event.GetId() == idCompare ){
-		::CompareDialog *mcd = new CompareDialog( this );
-		mcd->ShowModal();
-		#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-		mcd->Destroy();
-		#endif
+		::CompareDialog mcd( this );
+		mcd.ShowModal();
 		}
 	else if( event.GetId() == idChecksum){
-		::ChecksumDialog *mcd = new ChecksumDialog( this );
-		mcd->ShowModal();
-		#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-		mcd->Destroy();
-		#endif
+		::ChecksumDialog mcd( this );
+		mcd.ShowModal();
 		}
 	event.Skip(false);
 	}
@@ -704,9 +696,8 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 	if( event.GetId() == wxID_PREFERENCES){
 		wxString OldLang = wxConfig::Get()->Read(_T("Language"), wxEmptyString);
-		PreferencesDialog *prefdlg = new PreferencesDialog( this );
-		prefdlg->ShowModal();
-		prefdlg->Destroy();
+		PreferencesDialog prefdlg( this );
+		prefdlg.ShowModal();
 
 		if ( wxConfig::Get()->Read(_T("Language")) != OldLang ) {
 			wxMessageBox( _("Please restart program for changes."), _("Info") );

@@ -242,7 +242,6 @@ HexEditorFrame::~HexEditorFrame(){
 
 	pConfig->Flush();
 
-	MyNotebook->Destroy();
 	MyAUI->UnInit();
 #if _FSWATCHER_
 	delete file_watcher;

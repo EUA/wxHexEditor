@@ -74,11 +74,14 @@ mhash/lib/.libs/libmhash.a:
 	cd mhash; ./configure --host=$(HOST) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS) ${OPTFLAGS}" CXXFLAGS="$(CXXFLAGS) ${OPTFLAGS}" CPPFLAGS="$(CPPFLAGS)"
 	cd mhash; $(MAKE) $(MFLAGS)
 
-win: $(RESOURCES) $(EXECUTABLE_WIN)
+src/windrv.o:
+	$(CXX) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -c src/windrv.c -o src/windrv.o
+
+win: $(RESOURCES) $(EXECUTABLE_WIN) src/windrv.o
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)
-	$(CXX) $(OBJECTS) $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -static ${LDFLAGS} -lpthread -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
+	$(CXX) $(OBJECTS) src/windrv.o $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -static ${LDFLAGS} -lpthread -lntdll -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
 	$(CXX) $(OBJECTS) ${LDFLAGS} $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)

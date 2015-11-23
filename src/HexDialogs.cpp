@@ -338,10 +338,11 @@ bool FindDialog::SearchAtBufferUnitTest(void){
 		memcpy( buff+i, src, sz );
 		UTF8SpeedHackChrs[0]=toupper(src[0]);
 		UTF8SpeedHackChrs[1]=toupper(src[1]);
-		//Manully change OPTIONS for testing!
+
+		#ifdef _DEBUG_
+        //Manully change OPTIONS for testing!
 		int f = SearchAtBuffer( buff, STEP, src, strlen(src), SEARCH_TEXT|SEARCH_MATCHCASE );
 		//int f = SearchAtBufferMultiThread( buff, STEP, src, strlen(src), SEARCH_TEXT);
-		#ifdef _DEBUG_
 		if( f not_eq i )
 			std::cout << "For key at : "<< i << "\t result = " << f << "\t sz: " << sz << std::endl;
 		else
@@ -1825,7 +1826,6 @@ void CopyAsDialog::PrepareFullText( wxString& cb, wxMemoryBuffer& buff ){
 	}
 
 void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, wxString startup, wxString ending, wxString blank ){
-	int selection = chcOption->GetSelection();
 	bool TAGenable=true;
 
 	wxString x3Blank=blank+blank+blank;
@@ -1900,7 +1900,6 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 
 		if(chkText->GetValue()){
 			//Add 16 Ascii rep
-			unsigned char chr;
 
 			if( current_offset == 0 )
 				for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
@@ -1929,11 +1928,6 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 						}
 
 					//Char filter for ascii
-//					chr = buff[ current_offset + i];
-//					if( (chr !=173) && ( (chr>31 && chr<127) || chr>159) )
-//						cb+= wxString::FromAscii( buff[ current_offset + i] );
-//					else
-//						cb+= wxString::FromAscii( '.' );
 					cb += wxString::From8BitData( &buff[ current_offset + i], 1 );
 					}
 				if(last_color_text.Len() and i==BytePerLine-1)

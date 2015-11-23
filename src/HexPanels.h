@@ -137,4 +137,3 @@ class DisassemblerPanel : public DisassemblerPanelGUI{
 	wxMemoryBuffer mybuff;
 	};
 #endif
-

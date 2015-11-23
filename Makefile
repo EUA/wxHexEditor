@@ -5,7 +5,7 @@ CC = $(shell echo `$(WXCONFIG) --cc`)
 CXX = $(shell echo `$(WXCONFIG) --cxx`)
 LDFLAGS += -lgomp
 #add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
-WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp
+WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp -Wall
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
@@ -42,6 +42,8 @@ DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
 VERSION = 0.23 Beta
+
+clang: $(eval CXX=clang++) all
 
 all:$(EXECUTABLE) langs
 

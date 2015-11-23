@@ -806,6 +806,10 @@ void HexEditorCtrl::TagCreator( bool QuickTag ){
 			last_tag_color = TE->NoteClrData.GetColour();
 			last_font_color = TE->FontClrData.GetColour();
 			MainTagArray.Add( TE );
+
+			//Sorting TAGs array because of quick painting code look sorted tags and just paint required ones.
+			MainTagArray.Sort( TagElementSort );
+
 			PreparePaintTAGs();
 			ClearPaint();
 			text_ctrl->RePaint();

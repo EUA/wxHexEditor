@@ -114,31 +114,118 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	}
 
 #ifdef __WXMSW__
+HANDLE GetDDK(PCWSTR a);
+#include "HDwin.h"
+
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	//Windows special device opening
-	if(myfilename.GetFullPath().StartsWith( wxT(".:"))
-		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk")) ){
-
+	std::cout << "WinOSDepOpen"<< std::endl;
+	if(IsWinDevice(myfilename)){
 		wxString devnm;
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
 		if(myfilename.GetFullPath().StartsWith( wxT(".:")))
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
 		else devnm = myfilename.GetFullPath();
+		//devnm=wxT("\\Device\\HarddiskVolume1");
+		std::wcout << devnm << std::endl;
+		if( myfilename.GetFullPath().StartsWith("\\Device") ){
+			hDevice=GetDDK(devnm);
+			std::cout << hDevice << std::endl;
+			int nDosLinkCreated;
+			HANDLE dev;
+			DWORD dwResult;
+			BOOL bResult;
+			PARTITION_INFORMATION diskInfo;
+			DISK_GEOMETRY driveInfo;
+			WCHAR szDosDevice[MAX_PATH], szCFDevice[MAX_PATH];
+			static LONGLONG deviceSize = 0;
+			wchar_t size[100] = {0}, partTypeStr[1024] = {0}, *partType = partTypeStr;
 
-		HANDLE hDevice;
-		hDevice = CreateFile( devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+			BOOL drivePresent = FALSE;
+			BOOL removable = FALSE;
 
+			drivePresent = TRUE;
+			windowsHDD wdd;
+
+			nDosLinkCreated = wdd.FakeDosNameForDevice (devnm.wchar_str(), szDosDevice, szCFDevice, FALSE);
+			hDevice = CreateFile( szCFDevice, GENERIC_READ | GENERIC_WRITE,
+												FILE_SHARE_READ | FILE_SHARE_WRITE,
+												NULL,
+												OPEN_EXISTING,
+												FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
+												NULL);
+
+			}
+		else{
+
+			if(0 /*FAM == ReadOnly*/)
+				hDevice = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY|FILE_FLAG_RANDOM_ACCESS, NULL);
+			else
+				hDevice = CreateFile( devnm, GENERIC_READ | GENERIC_WRITE,
+													FILE_SHARE_READ | FILE_SHARE_WRITE,
+													NULL,
+													OPEN_EXISTING,
+													FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
+													NULL);
+			}
+
+		if(hDevice==INVALID_HANDLE_VALUE) // this may happen if another program is already reading from disk
+			{
+			std::cout << "Device open invalid handle : " << hDevice << std::endl;
+			CloseHandle(hDevice);
+			return false;
+			}
+
+		// lock volume
 		DWORD dwResult;
+		if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
+			DWORD err = GetLastError ();
+			wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), err, devnm) );
+			}
+		//Dismount
+		//if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
+		//	DWORD err = GetLastError ();
+		//	wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
+		//	}
+
 		DISK_GEOMETRY driveInfo;
-		//dev = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+
 		DeviceIoControl (hDevice, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
 		BlockRWSize=driveInfo.BytesPerSector;
 		BlockRWCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
+
+/***  Testing code for \\.\PhysicalDriveX write operations.
+//		Strangely only sector 0 is writeable. Other sectors are not. I got ERROR_INVALID_BLOCK error. I don't know why... \\.\E: works properly. Do not understand why...
+
+//		System Error Codes: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382%28v=vs.85%29.aspx
+//		FileWrite() https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747%28v=vs.85%29.aspx
+//		SetFilePointer() https://msdn.microsoft.com/en-us/library/windows/desktop/aa365541%28v=vs.85%29.aspx
+//		SetFilePointerEx() https://msdn.microsoft.com/en-us/library/windows/desktop/aa365542%28v=vs.85%29.aspx
+
+		bool stat = SetFilePointer(hDevice, (1*BlockRWSize), 0, FILE_BEGIN);
+		std::cout << "Sector set Win Mode:" << 1*BlockRWSize << " status:" << stat << "\tLoc:"<<SetFilePointer( hDevice, 0, NULL,  FILE_CURRENT )<< "\tLast err:"<< GetLastError() <<std::endl;
+
+		long unsigned int rd;
+		char x[1024];
+		bool success=ReadFile( hDevice, &x, BlockRWSize, &rd, NULL );
+		std::cout << "BlockRead Win Mode:" << success << "\trd:" << rd <<"\tLast err:"<< GetLastError() << std::endl;
+		x[50]='H';
+		x[51]='e';
+		x[52]='l';
+		x[53]='l';
+		x[54]='o';
+		stat = SetFilePointer(hDevice, (1*BlockRWSize), 0, FILE_BEGIN);
+		std::cout << "Sector set Win Mode:" << 1*BlockRWSize << " status:" << stat << "\tLast err:"<< GetLastError() <<std::endl;
+
+		success=WriteFile(hDevice, &x, BlockRWSize, &rd, NULL);//*= to make upd
+		std::cout << "BlockWrite Win Mode:" << success << "\trd:" << rd << "\tLast err:"<< GetLastError() << std::endl;
+//*/
 
 		int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hDevice), 0);
 	#ifdef _DEBUG_
 		std::cout<< "Win Device Info:\n" << "Bytes per sector = " <<  BlockRWSize << "\nTotal number of bytes = " << BlockRWCount << std::endl;
 	#endif
+
 		wxFile::Attach( fd );
 		return true;
 		}
@@ -276,6 +363,29 @@ bool FAL::Close(){
 			if( ProcessID >=0 )
 				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, NULL)) >= 0 );
 			#endif
+			#ifdef __WXMSW__
+			if(IsWinDevice( the_file ) ){
+				_close( reinterpret_cast<int>(hDevice) );
+				//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
+				wxString devnm;
+				if(the_file.GetFullPath().StartsWith( wxT(".:")))
+					devnm = wxString(wxT("\\\\.")) + the_file.GetFullPath().AfterFirst(':');
+				else devnm = the_file.GetFullPath();
+
+				DWORD dwResult;
+				// unlock volume
+				DeviceIoControl (hDevice, FSCTL_UNLOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL);
+
+				//mount
+				//if (!DeviceIoControl (hDevice, FSCTL_MOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
+				//	DWORD err = GetLastError ();
+				//	wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
+				//	}
+
+				hDevice=NULL;
+				return true;
+				}
+			#endif // __WXMSW__
 			return wxFile::Close();
 			};
 
@@ -306,16 +416,25 @@ FAL::~FAL(){
 	}
 
 bool FAL::SetAccessMode( FileAccessMode fam ){
-	if( ProcessID > 0 ){
+	if( ProcessID > 0
+	#ifdef __WXMSW__
+	or (IsWinDevice( the_file ) )
+#endif // __WXMSW__
+		){
 		file_access_mode = fam;
 		return true;
 		}
 
-	if( Access( the_file.GetFullPath() , (fam == ReadOnly ? wxFile::read : wxFile::read_write) ) ){
+	if( Access( the_file.GetFullPath() , (fam == ReadOnly ? wxFile::read : wxFile::read_write) )
+#ifdef __WXMSW__
+	or (IsWinDevice( the_file ) )
+#endif // __WXMSW__
+		){
 		Close();
-		Open( the_file.GetFullPath(), (fam == ReadOnly ? wxFile::read : wxFile::read_write) );
+		//Open( the_file.GetFullPath(), (fam == ReadOnly ? wxFile::read : wxFile::read_write) );
+		OSDependedOpen( the_file, fam );
 		if(! IsOpened()){
-			wxBell();wxBell();wxBell();
+			wxBell();
 			wxMessageBox( _("File load error!.\nFile closed but not opened while access change. For avoid corruption close the program"),_("Error"), wxOK|wxICON_ERROR );
 			file_access_mode = AccessInvalid;
 			return false;
@@ -404,7 +523,10 @@ size_t FAL::BlockWrite( unsigned char* buffer, unsigned size ){
 
 	std::cout << "buffer write : " << size << "put_ptr :" << put_ptr << std::endl;
 	uint64_t StartSector = put_ptr / BlockRWSize;
+	unsigned StartShift = put_ptr - StartSector*BlockRWSize;
+	uint64_t EndSector = (put_ptr + size)/BlockRWSize;
 
+	int rd = 0;
 	wxFile::Seek(StartSector*BlockRWSize);
 	size_t ret = Write(buffer, size);//*= to make update success true or false
 	put_ptr+=size;
@@ -425,6 +547,8 @@ bool FAL::Apply( void ){
 					int rd_size = (EndSector - StartSector + 1 )*BlockRWSize;// +1 for make read least one sector
 					char *bfr = new char[rd_size];
 					int rd = 0;
+
+					//First read the original sector
 					if ( ProcessID >=0 ){
 						#ifndef __WXMSW__
 						long word=0;
@@ -445,9 +569,11 @@ bool FAL::Apply( void ){
 						delete [] bfr;
 						return false;
 						}
+
 					//if already written and makeing undo, than use old_data
 					memcpy( bfr+StartShift, (DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
 
+					//Than apply the changes
 					if ( ProcessID >=0 ){
 						int wr=0;
 						long word=0;
@@ -461,15 +587,16 @@ bool FAL::Apply( void ){
 						success*=true;
 						#endif
 						}
-					else
+					else{
+						wxFile::Seek(StartSector*BlockRWSize);
 						success*=Write(bfr, rd_size);//*= to make update success true or false
-
+						}
 					delete [] bfr;
 					}
-				else
+				else{
 					//if already written and makeing undo, than use old_data
 					success*=Write((DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
-
+					}
 				if( success )
 					DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag
 				}

@@ -57,7 +57,7 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
  		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
  		for(int i=0; i < DevVector.size();i++)
 // TODO (death#1#): Enable \\Device files!
-			if( not wxString(DevVector[i]).StartsWith(wxT("\\Device")))
+			if( !wxString(DevVector[i]).StartsWith(wxT("\\Device")))
 				disks.Add(wxString(DevVector[i]));
 #endif
 	if( WithPartitions )
@@ -68,13 +68,13 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 	for( unsigned i =0 ; i < disks.Count() ; i++){
 		//SubMenu categorization for posix
 		#ifndef __WXMSW__
-		if( disks.Item(i).StartsWith( disks.Item( last_item ) ) and i not_eq 0 )
+		if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
 			disks.RemoveAt(i--);
 		else
 			last_item = i;
 
 		#else	//Windows device menu categorization
-		if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) and i not_eq 0 )
+		if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 )
 			disks.RemoveAt(i);
 		else //Create new submenu
 			last_item = i;
@@ -85,7 +85,7 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 	}
 
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
-				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T(_VERSION_STR_ )){
+				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _VERSION_STR_ ){
 	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
 	int no = AttachConsole(ATTACH_PARENT_PROCESS); //doesn't work!, don't know why....
 	///Use LDFLAGS="Wl,--subsystem,console -mconsole" to have debug window
@@ -97,7 +97,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	#endif // _FSWATCHER_
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
-	license=_T("wxHexEditor is a hex editor for HUGE files and devices.\n"
+	license= "wxHexEditor is a hex editor for HUGE files and devices.\n"
 			 "Copyright (C) 2006-2012  Erdem U. Altinyurt\n"
 			 "\n"
 			 "This program is free software; you can redistribute it and/or\n"
@@ -119,7 +119,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
 			 "\n"
 			 "home:  wxhexeditor.org  -  diskeditor.net\n"
-			 "email: spamjunkeater@gmail.com\n");
+			 "email: spamjunkeater@gmail.com\n";
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
 	int x = pConfig->Read(_T("ScreenX"), 100),
@@ -184,7 +184,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	MyAUI->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler( HexEditorFrame::OnFloatingPaneClosed ), NULL, this );
 
 	bool update_enable = false;
-	if ( not wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
+	if ( !wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
 		update_enable = true;
 		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
 		//First Run!
@@ -242,7 +242,6 @@ HexEditorFrame::~HexEditorFrame(){
 
 	pConfig->Flush();
 
-	MyNotebook->Destroy();
 	MyAUI->UnInit();
 #if _FSWATCHER_
 	delete file_watcher;
@@ -445,7 +444,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 		wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &autoShowTagsSwitch, true );
 
 		//Detect from file name if we are opening a RAM Process:
-		if( (x->MainTagArray.Count() > 0 and autoShowTagsSwitch)  or filename.GetFullPath().Lower().StartsWith( wxT("-pid=")) )
+		if( (x->MainTagArray.Count() > 0 && autoShowTagsSwitch)  || filename.GetFullPath().Lower().StartsWith( wxT("-pid=")) )
 		MyAUI->GetPane(MyTagPanel).Show( true );
 		MyAUI->Update();
 
@@ -472,7 +471,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( filename.GetFullPath().Append(wxT(".sha256")) );
 #if _FSWATCHER_
-		if(not filename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
+		if(!filename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
 			if(file_watcher!=NULL){
 				file_watcher->Add( filename.GetFullPath(), wxFSW_EVENT_MODIFY );
 				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, x);
@@ -492,8 +491,9 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 	}
 
 HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
-// TODO (death#1#): BUG : MyNotebook = warning RTTI symbol not found for class wxAuiFloatingFrame	int x = MyNotebook->GetSelection();
-	return static_cast<HexEditor*>( MyNotebook->GetPage( x ) );
+// TODO (death#1#): BUG : MyNotebook = warning RTTI symbol not found for class wxAuiFloatingFrame
+	int x = MyNotebook->GetSelection();
+	return x == wxNOT_FOUND ? NULL : static_cast<HexEditor*>( MyNotebook->GetPage( x ) );
 	}
 
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
@@ -507,29 +507,29 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			if(lngt.IsEmpty()){
 				return;
 			}
-			else if( lngt.ToULong( &size, 10 ) and (size > 0) )// ToULongLong has problems with Windows...
+			else if( lngt.ToULong( &size, 10 ) && (size > 0) )// ToULongLong has problems with Windows...
 				break;
 
 			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),lngt.ToULong( &size, 10 ) ) ,_T("Error!"), wxICON_ERROR, this );
 			}
 		//Save file
-		wxFileDialog* filediag = new wxFileDialog(this,
+		wxFileDialog filediag(this,
 									_("Choose a file for save as"),
 									wxEmptyString,
 									wxEmptyString,
-									wxT("*"),
+									wxFileSelectorDefaultWildcardStr,
 									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 
-		if(wxID_OK == filediag->ShowModal()){
-			wxFileName flname(filediag->GetPath());
+		if(wxID_OK == filediag.ShowModal()){
+			wxFileName flname(filediag.GetPath());
 			//create file
 			wxFile crt;
-			if( not crt.Create( flname.GetFullPath(), true ) ){
+			if( !crt.Create( flname.GetFullPath(), true ) ){
 				wxMessageBox( _("File cannot create!") ,_T("Error!"), wxICON_ERROR, this );
 				return;
 				}
-			if( not crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
+			if( !crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
 				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR, this );
 				return;
 				}
@@ -538,7 +538,6 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			crt.Close();
 			//Openning the file with text editor.
 			OpenFile( flname );
-			filediag->Destroy();
 			}
 		}
 	else if( event.GetId() == wxID_OPEN ){
@@ -546,16 +545,15 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 									_("Choose a file for editing"),
 									wxEmptyString,
 									wxEmptyString,
-									wxT("*"),
+									wxFileSelectorDefaultWildcardStr,
 									wxFD_FILE_MUST_EXIST|wxFD_OPEN|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 		if(wxID_OK == filediag.ShowModal()){
 			wxFileName flname(filediag.GetPath());
 			OpenFile( flname );
-			filediag.Destroy();
 			}
 		}
-	else if( event.GetId() >= MyFileHistory->GetBaseId() and event.GetId() <= MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1){
+	else if( event.GetId() >= MyFileHistory->GetBaseId() && event.GetId() <= MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1){
 		wxString filename = MyFileHistory->GetHistoryFile( event.GetId() - MyFileHistory->GetBaseId() );
 		OpenFile( filename );
 		}
@@ -570,7 +568,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 												wxFileDialog filediag(this,_("Choose a file for save as"),
 																					wxEmptyString,
 																					wxEmptyString,
-																					wxT("*"),
+																					wxFileSelectorDefaultWildcardStr,
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
 												if(wxID_OK == filediag.ShowModal())
@@ -636,7 +634,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_REPLACE:	MyHexEditor->ReplaceDialog();			break;
 					case idGotoOffset:	MyHexEditor->GotoDialog();				break;
 					case wxID_CLOSE:
-						OnQuit( event );
+						Close();
 						break;
 					default: wxBell();
 					}
@@ -652,18 +650,12 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	if( event.GetId() == idXORView )
 		GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
 	else if( event.GetId() == idCompare ){
-		::CompareDialog *mcd = new CompareDialog( this );
-		mcd->ShowModal();
-		#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-		mcd->Destroy();
-		#endif
+		::CompareDialog mcd( this );
+		mcd.ShowModal();
 		}
 	else if( event.GetId() == idChecksum){
-		::ChecksumDialog *mcd = new ChecksumDialog( this );
-		mcd->ShowModal();
-		#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-		mcd->Destroy();
-		#endif
+		::ChecksumDialog mcd( this );
+		mcd.ShowModal();
 		}
 	event.Skip(false);
 	}
@@ -704,9 +696,8 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 	if( event.GetId() == wxID_PREFERENCES){
 		wxString OldLang = wxConfig::Get()->Read(_T("Language"), wxEmptyString);
-		PreferencesDialog *prefdlg = new PreferencesDialog( this );
-		prefdlg->ShowModal();
-		prefdlg->Destroy();
+		PreferencesDialog prefdlg( this );
+		prefdlg.ShowModal();
 
 		if ( wxConfig::Get()->Read(_T("Language")) != OldLang ) {
 			wxMessageBox( _("Please restart program for changes."), _("Info") );
@@ -739,33 +730,18 @@ void HexEditorFrame::OnOptionsMenu( wxCommandEvent& event ){
 	}
 
 void HexEditorFrame::OnClose( wxCloseEvent& event ){
-	wxCommandEvent evt;
-	OnQuit( evt );
-	event.Skip(false);
-	}
-
-void HexEditorFrame::OnQuit( wxCommandEvent& event ){
 	HexEditor *MyHexEditor;
-	for(;;){
-		if( MyNotebook->GetPageCount() ){
-			MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( 0 ) );
-			if( MyHexEditor != NULL ){
-				if( MyHexEditor->FileClose() ){
-					MyNotebook->DeletePage( 0 );
-					MyHexEditor = NULL;
-					}
-				else
-					break;
+	for( unsigned i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
+		MyHexEditor = static_cast<HexEditor*>(MyNotebook->GetPage( i ) );
+		if( MyHexEditor != NULL ){
+			if( !MyHexEditor->FileClose() ){
+				event.Veto();
+				return;
 				}
-			else
-				wxLogError(_("Error on quit!"));
-			}
-		else{
-			Destroy();
-			//event.Skip();//Makes error on OSX
-			return;
 			}
 		}
+
+	event.Skip();
 	}
 
 void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
@@ -805,7 +781,7 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 		case idShowHex:
 			GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , true );
 			GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , event.IsChecked() );
-			if(not event.IsChecked())
+			if(!event.IsChecked())
 				mbar->Check( idShowText, true );
 			//For vanishing control at Win & OSX, not needed on GTK
 			MyNotebook->Layout();
@@ -813,7 +789,7 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 		case idShowText:
 			GetActiveHexEditor()->ControlShow( HexEditorCtrl::HEX_CTRL , true );
 			GetActiveHexEditor()->ControlShow( HexEditorCtrl::TEXT_CTRL , event.IsChecked() );
-			if(not event.IsChecked())
+			if(!event.IsChecked())
 				mbar->Check( idShowHex, true );
 			//For vanishing control at Win & OSX, not needed on GTK
 			MyNotebook->Layout();
@@ -828,7 +804,7 @@ void HexEditorFrame::OnHelpMenu( wxCommandEvent& event ){
 	if(event.GetId() == wxID_ABOUT ){
 		wxAboutDialogInfo AllAbout;
 		AllAbout.SetName(_T("wxHexEditor"));
-		AllAbout.SetVersion( _T(_VERSION_STR_) );
+		AllAbout.SetVersion( _VERSION_STR_ );
 		AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices."));
 		AllAbout.SetCopyright(_T("(C) 2006-2012 Erdem U. Altinyurt"));
 		AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
@@ -869,7 +845,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 //	mbar->Check(idComparePanel, MyComparePanel->IsShown());
 //	mbar->Check(idToolbar, Toolbar->IsShown());
 
-	mbar->Check(idXORView, (MyNotebook->GetPageCount() and GetActiveHexEditor()->IsFileUsingXORKey()));
+	mbar->Check(idXORView, (MyNotebook->GetPageCount() && GetActiveHexEditor()->IsFileUsingXORKey()));
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowOffset, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowHex, MyNotebook->GetPageCount() );
@@ -902,7 +878,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 			//SubMenu categorization for posix
 			#ifndef __WXMSW__
-			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) and i not_eq 0 )
+			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
 				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
 			else{
 				nm=new wxMenu( );
@@ -911,7 +887,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				last_item = i;
 				}
 			#else	//Windows device menu categorization
-			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) and i not_eq 0 ){
+			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 ){
 				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
 				}
 			else{ //Create new submenu
@@ -970,7 +946,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			MyNotebook->Layout();
 			}
 
-		else if(event.GetId() == SELECT_EVENT or event.GetId()==XORVIEW_EVENT){
+		else if(event.GetId() == SELECT_EVENT || event.GetId()==XORVIEW_EVENT){
 			#ifdef _DEBUG_SELECT_
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
@@ -984,7 +960,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
 			mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
 
-			if(not GetActiveHexEditor()->IsFileUsingXORKey() and not GetActiveHexEditor()->IsBlockDevice() ){
+			if(!GetActiveHexEditor()->IsFileUsingXORKey() && !GetActiveHexEditor()->IsBlockDevice() ){
 				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
 				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
 				Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
@@ -1009,7 +985,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			wxString S = MyNotebook->GetPageText(sel);
 			wxString XORViewStr = wxT(" (XORView)");
 			if( event.GetString()==wxT("Checked") )
-				if( not S.EndsWith(XORViewStr) )
+				if( !S.EndsWith(XORViewStr) )
 					S.Append( XORViewStr );
 			if( event.GetString()==wxT("UnChecked") )
 				if( S.EndsWith( XORViewStr ))
@@ -1092,7 +1068,7 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 		   MyHexEditor->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditorFrame::OnKeyDown)  ,NULL, this);
 			if( MyHexEditor->FileClose() ){
 #if _FSWATCHER_
-				if(not MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid=")))
+				if(!MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid=")))
 					if(file_watcher!=NULL){
 						file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
 						Disconnect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
@@ -1139,7 +1115,7 @@ bool HexEditorFrame::CreateFileWatcher(){
 	//Reconnecting already open files (open by argument) to FSWATCHER event.
 	for( unsigned i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( i ) );
-		if(not MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid="))){
+		if(!MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid="))){
 			if(file_watcher!=NULL){
 				file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
 				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);

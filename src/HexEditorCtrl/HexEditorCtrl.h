@@ -26,7 +26,7 @@
 
 #ifdef __WXOSX__
    #include <wx/version.h>
-	#if not wxCHECK_VERSION(3,0,0)
+	#if !wxCHECK_VERSION(3,0,0)
 		#define DO_NOT_USE_THREAD_FOR_SCROLL
 	#endif
 #endif
@@ -61,7 +61,7 @@ class Select{	//for using EventHandler
 			evth = evth_;
 			}
 		uint64_t GetSize( void ){
-			return abs( EndOffset - StartOffset)+1;};	//for select byte 13 start=13, end=13
+			return abs(static_cast<int64_t>(EndOffset - StartOffset))+1;};	//for select byte 13 start=13, end=13
 		void SetState( bool new_state ){
 			state = new_state;
 

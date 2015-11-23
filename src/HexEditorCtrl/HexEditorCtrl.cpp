@@ -167,7 +167,7 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 				break;
 
 			if(    (M > page_offset)
-				and (M <= page_offset + ByteCapacity()) ){
+				&& (M <= page_offset + ByteCapacity()) ){
 
 				int draw_line = M - page_offset;
 				hex_ctrl->ThinSeparationLines.Add( 2*draw_line );
@@ -182,7 +182,7 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 
 	offset_ctrl->SetValue( position, BytePerLine() );
 
-	if( offset_scroll->GetThumbPosition() not_eq (page_offset / BytePerLine()) )
+	if( offset_scroll->GetThumbPosition() != (page_offset / BytePerLine()) )
 		offset_scroll->SetThumbPosition( page_offset / BytePerLine() );
 
 	if( paint ){
@@ -305,7 +305,7 @@ void HexEditorCtrl::SetStyle( ) {
 //Handles selection operations.
 bool HexEditorCtrl::Selector(){
 	wxWindow* FocusAt=FindFocus();
-	if( not (FocusAt == hex_ctrl || FocusAt == text_ctrl) ){		//Checks If selecton from hex or text control
+	if( !(FocusAt == hex_ctrl || FocusAt == text_ctrl) ){		//Checks If selecton from hex or text control
 		#ifdef _DEBUG_
 		std::cout << "Selector without focus captured." << std::endl;
 		std::cout << "use last focus as a work-a-round." << std::endl;
@@ -317,7 +317,7 @@ bool HexEditorCtrl::Selector(){
 	std::cout << "Selector captured at CursorOffset()=" << std::dec << CursorOffset() << "\t select->StartOffset:" <<  select->StartOffset << std::endl;
 	#endif
 	select->EndOffset = CursorOffset();	//Than make selection
-	if( not select->GetState() ){	// If no select available,
+	if( !select->GetState() ){	// If no select available,
 		select->SetState( true );	// then set start selection procedure
 		select->OriginalStartOffset = select->StartOffset = select->EndOffset;
 		return true;
@@ -394,10 +394,10 @@ void HexEditorCtrl::PaintTAGsPrefilter( ArrayOfTAG& Arr ){
 
 	unsigned s = 0;
 	if (c>0)
-	for( ; page_offset > (Arr.Item(s))->end and s<c-1; s++ );
+	for( ; page_offset > (Arr.Item(s))->end && s<c-1; s++ );
 	unsigned e=s;
 	if (c>0)
-	for( ; page_offset + GetByteCount() > Arr.Item(e)->start and e<c-1 ; e++ );
+	for( ; page_offset + GetByteCount() > Arr.Item(e)->start && e<c-1 ; e++ );
 //#ifdef _DEBUG_
 	std::cout << "Tags needed between : " << s << " - " << e << std::endl;
 //#endif //_DEBUG_
@@ -604,6 +604,11 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 //	text_ctrl->SetSize( wxSize( text_x, y ));
 	m_static_byteview->SetMinSize( wxSize( text_x, m_static_offset->GetSize().GetY()) );
 
+	// Destroy the sizer created by the form builder before adding the windows
+	// managed by it to another sizer, otherwise we would crash later when
+	// destroying the sizer as it wouldn't know about the windows it contains.
+	SetSizer(NULL);
+
 	//Preparing Sizer
 	wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
 #if 1
@@ -611,9 +616,9 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	fgSizer1->Add( m_static_address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT, 2 );
 	fgSizer1->Add( m_static_byteview, 0, wxALIGN_CENTER|wxALL, 0 );
 	fgSizer1->Add( m_static_null, 0, wxALIGN_CENTER, 3 );
-	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
-	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( offset_ctrl, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( hex_ctrl, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 0 );
+	fgSizer1->Add( text_ctrl, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 0 );
 	fgSizer1->Add( offset_scroll_real, 0, wxEXPAND, 0 );
 
 #else
@@ -653,7 +658,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Adjusting custom hex formatting bar - Converting 00010203 -> 00 01 02 03 for "xx " format.
-	for( unsigned x = 0, i=0 ; x < hex_x and i < temp_address.Len() ; x++ )
+	for( unsigned x = 0, i=0 ; x < hex_x && i < temp_address.Len() ; x++ )
 		if(hex_ctrl->IsDenied(x))
 			address << wxT(" ");
 		else
@@ -672,10 +677,10 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 }
 
 inline uint8_t HexEditorCtrl::GetCharToHexSize( void ){
-	if(text_ctrl->FontEnc == wxFONTENCODING_UTF16LE or
+	if(text_ctrl->FontEnc == wxFONTENCODING_UTF16LE ||
 		text_ctrl->FontEnc == wxFONTENCODING_UTF16BE )
 		return 4;
-	if(text_ctrl->FontEnc == wxFONTENCODING_UTF32LE or
+	if(text_ctrl->FontEnc == wxFONTENCODING_UTF32LE ||
 		text_ctrl->FontEnc == wxFONTENCODING_UTF32BE )
 		return 8;
 	return 2;
@@ -713,7 +718,7 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 		int old_hex_location = GetLocalHexInsertionPoint();	//requesting old hex location
 		if( new_hex_location != old_hex_location ){				//if hex selection addresses are different, start selection routine
 
-			if( not select->GetState() )	//if this is new selection start
+			if( !select->GetState() )	//if this is new selection start
 				if( Selector() == false )	//and  select without focus
 					return;						//don't make anything.
 			SetLocalHexInsertionPoint( new_hex_location );	//Moving cursor to new location.
@@ -722,12 +727,12 @@ void HexEditorCtrl::OnMouseMove( wxMouseEvent& event ){
 			}
 		}
 	else{
-		if( event.GetEventObject() == hex_ctrl or
-			event.GetEventObject() == text_ctrl or
+		if( event.GetEventObject() == hex_ctrl ||
+			event.GetEventObject() == text_ctrl ||
 			event.GetEventObject() == offset_ctrl ){
 			TagElement* tg = static_cast<wxHexCtrl*>(event.GetEventObject())->GetTagByPix( event.GetPosition() );
-			if( (tg == NULL and TAGMutex==true) or 	 //If there is no Tag at under and tag mutex available
-				(tg != NULL and not tg->visible) )		// or Changed to new tag
+			if( (tg == NULL && TAGMutex==true) || 	 //If there is no Tag at under and tag mutex available
+				(tg != NULL && !tg->visible) )		// or Changed to new tag
 				TagHideAll();
 			}
 		event.Skip(); //enable tags but problems with paint?
@@ -764,7 +769,7 @@ void HexEditorCtrl::OnFocus( wxFocusEvent& event){
 #ifdef _DEBUG_
 	std::cout << "HexEditorCtrl::OnFocus( wxFocusEvent& event ) \n" ;
 #endif
-	if( event.GetWindow() == hex_ctrl or
+	if( event.GetWindow() == hex_ctrl ||
 		 event.GetWindow() == text_ctrl  )
 		LastFocused=event.GetWindow();
 	event.Skip();//let wxHexCtrl::Focus set the cursor
@@ -793,7 +798,7 @@ void HexEditorCtrl::TagCreator( bool QuickTag ){
 		TE->FontClrData.SetColour( last_font_color );
 
 		int a=wxID_SAVE;
-		if( not QuickTag ){
+		if( !QuickTag ){
 			TagDialog x( *TE, this );
 			a=x.ShowModal();
 			}
@@ -875,7 +880,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 
 				while (child) {
 					if (child->GetName() == wxT("TAG")) {
-						wxString propvalue = child->GetPropVal(wxT("id"), wxEmptyString);
+                        wxString propvalue = child->GetAttribute(wxT("id"), wxEmptyString);
 	#ifdef _DEBUG_TAG_
 						std::cout << "TAG ID:" << propvalue.ToAscii() << " readed.\n";
 	#endif
@@ -926,7 +931,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TagElement *TAG = MainTagArray.Item(i);
-		if( size < 0 and TAG->start >= location and TAG->start <= location+(-size) ){//Deletion, (-size) double negation indicates deletion range.
+		if( size < 0 && TAG->start >= location && TAG->start <= location+(-size) ){//Deletion, (-size) double negation indicates deletion range.
 			MainTagArray.RemoveAt(i); //Deletion of code if start inside deletion selection.
 			continue;
 			}
@@ -950,7 +955,7 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 
 		wxXmlNode *node_Root = new wxXmlNode( NULL, wxXML_ELEMENT_NODE, wxT("wxHexEditor_XML_TAG"), wxEmptyString, NULL , NULL);
 
-		wxXmlProperty *prop_filename = new wxXmlProperty( wxT("path"), flnm.GetFullPath(), NULL);
+		wxXmlAttribute *prop_filename = new wxXmlAttribute( wxT("path"), flnm.GetFullPath(), NULL);
 		wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), wxEmptyString, prop_filename , NULL);
 
 		MainTagArray.Sort(TagElementSort);
@@ -958,7 +963,7 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			//Used reverse order for make XML offsets increasing.
 			TagElement *TAG = MainTagArray.Item(i);
 
-			wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
+			wxXmlAttribute *ID = new wxXmlAttribute( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
 			wxXmlNode *node_Tag = new wxXmlNode( node_File, wxXML_ELEMENT_NODE, wxT("TAG"), wxEmptyString, ID , NULL);
 
 			wxXmlNode *element_NoteColour		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("note_colour"), wxEmptyString, NULL, NULL);
@@ -971,14 +976,14 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			new wxXmlNode( element_TagText, wxXML_TEXT_NODE, wxT("tag_text"), TAG->tag, NULL, NULL);
 
 			wxXmlNode *element_End 			= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("end_offset"), wxEmptyString, NULL, element_TagText);
-			new wxXmlNode( element_End, wxXML_TEXT_NODE, wxT("end_offset"), wxString::Format(wxT("%" wxLongLongFmtSpec "u"),TAG->end ) , NULL, NULL);
+			new wxXmlNode( element_End, wxXML_TEXT_NODE, wxT("end_offset"), wxString::Format("%" wxLongLongFmtSpec "u",TAG->end ) , NULL, NULL);
 
 			wxXmlNode *element_Start		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("start_offset"), wxEmptyString, NULL, element_End);
-			new wxXmlNode( element_Start, wxXML_TEXT_NODE, wxT("start_offset"), wxString::Format(wxT("%" wxLongLongFmtSpec "u"), TAG->start ), NULL, NULL);
+			new wxXmlNode( element_Start, wxXML_TEXT_NODE, wxT("start_offset"), wxString::Format("%" wxLongLongFmtSpec "u", TAG->start ), NULL, NULL);
 			}
 		doc.SetFileEncoding( wxT("UTF-8") );
 		doc.SetRoot( node_Root );
-		if( not flnm.GetFullName().Lower().EndsWith(wxT(".tags")) )
+		if( !flnm.GetFullName().Lower().EndsWith(wxT(".tags")) )
 			return doc.Save(flnm.GetFullPath() + wxT(".tags"));
 		return doc.Save(flnm.GetFullPath());
 		}
@@ -1011,7 +1016,7 @@ uint64_t HexEditorCtrl::CursorOffset( void ){
 	}
 
 uint64_t HexEditorCtrl::ProcessRAM_GetFootPrint(){
-	uint64_t fp;
+	uint64_t fp = 0;
 	for( unsigned i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
 		fp += ProcessRAMMap.Item(i+1);
 		fp -= ProcessRAMMap.Item(i);
@@ -1023,7 +1028,7 @@ uint64_t HexEditorCtrl::ProcessRAM_GetVirtualOffset( uint64_t offset ){
 	uint64_t fp=0;
 	for( unsigned i = 0; i+1 < ProcessRAMMap.Count() ; i+=2){
 		ProcessRAMMap.Item(i);
-		if( i == 0 and ProcessRAMMap.Item(i) > offset )
+		if( i == 0 && ProcessRAMMap.Item(i) > offset )
 			return 0;
 		//If map end smaller than offset, just add memory map size to "fp"
 		if( offset > ProcessRAMMap.Item(i+1) ){
@@ -1064,11 +1069,11 @@ bool HexEditorCtrl::ProcessRAM_FindMap( uint64_t offset, uint64_t& start, uint64
 	end=0;
 	if(ProcessRAMMap.Count())
 		for( unsigned i=0; i < ProcessRAMMap.Count() ; i+=2 )
-			if(( ProcessRAMMap.Item(i) <=  offset ) and
+			if(( ProcessRAMMap.Item(i) <=  offset ) &&
 				( ProcessRAMMap.Item(i+1) >= offset )){
 					start=ProcessRAMMap.Item(i);
 					end=ProcessRAMMap.Item(i+1);
-					if( backward and i >= 2 ){
+					if( backward && i >= 2 ){
 						start=ProcessRAMMap.Item(i-2);
 						end=ProcessRAMMap.Item(i-2+1);
 						}

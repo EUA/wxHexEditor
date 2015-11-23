@@ -479,7 +479,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_binary->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	m_textctrl_binary->SetToolTip( _("Press enter to make changes!") );
 	
-	binSizer->Add( m_textctrl_binary, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	binSizer->Add( m_textctrl_binary, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_check_edit = new wxCheckBox( this, wxID_ANY, _("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_check_edit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
@@ -499,7 +499,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
 	m_textctrl_8bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_8bit, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_8bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_16bit = new wxStaticText( this, ID_DEFAULT, _("16 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_16bit->Wrap( -1 );
@@ -510,7 +510,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
 	m_textctrl_16bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_16bit, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_16bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_32bit = new wxStaticText( this, ID_DEFAULT, _("32 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_32bit->Wrap( -1 );
@@ -521,7 +521,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_32bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_64bit = new wxStaticText( this, ID_DEFAULT, _("64 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_64bit->Wrap( -1 );
@@ -532,7 +532,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_64bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_64bit, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_64bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_float = new wxStaticText( this, ID_DEFAULT, _("Float"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_float->Wrap( -1 );
@@ -543,7 +543,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_float->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_float, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_float, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_double = new wxStaticText( this, ID_DEFAULT, _("Double"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_double->Wrap( -1 );
@@ -554,7 +554,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_double->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_double, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_double, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	
 	mainSizer->Add( numSizer, 1, wxEXPAND, 5 );
@@ -603,7 +603,7 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	m_buttonClear = new wxButton( this, wxID_ANY, _("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonClear->Hide();
 	
-	mainSize->Add( m_buttonClear, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 2 );
+	mainSize->Add( m_buttonClear, 0, wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 2 );
 	
 	
 	this->SetSizer( mainSize );
@@ -678,7 +678,7 @@ DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, con
 	mainSizer->Add( bSizerTop, 0, wxEXPAND, 5 );
 	
 	m_dasmCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP|wxTE_MULTILINE|wxTE_READONLY );
-	mainSizer->Add( m_dasmCtrl, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	mainSizer->Add( m_dasmCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	
 	this->SetSizer( mainSizer );
@@ -732,7 +732,7 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	m_comboBoxOffset->Append( _(" ") );
 	m_comboBoxOffset->Append( _(" ") );
 	m_comboBoxOffset->Append( _(" ") );
-	bSizerTop->Add( m_comboBoxOffset, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizerTop->Add( m_comboBoxOffset, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_dec = new wxRadioButton( this, wxID_ANY, _("Decimal"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_dec->SetValue( true ); 
@@ -914,10 +914,10 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	btnFind = new wxButton( this, wxID_ANY, _("Find"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnFind->SetDefault(); 
-	bSizerButtons->Add( btnFind, 0, wxALIGN_CENTER|wxEXPAND|wxTOP, 2 );
+	bSizerButtons->Add( btnFind, 0, wxALIGN_CENTER|wxTOP, 2 );
 	
 	btnFindAll = new wxButton( this, wxID_ANY, _("Find All"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnFindAll, 0, wxALIGN_CENTER|wxEXPAND|wxTOP, 2 );
+	bSizerButtons->Add( btnFindAll, 0, wxALIGN_CENTER|wxTOP, 2 );
 	
 	btnFindSomeBytes = new wxButton( this, wxID_ANY, _("Find Some Bytes"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnFindSomeBytes->SetToolTip( _("This function finds some different values at file. Usefull for finding non-null sections at disks.") );
@@ -932,15 +932,15 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	btnReplace = new wxButton( this, wxID_ANY, _("Replace"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnReplace->Hide();
 	
-	bSizerButtons->Add( btnReplace, 0, wxTOP|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 2 );
+	bSizerButtons->Add( btnReplace, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
 	
 	btnReplaceAll = new wxButton( this, wxID_ANY, _("Replace All"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnReplaceAll->Hide();
 	
-	bSizerButtons->Add( btnReplaceAll, 0, wxTOP|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 2 );
+	bSizerButtons->Add( btnReplaceAll, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
 	
 	btnClose = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnClose, 0, wxTOP|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 2 );
+	bSizerButtons->Add( btnClose, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
 	
 	
 	bSizerMain->Add( bSizerButtons, 0, wxEXPAND|wxRIGHT, 5 );

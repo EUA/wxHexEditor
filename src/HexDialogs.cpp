@@ -339,7 +339,6 @@ bool FindDialog::SearchAtBufferUnitTest(void){
 		UTF8SpeedHackChrs[0]=toupper(src[0]);
 		UTF8SpeedHackChrs[1]=toupper(src[1]);
 
-		#ifdef _DEBUG_
         //Manully change OPTIONS for testing!
 		int f = SearchAtBuffer( buff, STEP, src, strlen(src), SEARCH_TEXT|SEARCH_MATCHCASE );
 		//int f = SearchAtBufferMultiThread( buff, STEP, src, strlen(src), SEARCH_TEXT);

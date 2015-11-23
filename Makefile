@@ -43,7 +43,10 @@ LOCALEDIR   = $(DATADIR)/locale
 
 VERSION = 0.23 Beta
 
-clang: $(eval CXX=clang++) all
+.DEFAULT_GOAL := all
+
+clang: CXX=clang++
+clang: all
 
 all:$(EXECUTABLE) langs
 

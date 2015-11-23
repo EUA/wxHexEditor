@@ -73,6 +73,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	ZebraStriping=new int;
 	*ZebraStriping=-1;
 
+	DrawCharByChar=false;
+
 	internalBufferDC=NULL;
 	internalBufferBMP=NULL;
 

@@ -238,7 +238,7 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 #ifdef __WXMSW__
 		if(sbufptr->st_mode==0)	//Enable block size detection code on windows targets,
 #else
-		if(S_ISBLK( sbufptr->st_mode )
+		if(S_ISBLK( sbufptr->st_mode ) )
 #endif
 			{
 			info_string += _("Sector Size: ") + wxString::Format(wxT("%u\n"), FDtoBlockSize( FD ));

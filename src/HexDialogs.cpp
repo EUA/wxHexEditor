@@ -342,13 +342,19 @@ bool FindDialog::SearchAtBufferUnitTest(void){
         //Manully change OPTIONS for testing!
 		int f = SearchAtBuffer( buff, STEP, src, strlen(src), SEARCH_TEXT|SEARCH_MATCHCASE );
 		//int f = SearchAtBufferMultiThread( buff, STEP, src, strlen(src), SEARCH_TEXT);
-		#ifdef _DEBUG_
-		if( f != i )
-			std::cout << "For key at : "<< i << "\t result = " << f << "\t sz: " << sz << std::endl;
+
+		if( f != i ){
+			#ifdef _DEBUG_
+            std::cout << "For key at : "<< i << "\t result = " << f << "\t sz: " << sz << std::endl;
+			#endif // _DEBUG_
+			return false;
+            }
+        #ifdef _DEBUG_
 		else
+
 			std::cout << "Searching key at: " << i << " OK\r";
 		std::cout.flush();
-		#endif
+		#endif // _DEBUG_
 		}
 	return true;
 	}

@@ -620,11 +620,11 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case wxID_UNDO:		MyHexEditor->DoUndo();					break;
 					case wxID_REDO:		MyHexEditor->DoRedo();					break;
 					case wxID_COPY:		MyHexEditor->CopySelection();			break;
-					case idCopyAs:			MyHexEditor->CopyAsDialog();			break;
+					case idCopyAs:			MyHexEditor->CopyAsDialog();		break;
 					case idSaveAsDump:	MyHexEditor->SaveAsDump();				break;
 					case idFillSelection:	MyHexEditor->FillSelection();		break;
-					case idBlockSelect:	MyHexEditor->BlockSelect();			break;
-					case wxID_CUT:			MyHexEditor->CutSelection();			break;
+					case idBlockSelect:	MyHexEditor->BlockSelect();			    break;
+					case wxID_CUT:			MyHexEditor->CutSelection();		break;
 					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
 					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
 					case idInsert:			MyHexEditor->InsertBytes();			break;

@@ -109,6 +109,7 @@ void HexEditor::Dynamic_Connector() {
 	text_ctrl->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	hex_ctrl ->Connect( wxEVT_MOUSEWHEEL,wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
 	text_ctrl->Connect( wxEVT_MOUSEWHEEL,wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
+
 	}
 
 void HexEditor::Dynamic_Disconnector() {
@@ -715,16 +716,16 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 		wxHexCtrl *myctrl = static_cast<wxHexCtrl*>(event.GetEventObject());
 		//Keyboard Selection Code
 		if( event.ShiftDown() )
-		if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
-		      event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
-		      event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
-		      event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
-		      event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
-		      event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
-		      event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
-		      event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
-		  )
-			OnKeyboardSelector(event);	//Selection Starter call
+            if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
+                  event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
+                  event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
+                  event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
+                  event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
+                  event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
+                  event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
+                  event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
+              )
+                OnKeyboardSelector(event);	//Selection Starter call
 
 		switch (event.GetKeyCode()) {
 			case (WXK_UP):
@@ -870,6 +871,13 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 							}
 					*/
 				break;
+
+            //Not working?
+            //case (WXK_CONTROL_T):
+            case (0x54):
+                if( event.ControlDown() )
+                   HexEditorCtrl::TagCreator( !event.ShiftDown() );
+                break;
 
 			default: {
 ////This part handled by wxMenuItem shortcuts.
@@ -1080,9 +1088,9 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	else
 		menu.Append(idBlockSelect, _("Set Selection Block End"));
 	menu.AppendSeparator();
-	menu.Append(idTagQuick,			 _("Quick Tag"), _("Creates empty tag with Random Color."));
-	menu.Append(idTagAddSelection, _("New Tag") );
-	menu.Append(idTagEdit, 			 _("Tag Edit"));
+	menu.Append(idTagQuick,         _("Quick Tag")+ wxT('\t') + _("CTRL+T"), _("Creates empty tag with Random Color."));
+	menu.Append(idTagAddSelection, _("New Tag")+ wxT('\t') + _("CTRL+SHIFT+T") );
+	menu.Append(idTagEdit,          _("Tag Edit"));
 //	menu.AppendSeparator();
 //	menu.Append(idClose, 			 _("Close File")); Results Seg-error
 

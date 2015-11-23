@@ -18,6 +18,7 @@
 					<Add option="-O2" />
 					<Add option="-pg" />
 					<Add option="`wx-config --cflags` -fopenmp" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -54,6 +55,31 @@
 					<Add library="mhash/bin/Debug/libmhash.a" />
 					<Add library="udis86/bin/Debug/libudis86.a" />
 				</Linker>
+			</Target>
+			<Target title="Custom Release">
+				<Option platforms="Unix;" />
+				<Option output="Release/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release/obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="testfile.swp" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="$($(WXCONFIG) --cflags) -fopenmp -Wno-deprecated-declarations" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add library="gomp" />
+					<Add library="mhash/bin/Release/libmhash.a" />
+					<Add library="udis86/bin/Release/libudis86.a" />
+				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.2/release/wx-config" />
+				</Environment>
 			</Target>
 			<Target title="Custom Debug">
 				<Option platforms="Unix;" />
@@ -274,7 +300,6 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Wall" />
 			<Add directory="mhash/include" />
 		</Compiler>
 		<Unit filename="HexEditorGui.fbp">

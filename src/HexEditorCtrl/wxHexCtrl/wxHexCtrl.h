@@ -150,8 +150,8 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		wxMemoryDC* CreateDC( void );
 		wxMemoryDC* internalBufferDC;
 		wxBitmap*   internalBufferBMP;
-		wxString		HexFormat;
-		bool			DrawCharByChar=false;
+		wxString	HexFormat;
+		bool		DrawCharByChar;
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );

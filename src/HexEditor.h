@@ -39,7 +39,7 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
 
-#if wxCHECK_VERSION( 2,9,0 ) and defined( __WXGTK__)
+#if wxCHECK_VERSION( 2,9,0 ) && defined( __WXGTK__)
 	#define _FSWATCHER_  1
 	#include <wx/fswatcher.h>
 #else
@@ -261,7 +261,7 @@ class scrollthread:wxThreadHelper {
 			int64_t newoffset=0;
 			while( !(GetThread()->TestDestroy()) ) {
 				if(speed == 0){
-					usleep( 10 );
+					wxMicroSleep( 10 );
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 					}
 #if _DEBUG_THREAD_SCROLL_
@@ -288,7 +288,7 @@ class scrollthread:wxThreadHelper {
 				::wxQueueEvent( parent, eventx );
 				wxYield();
 
-				while(not eventx->GetSkipped())
+				while(!eventx->GetSkipped())
 					GetThread()->Sleep(sleeper);
 				//delete eventx;
 #else			//Old versions
@@ -313,9 +313,9 @@ class scrollthread:wxThreadHelper {
 			}
 
 		void UpdateSpeed(int new_speed, int sleeptime = 25) {
-			if (new_speed == 0 and speed == 0 )
+			if (new_speed == 0 && speed == 0 )
 				return;
-			else if(new_speed == 0 and GetThread()->IsRunning() )
+			else if(new_speed == 0 && GetThread()->IsRunning() )
 				GetThread()->Pause();
 			else if( GetThread()->IsPaused() )
 				GetThread()->Resume();

@@ -53,12 +53,13 @@
 #ifdef __WXMSW__
 	#include <windows.h>
 	#include <winioctl.h>
+#else
+	#include <unistd.h>
 #endif
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdint.h>
-#include <unistd.h>
 
 #include <stdio.h>
 #include <errno.h>

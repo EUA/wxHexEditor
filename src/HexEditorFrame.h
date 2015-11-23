@@ -45,7 +45,7 @@
 #include <wx/mstream.h>
 #include <wx/docview.h>
 
-#if wxCHECK_VERSION( 2,9,0 ) and defined( __WXGTK__)
+#if wxCHECK_VERSION( 2,9,0 ) && defined( __WXGTK__)
 	#define _FSWATCHER_  1
 	#include <wx/fswatcher.h>
 #else
@@ -88,7 +88,6 @@ class HexEditorFrame : public HexEditorGui {
 		void OnOptionsMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );
 		void OnClose( wxCloseEvent& event );
-		void OnQuit( wxCommandEvent& event );
 		void OnHelpMenu( wxCommandEvent& event );
 		void OnActivate( wxActivateEvent& event );
 

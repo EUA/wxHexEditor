@@ -92,7 +92,7 @@
 				<Compiler>
 					<Add option="-std=c++0x" />
 					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags) -fopenmp" />
+					<Add option="$($(WXCONFIG) --cflags) -fopenmp -Wno-deprecated-declarations" />
 					<Add option="-D_DEBUG_=9" />
 					<Add option="-D_DEBUG_MUTEX_x" />
 					<Add option="-D_DEBUG_FILE_x" />

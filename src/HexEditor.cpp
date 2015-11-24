@@ -1066,7 +1066,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
 	menu.Append(wxID_COPY, _("Copy"));
-	menu.Append(idCopyAs, _("CopyAs"));
+	menu.Append(idCopyAs, _("CopyAs")+wxT("\t")+wxT("CTRL+SHIFT+C"));
 	menu.Append(wxID_PASTE, _("Paste"));
 	if(!IsFileUsingXORKey()){
 		menu.AppendSeparator();
@@ -1081,7 +1081,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 //		}
 
 	menu.AppendSeparator();
-	menu.Append(idSaveAsDump, _("Save As Dump"));
+	menu.Append(idSaveAsDump, _("Save As Dump")+wxT("\t")+wxT("CTRL+ALT+S"));
 	menu.Append(idFillSelection, _("Fill Selecton"));
 	if( BlockSelectOffset == -1 )
 		menu.Append(idBlockSelect, _("Set Selection Block Start"));

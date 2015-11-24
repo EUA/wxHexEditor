@@ -952,7 +952,7 @@ void wxHexCtrl::OnSize( wxSizeEvent &event ){
 		std::cout << "wxHexCtrl::OnSize X,Y" << event.GetSize().GetX() <<',' << event.GetSize().GetY() << std::endl;
 #endif
 	ChangeSize();
-   event.Skip();
+	event.Skip();
 	}
 
 void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){

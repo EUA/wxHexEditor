@@ -91,7 +91,6 @@ virtual void EventHandler( wxCommandEvent& event );
 		class HexEditor* parent;
 		FAL *findfile;
 		void PrepareComboBox( bool AddString );
-
 		bool SkipRAM( uint64_t& current_offset, unsigned search_size, unsigned& search_step, bool backward=false );
 	};
 
@@ -162,7 +161,7 @@ class PreferencesDialog : public PreferencesDialogGui{
 		void GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers);
 		void OnSave(wxCommandEvent& event);
 		void OnResetColours(wxCommandEvent& event);
-		void OnCustomHexCheck( wxCommandEvent& event );
+		void SaveRegistry( void );
 
 		wxArrayString LangNames;
 		wxArrayLong LangIds;

@@ -1808,26 +1808,46 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	clrPickerForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerBackgroundZebra->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerSelectionForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerSelectionBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	btnResetColours->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
 	chcCharacterEncodingFamily->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	chcCharacterEncoding->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	spinFontSize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( PreferencesDialogGui::SpinEventHandler ), NULL, this );
 	spinFontSize->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
-	chkCustom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
-	chkBytePerLineLimit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
+	comboCustomHexFormat->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	comboCustomHexFormat->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	comboCustomHexFormat->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	chkCustom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	chkBytePerLineLimit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	spinBytePerLine->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	spinBytePerLine->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	BtnSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 }
 
 PreferencesDialogGui::~PreferencesDialogGui()
 {
 	// Disconnect Events
+	clrPickerForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerBackgroundZebra->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerSelectionForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	clrPickerSelectionBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	btnResetColours->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnResetColours ), NULL, this );
 	chcCharacterEncodingFamily->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	chcCharacterEncoding->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	spinFontSize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( PreferencesDialogGui::SpinEventHandler ), NULL, this );
 	spinFontSize->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
-	chkCustom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
-	chkBytePerLineLimit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnCustomHexCheck ), NULL, this );
+	comboCustomHexFormat->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	comboCustomHexFormat->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	comboCustomHexFormat->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	chkCustom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	chkBytePerLineLimit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	spinBytePerLine->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	spinBytePerLine->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 	
 }

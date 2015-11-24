@@ -3015,7 +3015,7 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 //Could use EventHandler directly but that breaks GCC4.4 :p
 void PreferencesDialog::SpinEventHandler( wxSpinEvent& event ) {
 	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
-   wxConfigBase::Get()->Flush();
+	wxConfigBase::Get()->Flush();
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
 	wxPostEvent( GetParent(), eventx );
 	}
@@ -3069,31 +3069,25 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		wxPostEvent( GetParent(), eventx );
 		}
 */
-	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
-	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
-	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+	if(event.GetId() == chkCustom->GetId() )
+		comboCustomHexFormat->Enable( event.IsChecked() );
+	if(event.GetId() == chkBytePerLineLimit->GetId() )
+		spinBytePerLine->Enable( event.IsChecked() );
 
-   wxConfigBase::Get()->Flush();
-   wxString CurrentSelection=chcCharacterEncoding->GetStringSelection();
-
-   //Redrawing because we need to re-interpret the readed bytes.
-   wxUpdateUIEvent eventx( REDRAW_EVENT );
-	wxPostEvent( GetParent(), eventx );
+	//Redrawing because we need to re-interpret the readed bytes.
+	SaveRegistry();
 	}
 
-void PreferencesDialog::OnSave( wxCommandEvent& event ) {
-   //wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
-   //wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Language );
-   wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description ); //Saves string into configuration file.
+void PreferencesDialog::SaveRegistry( void ) {
+	wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description ); //Saves string into configuration file.
 
+	wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	wxConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	wxConfigBase::Get()->Write( _T("ColourHexBackgroundZebra"), clrPickerBackgroundZebra->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	wxConfigBase::Get()->Write( _T("ColourHexSelectionForeground"), clrPickerSelectionForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	wxConfigBase::Get()->Write( _T("ColourHexSelectionBackground"), clrPickerSelectionBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
 
-   wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-   wxConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-   wxConfigBase::Get()->Write( _T("ColourHexBackgroundZebra"), clrPickerBackgroundZebra->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-   wxConfigBase::Get()->Write( _T("ColourHexSelectionForeground"), clrPickerSelectionForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-   wxConfigBase::Get()->Write( _T("ColourHexSelectionBackground"), clrPickerSelectionBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-
-   wxConfigBase::Get()->Write( _T("UseCustomHexFormat"), chkCustom->GetValue() );
+	wxConfigBase::Get()->Write( _T("UseCustomHexFormat"), chkCustom->GetValue() );
 	wxConfigBase::Get()->Write( _T("CustomHexFormat"), comboCustomHexFormat->GetValue() );
 
 	wxConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
@@ -3105,11 +3099,16 @@ void PreferencesDialog::OnSave( wxCommandEvent& event ) {
 
 	wxConfigBase::Get()->Write( _T("AutoShowTagPanel"), chkAutoShowTagPanel->GetValue() );
 
-   wxConfigBase::Get()->Flush();
+	wxConfigBase::Get()->Flush();
 
-	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+	wxUpdateUIEvent eventx( REDRAW_EVENT );
 	wxPostEvent( GetParent(), eventx );
-   Close();
+	}
+void PreferencesDialog::OnSave( wxCommandEvent& event ) {
+	//wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+	//wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Language );
+	SaveRegistry();
+	Close();
    }
 
 void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
@@ -3125,14 +3124,6 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 		wxPostEvent( GetParent(), eventx );
 		Close();
 		}
-	}
-
-void PreferencesDialog::OnCustomHexCheck( wxCommandEvent& event ){
-	if(event.GetId() == chkCustom->GetId() )
-		comboCustomHexFormat->Enable( event.IsChecked() );
-	if(event.GetId() == chkBytePerLineLimit->GetId() )
-		spinBytePerLine->Enable( event.IsChecked() );
-
 	}
 
 extern wxArrayString GetDeviceList( bool=true );

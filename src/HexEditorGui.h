@@ -507,16 +507,17 @@ class PreferencesDialogGui : public wxDialog
 		wxButton* BtnCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxColourPickerEvent& event ) { event.Skip(); }
 		virtual void OnResetColours( wxCommandEvent& event ) { event.Skip(); }
 		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SpinEventHandler( wxSpinEvent& event ) { event.Skip(); }
-		virtual void OnCustomHexCheck( wxCommandEvent& event ) { event.Skip(); }
+		virtual void EventHandler( wxSpinEvent& event ) { event.Skip(); }
 		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		PreferencesDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+		PreferencesDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION ); 
 		~PreferencesDialogGui();
 	
 };

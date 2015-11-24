@@ -533,12 +533,13 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	int offset_x = offset_ctrl->GetCharSize().GetX()*offset_ctrl->GetLineSize();// + 4;
 	offset_x = offset_ctrl->IsShown() ? offset_x : 0;
 
-   x -= offset_x;										//Remove Offset Control box X because its changeable
-   x -= offset_scroll_real->GetSize().GetX();//Remove Offset scroll size
-   x -= 4*2;											//+x 4 pixel external borders (dark ones, 2 pix each size)
-   y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
 
-//AutoFill:
+    x -= offset_x;								//Remove Offset Control box X because its changeable
+    x -= offset_scroll_real->GetSize().GetX();  //Remove Offset scroll size
+    x -= 4*2;									//+x 4 pixel external borders (dark ones, 2 pix each size)
+    x = wxMax(0,x);								//Avoid X being negative
+    y -= m_static_byteview->GetSize().GetY();	//Remove Head Text Y
+    //AutoFill:
 	bool custom_hex_format;
 	wxConfig::Get()->Read( wxT("UseCustomHexFormat"), &custom_hex_format, false );
 	wxString fmt(wxT("xx "));
@@ -566,7 +567,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	bool use_BytesPerLineLimit;
 	wxConfig::Get()->Read( wxT("UseBytesPerLineLimit"), &use_BytesPerLineLimit, false );
 	if( use_BytesPerLineLimit ){
-		unsigned BytesPerLineLimit;
+		int BytesPerLineLimit;
 		wxConfig::Get()->Read( wxT("BytesPerLineLimit"), reinterpret_cast<int*>(&BytesPerLineLimit), 16);
 
 		//Downsizing is available
@@ -589,7 +590,8 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 			<< "Offset Ctrl: \t(" << offset_ctrl->GetSize().GetX() << ',' << event.GetSize().GetY() <<")\n"
 			<< "Hex Ctrl: \t(" << hex_x << ',' << event.GetSize().GetY() << ")\n"
 			<< "Text Ctrl: \t(" << text_x << ',' << event.GetSize().GetY() << ")\n"
-			<< "Hex Char: " << charx << std::endl;
+			<< "Hex Char: \t" << charx << std::endl
+			<< "ByteShownPerLine: \t" << ByteShownPerLine << std::endl;
 #endif
 
 	offset_ctrl->SetMinSize( wxSize( offset_x , y ) );
@@ -649,11 +651,10 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	//Formating Hex and byteview column labels
 	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
 	wxString address,byteview,temp_address;
-
 	for( unsigned j = 0 ; j < ByteShownPerLine ; j++ ){
 		temp_address << wxString::Format( wxT("%02X"), j%0x100 );
-		if(j >= ByteShownPerLine/(GetCharToHexSize()/2))
-			continue;
+		//if(j >= ByteShownPerLine/(GetCharToHexSize()/2))
+		//	continue;
 		byteview << wxString::Format( wxT("%01X"), (j*(GetCharToHexSize()/2))%0x10 );
 		}
 

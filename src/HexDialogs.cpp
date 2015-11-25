@@ -2827,13 +2827,13 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );
 	if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &TempString) )				clrPickerBackground->SetColour( TempString );
 	if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
-	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )	clrPickerSelectionForeground->SetColour(TempString);
-	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )	clrPickerSelectionBackground->SetColour(TempString);
-	if( wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )						chkAutoShowTagPanel->SetValue( TempBool );
+	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )		clrPickerSelectionForeground->SetColour(TempString);
+	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )		clrPickerSelectionBackground->SetColour(TempString);
+	if( wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )					chkAutoShowTagPanel->SetValue( TempBool );
 	if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
-	if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)					comboCustomHexFormat->SetValue( TempString );
+	if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)				comboCustomHexFormat->SetValue( TempString );
 	comboCustomHexFormat->Enable( chkCustom->IsChecked() );
-	if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 				chkBytePerLineLimit->SetValue( TempBool );
+	if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 			chkBytePerLineLimit->SetValue( TempBool );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
 	int TempInt;
@@ -3023,6 +3023,7 @@ void PreferencesDialog::SpinEventHandler( wxSpinEvent& event ) {
 void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	wxString PrevSelection;
 	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &PrevSelection );
+
 	if(event.GetId()==chcCharacterEncodingFamily->GetId()){
 		wxArrayString Encodings;
 		if( event.GetString()==wxT("Experimental") )
@@ -3075,7 +3076,7 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		spinBytePerLine->Enable( event.IsChecked() );
 
 	//Redrawing because we need to re-interpret the readed bytes.
-	SaveRegistry();
+	//SaveRegistry();
 	}
 
 void PreferencesDialog::SaveRegistry( void ) {
@@ -3092,7 +3093,6 @@ void PreferencesDialog::SaveRegistry( void ) {
 
 	wxConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
 	wxConfigBase::Get()->Write( _T("BytesPerLineLimit"), spinBytePerLine->GetValue());
-
 	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
 	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );

@@ -820,7 +820,7 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerMain = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxFlexGridSizer* fgSizerLeft;
-	fgSizerLeft = new wxFlexGridSizer( 1, 1, 0, 0 );
+	fgSizerLeft = new wxFlexGridSizer( 2, 1, 0, 0 );
 	fgSizerLeft->AddGrowableCol( 0 );
 	fgSizerLeft->SetFlexibleDirection( wxBOTH );
 	fgSizerLeft->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );

@@ -130,8 +130,8 @@ class UdOpcodeTables:
             '/mod'   : lambda v: '00' if v == '!11' else '01',
             # Mode extensions:
             # (16, 32, 64) => (00, 01, 02)
-            '/o'     : lambda v: "%02x" % (int(v) / 32),
-            '/a'     : lambda v: "%02x" % (int(v) / 32),
+            '/o'     : lambda v: "%02x" % int(int(v) / 32),
+            '/a'     : lambda v: "%02x" % int(int(v) / 32),
             '/m'     : lambda v: '00' if v == '!64' else '01',
             # SSE
             '/sse'   : lambda v: UdOpcodeTables.OpcExtIndex['sse'][v],
@@ -226,17 +226,17 @@ class UdOpcodeTables:
             raise
 
     def print_table( self, table, pfxs ):
-        print("%s   |" % pfxs)
-        keys = table[ 'entries' ].keys()
+        print(("%s   |" % pfxs))
+        keys = list(table[ 'entries' ].keys())
         if ( len( keys ) ):
             keys.sort()
         for idx in keys:
             e = table[ 'entries' ][ idx ]
             if e[ 'type' ] == 'insn':
-                print("%s   |-<%s>" % ( pfxs, idx )),
-                print("%s %s" % ( e[ 'mnemonic' ], ' '.join( e[ 'operands'] ) ))
+                print(("%s   |-<%s>" % ( pfxs, idx )), end=' ')
+                print(("%s %s" % ( e[ 'mnemonic' ], ' '.join( e[ 'operands'] ) )))
             else:
-                print("%s   |-<%s> %s" % ( pfxs, idx, e['type'] ))
+                print(("%s   |-<%s> %s" % ( pfxs, idx, e['type'] )))
                 self.print_table( e, pfxs + '   |' )
 
     def print_tree( self ): 

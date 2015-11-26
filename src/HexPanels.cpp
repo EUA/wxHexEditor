@@ -298,7 +298,6 @@ void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int 
 		mutexinfo.Unlock();
 		}
 
-
 void TagPanel::Clear( void ){
 	mutextag.Lock();
 	TagPanelList->Clear();
@@ -321,16 +320,35 @@ void TagPanel::Set( ArrayOfTAG& TagArray ){
 	mutextag.Unlock();
 	}
 
-
 void TagPanel::OnTagSelect(wxCommandEvent& event) {
 	//HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor(); //if detached, parent changes!
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
-	unsigned selection = TagPanelList->GetSelection();
+	int selection = TagPanelList->GetSelection();
 
 	if( MyHexEditor != NULL )
 		if( MyHexEditor->MainTagArray.Count() >= selection ){
 			MyHexEditor->Goto( MyHexEditor->MainTagArray.Item( selection )->start );
 			MyHexEditor->ReDraw(); //To clear artefacts and move actual cursor shadow.
+			}
+	}
+
+void TagPanel::OnRightMouse( wxMouseEvent& event ){
+	TagPanelList->SetSelection( TagPanelList->HitTest( event.GetPosition() ) );
+	wxMenu menu;
+	menu.Append(idDeleteTag, _("Delete"));
+	PopupMenu(&menu, event.GetPosition() );
+	}
+
+void TagPanel::OnDeleteTag( wxCommandEvent& event ){
+	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+	int selection = TagPanelList->GetSelection();
+
+	if( MyHexEditor != NULL )
+		if( MyHexEditor->MainTagArray.Count() >= selection ){
+			MyHexEditor->MainTagArray.RemoveAt( selection );
+			wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
+			GetEventHandler()->ProcessEvent( eventx );
+			MyHexEditor->ReDraw();
 			}
 	}
 

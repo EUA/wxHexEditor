@@ -5,19 +5,19 @@
 
 /* ud_table_type -- lookup table types (see decode.c) */
 enum ud_table_type {
-    UD_TAB__OPC_TABLE,
     UD_TAB__OPC_X87,
-    UD_TAB__OPC_MOD,
-    UD_TAB__OPC_VEX_M,
     UD_TAB__OPC_VEX_P,
-    UD_TAB__OPC_RM,
-    UD_TAB__OPC_VENDOR,
-    UD_TAB__OPC_OSIZE,
-    UD_TAB__OPC_MODE,
     UD_TAB__OPC_3DNOW,
+    UD_TAB__OPC_TABLE,
+    UD_TAB__OPC_SSE,
+    UD_TAB__OPC_VENDOR,
     UD_TAB__OPC_REG,
+    UD_TAB__OPC_MOD,
+    UD_TAB__OPC_RM,
     UD_TAB__OPC_ASIZE,
-    UD_TAB__OPC_SSE
+    UD_TAB__OPC_VEX_M,
+    UD_TAB__OPC_OSIZE,
+    UD_TAB__OPC_MODE
 };
 
 /* ud_mnemonic -- mnemonic constants */

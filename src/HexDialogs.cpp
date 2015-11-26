@@ -343,7 +343,7 @@ bool FindDialog::SearchAtBufferUnitTest(void){
 		int f = SearchAtBuffer( buff, STEP, src, strlen(src), SEARCH_TEXT|SEARCH_MATCHCASE );
 		//int f = SearchAtBufferMultiThread( buff, STEP, src, strlen(src), SEARCH_TEXT);
 
-		if( f != i ){
+		if( f != static_cast<int>(i) ){
 			#ifdef _DEBUG_
             std::cout << "For key at : "<< i << "\t result = " << f << "\t sz: " << sz << std::endl;
 			#endif // _DEBUG_
@@ -589,12 +589,12 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	uint64_t map_start;
 	uint64_t map_end;
 	#ifdef _DEBUG_
-	printf( "SkipRAM() Processing from 0x%llX, %s\n", current_offset, (backward ? "Backward": ""));
+	printf( "SkipRAM() Processing from 0x%lX, %s\n", current_offset, (backward ? "Backward": ""));
 	#endif
 	if( !parent->ProcessRAM_FindMap( current_offset, map_start, map_end, backward ) ){
 		current_offset = parent->ProcessRAM_FindNextMap(current_offset, backward);
 		#ifdef _DEBUG_
-		printf( "Skipping to 0x%llX\n", current_offset);
+		printf( "Skipping to 0x%lX\n", current_offset);
 		#endif
 		}
 
@@ -610,7 +610,7 @@ bool FindDialog::SkipRAM( uint64_t& current_offset, unsigned search_size, unsign
 	if( search_step < search_size){
 		current_offset = parent->ProcessRAM_FindNextMap(current_offset, backward);
 		#ifdef _DEBUG_
-		printf( "Skipping to 0x%llX due step size.\n", current_offset);
+		printf( "Skipping to 0x%lX due step size.\n", current_offset);
 		#endif
 		}
 	#ifdef _DEBUG_
@@ -677,7 +677,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		return NANINT;
 		}
 	//Disabling search on empty files and if fileLength smaller than file size.
-	if( parent->FileLength() == 0 || parent->FileLength() < target.GetDataLen() )
+	if( parent->FileLength() == 0 || parent->FileLength() < static_cast<int>( target.GetDataLen() ))
 		return NANINT;
 	wxString msg= _("Finding matches...");
 	wxString emsg=wxT("\n");
@@ -732,11 +732,11 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 				uint64_t map_start,map_end;
 				if( !parent->ProcessRAM_FindMap( current_offset, map_start, map_end ) ){
 					#ifdef _DEBUG_
-					printf( "Skipping from: 0x%llX to", current_offset) ;
+					printf( "Skipping from: 0x%lX to", current_offset) ;
 					#endif
 					current_offset = parent->ProcessRAM_FindNextMap(current_offset);
 					#ifdef _DEBUG_
-					printf( "0x%llX\n", current_offset) ;
+					printf( "0x%lX\n", current_offset) ;
 					#endif
 					if( current_offset == 0 ) break;
 					}
@@ -769,7 +769,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 			#ifdef _DEBUG_
 				std::cout << "Readed: " << readed << std::endl;
-				printf( "FindBinary() FORWARD1 0x%llX - 0x%llX\n" , current_offset , current_offset+search_step);
+				printf( "FindBinary() FORWARD1 0x%lX - 0x%lX\n" , current_offset , current_offset+search_step);
 			#endif
 
 #ifndef _MULTI_SEARCH_
@@ -847,7 +847,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			totalread += readed; // We need this on step 2
 			if( findfile->IsProcess() ){
 				#ifdef _DEBUG_
-				printf( "ProcessRAM Virtual Offset: 0x%llX, \t Offset:0x%llX,  \tFootPrint: 0x%llX\n", parent->ProcessRAM_GetVirtualOffset( current_offset ),	current_offset, processfootprint);
+				printf( "ProcessRAM Virtual Offset: 0x%lX, \t Offset:0x%lX,  \tFootPrint: 0x%lX\n", parent->ProcessRAM_GetVirtualOffset( current_offset ),	current_offset, processfootprint);
 				#endif
 				percentage = parent->ProcessRAM_GetVirtualOffset( current_offset )*1000/processfootprint;
 				}
@@ -860,7 +860,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			if( ! progress_gauge.Update( percentage, emsg))		// update progress and break on abort
 				break;
 
-			}while(readed == search_step); //indicate also file end.
+			}while(readed == static_cast<int>(search_step)); //indicate also file end.
 
 #ifdef _MULTI_SEARCH_
 		//Create tags from results and put them into HighlightArray
@@ -2165,7 +2165,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 	wxConfigBase::Get()->Write( _T("CompareFile1"), fl1.GetFullPath() );
 	wxConfigBase::Get()->Write( _T("CompareFile2"), fl2.GetFullPath() );
-   wxConfigBase::Get()->Flush();
+	wxConfigBase::Get()->Flush();
 //	if( flsave != wxEmptyString ){
 //		if(!flsave.IsFileWritable() )
 //			wxMessageBox( _("Error, Save File is not writeable.") );
@@ -2200,7 +2200,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	unsigned read_speed=0;
 
 
-	uint64_t diffBuff[1*MB]; //up to 500K differences.
+	int64_t diffBuff[1*MB]; //up to 500K differences.
 	//Structure is : even indices for difference start offset, odd indices for end offsets
 	int diffHit = 0;
 	bool diff=false;
@@ -2229,7 +2229,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 //#endif
 
 //	for( uint64_t mb = 0 ; !(f1.Eof() || f2.Eof() || BreakDoubleFor) ; mb+=rdBlockSz){
-	for( uint64_t mb = 0 ; mb < wxMin(f1.Length(),f2.Length()) && !BreakDoubleFor ; mb+=rdBlockSz){
+	for( int64_t mb = 0 ; mb < wxMin(f1.Length(),f2.Length()) && !BreakDoubleFor ; mb+=rdBlockSz){
 		if(rd1_prefetch==0){
 //			buffer1.UngetWriteBuf( f1.Read(buffer1.GetWriteBuf( rdBlockSz ),rdBlockSz) );
 //			buffer2.UngetWriteBuf( f2.Read(buffer2.GetWriteBuf( rdBlockSz ),rdBlockSz) );
@@ -2271,7 +2271,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 				bfr_int2 = reinterpret_cast<int*>(buffer2);
 
 //				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) && !BreakDoubleFor; i ++ ){
-				for( unsigned i = 0 ; (i < wxMin( rd1, rd2)) && !BreakDoubleFor; ){
+				for( int i = 0 ; (i < wxMin( rd1, rd2)) && !BreakDoubleFor; ){
 					if(diffHit >= 500000){
 						show_limit_message=true;
 						BreakDoubleFor = true;
@@ -3170,7 +3170,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 		rd=src_fl.Read(buff, rdBlockSz);
 		read_speed+=rd;
 		readfrom+=rd;
-		if( rd != dst_fl.Write( buff, rd ) ){
+		if( static_cast<unsigned int>(rd) != dst_fl.Write( buff, rd ) ){
 			wxMessageBox( _("Error on writing to backup image."), _("ERROR!") );
 			return;
 			}

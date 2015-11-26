@@ -211,7 +211,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		stat = SetFilePointer(hDevice, (1*BlockRWSize), 0, FILE_BEGIN);
 		std::cout << "Sector set Win Mode:" << 1*BlockRWSize << " status:" << stat << "\tLast err:"<< GetLastError() <<std::endl;
 
-		success=WriteFile(hDevice, &x, BlockRWSize, &rd, NULL);//*= to make upd
+		success=WriteFile(hDevice, &x, BlockRWSize, &rd, NULL);    // to make upd
 		std::cout << "BlockWrite Win Mode:" << success << "\trd:" << rd << "\tLast err:"<< GetLastError() << std::endl;
 //*/
 
@@ -517,10 +517,11 @@ size_t FAL::BlockWrite( unsigned char* buffer, unsigned size ){
 
 	std::cout << "buffer write : " << size << "put_ptr :" << put_ptr << std::endl;
 	uint64_t StartSector = put_ptr / BlockRWSize;
-	unsigned StartShift = put_ptr - StartSector*BlockRWSize;
-	uint64_t EndSector = (put_ptr + size)/BlockRWSize;
 
-	int rd = 0;
+//	unsigned StartShift = put_ptr - StartSector*BlockRWSize;
+//	uint64_t EndSector = (put_ptr + size)/BlockRWSize;
+//	int rd = 0;
+
 	wxFile::Seek(StartSector*BlockRWSize);
 	size_t ret = Write(buffer, size);//*= to make update success true or false
 	put_ptr+=size;
@@ -841,12 +842,14 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			}
 		else{
 			readsize = ReadR( buffer, size, from, PatchArray, PatchIndice-1 );//PatchIndice-1 => Makes Patch = 0 for 1 patch. Read from file.
-			if(size != readsize) //If there is free chars
+			if(size != static_cast<unsigned int>(readsize)) //If there is free chars
 				readsize = (Length() - from > size) ? (size):(Length() - from);	//check for buffer overflow
 			ModificationPatcher( from, buffer, size, patch );
 			}
 		}
-	if( from + readsize > Length() ){
+//	if(readsize < 0)
+//		return -1;
+	if( static_cast<int64_t>(from + readsize) > Length() ){
 		//Injection fills all buffer as requested. So we need truncate it for avoid random memory on file end.
 		readsize = Length()-from;
 		}

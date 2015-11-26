@@ -95,17 +95,24 @@ class InfoPanel : public InfoPanelGui{
 		void OnUpdate( wxCommandEvent& event ){
 			}
 };
+
+#define idDeleteTag 31001 //just random num
 class TagPanel : public TagPanelGui{
 	public:
 		TagPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 		:TagPanelGui( (wxWindow*) parent_, id, pos, size, style){
 			parent = parent_;
+			this->Connect( idDeleteTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnDeleteTag ) );
 			}
 		class HexEditorFrame *parent;
 		void Set( ArrayOfTAG& TagArray );
 		void Clear( void );
 		void OnTagSelect( wxCommandEvent& event );
-		void OnUpdate( wxCommandEvent& event ){
+		void OnUpdate( wxCommandEvent& event ){}
+		void OnRightMouse( wxMouseEvent& event );
+		void OnDeleteTag( wxCommandEvent& event );
+		~TagPanel(void){
+			this->Disconnect( idDeleteTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnDeleteTag ) );
 			}
 	private:
 		wxMutex mutextag;

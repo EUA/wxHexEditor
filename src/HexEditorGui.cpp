@@ -612,6 +612,7 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	
 	// Connect Events
 	TagPanelList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( TagPanelGui::OnTagSelect ), NULL, this );
+	TagPanelList->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TagPanelGui::OnRightMouse ), NULL, this );
 	m_buttonClear->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnClear ), NULL, this );
 }
 
@@ -619,6 +620,7 @@ TagPanelGui::~TagPanelGui()
 {
 	// Disconnect Events
 	TagPanelList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( TagPanelGui::OnTagSelect ), NULL, this );
+	TagPanelList->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TagPanelGui::OnRightMouse ), NULL, this );
 	m_buttonClear->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnClear ), NULL, this );
 	
 }

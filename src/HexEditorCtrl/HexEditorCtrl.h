@@ -51,6 +51,7 @@
 #define THREAD_UPDATE_EVENT 50012
 #define REDRAW_EVENT 50013
 
+
 WX_DECLARE_OBJARRAY(uint64_t, wxArrayUINT64);
 
 class Select{	//for using EventHandler
@@ -100,8 +101,8 @@ class wxHugeScrollBar: public wxEvtHandler{ //64bit wrapper for wxScrollbar
 
       void Enable( bool en ){ m_scrollbar->Enable(en); }
       wxSize GetSize( void ){ return m_scrollbar->GetSize(); }
-      uint64_t GetRange( void ){ return m_range; };
-      uint64_t GetThumbPosition( void ){ return m_thumb; }
+      int64_t GetRange( void ){ return m_range; };
+      int64_t GetThumbPosition( void ){ return m_thumb; }
       void SetThumbPosition(int64_t setpos);
       void SetScrollbar( int64_t Current_Position,int page_x, int64_t new_range, int pagesize, bool repaint=true );
 		void OnOffsetScroll( wxScrollEvent& event );
@@ -124,7 +125,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		enum IDS{ idTagAddSelection=2001,idTagEdit, idTagQuick };
 		void ReadFromBuffer( uint64_t position, unsigned lenght, char *buffer, bool cursor_reset = true, bool paint = true );
 		void RePaint( void );
-		uint64_t CursorOffset( void );
+		int64_t CursorOffset( void );
 		void SetFont( wxFont f );
 		void SetFont( );
 		void SetStyle( );
@@ -206,7 +207,7 @@ virtual void SetLocalHexInsertionPoint( int hex_location );
 		bool ProcessRAM_FindMap( uint64_t current_offset, uint64_t& start, uint64_t& end, bool backward=false);
 
 	protected:
-		uint64_t page_offset;	//holds current start offset of file
+		int64_t page_offset;	//holds current start offset of file. Declared signed for error checking.
 /*
 virtual int ToExactPosition( int InternalPosition );
 virtual int ToInternalPosition( int ExactPosition );

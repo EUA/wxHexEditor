@@ -162,7 +162,7 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 		text_ctrl->ThinSeparationLines.Clear();
 		//Notice that, ProcessRAMMap is SORTED.
 		for( unsigned i=0; i < ProcessRAMMap.Count(); i++ ){
-			uint64_t M = ProcessRAMMap.Item(i);
+			int64_t M = ProcessRAMMap.Item(i);
 			if( M > page_offset + ByteCapacity() )
 				break;
 
@@ -394,10 +394,10 @@ void HexEditorCtrl::PaintTAGsPrefilter( ArrayOfTAG& Arr ){
 
 	unsigned s = 0;
 	if (c>0)
-	for( ; page_offset > (Arr.Item(s))->end && s<c-1; s++ );
+		for( ; static_cast<uint64_t>( page_offset ) > (Arr.Item(s))->end && s<c-1; s++ );
 	unsigned e=s;
 	if (c>0)
-	for( ; page_offset + GetByteCount() > Arr.Item(e)->start && e<c-1 ; e++ );
+		for( ; page_offset + GetByteCount() > static_cast<int>( Arr.Item(e)->start ) && e<c-1 ; e++ );
 //#ifdef _DEBUG_
 	std::cout << "Tags needed between : " << s << " - " << e << std::endl;
 //#endif //_DEBUG_
@@ -407,8 +407,8 @@ void HexEditorCtrl::PaintTAGsPrefilter( ArrayOfTAG& Arr ){
 
 //This functions move tags to local hex and text ctrls.
 void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
-	uint64_t start_byte = TAG->start;
-	uint64_t end_byte = TAG->end;
+	int64_t start_byte = TAG->start;
+	int64_t end_byte = TAG->end;
 
 	if(start_byte > end_byte){							// swap if start > end
 		int64_t temp = start_byte;
@@ -441,8 +441,8 @@ void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 void HexEditorCtrl::PaintSelection( void ){
 	PreparePaintTAGs();
 	if( select->GetState() ){
-		uint64_t start_byte = select->StartOffset;
-		uint64_t end_byte = select->EndOffset;
+		int64_t start_byte = select->StartOffset;
+		int64_t end_byte = select->EndOffset;
 
 		if(start_byte > end_byte){	// swap if start > end
 			int64_t temp = start_byte;
@@ -549,18 +549,18 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 // TODO (death#1#): Move style engine somewhere else to speedy resizing.
 	hex_ctrl->SetFormat( fmt );
 
-	unsigned cnt_chr=0; //Counted character at current format
+	int cnt_chr=0; //Counted character at current format
 	for( unsigned i = 0 ; i <  fmt.Len() ; i++ ){
 		if( fmt[i]!=' ' )
 			cnt_chr++;
 		}
 	cnt_chr/=2; // divide 2 for find byte per hex representation.
 
-	unsigned hexchr=0,textchr = 0;
+	int hexchr=0,textchr = 0;
 	//Recalculate available area due hidden panels.
 	hexchr+=hex_ctrl->IsShown() ? fmt.Len() : 0;
 	textchr+=text_ctrl->IsShown() ? cnt_chr : 0;
-	unsigned available_space=0;
+	int available_space=0;
 	available_space=x/(hexchr*charx+textchr*chartx/(GetCharToHexSize()/2));
 
 	//Limiting Bytes Per Line
@@ -576,9 +576,9 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Calculation of available area for Hex and Text panels.
-	unsigned text_x = chartx*available_space*cnt_chr/(GetCharToHexSize()/2)  +2 +4;
-	unsigned hex_x = charx*available_space*fmt.Len()  +2 +4 - charx ; //no need for last gap;
-	unsigned ByteShownPerLine=available_space*cnt_chr;
+	int text_x = chartx*available_space*cnt_chr/(GetCharToHexSize()/2)  +2 +4;
+	int hex_x = charx*available_space*fmt.Len()  +2 +4 - charx ; //no need for last gap;
+	int ByteShownPerLine=available_space*cnt_chr;
 
 	text_x = text_ctrl->IsShown() ? text_x : 0;
 	hex_x = hex_ctrl->IsShown() ? hex_x : 0;
@@ -651,7 +651,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 	//Formating Hex and byteview column labels
 	//This needed bellow hex_ctrl->ChangeSize() because it's updates the IsDenied function.
 	wxString address,byteview,temp_address;
-	for( unsigned j = 0 ; j < ByteShownPerLine ; j++ ){
+	for( int j = 0 ; j < ByteShownPerLine ; j++ ){
 		temp_address << wxString::Format( wxT("%02X"), j%0x100 );
 		//if(j >= ByteShownPerLine/(GetCharToHexSize()/2))
 		//	continue;
@@ -659,7 +659,7 @@ void HexEditorCtrl::OnResize( wxSizeEvent &event ){
 		}
 
 	//Adjusting custom hex formatting bar - Converting 00010203 -> 00 01 02 03 for "xx " format.
-	for( unsigned x = 0, i=0 ; x < hex_x && i < temp_address.Len() ; x++ )
+	for( int x = 0, i=0 ; x < hex_x && static_cast<unsigned>(i) < temp_address.Len() ; x++ )
 		if(hex_ctrl->IsDenied(x))
 			address << wxT(" ");
 		else
@@ -1016,7 +1016,7 @@ void HexEditorCtrl::SetLocalHexInsertionPoint( int hex_location ){	//Sets positi
 	text_ctrl->SetInsertionPoint( hex_location/GetCharToHexSize() );
 	hex_ctrl->SetInsertionPoint( hex_location );
 	}
-uint64_t HexEditorCtrl::CursorOffset( void ){
+int64_t HexEditorCtrl::CursorOffset( void ){
 	return GetLocalInsertionPoint() + page_offset;
 	}
 

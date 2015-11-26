@@ -375,7 +375,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	wxFFile savefile( savefilename, wxT("wb") );
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
-		uint64_t range = FileLength();
+		int64_t range = FileLength();
 		wxString msg = _("File save in progress");
 		wxString emsg = wxT("\n");
 		wxProgressDialog mpd( _("Saving file"),msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
@@ -509,7 +509,10 @@ void HexEditor::DoRedo( void ) {
 
 	}
 
-void HexEditor::Goto( uint64_t cursor_offset, bool set_focus ){
+void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
+#ifdef _DEBUG_
+	std::cout << "Goto: " << cursor_offset << std::endl;
+#endif // _DEBUG_FILE_
 	if(page_offset <= cursor_offset &&
 	      page_offset+ByteCapacity() >= cursor_offset) {	//cursor_offset is in visible area
 		Reload();					//Reload data needed for undo - redo
@@ -519,6 +522,7 @@ void HexEditor::Goto( uint64_t cursor_offset, bool set_focus ){
 		page_offset = cursor_offset;
 		page_offset -= static_cast<int64_t>( ByteCapacity() * 0.20 ); // load some bytes behind of request for make lines at top side
 		page_offset -= page_offset % BytePerLine();	//to allign offset
+		wxMax(0,page_offset);
 		if(page_offset < 0)
 			page_offset = 0;
 		else if(page_offset > FileLength() )
@@ -654,6 +658,9 @@ void HexEditor::Reload( void ) {
 	}
 
 void HexEditor::ReDraw(){
+#ifdef _DEBUG_
+	std::cout << "HexEditor::ReDraw()" << std::endl ;
+#endif // _DEBUG_
 	wxSizeEvent ev(GetSize());
 	OnResize(ev);
 	}

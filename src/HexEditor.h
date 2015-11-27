@@ -159,7 +159,7 @@ class HexEditor: public HexEditorCtrl
 		void OnMouseSelectionEnd( wxMouseEvent& event );
 		void OnMouseMove( wxMouseEvent& event );
 		void OnMouseWhell( wxMouseEvent& event );
-		void OnOffsetMouseFocus( wxMouseEvent& event );
+		void OnOffsetMouse( wxMouseEvent& event );
 		void OnResize( wxSizeEvent &event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 

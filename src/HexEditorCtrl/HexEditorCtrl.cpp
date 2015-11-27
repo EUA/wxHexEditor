@@ -41,7 +41,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 
 	SetAutoLayout(true);
 
-	m_static_offset->SetLabel( _("Offset") );
+	m_static_offset->SetLabel( wxString(wxT("+"))+_("Offset")+wxT("-") );
 	SetFont();
 
 	Dynamic_Connector();

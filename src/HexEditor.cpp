@@ -87,32 +87,38 @@ HexEditor::~HexEditor() {
 	}
 
 void HexEditor::Dynamic_Connector() {
-	Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( HexEditor::ThreadPaint ), NULL, this );
+	Connect( wxEVT_COMMAND_TEXT_UPDATED, 	wxCommandEventHandler( HexEditor::ThreadPaint ), NULL, this );
 
-	hex_ctrl ->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
-	text_ctrl->Connect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	hex_ctrl ->Connect( wxEVT_KEY_DOWN,		wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
+	text_ctrl->Connect( wxEVT_KEY_DOWN,		wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	//this is not up arrow key, just means release of key press.
-//	hex_ctrl ->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-//	text_ctrl->Connect( wxEVT_KEY_UP,	wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
-	hex_ctrl ->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
-	text_ctrl->Connect( wxEVT_CHAR,		wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+//	hex_ctrl ->Connect( wxEVT_KEY_UP,		wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+//	text_ctrl->Connect( wxEVT_KEY_UP,		wxKeyEventHandler(HexEditor::OnKeyboardSelectionEnd),NULL, this);
+	hex_ctrl ->Connect( wxEVT_CHAR,			wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
+	text_ctrl->Connect( wxEVT_CHAR,			wxKeyEventHandler(HexEditor::OnKeyboardChar),NULL, this);
 	hex_ctrl ->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	text_ctrl->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
-	hex_ctrl ->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
-	text_ctrl->Connect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	hex_ctrl ->Connect( wxEVT_LEFT_UP,		wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
+	text_ctrl->Connect( wxEVT_LEFT_UP,		wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	offset_ctrl->Connect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
-	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
-	text_ctrl->Connect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
-	hex_ctrl ->Connect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-	text_ctrl->Connect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
-	hex_ctrl ->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
-	text_ctrl->Connect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
-	hex_ctrl ->Connect( wxEVT_MOUSEWHEEL,wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
-	text_ctrl->Connect( wxEVT_MOUSEWHEEL,wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
+	hex_ctrl ->Connect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
+	text_ctrl->Connect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
+	hex_ctrl ->Connect( wxEVT_MIDDLE_DOWN,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	text_ctrl->Connect( wxEVT_MIDDLE_DOWN,	wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
+	hex_ctrl ->Connect( wxEVT_MOTION,		wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	text_ctrl->Connect( wxEVT_MOTION,		wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+	hex_ctrl ->Connect( wxEVT_MOUSEWHEEL,	wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
+	text_ctrl->Connect( wxEVT_MOUSEWHEEL,	wxMouseEventHandler(HexEditor::OnMouseWhell),NULL, this);
 
+	m_static_offset->Connect( wxEVT_LEFT_DCLICK,wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Connect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Connect( wxEVT_RIGHT_DCLICK,wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Connect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Connect( wxEVT_MOTION,		wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
 	}
 
 void HexEditor::Dynamic_Disconnector() {
+	Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( HexEditor::ThreadPaint ), NULL, this );
 
 	hex_ctrl ->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
 	text_ctrl->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditor::OnKeyboardInput),NULL, this);
@@ -125,13 +131,19 @@ void HexEditor::Dynamic_Disconnector() {
 	text_ctrl->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseLeft),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
 	text_ctrl->Disconnect( wxEVT_LEFT_UP,	wxMouseEventHandler(HexEditor::OnMouseSelectionEnd),NULL, this);
-	offset_ctrl->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
+	offset_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	text_ctrl->Disconnect( wxEVT_RIGHT_DOWN,wxMouseEventHandler(HexEditor::OnMouseRight),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MIDDLE_DOWN,wxMouseEventHandler(HexEditor::OnMouseTest),NULL, this);
 	hex_ctrl ->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
 	text_ctrl->Disconnect( wxEVT_MOTION,	wxMouseEventHandler(HexEditor::OnMouseMove),NULL, this);
+
+	m_static_offset->Disconnect( wxEVT_LEFT_DCLICK,	wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Disconnect( wxEVT_LEFT_DOWN,	wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Disconnect( wxEVT_RIGHT_DCLICK,wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Disconnect( wxEVT_RIGHT_DOWN,	wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
+	m_static_offset->Disconnect( wxEVT_MOTION,		wxMouseEventHandler(HexEditor::OnOffsetMouse),NULL, this);
 	}
 
 int HexEditor::HashVerify(wxString hash_file, FAL* File){
@@ -1538,4 +1550,19 @@ bool HexEditor::PasteFromClipboard( void ) {
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	return ret;
+	}
+
+void HexEditor::OnOffsetMouse(wxMouseEvent& event){
+	if( event.LeftIsDown() ){
+#ifdef _DEBUG_
+	std::cout << "OnOffsetMouse +1" << std::endl;
+#endif // _DEBUG_
+		LoadFromOffset( wxMin(page_offset +1, FileLength() ));
+		}
+	if( event.RightIsDown() ){
+#ifdef _DEBUG_
+	std::cout << "OnOffsetMouse -1" << std::endl;
+#endif // _DEBUG_
+		LoadFromOffset( wxMax(page_offset -1,0) );
+		}
 	}

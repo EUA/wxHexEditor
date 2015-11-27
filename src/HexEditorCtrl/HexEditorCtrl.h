@@ -198,7 +198,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		int GetLocalInsertionPoint( void );
 		wxString GetFormatedOffsetString( uint64_t offset ){ return offset_ctrl->GetFormatedOffsetString( offset ); }
 virtual void SetLocalHexInsertionPoint( int hex_location );
-		void OnOffsetMouseFocus( wxMouseEvent& event );
+		void OnOffsetMouse( wxMouseEvent& event );
 		int sector_size;
 		wxArrayUINT64 ProcessRAMMap;
 		uint64_t ProcessRAM_GetFootPrint();

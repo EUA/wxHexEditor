@@ -427,7 +427,7 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 	// at least 1*1 one.
 	wxSize sizeBmp = GetSize();
 	sizeBmp.IncTo(wxSize(1, 1));
-	internalBufferBMP=new wxBitmap(sizeBmp);
+	internalBufferBMP=new wxBitmap(sizeBmp.GetWidth(), sizeBmp.GetHeight());
 	internalBufferDC = new wxMemoryDC();
 	internalBufferDC->SelectObject(*internalBufferBMP);
 	return internalBufferDC;

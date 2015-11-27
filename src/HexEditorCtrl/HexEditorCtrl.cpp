@@ -960,15 +960,24 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 
 		wxXmlNode *node_Root = new wxXmlNode( NULL, wxXML_ELEMENT_NODE, wxT("wxHexEditor_XML_TAG"), wxEmptyString, NULL , NULL);
 
+#if wxCHECK_VERSION(3, 0, 0)
 		wxXmlAttribute *prop_filename = new wxXmlAttribute( wxT("path"), flnm.GetFullPath(), NULL);
+#else
+		wxXmlProperty *prop_filename = new wxXmlProperty( wxT("path"), flnm.GetFullPath(), NULL);
+#endif
 		wxXmlNode *node_File = new wxXmlNode( node_Root, wxXML_ELEMENT_NODE, wxT("filename"), wxEmptyString, prop_filename , NULL);
 
 		MainTagArray.Sort(TagElementSort);
 		for(signed i = MainTagArray.Count()-1 ; i>=0 ; i-- ){
 			//Used reverse order for make XML offsets increasing.
 			TagElement *TAG = MainTagArray.Item(i);
-
+#if wxCHECK_VERSION(3, 0, 0)
 			wxXmlAttribute *ID = new wxXmlAttribute( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
+#else
+			wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
+#endif
+
+
 			wxXmlNode *node_Tag = new wxXmlNode( node_File, wxXML_ELEMENT_NODE, wxT("TAG"), wxEmptyString, ID , NULL);
 
 			wxXmlNode *element_NoteColour		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("note_colour"), wxEmptyString, NULL, NULL);

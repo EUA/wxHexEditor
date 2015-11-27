@@ -1073,7 +1073,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		TagPosition = page_offset + text_ctrl->PixelCoordToInternalPosition( event.GetPosition() );
 
 	menu.Append(wxID_COPY, _("Copy"));
-	menu.Append(idCopyAs, _("CopyAs")+wxT("\t")+wxT("CTRL+SHIFT+C"));
+	menu.Append(idCopyAs, wxString( _("CopyAs") ) + wxChar('\t') + wxT("CTRL+SHIFT+C"));
 	menu.Append(wxID_PASTE, _("Paste"));
 	if(!IsFileUsingXORKey()){
 		menu.AppendSeparator();
@@ -1088,15 +1088,15 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 //		}
 
 	menu.AppendSeparator();
-	menu.Append(idSaveAsDump, _("Save As Dump")+wxT("\t")+wxT("CTRL+ALT+S"));
+	menu.Append(idSaveAsDump, wxString( _("Save As Dump") )+wxChar('\t')+wxT("CTRL+ALT+S"));
 	menu.Append(idFillSelection, _("Fill Selecton"));
 	if( BlockSelectOffset == -1 )
 		menu.Append(idBlockSelect, _("Set Selection Block Start"));
 	else
 		menu.Append(idBlockSelect, _("Set Selection Block End"));
 	menu.AppendSeparator();
-	menu.Append(idTagQuick,         _("Quick Tag")+ wxT('\t') + _("CTRL+T"), _("Creates empty tag with Random Color."));
-	menu.Append(idTagAddSelection, _("New Tag")+ wxT('\t') + _("CTRL+SHIFT+T") );
+	menu.Append(idTagQuick,        wxString( _("Quick Tag") ) + wxChar('\t') + wxT("CTRL+T"), _("Creates empty tag with Random Color."));
+	menu.Append(idTagAddSelection, wxString( _("New Tag") )+ wxChar('\t') + wxT("CTRL+SHIFT+T") );
 	menu.Append(idTagEdit,          _("Tag Edit"));
 //	menu.AppendSeparator();
 //	menu.Append(idClose, 			 _("Close File")); Results Seg-error

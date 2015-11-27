@@ -85,7 +85,7 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 	}
 
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
-				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _VERSION_STR_ ){
+				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T( _VERSION_STR_ ) ){
 	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
 	int no = AttachConsole(ATTACH_PARENT_PROCESS); //doesn't work!, don't know why....
 	///Use LDFLAGS="Wl,--subsystem,console -mconsole" to have debug window
@@ -97,7 +97,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	#endif // _FSWATCHER_
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
-	license= "wxHexEditor is a hex editor for HUGE files and devices.\n"
+	license= wxT("wxHexEditor is a hex editor for HUGE files and devices.\n"
 			 "Copyright (C) 2006-2012  Erdem U. Altinyurt\n"
 			 "\n"
 			 "This program is free software; you can redistribute it and/or\n"
@@ -119,7 +119,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "Udis86 used under BSD licence, Vivek Thampi (c) 2002-2008\n"
 			 "\n"
 			 "home:  wxhexeditor.org  -  diskeditor.net\n"
-			 "email: spamjunkeater@gmail.com\n";
+			 "email: spamjunkeater@gmail.com\n");
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
 	int x = pConfig->Read(_T("ScreenX"), 100),
@@ -804,7 +804,7 @@ void HexEditorFrame::OnHelpMenu( wxCommandEvent& event ){
 	if(event.GetId() == wxID_ABOUT ){
 		wxAboutDialogInfo AllAbout;
 		AllAbout.SetName(_T("wxHexEditor"));
-		AllAbout.SetVersion( _VERSION_STR_ );
+		AllAbout.SetVersion( _T(_VERSION_STR_) );
 		AllAbout.SetDescription(_("wxHexEditor is a hex editor for HUGE files and devices."));
 		AllAbout.SetCopyright(_T("(C) 2006-2012 Erdem U. Altinyurt"));
 		AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );

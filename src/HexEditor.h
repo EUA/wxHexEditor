@@ -241,11 +241,10 @@ class copy_maker {
 class scrollthread:wxThreadHelper {
 	private:
 		HexEditor *parent;
-		int speed, sleeper, cursor;
+		int speed;
+		wxMutex speed_mtx;
 	public:
 		scrollthread(int initial_speed, HexEditor *parent ):parent(parent) {
-			sleeper = 25;
-			cursor = 0;
 			speed = initial_speed;
 #if wxCHECK_VERSION(2,9,0)
 			CreateThread();
@@ -259,76 +258,97 @@ class scrollthread:wxThreadHelper {
 
 		void *Entry() {
 			int64_t newoffset=0;
+			int64_t FileLength;
+			int thread_speed;
 			while( !(GetThread()->TestDestroy()) ) {
+				//wxMilliSleep(25);
+				speed_mtx.Lock();
+				thread_speed=speed;
+				speed_mtx.Unlock();
 				if(speed == 0){
-					wxMicroSleep( 10 );
+				//	wxMicroSleep( 10 );
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 					}
 #if _DEBUG_THREAD_SCROLL_
-				std::cout << "scrollthread speed : " << speed;
+				std::cout << "scrollthread speed : " << thread_speed;
 #endif
-				int64_t FileLength = parent->FileLength();
-				newoffset = parent->page_offset + ( parent->BytePerLine() )*speed;
+				FileLength = parent->FileLength();
+				newoffset = parent->page_offset + ( parent->BytePerLine() )*thread_speed;
 				if( newoffset < 0 )
 					newoffset = 0;
 				else if( newoffset + parent->ByteCapacity() >= FileLength ) {
 					newoffset = FileLength - parent->ByteCapacity();
 					newoffset += parent->BytePerLine() - (parent->page_offset % parent->BytePerLine()) ; //cosmetic
 					}
-
-				parent->page_offset=newoffset;
-
-
 #if _DEBUG_THREAD_SCROLL_
-				std::cout << " \t- offset : " << newoffset;
+				std::cout << " \t- offset : " << newoffset << std::endl;
 #endif
+				if( newoffset != parent->page_offset ){
+					parent->page_offset=newoffset;
+
 #if wxCHECK_VERSION(3, 0, 0)
-				wxCommandEvent *eventx=new wxCommandEvent( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
-				//eventx->SetInt(newoffset);
-				::wxQueueEvent( parent, eventx );
-				wxYield();
+					/*
+					wxCommandEvent *eventx=new wxCommandEvent( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
+					//eventx->SetInt(newoffset);
+					//::wxQueueEvent( parent, eventx );
+					wxYield();
+					while(!eventx->GetSkipped())
+						GetThread()->Sleep(35);
+					//delete eventx;
+					*/
+					wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
+					//event.SetWillBeProcessedAgain();
+					//event.SetInt(n);  // pass some data along the event, a number in this case
 
-				while(!eventx->GetSkipped())
-					GetThread()->Sleep(sleeper);
-				//delete eventx;
-#else			//Old versions
-				wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
-				//eventx.SetInt(newoffset);
-				wxMutexGuiEnter(); //wxMutexGuiEnter & Leave fundtions are required because wxPostEvent will run under Thread
-				::wxPostEvent(parent, eventx );
-				wxMutexGuiLeave();
-				wxYield();
+					parent->GetEventHandler()->AddPendingEvent( event );
+					//::wxPostEvent( parent, event );
+					wxYield();
+					//while(event.GetSkipped()){
 
-				GetThread()->Sleep(sleeper);
+					while(!event.WasProcessed()){
+						GetThread()->Sleep(35);
+						//wxMilliSleep(35);
+						}
+
+#else				//Old versions
+					wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
+					//eventx.SetInt(newoffset);
+					wxMutexGuiEnter(); //wxMutexGuiEnter & Leave fundtions are required because wxPostEvent will run under Thread
+					::wxPostEvent(parent, eventx );
+					wxMutexGuiLeave();
+					wxYield();
+					GetThread()->Sleep(35);
 #endif
-
-#if _DEBUG_THREAD_SCROLL_
-				std::cout << " \t done." << std::endl;
-#endif
+					}
 				}
 #if _DEBUG_THREAD_SCROLL_
-				std::cout << "scrollthread got testDestroy!" << std::endl;
+			std::cout << "scrollthread got testDestroy!" << std::endl;
 #endif
 			return NULL;
 			}
 
-		void UpdateSpeed(int new_speed, int sleeptime = 25) {
+		void UpdateSpeed(int new_speed) {
+#if _DEBUG_THREAD_SCROLL_
+				std::cout << "UpdateSpeed:" << new_speed << std::endl;
+#endif
 			if (new_speed == 0 && speed == 0 )
 				return;
 			else if(new_speed == 0 && GetThread()->IsRunning() )
 				GetThread()->Pause();
 			else if( GetThread()->IsPaused() )
 				GetThread()->Resume();
+
+			speed_mtx.Lock();
 			speed = new_speed;
-			sleeper = sleeptime;
-			cursor = parent->GetLocalHexInsertionPoint();
+			speed_mtx.Unlock();
 			}
 		void Exit(void){
 			//__WXMSW__ ISSUE
 			//if( GetThread()->IsRunning() )
 				//GetThread()->Pause();
 			GetThread()->Delete();
-			GetThread()->Wait();
+			wxMilliSleep(100);
+			//GetThread()->Wait();
 			}
 	};
 

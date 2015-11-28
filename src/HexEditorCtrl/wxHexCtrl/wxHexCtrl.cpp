@@ -73,6 +73,8 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	ZebraStriping=new int;
 	*ZebraStriping=-1;
 
+	CtrlType=0;
+
 	DrawCharByChar=false;
 
 	internalBufferDC=NULL;
@@ -466,72 +468,133 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 	size_t textLenghtLimit = 0;
 	size_t textLength=m_text.Length();
 //	char bux[1000];  //++//
-/*** Hex to Color Engine Prototype
-   char chr;
-   unsigned char chrP,chrC;
-   chrP=0;
-	if(1)
-	for ( int y = 0 ; y < m_Window.y; y++ ){
-		for ( int x = 0 ; x < m_Window.x; x++ ){
-			if( IsDenied(x)){
-				chr=' ';
-				dcTemp->DrawText( wxString::From8BitData(&chr), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
-				//bux[x]=' ';//++//
-				continue;
+
+	//Normal process
+#define Hex_2_Color_Engine_Prototype 0
+	if( !Hex_2_Color_Engine_Prototype || CtrlType==2 ){
+		dcTemp->SetPen(*wxTRANSPARENT_PEN);
+	   //Drawing line by line
+		for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
+			line.Empty();
+
+			//Prepare for zebra stripping
+			if (*ZebraStriping != -1 ){
+				dcTemp->SetTextBackground( (y+*ZebraStriping)%2 ? col_standart : col_zebra);
+
+				//This fills empty regions at Zebra Stripes when printed char with lower than defined
+				if(DrawCharByChar){
+					dcTemp->SetBrush( wxBrush( (y+*ZebraStriping)%2 ? col_standart : col_zebra ));
+					dcTemp->DrawRectangle( m_Margin.x, m_Margin.y + y * m_CharSize.y, m_Window.x*m_CharSize.x, m_CharSize.y);
+					}
 				}
-			if(textLenghtLimit >= textLength)
-				break;
-	//		bux[x]=CharAt(z);//++//
-			chr = CharAt(textLenghtLimit++);
 
-			if( !(chrP++ % 2) )
-			   chrC = (atoh( chr ) << 4) | atoh( CharAt(textLenghtLimit) );
+			for ( int x = 0 ; x < m_Window.x; x++ ){
+				if( IsDenied(x)){
+					line += wxT(' ');
+					//bux[x]=' ';//++//
+					continue;
+					}
+				if(textLenghtLimit >= textLength)
+					break;
+		//		bux[x]=CharAt(z);//++//
+				line += CharAt(textLenghtLimit++);
+				//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+				}
 
-			unsigned char R=(chrC>>5)*0xFF/7;
-			unsigned char G=(0x07 & (chrC>>2))*0xFF/7;
-			unsigned char B=(0x03 & chrC)*0xFF/3;
-		   dcTemp->SetTextBackground( wxColour(R,G,B) );
-			dcTemp->DrawText( wxString::From8BitData(&chr), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+			// For encodings that have variable font with, we need to write characters one by one.
+			if(DrawCharByChar)
+				for( unsigned q = 0 ; q < line.Len() ;q++ )
+					dcTemp->DrawText( line[q], m_Margin.x + q*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+			else
+				dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
 			}
 		}
-	else
-//*/
-	dcTemp->SetPen(*wxTRANSPARENT_PEN);
-   //Drawing line by line
-	for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
-		line.Empty();
+	else{
+/*** Hex to Color Engine Prototype ***/
+		char chr;
+		unsigned char chrP,chrC;
+		unsigned char R,G,B;
+		wxColour RGB;
+		chrP=0;
+		int col[256];
+		//Prepare 8bit to 32Bit color table for speed
+		///Bit    7  6  5  4  3  2  1  0
+		///Data   R  R  R  G  G  G  B  B
+		///OnWX   B  B  G  G  G  R  R  R
 
-		//Prepare for zebra stripping
-		if (*ZebraStriping != -1 ){
-			dcTemp->SetTextBackground( (y+*ZebraStriping)%2 ? col_standart : col_zebra);
-
-			//This fills empty regions at Zebra Stripes when printed char with lower than defined
-			if(DrawCharByChar){
-				dcTemp->SetBrush( wxBrush( (y+*ZebraStriping)%2 ? col_standart : col_zebra ));
-				dcTemp->DrawRectangle( m_Margin.x, m_Margin.y + y * m_CharSize.y, m_Window.x*m_CharSize.x, m_CharSize.y);
-				}
+		for(unsigned chrC=0;chrC<256;chrC++){
+			R=(chrC>>5)*0xFF/7;
+			G=(0x07 & (chrC>>2))*0xFF/7;
+			B=(0x03 & chrC)*0xFF/3;
+			col[chrC]=B<<16|G<<8|R;
 			}
 
-		for ( int x = 0 ; x < m_Window.x; x++ ){
-			if( IsDenied(x)){
-				line += wxT(' ');
-				//bux[x]=' ';//++//
-				continue;
-				}
-			if(textLenghtLimit >= textLength)
-				break;
-	//		bux[x]=CharAt(z);//++//
-			line += CharAt(textLenghtLimit++);
-			//dcTemp->DrawText( wxString::From8BitData(&t), m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
-			}
+//		//Monochrome Palettes
+//		for(int chrC=0;chrC<256;chrC++){
+//			col[chrC]=chrC*0x010101; //W
+//			//col[chrC]=chrC; 	//R
+//			//col[chrC]=chrC<<8; 	//G
+//			//col[chrC]=chrC<<16; //B
+//			}
 
-		// For encodings that have variable font with, we need to write characters one by one.
-		if(DrawCharByChar)
-			for( unsigned q = 0 ; q < line.Len() ;q++ )
-				dcTemp->DrawText( line[q], m_Margin.x + q*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
-		else
-			dcTemp->DrawText( line, m_Margin.x, m_Margin.y + y * m_CharSize.y );
-		}
+		wxString RenderedHexByte;
+		for ( int y = 0 ; y < m_Window.y; y++ ){
+			for ( int x = 0 ; x < m_Window.x; ){
+				if(CtrlType==0){
+					RenderedHexByte.Empty();
+					/*while( IsDenied( x ) ){
+						RenderedHexByte=" ";
+						x++;
+						}
+					*/
+					if(textLenghtLimit >= textLength)
+						break;
+
+					//First half of byte
+					RenderedHexByte += CharAt(textLenghtLimit++);
+					chr = RenderedHexByte.ToAscii()[0];
+					chrC = atoh( chr ) << 4;
+
+					//Space could be here
+					int i=1;
+					while( IsDenied( x+i ) ){
+						RenderedHexByte+=wxT(" ");
+						i++;
+						}
+
+					//Second half of byte.
+					RenderedHexByte += CharAt(textLenghtLimit++);
+					chr = RenderedHexByte.ToAscii()[1];
+					chrC |= atoh( chr );
+					//chrC = (atoh( RenderedHexByte.ToAscii()[0] ) << 4) | atoh( RenderedHexByte.ToAscii()[1] );
+
+					//Trailing HEX space
+					i++;
+					while( IsDenied( x+i ) ){
+						RenderedHexByte+=wxT(" ");
+						i++;
+						}
+
+					RGB.Set(col[chrC]);
+					//dcTemp->SetTextBackground( wxColour(R,G,B) );
+					dcTemp->SetTextBackground( RGB );
+					dcTemp->DrawText( RenderedHexByte, m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+					chrC = 0;
+					x+=i;
+					}
+				//Text Coloring
+				else{
+					//Not accurate since text buffer is changed due encoding translation
+					chrC=CharAt(textLenghtLimit);
+					wxString stt=CharAt(textLenghtLimit++);
+					RGB.Set(col[chrC]);
+					dcTemp->SetTextBackground( RGB );
+					dcTemp->DrawText( stt, m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
+					x++;
+					}
+				}
+			}
+	}//Hex_2_Color_Engine_Prototype
 
 	int TAC = TagArray.Count();
 	if( TAC != 0 ){

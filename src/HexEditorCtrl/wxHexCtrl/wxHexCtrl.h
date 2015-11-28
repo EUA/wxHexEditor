@@ -62,8 +62,8 @@ class wxHexCtrl : public wxScrolledWindow{
 		~wxHexCtrl();
 		wxChar CharAt(unsigned offset){
 			if( offset >= m_text.Len() ){
-			   //std::cout << "Buff lower for offset : " << offset << std::endl;
-			   return 0;
+				//std::cout << "Buff lower for offset : " << offset << std::endl;
+				return 0;
 				}
 		return m_text.GetChar(offset);}
 
@@ -152,6 +152,7 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		wxBitmap*   internalBufferBMP;
 		wxString	HexFormat;
 		bool		DrawCharByChar;
+		int CtrlType;
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );
@@ -190,7 +191,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 		wxString Codepage;
 		wxFontEncoding FontEnc;
 //		wxHexTextCtrl():wxHexCtrl(){}
-		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){}
+		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){CtrlType=1;}
 		wxHexTextCtrl( wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
@@ -199,6 +200,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator) :
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
+				CtrlType=1;
 				wxWindow::SetCursor( wxCURSOR_CHAR );
 
 				FontEnc=wxFONTENCODING_ALTERNATIVE;
@@ -255,6 +257,7 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				SetCaret( NULL );
 
             //offset_mode='u';
+            CtrlType=2;
             offset_mode=wxConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
             if( offset_mode=='s' )	// No force to sector mode at startup.
 					offset_mode='u';
@@ -263,7 +266,7 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				digit_count=6;
 				};
 		wxString GetFormatString( bool minimal=false );
-      wxString GetFormatedOffsetString( uint64_t c_offset, bool minimal=false );
+		wxString GetFormatedOffsetString( uint64_t c_offset, bool minimal=false );
 		void SetOffsetLimit( uint64_t max_offset ){offset_limit = max_offset;}
 		unsigned GetDigitCount( void );
 		unsigned GetLineSize( void );  //Digit count plus Formating chars like h,o if required

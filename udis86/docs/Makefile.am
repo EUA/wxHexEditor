@@ -1,2 +1,0 @@
-SUBDIRS = x86 manual
-MAINTAINERCLEANFILES = Makefile.in

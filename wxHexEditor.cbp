@@ -327,9 +327,6 @@
 		<Unit filename="src/FAL.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="src/HDwin.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
 		<Unit filename="src/HexDialogs.cpp" />
 		<Unit filename="src/HexDialogs.h">
 			<Option target="&lt;{~None~}&gt;" />
@@ -379,6 +376,14 @@
 		<Unit filename="src/HexPanels.cpp" />
 		<Unit filename="src/HexPanels.h">
 			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/windrv.cpp">
+			<Option target="Win32 Release" />
+			<Option target="Win32 Debug" />
+		</Unit>
+		<Unit filename="src/windrv.h">
+			<Option target="Win32 Release" />
+			<Option target="Win32 Debug" />
 		</Unit>
 		<Extensions>
 			<envvars />

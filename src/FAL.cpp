@@ -108,8 +108,15 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	}
 
 #ifdef __WXMSW__
+#include "windrv.h"
 HANDLE GetDDK(PCWSTR a);
-#include "HDwin.h"
+
+bool IsWinDevice( wxFileName myfilename ){
+	if(myfilename.GetFullPath().StartsWith( wxT(".:"))
+		or myfilename.GetFullPath().StartsWith( wxT("\\Device\\Harddisk")) )
+		return true;
+	return false;
+	}
 
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	//Windows special device opening
@@ -119,12 +126,15 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
 		if(myfilename.GetFullPath().StartsWith( wxT(".:")))
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
-		else devnm = myfilename.GetFullPath();
+
+		else
+			devnm = myfilename.GetFullPath();
 		//devnm=wxT("\\Device\\HarddiskVolume1");
+
 		std::wcout << devnm << std::endl;
 		if( myfilename.GetFullPath().StartsWith("\\Device") ){
-			hDevice=GetDDK(devnm);
-			std::cout << hDevice << std::endl;
+			//hDevice=GetDDK(devnm);
+			//std::cout << hDevice << std::endl;
 			int nDosLinkCreated;
 			HANDLE dev;
 			DWORD dwResult;
@@ -139,9 +149,12 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			BOOL removable = FALSE;
 
 			drivePresent = TRUE;
+
 			windowsHDD wdd;
 
+
 			nDosLinkCreated = wdd.FakeDosNameForDevice (devnm.wchar_str(), szDosDevice, szCFDevice, FALSE);
+
 			hDevice = CreateFile( szCFDevice, GENERIC_READ | GENERIC_WRITE,
 												FILE_SHARE_READ | FILE_SHARE_WRITE,
 												NULL,
@@ -149,6 +162,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 												FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
 												NULL);
 
+			//Where issue RemoveFakeDosName ???
 			}
 		else{
 
@@ -264,7 +278,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+ wxT("\n")+
 												        _("Please change file permissons or run this program with root privileges.")+wxT("\n")+
 												        _("You can also try to own the file temporarily (requires root's password.)")+wxT("\n")+wxT("\n")+
-												        _("Do you want to own the file?"),_("Error"), wxOK|wxCANCEL|wxICON_ERROR) )
+												        _("Do you want to own the file?"),_("Warning"), wxOK|wxCANCEL|wxICON_WARNING) )
 
 			return false;
 
@@ -288,6 +302,10 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			cmd = wxT("gksu -u root \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksudo")))
 			cmd = wxT("gksudo -u root \"chown ");
+		else{
+			wxMessageBox(_("For using this function, please install \"gnomesu\" or \"gksu\" tools first."),_("Error"), wxOK|wxCANCEL|wxICON_ERROR);
+			return false;
+			}
 		cmd+=wxGetUserId() + wxT(" ")+ myfilename.GetFullPath() +wxT("\"");
 	#ifdef _DEBUG_
 		std::cout << "Changing permission of " << myfilename.GetFullPath().ToAscii() << std::endl;
@@ -411,7 +429,7 @@ FAL::~FAL(){
 
 bool FAL::SetAccessMode( FileAccessMode fam ){
 	if( ProcessID > 0
-	#ifdef __WXMSW__
+#ifdef __WXMSW__
 	or (IsWinDevice( the_file ) )
 #endif // __WXMSW__
 		){

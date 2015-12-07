@@ -26,7 +26,7 @@
 #ifdef  __WXMAC__
 	#include <dirent.h>	//for pre 2.9.0 wx releases
 #elif defined( __WXMSW__ )
-	#include "HDwin.h"
+	#include "windrv.h"
 #endif
 
 wxArrayString GetDeviceList( bool WithPartitions=true){

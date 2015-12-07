@@ -69,7 +69,7 @@
 #ifdef __WXGTK__
 	#include <sys/ioctl.h>
 	//#include <dev/disk.h>
-	
+
 	#ifdef BSD
 		#include <sys/ptrace.h>
 		#include <sys/disk.h>
@@ -189,6 +189,9 @@ virtual	long Read( unsigned char* buffer, int size );
 		wxFileName the_file;
 		uint64_t put_ptr,get_ptr;
 		wxMemoryBuffer XORview;
+#ifdef __WXMSW__
+		HANDLE hDevice;
+#endif // __WXMSW__
 //		DiffNode *head,*tail;	//linked list holds modification record
 	};
 

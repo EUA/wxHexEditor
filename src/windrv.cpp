@@ -22,47 +22,9 @@
 *               email : spamjunkeater@gmail.com                         *
 *************************************************************************/
 
-/******************This file By Charilaos Skandylas ********************/
-
-#include <windows.h>
-#include <winioctl.h>
-#include <stdio.h>
-#include <string>
-#include <vector>
+#include "windrv.h"
 
 using namespace std;
-struct _opt {
-	bool				list;
-	bool				yes;
-	unsigned int	quiet;
-	ULONGLONG		start;
-	ULONGLONG		end;
-	bool				read;
-	bool				kilobyte;
-	unsigned int	refresh;
-	};
-typedef struct _opt t_opt;
-static t_opt opt = {
-	false,			// list
-	0,					// quiet
-	0,					// start
-	0,					// end
-	false,			// read
-	false,			// kilobyte
-	1,					// refresh
-	};
-class windowsHDD
-	{	private:
-		vector<WCHAR*> devicenames;
-
-		void list_device(WCHAR *format_str, WCHAR *szTmp, int n);
-		bool RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice);
-		bool FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly);
-		void list_devices();
-	public:
-
-		vector<WCHAR*> getdevicenamevector();
-	};
 
 bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly)
 	{
@@ -173,5 +135,3 @@ vector<WCHAR*> windowsHDD::getdevicenamevector()
 	{	list_devices();
 	return devicenames;
 	}
-
-

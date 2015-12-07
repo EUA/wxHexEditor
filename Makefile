@@ -78,7 +78,7 @@ mhash/lib/.libs/libmhash.a:
 	cd mhash; $(MAKE) $(MFLAGS)
 
 src/windrv.o:
-	$(CXX) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -c src/windrv.c -o src/windrv.o
+	$(CXX) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -c src/windrv.cpp -o src/windrv.o
 
 win: $(RESOURCES) $(EXECUTABLE_WIN) src/windrv.o
 

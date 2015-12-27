@@ -1195,7 +1195,7 @@ void FindDialog::OnFindAll( bool internal ){
 
 		if( !internal ){
 			this->Hide();
-			OSXwxMessageBox(wxString::Format(_("Found %d matches."),parent->HighlightArray.GetCount()), _("Find All Done!"), wxOK, parent );
+			OSXwxMessageBox(wxString::Format(_("Found %d matches."), static_cast<int>( parent->HighlightArray.GetCount()) ), _("Find All Done!"), wxOK, parent );
 			Destroy();
 			}
 		}

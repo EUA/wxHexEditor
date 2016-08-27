@@ -11,20 +11,23 @@ LINUX
 For Linux, make sure you have installed wxWidgets.
 Use this command for ubuntu like distros:
 
-apt-get install libwxgtk<version>-dev
+   apt-get install libwxgtk<version>-dev
 
 or use your need to use this one for distros like OpenSuSE...
 
-zypper in wxWidgets-devel
+  zypper in wxWidgets-devel
 
 Then extract the wxHexEditor:
 
-tar xvf wxHexEditor-v<version>-src.tar.bz2
-cd wxHexEditor
-make
+  tar xvf wxHexEditor-v<version>-src.tar.bz2
+  cd wxHexEditor
+  make
 
 you can also use OPTFLAGS and WXCONFIG flags if you have different wx-config name like
-make WXCONFIG=wx-config-3.0 OPTFLAGS="-O3 -march-native"
+  make WXCONFIG=wx-config CPPFLAGS="-fPIC" OPTFLAGS="-O3 -march-native -fopenmp"
+
+Than you could use this command for installing wxHexEditor to your computer.
+  make install
 
 -----------------------------------------------------
 WINDOWS

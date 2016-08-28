@@ -22,7 +22,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`wx-config --libs`" />
+					<Add option="`wx-config --libs all`" />
 					<Add library="gomp" />
 					<Add library="mhash/bin/Release/libmhash.a" />
 					<Add library="udis86/bin/Release/libudis86.a" />
@@ -39,7 +39,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="`wx-config  --cflags` -fopenmp" />
+					<Add option="`wx-config --cflags` -fopenmp" />
 					<Add option="-D_DEBUG_" />
 					<Add option="-D_DEBUG_FILE_x" />
 					<Add option="-D_DEBUG_SELECT_x" />
@@ -50,7 +50,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="`wx-config --libs`" />
+					<Add option="`wx-config --libs all`" />
 					<Add library="gomp" />
 					<Add library="mhash/bin/Debug/libmhash.a" />
 					<Add library="udis86/bin/Debug/libudis86.a" />
@@ -78,7 +78,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.2/release/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.12/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Custom Debug">

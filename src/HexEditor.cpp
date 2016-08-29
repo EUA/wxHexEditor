@@ -385,6 +385,19 @@ bool HexEditor::FileSave( bool question ) {
 bool HexEditor::FileSave( wxString savefilename ) {
 // TODO (death#1#): Protection to save opened file/samefile
 	wxFFile savefile( savefilename, wxT("wb") );
+
+	wxDiskspaceSize_t available, total;
+	do{
+		wxGetDiskSpace( savefilename, &total, &available );
+		if( FileLength() > available ){
+			int state = wxMessageBox( wxString::Format( _( "There are not enough free disk space.\nRequired: %s\nAvailable: %s"),
+															wxFileName::GetHumanReadableSize( wxULongLong(FileLength()) ),
+															wxFileName::GetHumanReadableSize( wxULongLong(available.GetValue()) ) ), _("Not Enought Space"), wxCANCEL|wxOK|wxICON_QUESTION, this );
+			if(state==wxCANCEL)
+				return false;
+			}
+		}while(FileLength() > available);
+
 	if(savefile.IsOpened()) {
 		myfile->Seek( 0, wxFromStart);
 		int64_t range = FileLength();
@@ -402,7 +415,11 @@ bool HexEditor::FileSave( wxString savefilename ) {
 		while( savefile.Tell() < FileLength() ) {
 			rd=myfile->Read( buffer, BlockSz );
 			readfrom+=rd;
-			savefile.Write( buffer, rd );
+			if( savefile.Write( buffer, rd ) != rd ){
+				savefile.Close();
+				wxRemoveFile( savefilename );
+				return false;
+				};
 			memset(buffer,0,BlockSz);
 			time(&te);
 			if(ts != te ){
@@ -413,6 +430,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 			if( !mpd.Update( (readfrom*1000)/range, emsg) ){
 				savefile.Close();
 				wxRemoveFile( savefilename );
+				wxMessageBox( wxString(_("File cannot save as ")).Append( savefilename ),_("Error"), wxOK|wxICON_ERROR, this );
 				return false;
 				}
 			}

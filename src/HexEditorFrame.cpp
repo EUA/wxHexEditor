@@ -579,8 +579,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 																					wxDefaultPosition);
 												if(wxID_OK == filediag.ShowModal())
-													if( !MyHexEditor->FileSave( filediag.GetPath() ))
-														wxMessageBox( wxString(_("File cannot save as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+													MyHexEditor->FileSave( filediag.GetPath() );
 												break;
 												}
 					case idClose:{

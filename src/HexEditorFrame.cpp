@@ -557,6 +557,13 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 		wxString filename = MyFileHistory->GetHistoryFile( event.GetId() - MyFileHistory->GetBaseId() );
 		OpenFile( filename );
 		}
+
+	else if( event.GetId() == wxID_QUIT ){
+		wxCloseEvent evt(wxEVT_CLOSE_WINDOW );
+		//GetEventHandler()->ProcessEvent( evt) ;
+		wxPostEvent( this, evt );
+		}
+
 	//If there some file(s) are open
 	else if( MyNotebook->GetPageCount() ){
 			HexEditor *MyHexEditor = GetActiveHexEditor();

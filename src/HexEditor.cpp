@@ -491,6 +491,7 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 		delete myfile;
 		myfile = NULL;
 		tagpanel->Set(MainTagArray);
+
 		}
 	return true;
 	}

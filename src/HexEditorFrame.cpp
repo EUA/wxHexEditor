@@ -1077,12 +1077,13 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 	if( MyNotebook->GetPageCount() ){
 		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( event.GetSelection() ) );
 		if( MyHexEditor != NULL ){
-		   MyHexEditor->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditorFrame::OnKeyDown)  ,NULL, this);
+			MyHexEditor->Disconnect( wxEVT_KEY_DOWN,	wxKeyEventHandler(HexEditorFrame::OnKeyDown)  ,NULL, this);
+			wxFileName FileNameProxy=MyHexEditor->GetFileName();
 			if( MyHexEditor->FileClose() ){
 #if _FSWATCHER_
-				if(!MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid=")))
+				if(!FileNameProxy.GetFullPath().Lower().StartsWith( wxT("-pid=")))
 					if(file_watcher!=NULL){
-						file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
+						file_watcher->Remove( FileNameProxy );
 						Disconnect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
 						}
 #endif // _FSWATCHER_

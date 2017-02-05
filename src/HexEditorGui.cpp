@@ -1089,7 +1089,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	sbSizerSearchFor->Add( m_radioSame, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
-	bSizerMain->Add( sbSizerSearchFor, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	bSizerMain->Add( sbSizerSearchFor, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerStopAfter;
 	bSizerStopAfter = new wxBoxSizer( wxHORIZONTAL );
@@ -1156,7 +1156,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
 	
 	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnCancel, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizerButtons->Add( btnCancel, 1, wxALL, 5 );
 	
 	btnCompare = new wxButton( this, wxID_ANY, wxT("Compare"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnCompare->SetDefault(); 
@@ -1217,7 +1217,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	
 	txtFileToHash = new wxStaticText( this, wxID_ANY, wxT("File To Hash:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtFileToHash->Wrap( -1 );
-	bSizerTop->Add( txtFileToHash, 0, wxALIGN_CENTER|wxALL|wxEXPAND, 5 );
+	bSizerTop->Add( txtFileToHash, 0, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerDiler;
 	bSizerDiler = new wxBoxSizer( wxVERTICAL );
@@ -1225,7 +1225,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	chkFile = new wxCheckBox( this, wxID_ANY, wxT("Current File"), wxDefaultPosition, wxDefaultSize, 0 );
 	chkFile->Enable( false );
 	
-	bSizerDiler->Add( chkFile, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizerDiler->Add( chkFile, 0, wxALL, 5 );
 	
 	filePick = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
 	bSizerDiler->Add( filePick, 0, wxALL|wxEXPAND, 5 );
@@ -1363,16 +1363,16 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
 	
 	btnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnCancel, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	bSizerButtons->Add( btnCancel, 1, wxALL|wxEXPAND, 5 );
 	
 	btnCalculate = new wxButton( this, wxID_ANY, wxT("Calculate"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnCalculate->SetDefault(); 
 	btnCalculate->Enable( false );
 	
-	bSizerButtons->Add( btnCalculate, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	bSizerButtons->Add( btnCalculate, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizerMain->Add( bSizerButtons, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizerMain->Add( bSizerButtons, 0, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( bSizerMain );
@@ -1596,7 +1596,7 @@ XORViewDialogGui::XORViewDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	radioHex = new wxRadioButton( this, wxID_ANY, wxT("Hex"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerRadio->Add( radioHex, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 	
-	XORtext = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	XORtext = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizerRadio->Add( XORtext, 1, wxALIGN_CENTER|wxLEFT, 5 );
 	
 	
@@ -1782,7 +1782,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	spinBytePerLine = new wxSpinCtrl( sbSizerFormat->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 8 );
 	spinBytePerLine->Enable( false );
 	
-	bSizerBytePerLine->Add( spinBytePerLine, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	bSizerBytePerLine->Add( spinBytePerLine, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	
 	sbSizerFormat->Add( bSizerBytePerLine, 0, 0, 5 );
@@ -1804,7 +1804,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	bSizerBtns = new wxBoxSizer( wxHORIZONTAL );
 	
 	BtnSave = new wxButton( this, wxID_SAVE, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerBtns->Add( BtnSave, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizerBtns->Add( BtnSave, 0, wxALL, 5 );
 	
 	BtnCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerBtns->Add( BtnCancel, 0, wxALL, 5 );
@@ -1874,7 +1874,7 @@ DeviceBackupDialogGui::DeviceBackupDialogGui( wxWindow* parent, wxWindowID id, c
 	wxFlexGridSizer* fgSizerSourceDestination;
 	fgSizerSourceDestination = new wxFlexGridSizer( 2, 2, 0, 0 );
 	fgSizerSourceDestination->AddGrowableCol( 1 );
-	fgSizerSourceDestination->SetFlexibleDirection( wxBOTH );
+	fgSizerSourceDestination->SetFlexibleDirection( wxHORIZONTAL );
 	fgSizerSourceDestination->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	txtSource = new wxStaticText( this, wxID_ANY, wxT("Source :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1894,7 +1894,7 @@ DeviceBackupDialogGui::DeviceBackupDialogGui( wxWindow* parent, wxWindowID id, c
 	fgSizerSourceDestination->Add( filePickBackup, 1, wxALL|wxEXPAND, 5 );
 	
 	
-	MainSizer->Add( fgSizerSourceDestination, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	MainSizer->Add( fgSizerSourceDestination, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* ButtonSizer;
 	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );

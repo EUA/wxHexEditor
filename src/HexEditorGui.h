@@ -544,7 +544,7 @@ class DeviceBackupDialogGui : public wxDialog
 	
 	public:
 		
-		DeviceBackupDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Backup Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		DeviceBackupDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Backup Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 450,170 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~DeviceBackupDialogGui();
 	
 };
@@ -570,7 +570,7 @@ class DeviceRestoreDialogGui : public wxDialog
 	
 	public:
 		
-		DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Restore Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Restore Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 450,200 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~DeviceRestoreDialogGui();
 	
 };
@@ -595,7 +595,7 @@ class DeviceEraseDialogGui : public wxDialog
 	
 	public:
 		
-		DeviceEraseDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Erase Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 492,149 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		DeviceEraseDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Disk/Partition Erase Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 450,200 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~DeviceEraseDialogGui();
 	
 };

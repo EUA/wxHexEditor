@@ -302,6 +302,39 @@
 					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
 				</Environment>
 			</Target>
+			<Target title="Clang Custom Debug">
+				<Option platforms="Unix;" />
+				<Option output="Debug/bin/wxHexEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/obj/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Option parameters="testfile.swp" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-g" />
+					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="-Wno-deprecated-declarations" />
+					<Add option="-D_DEBUG_=9" />
+					<Add option="-D_DEBUG_MUTEX_x" />
+					<Add option="-D_DEBUG_FILE_x" />
+					<Add option="-D_DEBUG_SELECT_x" />
+					<Add option="-D_DEBUG_SIZE_x" />
+					<Add option="-D_DEBUG_SCROLL_x" />
+					<Add option="-D_DEBUG_CARET_x" />
+					<Add option="-D_DEBUG_MOUSE_x" />
+					<Add option="-D_DEBUG_EVENTS_x" />
+					<Add option="-D_DEBUG_THREAD_SCROLL_" />
+				</Compiler>
+				<Linker>
+					<Add option="$($(WXCONFIG) --libs)" />
+					<Add library="mhash/bin/Release/libmhash.a" />
+					<Add library="udis86/bin/Release/libudis86.a" />
+				</Linker>
+				<Environment>
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/debug/wx-config" />
+				</Environment>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add directory="mhash/include" />

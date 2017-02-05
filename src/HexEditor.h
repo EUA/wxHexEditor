@@ -238,12 +238,14 @@ class copy_maker {
 			}
 	};
 
+
 class scrollthread:wxThreadHelper {
 	private:
 		HexEditor *parent;
 		int speed;
 		wxMutex speed_mtx;
 	public:
+		wxMutex ThreadScrool;
 		scrollthread(int initial_speed, HexEditor *parent ):parent(parent) {
 			speed = initial_speed;
 #if wxCHECK_VERSION(2,9,0)
@@ -260,6 +262,7 @@ class scrollthread:wxThreadHelper {
 			int64_t newoffset=0;
 			int64_t FileLength;
 			int thread_speed;
+			ThreadScrool.Unlock();
 			while( !(GetThread()->TestDestroy()) ) {
 				//wxMilliSleep(25);
 				speed_mtx.Lock();
@@ -286,40 +289,14 @@ class scrollthread:wxThreadHelper {
 				if( newoffset != parent->page_offset ){
 					parent->page_offset=newoffset;
 
-#if wxCHECK_VERSION(3, 0, 0)
-					/*
-					wxCommandEvent *eventx=new wxCommandEvent( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
-					//eventx->SetInt(newoffset);
-					//::wxQueueEvent( parent, eventx );
-					wxYield();
-					while(!eventx->GetSkipped())
-						GetThread()->Sleep(35);
-					//delete eventx;
-					*/
+					while( ThreadScrool.TryLock() != wxMUTEX_NO_ERROR )
+						GetThread()->Sleep(25);
 
 					wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
 					//event.SetWillBeProcessedAgain();
 					//event.SetInt(n);  // pass some data along the event, a number in this case
-
-					parent->GetEventHandler()->AddPendingEvent( event );
-					//::wxPostEvent( parent, event );
-					wxYield();
-					//while(event.GetSkipped()){
-
-					while(!event.WasProcessed()){
-						GetThread()->Sleep(35);
-						//wxMilliSleep(35);
-						}
-
-#else				//Old versions
-					wxCommandEvent eventx( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
-					//eventx.SetInt(newoffset);
-					wxMutexGuiEnter(); //wxMutexGuiEnter & Leave fundtions are required because wxPostEvent will run under Thread
-					::wxPostEvent(parent, eventx );
-					wxMutexGuiLeave();
-					wxYield();
-					GetThread()->Sleep(35);
-#endif
+					::wxPostEvent( parent, event );
+					wxYieldIfNeeded();
 					}
 				}
 #if _DEBUG_THREAD_SCROLL_

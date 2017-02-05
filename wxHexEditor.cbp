@@ -40,13 +40,16 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags` -fopenmp" />
-					<Add option="-D_DEBUG_" />
+					<Add option="-D_DEBUG_=9" />
+					<Add option="-D_DEBUG_MUTEX_x" />
 					<Add option="-D_DEBUG_FILE_x" />
 					<Add option="-D_DEBUG_SELECT_x" />
 					<Add option="-D_DEBUG_SIZE_x" />
 					<Add option="-D_DEBUG_SCROLL_x" />
 					<Add option="-D_DEBUG_CARET_x" />
-					<Add option="-D_DEBUG_MOUSE_" />
+					<Add option="-D_DEBUG_MOUSE_x" />
+					<Add option="-D_DEBUG_EVENTS_x" />
+					<Add option="-D_DEBUG_THREAD_SCROLL_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

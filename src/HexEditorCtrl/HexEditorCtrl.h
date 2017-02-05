@@ -30,9 +30,9 @@
 		#define DO_NOT_USE_THREAD_FOR_SCROLL
 	#endif
 #endif
-//#ifdef __WXMSW__  //WXMSW Stuck sometimes if thread on
+#ifdef __WXMSW__  //WXMSW Stuck sometimes if thread on
 	#define DO_NOT_USE_THREAD_FOR_SCROLL
-//#endif
+#endif
 
 
 #include <wx/xml/xml.h>

@@ -656,6 +656,9 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint, 
 	}
 
 void HexEditor::ThreadPaint(wxCommandEvent& event){
+#ifdef _DEBUG_THREAD_SCROLL_
+	std::cout << "ThreadPaint() Enter" << std::endl;
+#endif // _DEBUG_THREAD_SCROLL_
 	if( event.GetId()==THREAD_UPDATE_EVENT){
 		LoadFromOffset( page_offset, false, false );
 		SetLocalHexInsertionPoint(GetLocalHexInsertionPoint());
@@ -667,7 +670,8 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 //		if( parent->offset_scroll->GetThumbPosition() != parent->page_offset / parent->BytePerLine() )
 //			parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
 
-		event.Skip(true);
+		event.Skip(false);
+		myscrollthread->ThreadScrool.Unlock();
 		}
 	}
 
@@ -1246,6 +1250,31 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 	}
 
 void HexEditor::ScrollNoThread( int speed ) {
+	if( ((speed > 0) && (page_offset + ByteCapacity() < FileLength()))
+		|| ( (speed < 0) && (page_offset > 0) )
+	  ) {
+#ifdef _DEBUG_MOUSE_
+		std::cout << "Loop Scroll speed  :" << speed << std::endl;
+		std::cout << "Loop Pending Event :" << wxTheApp->Pending() << std::endl;
+#endif
+		page_offset += BytePerLine() * speed;
+		if( page_offset < 0 )
+			page_offset = 0;
+		else if( page_offset + ByteCapacity() >= FileLength() ) {
+			page_offset = FileLength() - ByteCapacity();
+			page_offset += BytePerLine() - (page_offset % BytePerLine()) ; //cosmetic
+			}
+		LoadFromOffset( page_offset, false, false );
+	//	SetLocalHexInsertionPoint(cursor); //to update cursor location on WXMSW!
+		Selector();
+		PaintSelection();
+		UpdateCursorLocation( true );
+		if( offset_scroll->GetThumbPosition() != page_offset / BytePerLine() )
+			offset_scroll->SetThumbPosition( page_offset / BytePerLine() );
+		}
+	return;
+	///REMAINING CODE IS DISABLED
+	//Old and which has errors in newer versions of wx
 	while( (
 			!wxTheApp->Pending() &&
 			speed != 0

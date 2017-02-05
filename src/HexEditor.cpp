@@ -1246,7 +1246,10 @@ void HexEditor::OnMouseMove( wxMouseEvent& event ) {
 	}
 
 void HexEditor::ScrollNoThread( int speed ) {
-	while( (!wxTheApp->Pending() && speed != 0 )
+	while( (
+			!wxTheApp->Pending() &&
+			speed != 0
+			)
 	     && ( ((speed > 0) && (page_offset + ByteCapacity() < FileLength()))
 			|| ( (speed < 0) && (page_offset > 0) ))
 	     ) {
@@ -1273,6 +1276,8 @@ void HexEditor::ScrollNoThread( int speed ) {
 
 		if( page_offset == 0 || page_offset + ByteCapacity() >= FileLength() )
 			break;
+
+		//break;
 		}
 	}
 

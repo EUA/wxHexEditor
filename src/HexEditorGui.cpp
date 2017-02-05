@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Mar  8 2013)
+// C++ code generated with wxFormBuilder (version Feb  5 2017)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -34,12 +34,13 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	fileMenu->Append( menuFileOpen );
 	
 	menuFileOpenRecent = new wxMenu();
+	wxMenuItem* menuFileOpenRecentItem = new wxMenuItem( fileMenu, wxID_ANY, _("Open &Recent"), wxEmptyString, wxITEM_NORMAL, menuFileOpenRecent );
 	wxMenuItem* menuFileOpenRecentDummy;
 	menuFileOpenRecentDummy = new wxMenuItem( menuFileOpenRecent, wxID_ANY, wxString( _("No Recent File") ) , wxEmptyString, wxITEM_NORMAL );
 	menuFileOpenRecent->Append( menuFileOpenRecentDummy );
 	menuFileOpenRecentDummy->Enable( false );
 	
-	fileMenu->Append( -1, _("Open &Recent"), menuFileOpenRecent );
+	fileMenu->Append( menuFileOpenRecentItem );
 	
 	wxMenuItem* menuFileSave;
 	menuFileSave = new wxMenuItem( fileMenu, wxID_SAVE, wxString( _("&Save") ) + wxT('\t') + _("CTRL+S"), _("Save modifications"), wxITEM_NORMAL );
@@ -222,11 +223,12 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuDevicesRam->Enable( false );
 	
 	menuDeviceDisk = new wxMenu();
+	wxMenuItem* menuDeviceDiskItem = new wxMenuItem( devicesMenu, wxID_ANY, _("Open Disk Device"), wxEmptyString, wxITEM_NORMAL, menuDeviceDisk );
 	wxMenuItem* menuDevicesDiskItem1;
 	menuDevicesDiskItem1 = new wxMenuItem( menuDeviceDisk, wxID_ANY, wxString( _("N/A on this OS (yet)") ) , wxEmptyString, wxITEM_NORMAL );
 	menuDeviceDisk->Append( menuDevicesDiskItem1 );
 	
-	devicesMenu->Append( -1, _("Open Disk Device"), menuDeviceDisk );
+	devicesMenu->Append( menuDeviceDiskItem );
 	
 	wxMenuItem* menuDevicesProcessRAM;
 	menuDevicesProcessRAM = new wxMenuItem( devicesMenu, idProcessRAM, wxString( _("Open Process RAM") ) , wxEmptyString, wxITEM_NORMAL );
@@ -236,6 +238,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	devicesMenu->AppendSeparator();
 	
 	menuDeviceImage = new wxMenu();
+	wxMenuItem* menuDeviceImageItem = new wxMenuItem( devicesMenu, wxID_ANY, _("Device Image Tools"), wxEmptyString, wxITEM_NORMAL, menuDeviceImage );
 	wxMenuItem* menuDeviceBackup;
 	menuDeviceBackup = new wxMenuItem( menuDeviceImage, idDeviceBackup, wxString( _("Backup") ) , wxEmptyString, wxITEM_NORMAL );
 	menuDeviceImage->Append( menuDeviceBackup );
@@ -248,12 +251,13 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuDeviceErase = new wxMenuItem( menuDeviceImage, idDeviceErase, wxString( _("Erase") ) , wxEmptyString, wxITEM_NORMAL );
 	menuDeviceImage->Append( menuDeviceErase );
 	
-	devicesMenu->Append( -1, _("Device Image Tools"), menuDeviceImage );
+	devicesMenu->Append( menuDeviceImageItem );
 	
 	mbar->Append( devicesMenu, _("Devices") ); 
 	
 	optionsMenu = new wxMenu();
 	menuOptionsFileMode = new wxMenu();
+	wxMenuItem* menuOptionsFileModeItem = new wxMenuItem( optionsMenu, wxID_ANY, _("File Mode"), wxEmptyString, wxITEM_NORMAL, menuOptionsFileMode );
 	wxMenuItem* menuOptionsFileModeRO;
 	menuOptionsFileModeRO = new wxMenuItem( menuOptionsFileMode, idFileRO, wxString( _("Read Only") ) , wxEmptyString, wxITEM_RADIO );
 	menuOptionsFileMode->Append( menuOptionsFileModeRO );
@@ -270,7 +274,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuOptionsFileMode->Append( menuOptionsFileModeDW );
 	menuOptionsFileModeDW->Enable( false );
 	
-	optionsMenu->Append( -1, _("File Mode"), menuOptionsFileMode );
+	optionsMenu->Append( menuOptionsFileModeItem );
 	
 	wxMenuItem* menuOptionsPreferences;
 	menuOptionsPreferences = new wxMenuItem( optionsMenu, wxID_PREFERENCES, wxString( _("Preferences") ) , wxEmptyString, wxITEM_NORMAL );
@@ -296,7 +300,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->SetMenuBar( mbar );
 	
 	statusBar = this->CreateStatusBar( 5, wxST_SIZEGRIP, wxID_ANY );
-	statusBar->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	statusBar->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	wxBoxSizer* FrameSizer;
 	FrameSizer = new wxBoxSizer( wxVERTICAL );
@@ -448,12 +452,12 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	optionSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_check_unsigned = new wxCheckBox( this, ID_CHK_UNSIGNED, _("Unsigned"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_check_unsigned->SetFont( wxFont( 8, 74, 90, 90, false, _("Sans") ) );
+	m_check_unsigned->SetFont( wxFont( 8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, _("Sans") ) );
 	
 	optionSizer->Add( m_check_unsigned, 0, wxALL, 5 );
 	
 	m_check_bigendian = new wxCheckBox( this, ID_CHK_BIGENDIAN, _("Big Endian"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_check_bigendian->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_check_bigendian->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	optionSizer->Add( m_check_bigendian, 0, wxALL, 5 );
 	
@@ -467,7 +471,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	m_static_bin = new wxStaticText( this, ID_DEFAULT, _("Binary"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_bin->Wrap( -1 );
-	m_static_bin->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_bin->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_bin, 0, wxALIGN_CENTER, 2 );
 	
@@ -475,14 +479,21 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	binSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_textctrl_binary = new wxTextCtrl( this, ID_DEFAULT, _("00000000"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	m_textctrl_binary->SetMaxLength( 8 ); 
-	m_textctrl_binary->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	#ifdef __WXGTK__
+	if ( !m_textctrl_binary->HasFlag( wxTE_MULTILINE ) )
+	{
+	m_textctrl_binary->SetMaxLength( 8 );
+	}
+	#else
+	m_textctrl_binary->SetMaxLength( 8 );
+	#endif
+	m_textctrl_binary->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_textctrl_binary->SetToolTip( _("Press enter to make changes!") );
 	
 	binSizer->Add( m_textctrl_binary, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_check_edit = new wxCheckBox( this, wxID_ANY, _("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_check_edit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_check_edit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_check_edit->SetToolTip( _("Allow editing by Data Interpreter Panel") );
 	
 	binSizer->Add( m_check_edit, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1 );
@@ -492,67 +503,67 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	m_static_8bit = new wxStaticText( this, ID_DEFAULT, _("8 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_8bit->Wrap( -1 );
-	m_static_8bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_8bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_8bit, 0, wxALIGN_CENTER, 0 );
 	
 	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
-	m_textctrl_8bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_8bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_textctrl_8bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_16bit = new wxStaticText( this, ID_DEFAULT, _("16 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_16bit->Wrap( -1 );
-	m_static_16bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_16bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_16bit, 0, wxALIGN_CENTER, 0 );
 	
 	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
-	m_textctrl_16bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_16bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_textctrl_16bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_32bit = new wxStaticText( this, ID_DEFAULT, _("32 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_32bit->Wrap( -1 );
-	m_static_32bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_32bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_32bit, 0, wxALIGN_CENTER, 2 );
 	
 	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	m_textctrl_32bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_32bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_64bit = new wxStaticText( this, ID_DEFAULT, _("64 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_64bit->Wrap( -1 );
-	m_static_64bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_64bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_64bit, 0, wxALIGN_CENTER, 2 );
 	
 	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	m_textctrl_64bit->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_64bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_textctrl_64bit, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_float = new wxStaticText( this, ID_DEFAULT, _("Float"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_float->Wrap( -1 );
-	m_static_float->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_float->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_float, 0, wxALIGN_CENTER, 2 );
 	
 	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	m_textctrl_float->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_float->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_textctrl_float, 0, wxALIGN_CENTER|wxALL, 1 );
 	
 	m_static_double = new wxStaticText( this, ID_DEFAULT, _("Double"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_double->Wrap( -1 );
-	m_static_double->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_static_double->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_static_double, 0, wxALIGN_CENTER|wxBOTTOM|wxTOP, 3 );
 	
 	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	m_textctrl_double->SetFont( wxFont( 8, 70, 90, 90, false, wxEmptyString ) );
+	m_textctrl_double->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
 	numSizer->Add( m_textctrl_double, 0, wxALIGN_CENTER|wxALL, 1 );
 	
@@ -655,7 +666,7 @@ DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, con
 	int m_choiceVendorNChoices = sizeof( m_choiceVendorChoices ) / sizeof( wxString );
 	m_choiceVendor = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceVendorNChoices, m_choiceVendorChoices, 0 );
 	m_choiceVendor->SetSelection( 0 );
-	m_choiceVendor->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+	m_choiceVendor->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_choiceVendor->SetToolTip( _("CPU Vendor") );
 	
 	bSizerTop->Add( m_choiceVendor, 1, wxTOP|wxRIGHT|wxLEFT, 5 );
@@ -890,16 +901,16 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	wxStaticBoxSizer* sbSizerSearchOptions;
 	sbSizerSearchOptions = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Options") ), wxVERTICAL );
 	
-	chkMatchCase = new wxCheckBox( this, wxID_ANY, _("Match Case"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkMatchCase = new wxCheckBox( sbSizerSearchOptions->GetStaticBox(), wxID_ANY, _("Match Case"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSearchOptions->Add( chkMatchCase, 0, wxALL, 5 );
 	
-	chkSearchBackwards = new wxCheckBox( this, wxID_ANY, _("Search backwards"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSearchBackwards = new wxCheckBox( sbSizerSearchOptions->GetStaticBox(), wxID_ANY, _("Search backwards"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSearchOptions->Add( chkSearchBackwards, 0, wxALL, 5 );
 	
-	chkWrapAround = new wxCheckBox( this, wxID_ANY, _("Wrap around"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkWrapAround = new wxCheckBox( sbSizerSearchOptions->GetStaticBox(), wxID_ANY, _("Wrap around"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSearchOptions->Add( chkWrapAround, 0, wxALL, 5 );
 	
-	chkUTF8 = new wxCheckBox( this, wxID_ANY, _("As UTF-8"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkUTF8 = new wxCheckBox( sbSizerSearchOptions->GetStaticBox(), wxID_ANY, _("As UTF-8"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSearchOptions->Add( chkUTF8, 0, wxALL, 5 );
 	
 	
@@ -1070,11 +1081,11 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	wxStaticBoxSizer* sbSizerSearchFor;
 	sbSizerSearchFor = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Search For") ), wxHORIZONTAL );
 	
-	m_radioDifferent = new wxRadioButton( this, wxID_ANY, _("Different bytes"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioDifferent = new wxRadioButton( sbSizerSearchFor->GetStaticBox(), wxID_ANY, _("Different bytes"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioDifferent->SetValue( true ); 
 	sbSizerSearchFor->Add( m_radioDifferent, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_radioSame = new wxRadioButton( this, wxID_ANY, _("Same bytes"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioSame = new wxRadioButton( sbSizerSearchFor->GetStaticBox(), wxID_ANY, _("Same bytes"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSearchFor->Add( m_radioSame, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
@@ -1231,13 +1242,13 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerMD;
 	sbSizerMD = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("MD") ), wxVERTICAL );
 	
-	chkMD2 = new wxCheckBox( this, wxID_ANY, _("MD2 (slow!)"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkMD2 = new wxCheckBox( sbSizerMD->GetStaticBox(), wxID_ANY, _("MD2 (slow!)"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerMD->Add( chkMD2, 0, 0, 5 );
 	
-	chkMD4 = new wxCheckBox( this, wxID_ANY, _("MD4"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkMD4 = new wxCheckBox( sbSizerMD->GetStaticBox(), wxID_ANY, _("MD4"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerMD->Add( chkMD4, 0, 0, 5 );
 	
-	chkMD5 = new wxCheckBox( this, wxID_ANY, _("MD5"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkMD5 = new wxCheckBox( sbSizerMD->GetStaticBox(), wxID_ANY, _("MD5"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerMD->Add( chkMD5, 0, 0, 5 );
 	
 	
@@ -1246,19 +1257,19 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerSHA;
 	sbSizerSHA = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("SHA") ), wxVERTICAL );
 	
-	chkSHA1 = new wxCheckBox( this, wxID_ANY, _("SHA1"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSHA1 = new wxCheckBox( sbSizerSHA->GetStaticBox(), wxID_ANY, _("SHA1"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSHA->Add( chkSHA1, 0, 0, 5 );
 	
-	chkSHA224 = new wxCheckBox( this, wxID_ANY, _("SHA224"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSHA224 = new wxCheckBox( sbSizerSHA->GetStaticBox(), wxID_ANY, _("SHA224"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSHA->Add( chkSHA224, 0, 0, 5 );
 	
-	chkSHA256 = new wxCheckBox( this, wxID_ANY, _("SHA256"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSHA256 = new wxCheckBox( sbSizerSHA->GetStaticBox(), wxID_ANY, _("SHA256"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSHA->Add( chkSHA256, 0, 0, 5 );
 	
-	chkSHA384 = new wxCheckBox( this, wxID_ANY, _("SHA384"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSHA384 = new wxCheckBox( sbSizerSHA->GetStaticBox(), wxID_ANY, _("SHA384"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSHA->Add( chkSHA384, 0, 0, 5 );
 	
-	chkSHA512 = new wxCheckBox( this, wxID_ANY, _("SHA512"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSHA512 = new wxCheckBox( sbSizerSHA->GetStaticBox(), wxID_ANY, _("SHA512"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSHA->Add( chkSHA512, 0, 0, 5 );
 	
 	
@@ -1267,16 +1278,16 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerRIPEMD;
 	sbSizerRIPEMD = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("RipeMD") ), wxVERTICAL );
 	
-	chkRIPEMD128 = new wxCheckBox( this, wxID_ANY, _("RipeMD128"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkRIPEMD128 = new wxCheckBox( sbSizerRIPEMD->GetStaticBox(), wxID_ANY, _("RipeMD128"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerRIPEMD->Add( chkRIPEMD128, 0, 0, 5 );
 	
-	chkRIPEMD160 = new wxCheckBox( this, wxID_ANY, _("RipeMD160"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkRIPEMD160 = new wxCheckBox( sbSizerRIPEMD->GetStaticBox(), wxID_ANY, _("RipeMD160"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerRIPEMD->Add( chkRIPEMD160, 0, 0, 5 );
 	
-	chkRIPEMD256 = new wxCheckBox( this, wxID_ANY, _("RipeMD256"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkRIPEMD256 = new wxCheckBox( sbSizerRIPEMD->GetStaticBox(), wxID_ANY, _("RipeMD256"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerRIPEMD->Add( chkRIPEMD256, 0, 0, 5 );
 	
-	chkRIPEMD320 = new wxCheckBox( this, wxID_ANY, _("RipeMD320"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkRIPEMD320 = new wxCheckBox( sbSizerRIPEMD->GetStaticBox(), wxID_ANY, _("RipeMD320"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerRIPEMD->Add( chkRIPEMD320, 0, 0, 5 );
 	
 	
@@ -1285,19 +1296,19 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerHAVAL;
 	sbSizerHAVAL = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("HAVAL") ), wxVERTICAL );
 	
-	chkHAVAL128 = new wxCheckBox( this, wxID_ANY, _("HAVAL128"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkHAVAL128 = new wxCheckBox( sbSizerHAVAL->GetStaticBox(), wxID_ANY, _("HAVAL128"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerHAVAL->Add( chkHAVAL128, 0, 0, 5 );
 	
-	chkHAVAL160 = new wxCheckBox( this, wxID_ANY, _("HAVAL160"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkHAVAL160 = new wxCheckBox( sbSizerHAVAL->GetStaticBox(), wxID_ANY, _("HAVAL160"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerHAVAL->Add( chkHAVAL160, 0, 0, 5 );
 	
-	chkHAVAL192 = new wxCheckBox( this, wxID_ANY, _("HAVAL192"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkHAVAL192 = new wxCheckBox( sbSizerHAVAL->GetStaticBox(), wxID_ANY, _("HAVAL192"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerHAVAL->Add( chkHAVAL192, 0, 0, 5 );
 	
-	chkHAVAL224 = new wxCheckBox( this, wxID_ANY, _("HAVAL224"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkHAVAL224 = new wxCheckBox( sbSizerHAVAL->GetStaticBox(), wxID_ANY, _("HAVAL224"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerHAVAL->Add( chkHAVAL224, 0, 0, 5 );
 	
-	chkHAVAL256 = new wxCheckBox( this, wxID_ANY, _("HAVAL256"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkHAVAL256 = new wxCheckBox( sbSizerHAVAL->GetStaticBox(), wxID_ANY, _("HAVAL256"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerHAVAL->Add( chkHAVAL256, 0, 0, 5 );
 	
 	
@@ -1306,13 +1317,13 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerTIGER;
 	sbSizerTIGER = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("TIGER") ), wxVERTICAL );
 	
-	chkTIGER128 = new wxCheckBox( this, wxID_ANY, _("TIGER128"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkTIGER128 = new wxCheckBox( sbSizerTIGER->GetStaticBox(), wxID_ANY, _("TIGER128"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTIGER->Add( chkTIGER128, 0, 0, 5 );
 	
-	chkTIGER160 = new wxCheckBox( this, wxID_ANY, _("TIGER160"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkTIGER160 = new wxCheckBox( sbSizerTIGER->GetStaticBox(), wxID_ANY, _("TIGER160"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTIGER->Add( chkTIGER160, 0, 0, 5 );
 	
-	chkTIGER = new wxCheckBox( this, wxID_ANY, _("TIGER192"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkTIGER = new wxCheckBox( sbSizerTIGER->GetStaticBox(), wxID_ANY, _("TIGER192"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTIGER->Add( chkTIGER, 0, 0, 5 );
 	
 	
@@ -1321,25 +1332,25 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	wxStaticBoxSizer* sbSizerOthers;
 	sbSizerOthers = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Others") ), wxVERTICAL );
 	
-	chkADLER32 = new wxCheckBox( this, wxID_ANY, _("ADLER32"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkADLER32 = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("ADLER32"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkADLER32, 0, 0, 5 );
 	
-	chkCRC32 = new wxCheckBox( this, wxID_ANY, _("CRC32"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkCRC32 = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("CRC32"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkCRC32, 0, 0, 5 );
 	
-	chkCRC32B = new wxCheckBox( this, wxID_ANY, _("CRC32B"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkCRC32B = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("CRC32B"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkCRC32B, 0, 0, 5 );
 	
-	chkWHIRLPOOL = new wxCheckBox( this, wxID_ANY, _("WHIRLPOOL"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkWHIRLPOOL = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("WHIRLPOOL"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkWHIRLPOOL, 0, 0, 5 );
 	
-	chkGOST = new wxCheckBox( this, wxID_ANY, _("GOST"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkGOST = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("GOST"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkGOST, 0, 0, 5 );
 	
-	chkSNEFRU128 = new wxCheckBox( this, wxID_ANY, _("SNEFRU128"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSNEFRU128 = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("SNEFRU128"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkSNEFRU128, 0, 0, 5 );
 	
-	chkSNEFRU256 = new wxCheckBox( this, wxID_ANY, _("SNEFRU256"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSNEFRU256 = new wxCheckBox( sbSizerOthers->GetStaticBox(), wxID_ANY, _("SNEFRU256"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerOthers->Add( chkSNEFRU256, 0, 0, 5 );
 	
 	
@@ -1492,7 +1503,7 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	wxStaticBoxSizer* sbSizerBPL;
 	sbSizerBPL = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Bytes Per Line") ), wxVERTICAL );
 	
-	spnBytePerLine = new wxSpinCtrl( this, wxID_ANY, _("16"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 8, 1024, 0 );
+	spnBytePerLine = new wxSpinCtrl( sbSizerBPL->GetStaticBox(), wxID_ANY, _("16"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 8, 1024, 0 );
 	sbSizerBPL->Add( spnBytePerLine, 0, wxALIGN_RIGHT, 5 );
 	
 	
@@ -1586,7 +1597,6 @@ XORViewDialogGui::XORViewDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizerRadio->Add( radioHex, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 	
 	XORtext = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	XORtext->SetMaxLength( 0 ); 
 	bSizerRadio->Add( XORtext, 1, wxALIGN_CENTER|wxLEFT, 5 );
 	
 	
@@ -1643,40 +1653,40 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	fgSizerColours->SetFlexibleDirection( wxBOTH );
 	fgSizerColours->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	txtBtn = new wxStaticText( this, wxID_ANY, _("Hex Colors:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtBtn = new wxStaticText( sbSizerColour->GetStaticBox(), wxID_ANY, _("Hex Colors:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtBtn->Wrap( -1 );
 	fgSizerColours->Add( txtBtn, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	clrPickerForeground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerForeground = new wxColourPickerCtrl( sbSizerColour->GetStaticBox(), wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	clrPickerForeground->SetToolTip( _("Foreground Colour") );
 	
 	fgSizerColours->Add( clrPickerForeground, 0, wxALL, 5 );
 	
-	clrPickerBackground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerBackground = new wxColourPickerCtrl( sbSizerColour->GetStaticBox(), wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	clrPickerBackground->SetToolTip( _("Background Colour") );
 	
 	fgSizerColours->Add( clrPickerBackground, 0, wxALL, 5 );
 	
-	clrPickerBackgroundZebra = new wxColourPickerCtrl( this, wxID_ANY, wxColour( 238, 238, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerBackgroundZebra = new wxColourPickerCtrl( sbSizerColour->GetStaticBox(), wxID_ANY, wxColour( 238, 238, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	clrPickerBackgroundZebra->SetToolTip( _("Zebra Colour") );
 	
 	fgSizerColours->Add( clrPickerBackgroundZebra, 0, wxALL, 5 );
 	
-	txtSelection = new wxStaticText( this, wxID_ANY, _("Selection Colours:"), wxDefaultPosition, wxDefaultSize, 0 );
+	txtSelection = new wxStaticText( sbSizerColour->GetStaticBox(), wxID_ANY, _("Selection Colours:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtSelection->Wrap( -1 );
 	fgSizerColours->Add( txtSelection, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	clrPickerSelectionForeground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerSelectionForeground = new wxColourPickerCtrl( sbSizerColour->GetStaticBox(), wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	clrPickerSelectionForeground->SetToolTip( _("Selection Foreground Colour") );
 	
 	fgSizerColours->Add( clrPickerSelectionForeground, 0, wxALL, 5 );
 	
-	clrPickerSelectionBackground = new wxColourPickerCtrl( this, wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	clrPickerSelectionBackground = new wxColourPickerCtrl( sbSizerColour->GetStaticBox(), wxID_ANY, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	clrPickerSelectionBackground->SetToolTip( _("Selection Colour") );
 	
 	fgSizerColours->Add( clrPickerSelectionBackground, 0, wxALL, 5 );
 	
-	btnResetColours = new wxButton( this, wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnResetColours = new wxButton( sbSizerColour->GetStaticBox(), wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnResetColours->SetToolTip( _("Reset Colour Values to Default") );
 	
 	fgSizerColours->Add( btnResetColours, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
@@ -1748,7 +1758,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	fgSizerCustomFormat->SetFlexibleDirection( wxBOTH );
 	fgSizerCustomFormat->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	comboCustomHexFormat = new wxComboBox( this, wxID_ANY, _("xx "), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	comboCustomHexFormat = new wxComboBox( sbSizerFormat->GetStaticBox(), wxID_ANY, _("xx "), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
 	comboCustomHexFormat->Append( _("xxxx ") );
 	comboCustomHexFormat->Append( _("xx xx xx xx xx xx xx xx  ") );
 	comboCustomHexFormat->Append( _("xxxx xxxx xxxx xxxx  ") );
@@ -1757,7 +1767,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	
 	fgSizerCustomFormat->Add( comboCustomHexFormat, 1, wxALL|wxEXPAND, 5 );
 	
-	chkCustom = new wxCheckBox( this, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkCustom = new wxCheckBox( sbSizerFormat->GetStaticBox(), wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizerCustomFormat->Add( chkCustom, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
@@ -1766,10 +1776,10 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizerBytePerLine;
 	bSizerBytePerLine = new wxBoxSizer( wxHORIZONTAL );
 	
-	chkBytePerLineLimit = new wxCheckBox( this, wxID_ANY, _("Bytes Per Line Limit"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkBytePerLineLimit = new wxCheckBox( sbSizerFormat->GetStaticBox(), wxID_ANY, _("Bytes Per Line Limit"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerBytePerLine->Add( chkBytePerLineLimit, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	spinBytePerLine = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 8 );
+	spinBytePerLine = new wxSpinCtrl( sbSizerFormat->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 8 );
 	spinBytePerLine->Enable( false );
 	
 	bSizerBytePerLine->Add( spinBytePerLine, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
@@ -2051,7 +2061,7 @@ OSXMessageDialogGui::OSXMessageDialogGui( wxWindow* parent, wxWindowID id, const
 	
 	txtCaption = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	txtCaption->Wrap( -1 );
-	txtCaption->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	txtCaption->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
 	
 	bSizer51->Add( txtCaption, 0, wxALL, 5 );
 	

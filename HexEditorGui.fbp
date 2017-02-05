@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
-    <FileVersion major="1" minor="11" />
+    <FileVersion major="1" minor="13" />
     <object class="Project" expanded="1">
         <property name="class_decoration"></property>
         <property name="code_generation">C++</property>
@@ -20,8 +20,10 @@
         <property name="path">./src</property>
         <property name="precompiled_header">#include &quot;wx/wxprec.h&quot;&#x0A;&#x0A;#ifdef __BORLANDC__&#x0A;#pragma hdrstop&#x0A;#endif //__BORLANDC__&#x0A;&#x0A;#ifndef WX_PRECOMP&#x0A;#include &lt;wx/wx.h&gt;&#x0A;#endif //WX_PRECOMP</property>
         <property name="relative_path">1</property>
+        <property name="skip_lua_events">1</property>
         <property name="skip_php_events">1</property>
         <property name="skip_python_events">1</property>
+        <property name="ui_table">UI</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
         <object class="Frame" expanded="0">
@@ -166,6 +168,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="submenu" expanded="0">
+                        <property name="bitmap"></property>
                         <property name="label">Open &amp;Recent</property>
                         <property name="name">menuFileOpenRecent</property>
                         <property name="permission">protected</property>
@@ -740,6 +743,7 @@
                         <event name="OnUpdateUI">OnUpdateUI</event>
                     </object>
                     <object class="submenu" expanded="0">
+                        <property name="bitmap"></property>
                         <property name="label">Open Disk Device</property>
                         <property name="name">menuDeviceDisk</property>
                         <property name="permission">protected</property>
@@ -779,6 +783,7 @@
                         <property name="permission">none</property>
                     </object>
                     <object class="submenu" expanded="0">
+                        <property name="bitmap"></property>
                         <property name="label">Device Image Tools</property>
                         <property name="name">menuDeviceImage</property>
                         <property name="permission">protected</property>
@@ -834,6 +839,7 @@
                     <property name="name">optionsMenu</property>
                     <property name="permission">protected</property>
                     <object class="submenu" expanded="0">
+                        <property name="bitmap"></property>
                         <property name="label">File Mode</property>
                         <property name="name">menuOptionsFileMode</property>
                         <property name="permission">protected</property>
@@ -1067,6 +1073,7 @@
                         <event name="OnAuiNotebookPageChanged"></event>
                         <event name="OnAuiNotebookPageChanging"></event>
                         <event name="OnAuiNotebookPageClose"></event>
+                        <event name="OnAuiNotebookPageClosed"></event>
                         <event name="OnChar"></event>
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>
@@ -3789,6 +3796,8 @@
                                 <property name="window_style"></property>
                                 <event name="OnChar">OnChar</event>
                                 <event name="OnCombobox"></event>
+                                <event name="OnComboboxCloseup"></event>
+                                <event name="OnComboboxDropdown"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
                                 <event name="OnKeyDown"></event>
@@ -4627,6 +4636,8 @@
                                                 <property name="window_style"></property>
                                                 <event name="OnChar">OnChar</event>
                                                 <event name="OnCombobox"></event>
+                                                <event name="OnComboboxCloseup"></event>
+                                                <event name="OnComboboxDropdown"></event>
                                                 <event name="OnEnterWindow"></event>
                                                 <event name="OnEraseBackground"></event>
                                                 <event name="OnKeyDown"></event>
@@ -4801,6 +4812,8 @@
                                                 <property name="window_style"></property>
                                                 <event name="OnChar">OnChar</event>
                                                 <event name="OnCombobox"></event>
+                                                <event name="OnComboboxCloseup"></event>
+                                                <event name="OnComboboxDropdown"></event>
                                                 <event name="OnEnterWindow"></event>
                                                 <event name="OnEraseBackground"></event>
                                                 <event name="OnKeyDown"></event>
@@ -4940,6 +4953,7 @@
                                         <property name="minimum_size"></property>
                                         <property name="name">sbSizerSearchOptions</property>
                                         <property name="orient">wxVERTICAL</property>
+                                        <property name="parent">1</property>
                                         <property name="permission">none</property>
                                         <event name="OnUpdateUI"></event>
                                         <object class="sizeritem" expanded="0">
@@ -6780,6 +6794,7 @@
                         <property name="minimum_size"></property>
                         <property name="name">sbSizerSearchFor</property>
                         <property name="orient">wxHORIZONTAL</property>
+                        <property name="parent">1</property>
                         <property name="permission">none</property>
                         <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="0">
@@ -7141,6 +7156,7 @@
                                 <event name="OnSize"></event>
                                 <event name="OnSpinCtrl"></event>
                                 <event name="OnSpinCtrlText"></event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
@@ -7410,6 +7426,7 @@
                                 <event name="OnSize"></event>
                                 <event name="OnSpinCtrl"></event>
                                 <event name="OnSpinCtrlText"></event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
@@ -8342,6 +8359,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">sbSizerMD</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -8620,6 +8638,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">sbSizerSHA</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -9074,6 +9093,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">sbSizerRIPEMD</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -9440,6 +9460,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">sbSizerHAVAL</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -9894,6 +9915,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">sbSizerTIGER</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -10172,6 +10194,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">sbSizerOthers</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -11526,6 +11549,7 @@
                                         <property name="minimum_size"></property>
                                         <property name="name">sbSizerBPL</property>
                                         <property name="orient">wxVERTICAL</property>
+                                        <property name="parent">1</property>
                                         <property name="permission">none</property>
                                         <event name="OnUpdateUI"></event>
                                         <object class="sizeritem" expanded="0">
@@ -11612,6 +11636,7 @@
                                                 <event name="OnSize"></event>
                                                 <event name="OnSpinCtrl"></event>
                                                 <event name="OnSpinCtrlText"></event>
+                                                <event name="OnTextEnter"></event>
                                                 <event name="OnUpdateUI"></event>
                                             </object>
                                         </object>
@@ -12862,6 +12887,7 @@
                         <property name="minimum_size"></property>
                         <property name="name">sbSizerColour</property>
                         <property name="orient">wxVERTICAL</property>
+                        <property name="parent">1</property>
                         <property name="permission">none</property>
                         <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="0">
@@ -14284,6 +14310,7 @@
                                 <event name="OnSize"></event>
                                 <event name="OnSpinCtrl">SpinEventHandler</event>
                                 <event name="OnSpinCtrlText">EventHandler</event>
+                                <event name="OnTextEnter"></event>
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
@@ -14299,6 +14326,7 @@
                         <property name="minimum_size"></property>
                         <property name="name">sbSizerFormat</property>
                         <property name="orient">wxVERTICAL</property>
+                        <property name="parent">1</property>
                         <property name="permission">none</property>
                         <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="0">
@@ -14382,6 +14410,8 @@
                                         <property name="window_style"></property>
                                         <event name="OnChar"></event>
                                         <event name="OnCombobox">EventHandler</event>
+                                        <event name="OnComboboxCloseup"></event>
+                                        <event name="OnComboboxDropdown"></event>
                                         <event name="OnEnterWindow"></event>
                                         <event name="OnEraseBackground"></event>
                                         <event name="OnKeyDown"></event>
@@ -14679,6 +14709,7 @@
                                         <event name="OnSize"></event>
                                         <event name="OnSpinCtrl">EventHandler</event>
                                         <event name="OnSpinCtrlText">EventHandler</event>
+                                        <event name="OnTextEnter"></event>
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>

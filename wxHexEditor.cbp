@@ -46,7 +46,7 @@
 					<Add option="-D_DEBUG_SIZE_x" />
 					<Add option="-D_DEBUG_SCROLL_x" />
 					<Add option="-D_DEBUG_CARET_x" />
-					<Add option="-D_DEBUG_MOUSE_x" />
+					<Add option="-D_DEBUG_MOUSE_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -67,6 +67,7 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-pg" />
+					<Add option="-g" />
 					<Add option="$($(WXCONFIG) --cflags) -fopenmp -Wno-deprecated-declarations" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
@@ -78,7 +79,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-2.8.12/release/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Custom Debug">
@@ -111,7 +112,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.0.2/debug/wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/debug/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Release">

@@ -296,6 +296,7 @@ class scrollthread:wxThreadHelper {
 						GetThread()->Sleep(35);
 					//delete eventx;
 					*/
+
 					wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, THREAD_UPDATE_EVENT );
 					//event.SetWillBeProcessedAgain();
 					//event.SetInt(n);  // pass some data along the event, a number in this case

@@ -371,7 +371,7 @@ void HexEditorFrame::PrepareAUI( void ){
 					Caption(_("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
-					BestSize(wxSize(174,218)).
+					//BestSize(wxSize(174,218)).
 					Resizable(false).
 					Show(true).
 					Left().Layer(1).Position(0) );

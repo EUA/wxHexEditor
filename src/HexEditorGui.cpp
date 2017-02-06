@@ -490,13 +490,13 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_binary->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_textctrl_binary->SetToolTip( wxT("Press enter to make changes!") );
 	
-	binSizer->Add( m_textctrl_binary, 0, wxALIGN_CENTER|wxALL, 1 );
+	binSizer->Add( m_textctrl_binary, 0, wxEXPAND, 1 );
 	
 	m_check_edit = new wxCheckBox( this, wxID_ANY, wxT("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_check_edit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_check_edit->SetToolTip( wxT("Allow editing by Data Interpreter Panel") );
 	
-	binSizer->Add( m_check_edit, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1 );
+	binSizer->Add( m_check_edit, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 1 );
 	
 	
 	numSizer->Add( binSizer, 1, wxEXPAND, 5 );
@@ -510,7 +510,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, wxT("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
 	m_textctrl_8bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_8bit, 0, wxALIGN_CENTER|wxALL, 1 );
+	numSizer->Add( m_textctrl_8bit, 0, wxEXPAND, 1 );
 	
 	m_static_16bit = new wxStaticText( this, ID_DEFAULT, wxT("16 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_16bit->Wrap( -1 );
@@ -521,7 +521,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, wxT("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
 	m_textctrl_16bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_16bit, 0, wxALIGN_CENTER|wxALL, 1 );
+	numSizer->Add( m_textctrl_16bit, 0, wxEXPAND, 1 );
 	
 	m_static_32bit = new wxStaticText( this, ID_DEFAULT, wxT("32 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_32bit->Wrap( -1 );
@@ -532,7 +532,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, wxT("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_32bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_32bit, 0, wxALIGN_CENTER|wxALL, 1 );
+	numSizer->Add( m_textctrl_32bit, 0, wxBOTTOM|wxEXPAND, 1 );
 	
 	m_static_64bit = new wxStaticText( this, ID_DEFAULT, wxT("64 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_64bit->Wrap( -1 );
@@ -543,7 +543,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, wxT("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_64bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_64bit, 0, wxALIGN_CENTER|wxALL, 1 );
+	numSizer->Add( m_textctrl_64bit, 0, wxBOTTOM|wxEXPAND, 1 );
 	
 	m_static_float = new wxStaticText( this, ID_DEFAULT, wxT("Float"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_float->Wrap( -1 );
@@ -554,7 +554,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, wxT("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_float->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_float, 0, wxALIGN_CENTER|wxALL, 1 );
+	numSizer->Add( m_textctrl_float, 0, wxBOTTOM|wxEXPAND, 1 );
 	
 	m_static_double = new wxStaticText( this, ID_DEFAULT, wxT("Double"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_double->Wrap( -1 );
@@ -565,7 +565,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, wxT("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_double->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_double, 0, wxALIGN_CENTER|wxALL, 1 );
+	numSizer->Add( m_textctrl_double, 0, wxEXPAND, 1 );
 	
 	
 	mainSizer->Add( numSizer, 1, wxEXPAND, 5 );
@@ -573,6 +573,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
+	mainSizer->Fit( this );
 	
 	// Connect Events
 	m_check_unsigned->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );

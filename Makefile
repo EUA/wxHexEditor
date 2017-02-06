@@ -1,8 +1,8 @@
 WXCONFIG = wx-config
 #CC ?= `$(WXCONFIG) --cc`    #this doesn't look working here properly :(
 #CXX ?= `$(WXCONFIG) --cxx`
-CC = $(shell echo `$(WXCONFIG) --cc`)
-CXX = $(shell echo `$(WXCONFIG) --cxx`)
+CC ?= $(shell echo `$(WXCONFIG) --cc`)
+CXX ?= $(shell echo `$(WXCONFIG) --cxx`)
 LDFLAGS += -lgomp
 #add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp -Wall
@@ -45,7 +45,7 @@ VERSION = 0.23 Beta
 
 .DEFAULT_GOAL := all
 
-clang: CXX=clang++
+clang: CXX=clang++ -D_Bool=bool -std=c++11 -lomp
 clang: all
 
 all:$(EXECUTABLE) langs

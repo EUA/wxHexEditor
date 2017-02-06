@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 17 2008)
+// C++ code generated with wxFormBuilder (version Feb  5 2017)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __TagDialogGui__
-#define __TagDialogGui__
+#ifndef __TAGDIALOGGUI_H__
+#define __TAGDIALOGGUI_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-
 #include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/gdicmn.h>
@@ -34,21 +35,22 @@ class TagDialogGui : public wxDialog
 	protected:
 		wxTextCtrl* TagTextCtrl;
 		wxStaticText* m_staticText1;
-		wxColourPickerCtrl* m_FontColourPicker;
 		wxStaticText* m_staticText2;
+		wxColourPickerCtrl* m_FontColourPicker;
 		wxColourPickerCtrl* m_NoteColourPicker;
 		wxButton* m_SaveButton;
 		wxButton* m_RemoveButton;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnSave( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnDelete( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnDelete( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
-		TagDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Tag Dialog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		
+		TagDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Tag Dialog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 364,189 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~TagDialogGui();
 	
 };
 
-#endif //__TagDialogGui__
+#endif //__TAGDIALOGGUI_H__

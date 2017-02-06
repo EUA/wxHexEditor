@@ -936,25 +936,25 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	btnFindSomeBytes = new wxButton( this, wxID_ANY, wxT("Find Some Bytes"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnFindSomeBytes->SetToolTip( wxT("This function finds some different values at file. Usefull for finding non-null sections at disks.") );
 	
-	bSizerButtons->Add( btnFindSomeBytes, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxTOP, 2 );
+	bSizerButtons->Add( btnFindSomeBytes, 0, wxALIGN_CENTER|wxTOP, 2 );
 	
 	m_staticline = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	m_staticline->Hide();
 	
-	bSizerButtons->Add( m_staticline, 0, wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizerButtons->Add( m_staticline, 0, wxALL|wxEXPAND, 5 );
 	
 	btnReplace = new wxButton( this, wxID_ANY, wxT("Replace"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnReplace->Hide();
 	
-	bSizerButtons->Add( btnReplace, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
+	bSizerButtons->Add( btnReplace, 0, wxALIGN_CENTER, 2 );
 	
 	btnReplaceAll = new wxButton( this, wxID_ANY, wxT("Replace All"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnReplaceAll->Hide();
 	
-	bSizerButtons->Add( btnReplaceAll, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
+	bSizerButtons->Add( btnReplaceAll, 0, wxALIGN_CENTER, 2 );
 	
 	btnClose = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerButtons->Add( btnClose, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
+	bSizerButtons->Add( btnClose, 0, wxALIGN_CENTER, 2 );
 	
 	
 	bSizerMain->Add( bSizerButtons, 0, wxEXPAND|wxRIGHT, 5 );
@@ -1468,17 +1468,17 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	txtCopyAs = new wxStaticText( this, wxID_ANY, wxT("Copy As :"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtCopyAs->Wrap( -1 );
-	fgSizerSelections->Add( txtCopyAs, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizerSelections->Add( txtCopyAs, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxString chcCopyAsChoices[] = { wxT("Full Text"), wxT("Special Hex"), wxT("Internet"), wxT("C/C++ Source"), wxT("Assembler Source") };
 	int chcCopyAsNChoices = sizeof( chcCopyAsChoices ) / sizeof( wxString );
 	chcCopyAs = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcCopyAsNChoices, chcCopyAsChoices, 0 );
 	chcCopyAs->SetSelection( 0 );
-	fgSizerSelections->Add( chcCopyAs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	fgSizerSelections->Add( chcCopyAs, 1, wxALL|wxEXPAND, 5 );
 	
 	txtOption = new wxStaticText( this, wxID_ANY, wxT("Option:"), wxDefaultPosition, wxDefaultSize, 0 );
 	txtOption->Wrap( -1 );
-	fgSizerSelections->Add( txtOption, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	fgSizerSelections->Add( txtOption, 0, wxALIGN_CENTER|wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 	
 	wxArrayString chcOptionChoices;
 	chcOption = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, chcOptionChoices, 0 );
@@ -1529,7 +1529,7 @@ CopyAsDialogGui::CopyAsDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizerRight->Add( chkText, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	
-	bSizerMiddle->Add( bSizerRight, 0, 0, 5 );
+	bSizerMiddle->Add( bSizerRight, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
 	bSizerMain->Add( bSizerMiddle, 0, 0, 5 );

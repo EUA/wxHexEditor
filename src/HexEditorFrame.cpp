@@ -314,14 +314,14 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	//MyAUI->LoadPerspective()???
 	MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
-                  Name(wxT("Toolbar")).
+                  Name(_("Toolbar")).
 						Caption(_("Toolbar")).
                   ToolbarPane().Top().
                   LeftDockable(false).RightDockable(false));
 
 	MyTagPanel = new TagPanel( this, -1 );
 	MyAUI -> AddPane( MyTagPanel, wxAuiPaneInfo().
-					Name(wxT("TagPanel")).
+					Name(_("TagPanel")).
 					Caption(_("TagPanel")).
 					TopDockable(false).
 					BottomDockable(false).
@@ -332,7 +332,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyDisassemblerPanel = new DisassemblerPanel( this, -1 );
 	MyAUI -> AddPane( MyDisassemblerPanel, wxAuiPaneInfo().
-					Name(wxT("Disassembler Panel")).
+					Name(_("Disassembler Panel")).
 					Caption(_("Disassembler Panel")).
 					TopDockable(false).
 					BottomDockable(false).
@@ -344,7 +344,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
-				Name(wxT("Search Results")).
+				Name(_("Search Results")).
 				Caption(_("Search Results")).
 				TopDockable(false).
 				BottomDockable(false).
@@ -356,7 +356,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyComparePanel = new ComparePanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
-				Name(wxT("Comparison Results")).
+				Name(_("Comparison xResults")).
 				Caption(_("Comparison Results")).
 				TopDockable(false).
 				BottomDockable(false).
@@ -367,7 +367,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyInterpreter = new DataInterpreter( this, -1 );
 	MyAUI -> AddPane( MyInterpreter, wxAuiPaneInfo().
-					Name(wxT("DataInterpreter")).
+					Name(_("DataInterpreter")).
 					Caption(_("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
@@ -378,7 +378,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyInfoPanel = new InfoPanel( this, -1 );
 	MyAUI -> AddPane( MyInfoPanel, wxAuiPaneInfo().
-					Name(wxT("InfoPanel")).
+					Name(_("InfoPanel")).
 					Caption(_("InfoPanel")).
 					TopDockable(false).
 					BottomDockable(false).

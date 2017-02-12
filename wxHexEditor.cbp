@@ -17,7 +17,8 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O2" />
 					<Add option="-pg" />
-					<Add option="`wx-config --cflags` -fopenmp" />
+					<Add option="`wx-config --cflags`" />
+					<Add option="-fopenmp" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
@@ -315,6 +316,8 @@
 					<Add option="-g" />
 					<Add option="$($(WXCONFIG) --cflags)" />
 					<Add option="-Wno-deprecated-declarations" />
+					<Add option="-fopenmp" />
+					<Add option="-D_Bool=bool" />
 					<Add option="-D_DEBUG_=9" />
 					<Add option="-D_DEBUG_MUTEX_x" />
 					<Add option="-D_DEBUG_FILE_x" />
@@ -330,6 +333,7 @@
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add library="mhash/bin/Release/libmhash.a" />
 					<Add library="udis86/bin/Release/libudis86.a" />
+					<Add library="omp" />
 				</Linker>
 				<Environment>
 					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/debug/wx-config" />

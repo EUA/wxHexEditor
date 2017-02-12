@@ -1124,7 +1124,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 
 	menu.AppendSeparator();
 	menu.Append(idSaveAsDump, wxString( _("Save As Dump") )+wxChar('\t')+wxT("CTRL+ALT+S"));
-	menu.Append(idFillSelection, _("Fill Selecton"));
+	menu.Append(idFillSelection, _("Fill Selection"));
 	if( BlockSelectOffset == -1 )
 		menu.Append(idBlockSelect, _("Set Selection Block Start"));
 	else

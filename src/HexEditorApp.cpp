@@ -98,34 +98,35 @@ void wxHexEditorApp::SetLanguage(void){
 	wxConfigBase::Get()->Write( _T("Language"), lang );
 	wxConfigBase::Get()->Flush();
 
-	int langid = wxLocale::FindLanguageInfo( lang )->Language;
-
-
+	///Add catalog paths
 	wxFileName flnm(argv[0]); //take current path and search "locale" directory
 	myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) + _T("locale") );
+	//myLocale.AddCatalogLookupPathPrefix( _T("./locale") );
 
-//#ifdef _UNIX_
-//			myLocale.AddCatalogLookupPathPrefix( _T("/usr/local/share/locale/") );
-//#endif
+#ifdef _UNIX_
+			myLocale.AddCatalogLookupPathPrefix( _T("/usr/share/locale/") );
+#endif
+
 #ifdef __WXMAC__
 	myLocale.AddCatalogLookupPathPrefix( flnm.GetPath(wxPATH_GET_SEPARATOR) +
 	_T("..") + wxFileName::GetPathSeparator() + _T("Resources") + wxFileName::GetPathSeparator() + _T("locale") );
 #endif
-	myLocale.AddCatalog(_T("wxHexEditor"));
 
 
-
-    if( myLocale.IsAvailable( langid ) ){
+	///init first
+	int langid = wxLocale::FindLanguageInfo( lang )->Language;
 #ifdef __WXMAC__
-        if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING ) )
+	if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING ) )
 #else
-        if ( !myLocale.Init( langid ) )
+	if ( !myLocale.Init( langid, wxLOCALE_LOAD_DEFAULT ) )
 #endif
-            {
-            wxLogError(_T("This language is not supported by the system."));
-            return;
-            }
-        }
+		{
+		wxLogError(_T("This language is not supported by the system."));
+		//return; //not return here for continue to load this program catalog
+		}
+
+	///And add catalogs
+	myLocale.AddCatalog(_T("wxHexEditor"));
 	}
 
 #ifdef _DEBUG_EVENTS_

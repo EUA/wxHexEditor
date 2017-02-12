@@ -63,6 +63,9 @@ $(EXECUTABLE): $(OBJECTS)
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@
 
+langsup:
+	tx pull
+
 langs: $(MOBJECTS)
 
 %.mo : %.po

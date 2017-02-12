@@ -475,8 +475,11 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	
 	numSizer->Add( m_static_bin, 0, wxALIGN_CENTER, 2 );
 	
-	wxBoxSizer* binSizer;
-	binSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxFlexGridSizer* fgBinSizer;
+	fgBinSizer = new wxFlexGridSizer( 1, 2, 0, 0 );
+	fgBinSizer->AddGrowableCol( 0 );
+	fgBinSizer->SetFlexibleDirection( wxBOTH );
+	fgBinSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_textctrl_binary = new wxTextCtrl( this, ID_DEFAULT, _("00000000"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	#ifdef __WXGTK__
@@ -490,16 +493,16 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_binary->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_textctrl_binary->SetToolTip( _("Press enter to make changes!") );
 	
-	binSizer->Add( m_textctrl_binary, 0, wxEXPAND, 1 );
+	fgBinSizer->Add( m_textctrl_binary, 0, wxEXPAND, 1 );
 	
 	m_check_edit = new wxCheckBox( this, wxID_ANY, _("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_check_edit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_check_edit->SetToolTip( _("Allow editing by Data Interpreter Panel") );
 	
-	binSizer->Add( m_check_edit, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 1 );
+	fgBinSizer->Add( m_check_edit, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 1 );
 	
 	
-	numSizer->Add( binSizer, 1, wxEXPAND, 5 );
+	numSizer->Add( fgBinSizer, 1, wxEXPAND, 5 );
 	
 	m_static_8bit = new wxStaticText( this, ID_DEFAULT, _("8 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_8bit->Wrap( -1 );
@@ -532,7 +535,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_32bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_32bit, 0, wxBOTTOM|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_32bit, 0, wxEXPAND, 1 );
 	
 	m_static_64bit = new wxStaticText( this, ID_DEFAULT, _("64 bit"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_64bit->Wrap( -1 );
@@ -543,7 +546,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_64bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_64bit, 0, wxBOTTOM|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_64bit, 0, wxEXPAND, 1 );
 	
 	m_static_float = new wxStaticText( this, ID_DEFAULT, _("Float"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_float->Wrap( -1 );
@@ -554,7 +557,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_float->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	
-	numSizer->Add( m_textctrl_float, 0, wxBOTTOM|wxEXPAND, 1 );
+	numSizer->Add( m_textctrl_float, 0, wxEXPAND, 1 );
 	
 	m_static_double = new wxStaticText( this, ID_DEFAULT, _("Double"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_double->Wrap( -1 );
@@ -1804,11 +1807,11 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizerBtns;
 	bSizerBtns = new wxBoxSizer( wxHORIZONTAL );
 	
-	BtnSave = new wxButton( this, wxID_SAVE, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizerBtns->Add( BtnSave, 0, wxALL, 5 );
-	
 	BtnCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerBtns->Add( BtnCancel, 0, wxALL, 5 );
+	
+	BtnSave = new wxButton( this, wxID_SAVE, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerBtns->Add( BtnSave, 0, wxALL, 5 );
 	
 	
 	bSizerMain->Add( bSizerBtns, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -1900,11 +1903,11 @@ DeviceBackupDialogGui::DeviceBackupDialogGui( wxWindow* parent, wxWindowID id, c
 	wxBoxSizer* ButtonSizer;
 	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	btnBackup = new wxButton( this, wxID_ANY, _("Backup"), wxDefaultPosition, wxDefaultSize, 0 );
-	ButtonSizer->Add( btnBackup, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	btnCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	ButtonSizer->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnBackup = new wxButton( this, wxID_ANY, _("Backup"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnBackup, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
 	MainSizer->Add( ButtonSizer, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -1961,11 +1964,11 @@ DeviceRestoreDialogGui::DeviceRestoreDialogGui( wxWindow* parent, wxWindowID id,
 	wxBoxSizer* ButtonSizer;
 	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	btnRestore = new wxButton( this, wxID_ANY, _("Restore"), wxDefaultPosition, wxDefaultSize, 0 );
-	ButtonSizer->Add( btnRestore, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	btnCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	ButtonSizer->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnRestore = new wxButton( this, wxID_ANY, _("Restore"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnRestore, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
 	MainSizer->Add( ButtonSizer, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -2021,11 +2024,11 @@ DeviceEraseDialogGui::DeviceEraseDialogGui( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* ButtonSizer;
 	ButtonSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	btnErase = new wxButton( this, wxID_ANY, _("Erase"), wxDefaultPosition, wxDefaultSize, 0 );
-	ButtonSizer->Add( btnErase, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	btnCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	ButtonSizer->Add( btnCancel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	btnErase = new wxButton( this, wxID_ANY, _("Erase"), wxDefaultPosition, wxDefaultSize, 0 );
+	ButtonSizer->Add( btnErase, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
 	MainSizer->Add( ButtonSizer, 0, wxALIGN_CENTER_HORIZONTAL, 5 );

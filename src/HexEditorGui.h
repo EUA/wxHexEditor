@@ -504,8 +504,8 @@ class PreferencesDialogGui : public wxDialog
 		wxCheckBox* chkBytePerLineLimit;
 		wxSpinCtrl* spinBytePerLine;
 		wxCheckBox* chkAutoShowTagPanel;
-		wxButton* BtnSave;
 		wxButton* BtnCancel;
+		wxButton* BtnSave;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void EventHandler( wxColourPickerEvent& event ) { event.Skip(); }
@@ -535,8 +535,8 @@ class DeviceBackupDialogGui : public wxDialog
 		wxChoice* chcPartition;
 		wxStaticText* txtDestination;
 		wxFilePickerCtrl* filePickBackup;
-		wxButton* btnBackup;
 		wxButton* btnCancel;
+		wxButton* btnBackup;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnBackup( wxCommandEvent& event ) { event.Skip(); }
@@ -561,8 +561,8 @@ class DeviceRestoreDialogGui : public wxDialog
 		wxFilePickerCtrl* filePickBackup;
 		wxStaticText* txtDestination;
 		wxChoice* chcPartition;
-		wxButton* btnRestore;
 		wxButton* btnCancel;
+		wxButton* btnRestore;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnRestore( wxCommandEvent& event ) { event.Skip(); }
@@ -586,8 +586,8 @@ class DeviceEraseDialogGui : public wxDialog
 		wxStaticText* txtDestination;
 		wxChoice* chcPartition;
 		wxRadioBox* radioErase;
-		wxButton* btnErase;
 		wxButton* btnCancel;
+		wxButton* btnErase;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnErase( wxCommandEvent& event ) { event.Skip(); }

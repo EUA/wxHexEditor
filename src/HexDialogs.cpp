@@ -87,6 +87,7 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 	wxString TempString;
 	wxArrayString SearchStrings;
 	//Prepare Array;
+	///Note that, lower indices will shown at bottom, not at top!
 	for( int i = 0 ; i < 10 ; i ++)
 		if (wxConfigBase::Get()->Read(KeyName+wxEmptyString<<i , &TempString)){
 			SearchStrings.Add( TempString );
@@ -117,9 +118,7 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 		CurrentBox->SetString( i, SearchStrings.Item(SearchStrings.Count()-i-1) );
 	for( ; i < 10 ; i ++ )
 		CurrentBox->SetString( i, wxEmptyString);
-	#ifdef __WXMSW__ //Or windows leaves empty the gauge!
-		CurrentBox->SetSelection(0);
-	#endif
+	CurrentBox->SetSelection(0);
 	}
 
 GotoDialog::GotoDialog( wxWindow* _parent, uint64_t& _offset, uint64_t _cursor_offset, uint64_t _filesize, unsigned _BlockSize ):GotoDialogGui(_parent, wxID_ANY){

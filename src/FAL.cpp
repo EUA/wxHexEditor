@@ -725,6 +725,9 @@ wxFileOffset FAL::Length( void ){
 		else if( DiffArray[i]->flag_inject )
 				max_size += DiffArray[i]->size;
 
+	#ifdef _DEBUG_
+		std::cout << "FAL::Length() : " << max_size << std::endl;
+	#endif // _DEBUG_
 	return max_size;
 	}
 

@@ -71,9 +71,9 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-pg" />
-					<Add option="-g" />
 					<Add option="$($(WXCONFIG) --cflags) -fopenmp -Wno-deprecated-declarations" />
 					<Add option="-DNDEBUG" />
+					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -97,7 +97,10 @@
 				<Compiler>
 					<Add option="-std=c++0x" />
 					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags) -fopenmp -Wno-deprecated-declarations" />
+					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="-fopenmp" />
+					<Add option="-Wno-deprecated-declarations" />
+					<Add option="-msse2" />
 					<Add option="-D_DEBUG_=9" />
 					<Add option="-D_DEBUG_MUTEX_x" />
 					<Add option="-D_DEBUG_FILE_x" />
@@ -108,7 +111,7 @@
 					<Add option="-D_DEBUG_MOUSE_x" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_x" />
-					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
+					<Add option="-D_DEBUG_FIND_UNIT_TEST_" />
 				</Compiler>
 				<Linker>
 					<Add option="$($(WXCONFIG) --libs)" />
@@ -127,7 +130,7 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-march=athlon64" />
 					<Add option="-Wall" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
@@ -342,6 +345,7 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-O2" />
 			<Add directory="mhash/include" />
 		</Compiler>
 		<Unit filename="HexEditorGui.fbp">

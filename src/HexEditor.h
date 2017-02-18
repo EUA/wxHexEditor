@@ -264,12 +264,11 @@ class scrollthread:wxThreadHelper {
 			int thread_speed;
 			ThreadScrool.Unlock();
 			while( !(GetThread()->TestDestroy()) ) {
-				//wxMilliSleep(25);
 				speed_mtx.Lock();
 				thread_speed=speed;
 				speed_mtx.Unlock();
 				if(speed == 0){
-				//	wxMicroSleep( 10 );
+					wxMicroSleep( 25 );
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 					}
 #if _DEBUG_THREAD_SCROLL_
@@ -321,12 +320,12 @@ class scrollthread:wxThreadHelper {
 			speed_mtx.Unlock();
 			}
 		void Exit(void){
-			//__WXMSW__ ISSUE
-			//if( GetThread()->IsRunning() )
-				//GetThread()->Pause();
+			if( !GetThread()->IsRunning() ) //We only "Delete" running threads
+				GetThread()->Run();// if can't kill, run the thread for kill it
 			GetThread()->Delete();
-			wxMilliSleep(100);
-			//GetThread()->Wait();
+			//wait for thread kill
+			while( !(GetThread()->TestDestroy()) )
+				wxMilliSleep(25);
 			}
 	};
 

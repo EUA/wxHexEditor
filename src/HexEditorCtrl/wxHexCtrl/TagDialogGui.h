@@ -38,17 +38,19 @@ class TagDialogGui : public wxDialog
 		wxStaticText* m_staticText2;
 		wxColourPickerCtrl* m_FontColourPicker;
 		wxColourPickerCtrl* m_NoteColourPicker;
-		wxButton* m_SaveButton;
+		wxButton* m_CancelButton;
 		wxButton* m_RemoveButton;
+		wxButton* m_SaveButton;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSave( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		TagDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Tag Dialog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 364,189 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+		TagDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Tag Dialog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~TagDialogGui();
 	
 };

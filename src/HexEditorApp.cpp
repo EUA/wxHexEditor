@@ -81,12 +81,17 @@ void wxHexEditorApp::MyAppInit(){
 		}
 	}
 void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)){
-#if _FSWATCHER_
-	frame->CreateFileWatcher();
-#endif // _FSWATCHER_
 	static bool first_run=true;
 	if(first_run){
 		first_run=false;
+#if _FSWATCHER_
+		frame->CreateFileWatcher();
+//		if(frame->file_watcher == NULL ){
+//			frame->file_watcher = new wxFileSystemWatcher();
+//			frame->file_watcher->SetOwner(this);
+//			Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
+//			}
+#endif // _FSWATCHER_
 		MyAppInit();
 		}
 	}

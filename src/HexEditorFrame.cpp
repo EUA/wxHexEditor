@@ -1126,23 +1126,25 @@ bool HexEditorFrame::CreateFileWatcher(){
 	Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
 
 	//Reconnecting already open files (open by argument) to FSWATCHER event.
-	for( unsigned i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
-		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( i ) );
-		if(!MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid="))){
-			if(file_watcher!=NULL){
-				file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
-				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
-				}
-			else{
-				std::cout << "File_watcher event is null! File Watcher is not working!" << std::endl;
-				}
-			}
-		}
+	///Not needed, we open files after eventloopenter at MyAppInit() now.
+//	for( unsigned i = 0 ; i<MyNotebook->GetPageCount() ; i++ ){
+//		HexEditor *MyHexEditor = static_cast<HexEditor*>( MyNotebook->GetPage( i ) );
+//		if(!MyHexEditor->GetFileName().GetFullPath().Lower().StartsWith( wxT("-pid="))){
+//			if(file_watcher!=NULL){
+//				file_watcher->Add( MyHexEditor->GetFileName().GetFullPath(), wxFSW_EVENT_MODIFY );
+//				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
+//				}
+//			else{
+//				std::cout << "File_watcher event is null! File Watcher is not working!" << std::endl;
+//				}
+//			}
+//		}
+
    return true;
 }
 void HexEditorFrame::OnFileSystemEvent(wxFileSystemWatcherEvent &event){
-	//if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
-	//	wxMessageBox("Captured Change event on frame!");
+	if(event.GetChangeType()==wxFSW_EVENT_MODIFY)
+		std::cout << "Captured Change event on frame!" << std::endl;
 	event.Skip(true);
 	}
 #endif // _FSWATCHER_

@@ -56,7 +56,7 @@
 class wxHexEditorApp : public wxApp {
    public:
       virtual bool OnInit();
-      void MyAppInit();
+      void MyAppInit(void);
       void SetLanguage(void);
 #ifdef _DEBUG_EVENTS_
       int FilterEvent(wxEvent &evt);

@@ -442,7 +442,8 @@ bool HexEditor::FileSave( wxString savefilename ) {
 
 bool HexEditor::FileClose( bool WithoutChange ) {
 #if _FSWATCHER_
-//myfile->Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
+///  Moved to frame...
+//   Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
 #endif
 	if( myfile != NULL ) {
 		if( myfile->IsChanged() && !WithoutChange) {
@@ -677,6 +678,9 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 
 #if _FSWATCHER_
 void HexEditor::OnFileModify(wxFileSystemWatcherEvent &event){
+	#ifdef _DEBUG_
+	std::cout << "HexEditor::OnFileModify() Change detected, Reloading..."  << std::endl;
+	#endif // _DEBUG_
 	if(event.GetChangeType()==wxFSW_EVENT_MODIFY && event.GetPath() == myfile->GetFileName().GetFullPath())
 		Reload();
 	event.Skip(true);

@@ -72,7 +72,6 @@ class HexEditorFrame : public HexEditorGui {
 		~HexEditorFrame();
 		void TagHideAll();
 		class HexEditor* OpenFile(wxFileName flname, bool openAtRight=false);
-
 		class HexEditor* GetActiveHexEditor(void);
 #if _FSWATCHER_
 		void OnFileSystemEvent( wxFileSystemWatcherEvent& event );

@@ -112,7 +112,8 @@
 					<Add option="-D_DEBUG_MOUSE_x" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_x" />
-					<Add option="-D_DEBUG_FIND_UNIT_TEST_" />
+					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
+					<Add option="-D_FSWATCHER_" />
 				</Compiler>
 				<Linker>
 					<Add option="$($(WXCONFIG) --libs)" />

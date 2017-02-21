@@ -93,7 +93,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	//AllocConsole();
 	#endif
 	#if _FSWATCHER_
-   file_watcher=NULL;
+	file_watcher=NULL;
 	#endif // _FSWATCHER_
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
@@ -1119,10 +1119,10 @@ void HexEditorFrame::TagHideAll( void ){
 
 #if _FSWATCHER_
 bool HexEditorFrame::CreateFileWatcher(){
-   if (file_watcher)
+	if(file_watcher)
 		return false;
 	file_watcher = new wxFileSystemWatcher();
-   file_watcher->SetOwner(this);
+	file_watcher->SetOwner(this);
 	Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
 
 	//Reconnecting already open files (open by argument) to FSWATCHER event.

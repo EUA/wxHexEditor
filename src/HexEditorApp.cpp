@@ -42,18 +42,22 @@
 IMPLEMENT_APP(wxHexEditorApp)
 
 bool wxHexEditorApp::OnInit() {
-   wxImage::AddHandler(new wxPNGHandler);
-   SetLanguage();
-   frame = new HexEditorFrame( 0L );
-//    frame	->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
-   frame->Show();
-   wxYield();
+	wxImage::AddHandler(new wxPNGHandler);
+	SetLanguage();
+	frame = new HexEditorFrame( 0L );
+	// frame->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);
+	frame->Show();
+	wxYield();
+
+	///Moved file opening via argv to OnEventLoopEnter()->MyFrameInit() because of need to wait FileSystemWatcher initialization.
+	return true;
+	}
+
+void wxHexEditorApp::MyAppInit(){
    // Open all of the files specified on the command line (assumes no flags)
-
 	//processing --flags
-   if(argc == 4) {
+	if(argc == 4) {
 		wxString str(argv[1]);
-
 		//Initializes comparison startup
 		if(str.Lower().StartsWith(wxT("--compare"))){
 			wxArrayString cfiles;
@@ -65,26 +69,27 @@ bool wxHexEditorApp::OnInit() {
 
 			::CompareDialog mcd( frame, cfiles[0], cfiles[1]);
 			mcd.ShowModal();
-
-			return true;
+			return;
 			}
 		}
 
-   for(int ii = 1; ii < argc; ++ii) {
-      wxString str(argv[ii]);
-      wxFileName fn = wxFileName(str);
- //  if(fn.FileExists() || str.Lower().StartsWith(wxT("-pid")))
-      frame->OpenFile(fn.GetFullPath());
-      }
-
-   return true;
-   }
-
-#if _FSWATCHER_
-void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)){
-      frame->CreateFileWatcher();
+	for(int ii = 1; ii < argc; ++ii) {
+		wxString str(argv[ii]);
+		wxFileName fn = wxFileName(str);
+	//  if(fn.FileExists() || str.Lower().StartsWith(wxT("-pid")))
+		frame->OpenFile(fn.GetFullPath());
 		}
+	}
+void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)){
+#if _FSWATCHER_
+	frame->CreateFileWatcher();
 #endif // _FSWATCHER_
+	static bool first_run=true;
+	if(first_run){
+		first_run=false;
+		MyAppInit();
+		}
+	}
 
 void wxHexEditorApp::SetLanguage(void){
 	wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );

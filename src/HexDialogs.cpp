@@ -733,7 +733,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 			current_offset=0;
 	#ifdef _DEBUG_FIND_UNIT_TEST_
 		wxString msg;
-		found = FindBinaryForward(target, current_offset, findfile->Length(), options, nullptr, msg, totalread);
+		found = FindBinaryForward(target, current_offset, findfile->Length(), options, NULL, msg, totalread);
 	#else
 		found = FindBinaryForward(target, current_offset, findfile->Length(), options, &progress_gauge, msg, totalread );
 	#endif //_DEBUG_FIND_UNIT_TEST_
@@ -743,7 +743,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		//Second round from file end to current offset
 		if(( options & SEARCH_WRAPAROUND ) && !( options & SEARCH_FINDALL ))
 	#ifdef _DEBUG_FIND_UNIT_TEST_
-		return FindBinaryForward(target, 0, current_offset , options, nullptr, msg, totalread );
+		return FindBinaryForward(target, 0, current_offset , options, NULL, msg, totalread );
 	#else
 		return FindBinaryForward(target, 0, current_offset , options, &progress_gauge, msg, totalread );
 	#endif
@@ -756,7 +756,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	//First search from current offset to 0
 	#ifdef _DEBUG_FIND_UNIT_TEST_
 		wxString msg;
-		found = FindBinaryBackward(target, current_offset, 0, options, nullptr, msg, totalread);
+		found = FindBinaryBackward(target, current_offset, 0, options, NULL, msg, totalread);
 	#else
 		found = FindBinaryBackward(target, current_offset, 0, options, &progress_gauge, msg, totalread );
 	#endif //_DEBUG_FIND_UNIT_TEST_
@@ -765,7 +765,7 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 		//Second round from file end to current offset
 		if( options & SEARCH_WRAPAROUND )
 	#ifdef _DEBUG_FIND_UNIT_TEST_
-		return FindBinaryBackward(target, findfile->Length(), current_offset , options, nullptr, msg, totalread );
+		return FindBinaryBackward(target, findfile->Length(), current_offset , options, NULL, msg, totalread );
 	#else
 		return FindBinaryBackward(target, findfile->Length(), current_offset , options, &progress_gauge, msg, totalread );
 	#endif
@@ -1076,7 +1076,7 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 			}
 		else
 			percentage =  (findfile->Length()-totalread)*1000/findfile->Length();
-		if( progress_gauge != nullptr)
+		if( progress_gauge != NULL)
 		if(first_run){
 			if( ! progress_gauge->Update( percentage));		// update progress and break on abort
 				break;
@@ -1288,7 +1288,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
-							if(ret_ptr==nullptr)
+							if(ret_ptr==NULL)
 								return i;
 							else
 								ret_ptr->push_back(i);
@@ -1304,7 +1304,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
-							if(ret_ptr==nullptr)
+							if(ret_ptr==NULL)
 								return i;
 							else
 								ret_ptr->push_back(i);
@@ -1319,7 +1319,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
-						if(ret_ptr==nullptr)
+						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
@@ -1330,7 +1330,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
-						if(ret_ptr==nullptr)
+						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
@@ -1383,7 +1383,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
 								bfr[k]=tolower(bfr[k]);
 							if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-								if(ret_ptr==nullptr)
+								if(ret_ptr==NULL)
 									return i+j;
 								else
 									ret_ptr->push_back(i+j);
@@ -1430,7 +1430,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
 								bfr[k]=tolower(bfr[k]);
 							if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-								if(ret_ptr==nullptr)
+								if(ret_ptr==NULL)
 									return i+j;
 								else
 									ret_ptr->push_back(i+j);
@@ -1441,7 +1441,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 			for(int i=16 ; i >= 0 ; i-- )
 				if( bfr[i] == search[0] )
 					if(! memcmp( bfr+i, search, search_size ))	//if match found
-						if(ret_ptr==nullptr)
+						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
@@ -1457,7 +1457,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 						bfr[j]=tolower(bfr[j]);
 					if(! memcmp( bfr+i, search, search_size ))	//if match found
-						if(ret_ptr==nullptr)
+						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
@@ -1470,7 +1470,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 						bfr[j]=tolower(bfr[j]);
 					if(! memcmp( bfr+i, search, search_size ))	//if match found
-						if(ret_ptr==nullptr)
+						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
@@ -1511,7 +1511,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					//if( (1<<j) & reg)
 					if( bfr[i+j] == search[0] ) //xxxclk
 						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-							if(ret_ptr==nullptr)
+							if(ret_ptr==NULL)
 								return i+j;
 							else
 								ret_ptr->push_back(i+j);
@@ -1526,7 +1526,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		for(int i=0 ; i <= bfr_size - search_size ; i++ )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					if(ret_ptr==nullptr)
+					if(ret_ptr==NULL)
 						return i;
 					else
 						ret_ptr->push_back(i);
@@ -1562,7 +1562,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					//if( (1<<j) & reg)
 					if( bfr[i+j] == search[0] )
 						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-							if(ret_ptr==nullptr)
+							if(ret_ptr==NULL)
 								return i+j;
 							else
 								ret_ptr->push_back(i+j);
@@ -1572,7 +1572,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		for(int i=16 ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					if(ret_ptr==nullptr)
+					if(ret_ptr==NULL)
 						return i;
 					else
 						ret_ptr->push_back(i);
@@ -1580,13 +1580,13 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					if(ret_ptr==nullptr)
+					if(ret_ptr==NULL)
 						return i;
 					else
 						ret_ptr->push_back(i);
 		#endif // __SSE2__
 		}
-	if( ret_ptr == nullptr )
+	if( ret_ptr == NULL )
 		return -1;
 	return ret_ptr->size();
 	}

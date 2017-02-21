@@ -343,7 +343,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MySearchPanel = new SearchPanel( this, -1 );
    //Created under OnUpdateUI
-   MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
+	MyAUI -> AddPane( MySearchPanel, wxAuiPaneInfo().
 				Name(_("Search Results")).
 				Caption(_("Search Results")).
 				TopDockable(false).

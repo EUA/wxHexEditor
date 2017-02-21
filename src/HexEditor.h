@@ -320,12 +320,9 @@ class scrollthread:wxThreadHelper {
 			speed_mtx.Unlock();
 			}
 		void Exit(void){
-			if( !GetThread()->IsRunning() ) //We only "Delete" running threads
-				GetThread()->Run();// if can't kill, run the thread for kill it
+			if( !GetThread()->IsRunning() ) //We can only "Delete" running threads
+				GetThread()->Resume();// Resume the thread for kill it
 			GetThread()->Delete();
-			//wait for thread kill
-			while( !(GetThread()->TestDestroy()) )
-				wxMilliSleep(25);
 			}
 	};
 

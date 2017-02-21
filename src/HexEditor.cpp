@@ -679,10 +679,16 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 #if _FSWATCHER_
 void HexEditor::OnFileModify(wxFileSystemWatcherEvent &event){
 	#ifdef _DEBUG_
-	std::cout << "HexEditor::OnFileModify() Change detected, Reloading..."  << std::endl;
+	bool x=(event.GetChangeType()&(wxFSW_EVENT_MODIFY|wxFSW_EVENT_RENAME|wxFSW_EVENT_ATTRIB))!=0;
+	std::cout << "HexEditor::OnFileModify()... : 0x" << std::hex<< event.GetChangeType() << std::dec << " mask:" << x << std::endl;
 	#endif // _DEBUG_
-	if(event.GetChangeType()==wxFSW_EVENT_MODIFY && event.GetPath() == myfile->GetFileName().GetFullPath())
+	//wxFSW_EVENT_MODIFY 0x08
+	//wxFSW_EVENT_RENAME 0x04
+	//wxFSW_EVENT_ATTRIB 0x20 -- Some programs like gedit return this. But AFAIK our opened file is different than actual.
+	if( (event.GetChangeType()&(wxFSW_EVENT_MODIFY))!=0
+		&& event.GetPath() == myfile->GetFileName().GetFullPath()){
 		Reload();
+		}
 	event.Skip(true);
 	}
 #endif

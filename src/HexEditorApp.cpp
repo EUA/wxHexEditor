@@ -80,17 +80,18 @@ void wxHexEditorApp::MyAppInit(){
 		frame->OpenFile(fn.GetFullPath());
 		}
 	}
-void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)){
+
+    // create the file system watcher here, because it needs an active loop
+void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)) //wxOVERRIDE
+	{
 	static bool first_run=true;
 	if(first_run){
 		first_run=false;
 #if _FSWATCHER_
-		frame->CreateFileWatcher();
-//		if(frame->file_watcher == NULL ){
-//			frame->file_watcher = new wxFileSystemWatcher();
-//			frame->file_watcher->SetOwner(this);
-//			Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditorFrame::OnFileSystemEvent));
-//			}
+		if(frame->file_watcher == NULL ){
+			frame->file_watcher = new wxFileSystemWatcher();
+			frame->file_watcher->SetOwner(frame);
+			}
 #endif // _FSWATCHER_
 		MyAppInit();
 		}

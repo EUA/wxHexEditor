@@ -747,7 +747,6 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 	#else
 		return FindBinaryForward(target, 0, current_offset , options, &progress_gauge, msg, totalread );
 	#endif
-
 		}
 
 	// TODO (death#1#): MemorySearch Backward.
@@ -1275,7 +1274,7 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 	if(options & SEARCH_FINDALL)
 		options &= ~SEARCH_BACKWARDS;
 
-	//UTF with NO matched case handled here !!!SLOW!!!
+	//UTF with NO matched case handled here !!!SLOW!!! both for FORWARD and BACKWARD
 	if(options & SEARCH_UTF8 && options & SEARCH_TEXT && !(options & SEARCH_MATCHCASE) ){
 		//!!!UTF8 Search Speed Hack handling here!!!
 
@@ -1492,10 +1491,8 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 	#endif
 		}
 
-
-	//Search as HEX, TEXT with MATCHCASE
-	//FORWARD Search!
-	if((options & SEARCH_FINDALL) || !(options & SEARCH_BACKWARDS)){
+	//Search as HEX, TEXT with MATCHCASE FORWARD Search.
+	else if((options & SEARCH_FINDALL) || !(options & SEARCH_BACKWARDS)){
 		//#pragma omp parallel for schedule(static)
 	#ifdef __SSE2__
 		//681 clk with SSE2 vs 1200clk with C++
@@ -1547,7 +1544,8 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 	#endif //__SSE2__
 		}
 
-	else{ //BACKWARD Search!
+	//Search as HEX, TEXT with MATCHCASE BACKWARD Search.
+	else{
 		#ifdef __SSE2__
 		 //676clk with SSE2, 1251 clk with C++
 		__m128i b = _mm_set1_epi8 ( search[0] );

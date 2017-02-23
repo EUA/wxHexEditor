@@ -347,7 +347,6 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-O2" />
 			<Add directory="mhash/include" />
 		</Compiler>
 		<Unit filename="HexEditorGui.fbp">

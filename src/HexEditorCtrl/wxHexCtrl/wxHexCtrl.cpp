@@ -963,7 +963,7 @@ wxMemoryBuffer wxHexCtrl::HexToBin(const wxString& HexValue){
 			i--; //Means +1 after loop increament of +2. Don't put i++ due HexValue.Length() check
 			continue;
 			}
-		else if ((HexValue[i] == '0' && ( HexValue[i+1] == 'x' || HexValue[i+1] == 'X'))){ //Removes "0x" and "0X" strings.
+		else if ((HexValue[i] == '0' || HexValue[i] == '\\') && ( HexValue[i+1] == 'x' || HexValue[i+1] == 'X')){ //Removes "0x", "0X", "\x", "\X"  strings.
 			continue; //Means +2 by loop increament.
 			}
 		bfrH = atoh( HexValue[i] );

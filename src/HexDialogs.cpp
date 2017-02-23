@@ -1451,29 +1451,35 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)){
 			for(int i=0 ; i <= bfr_size - search_size ; i++ )
 				//since search[0] allready lowered, UTF8SpeedHackChrs[0] is uppered
-				if( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] )
+				if( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] ){
 					//we got first byte match here, let lower bfr[i:search_size] to full match
 					//partialy lowering
 					for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 						bfr[j]=tolower(bfr[j]);
-					if(! memcmp( bfr+i, search, search_size ))	//if match found
+
+					if(! memcmp( bfr+i, search, search_size )){	//if match found
 						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
+						}
+					}
 			}
 		//Backward Operation
 		else{
 			for( int i=bfr_size - search_size ; i >= 0 ; i-- )
-				if( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] )
+				if( bfr[i] == search[0] || bfr[i] == UTF8SpeedHackChrs[0] ){
 					//partial lowering code
 					for( int j = i ; (j < bfr_size) && (j-i<search_size); j++)
 						bfr[j]=tolower(bfr[j]);
-					if(! memcmp( bfr+i, search, search_size ))	//if match found
+
+					if(! memcmp( bfr+i, search, search_size )){	//if match found
 						if(ret_ptr==NULL)
 							return i;
 						else
 							ret_ptr->push_back(i);
+						}
+					}
 			}
 	#endif
 		}

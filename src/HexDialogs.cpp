@@ -1295,10 +1295,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
-							if(! options & SEARCH_FINDALL)
-								return i;
-							else
+							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i);
+							else
+								return i;
 						}
 					}
 			else //Backward Search!
@@ -1311,10 +1311,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
 						if(! memcmp( ubuf, search, search_size))	//if match found
-							if(! options & SEARCH_FINDALL)
-								return i;
-							else
+							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i);
+							else
+								return i;
 					}
 				}
 			}
@@ -1326,10 +1326,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
-						if(! options & SEARCH_FINDALL)
-							return i;
-						else
+						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
+						else
+							return i;
 					}
 				}
 			else{ //Backward Search!
@@ -1337,10 +1337,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
 					if(! memcmp( ubuf, search, search_size ))	//if match found
-						if(! options & SEARCH_FINDALL)
-							return i;
-						else
+						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
+						else
+							return i;
 					}
 				}
 			}
@@ -1390,10 +1390,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
 								bfr[k]=tolower(bfr[k]);
 							if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-								if(! options & SEARCH_FINDALL)
-									return i+j;
-								else
+								if(options & SEARCH_FINDALL)
 									ret_ptr->push_back(i+j);
+								else
+									return i+j;
 							}
 						}
 					}
@@ -1437,10 +1437,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
 								bfr[k]=tolower(bfr[k]);
 							if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-								if(! options & SEARCH_FINDALL)
-									return i+j;
-								else
+								if(options & SEARCH_FINDALL)
 									ret_ptr->push_back(i+j);
+								else
+									return i+j;
 							}
 					}
 				}
@@ -1448,10 +1448,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 			for(int i=16 ; i >= 0 ; i-- )
 				if( bfr[i] == search[0] )
 					if(! memcmp( bfr+i, search, search_size ))	//if match found
-						if(! options & SEARCH_FINDALL)
-							return i;
-						else
+						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
+						else
+							return i;
 			}
 	#else
 		//Forward Operation
@@ -1465,10 +1465,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						bfr[j]=tolower(bfr[j]);
 
 					if(! memcmp( bfr+i, search, search_size )){	//if match found
-						if(! options & SEARCH_FINDALL)
-							return i;
-						else
+						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
+						else
+							return i;
 						}
 					}
 			}
@@ -1481,10 +1481,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						bfr[j]=tolower(bfr[j]);
 
 					if(! memcmp( bfr+i, search, search_size )){	//if match found
-						if(! options & SEARCH_FINDALL)
-							return i;
-						else
+						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
+						else
+							return i;
 						}
 					}
 			}
@@ -1522,10 +1522,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					//if( (1<<j) & reg)
 					if( bfr[i+j] == search[0] ) //xxxclk
 						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-							if(! options & SEARCH_FINDALL)
-								return i+j;
-							else
+							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i+j);
+							else
+								return i+j;
 			}
 		//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
 //		for(int i=0 ; i < 16 ; i++ )
@@ -1537,10 +1537,10 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		for(int i=0 ; i <= bfr_size - search_size ; i++ )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					if(! options & SEARCH_FINDALL)
-						return i;
-					else
+					if(options & SEARCH_FINDALL)
 						ret_ptr->push_back(i);
+					else
+						return i;
 	#endif //__SSE2__
 		}
 
@@ -1574,28 +1574,28 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 					//if( (1<<j) & reg)
 					if( bfr[i+j] == search[0] )
 						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-							if(! options & SEARCH_FINDALL)
-								return i+j;
-							else
+							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i+j);
+							else
+								return i+j;
 				}
 			}
 		//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
 		for(int i=16 ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					if(! options & SEARCH_FINDALL)
-						return i;
-					else
+					if(options & SEARCH_FINDALL)
 						ret_ptr->push_back(i);
+					else
+						return i;
 		#else
 		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
 				if(! memcmp( bfr+i, search, search_size ))	//if match found
-					(! options & SEARCH_FINDALL)
-						return i;
-					else
+					if(options & SEARCH_FINDALL)
 						ret_ptr->push_back(i);
+					else
+						return i;
 		#endif // __SSE2__
 		}
 

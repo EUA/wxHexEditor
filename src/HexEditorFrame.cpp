@@ -356,7 +356,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	MyComparePanel = new ComparePanel( this, -1 );
    //Created under OnUpdateUI
    MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
-				Name(_("Comparison xResults")).
+				Name(_("Comparison Results")).
 				Caption(_("Comparison Results")).
 				TopDockable(false).
 				BottomDockable(false).

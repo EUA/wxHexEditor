@@ -26,7 +26,7 @@
  * Purpose:   Defines Application Class
  * Author:    Death Knight (spamjunkeater@gmail.com)
  * Created:   2008-05-12
- * Copyright: Death Knight (wxhexeditor.sourceforge.net)
+ * Copyright: Erdem U. Altinyurt
  * License:   GPL v2
  **************************************************************/
 

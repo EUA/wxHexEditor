@@ -198,7 +198,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 		if( wxDateTime::Now() - wxDateSpan::Week() > wxDateTime( last_chk ) )	//One check for a week enough
 			{
 			wxConfigBase::Get()->Write(_T("LastUpdateCheckTime"), static_cast< double >( wxDateTime::Now().GetTicks()) );
-			VersionChecker vc( wxT("http://wxhexeditor.sourceforge.net/version.php"), wxT(_VERSION_) );
+			VersionChecker vc( wxT("http://www.wxhexeditor.org/version.php"), wxT(_VERSION_) );
 			}
 		}
 

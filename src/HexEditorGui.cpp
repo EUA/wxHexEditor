@@ -1027,7 +1027,7 @@ UpdateDialogGui::UpdateDialogGui( wxWindow* parent, wxWindowID id, const wxStrin
 	version_text->Wrap( -1 );
 	VerticalBoxSizer->Add( version_text, 0, wxALIGN_CENTER|wxALL, 10 );
 	
-	m_hyperlink = new wxHyperlinkCtrl( this, wxID_ANY, _("Download new wxHexEditor"), _("http://wxhexeditor.sourceforge.net"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
+	m_hyperlink = new wxHyperlinkCtrl( this, wxID_ANY, _("Download new wxHexEditor"), _("http://www.wxhexeditor.org"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
 	VerticalBoxSizer->Add( m_hyperlink, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxchk_display = new wxCheckBox( this, wxID_ANY, _("Do not show this again."), wxDefaultPosition, wxDefaultSize, 0 );

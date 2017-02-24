@@ -56,7 +56,7 @@ HexEditorCtrl::HexEditorCtrl(wxWindow* parent, int id, const wxPoint& pos, const
 	ZebraStriping = hex_ctrl->ZebraStriping;
 	text_ctrl->ZebraStriping = ZebraStriping;
 	offset_ctrl->ZebraStriping = ZebraStriping;
-	wxConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable, true);
+	myConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable, true);
 	sector_size=0;
    }
 
@@ -248,7 +248,7 @@ void HexEditorCtrl::SetFont( wxFont f ){
 void HexEditorCtrl::SetFont( ){
 	wxFont newfont;
 	int FontSize=10;
-	wxConfigBase::Get()->Read( wxT("FontSize"), &FontSize, 10 );
+	myConfigBase::Get()->Read( wxT("FontSize"), &FontSize, 10 );
 
 #if defined( __WXOSX__ )
 	newfont = wxFont(FontSize, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, 0, wxT("Monaco"), wxFONTENCODING_ISO8859_1);// Fonts are too small on wxOSX 2.9.x series.
@@ -280,7 +280,7 @@ void HexEditorCtrl::SetStyle( ) {
    offset_ctrl->SetDefaultStyle( Style );
    hex_ctrl->SetDefaultStyle( Style );
 	wxString cp;
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS OEM") );
+	myConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS OEM") );
 	text_ctrl->PrepareCodepageTable(cp);
    text_ctrl->SetDefaultStyle( Style );
 

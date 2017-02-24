@@ -93,7 +93,7 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 	//Prepare Array;
 	///Note that, lower indices will shown at bottom, not at top!
 	for( int i = 0 ; i < 10 ; i ++)
-		if (wxConfigBase::Get()->Read(KeyName+wxEmptyString<<i , &TempString)){
+		if (myConfigBase::Get()->Read(KeyName+wxEmptyString<<i , &TempString)){
 			SearchStrings.Add( TempString );
 			#ifdef _DEBUG_
 			std::cout << "ComboBoxFill Read (" << i << ") : " << TempString.ToAscii() << std::endl;
@@ -113,7 +113,7 @@ void ComboBoxFill( wxString KeyName, wxComboBox* CurrentBox, bool AddString){
 			#ifdef _DEBUG_
 			std::cout << "ComboBoxFill Write (" << i << ") : " << SearchStrings.Item(i).ToAscii() << std::endl;
 			#endif
-			wxConfigBase::Get()->Write(KeyName+wxEmptyString<<i,  SearchStrings.Item(i));
+			myConfigBase::Get()->Write(KeyName+wxEmptyString<<i,  SearchStrings.Item(i));
 			}
 		}
 	//Set ComboBox
@@ -135,7 +135,7 @@ GotoDialog::GotoDialog( wxWindow* _parent, uint64_t& _offset, uint64_t _cursor_o
 	SetAutoLayout(true);
 
 	int options=0;
-	wxConfigBase::Get()->Read( _T("GoToOptions"), &options );
+	myConfigBase::Get()->Read( _T("GoToOptions"), &options );
 
 	options & OPT_DEC_INPUT ? m_dec->SetValue(true) : m_hex->SetValue(true);
 /*	wxArrayString hex_letters;//=wxT("abcdefABCDEFxX");
@@ -203,7 +203,7 @@ void GotoDialog::EventHandler( wxCommandEvent& event ){
 	options |= m_branch->GetSelection() == 0 ? OPT_BRANCH_NORMAL :
 				  m_branch->GetSelection() == 2 ? OPT_BRANCH_END : 0;
 
-	wxConfigBase::Get()->Write( _T("GoToOptions"), options );
+	myConfigBase::Get()->Write( _T("GoToOptions"), options );
 
 	m_comboBoxOffset->SetFocusFromKbd();
 	}
@@ -314,7 +314,7 @@ FindDialog::FindDialog( wxWindow* _parent, FAL *_findfile, wxString title ):Find
 	findfile = _findfile;
 
 	int options=0;
-	wxConfigBase::Get()->Read( _T("FindOptions"), &options );
+	myConfigBase::Get()->Read( _T("FindOptions"), &options );
 	m_searchtype->SetSelection( options & SEARCH_TEXT ? 0 : 1);
 	chkWrapAround->SetValue( options & SEARCH_WRAPAROUND );
 	chkSearchBackwards->SetValue( options & SEARCH_BACKWARDS );
@@ -456,7 +456,7 @@ void FindDialog::EventHandler( wxCommandEvent& event ){
 	options |= chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
 	options |= chkUTF8->GetValue() ? SEARCH_UTF8 : 0;
 	options |= chkMatchCase->GetValue() ? SEARCH_MATCHCASE : 0;
-	wxConfigBase::Get()->Write( _T("FindOptions"), options );
+	myConfigBase::Get()->Write( _T("FindOptions"), options );
 	}
 
 void FindDialog::FindSomeBytes( void ){
@@ -1738,11 +1738,11 @@ CopyAsDialog::CopyAsDialog( wxWindow* _parent, FAL *file, Select *select_ , Arra
 	MainTagArray=MainTagArray_;
 	bool IsBigEndian;
 	//parent->interpreter->chkBigEndian->GetValue(); Does this approach better than remembering old value?
-	wxConfigBase::Get()->Read( _T("CopyAsBigEndian"), &IsBigEndian );
+	myConfigBase::Get()->Read( _T("CopyAsBigEndian"), &IsBigEndian );
 	chkBigEndian->SetValue( IsBigEndian );
 
 	int CopyAsFunction;
-	if (wxConfigBase::Get()->Read(_T("CopyAsSelectedFunction"), &CopyAsFunction))
+	if (myConfigBase::Get()->Read(_T("CopyAsSelectedFunction"), &CopyAsFunction))
 		chcCopyAs->SetSelection( CopyAsFunction );
 	PrepareOptions( CopyAsFunction );
 	}
@@ -1789,7 +1789,7 @@ void CopyAsDialog::PrepareOptions( int SelectedFunction ){
 		chkText->Enable(false);
 		}
 	int option=0;
-	wxConfigBase::Get()->Read(_T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"),SelectedFunction), &option);
+	myConfigBase::Get()->Read(_T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"),SelectedFunction), &option);
 	chcOption->SetSelection( option );
 
 	//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
@@ -1814,21 +1814,21 @@ void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 
 		int option;
 		//Adjustinf selection part
-		if (wxConfigBase::Get()->Read(_T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"),SelectedFunction), &option))
+		if (myConfigBase::Get()->Read(_T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"),SelectedFunction), &option))
 			chcOption->SetSelection( option );
 		else
 			chcOption->SetSelection(0);
 
-		wxConfigBase::Get()->Write( _T("CopyAsSelectedFunction"), SelectedFunction );
+		myConfigBase::Get()->Write( _T("CopyAsSelectedFunction"), SelectedFunction );
 		}
 	else if( id == chcOption->GetId() ){
-		wxConfigBase::Get()->Write( _T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"), chcCopyAs->GetSelection()), chcOption->GetSelection() );
+		myConfigBase::Get()->Write( _T("CopyAsSelectedOptionOfFunction") + wxString::Format(wxT("%d"), chcCopyAs->GetSelection()), chcOption->GetSelection() );
 
 		//Enable big endian checkbox if multi byte representation selected for C/C++/ASM sources.
 		chkBigEndian->Enable( chcCopyAs->GetSelection() >=3 && chcOption->GetSelection() > 0 );
 		}
 	else if( id == chkBigEndian->GetId() ){
-		wxConfigBase::Get()->Write( _T("CopyAsBigEndian"), chkBigEndian->GetValue() );
+		myConfigBase::Get()->Write( _T("CopyAsBigEndian"), chkBigEndian->GetValue() );
 		}
 
 	}
@@ -2157,18 +2157,18 @@ CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 
 		//Not working on linux somehow???
 //	else{
 //		wxString tmp;
-//		wxConfigBase::Get()->Read( _T("CompareFile1"), &tmp );
+//		myConfigBase::Get()->Read( _T("CompareFile1"), &tmp );
 //		filePick1->SetLabel( tmp );
 //		filePick1->SetPath( tmp );
 //
-//		wxConfigBase::Get()->Read( _T("CompareFile2"), &tmp );
+//		myConfigBase::Get()->Read( _T("CompareFile2"), &tmp );
 //		filePick2->SetLabel( tmp );
 //		filePick2->SetPath( tmp );
 //		filePick2->UpdateTextCtrlFromPicker();
 //		}
 
 	int options=0;
-	wxConfigBase::Get()->Read( _T("CompareOptions"), &options );
+	myConfigBase::Get()->Read( _T("CompareOptions"), &options );
 	checkConnectFiles->SetValue( options & OPT_CMP_CONNECT );
 	checkMergeSection->SetValue( options & OPT_CMP_MERGE_SECTION );
 	spinMergeSection->Enable( options & OPT_CMP_MERGE_SECTION );
@@ -2180,10 +2180,10 @@ CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 
 	m_radioSame->SetValue( !(options & OPT_CMP_SEARCH_DIFF) );
 
 	int tmp;
-	wxConfigBase::Get()->Read( _T("CompareOptionStopAfter"), &tmp );
+	myConfigBase::Get()->Read( _T("CompareOptionStopAfter"), &tmp );
 	spinStopCompare->SetValue(tmp);
 
-	wxConfigBase::Get()->Read( _T("CompareOptionMergeSection"), &tmp );
+	myConfigBase::Get()->Read( _T("CompareOptionMergeSection"), &tmp );
 	spinMergeSection->SetValue(tmp);
 	}
 
@@ -2202,9 +2202,9 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		return false;
 		}
 
-	wxConfigBase::Get()->Write( _T("CompareFile1"), fl1.GetFullPath() );
-	wxConfigBase::Get()->Write( _T("CompareFile2"), fl2.GetFullPath() );
-	wxConfigBase::Get()->Flush();
+	myConfigBase::Get()->Write( _T("CompareFile1"), fl1.GetFullPath() );
+	myConfigBase::Get()->Write( _T("CompareFile2"), fl2.GetFullPath() );
+	myConfigBase::Get()->Flush();
 //	if( flsave != wxEmptyString ){
 //		if(!flsave.IsFileWritable() )
 //			wxMessageBox( _("Error, Save File is not writeable.") );
@@ -2537,12 +2537,12 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 	options|=checkStopCompare->GetValue() ? OPT_CMP_STOP_AFTER : 0;
 	options|=checkSaveResults->GetValue() ? OPT_CMP_SAVE : 0;
 	options|=m_radioDifferent->GetValue() ? OPT_CMP_SEARCH_DIFF : 0;
-	wxConfigBase::Get()->Write( _T("CompareOptions"), options );
+	myConfigBase::Get()->Write( _T("CompareOptions"), options );
 
 	int optionStopAfter = spinStopCompare->GetValue();
 	int optionMergeSection = spinMergeSection->GetValue();
-	wxConfigBase::Get()->Write( _T("CompareOptionStopAfter"), optionStopAfter );
-	wxConfigBase::Get()->Write( _T("CompareOptionMergeSection"), optionMergeSection );
+	myConfigBase::Get()->Write( _T("CompareOptionStopAfter"), optionStopAfter );
+	myConfigBase::Get()->Write( _T("CompareOptionMergeSection"), optionMergeSection );
 	}
 
 ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, wxID_ANY){
@@ -2554,7 +2554,7 @@ ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, w
 	btnCalculate->Enable( active_hex );
 
 	int options;
-	wxConfigBase::Get()->Read( _T("SelectedChecksumFunctions"), &options );
+	myConfigBase::Get()->Read( _T("SelectedChecksumFunctions"), &options );
 
 	chkMD2->SetValue( options & (1 << MHASH_MD2) );
 	chkMD4->SetValue( options & (1 << MHASH_MD4) );
@@ -2628,7 +2628,7 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 	options |= (chkSNEFRU128->GetValue() ? 1 << MHASH_SNEFRU128 : 0);
 	options |= (chkSNEFRU256->GetValue() ? 1 << MHASH_SNEFRU256 : 0);
 
-	wxConfigBase::Get()->Write( _T("SelectedChecksumFunctions"), options );
+	myConfigBase::Get()->Write( _T("SelectedChecksumFunctions"), options );
 
 	if(event.GetId() == wxID_CANCEL)
 		Destroy();
@@ -2834,7 +2834,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	chcLang->Clear();
 	LangNames.Sort();
 	chcLang->Append( LangNames );
-	wxConfigBase *pConfig = wxConfigBase::Get();
+	wxConfigBase *pConfig = myConfigBase::Get();
 
 	if ( ! pConfig->Read(_T("Language")).IsEmpty() ){
 		wxString lang = pConfig->Read(_T("Language"), wxEmptyString) ;
@@ -2863,23 +2863,23 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 */
 	wxString TempString;
 	bool TempBool;
-	if( wxConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );
-	if( wxConfigBase::Get()->Read( _T("ColourHexBackground"), &TempString) )				clrPickerBackground->SetColour( TempString );
-	if( wxConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
-	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )		clrPickerSelectionForeground->SetColour(TempString);
-	if( wxConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )		clrPickerSelectionBackground->SetColour(TempString);
-	if( wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )					chkAutoShowTagPanel->SetValue( TempBool );
-	if( wxConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
-	if( wxConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)				comboCustomHexFormat->SetValue( TempString );
+	if( myConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );
+	if( myConfigBase::Get()->Read( _T("ColourHexBackground"), &TempString) )				clrPickerBackground->SetColour( TempString );
+	if( myConfigBase::Get()->Read( _T("ColourHexBackgroundZebra"), &TempString) )			clrPickerBackgroundZebra->SetColour( TempString );
+	if( myConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )		clrPickerSelectionForeground->SetColour(TempString);
+	if( myConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )		clrPickerSelectionBackground->SetColour(TempString);
+	if( myConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )					chkAutoShowTagPanel->SetValue( TempBool );
+	if( myConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
+	if( myConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)				comboCustomHexFormat->SetValue( TempString );
 	comboCustomHexFormat->Enable( chkCustom->IsChecked() );
-	if( wxConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 			chkBytePerLineLimit->SetValue( TempBool );
+	if( myConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 			chkBytePerLineLimit->SetValue( TempBool );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
 
 	int TempInt;
-	wxConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
+	myConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
 	spinBytePerLine->SetValue( TempInt );
 
-	wxConfigBase::Get()->Read( _T("FontSize"), &TempInt, 10 );
+	myConfigBase::Get()->Read( _T("FontSize"), &TempInt, 10 );
 	spinFontSize->SetValue( TempInt );
 
 	if( AvailableEncodings.IsEmpty() )
@@ -2903,7 +2903,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	ChrEncFamArray.Add(wxT("Other"));
 	chcCharacterEncodingFamily->Append(ChrEncFamArray);
 
-	wxConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &TempString, wxT("DOS") );
+	myConfigBase::Get()->Read( _T("CharacterEncodingFamily"), &TempString, wxT("DOS") );
 	chcCharacterEncodingFamily->SetStringSelection( TempString );
 
 	ExperimentalEncodingsList.Clear();
@@ -2930,7 +2930,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	e.SetId( chcCharacterEncodingFamily->GetId() );
 	EventHandler( e );
 
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString, wxT("OEM - IBM PC/DOS CP437 - MS-DOS Latin US" ));
+	myConfigBase::Get()->Read( _T("CharacterEncoding"), &TempString, wxT("OEM - IBM PC/DOS CP437 - MS-DOS Latin US" ));
 	if(TempString==wxT("Extended Binary Coded Decimal Interchange Code"))
 		TempString=wxT("EBCDIC");
 	if( !chcCharacterEncoding->SetStringSelection( TempString ) )
@@ -3053,15 +3053,15 @@ void PreferencesDialog::GetInstalledLanguages(wxArrayString & names, wxArrayLong
 
 //Could use EventHandler directly but that breaks GCC4.4 :p
 void PreferencesDialog::SpinEventHandler( wxSpinEvent& event ) {
-	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
-	wxConfigBase::Get()->Flush();
+	myConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+	myConfigBase::Get()->Flush();
 	wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
 	wxPostEvent( GetParent(), eventx );
 	}
 
 void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	wxString PrevSelection;
-	wxConfigBase::Get()->Read( _T("CharacterEncoding"), &PrevSelection );
+	myConfigBase::Get()->Read( _T("CharacterEncoding"), &PrevSelection );
 
 	if(event.GetId()==chcCharacterEncodingFamily->GetId()){
 		wxArrayString Encodings;
@@ -3097,14 +3097,14 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		chcCharacterEncoding->Clear();
 		chcCharacterEncoding->Append( Encodings );
 		wxString Selection;
-		wxConfigBase::Get()->Read( _T("CharacterEncoding"), &Selection );
+		myConfigBase::Get()->Read( _T("CharacterEncoding"), &Selection );
 		if( !chcCharacterEncoding->SetStringSelection( Selection ) )
 			chcCharacterEncoding->SetSelection( 0 );
 		}
 /*
 	if(event.GetId()==chcCharacterEncoding->GetId()){
-		wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
-		wxConfigBase::Get()->Flush();
+		myConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
+		myConfigBase::Get()->Flush();
 		wxUpdateUIEvent eventx( REDRAW_EVENT );
 		wxPostEvent( GetParent(), eventx );
 		}
@@ -3119,45 +3119,45 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 	}
 
 void PreferencesDialog::SaveRegistry( void ) {
-	wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description ); //Saves string into configuration file.
+	myConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Description ); //Saves string into configuration file.
 
-	wxConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-	wxConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-	wxConfigBase::Get()->Write( _T("ColourHexBackgroundZebra"), clrPickerBackgroundZebra->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-	wxConfigBase::Get()->Write( _T("ColourHexSelectionForeground"), clrPickerSelectionForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
-	wxConfigBase::Get()->Write( _T("ColourHexSelectionBackground"), clrPickerSelectionBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	myConfigBase::Get()->Write( _T("ColourHexForeground"), clrPickerForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	myConfigBase::Get()->Write( _T("ColourHexBackground"), clrPickerBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	myConfigBase::Get()->Write( _T("ColourHexBackgroundZebra"), clrPickerBackgroundZebra->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	myConfigBase::Get()->Write( _T("ColourHexSelectionForeground"), clrPickerSelectionForeground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
+	myConfigBase::Get()->Write( _T("ColourHexSelectionBackground"), clrPickerSelectionBackground->GetColour().GetAsString(wxC2S_HTML_SYNTAX) );
 
-	wxConfigBase::Get()->Write( _T("UseCustomHexFormat"), chkCustom->GetValue() );
-	wxConfigBase::Get()->Write( _T("CustomHexFormat"), comboCustomHexFormat->GetValue() );
+	myConfigBase::Get()->Write( _T("UseCustomHexFormat"), chkCustom->GetValue() );
+	myConfigBase::Get()->Write( _T("CustomHexFormat"), comboCustomHexFormat->GetValue() );
 
-	wxConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
-	wxConfigBase::Get()->Write( _T("BytesPerLineLimit"), spinBytePerLine->GetValue());
-	wxConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
-	wxConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
-	wxConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
+	myConfigBase::Get()->Write( _T("UseBytesPerLineLimit"), chkBytePerLineLimit->GetValue() );
+	myConfigBase::Get()->Write( _T("BytesPerLineLimit"), spinBytePerLine->GetValue());
+	myConfigBase::Get()->Write( _T("CharacterEncodingFamily"), chcCharacterEncodingFamily->GetStringSelection() );
+	myConfigBase::Get()->Write( _T("CharacterEncoding"), chcCharacterEncoding->GetStringSelection() );
+	myConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
 
-	wxConfigBase::Get()->Write( _T("AutoShowTagPanel"), chkAutoShowTagPanel->GetValue() );
+	myConfigBase::Get()->Write( _T("AutoShowTagPanel"), chkAutoShowTagPanel->GetValue() );
 
-	wxConfigBase::Get()->Flush();
+	myConfigBase::Get()->Flush();
 
 	wxUpdateUIEvent eventx( REDRAW_EVENT );
 	wxPostEvent( GetParent(), eventx );
 	}
 void PreferencesDialog::OnSave( wxCommandEvent& event ) {
-	//wxConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
-	//wxConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Language );
+	//myConfigBase::Get()->Write( _T("Language"), LangIds.Item(chcLang->GetSelection()) );
+	//myConfigBase::Get()->Write( _T("Language"), wxLocale::FindLanguageInfo( chcLang->GetString( chcLang->GetSelection() ) )->Language );
 	SaveRegistry();
 	Close();
    }
 
 void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 	if( wxOK == wxMessageBox( _("Are you sure about resetting colours?"), _("Resetting Hex Colours"), wxOK|wxCANCEL) ){
-		wxConfigBase::Get()->DeleteEntry(_T("ColourHexForeground"));
-		wxConfigBase::Get()->DeleteEntry(_T("ColourHexBackground"));
-		wxConfigBase::Get()->DeleteEntry(_T("ColourHexBackgroundZebra"));
-		wxConfigBase::Get()->DeleteEntry(_T("ColourHexSelectionForeground"));
-		wxConfigBase::Get()->DeleteEntry(_T("ColourHexSelectionBackground"));
-		wxConfigBase::Get()->Flush();
+		myConfigBase::Get()->DeleteEntry(_T("ColourHexForeground"));
+		myConfigBase::Get()->DeleteEntry(_T("ColourHexBackground"));
+		myConfigBase::Get()->DeleteEntry(_T("ColourHexBackgroundZebra"));
+		myConfigBase::Get()->DeleteEntry(_T("ColourHexSelectionForeground"));
+		myConfigBase::Get()->DeleteEntry(_T("ColourHexSelectionBackground"));
+		myConfigBase::Get()->Flush();
 
 		wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
 		wxPostEvent( GetParent(), eventx );

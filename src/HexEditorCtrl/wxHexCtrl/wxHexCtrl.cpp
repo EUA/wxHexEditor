@@ -2713,7 +2713,7 @@ void wxHexOffsetCtrl::OnMouseRight( wxMouseEvent& event ){
         }
 
 	wxString s= wxChar( offset_mode );
-   wxConfigBase::Get()->Write( _T("LastOffsetMode"), s);
+   myConfigBase::Get()->Write( _T("LastOffsetMode"), s);
 
 	SetValue( offset_position );
 	}

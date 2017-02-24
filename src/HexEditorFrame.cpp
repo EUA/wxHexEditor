@@ -121,7 +121,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			 "home:  wxhexeditor.org  -  diskeditor.net\n"
 			 "email: spamjunkeater@gmail.com\n");
 
-	wxConfigBase *pConfig = wxConfigBase::Get();
+	wxConfigBase *pConfig = myConfigBase::Get();
 	int x = pConfig->Read(_T("ScreenX"), 100),
 		 y = pConfig->Read(_T("ScreenY"), 100),
 		 w = pConfig->Read(_T("ScreenW"), 600),
@@ -151,10 +151,10 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	MyFileHistory = new wxFileHistory( );
 	MyFileHistory->UseMenu( menuFileOpenRecent );
 	menuFileOpenRecent->Remove( *menuFileOpenRecent->GetMenuItems().begin() ); //Removes "no recent file" message
-	MyFileHistory->Load( *wxConfigBase::Get() );
+	MyFileHistory->Load( *myConfigBase::Get() );
 
 	bool ZebraEnable;
-	wxConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable, true );
+	myConfigBase::Get()->Read( _T("ZebraStriping"), &ZebraEnable, true );
 	mbar->Check(idZebraStriping, ZebraEnable);
 
 	PrepareAUI();
@@ -184,9 +184,9 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	MyAUI->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler( HexEditorFrame::OnFloatingPaneClosed ), NULL, this );
 
 	bool update_enable = false;
-	if ( !wxConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
+	if ( !myConfigBase::Get()->Read(_T("UpdateCheck"), &update_enable )){
 		update_enable = true;
-		wxConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
+		myConfigBase::Get()->Write( _T("UpdateCheck"), update_enable );
 		//First Run!
 		wxMessageBox( license, _("License Agreement"));
 		}
@@ -194,10 +194,10 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 
 	if( update_enable ){
 		double last_chk=0;
-		wxConfigBase::Get()->Read(_T("LastUpdateCheckTime"), (&last_chk));
+		myConfigBase::Get()->Read(_T("LastUpdateCheckTime"), (&last_chk));
 		if( wxDateTime::Now() - wxDateSpan::Week() > wxDateTime( last_chk ) )	//One check for a week enough
 			{
-			wxConfigBase::Get()->Write(_T("LastUpdateCheckTime"), static_cast< double >( wxDateTime::Now().GetTicks()) );
+			myConfigBase::Get()->Write(_T("LastUpdateCheckTime"), static_cast< double >( wxDateTime::Now().GetTicks()) );
 			VersionChecker vc( wxT("http://www.wxhexeditor.org/version.php"), wxT(_VERSION_) );
 			}
 		}
@@ -226,7 +226,7 @@ HexEditorFrame::~HexEditorFrame(){
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabSelection ), NULL,this );
 	MyNotebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_TAB_MIDDLE_UP, wxAuiNotebookEventHandler(  HexEditorFrame::OnNotebookTabClose ), NULL,this );
 
-	wxConfigBase *pConfig = wxConfigBase::Get();
+	wxConfigBase *pConfig = myConfigBase::Get();
 	if ( pConfig == NULL )
 		return;
 	int x, y, w, h;
@@ -388,7 +388,7 @@ void HexEditorFrame::PrepareAUI( void ){
 					Left().Layer(1).Position(1) );
 
    wxString tempStr;
-   wxConfigBase::Get()->Read(_T("LastPerspective"), &tempStr, wxEmptyString);
+   myConfigBase::Get()->Read(_T("LastPerspective"), &tempStr, wxEmptyString);
 	MyAUI->LoadPerspective( tempStr );
 
 	ActionDisabler();
@@ -441,7 +441,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 			MyNotebook->Split( MyNotebook->GetSelection() , wxRIGHT);
 
 		bool autoShowTagsSwitch;
-		wxConfigBase::Get()->Read( _T("AutoShowTagPanel"), &autoShowTagsSwitch, true );
+		myConfigBase::Get()->Read( _T("AutoShowTagPanel"), &autoShowTagsSwitch, true );
 
 		//Detect from file name if we are opening a RAM Process:
 		if( (x->MainTagArray.Count() > 0 && autoShowTagsSwitch)  || filename.GetFullPath().Lower().StartsWith( wxT("-pid=")) )
@@ -457,8 +457,8 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 		if( found != -1 )
 				MyFileHistory->RemoveFileFromHistory( found );
 		MyFileHistory->AddFileToHistory( filename.GetFullPath() );
-		MyFileHistory->Save( *(wxConfigBase::Get()) );
-		wxConfigBase::Get()->Flush();
+		MyFileHistory->Save( *(myConfigBase::Get()) );
+		myConfigBase::Get()->Flush();
 //		mbar->Check(idFileRO, x->GetFileAccessMode()==FAL::FileAccessMode::ReadOnly);
 
 		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".md5")) ) )
@@ -778,7 +778,7 @@ void HexEditorFrame::OnViewMenu( wxCommandEvent& event ){
 			for( unsigned i = 0 ; i< MyNotebook->GetPageCount(); i++ ){
 				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->ZebraEnable=event.IsChecked();
 				static_cast<HexEditor*>(MyNotebook->GetPage( i ))->RePaint();
-				wxConfigBase::Get()->Write( _T("ZebraStriping"), event.IsChecked() );
+				myConfigBase::Get()->Write( _T("ZebraStriping"), event.IsChecked() );
 				}
 			break;
 		case idShowOffset:
@@ -1191,6 +1191,6 @@ VersionChecker::VersionChecker( wxString _url, wxString _version, wxWindow *pare
 	}
 
 void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
-	wxConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
+	myConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
 	}
 

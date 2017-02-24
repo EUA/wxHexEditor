@@ -98,7 +98,7 @@ void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)) //wxOVERR
 	}
 
 void wxHexEditorApp::SetLanguage(void){
-	wxString lang = wxConfigBase::Get()->Read( _T("Language"), wxEmptyString );
+	wxString lang = myConfigBase::Get()->Read( _T("Language"), wxEmptyString );
 
 	if ( lang.IsEmpty() )
 		lang= wxLocale::GetLanguageName( wxLocale::GetSystemLanguage() );
@@ -106,8 +106,8 @@ void wxHexEditorApp::SetLanguage(void){
 	if ( wxLocale::FindLanguageInfo( lang ) == NULL )
 		lang=wxT("English"); //Defaulting to english.
 
-	wxConfigBase::Get()->Write( _T("Language"), lang );
-	wxConfigBase::Get()->Flush();
+	myConfigBase::Get()->Write( _T("Language"), lang );
+	myConfigBase::Get()->Flush();
 
 	///Add catalog paths
 	wxFileName flnm(argv[0]); //take current path and search "locale" directory

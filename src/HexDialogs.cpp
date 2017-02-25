@@ -2017,11 +2017,15 @@ void CopyAsDialog::Copy( void ){
 
 			for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset ++){
 				cb+= wxString::Format( HexFormat, (unsigned char)buff[ current_offset ] );
+				if(current_offset+1==select->GetSize())
+					if (HexFormat.EndsWith(", ")) //Ox with period
+						cb=cb.RemoveLast(2);
 				if( quad && ((current_offset+1)%2)==0)
 					cb += wxT(" ");
 				if(( (current_offset+1) % BytePerLine)==0 )
 					cb += wxNewline;
 				}
+
 			}
 
 		else if( chcCopyAs->GetSelection() == 2){//Internet

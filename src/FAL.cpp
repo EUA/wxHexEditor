@@ -693,7 +693,7 @@ int FAL::GetBlockSize( void ){
 	return BlockRWSize;
 	}
 
-wxFileOffset FAL::Length( void ){
+wxFileOffset FAL::Length( int PatchIndice ){
 	if( ProcessID >=0 )
 		return 0x800000000000LL;
 
@@ -719,7 +719,9 @@ wxFileOffset FAL::Length( void ){
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();
-	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
+	if(PatchIndice == -1)
+		PatchIndice = DiffArray.GetCount();
+	for( unsigned i=0 ; i < PatchIndice; i++ )
 		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )
 			continue;
 		else if( DiffArray[i]->flag_inject )
@@ -781,11 +783,14 @@ bool FAL::IsInjected( void ){
 	return false;
 	}
 
+#ifdef _DEBUG_FILE_
+#include <iomanip> //for setw
+#endif // _DEBUG_FILE_
 ///State of the Art Read Function
 //Only recursion could handle such a complex operation. Comes my mind while I am trying to sleep.
 long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNode* PatchArray, int PatchIndice ){
 #ifdef _DEBUG_FILE_
-	std::cout << "ReadR from:" << std::dec << from << "\t size:" << size << "\t PtchIndice" << PatchIndice << std::endl;
+	std::cout << "ReadR from:" << std::dec << from << "\t size:"  <<  std::setw(3) << size  << "\t PtchIndice" << PatchIndice << std::endl;
 #endif // _DEBUG_FILE_
 	///Getting Data from bellow layer.
 	if( PatchIndice == 0 )	//Deepest layer
@@ -861,23 +866,26 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 		else{
 			readsize = ReadR( buffer, size, from, PatchArray, PatchIndice-1 );//PatchIndice-1 => Makes Patch = 0 for 1 patch. Read from file.
 			if(size != static_cast<unsigned int>(readsize)) //If there is free chars
-				readsize = (Length() - from > size) ? (size):(Length() - from);	//check for buffer overflow
+				readsize = (Length(PatchIndice-1) - from > size) ? (size):(Length(PatchIndice-1) - from);	//check for buffer overflow
 			ModificationPatcher( from, buffer, size, patch );
 			}
 		}
 //	if(readsize < 0)
 //		return -1;
-	if( static_cast<int64_t>(from + readsize) > Length() ){
+	if( static_cast<int64_t>(from + readsize) > Length(PatchIndice) ){
 		//Injection fills all buffer as requested. So we need truncate it for avoid random memory on file end.
-		readsize = Length()-from;
+		readsize = Length(PatchIndice)-from;
 		}
 #ifdef _DEBUG_FILE_
-	std::cout << "Read Size:" << readsize << std::endl;
+	std::cout << "Read Size:"  <<  std::setw(3) << readsize << std::endl;
 #endif // _DEBUG_FILE_
  	return readsize;
 	}
 
 long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
+#ifdef _DEBUG_FILE_
+	std::cout << "InjectionP:" << std::dec << current_location << "\t size:"  <<  std::setw(3) << size  << "\t PtchIndice" << PatchIndice << std::endl;
+#endif // _DEBUG_FILE_
 	/******* MANUAL of Code Understanding *******
 	* current_location                    = [   *
 	* current_location + size             = ]   *
@@ -943,6 +951,9 @@ long FAL::InjectionPatcher(uint64_t current_location, unsigned char* data, int s
 	}
 
 long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int size, ArrayOfNode* PatchArray, int PatchIndice){
+#ifdef _DEBUG_FILE_
+	std::cout << "Deletion P:" << std::dec << current_location << "\t size:"  <<  std::setw(3) << size  << "\t PtchIndice" << PatchIndice << std::endl;
+#endif // _DEBUG_FILE_
 	/******* MANUAL of Code Understanding ******
 	* current_location                   = [   *
 	* current_location + size            = ]   *
@@ -958,6 +969,9 @@ long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int si
 		///State ...(..[..).].,,,.... -> ...()..[,,,]....
 		///State ...(..[...].)..,,,.. -> ...()..[,,,]..
 		if( Delete_Node->start_offset <= current_location ){
+		#ifdef _DEBUG_FILE_
+			std::cout << "D->";
+		#endif // _DEBUG_FILE_
 			return ReadR( data, size, current_location - Delete_Node->size, PatchArray, PatchIndice-1 );
 			}
 		///State ...[xxx(...)...],,,... -> ...[xxx()...,,,]...
@@ -965,12 +979,21 @@ long FAL::DeletionPatcher(uint64_t current_location, unsigned char* data, int si
 		else if( Delete_Node->start_offset > current_location && Delete_Node->start_offset < current_location + size ){
 			int first_part_size = Delete_Node->start_offset - current_location;
 			int read_size=0;
-			read_size += ReadR( data,						first_part_size,				current_location,															PatchArray,  PatchIndice-1 );
-			read_size += ReadR( data+first_part_size, size - first_part_size,		current_location + first_part_size - Delete_Node->size,		PatchArray,  PatchIndice-1 );
+		#ifdef _DEBUG_FILE_
+			std::cout << "D->";
+		#endif // _DEBUG_FILE_
+			read_size += ReadR( data,						 first_part_size,	current_location,										PatchArray,  PatchIndice-1 );
+		#ifdef _DEBUG_FILE_
+			std::cout << "D->";
+		#endif // _DEBUG_FILE_
+			read_size += ReadR( data+first_part_size, size - first_part_size,	current_location + first_part_size - Delete_Node->size,	PatchArray,  PatchIndice-1 );
 			return read_size;
 			}
 		///State ...[...]...(...)... -> ...[...]...()...
 		else{
+		#ifdef _DEBUG_FILE_
+			std::cout << "D->";
+		#endif // _DEBUG_FILE_
 			return ReadR( data, size, current_location, PatchArray, PatchIndice-1 );
 			}
 		}

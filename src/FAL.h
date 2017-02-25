@@ -139,7 +139,7 @@ class FAL : private wxFile
 		int64_t Undo( void );	//undo last action
 		int64_t Redo( void );	//redo last undo
 		void ShowDebugState( void );
-		wxFileOffset Length( void );
+		wxFileOffset Length( int PatchIndice=-1 );
 
 		wxFileOffset Seek(wxFileOffset ofs, wxSeekMode mode = wxFromStart);
 		bool OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);

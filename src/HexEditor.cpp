@@ -1361,27 +1361,29 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 //		if( GetLocalHexInsertionPoint()/2+page_offset > FileLength() ) {
 //			SetLocalHexInsertionPoint( (FileLength() - page_offset)*2 - 1 );
 //			}
+	wxMemoryBuffer bfr;
+	myfile->Seek( CursorOffset(), wxFromStart );
+#ifdef _DEBUG_FILE_
+	std::cout << "UpdateCursorLocation() read file for panels" << std::endl;
+#endif
+	int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
+	bfr.UngetWriteBuf( size );
 
 	if( interpreter != NULL ) {
-		myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
-		wxMemoryBuffer bfr;
-		int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
-		bfr.UngetWriteBuf( size );
 		interpreter->Set( bfr );
 		}
 	if( dasmpanel != NULL ) {
-		wxMemoryBuffer bfr;
-		if( select->GetState() ){ //If there is a selection, use selection
-			myfile->Seek( select->GetStart(), wxFromStart );
-			//Take just first 100 bytes!
-			int sz = select->GetSize() > 100 ? 100 : select->GetSize();
-			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
-			bfr.UngetWriteBuf( size );
+		if( ! select->GetState() ){ //If there is a NO selection, take 8 bytes from cursor location
 			dasmpanel->Set( bfr );
 			}
-		else{ //Take 8 bytes from cursor location
-			myfile->Seek( GetLocalHexInsertionPoint()/2+page_offset, wxFromStart );
-			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
+		else{  //If there is a selection, use selection up to 100 bytes.
+			myfile->Seek( select->GetStart(), wxFromStart );
+			//Take just first 128 bytes!
+			int sz = select->GetSize() > 128 ? 128 : select->GetSize();
+		#ifdef _DEBUG_FILE_
+			std::cout << "UpdateCursorLocation() read file for dasm" << std::endl;
+		#endif
+			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
 			bfr.UngetWriteBuf( size );
 			dasmpanel->Set( bfr );
 			}
@@ -1390,10 +1392,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 	if( statusbar != NULL ) {
 		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
 		statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
-		uint8_t ch;
-		myfile->Seek( CursorOffset() );
-		myfile->Read( reinterpret_cast<char*>(&ch), 1);
-		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), ch), 2);
+		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), reinterpret_cast<uint8_t*>(bfr.GetData())[0]), 2);
 		if( !select->GetState() ) {
 			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);

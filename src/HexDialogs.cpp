@@ -1763,7 +1763,7 @@ void CopyAsDialog::PrepareOptions( int SelectedFunction ){
 		chcOption->Insert(_("With Space"),1);
 		chcOption->Insert(_("Quad Hex"),2);
 		chcOption->Insert(_("with 0x"),3);
-		chcOption->Insert(_("with 0x and period"),4);
+		chcOption->Insert(_("with 0x and Comma"),4);
 		chkOffset->Enable(false);
 		chkHex->Enable(false);
 		chkText->Enable(false);
@@ -2835,6 +2835,8 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(parent, wxID_ANY){
 	GetInstalledLanguages( LangNames, LangIds );
 
+	chkPortable->Hide(); //Not yet ready.
+
 	chcLang->Clear();
 	LangNames.Sort();
 	chcLang->Append( LangNames );
@@ -2852,19 +2854,6 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	else
 		chcLang->SetSelection(0);
 
-/*
-	if ( ! pConfig->Read(_T("Language")).IsEmpty() ){
-		int lang = pConfig->Read(_T("Language"), -1) ;
-		if ( lang != -1 )
-			for( unsigned i = 0 ; i < LangIds.Count() ; i++)
-				if( lang == LangIds.Item(i)){
-					chcLang->SetSelection(i);
-					break;
-					}
-		}
-	else
-		chcLang->SetSelection(0);
-*/
 	wxString TempString;
 	bool TempBool;
 	if( myConfigBase::Get()->Read( _T("ColourHexForeground"), &TempString) )				clrPickerForeground->SetColour( TempString );

@@ -997,9 +997,11 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			}
 		doc.SetFileEncoding( wxT("UTF-8") );
 		doc.SetRoot( node_Root );
-		if( !flnm.GetFullName().Lower().EndsWith(wxT(".tags")) )
-			return doc.Save(flnm.GetFullPath() + wxT(".tags"));
-		return doc.Save(flnm.GetFullPath());
+		wxString path = flnm.GetFullPath();
+		if( !path.Lower().EndsWith(wxT(".tags")) )
+			path += wxT(".tags");
+
+		return doc.Save(path);
 		}
 	}
 

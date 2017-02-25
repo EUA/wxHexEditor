@@ -1801,6 +1801,9 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	chkAutoShowTagPanel->SetValue(true); 
 	bSizerTags->Add( chkAutoShowTagPanel, 0, wxALL, 5 );
 	
+	chkPortable = new wxCheckBox( this, wxID_ANY, _("Make program portable "), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizerTags->Add( chkPortable, 0, wxALL, 5 );
+	
 	
 	bSizerMain->Add( bSizerTags, 0, 0, 5 );
 	

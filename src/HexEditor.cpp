@@ -1588,11 +1588,15 @@ bool HexEditor::PasteFromClipboard( void ) {
 		else if( str.StartsWith(wxT("wxHexEditor Internal Buffer Object : "))){
 			wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
 			myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->m_buffer.GetDataLen(), 0 );
+			Select(CursorOffset(), CursorOffset()+copy_mark->m_buffer.GetDataLen()-1);
+			Goto( CursorOffset() + copy_mark->m_buffer.GetDataLen());
+			ret = true;
 			}
 		else if( focus==HEX_CTRL ) {
 			wxMemoryBuffer mymem = wxHexCtrl::HexToBin( str );
 			FileAddDiff( CursorOffset(), static_cast<char*>(mymem.GetData()), mymem.GetDataLen() );
-			select->SetState( false );
+			//select->SetState( false );
+			Select(CursorOffset(), CursorOffset()+mymem.GetDataLen() -1);
 			Goto( CursorOffset() + mymem.GetDataLen());
 			ret = true;
 			}
@@ -1601,7 +1605,8 @@ bool HexEditor::PasteFromClipboard( void ) {
 			for( unsigned i=0; i<str.Len(); i++ )
 				ch[i] = str[i];
 			FileAddDiff( CursorOffset(), ch, str.Len() );
-			select->SetState( false );
+			//select->SetState( false );
+			Select(CursorOffset(), CursorOffset()+str.Len() -1);
 			Goto( CursorOffset() + str.Len() );
 			ret = true;
 			}

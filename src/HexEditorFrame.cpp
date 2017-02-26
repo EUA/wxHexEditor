@@ -633,7 +633,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 					case idBlockSelect:	MyHexEditor->BlockSelect();			    break;
 					case wxID_CUT:			MyHexEditor->CutSelection();		break;
 					case wxID_PASTE:		MyHexEditor->PasteFromClipboard();	break;
-					case wxID_DELETE:		MyHexEditor->DeleteSelection();		break;
+					case wxID_DELETE:		MyHexEditor->DeleteSelection(); MyTagPanel->Set( MyHexEditor->MainTagArray );		break;
 					case idInsert:			MyHexEditor->InsertBytes();			break;
 					//idInjection for Right click Menu Insertion Event
 					case idInjection:		MyHexEditor->InsertBytes();			break;

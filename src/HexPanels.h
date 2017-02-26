@@ -108,7 +108,7 @@ class TagPanel : public TagPanelGui{
 		void Set( ArrayOfTAG& TagArray );
 		void Clear( void );
 		void OnTagSelect( wxCommandEvent& event );
-		void OnUpdate( wxCommandEvent& event ){}
+		//void OnUpdate( wxCommandEvent& event ){}
 		void OnRightMouse( wxMouseEvent& event );
 		void OnDeleteTag( wxCommandEvent& event );
 		~TagPanel(void){

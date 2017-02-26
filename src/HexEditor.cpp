@@ -1369,25 +1369,27 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 	int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
 	bfr.UngetWriteBuf( size );
 
-	if( interpreter != NULL ) {
-		interpreter->Set( bfr );
-		}
-	if( dasmpanel != NULL ) {
-		if( ! select->GetState() ){ //If there is a NO selection, take 8 bytes from cursor location
-			dasmpanel->Set( bfr );
+	if(size>0){
+		if( interpreter != NULL ) {
+			interpreter->Set( bfr );
 			}
-		else{  //If there is a selection, use selection up to 100 bytes.
-			myfile->Seek( select->GetStart(), wxFromStart );
-			//Take just first 128 bytes!
-			int sz = select->GetSize() > 128 ? 128 : select->GetSize();
-		#ifdef _DEBUG_FILE_
-			std::cout << "UpdateCursorLocation() read file for dasm" << std::endl;
-		#endif
-			int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
-			bfr.UngetWriteBuf( size );
-			dasmpanel->Set( bfr );
+		if( dasmpanel != NULL ) {
+			if( ! select->GetState() ){ //If there is a NO selection, take 8 bytes from cursor location
+				dasmpanel->Set( bfr );
+				}
+			else{  //If there is a selection, use selection up to 100 bytes.
+				myfile->Seek( select->GetStart(), wxFromStart );
+				//Take just first 128 bytes!
+				int sz = select->GetSize() > 128 ? 128 : select->GetSize();
+			#ifdef _DEBUG_FILE_
+				std::cout << "UpdateCursorLocation() read file for dasm" << std::endl;
+			#endif
+				int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( sz )), sz);
+				bfr.UngetWriteBuf( size );
+				dasmpanel->Set( bfr );
+				}
 			}
-		}
+	}
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL ) {
 		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);

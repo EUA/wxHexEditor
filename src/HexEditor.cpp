@@ -517,6 +517,7 @@ void HexEditor::DoUndo( void ) {
 			}
 
 	Goto( myfile->Undo() );
+
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
@@ -538,7 +539,6 @@ void HexEditor::DoRedo( void ) {
 			}
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
-
 	}
 
 void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
@@ -1366,8 +1366,10 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 #ifdef _DEBUG_FILE_
 	std::cout << "UpdateCursorLocation() read file for panels" << std::endl;
 #endif
+
 	int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
-	bfr.UngetWriteBuf( size );
+	if(size>0)
+		bfr.UngetWriteBuf( size );
 
 	if(size>0){
 		if( interpreter != NULL ) {

@@ -1104,6 +1104,7 @@ void HexEditor::OnMouseRight( wxMouseEvent& event ) {
 		return;//to avoid ShowContextMenu
 		}
 
+	//Adjust required operations enable/disable
 	ShowContextMenu( event );
 
 	event.Skip(false); //Disables HexEditorCtrl::OnMouseRight
@@ -1172,6 +1173,15 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		menu.Enable( wxID_DELETE, false);
 		menu.Enable( idInjection, false);
 		menu.Enable( wxID_CUT, false);
+		}
+
+	if( FileLength() == 0 ){
+		int ids[]={wxID_DELETE, idTagQuick, idTagAddSelection, idTagEdit, wxID_COPY, idCopyAs, idSaveAsDump, idFillSelection, wxID_PASTE, wxID_DELETE, wxID_CUT};
+		for( int i=0; i< sizeof(ids)/4 ; i++ ){
+			menu.Enable( ids[i], false );
+			printf("i: %d\n",i);
+			}
+		menu.Enable( idInjection, false );
 		}
 
 	wxPoint pos = event.GetPosition();

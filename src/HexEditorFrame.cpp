@@ -208,14 +208,14 @@ HexEditorFrame::~HexEditorFrame(){
 	this->Disconnect( XORVIEW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( SELECT_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( UNREDO_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
-   this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
-   this->Disconnect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
-   this->Disconnect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Disconnect( TAG_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Disconnect( SEARCH_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
+	this->Disconnect( COMPARE_CHANGE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 
 	this->Disconnect( RESET_STYLE_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 	this->Disconnect( REDRAW_EVENT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorFrame::OnUpdateUI ) );
 
-   this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
+	this->Disconnect( wxEVT_CHAR,	wxKeyEventHandler(HexEditorFrame::OnKeyDown),NULL, this);
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler(HexEditorFrame::OnActivate),NULL, this );
 
 	this->Disconnect( idInjection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnMenuEvent ) );
@@ -408,6 +408,12 @@ void HexEditorFrame::ActionEnabler( void ){
 		mbar->Enable( arr[i],true );
 		Toolbar->EnableTool( arr[i], true );
 		}
+
+	if( GetActiveHexEditor()->FileLength()==0 ){
+		Toolbar->EnableTool(wxID_PASTE, false );
+		mbar->Enable(wxID_PASTE, false );
+		}
+
 	mbar->Enable(idExportTAGs, true );
 	mbar->Enable(idImportTAGs, true );
 	MyInterpreter->Enable();
@@ -839,12 +845,12 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 #endif
 // TODO (death#1#): Add idBased approach to decrease overhead!! This slowdowns cursor movement!!!
 
-	mbar->Check(idInterpreter,	(MyAUI->GetPane(MyInterpreter).IsFloating()	? MyAUI->GetPane(MyInterpreter).frame->IsShown() : MyInterpreter->IsShown()) );
-	mbar->Check(idInfoPanel,	(MyAUI->GetPane(MyInfoPanel).IsFloating() 	? MyAUI->GetPane(MyInfoPanel).frame->IsShown() : MyInfoPanel->IsShown()) );
+	mbar->Check(idInterpreter,	(MyAUI->GetPane(MyInterpreter).IsFloating()		? MyAUI->GetPane(MyInterpreter).frame->IsShown() : MyInterpreter->IsShown()) );
+	mbar->Check(idInfoPanel,	(MyAUI->GetPane(MyInfoPanel).IsFloating()		? MyAUI->GetPane(MyInfoPanel).frame->IsShown() : MyInfoPanel->IsShown()) );
 	mbar->Check(idTagPanel,		(MyAUI->GetPane(MyTagPanel).IsFloating()		? MyAUI->GetPane(MyTagPanel).frame->IsShown() : MyTagPanel->IsShown()) );
 	mbar->Check(idDisassemblerPanel,(MyAUI->GetPane(MyDisassemblerPanel).IsFloating() ? MyAUI->GetPane(MyDisassemblerPanel).frame->IsShown() : MyDisassemblerPanel->IsShown()) );
-	mbar->Check(idSearchPanel,	(MyAUI->GetPane(MySearchPanel).IsFloating()	? MyAUI->GetPane(MySearchPanel).frame->IsShown() : MySearchPanel->IsShown()) );
-	mbar->Check(idComparePanel,(MyAUI->GetPane(MyComparePanel).IsFloating()	? MyAUI->GetPane(MyComparePanel).frame->IsShown() : MyComparePanel->IsShown()) );
+	mbar->Check(idSearchPanel,	(MyAUI->GetPane(MySearchPanel).IsFloating()		? MyAUI->GetPane(MySearchPanel).frame->IsShown() : MySearchPanel->IsShown()) );
+	mbar->Check(idComparePanel, (MyAUI->GetPane(MyComparePanel).IsFloating()	? MyAUI->GetPane(MyComparePanel).frame->IsShown() : MyComparePanel->IsShown()) );
 	mbar->Check(idToolbar,		(MyAUI->GetPane(Toolbar).IsFloating()			? MyAUI->GetPane(Toolbar).frame->IsShown() : Toolbar->IsShown()) );
 
 //	mbar->Check(idInfoPanel, MyInfoPanel->IsShown());
@@ -960,35 +966,51 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			#ifdef _DEBUG_SELECT_
 				std::cout << "HexEditorFrame::Select_Event :" << event.GetString().ToAscii() << std::endl ;
 			#endif
-			Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
-			mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
-
-			Toolbar->EnableTool( wxID_PASTE, event.GetString() == wxT("NotSelected") );
-			mbar->Enable( wxID_PASTE, event.GetString() == wxT("NotSelected") );
-
-			mbar->Enable( idCopyAs, event.GetString() == wxT("Selected") );
-			mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
-			mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
-
-			if(!GetActiveHexEditor()->IsFileUsingXORKey() && !GetActiveHexEditor()->IsBlockDevice() ){
-				Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
-				mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
-				Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
-				mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
-				Toolbar->EnableTool( idInsert, event.GetString() == wxT("NotSelected") );
-				mbar->Enable( idInsert, event.GetString() == wxT("NotSelected") );
-				}
-			else{
+			if( GetActiveHexEditor()->FileLength()==0 ){
+				Toolbar->EnableTool( wxID_COPY, false );
+				mbar->Enable( wxID_COPY, false );
+				Toolbar->EnableTool( wxID_PASTE, false );
+				mbar->Enable( wxID_PASTE, false );
+				mbar->Enable( idCopyAs, false );
+				mbar->Enable( idSaveAsDump, false );
+				mbar->Enable( idFillSelection, false );
 				Toolbar->EnableTool( wxID_CUT, false );
 				mbar->Enable( wxID_CUT, false );
 				Toolbar->EnableTool( wxID_DELETE, false );
 				mbar->Enable( wxID_DELETE, false );
-				Toolbar->EnableTool( idInsert, false );
-				mbar->Enable( idInsert, false);
+				Toolbar->EnableTool( idInsert, true );
+				mbar->Enable( idInsert, true );
+				}
+			else{
+				Toolbar->EnableTool( wxID_COPY, event.GetString() == wxT("Selected") );
+				mbar->Enable( wxID_COPY, event.GetString() == wxT("Selected") );
+
+				Toolbar->EnableTool( wxID_PASTE, event.GetString() == wxT("NotSelected") );
+				mbar->Enable( wxID_PASTE, event.GetString() == wxT("NotSelected") );
+
+				mbar->Enable( idCopyAs, event.GetString() == wxT("Selected") );
+				mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
+				mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
+
+				if(!GetActiveHexEditor()->IsFileUsingXORKey() && !GetActiveHexEditor()->IsBlockDevice() ){
+					Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
+					mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
+					Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
+					mbar->Enable( wxID_DELETE, event.GetString() == wxT("Selected") );
+					Toolbar->EnableTool( idInsert, event.GetString() == wxT("NotSelected") );
+					mbar->Enable( idInsert, event.GetString() == wxT("NotSelected") );
+					}
+				else{
+					Toolbar->EnableTool( wxID_CUT, false );
+					mbar->Enable( wxID_CUT, false );
+					Toolbar->EnableTool( wxID_DELETE, false );
+					mbar->Enable( wxID_DELETE, false );
+					Toolbar->EnableTool( idInsert, false );
+					mbar->Enable( idInsert, false);
+					}
 				}
 			Toolbar->Refresh();
 			}
-
 
 		else if(event.GetId()==XORVIEW_EVENT){
 			int sel = MyNotebook->GetSelection();

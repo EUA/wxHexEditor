@@ -558,7 +558,7 @@ void HexEditor::Goto( int64_t cursor_offset, bool set_focus ){
 		if(page_offset < 0)
 			page_offset = 0;
 		else if(page_offset > FileLength() )
-			page_offset = FileLength() - ByteCapacity() + 2*BytePerLine();
+			page_offset = wxMax(0, FileLength() - ByteCapacity() + 2*BytePerLine());
 		Reload();
 		SetLocalHexInsertionPoint( (cursor_offset - page_offset)*2 );
 		}
@@ -640,6 +640,7 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint, 
 #ifdef _DEBUG_FILE_
 	std::cout << "\nLoadFromOffset() : " << position << std::endl;
 #endif
+
 	//For file compare mode
 	if(ComparatorHexEditor!=NULL && !from_comparator)
 		ComparatorHexEditor->LoadFromOffset(position, cursor_reset, true, true);
@@ -647,7 +648,8 @@ void HexEditor::LoadFromOffset(int64_t position, bool cursor_reset, bool paint, 
 	myfile->Seek(position, wxFromStart);
 	char *buffer = new char[ ByteCapacity() ];
 	int readedbytes = myfile->Read(buffer, ByteCapacity());
-	if ( readedbytes == -1 ){
+
+	if( readedbytes == -1 ){
 		wxMessageBox( _("File cannot read!"),_("Error"), wxOK|wxICON_ERROR );
 		delete [] buffer;
 		return;

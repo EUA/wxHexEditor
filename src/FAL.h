@@ -120,6 +120,9 @@ WX_DECLARE_OBJARRAY(DiffNode *, ArrayOfNode);
 class FAL : private wxFile
 	{
 	public:
+		//std::queue readqueue;
+		//or
+		//std:sstream readstream;
 	enum FileAccessMode { ReadOnly, ReadWrite, DirectWrite, ForcedReadOnly, AccessInvalid };
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		~FAL();

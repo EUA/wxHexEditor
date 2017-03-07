@@ -355,7 +355,7 @@ void HexEditorFrame::PrepareAUI( void ){
 
 	MyComparePanel = new ComparePanel( this, -1 );
    //Created under OnUpdateUI
-   MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
+	MyAUI -> AddPane( MyComparePanel, wxAuiPaneInfo().
 				Name(_("Comparison Results")).
 				Caption(_("Comparison Results")).
 				TopDockable(false).
@@ -387,8 +387,8 @@ void HexEditorFrame::PrepareAUI( void ){
 					//Resizable(false).
 					Left().Layer(1).Position(1) );
 
-   wxString tempStr;
-   myConfigBase::Get()->Read(_T("LastPerspective"), &tempStr, wxEmptyString);
+	wxString tempStr;
+	myConfigBase::Get()->Read(_T("LastPerspective"), &tempStr, wxEmptyString);
 	MyAUI->LoadPerspective( tempStr );
 
 	ActionDisabler();
@@ -928,18 +928,28 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 
 	if( MyNotebook->GetPageCount() ){
 		HexEditor *MyHexEditor = GetActiveHexEditor();
-		if( MyHexEditor != NULL ){
+		if( event.GetId() == idFileRO ){
 			switch( MyHexEditor->GetFileAccessMode() ){
 				case FAL::ReadOnly :
 					mbar->Check(idFileRO, true);
+					#ifdef _DEBUG_
+					std::cout << "Menu ticked as Read-Only file \r\n";
+					#endif // _DEBUG_
 					break;
 				case FAL::ReadWrite :
 					mbar->Check(idFileRW, true);
+					#ifdef _DEBUG_
+					std::cout << "Menu ticked as Read-Write file \r\n";
+					#endif // _DEBUG_
 					break;
 				case FAL::DirectWrite :
 					mbar->Check(idFileDW, true);
+					#ifdef _DEBUG_
+					std::cout << "Menu ticked as DirectWrite file \r\n";
+					#endif // _DEBUG_
 					break;
 				}
+			wxYield();//Sometime, evenif you make mbar->Check(idFileRO, true), display is not updated. It's because wxYield req.
 			}
 
 		if( event.GetId() == RESET_STYLE_EVENT ){
@@ -992,7 +1002,11 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				mbar->Enable( idSaveAsDump, event.GetString() == wxT("Selected") );
 				mbar->Enable( idFillSelection, event.GetString() == wxT("Selected") );
 
-				if(!GetActiveHexEditor()->IsFileUsingXORKey() && !GetActiveHexEditor()->IsBlockDevice() ){
+				if(!GetActiveHexEditor()->IsFileUsingXORKey()
+					 && !GetActiveHexEditor()->IsBlockDevice()
+					 && GetActiveHexEditor()->ComparatorHexEditor==NULL		//Only check for connected scrools
+					 && GetActiveHexEditor()->CompareArray.size()==0		//Only checks only for compare array.
+					){
 					Toolbar->EnableTool( wxID_CUT, event.GetString() == wxT("Selected") );
 					mbar->Enable( wxID_CUT, event.GetString() == wxT("Selected") );
 					Toolbar->EnableTool( wxID_DELETE, event.GetString() == wxT("Selected") );
@@ -1081,9 +1095,9 @@ void HexEditorFrame::OnNotebookTabSelection( wxAuiNotebookEvent& event ){
 				else
 					event.SetString( wxT("NotSelected") );
 
-            event.SetId( SELECT_EVENT );
+				event.SetId( SELECT_EVENT );
 				OnUpdateUI( event );
-            event.SetId( UNREDO_EVENT );
+				event.SetId( UNREDO_EVENT );
 				OnUpdateUI( event );
 				}
 		}

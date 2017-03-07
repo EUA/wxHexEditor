@@ -2445,6 +2445,8 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 	HexEditor* hexeditor1 = parent->OpenFile( fl1 );
 	HexEditor* hexeditor2 = parent->OpenFile( fl2 , true);
+	hexeditor1->SetFileAccessMode( FAL::ReadOnly );
+	hexeditor2->SetFileAccessMode( FAL::ReadOnly );
 //	parent->MyNotebook.Split(-1, wxRIGHT); //Not available due protected wxNotepad. Changed OpenFile function instead.
 
 	if(checkConnectFiles->GetValue()){

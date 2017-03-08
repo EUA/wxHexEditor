@@ -719,6 +719,22 @@ wxFileOffset FAL::Length( int PatchIndice ){
 	if(! IsOpened() )
 		return -1;
 	wxFileOffset max_size=wxFile::Length();
+
+	#ifdef __WXGTK__
+	///WorkAround for wxFile::Length() zero size bug
+	if( max_size == 0 ){ //This could be GIANT file like /proc/kcore = 128 TB -10MB +12KB
+		FILE *fp;
+		fp=fopen(the_file.GetFullPath().To8BitData(), "r");
+		fseek(fp, 0L, SEEK_END);
+		uint64_t sz=ftell(fp);
+		#ifdef _DEBUG_FILE_
+		printf( "File Size by STD C is : %llu \r\n" ,sz );
+		#endif // _DEBUG_FILE_
+		fclose(fp);
+		max_size=sz;
+		}
+	#endif // __wxGTK__
+
 	if(PatchIndice == -1)
 		PatchIndice = DiffArray.GetCount();
 	for( unsigned i=0 ; i < PatchIndice; i++ )

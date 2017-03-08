@@ -248,11 +248,15 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else
 #endif
-
+	FAL::FileAccessMode AccessMode = FAL::ReadOnly;
 	if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
-		myfile = new FAL( myfilename, FAL::ReadWrite );
-	else
-		myfile = new FAL( myfilename );
+		AccessMode = FAL::ReadWrite;
+
+	int ForceBlockRw=0;
+//	if ( myfilename.GetFullPath()=="/proc/kcore" )
+//		ForceBlockRw=512;
+
+	myfile = new FAL( myfilename, AccessMode, ForceBlockRw );
 
 	if(myfile->IsOpened()) {
 #ifndef DO_NOT_USE_THREAD_FOR_SCROLL
@@ -297,7 +301,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			//tagpanel->Show();
 			}
 		offset_ctrl->SetOffsetLimit(  FileLength() );
-		sector_size = FDtoBlockSize( GetFD() );//myfile->GetBlockSize();
+		sector_size = myfile->GetBlockSize(); //FDtoBlockSize( GetFD() );
 		LoadFromOffset(0, true);
 		SetLocalHexInsertionPoint(0);
 		return true;

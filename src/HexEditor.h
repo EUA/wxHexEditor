@@ -39,7 +39,7 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
 
-#if wxCHECK_VERSION( 2,9,0 ) && defined( __WXGTK__)
+#if wxCHECK_VERSION( 2,9,0 ) //&& defined( __WXGTK__)
 	#define _FSWATCHER_  1
 	#include <wx/fswatcher.h>
 #else

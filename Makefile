@@ -1,4 +1,4 @@
-WXCONFIG = wx-config
+WXCONFIG ?= wx-config
 #CC ?= `$(WXCONFIG) --cc`    #this doesn't look working here properly :(
 #CXX ?= `$(WXCONFIG) --cxx`
 CC ?= $(shell echo `$(WXCONFIG) --cc`)

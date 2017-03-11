@@ -377,7 +377,8 @@ bool FAL::Close(){
 			#endif
 			#ifdef __WXMSW__
 			if(IsWinDevice( the_file ) ){
-				_close( reinterpret_cast<int>(hDevice) );
+				//_close( reinterpret_cast<int>(hDevice) );
+				CloseHandle( hDevice );
 				//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
 				wxString devnm;
 				if(the_file.GetFullPath().StartsWith( wxT(".:")))
@@ -723,14 +724,12 @@ wxFileOffset FAL::Length( int PatchIndice ){
 	#ifdef __WXGTK__
 	///WorkAround for wxFile::Length() zero size bug
 	if( max_size == 0 ){ //This could be GIANT file like /proc/kcore = 128 TB -10MB +12KB
-		FILE *fp;
-		fp=fopen(the_file.GetFullPath().To8BitData(), "r");
-		fseek(fp, 0L, SEEK_END);
-		uint64_t sz=ftell(fp);
+		struct stat st;
+		stat(the_file.GetFullPath().To8BitData(), &st);
+		uint64_t sz = st.st_size;
 		#ifdef _DEBUG_FILE_
 		printf( "File Size by STD C is : %llu \r\n" ,sz );
 		#endif // _DEBUG_FILE_
-		fclose(fp);
 		max_size=sz;
 		}
 	#endif // __wxGTK__

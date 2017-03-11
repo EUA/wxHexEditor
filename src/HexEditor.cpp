@@ -248,15 +248,11 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else
 #endif
-	FAL::FileAccessMode AccessMode = FAL::ReadOnly;
+
 	if ( myfilename.GetSize( ) < 50*MB && myfilename.IsFileWritable() )
-		AccessMode = FAL::ReadWrite;
-
-	int ForceBlockRw=0;
-//	if ( myfilename.GetFullPath()=="/proc/kcore" )
-//		ForceBlockRw=512;
-
-	myfile = new FAL( myfilename, AccessMode, ForceBlockRw );
+		myfile = new FAL( myfilename, FAL::ReadWrite, 0 );
+	else
+		myfile = new FAL( myfilename, FAL::ReadOnly, 0 );
 
 	if(myfile->IsOpened()) {
 #ifndef DO_NOT_USE_THREAD_FOR_SCROLL
@@ -678,7 +674,9 @@ void HexEditor::ThreadPaint(wxCommandEvent& event){
 //			parent->offset_scroll->SetThumbPosition( parent->page_offset / parent->BytePerLine() );
 
 		event.Skip(false);
+#ifndef DO_NOT_USE_THREAD_FOR_SCROLL
 		myscrollthread->ThreadScrool.Unlock();
+#endif
 		}
 	}
 

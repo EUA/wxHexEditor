@@ -45,13 +45,6 @@
 #include <wx/mstream.h>
 #include <wx/docview.h>
 
-#if wxCHECK_VERSION( 2,9,0 ) && defined( __WXGTK__)
-	#define _FSWATCHER_  1
-	#include <wx/fswatcher.h>
-#else
-	#define _FSWATCHER_  0
-#endif
-
 #if defined __WXMAC__
 #include "../resources/osx/png2c.h"
 #elif defined __WXMSW__

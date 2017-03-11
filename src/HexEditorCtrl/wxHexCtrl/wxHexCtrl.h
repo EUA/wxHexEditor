@@ -30,6 +30,7 @@
 #include <wx/caret.h>
 #include <wx/wx.h>
 #include <wx/config.h>
+#include <wx/fileconf.h>
 #include <wx/dcbuffer.h>
 #include <wx/clipbrd.h>
 

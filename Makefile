@@ -1,8 +1,5 @@
 WXCONFIG ?= wx-config
-#CC ?= `$(WXCONFIG) --cc`    #this doesn't look working here properly :(
-#CXX ?= `$(WXCONFIG) --cxx`
-CC ?= $(shell echo `$(WXCONFIG) --cc`)
-CXX ?= $(shell echo `$(WXCONFIG) --cxx`)
+HOST=
 LDFLAGS += -lgomp
 #add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp -Wall
@@ -11,8 +8,6 @@ RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
 MSGFMT = msgfmt
-
-HOST=
 SOURCES= src/HexEditorGui.cpp \
 			src/FAL.cpp\
 			src/HexDialogs.cpp\
@@ -44,6 +39,14 @@ LOCALEDIR   = $(DATADIR)/locale
 VERSION = 0.23 Beta
 
 .DEFAULT_GOAL := all
+
+host_test:
+ifeq ($(HOST),)
+		echo "Cross-Compiling host detected."
+else
+CC = $(shell echo `$(WXCONFIG) --cc`)
+CXX = $(shell echo `$(WXCONFIG) --cxx`)
+endif
 
 clang: CXX=clang++ -D_Bool=bool -std=c++11 -lomp
 clang: all
@@ -83,7 +86,7 @@ mhash/lib/.libs/libmhash.a:
 src/windrv.o:
 	$(CXX) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) ${LDFLAGS} -c src/windrv.cpp -o src/windrv.o
 
-win: $(RESOURCES) $(EXECUTABLE_WIN) src/windrv.o
+win: host_test $(RESOURCES) $(EXECUTABLE_WIN) src/windrv.o
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ)

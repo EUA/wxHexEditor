@@ -39,6 +39,7 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("sd*"), wxDIR_FILES );
 		wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("hd*"), wxDIR_FILES );
 		}
+	disks.Sort();
 #elif defined( __WXMAC__ )
 	#if wxCHECK_VERSION(2, 9, 0) //Problem on wx 2.8.x, returns null.
 	wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("disk*"), wxDIR_FILES );
@@ -52,6 +53,7 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 			closedir(dirp);
 			}
 	#endif
+	disks.Sort();
 #elif defined( __WXMSW__ )
  		windowsHDD windevs;
  		vector<string> DevVector = windevs.getdevicenamevector();
@@ -60,19 +62,23 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 			//if( !wxString(DevVector[i]).StartsWith(wxT("\\Device")))
 				disks.Add(wxString(DevVector[i]));
 			}
+	///No Sort for MSW, because PhysicalDrive0 is better at top.
+	//disks.Sort();
 #endif
 	if( WithPartitions )
 		return disks;
 
 	int last_item=0;
-	disks.Sort();
+
 	for( unsigned i =0 ; i < disks.Count() ; i++){
 		//Windows device menu categorization
 		#ifdef __WXMSW__
-		if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 )
-			disks.RemoveAt(i);
-		else //Create new submenu
-			last_item = i;
+
+//		if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 )
+//			disks.RemoveAt(i);
+//		else //Create new submenu
+//			last_item = i;
+
 		#else	//SubMenu categorization for posix
 			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
 			disks.RemoveAt(i--);
@@ -533,11 +539,11 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			//create file
 			wxFile crt;
 			if( !crt.Create( flname.GetFullPath(), true ) ){
-				wxMessageBox( _("File cannot create!") ,_T("Error!"), wxICON_ERROR, this );
+				wxMessageBox( _("File cannot create!") ,_T("Error"), wxICON_ERROR, this );
 				return;
 				}
 			if( !crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
-				wxMessageBox( _("File cannot open!") ,_T("Error!"), wxICON_ERROR, this );
+				wxMessageBox( _("File cannot open.") ,_T("Error"), wxICON_ERROR, this );
 				return;
 				}
 			crt.Seek( size-1 );
@@ -677,7 +683,6 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){
 		int i=event.GetId() - idDiskDevice;
 		wxArrayString disks = GetDeviceList();
-		disks.Sort();
 		OpenFile( wxFileName(disks.Item(i)) );
 		}
 	else if( event.GetId() == idDeviceRam ){

@@ -160,7 +160,6 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			CloseHandle(hDevice);
 			return false;
 			}
-
 		// lock volume
 //		if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
 //			DWORD err = GetLastError ();
@@ -172,6 +171,13 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//	DWORD err = GetLastError ();
 		//	wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
 		//	}
+
+		//Check if drive is mounted
+		if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL)){
+			DWORD err = GetLastError ();
+			wxMessageBox( _("Device is not mounted"), _("Error"), wxOK|wxICON_ERROR );
+			return false;
+			}
 
 		DISK_GEOMETRY driveInfo;
 

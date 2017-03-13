@@ -105,25 +105,26 @@ void windowsHDD::list_devices() {
 
 	list_device(format_str, L"\\Device\\Ramdisk", 0);
 
-	for (i = 0; i < 64; i++) {
-		for (int n = 0; n <= 32; n++) {
-			_snwprintf(szTmp, sizeof(szTmp), L"\\Device\\Harddisk%d\\Partition%d", i, n);
-			list_device(format_str, szTmp, n);
-			}
-		}
-/*
-	for (i = 0; i < 8; i++) {
-		_snwprintf(szTmp, sizeof(szTmp), L"\\Device\\Floppy%d", i);
-		list_device(format_str, szTmp, 0);
-		}
-*/
-	for (i = 0; i < 26; i++) {
-		_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
-		list_device(format_str, szTmp, 0);
-		}
+//	for (i = 0; i < 64; i++) {
+//		for (int n = 0; n <= 32; n++) {
+//			_snwprintf(szTmp, sizeof(szTmp), L"\\Device\\Harddisk%d\\Partition%d", i, n);
+//			list_device(format_str, szTmp, n);
+//			}
+//		}
 
-/*	uint32_t drives=GetLogicalDrives();
-		for(int i=2; i<32 ; i++){
+//	for (i = 0; i < 8; i++) {
+//		_snwprintf(szTmp, sizeof(szTmp), L"\\Device\\Floppy%d", i);
+//		list_device(format_str, szTmp, 0);
+//		}
+
+//	for (i = 0; i < 26; i++) {
+//		_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
+//		list_device(format_str, szTmp, 0);
+//		}
+
+	//Add logical Drives here directly.
+	uint32_t drives=GetLogicalDrives();
+		for(int i=2; i<32 ; i++){	//i=2 drops A: and B: flopies if available
 			if((drives>>i) & 0x01 ){
 				//printf("%c: ", 'A' + i);
 				_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
@@ -132,13 +133,14 @@ void windowsHDD::list_devices() {
 				wcstombs( ascii, szTmp, wcslen(szTmp) );
 				printf( "Device Found: %s \r\n", ascii );
 				//list_device(format_str, szTmp, 0);
-				devicenames.push_back(ascii);
+				if( GetDriveType(ascii+4) != 4 )	//ascii+4 for strip out Z: , !=4 checks if its Network Drive
+					devicenames.push_back(ascii);
 			}
 		}
-*/
+
 
 	///What about https://msdn.microsoft.com/en-us/library/windows/desktop/aa364425(v=vs.85).aspx
-	///FindFirstVolume? FindNextVolume?
+	///FindFirstVolume? FindNextVolume? FindCloseVolume?
 	//HANDLE WINAPI FindFirstVolume(  _Out_ LPTSTR lpszVolumeName,  _In_  DWORD  cchBufferLength );
 //	CHAR volname[256];
 //	HANDLE dvar = FindFirstVolume( volname, 256 );

@@ -3161,11 +3161,12 @@ void PreferencesDialog::OnResetColours( wxCommandEvent& event ) {
 	}
 
 extern wxArrayString GetDeviceList( bool=true );
+
 DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui(parent, wxID_ANY){
 	wxArrayString disks = GetDeviceList();
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
-	disks.Sort();
+
 	#ifdef __WXMSW__
 	for( int i=0 ; i < disks.Count() ; i++ )
 		if(disks.Item(i).StartsWith(wxT("\\Device")))
@@ -3176,7 +3177,7 @@ DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui
 
 void DeviceBackupDialog::OnBackup( wxCommandEvent &event ){
 	wxArrayString disks = GetDeviceList();
-	disks.Sort();
+	//disks.Sort();
 	wxFileName src(disks.Item( chcPartition->GetSelection() ) );
 	wxFileName dst(filePickBackup->GetPath());
 
@@ -3248,7 +3249,6 @@ DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialog
 	wxArrayString disks = GetDeviceList();
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
-	disks.Sort();
 	#ifdef __WXMSW__
 	for( int i=0 ; i < disks.Count() ; i++ )
 		if(disks.Item(i).StartsWith(wxT("\\Device")))
@@ -3259,7 +3259,6 @@ DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialog
 
 void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ){
 	wxArrayString disks = GetDeviceList();
-	disks.Sort();
 	wxFileName dst(disks.Item( chcPartition->GetSelection() ) );
 	wxFileName src(filePickBackup->GetPath());
 
@@ -3319,13 +3318,11 @@ DeviceEraseDialog::DeviceEraseDialog( wxWindow* parent ):DeviceEraseDialogGui(pa
 	wxArrayString disks = GetDeviceList();
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
-	disks.Sort();
 	chcPartition->Append( disks );
 	}
 
 void DeviceEraseDialog::OnErase( wxCommandEvent &event ){
 	wxArrayString disks = GetDeviceList();
-	disks.Sort();
 	wxFileName dst(disks.Item( chcPartition->GetSelection() ) );
 	FAL dst_fl( dst, FAL::ReadWrite );
 

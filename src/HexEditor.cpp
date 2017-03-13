@@ -242,7 +242,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 			return true;
 			}
 		else {
-			wxMessageBox(_("File cannot open!"),_("Error"), wxOK|wxICON_ERROR, this);
+			wxMessageBox(_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, this);
 			return false;
 			}
 		}
@@ -304,7 +304,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 		}
 	else {
 		///Handled on FAM Layer...
-		///wxMessageBox(_("File cannot open!"),_("Error"), wxOK|wxICON_ERROR, this);
+		///wxMessageBox(_("File cannot open."),_("Error"), wxOK|wxICON_ERROR, this);
 		return false;
 		}
 	}

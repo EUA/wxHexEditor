@@ -33,6 +33,7 @@
 #include <vector>
 
 using namespace std;
+/*
 struct _opt {
 	bool			list;
 	bool			yes;
@@ -54,7 +55,7 @@ static t_opt opt = {
 	false,			// kilobyte
 	1,				// refresh
 	};
-
+*/
 class windowsHDD
 	{	private:
 		vector<string> devicenames;

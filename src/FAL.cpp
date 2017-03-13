@@ -138,9 +138,9 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			devnm=szCFDevice;
 			}
 
-		if( /*FAM == ReadOnly*/ 0)
+		if( FAM == ReadOnly)
 			hDevice = CreateFile (devnm, GENERIC_READ,
-												FILE_SHARE_READ,
+												FILE_SHARE_READ | FILE_SHARE_WRITE,
 												NULL,
 												OPEN_EXISTING,
 												FILE_FLAG_NO_BUFFERING | FILE_ATTRIBUTE_READONLY  | FILE_FLAG_RANDOM_ACCESS,
@@ -355,6 +355,7 @@ bool FAL::Close(){
 			#ifdef __WXMSW__
 			if(IsWinDevice( the_file ) ){
 				DWORD dwResult;
+
 				// unlock volume
 				//DeviceIoControl (hDevice, FSCTL_UNLOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL);
 

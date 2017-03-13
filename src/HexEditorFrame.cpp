@@ -883,7 +883,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		//This /dev/ will drop on adding menu for cosmetic!
 		for( unsigned i =0 ; i < disks.Count() ; i++)
 			disks[i]=disks.Item(i).AfterLast('/');
+
+		#ifndef __WXMSW__
 		disks.Sort();
+		#endif // __WXMSW__
 
 		wxMenu *nm;
 		int last_item=0;
@@ -891,8 +894,22 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 			//Old way...
 			//menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('/'), wxT(""), wxITEM_NORMAL );
 
-			//SubMenu categorization for posix
-			#ifndef __WXMSW__
+			//Windows device menu categorization
+			#ifdef __WXMSW__
+			menuDeviceDisk->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
+//
+//			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 ){
+//				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
+//				}
+//			else{ //Create new submenu
+//				nm=new wxMenu( );
+//				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
+//				wxMenuItem* mi = menuDeviceDisk->AppendSubMenu( nm, disks.Item(i).BeforeLast('\\')+wxT('\\') );
+//				//if(disks.Item(i).StartsWith(wxT("\\Device")))
+//				//	mi->Enable(false);
+//				last_item = i;
+//				}
+			#else
 			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
 				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
 			else{
@@ -901,18 +918,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				menuDeviceDisk->AppendSubMenu( nm, disks.Item(i) );
 				last_item = i;
 				}
-			#else	//Windows device menu categorization
-			if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 ){
-				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
-				}
-			else{ //Create new submenu
-				nm=new wxMenu( );
-				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
-				wxMenuItem* mi = menuDeviceDisk->AppendSubMenu( nm, disks.Item(i).BeforeLast('\\')+wxT('\\') );
-				//if(disks.Item(i).StartsWith(wxT("\\Device")))
-				//	mi->Enable(false);
-				last_item = i;
-				}
+
 			#endif
 
 

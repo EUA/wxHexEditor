@@ -26,25 +26,23 @@
 
 using namespace std;
 
-bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly)
-	{
+bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly)	{
 	if (wcsncmp(lpszDiskFile, L"\\\\", 2) == 0) {
 		wcscpy(lpszCFDevice, lpszDiskFile);
 		return 1;
 		}
 
 	BOOL bDosLinkCreated = TRUE;
-	_snwprintf(lpszDosDevice, MAX_PATH, L"dskwipe%lu", GetCurrentProcessId());
+	_snwprintf(lpszDosDevice, MAX_PATH, L"wxhxed%lu", GetCurrentProcessId());
 
 	if (bNameOnly == FALSE)
 		bDosLinkCreated = DefineDosDeviceW (DDD_RAW_TARGET_PATH, lpszDosDevice, lpszDiskFile);
 
-	if (bDosLinkCreated == FALSE) {
+	if (bDosLinkCreated == FALSE)
 		return 1;
-		}
-	else {
+	else
 		_snwprintf(lpszCFDevice, MAX_PATH, L"\\\\.\\%s", lpszDosDevice);
-		}
+
 	return 0;
 	}
 
@@ -52,15 +50,14 @@ bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice
 bool windowsHDD::RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice) {
 	BOOL bDosLinkRemoved = DefineDosDeviceW (DDD_RAW_TARGET_PATH | DDD_EXACT_MATCH_ON_REMOVE |
 	                       DDD_REMOVE_DEFINITION, lpszDosDevice, lpszDiskFile);
-	if (bDosLinkRemoved == FALSE) {
+	if (bDosLinkRemoved == FALSE)
 		return 1;
-		}
 	return 0;
 	}
 
 void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	int nDosLinkCreated;
-	HANDLE dev;
+	HANDLE dev = INVALID_HANDLE_VALUE;
 	DWORD dwResult;
 	BOOL bResult;
 	PARTITION_INFORMATION diskInfo;
@@ -74,18 +71,15 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 
 	drivePresent = TRUE;
 
-	nDosLinkCreated = FakeDosNameForDevice (szTmp, szDosDevice,
-	                                        szCFDevice, FALSE);
+	nDosLinkCreated = FakeDosNameForDevice (szTmp, szDosDevice, szCFDevice, FALSE);
 
 	dev = CreateFileW (szCFDevice, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 
-	bResult = DeviceIoControl (dev, IOCTL_DISK_GET_PARTITION_INFO, NULL, 0,
-	                           &diskInfo, sizeof (diskInfo), &dwResult, NULL);
+	bResult = DeviceIoControl (dev, IOCTL_DISK_GET_PARTITION_INFO, NULL, 0, &diskInfo, sizeof (diskInfo), &dwResult, NULL);
 
 	// Test if device is removable
 	if (// n == 0 &&
-		DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0,
-	                                     &driveInfo, sizeof (driveInfo), &dwResult, NULL))
+		DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL))
 		removable = driveInfo.MediaType == RemovableMedia;
 
 	RemoveFakeDosName(szTmp, szDosDevice);
@@ -93,20 +87,17 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 
 	if (!bResult)
 		return;
-	WCHAR *buffer=new WCHAR[70];
-	swprintf(buffer,L"%-30s", szTmp);
-	devicenames.push_back(buffer);
+	char* ascii = new char[wcslen(szTmp) + 1];
+	memset(ascii, 0, wcslen(szTmp) + 1);
+	wcstombs( ascii, szTmp, wcslen(szTmp) );
+	printf( "Device Found: %s \r\n", ascii );
+	devicenames.push_back(ascii);
 	}
 
-
 void windowsHDD::list_devices() {
-
-
 	WCHAR *format_str = L"%-30s %9S %-9s %-20S\n";
-
 	WCHAR szTmp[MAX_PATH];
 	int i;
-
 	for (i = 0; i < 64; i++) {
 		_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\PhysicalDrive%d", i);
 		list_device(format_str, szTmp, 0);
@@ -125,13 +116,37 @@ void windowsHDD::list_devices() {
 		}
 
 	list_device(format_str, L"\\Device\\Ramdisk", 0);
-
 	for (i = 0; i < 26; i++) {
 		_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
 		list_device(format_str, szTmp, 0);
 		}
+
+
+	///What about https://msdn.microsoft.com/en-us/library/windows/desktop/aa364425(v=vs.85).aspx
+	///FindFirstVolume? FindNextVolume?
+	//HANDLE WINAPI FindFirstVolume(  _Out_ LPTSTR lpszVolumeName,  _In_  DWORD  cchBufferLength );
+	CHAR volname[256];
+	HANDLE dvar = FindFirstVolume( volname, 256 );
+	printf( "\r\nFindFirstVolume is: %s \r\n", volname );
+	while( FindNextVolume( dvar, volname, 256 ) )
+		printf( "FindNextVolume is: %s \r\n", volname );
+
+	int d = GetLogicalDriveStrings(  256, volname );
+	for(int i=0; i<d ; i++){
+		if(volname[i]==0)
+			printf(" ");
+		else
+			printf("%c", volname[i]);
+		}
+	printf("\r\n");
+	uint32_t drives=GetLogicalDrives();
+	for(int i=0; i<32 ; i++){
+		if((drives>>i) & 0x01 )
+			printf("%c: ", 'A' + i);
+		}
 	}
-vector<WCHAR*> windowsHDD::getdevicenamevector()
-	{	list_devices();
+
+vector<string> windowsHDD::getdevicenamevector(){
+	list_devices();
 	return devicenames;
 	}

@@ -54,11 +54,12 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 	#endif
 #elif defined( __WXMSW__ )
  		windowsHDD windevs;
- 		vector<wchar_t*> DevVector = windevs.getdevicenamevector();
- 		for(int i=0; i < DevVector.size();i++)
+ 		vector<string> DevVector = windevs.getdevicenamevector();
+ 		for(int i=0; i < DevVector.size();i++){
 // TODO (death#1#): Enable \\Device files!
-			if( !wxString(DevVector[i]).StartsWith(wxT("\\Device")))
+			//if( !wxString(DevVector[i]).StartsWith(wxT("\\Device")))
 				disks.Add(wxString(DevVector[i]));
+			}
 #endif
 	if( WithPartitions )
 		return disks;
@@ -66,17 +67,16 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 	int last_item=0;
 	disks.Sort();
 	for( unsigned i =0 ; i < disks.Count() ; i++){
-		//SubMenu categorization for posix
-		#ifndef __WXMSW__
-		if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
-			disks.RemoveAt(i--);
-		else
-			last_item = i;
-
-		#else	//Windows device menu categorization
+		//Windows device menu categorization
+		#ifdef __WXMSW__
 		if( disks.Item(i).StartsWith( disks.Item( last_item ).BeforeLast('\\') ) && i != 0 )
 			disks.RemoveAt(i);
 		else //Create new submenu
+			last_item = i;
+		#else	//SubMenu categorization for posix
+			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
+			disks.RemoveAt(i--);
+		else
 			last_item = i;
 		#endif
 		}
@@ -909,8 +909,8 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 				nm=new wxMenu( );
 				nm->Append( idDiskDevice+i, disks.Item(i).AfterLast('\\'), wxT(""), wxITEM_NORMAL );
 				wxMenuItem* mi = menuDeviceDisk->AppendSubMenu( nm, disks.Item(i).BeforeLast('\\')+wxT('\\') );
-				if(disks.Item(i).StartsWith(wxT("\\Device")))
-					mi->Enable(false);
+				//if(disks.Item(i).StartsWith(wxT("\\Device")))
+				//	mi->Enable(false);
 				last_item = i;
 				}
 			#endif

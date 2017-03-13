@@ -53,6 +53,7 @@
 #ifdef __WXMSW__
 	#include <windows.h>
 	#include <winioctl.h>
+	#include "windrv.h"
 #else
 	#include <unistd.h>
 #endif
@@ -194,6 +195,9 @@ virtual	long Read( unsigned char* buffer, int size );
 		wxMemoryBuffer XORview;
 #ifdef __WXMSW__
 		HANDLE hDevice;
+		WCHAR szDosDevice[MAX_PATH], szCFDevice[MAX_PATH];
+		wxString devnm;
+		windowsHDD wdd;
 #endif // __WXMSW__
 //		DiffNode *head,*tail;	//linked list holds modification record
 	};

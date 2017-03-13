@@ -108,7 +108,6 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	}
 
 #ifdef __WXMSW__
-#include "windrv.h"
 HANDLE GetDDK(PCWSTR a);
 
 bool IsWinDevice( wxFileName myfilename ){
@@ -122,74 +121,52 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 	//Windows special device opening
 	std::cout << "WinOSDepOpen"<< std::endl;
 	if(IsWinDevice(myfilename)){
-		wxString devnm;
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
 		if(myfilename.GetFullPath().StartsWith( wxT(".:")))
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
-
 		else
 			devnm = myfilename.GetFullPath();
 		//devnm=wxT("\\Device\\HarddiskVolume1");
+
+		DWORD dwResult;
 
 		std::wcout << devnm << std::endl;
 		if( myfilename.GetFullPath().StartsWith("\\Device") ){
 			//hDevice=GetDDK(devnm);
 			//std::cout << hDevice << std::endl;
-			int nDosLinkCreated;
-			HANDLE dev;
-			DWORD dwResult;
-			BOOL bResult;
-			PARTITION_INFORMATION diskInfo;
-			DISK_GEOMETRY driveInfo;
-			WCHAR szDosDevice[MAX_PATH], szCFDevice[MAX_PATH];
-			static LONGLONG deviceSize = 0;
-			wchar_t size[100] = {0}, partTypeStr[1024] = {0}, *partType = partTypeStr;
+			int nDosLinkCreated = wdd.FakeDosNameForDevice (devnm.wchar_str(), szDosDevice, szCFDevice, FALSE);
+			devnm=szCFDevice;
+			}
 
-			BOOL drivePresent = FALSE;
-			BOOL removable = FALSE;
-
-			drivePresent = TRUE;
-
-			windowsHDD wdd;
-
-
-			nDosLinkCreated = wdd.FakeDosNameForDevice (devnm.wchar_str(), szDosDevice, szCFDevice, FALSE);
-
-			hDevice = CreateFile( szCFDevice, GENERIC_READ | GENERIC_WRITE,
+		if( /*FAM == ReadOnly*/ 0)
+			hDevice = CreateFile (devnm, GENERIC_READ,
+												FILE_SHARE_READ,
+												NULL,
+												OPEN_EXISTING,
+												FILE_FLAG_NO_BUFFERING | FILE_ATTRIBUTE_READONLY  | FILE_FLAG_RANDOM_ACCESS,
+												NULL);
+		else
+			hDevice = CreateFile( devnm, GENERIC_READ | GENERIC_WRITE,
 												FILE_SHARE_READ | FILE_SHARE_WRITE,
 												NULL,
 												OPEN_EXISTING,
 												FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
 												NULL);
 
-			//Where issue RemoveFakeDosName ???
-			}
-		else{
-
-			if(0 /*FAM == ReadOnly*/)
-				hDevice = CreateFile (devnm, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY|FILE_FLAG_RANDOM_ACCESS, NULL);
-			else
-				hDevice = CreateFile( devnm, GENERIC_READ | GENERIC_WRITE,
-													FILE_SHARE_READ | FILE_SHARE_WRITE,
-													NULL,
-													OPEN_EXISTING,
-													FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
-													NULL);
-			}
 
 		if(hDevice==INVALID_HANDLE_VALUE) // this may happen if another program is already reading from disk
 			{
-			std::cout << "Device open invalid handle : " << hDevice << std::endl;
+			std::cout << "Device cannot open due invalid handle : " << hDevice << std::endl;
 			CloseHandle(hDevice);
 			return false;
 			}
 
 		// lock volume
-		DWORD dwResult;
-		if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
-			DWORD err = GetLastError ();
-			wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), err, devnm) );
-			}
+//		if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
+//			DWORD err = GetLastError ();
+//			wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), err, devnm) );
+//			}
+
 		//Dismount
 		//if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
 		//	DWORD err = GetLastError ();
@@ -377,17 +354,14 @@ bool FAL::Close(){
 			#endif
 			#ifdef __WXMSW__
 			if(IsWinDevice( the_file ) ){
-				//_close( reinterpret_cast<int>(hDevice) );
-				CloseHandle( hDevice );
-				//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
-				wxString devnm;
-				if(the_file.GetFullPath().StartsWith( wxT(".:")))
-					devnm = wxString(wxT("\\\\.")) + the_file.GetFullPath().AfterFirst(':');
-				else devnm = the_file.GetFullPath();
-
 				DWORD dwResult;
 				// unlock volume
-				DeviceIoControl (hDevice, FSCTL_UNLOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL);
+				//DeviceIoControl (hDevice, FSCTL_UNLOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL);
+
+				wdd.RemoveFakeDosName(devnm.wchar_str(), szDosDevice);
+				wxFile::Detach();
+				_close( reinterpret_cast<int>(hDevice) );
+				//CloseHandle( hDevice ); //Not neccessary, already closed by _close
 
 				//mount
 				//if (!DeviceIoControl (hDevice, FSCTL_MOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){

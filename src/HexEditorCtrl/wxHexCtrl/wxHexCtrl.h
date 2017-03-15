@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <wx/defs.h>
 #include <wx/buffer.h>
+#include <wx/graphics.h>
 #include <wx/textctrl.h>
 #include <wx/caret.h>
 #include <wx/wx.h>
@@ -139,6 +140,7 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			bool selected;		//select available variable
 			} select;
 virtual void TagPainter( wxDC* DC, TagElement& TG );
+virtual void TagPainterGC( wxGraphicsContext* gc, TagElement& TG );
 		void RePaint( void );
 
 inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
@@ -147,7 +149,7 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		int *ZebraStriping;
 
 	protected:
-		wxDC* UpdateDC( void );
+		wxDC* UpdateDC( wxDC* dc=NULL);
 		wxMemoryDC* CreateDC( void );
 		wxMemoryDC* internalBufferDC;
 		wxBitmap*   internalBufferBMP;

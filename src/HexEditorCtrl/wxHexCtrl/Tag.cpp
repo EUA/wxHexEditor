@@ -95,7 +95,7 @@ wxColour TagElement::SoftColour( wxColour col ){
 	r +=  (0xff - r) / 2;
 	g +=  (0xff - g) / 2;
 	b +=  (0xff - b) / 2;
-	back.Set(r,g,b,0xff);
+	back.Set(r,g,b,0xFF);
 	return back;
 	}
 

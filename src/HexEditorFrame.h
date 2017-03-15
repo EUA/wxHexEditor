@@ -45,6 +45,10 @@
 #include <wx/mstream.h>
 #include <wx/docview.h>
 
+#ifdef _FSWATCHER_
+#include <wx/fswatcher.h>
+#endif // _FSWATCHER_
+
 #if defined __WXMAC__
 #include "../resources/osx/png2c.h"
 #elif defined __WXMSW__

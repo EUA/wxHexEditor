@@ -340,6 +340,7 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 			wxMessageBox( _("File cannot open."),_("Error"), wxOK|wxICON_ERROR );
 			return false;
 			}
+
 		if(IsBlockDev( wxFile::fd() )){
 			BlockRWSize=FDtoBlockSize( wxFile::fd() );
 			BlockRWCount=FDtoBlockCount( wxFile::fd() );

@@ -429,17 +429,23 @@ inline wxMemoryDC* wxHexCtrl::CreateDC(){
 	// at least 1*1 one.
 	wxSize sizeBmp = GetSize();
 	sizeBmp.IncTo(wxSize(1, 1));
-	internalBufferBMP=new wxBitmap(sizeBmp.GetWidth(), sizeBmp.GetHeight());
+	internalBufferBMP= new wxBitmap(sizeBmp);
 	internalBufferDC = new wxMemoryDC();
 	internalBufferDC->SelectObject(*internalBufferBMP);
 	return internalBufferDC;
 	}
 
-inline wxDC* wxHexCtrl::UpdateDC(){
-	if(internalBufferDC==NULL)
+//inline wxDC* wxHexCtrl::UpdateDC(wxDC *dcTemp){
+inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
+	wxDC *dcTemp;
+	if( xdc )
+		dcTemp = xdc;
+	else if(internalBufferDC==NULL){
 		internalBufferDC = CreateDC();
-	wxMemoryDC *dcTemp = internalBufferDC;
-	//wxPaintDC *dcTemp = new wxPaintDC(this);
+		dcTemp = internalBufferDC;
+		}
+	else
+		dcTemp = internalBufferDC;
 	//wxBufferedPaintDC *dcTemp= new wxBufferedPaintDC(this); //has problems with MacOSX
 
 #ifdef _DEBUG_SIZE_
@@ -596,6 +602,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 			}
 	}//Hex_2_Color_Engine_Prototype
 
+#ifndef _Use_Graphics_Contex_ //Uding_Graphics_Context disable TAG painting at buffer.
 	int TAC = TagArray.Count();
 	if( TAC != 0 ){
 		for(int i = 0 ; i < TAC ; i++)
@@ -603,7 +610,7 @@ inline wxDC* wxHexCtrl::UpdateDC(){
 		}
 	if(select.selected)
 		TagPainter( dcTemp, select );
-
+#endif
 	DrawCursorShadow(dcTemp);
 
 	if(ThinSeparationLines.Count() > 0)
@@ -646,24 +653,42 @@ void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset 
 		}
 	}
 
+#define _Use_Graphics_Contex_x
 void wxHexCtrl::RePaint( void ){
 	PaintMutex.Lock();
 	wxCaretSuspend cs(this);
 
-	wxDC* dcTemp = UpdateDC();
+	wxDC* dcTemp = UpdateDC(); //Prepare DC
 	if( dcTemp != NULL ){
-		wxClientDC dc( this );
+		wxClientDC dc( this ); //Not looks working on GraphicsContext
+		///Directly creating contentx at dc creates flicker!
+		//UpdateDC(&dc);
+
+		//dc.DrawBitmap( *internalBufferBMP, this->GetSize().GetWidth(), this->GetSize().GetHeight() ); //This does NOT work
+	#ifdef WXOSX_CARBON  //wxCarbon needs +2 patch on both axis somehow.
+		dc.Blit(2, 2, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+	#else
+		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+	#endif //WXOSX_CARBON
+
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
-		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0,dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
-		delete gc;
-#else
+		if (gc){
+			//gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0, dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+			//gc->Flush();
 
-#ifdef WXOSX_CARBON  //wxCarbon needs +2 patch on both axis somehow.
-		dc.Blit(2, 2, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+			int TAC = TagArray.Count();
+			if( TAC != 0 )
+				for(int i = 0 ; i < TAC ; i++)
+					TagPainterGC( gc, *TagArray.Item(i) );
+
+			if(select.selected)
+				TagPainterGC( gc, select );
+			delete gc;
+		}
+		else
+			std::cout << " GraphicContext returs NULL!\n";
 #else
-		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
-#endif //WXOSX_CARBON
 
 #endif //_Use_Graphics_Contex_
 
@@ -674,15 +699,43 @@ void wxHexCtrl::RePaint( void ){
 
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 	PaintMutex.Lock();
-	wxDC* dcTemp = UpdateDC();
-	if( dcTemp != NULL ){
+	wxDC* dcTemp = UpdateDC(); // Prepare DC
+	if( dcTemp != NULL )
+		{
 		wxPaintDC dc( this ); //wxPaintDC because here is under native wxPaintEvent.
+		//wxAutoBufferedPaintDC dc( this );
+		///Directly creating contentx at dc creates flicker!
+		//UpdateDC(&dc);
+
+		//dc.DrawBitmap( *internalBufferBMP, this->GetSize().GetWidth(), this->GetSize().GetHeight() ); //This does NOT work
+		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
 #ifdef _Use_Graphics_Contex_
 		wxGraphicsContext *gc = wxGraphicsContext::Create( dc );
-		gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0, dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
-		delete gc;
-#else
-		dc.Blit(0, 0, this->GetSize().GetWidth(), this->GetSize().GetHeight(), dcTemp, 0, 0, wxCOPY);
+		if (gc){
+			//gc->DrawBitmap( *internalBufferBMP, 0.0, 0.0, dc.GetSize().GetWidth(), dc.GetSize().GetHeight());
+			//gc->Flush();
+////			// make a path that contains a circle and some lines
+			gc->SetPen( *wxRED_PEN );
+			wxGraphicsPath path = gc->CreatePath();
+			path.AddCircle( 50.0, 50.0, 50.0 );
+			path.MoveToPoint(0.0, 50.0);
+			path.AddLineToPoint(100.0, 50.0);
+			path.MoveToPoint(50.0, 0.0);
+			path.AddLineToPoint(50.0, 100.0 );
+			path.CloseSubpath();
+			path.AddRectangle(25.0, 25.0, 50.0, 50.0);
+			gc->StrokePath(path);
+
+			int TAC = TagArray.Count();
+			if( TAC != 0 )
+				for(int i = 0 ; i < TAC ; i++)
+					TagPainterGC( gc, *TagArray.Item(i) );
+
+			if(select.selected)
+				TagPainterGC( gc, select );
+
+			delete gc;
+			}
 #endif
 		///delete dcTemp;
 		}
@@ -693,23 +746,26 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 	//Selection Painter
 	DC->SetFont( HexDefaultAttr.GetFont() );
 	DC->SetTextForeground( TG.FontClrData.GetColour() );
-//		DC->SetTextBackground( TG.NoteClrData.GetColour() );
+////		DC->SetTextBackground( TG.NoteClrData.GetColour() );
 	DC->SetTextBackground( TG.SoftColour( TG.NoteClrData.GetColour() ));
 
-	wxBrush sbrush( TG.NoteClrData.GetColour() );
-	//preparation for wxGCDC for semi transparent marking.
-	//wxBrush sbrush(wxBrush(wxColour(255,0,0,128),wxBRUSHSTYLE_TRANSPARENT ));
-	DC->SetBackground( sbrush );
-	DC->SetBackgroundMode( wxSOLID ); // overwrite old value
+	//wxBrush sbrush( TG.NoteClrData.GetColour() );
+	//wxBrush sbrush( wxColor((unsigned long) 0x0000000),wxBRUSHSTYLE_TRANSPARENT );
+
+	//preparation for wxGCDC, wxGraphicsContext req for semi transparent marking.
+
+	//wxColor a = TG.NoteClrData.GetColour();
+	//a.Set( a.Red(),a.Green(),a.Blue(), 10);
+	//wxBrush sbrush(wxBrush(a,wxBRUSHSTYLE_TRANSPARENT ));
+	//DC->SetBrush( sbrush );
+	//DC->SetBackground( sbrush );
+	//DC->SetBackgroundMode( wxSOLID ); // overwrite old value
 
 	int start = TG.start;
 	int end = TG.end;
 
-	if( start > end ){
-		int temp = end;
-		end = start;
-		start = temp;
-		}
+	if( start > end )
+		wxSwap( start, end );
 
 	if( start < 0 )
 		start = 0;
@@ -760,15 +816,83 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 
 		//Draw one character at a time to keep char with stable.
 		if(DrawCharByChar){
-			DC->SetBrush( wxBrush(TG.NoteClrData.GetColour()));
-			DC->DrawRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
+			//DC->SetBrush( wxBrush(TG.NoteClrData.GetColour()));
+			//DC->DrawRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
+
+//			if(gc){
+//				gc->SetPen( *wxRED_PEN );
+//				gc->SetBrush( wxBrush(TG.NoteClrData.GetColour()));
+//				wxGraphicsPath path = gc->CreatePath();
+//				path.AddRectangle(m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
+//				gc->StrokePath(path);
+//				gc->DrawRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
+//				}
+
+
 			for( unsigned q = 0 ; q < line.Len() ;q++ )
 				DC->DrawText( line[q], m_Margin.x + (_temp_.x+q)*m_CharSize.x, m_Margin.y + _temp_.y * m_CharSize.y );
 			}
 		else
-		DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
+			DC->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
 								m_Margin.x + _temp_.y * m_CharSize.y );
 //#endif
+		}
+//	if(gc) delete gc;
+	}
+
+void wxHexCtrl::TagPainterGC( wxGraphicsContext* gc, TagElement& TG ){
+	wxGraphicsFont wxgfont = gc->CreateFont( HexDefaultAttr.GetFont(), TG.FontClrData.GetColour() ) ;
+	gc->SetFont( wxgfont );
+	//gc->SetTextBackground( TG.SoftColour( TG.NoteClrData.GetColour() ));
+
+	int start = TG.start;
+	int end = TG.end;
+
+	if( start > end )
+		wxSwap( start, end );
+
+	if( start < 0 )
+		start = 0;
+
+	if ( end > ByteCapacity()*2 )
+		 end = ByteCapacity()*2;
+
+// TODO (death#1#): Here problem with Text Ctrl.Use smart pointer...?
+	wxPoint _start_ = InternalPositionToVisibleCoord( start );
+	wxPoint _end_   = InternalPositionToVisibleCoord( end );
+	wxPoint _temp_  = _start_;
+
+#ifdef _DEBUG_PAINT_
+   std::cout << "Tag paint from : " << start << " to " << end << std::endl;
+#endif
+	wxColor a;
+	a.SetRGBA( TG.NoteClrData.GetColour().GetRGB() | 80 << 24 );
+	wxBrush sbrush(wxBrush(a, wxBRUSHSTYLE_SOLID ));
+	gc->SetBrush( sbrush );
+	wxGraphicsBrush gcbrush = gc->CreateBrush( sbrush );
+	//gc->SetPen( *wxRED_PEN );
+	//Scan for each line
+	for ( ; _temp_.y <= _end_.y ; _temp_.y++ ){
+		wxString line;
+		_temp_.x = ( _temp_.y == _start_.y ) ? _start_.x : 0;	//calculating local line start
+		int z = ( _temp_.y == _end_.y ) ? _end_.x : m_Window.x;	// and end point
+		for ( int x = _temp_.x; x < z; x++ ){					//Prepare line to write process
+			if( IsDenied(x) ){
+				if(x+1 < z){
+					line += wxT(' ');
+					}
+				continue;
+				}
+			line += CharAt(start++);
+			}
+		//gc->DrawRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y);
+		//gc->DrawRoundedRectangle( m_Margin.x + _temp_.x*m_CharSize.x , m_Margin.y + _temp_.y * m_CharSize.y, line.Len()*m_CharSize.x, m_CharSize.y, 0.1);
+//		gc->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
+//							m_Margin.x + _temp_.y * m_CharSize.y );
+
+		gc->DrawText( line, m_Margin.x + _temp_.x * m_CharSize.x,	//Write prepared line
+							m_Margin.x + _temp_.y * m_CharSize.y,  gcbrush );
+
 		}
 	}
 

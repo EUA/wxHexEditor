@@ -936,10 +936,15 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TagElement *TAG = MainTagArray.Item(i);
-		if( size < 0 && TAG->start >= location && TAG->start <= location+(-size) ){//Deletion, (-size) double negation indicates deletion range.
-			MainTagArray.RemoveAt(i); //Deletion of code if start inside deletion selection.
+		//Deletion, (-size) double negation indicates deletion range.
+		if( size < 0 && TAG->start >= location && TAG->start <= location+(-size) ){
+			//Deletion of code if start inside deletion selection.
+			//i-- due MainTagArray.Count() shrinks
+			MainTagArray.RemoveAt(i--);
 			continue;
 			}
+
+		//Insert operation
 		if( TAG->start >= location ){
 			TAG->start += size;
 			TAG->end += size;

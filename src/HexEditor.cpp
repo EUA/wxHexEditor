@@ -1464,28 +1464,6 @@ void HexEditor::GotoDialog( void ) {
 	mygoto->Destroy();
 	}
 
-bool HexEditor::DeleteSelection( void ) {
-#ifdef _DEBUG_
-	std::cout << "DeleteSelection!" << std::endl;
-#endif
-	bool success=false;
-	if( select->GetState() ) {
-		success = myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
-		if(success)
-			MoveTAGS( std::min(select->StartOffset , select->EndOffset), -select->GetSize() );
-		select->SetState( false );
-		}
-	else {
-		wxBell();
-		return false;
-		}
-	Reload();
-	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD(), FileGetXORKey() );
-	wxUpdateUIEvent eventx( UNREDO_EVENT );
-	GetEventHandler()->ProcessEvent( eventx );
-	return success;
-	}
-
 bool HexEditor::InsertBytes( void ) {
 #ifdef _DEBUG_
 	std::cout << "Insert Bytes!" << std::endl;
@@ -1527,6 +1505,30 @@ bool HexEditor::CutSelection( void ) {
 		}
 	return success;
 	}
+
+bool HexEditor::DeleteSelection( void ) {
+#ifdef _DEBUG_
+	std::cout << "DeleteSelection!" << std::endl;
+#endif
+	bool success=false;
+	if( select->GetState() ) {
+		success = myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
+		if(success)
+			MoveTAGS( std::min(select->StartOffset , select->EndOffset), -select->GetSize() );
+
+		select->SetState( false );
+		}
+	else {
+		wxBell();
+		return false;
+		}
+	Reload();
+	infopanel->Set( GetFileName(), FileLength(), GetFileAccessModeString(), GetFD(), FileGetXORKey() );
+	wxUpdateUIEvent eventx( UNREDO_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+	return success;
+	}
+
 
 bool HexEditor::CopySelection( void ) {
 	if( select->GetState()) {

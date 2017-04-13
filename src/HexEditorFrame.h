@@ -45,7 +45,7 @@
 #include <wx/mstream.h>
 #include <wx/docview.h>
 
-#ifdef _FSWATCHER_
+#if _FSWATCHER_
 #include <wx/fswatcher.h>
 #endif // _FSWATCHER_
 

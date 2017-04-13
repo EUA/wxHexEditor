@@ -39,10 +39,10 @@
 	#define PTRACE_POKETEXT PT_WRITE_I
 #endif
 
-#ifdef BSD
-	#define DKIOCGETBLOCKSIZE DIOCGSECTORSIZE	/* Get the sector size of the device in bytes */
-	#define DKIOCGETBLOCKCOUNT DIOCGMEDIASIZE	/* Get media size in bytes */
-#endif
+//#if defined BSD
+//	#define DKIOCGETBLOCKSIZE DIOCGSECTORSIZE	/* Get the sector size of the device in bytes */
+//	#define DKIOCGETBLOCKCOUNT DIOCGMEDIASIZE	/* Get media size in bytes */
+//#endif
 
 
 WX_DEFINE_OBJARRAY(ArrayOfNode);

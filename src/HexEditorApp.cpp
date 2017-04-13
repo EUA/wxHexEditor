@@ -126,11 +126,11 @@ void wxHexEditorApp::SetLanguage(void){
 
 	///init first
 	int langid = wxLocale::FindLanguageInfo( lang )->Language;
-#ifdef __WXMAC__
-	if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING ) )
-#else
+//#ifdef __WXMAC__
+//	if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING ) )
+//#else
 	if ( !myLocale.Init( langid, wxLOCALE_LOAD_DEFAULT ) )
-#endif
+//#endif
 		{
 		wxLogError(_T("This language is not supported by the system."));
 		//return; //not return here for continue to load this program catalog

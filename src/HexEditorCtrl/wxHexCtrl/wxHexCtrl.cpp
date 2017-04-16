@@ -2782,7 +2782,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	BytePerLine = byteperline;
 	m_text.Clear();
 
-   wxString format=GetFormatString();
+    wxString format=GetFormatString();
 
 	wxULongLong_t ull = ( offset_position );
 	if( offset_mode == 's' ){//Sector Indicator!
@@ -2814,7 +2814,7 @@ wxString wxHexOffsetCtrl::GetFormatString( bool minimal ){
 			while((1+offset_limit/sector_size) > pow(10,++sector_digit));
 			while(sector_size > pow(10,++offset_digit));
 			}
-		format << wxT("%0") << sector_digit << wxLongLongFmtSpec << wxT("u:%0") << offset_digit << wxT("u");
+		format << wxT("%0") << sector_digit << wxLongLongFmtSpec << wxT(":%0") << offset_digit << wxT("u");
 		return format;
 		}
 	format << wxT("%0") <<

@@ -787,9 +787,11 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , ui
 
 	char* buffer = new char [search_step];
 	char* buffer_prefetch = new char [search_step];
-	if((buffer == NULL)||(buffer_prefetch == NULL))
-		return NANINT;
-
+	if((buffer == NULL)||(buffer_prefetch == NULL)){
+			delete [] buffer;
+			delete [] buffer_prefetch
+			return NANINT;
+		}
 	time_t ts,te;
 	time (&ts);
 	te=ts;
@@ -988,7 +990,10 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 	int found = -1, readed = -1;
 
 	char* buffer_prefetch = new char [search_step];
-	if(buffer_prefetch == NULL) return NANINT;
+	if(buffer_prefetch == NULL){
+			delete [] buffer;
+			return NANINT;
+		}
 	int readed_prefetch = -1;
 
 	time_t ts,te;

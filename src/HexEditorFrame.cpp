@@ -828,7 +828,6 @@ void HexEditorFrame::OnHelpMenu( wxCommandEvent& event ){
 		AllAbout.AddDeveloper( _T("Erdem U. Altinyurt") );
 		AllAbout.AddArtist( _T("Vlad Adrian") );
 		AllAbout.SetWebSite( _T("http://www.wxhexeditor.org"));
-
 		AllAbout.SetLicense( license );
 		wxAboutBox(AllAbout);
 		}

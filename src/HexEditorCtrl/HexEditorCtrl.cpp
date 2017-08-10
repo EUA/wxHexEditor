@@ -936,6 +936,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TagElement *TAG = MainTagArray.Item(i);
+
 		//Deletion, (-size) double negation indicates deletion range.
 		if( size < 0 && TAG->start >= location && TAG->start <= location+(-size) ){
 			//Deletion of code if start inside deletion selection.
@@ -950,6 +951,30 @@ void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 			TAG->end += size;
 			}
 		}
+
+	for( unsigned i = 0 ; i < HighlightArray.Count() ; i++ ){
+		TagElement *TAG = HighlightArray.Item(i);
+
+		//Deletion, (-size) double negation indicates deletion range.
+		if( size < 0 && TAG->start >= location && TAG->start <= location+(-size) ){
+			//Deletion of code if start inside deletion selection.
+			//i-- due HighlightArray.Count() shrinks
+			HighlightArray.RemoveAt(i--);
+			continue;
+			}
+
+		//Insert operation
+		if( TAG->start >= location ){
+			TAG->start += size;
+			TAG->end += size;
+			}
+		}
+
+	wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+
+	eventx.SetId( SEARCH_CHANGE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
 	}
 
 bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){

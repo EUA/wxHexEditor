@@ -238,7 +238,6 @@ class copy_maker {
 			}
 	};
 
-
 class scrollthread:wxThreadHelper {
 	private:
 		HexEditor *parent;
@@ -319,11 +318,14 @@ class scrollthread:wxThreadHelper {
 			speed = new_speed;
 			speed_mtx.Unlock();
 			}
+
 		void Exit(void){
 			if( !GetThread()->IsRunning() ) //We can only "Delete" running threads
 				GetThread()->Resume();// Resume the thread for kill it
 			GetThread()->Delete();
 			}
 	};
+
+
 
 #endif

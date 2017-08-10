@@ -774,6 +774,10 @@ uint64_t FindDialog::FindBinary( wxMemoryBuffer target, uint64_t from, unsigned 
 
 uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , uint64_t to_offset, unsigned options,
 										 wxProgressDialog* progress_gauge, wxString& gauge_msg, uint64_t& totalread){
+	if(from>to_offset){
+		std::cout << "FindDialog::FindBinaryForward() called with from > to_offset" << std::endl;
+		return -1;
+		}
 
 	bool first_run=true;
 	wxString emsg = gauge_msg + wxT("\n") ;
@@ -786,11 +790,14 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , ui
 	unsigned search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
 
 	char* buffer = new char [search_step];
+	if(buffer == NULL)
+		return NANINT;
+
 	char* buffer_prefetch = new char [search_step];
-	if((buffer == NULL)||(buffer_prefetch == NULL)){
-			delete [] buffer;
-			delete [] buffer_prefetch
-			return NANINT;
+	if(buffer_prefetch==NULL){
+		delete [] buffer;
+		buffer == NULL;
+		return NANINT;
 		}
 	time_t ts,te;
 	time (&ts);

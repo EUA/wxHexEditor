@@ -123,9 +123,9 @@ void wxHexEditorApp::SetLanguage(void){
 	_T("..") + wxFileName::GetPathSeparator() + _T("Resources") + wxFileName::GetPathSeparator() + _T("locale") );
 #endif
 
-
 	///init first
 	int langid = wxLocale::FindLanguageInfo( lang )->Language;
+
 //#ifdef __WXMAC__
 //	if ( !myLocale.Init( langid, wxLOCALE_CONV_ENCODING ) )
 //#else

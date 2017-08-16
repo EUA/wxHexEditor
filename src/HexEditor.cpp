@@ -510,11 +510,10 @@ bool HexEditor::FileReOpen( void ){
 
 void HexEditor::DoUndo( void ) {
 	//TODO: Tag Movement
-	const DiffNode* x = myfile->GetFirstUndoNode();
+	const DiffNode* x = myfile->GetFirstUndoNodeOrLast();
 	if( x != NULL )
-		if( x->flag_inject ) {
-			//wxMessageBox( _( "Do you want move tags too with this undo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
-			}
+		if( x->flag_inject )
+			MoveTAGS( x->start_offset, -x->size );
 
 	Goto( myfile->Undo() );
 
@@ -526,17 +525,16 @@ void HexEditor::DoUndo( void ) {
 	}
 
 void HexEditor::DoRedo( void ) {
-
-	Goto( myfile->Redo() );
 #ifdef _DEBUG_FILE_
 	std::cout << "Send UnReDo Event" << std::endl;
 #endif
-	const DiffNode* x = myfile->GetFirstUndoNode();
+	const DiffNode* x = myfile->GetFirstUndoNodeOrLast();
 	if( x != NULL )
-		if( x->flag_inject ) {
-			//TODO: Tag Movement
-			//wxMessageBox( _( "Do you want move tags too with this redo?\n"), _("Tag Movement"), wxYES_NO|wxCANCEL|wxICON_QUESTION );
-			}
+		if( x->flag_inject )
+			MoveTAGS( x->start_offset, x->size );
+
+	Goto( myfile->Redo() );
+
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}

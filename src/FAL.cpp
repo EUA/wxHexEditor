@@ -1079,11 +1079,12 @@ wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 	return wxFile::Seek( ofs, mode );
 	}
 
-const DiffNode* FAL::GetFirstUndoNode( void ){
+//Returns First Undo Node or Last
+const DiffNode* FAL::GetFirstUndoNodeOrLast( void ){
 	if( DiffArray.GetCount() == 0 )
 		return NULL;
 	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ )
-		if( !DiffArray.Item(i)->flag_undo )
+		if( DiffArray.Item(i)->flag_undo )
 			return DiffArray.Item(i);
-	return NULL;
+	return DiffArray.Last();
 	}

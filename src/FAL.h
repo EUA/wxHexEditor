@@ -170,7 +170,7 @@ virtual	long Read( unsigned char* buffer, int size );
 		bool IsAvailable_Undo( void );
 		bool IsAvailable_Redo( void );
 		bool IsInjected( void );
-		const DiffNode* GetFirstUndoNode( void );
+		const DiffNode* GetFirstUndoNodeOrLast( void );
 		int GetBlockSize( void );
 
 	protected:

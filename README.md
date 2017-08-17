@@ -7,5 +7,7 @@ Just launch `make`!
 
 # Compilation dependencies on Linux
 
-- wxgtk;
-- webkitgtk2;
+- wxgtk (libwxgtk3.0-dev);
+- webkitgtk2 (libwebkitgtk-3.0-dev);
+
+

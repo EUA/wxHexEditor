@@ -938,7 +938,7 @@ void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
 		TagElement *TAG = MainTagArray.Item(i);
 
 		//Deletion, (-size) double negation indicates deletion range.
-		if( size < 0 && TAG->start >= location && TAG->start <= location+(-size) ){
+		if( size < 0 && TAG->start >= location && TAG->start < location+(-size) ){
 			//Deletion of code if start inside deletion selection.
 			//i-- due MainTagArray.Count() shrinks
 			MainTagArray.RemoveAt(i--);

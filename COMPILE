@@ -61,24 +61,32 @@ ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=i686-w64
 -----------------------------------------------------
 OS X
 -----------------------------------------------------
-Note: Due wxWidgets issues, OSX version of wxHexEditor is experimental.
-Please use wxWidgets 2.8.12 version or wxWidgets 3.0 with carbon.
-wxWidgets 3.0 cocoa version has full of bugs results not quite usable wxHexEditor, yet.
-Also you need to have gcc tools and xcode_4.3.3_for_lion.dmg disk image mounted/installed on your Mac.
+You need to have Xcode Commandline Tools installed on your Mac.
+For OS X, you need to have wxWidgets.
 
-For OS X, you need to compile wxWidgets with:
+You can easily install it with Homebrew installation:
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
+After you could install required dependencies with this command:
+brew install wxmac gettext autoconf automake
+
+Or you can compile wxWidgets with:
 tar xvf wxWidgets-<version>.tar.bz2
 cd wxWidgets
 mkdir release
 cd release
-export arch_flags="-arch i386"
-../configure CFLAGS="$arch_flags" CXXFLAGS="$arch_flags" CPPFLAGS="$arch_flags" LDFLAGS="$arch_flags" OBJCFLAGS="$arch_flags" OBJCXXFLAGS="$arch_flags" --with-macosx-version-min=10.6 --with-macosx-sdk=/Volumes/Xcode/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/ --enable-monolithic --enable-static --disable-debug --disable-shared --with-regex=builtin --with-expat=builtin --enable-unicode
+../configure --with-osx_cocoa --with-macosx-version-min=10.7  --disable-shared  --disable-mediactrl --with-{zlib,expat,libpng,libtiff,jpeg}=builtin --with-opengl --enable-universal-binary=x86_64,i386 CXXFLAGS="-stdlib=libc++ -std=c++11" OBJCXXFLAGS="-stdlib=libc++ -std=c++11" LDFLAGS="-stdlib=libc++" --enable-{release,unicode,monolithic}
 
-Then extract the wxHexEditor as: 
+You might have some compilation issues with wxWidgets 3.1 using OSX 10.13.
 
+Then extract the wxHexEditor and compile with:
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
-make mac WXCONFIG=<wx-config path> OPTFLAGS="-arch i386"
+make mac WXCONFIG=<wx-config path>
+
+Opps! I forgot to say that, you probably need to remove -lgomp and -fopenmp included lines at Makefile manually due clang doesn't support OpenMP yet.
+
+If everything is OK, your executable is available to execute under:
+./wxHexEditor.app/Contents/MacOS/wxHexEditor
 
 That's all.

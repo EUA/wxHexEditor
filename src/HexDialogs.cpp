@@ -1157,7 +1157,7 @@ void FindDialog::OnFindAll( bool internal ){
 		if( !internal ){
 			this->Hide();
 			OSXwxMessageBox(wxString::Format(_("Found %d matches."), static_cast<int>( parent->HighlightArray.GetCount()) ), _("Find All Done!"), wxOK, parent );
-			Destroy();
+			EndModal(0);
 			}
 		}
 
@@ -1718,7 +1718,7 @@ void ReplaceDialog::OnReplaceAll( void ){
 		wxUpdateUIEvent eventx( UNREDO_EVENT );
 		wxPostEvent( parent, eventx);
 		OSXwxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info"), wxOK, parent);
-		Destroy();
+		EndModal(0);
 		}
 	}
 
@@ -1815,10 +1815,10 @@ void CopyAsDialog::PrepareOptions( int SelectedFunction ){
 void CopyAsDialog::EventHandler( wxCommandEvent& event ){
 	int id = event.GetId();
 	if( id == wxID_CANCEL )
-		Destroy();
+		EndModal(id);
 	else if( id == wxID_OK ){
 		Copy();
-		Destroy();
+		EndModal(id);
 		}
 	else if( id == chcCopyAs->GetId() ){
 		int SelectedFunction =  chcCopyAs->GetSelection();
@@ -2517,7 +2517,7 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 	std::cout << "CompareDialog::EventHandler()" << std::endl;
 #endif
 	if(event.GetId() == wxID_CANCEL)
-		Destroy();
+		EndModal(event.GetId());
 	else if(event.GetId() == btnCompare->GetId()){
 		if( !filePick1->GetPath().IsEmpty() && !filePick2->GetPath().IsEmpty()){
 			if( checkSaveResults->GetValue() && filePickSave->GetPath().IsEmpty() ){
@@ -2535,7 +2535,7 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 						(checkStopCompare->GetValue() ? spinStopCompare->GetValue() : 0),	//Stop after N Matches. 0 means unlimited.
 						(checkSaveResults->GetValue() ? filePickSave->GetPath() : wxT("") ))		//comparison result save path.
 																												)
-				Destroy();
+				EndModal(event.GetId());
 			}
 		else
 			wxBell();
@@ -2649,7 +2649,7 @@ void ChecksumDialog::EventHandler( wxCommandEvent& event ){
 	myConfigBase::Get()->Write( _T("SelectedChecksumFunctions"), options );
 
 	if(event.GetId() == wxID_CANCEL)
-		Destroy();
+		EndModal(event.GetId());
 
 	else if(event.GetId() == btnCalculate->GetId()){
 		wxString msg;

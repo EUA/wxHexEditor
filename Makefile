@@ -1,9 +1,11 @@
 WXCONFIG ?= wx-config
 HOST=
-LDFLAGS += -lgomp
-#add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp -Wall
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
+WXCXXFLAGS += -fopenmp
+LDFLAGS += -lgomp
+#add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
+#LDFLAGS += -Wl,--subsystem,console -mconsole
 RC = `$(WXCONFIG) --rescomp`
 #RC = x86_64-w64-mingw32-windres --define WX_CPU_AMD64
 RCFLAGS = `$(WXCONFIG) --cxxflags | sed s/' '-m.*//g;`
@@ -83,7 +85,7 @@ win_debug: win
 
 host_test:
 ifeq ($(HOST),)
-		echo "Cross-Compiling host detected."
+		echo "Cross-Compiling host NOT detected."
 else
 CC = $(shell echo `$(WXCONFIG) --cc`)
 CXX = $(shell echo `$(WXCONFIG) --cxx`)

@@ -441,10 +441,6 @@ bool HexEditor::FileSave( wxString savefilename ) {
 	}
 
 bool HexEditor::FileClose( bool WithoutChange ) {
-#if _FSWATCHER_
-///  Moved to frame...
-//   Disconnect( wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, this );
-#endif
 	if( myfile != NULL ) {
 		if( myfile->IsChanged() && !WithoutChange) {
 			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );

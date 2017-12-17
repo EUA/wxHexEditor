@@ -99,12 +99,6 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	ProcessID=-1;
 	get_ptr = put_ptr = 0;
 	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
-
-#if _FSWATCHER_ //Only GTK port is working good on detect changes of file.
-///Moved to CreateFileWatcher();
-//	if(! myfilename.GetFullPath().Lower().StartsWith( wxT("-pid=")))
-//	   file_watcher->Add( myfilename.GetFullPath(), wxFSW_EVENT_MODIFY );
-#endif
 	}
 
 #ifdef __WXMSW__
@@ -368,8 +362,8 @@ bool FAL::Close(){
 
 				wdd.RemoveFakeDosName(devnm.wchar_str(), szDosDevice);
 				wxFile::Detach();
-				_close( reinterpret_cast<int>(hDevice) );
-				//CloseHandle( hDevice ); //Not neccessary, already closed by _close
+				//_close( reinterpret_cast<int>(hDevice) );
+				CloseHandle( hDevice ); //Not neccessary, already closed by _close
 
 				//mount
 				//if (!DeviceIoControl (hDevice, FSCTL_MOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
@@ -525,6 +519,7 @@ size_t FAL::BlockWrite( unsigned char* buffer, unsigned size ){
 
 	wxFile::Seek(StartSector*BlockRWSize);
 	size_t ret = Write(buffer, size);//*= to make update success true or false
+	//sync();
 	put_ptr+=size;
 	return ret;
 	}

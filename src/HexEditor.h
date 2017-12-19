@@ -41,7 +41,7 @@
 
 #if wxCHECK_VERSION( 2,9,0 ) && !defined(__WXMAC__) && !defined( __WXMSW__)
 //Only GTK port is working good on detect changes of file.
-//MSW cannot detect changes in individual files yet in wx3.1.0
+//MSW cannot detect changes in individual files yet in wxWidgets 3.1.0
 	#define _FSWATCHER_  1
 	#include <wx/fswatcher.h>
 #else

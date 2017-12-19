@@ -124,7 +124,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 		DWORD dwResult;
 
-		std::wcout << devnm << std::endl;
+		std::wcout << "WinDevice" << devnm << std::endl;
 		if( myfilename.GetFullPath().StartsWith("\\Device") ){
 			//hDevice=GetDDK(devnm);
 			//std::cout << hDevice << std::endl;
@@ -134,18 +134,18 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 		if( FAM == ReadOnly)
 			hDevice = CreateFile (devnm, GENERIC_READ,
-												FILE_SHARE_READ | FILE_SHARE_WRITE,
-												NULL,
-												OPEN_EXISTING,
-												FILE_FLAG_NO_BUFFERING | FILE_ATTRIBUTE_READONLY  | FILE_FLAG_RANDOM_ACCESS,
-												NULL);
+											FILE_SHARE_READ | FILE_SHARE_WRITE,
+											NULL,
+											OPEN_EXISTING,
+											FILE_FLAG_NO_BUFFERING | FILE_ATTRIBUTE_READONLY  | FILE_FLAG_RANDOM_ACCESS,
+											NULL);
 		else
 			hDevice = CreateFile( devnm, GENERIC_READ | GENERIC_WRITE,
-												FILE_SHARE_READ | FILE_SHARE_WRITE,
-												NULL,
-												OPEN_EXISTING,
-												FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
-												NULL);
+											FILE_SHARE_READ | FILE_SHARE_WRITE,
+											NULL,
+											OPEN_EXISTING,
+											FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
+											NULL);
 
 
 		if(hDevice==INVALID_HANDLE_VALUE) // this may happen if another program is already reading from disk
@@ -154,21 +154,24 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			CloseHandle(hDevice);
 			return false;
 			}
-		// lock volume
+		 //lock volume
 //		if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
 //			DWORD err = GetLastError ();
 //			wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), err, devnm) );
 //			}
 
 		//Dismount
-		//if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
-		//	DWORD err = GetLastError ();
-		//	wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
-		//	}
+//		if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
+//			DWORD err = GetLastError ();
+//			wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
+//			}
 
 		//Check if drive is mounted
-		if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL)){
+		if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL) &&
+			( !devnm.StartsWith("\\\\.\\PhysicalDevice" ) //PhysicalDevice can not check with mounted since it's not logical volume to mount.
+			){
 			DWORD err = GetLastError ();
+			std::cout << err << std::endl;
 			wxMessageBox( _("Device is not mounted"), _("Error"), wxOK|wxICON_ERROR );
 			return false;
 			}

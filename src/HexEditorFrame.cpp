@@ -832,6 +832,9 @@ void HexEditorFrame::OnHelpMenu( wxCommandEvent& event ){
 		wxAboutBox(AllAbout);
 		}
 
+	else if(event.GetId() == idWiki )
+		wxLaunchDefaultBrowser( wxT("http://wiki.wxhexeditor.org"),wxBROWSER_NEW_WINDOW);
+
 	else if(event.GetId() == idDonate )
 		//No, you don't gonna change this.
 		///Thanks for donations to support this project!

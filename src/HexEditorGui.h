@@ -77,9 +77,10 @@
 #define idFileRW 1029
 #define idFileDW 1030
 #define idDonate 1031
-#define idBugReport 1032
-#define ID_CHK_UNSIGNED 1033
-#define ID_CHK_BIGENDIAN 1034
+#define idWiki 1032
+#define idBugReport 1033
+#define ID_CHK_UNSIGNED 1034
+#define ID_CHK_BIGENDIAN 1035
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui

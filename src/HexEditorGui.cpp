@@ -287,6 +287,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	menuHelpDonate = new wxMenuItem( helpMenu, idDonate, wxString( _("Donate") ) , _("Donate some money to author as a return!"), wxITEM_NORMAL );
 	helpMenu->Append( menuHelpDonate );
 	
+	wxMenuItem* menuHelpWiki;
+	menuHelpWiki = new wxMenuItem( helpMenu, idWiki, wxString( _("Wiki") ) , _("Documentation page of wxHexEditor"), wxITEM_NORMAL );
+	helpMenu->Append( menuHelpWiki );
+	
 	wxMenuItem* menuHelpBugReporting;
 	menuHelpBugReporting = new wxMenuItem( helpMenu, idBugReport, wxString( _("Bug Reporting") ) , _("Report bugs for smashing them!"), wxITEM_NORMAL );
 	helpMenu->Append( menuHelpBugReporting );
@@ -373,6 +377,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuOptionsPreferences->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Connect( menuHelpDonate->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
+	this->Connect( menuHelpWiki->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 	this->Connect( menuHelpBugReporting->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 }
@@ -438,6 +443,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idFileDW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( wxID_PREFERENCES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idDonate, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
+	this->Disconnect( idWiki, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 	this->Disconnect( idBugReport, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 	this->Disconnect( wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 	

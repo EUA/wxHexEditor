@@ -833,13 +833,12 @@ void HexEditorFrame::OnHelpMenu( wxCommandEvent& event ){
 		}
 
 	else if(event.GetId() == idDonate )
-		///Thanks for donations to support this project!
 		//No, you don't gonna change this.
-		wxLaunchDefaultBrowser( wxT("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=erdem%2eua%40gmail%2ecom&lc=US&item_name=Erdem%20U%2e%20Altinyurt&item_number=wxHexEditor&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"),wxBROWSER_NEW_WINDOW);
+		///Thanks for donations to support this project!
+		wxLaunchDefaultBrowser( wxT("http://wiki.wxhexeditor.org/index.php?title=Donation"),wxBROWSER_NEW_WINDOW);
 
 	else if(event.GetId() == idBugReport )
 		///Report a bug for help this project
-		//wxLaunchDefaultBrowser( wxT("http://sourceforge.net/p/wxhexeditor/bugs/"),wxBROWSER_NEW_WINDOW);
 		wxLaunchDefaultBrowser( wxT("https://github.com/EUA/wxHexEditor/issues"),wxBROWSER_NEW_WINDOW);
 	}
 

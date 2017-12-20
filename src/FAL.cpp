@@ -168,7 +168,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 		//Check if drive is mounted
 		if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL) &&
-			( !devnm.StartsWith("\\\\.\\PhysicalDevice" ) //PhysicalDevice can not check with mounted since it's not logical volume to mount.
+			!devnm.StartsWith("\\\\.\\PhysicalDevice" ) //PhysicalDevice can not check with mounted since it's not logical volume to mount.
 			){
 			DWORD err = GetLastError ();
 			std::cout << err << std::endl;

@@ -518,10 +518,9 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 	else{
 /*** Hex to Color Engine Prototype ***/
 		char chr;
-		unsigned char chrP,chrC;
+		unsigned char chrC;
 		unsigned char R,G,B;
 		wxColour RGB;
-		chrP=0;
 		int col[256];
 		//Prepare 8bit to 32Bit color table for speed
 		///Bit    7  6  5  4  3  2  1  0
@@ -949,9 +948,10 @@ void wxHexCtrl::OnChar( wxKeyEvent &event ){
                 NextChar();
 */
 				}
-			else
+			else{
 				wxBell();
-				event.Skip();
+				}
+			event.Skip();
 			break;
 
 	}//switch end
@@ -1273,12 +1273,13 @@ void wxHexCtrl::OnTestCall( void ){
     if ( frame && frame->GetStatusBar() )
     switch(1){
 		case 0:{	// ToVisiblePosition & ToInternalPosition fx test case
-			for(unsigned int i = 0 ; i < m_text.Length() ; i++)
+			for(unsigned int i = 0 ; i < m_text.Length() ; i++){
 				if( ToInternalPosition(i) != ToInternalPosition(ToVisiblePosition(ToInternalPosition(i)))){
 					msg.Printf(_T("To[Visible/Internal]Position fx test false at: %d"), i);
 					break;
 					}
-				std::cout << "To[Visible/Internal]Position fx test success" << std::endl;
+				}
+			std::cout << "To[Visible/Internal]Position fx test success" << std::endl;
 			break;
 			}
 		case 1:{	// SetInsertionPoint & GetInsertionPoint fx test case

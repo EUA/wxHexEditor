@@ -57,7 +57,7 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 #elif defined( __WXMSW__ )
  		windowsHDD windevs;
  		vector<string> DevVector = windevs.getdevicenamevector();
- 		for(int i=0; i < DevVector.size();i++){
+ 		for(unsigned i=0; i < DevVector.size();i++){
 // TODO (death#1#): Enable \\Device files!
 			//if( !wxString(DevVector[i]).StartsWith(wxT("\\Device")))
 				disks.Add(wxString(DevVector[i]));
@@ -69,7 +69,6 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 		return disks;
 
 	int last_item=0;
-
 	for( unsigned i =0 ; i < disks.Count() ; i++){
 		//Windows device menu categorization
 		#ifdef __WXMSW__

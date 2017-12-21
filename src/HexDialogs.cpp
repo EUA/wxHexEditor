@@ -1306,11 +1306,12 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						//Now generate UTF8 Lower binary from buffer for full comparison.
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
-						if(! memcmp( ubuf, search, search_size))	//if match found
+						if(! memcmp( ubuf, search, search_size)){	//if match found
 							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i);
 							else
 								return i;
+							}
 						}
 					}
 			else //Backward Search!
@@ -1322,11 +1323,12 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 						//Now generate UTF8 Lower binary from buffer for full comparison.
 						ucode = wxString::FromUTF8(bfr+i, search_size);
 						ubuf = ucode.Lower().ToUTF8();
-						if(! memcmp( ubuf, search, search_size))	//if match found
+						if(! memcmp( ubuf, search, search_size)){	//if match found
 							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i);
 							else
 								return i;
+							}
 					}
 				}
 			}
@@ -1337,22 +1339,24 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 				for(int i=0 ; i <= bfr_size - search_size ; i++ ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
-					if(! memcmp( ubuf, search, search_size ))	//if match found
+					if(! memcmp( ubuf, search, search_size )){	//if match found
 						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
 						else
 							return i;
+						}
 					}
 				}
 			else{ //Backward Search!
 				for(int i=bfr_size - search_size ; i >= 0 ; i-- ){
 					ucode = wxString::FromUTF8(bfr+i, search_size);
 					ubuf = ucode.Lower().ToUTF8();
-					if(! memcmp( ubuf, search, search_size ))	//if match found
+					if(! memcmp( ubuf, search, search_size )){	//if match found
 						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
 						else
 							return i;
+						}
 					}
 				}
 			}
@@ -1401,11 +1405,12 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							//partialy lowering buffer
 							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
 								bfr[k]=tolower(bfr[k]);
-							if(! memcmp( bfr+i+j, search, search_size ))	//if match found
+							if(! memcmp( bfr+i+j, search, search_size )){	//if match found
 								if(options & SEARCH_FINDALL)
 									ret_ptr->push_back(i+j);
 								else
 									return i+j;
+								}
 							}
 						}
 					}
@@ -1448,22 +1453,24 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 							//partialy lowering buffer
 							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
 								bfr[k]=tolower(bfr[k]);
-							if(! memcmp( bfr+i+j, search, search_size ))	//if match found
+							if(! memcmp( bfr+i+j, search, search_size )){	//if match found
 								if(options & SEARCH_FINDALL)
 									ret_ptr->push_back(i+j);
 								else
 									return i+j;
+								}
 							}
 					}
 				}
 			//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
 			for(int i=16 ; i >= 0 ; i-- )
 				if( bfr[i] == search[0] )
-					if(! memcmp( bfr+i, search, search_size ))	//if match found
+					if(! memcmp( bfr+i, search, search_size )){	//if match found
 						if(options & SEARCH_FINDALL)
 							ret_ptr->push_back(i);
 						else
 							return i;
+						}
 			}
 	#else
 		//Forward Operation
@@ -1533,11 +1540,12 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 				for( short j=0 ; j<=15 ; j++)
 					//if( (1<<j) & reg)
 					if( bfr[i+j] == search[0] ) //xxxclk
-						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
+						if(! memcmp( bfr+i+j, search, search_size )){	//if match found
 							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i+j);
 							else
 								return i+j;
+							}
 			}
 		//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
 //		for(int i=0 ; i < 16 ; i++ )
@@ -1585,29 +1593,32 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 				for( short j=15 ; j>=0 ; j--)
 					//if( (1<<j) & reg)
 					if( bfr[i+j] == search[0] )
-						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
+						if(! memcmp( bfr+i+j, search, search_size )){	//if match found
 							if(options & SEARCH_FINDALL)
 								ret_ptr->push_back(i+j);
 							else
 								return i+j;
+							}
 				}
 			}
 		//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
 		for(int i=16 ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
-				if(! memcmp( bfr+i, search, search_size ))	//if match found
+				if(! memcmp( bfr+i, search, search_size )){	//if match found
 					if(options & SEARCH_FINDALL)
 						ret_ptr->push_back(i);
 					else
 						return i;
+					}
 		#else
 		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
-				if(! memcmp( bfr+i, search, search_size ))	//if match found
+				if(! memcmp( bfr+i, search, search_size )){	//if match found
 					if(options & SEARCH_FINDALL)
 						ret_ptr->push_back(i);
 					else
 						return i;
+					}
 		#endif // __SSE2__
 		}
 
@@ -3180,7 +3191,7 @@ DeviceBackupDialog::DeviceBackupDialog( wxWindow* parent ):DeviceBackupDialogGui
 		disks[i]=disks.Item(i).AfterLast('/');
 
 	#ifdef __WXMSW__
-	for( int i=0 ; i < disks.Count() ; i++ )
+	for( unsigned i=0 ; i < disks.Count() ; i++ )
 		if(disks.Item(i).StartsWith(wxT("\\Device")))
 			disks.RemoveAt(i);
 	#endif
@@ -3262,7 +3273,7 @@ DeviceRestoreDialog::DeviceRestoreDialog( wxWindow* parent ):DeviceRestoreDialog
 	for( unsigned i =0 ; i < disks.Count() ; i++)
 		disks[i]=disks.Item(i).AfterLast('/');
 	#ifdef __WXMSW__
-	for( int i=0 ; i < disks.Count() ; i++ )
+	for( unsigned i=0 ; i < disks.Count() ; i++ )
 		if(disks.Item(i).StartsWith(wxT("\\Device")))
 			disks.RemoveAt(i);
 	#endif

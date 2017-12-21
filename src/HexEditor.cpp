@@ -1174,8 +1174,8 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 		}
 
 	if( FileLength() == 0 ){
-		int ids[]={wxID_DELETE, idTagQuick, idTagAddSelection, idTagEdit, wxID_COPY, idCopyAs, idSaveAsDump, idFillSelection, wxID_PASTE, wxID_DELETE, wxID_CUT};
-		for( int i=0; i< sizeof(ids)/4 ; i++ ){
+		unsigned ids[]={wxID_DELETE, idTagQuick, idTagAddSelection, idTagEdit, wxID_COPY, idCopyAs, idSaveAsDump, idFillSelection, wxID_PASTE, wxID_DELETE, wxID_CUT};
+		for( unsigned i=0; i< sizeof(ids)/4 ; i++ ){
 			menu.Enable( ids[i], false );
 			printf("i: %d\n",i);
 			}

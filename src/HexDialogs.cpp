@@ -1095,11 +1095,11 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 			percentage =  (findfile->Length()-totalread)*1000/findfile->Length();
 		if( progress_gauge != NULL)
 		if(first_run){
-			if( ! progress_gauge->Update( percentage));		// update progress and break on abort
+			if( ! progress_gauge->Update( percentage) );		// update progress and break on abort
 				break;
 				}
-			else if( ! progress_gauge->Update( percentage, emsg))		// update progress and break on abort
-				break;
+		else if( ! progress_gauge->Update( percentage, emsg))		// update progress and break on abort
+			break;
 #endif //_DEBUG_FIND_UNIT_TEST_
 		}while(backward_offset > end_offset);
 
@@ -1983,20 +1983,19 @@ void CopyAsDialog::PrepareFullTextWithTAGs( wxString& cb, wxMemoryBuffer& buff, 
 				cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
 			for(unsigned i = 0 ; i < BytePerLine ; i++){
 				if( i + current_offset < select->GetSize()){
-
-				//TAG Paint Loop
-				if(TAGenable)
-					for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
-						TagElement *tg = MainTagArray->Item(j);
-						if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
-							last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
-							cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
+					//TAG Paint Loop
+					if(TAGenable)
+						for( unsigned j = 0 ; j< MainTagArray->Count() ; j++ ){
+							TagElement *tg = MainTagArray->Item(j);
+							if( MainTagArray->Item(j)->start == i + current_offset + select->GetStart()){
+								last_color_text = tg->SoftColour( tg->NoteClrData.GetColour()).GetAsString(wxC2S_HTML_SYNTAX);
+								cb += wxT("<span style=\"background-color:") + last_color_text + wxT(";\">");
+								}
+							if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
+								cb += wxT("</span>");
+								last_color_text = wxEmptyString;
+								}
 							}
-						if( MainTagArray->Item(j)->end +1== i + current_offset + select->GetStart()){
-							cb += wxT("</span>");
-							last_color_text = wxEmptyString;
-							}
-						}
 
 					//Char filter for ascii
 					cb += wxString::From8BitData( &buff[ current_offset + i], 1 );

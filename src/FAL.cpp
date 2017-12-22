@@ -132,14 +132,26 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			devnm=szCFDevice;
 			}
 
-		if( FAM == ReadOnly)
+		if( FAM == ReadOnly){
 			hDevice = CreateFile (devnm, GENERIC_READ,
 											FILE_SHARE_READ | FILE_SHARE_WRITE,
 											NULL,
 											OPEN_EXISTING,
 											FILE_FLAG_NO_BUFFERING | FILE_ATTRIBUTE_READONLY  | FILE_FLAG_RANDOM_ACCESS,
 											NULL);
-		else
+			//Check if drive is mounted
+			if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL)
+				&& (!devnm.StartsWith("\\\\.\\PhysicalDrive" ) ) //PhysicalDrive can not checked since it's not logical volume to mount.
+				){
+				DWORD err = GetLastError ();
+				std::cout << err << std::endl;
+				wxMessageBox( _("Device is not mounted"), _("Error"), wxOK|wxICON_ERROR );
+				return false;
+				}
+			}
+
+		else{
+		//	hDevice = CreateFile( devnm, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 			hDevice = CreateFile( devnm, GENERIC_READ | GENERIC_WRITE,
 											FILE_SHARE_READ | FILE_SHARE_WRITE,
 											NULL,
@@ -147,32 +159,19 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 											FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
 											NULL);
 
+			 //lock volume
+			if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL))
+				wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), GetLastError (), devnm) );
+
+			//Dismount
+			if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL))
+				wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), GetLastError (), devnm) );
+			}
 
 		if(hDevice==INVALID_HANDLE_VALUE) // this may happen if another program is already reading from disk
 			{
 			std::cout << "Device cannot open due invalid handle : " << hDevice << std::endl;
 			CloseHandle(hDevice);
-			return false;
-			}
-		 //lock volume
-//		if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
-//			DWORD err = GetLastError ();
-//			wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), err, devnm) );
-//			}
-
-		//Dismount
-//		if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
-//			DWORD err = GetLastError ();
-//			wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
-//			}
-
-		//Check if drive is mounted
-		if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL)
-			&& (!devnm.StartsWith("\\\\.\\PhysicalDrive" ) ) //PhysicalDrive can not checked since it's not logical volume to mount.
-			){
-			DWORD err = GetLastError ();
-			std::cout << err << std::endl;
-			wxMessageBox( _("Device is not mounted"), _("Error"), wxOK|wxICON_ERROR );
 			return false;
 			}
 
@@ -183,6 +182,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		BlockRWCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
 
 /***  Testing code for \\.\PhysicalDriveX write operations.
+	if( FAM != ReadOnly){
 //		Strangely only sector 0 is writeable. Other sectors are not. I got ERROR_INVALID_BLOCK error. I don't know why... \\.\E: works properly. Do not understand why...
 
 //		System Error Codes: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382%28v=vs.85%29.aspx
@@ -207,6 +207,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 
 		success=WriteFile(hDevice, &x, BlockRWSize, &rd, NULL);    // to make upd
 		std::cout << "BlockWrite Win Mode:" << success << "\trd:" << rd << "\tLast err:"<< GetLastError() << std::endl;
+	}
 //*/
 
 		int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hDevice), 0);
@@ -408,11 +409,7 @@ FAL::~FAL(){
 	}
 
 bool FAL::SetAccessMode( FileAccessMode fam ){
-	if( ProcessID > 0
-#ifdef __WXMSW__
-	or (IsWinDevice( the_file ) )
-#endif // __WXMSW__
-		){
+	if( ProcessID > 0 ){
 		file_access_mode = fam;
 		return true;
 		}
@@ -425,6 +422,7 @@ bool FAL::SetAccessMode( FileAccessMode fam ){
 		Close();
 		//Open( the_file.GetFullPath(), (fam == ReadOnly ? wxFile::read : wxFile::read_write) );
 		OSDependedOpen( the_file, fam );
+		std::cout << "file reopened!" << std::endl;
 		if(! IsOpened()){
 			wxBell();
 			wxMessageBox( _("File load error!.\nFile closed but not opened while access change. For avoid corruption close the program"),_("Error"), wxOK|wxICON_ERROR );
@@ -538,9 +536,13 @@ bool FAL::Apply( void ){
 					uint64_t StartSector = put_ptr / BlockRWSize;
 					unsigned StartShift = put_ptr - StartSector*BlockRWSize;
 					uint64_t EndSector = (put_ptr + DiffArray[i]->size)/BlockRWSize;
-					int rd_size = (EndSector - StartSector + 1 )*BlockRWSize;// +1 for make read least one sector
+					long unsigned int rd_size = (EndSector - StartSector + 1 )*BlockRWSize;// +1 for make read least one sector
 					char *bfr = new char[rd_size];
-					int rd = 0;
+					//for( int i=0 i< rd_size; i++) bfr[i]=0;
+					long unsigned rd = 0;
+					//#ifdef __DEBUG__
+					std::cout << "BlockRW sectors:" << StartSector << ":" << EndSector << " Size:" << rd_size << std::endl;
+					//#endif // __DEBUG__
 
 					//First read the original sector
 					if ( ProcessID >=0 ){
@@ -568,6 +570,8 @@ bool FAL::Apply( void ){
 					memcpy( bfr+StartShift, (DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
 
 					//Than apply the changes
+
+					//if memory process
 					if ( ProcessID >=0 ){
 						int wr=0;
 						long word=0;
@@ -581,9 +585,11 @@ bool FAL::Apply( void ){
 						success*=true;
 						#endif
 						}
+					//disk block devices:
 					else{
 						wxFile::Seek(StartSector*BlockRWSize);
 						success*=Write(bfr, rd_size);//*= to make update success true or false
+
 						}
 					delete [] bfr;
 					}

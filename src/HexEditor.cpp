@@ -408,7 +408,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 		int BlockSz = 128*1024;
 		char *buffer = new char[BlockSz];
 		uint64_t readfrom=0,readspeed=0;
-		int rd;
+		unsigned rd;
 
 		time_t ts,te;
 		time (&ts);
@@ -765,16 +765,16 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 	if(myfile != NULL) {
 		wxHexCtrl *myctrl = static_cast<wxHexCtrl*>(event.GetEventObject());
 		//Keyboard Selection Code
-		if( event.ShiftDown() )
-            if(	event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
-                  event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
-                  event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
-                  event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
-                  event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
-                  event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
-                  event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
-                  event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN
-              )
+		if( event.ShiftDown() &&
+			(event.GetKeyCode()==WXK_UP || event.GetKeyCode()==WXK_NUMPAD_UP ||
+			event.GetKeyCode()==WXK_DOWN || event.GetKeyCode()==WXK_NUMPAD_DOWN ||
+			event.GetKeyCode()==WXK_LEFT || event.GetKeyCode()==WXK_NUMPAD_LEFT ||
+			event.GetKeyCode()==WXK_RIGHT || event.GetKeyCode()==WXK_NUMPAD_RIGHT ||
+			event.GetKeyCode()==WXK_HOME || event.GetKeyCode()==WXK_NUMPAD_HOME ||
+			event.GetKeyCode()==WXK_END || event.GetKeyCode()==WXK_NUMPAD_END ||
+			event.GetKeyCode()==WXK_PAGEUP || event.GetKeyCode()==WXK_NUMPAD_PAGEUP ||
+			event.GetKeyCode()==WXK_PAGEDOWN || event.GetKeyCode()==WXK_NUMPAD_PAGEDOWN )
+			)
                 OnKeyboardSelector(event);	//Selection Starter call
 
 		switch (event.GetKeyCode()) {

@@ -323,7 +323,7 @@ void TagPanel::Set( ArrayOfTAG& TagArray ){
 void TagPanel::OnTagSelect(wxCommandEvent& event) {
 	//HexEditor* MyHexEditor = static_cast< HexEditorFrame* >(GetParent())->GetActiveHexEditor(); //if detached, parent changes!
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
-	int selection = TagPanelList->GetSelection();
+	unsigned selection = TagPanelList->GetSelection();
 
 	if( MyHexEditor != NULL )
 		if( MyHexEditor->MainTagArray.Count() >= selection ){
@@ -341,7 +341,7 @@ void TagPanel::OnRightMouse( wxMouseEvent& event ){
 
 void TagPanel::OnDeleteTag( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
-	int selection = TagPanelList->GetSelection();
+	unsigned selection = TagPanelList->GetSelection();
 
 	if( MyHexEditor != NULL )
 		if( MyHexEditor->MainTagArray.Count() >= selection ){

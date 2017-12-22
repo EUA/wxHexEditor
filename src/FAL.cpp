@@ -159,13 +159,13 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 											FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_RANDOM_ACCESS,
 											NULL);
 
-			 //lock volume
-			if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL))
-				wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), GetLastError (), devnm) );
-
-			//Dismount
-			if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL))
-				wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), GetLastError (), devnm) );
+//			 //lock volume
+//			if (!DeviceIoControl (hDevice, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL))
+//				wxMessageBox( wxString::Format( wxT("Error %d attempting to lock volume: %s"), GetLastError (), devnm) );
+//
+//			//Dismount
+//			if (!DeviceIoControl (hDevice, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL))
+//				wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), GetLastError (), devnm) );
 			}
 
 		if(hDevice==INVALID_HANDLE_VALUE) // this may happen if another program is already reading from disk
@@ -180,35 +180,6 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		DeviceIoControl (hDevice, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL);
 		BlockRWSize=driveInfo.BytesPerSector;
 		BlockRWCount=driveInfo.TracksPerCylinder*driveInfo.SectorsPerTrack*driveInfo.Cylinders.QuadPart;
-
-/***  Testing code for \\.\PhysicalDriveX write operations.
-	if( FAM != ReadOnly){
-//		Strangely only sector 0 is writeable. Other sectors are not. I got ERROR_INVALID_BLOCK error. I don't know why... \\.\E: works properly. Do not understand why...
-
-//		System Error Codes: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382%28v=vs.85%29.aspx
-//		FileWrite() https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747%28v=vs.85%29.aspx
-//		SetFilePointer() https://msdn.microsoft.com/en-us/library/windows/desktop/aa365541%28v=vs.85%29.aspx
-//		SetFilePointerEx() https://msdn.microsoft.com/en-us/library/windows/desktop/aa365542%28v=vs.85%29.aspx
-
-		bool stat = SetFilePointer(hDevice, (1*BlockRWSize), 0, FILE_BEGIN);
-		std::cout << "Sector set Win Mode:" << 1*BlockRWSize << " status:" << stat << "\tLoc:"<<SetFilePointer( hDevice, 0, NULL,  FILE_CURRENT )<< "\tLast err:"<< GetLastError() <<std::endl;
-
-		long unsigned int rd;
-		char x[1024];
-		bool success=ReadFile( hDevice, &x, BlockRWSize, &rd, NULL );
-		std::cout << "BlockRead Win Mode:" << success << "\trd:" << rd <<"\tLast err:"<< GetLastError() << std::endl;
-		x[50]='H';
-		x[51]='e';
-		x[52]='l';
-		x[53]='l';
-		x[54]='o';
-		stat = SetFilePointer(hDevice, (1*BlockRWSize), 0, FILE_BEGIN);
-		std::cout << "Sector set Win Mode:" << 1*BlockRWSize << " status:" << stat << "\tLast err:"<< GetLastError() <<std::endl;
-
-		success=WriteFile(hDevice, &x, BlockRWSize, &rd, NULL);    // to make upd
-		std::cout << "BlockWrite Win Mode:" << success << "\trd:" << rd << "\tLast err:"<< GetLastError() << std::endl;
-	}
-//*/
 
 		int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hDevice), 0);
 	#ifdef _DEBUG_

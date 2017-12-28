@@ -32,9 +32,7 @@ TagElement::TagElement(){
 	tag.Clear();
 	FontClrData.SetColour( *wxBLACK );//Default wxBlack
 	NoteClrData.SetColour( *wxRED );
-#ifndef __WXMAC__
 	wxP = NULL;
-#endif
 	}
 
 TagElement::TagElement( TagElementData data ){
@@ -43,17 +41,13 @@ TagElement::TagElement( TagElementData data ){
 	FontClrData=data.FontClrData;
 	NoteClrData=data.NoteClrData;
 	visible = false;
-	#ifndef __WXMAC__
 	wxP = NULL;
-	#endif
 	}
 
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColourData fntclr, wxColourData noteclr):
 			start( _start < _end ? _start : _end), end(_start < _end ? _end : _start), tag(_tag), FontClrData(fntclr), NoteClrData(noteclr){
 	visible = false;
-	#ifndef __WXMAC__
 	wxP = NULL;
-	#endif
 	}
 
 TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour fntclr, wxColour noteclr):
@@ -61,19 +55,15 @@ TagElement::TagElement( uint64_t _start, uint64_t _end, wxString _tag, wxColour 
 	FontClrData.SetColour(fntclr);
 	NoteClrData.SetColour(noteclr);
 	visible = false;
-	#ifndef __WXMAC__
 	wxP = NULL;
-	#endif
 	}
 
 
 TagElement::~TagElement(){
 	if( visible )
 		Hide();
-#ifndef __WXMAC__
 	if(wxP != NULL)
 		wxP->Destroy();
-#endif
 	tag.Clear();
 	}
 
@@ -105,7 +95,6 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		std::cout << "Show tag element " << this << std::endl;
 #endif
 		visible = true;
-#ifndef __WXMAC__
 		wxP = new wxPopupWindow( parent );
 		wxP->SetBackgroundColour( NoteClrData.GetColour() );
 		wxP->SetForegroundColour( FontClrData.GetColour() );
@@ -118,7 +107,6 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		wxP->Position( pos, wxSize(0,-50)); //topSizer->GetSize() ); //size put gap here
 		wxP->Show();
 // TODO (death#1#): Auto hide on popup menus. Modularized!
-#endif
 		}
 	}
 
@@ -129,11 +117,9 @@ void TagElement::Hide( void ){
 		std::cout << "Hide tag element " << this << std::endl;
 #endif
 		visible=false;
-#ifndef __WXMAC__
-		wxP->Hide();
+        wxP->Hide();
 		wxP->Destroy();
 		wxP=NULL;
-#endif
 		}
 	}
 

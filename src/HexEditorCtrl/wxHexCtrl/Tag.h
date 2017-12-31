@@ -75,9 +75,7 @@ class TagElement{
 //		bool operator>( TagElement a ){ return start > a.start; }
 
 //		void OnKillFocus( wxFocusEvent& event );
-#ifndef __WXMAC__
 		wxPopupWindow *wxP;
-#endif	//wxPopupWindows is not yet implemented in MacOSX
 	};
 
 int TagElementSort( TagElement **a, TagElement **b );

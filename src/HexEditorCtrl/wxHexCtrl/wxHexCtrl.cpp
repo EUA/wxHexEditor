@@ -2784,11 +2784,12 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 	m_text.Clear();
 
     wxString format=GetFormatString();
-
-	wxULongLong_t ull = ( offset_position );
+    //not wxULongLong_t ull due no wxULongLongFmtSpec
+	//wxLongLong_t ull = ( offset_position );
+	uint64_t ull = ( offset_position );
 	if( offset_mode == 's' ){//Sector Indicator!
 		for( int i=0 ; i<LineCount() ; i++ ){
-			m_text << wxString::Format( format, (ull/sector_size), ull%sector_size );
+			m_text << wxString::Format( format, int64_t(ull/sector_size), unsigned(ull%sector_size) );
 			ull += BytePerLine;
 			}
 		}
@@ -2802,7 +2803,7 @@ void wxHexOffsetCtrl::SetValue( uint64_t position, int byteperline ){
 
 wxString wxHexOffsetCtrl::GetFormatedOffsetString( uint64_t c_offset, bool minimal ){
    if(offset_mode=='s')
-		return wxString::Format( GetFormatString(minimal), (c_offset/sector_size), c_offset%sector_size );
+		return wxString::Format( GetFormatString(minimal), uint64_t(c_offset/sector_size), unsigned(c_offset%sector_size) );
 	return wxString::Format( GetFormatString(minimal), c_offset );
 	}
 
@@ -2815,12 +2816,14 @@ wxString wxHexOffsetCtrl::GetFormatString( bool minimal ){
 			while((1+offset_limit/sector_size) > pow(10,++sector_digit));
 			while(sector_size > pow(10,++offset_digit));
 			}
-		format << wxT("%0") << sector_digit << wxLongLongFmtSpec << wxT(":%0") << offset_digit << wxT("u");
+        #ifdef __WXMAC__
+        format << wxT("%0") << sector_digit << wxT("llu:%0") << offset_digit << wxT("u");
+        #else
+        format << wxT("%0") << sector_digit << wxLongLongFmtSpec << wxT(":%0") << offset_digit;
+        #endif
 		return format;
 		}
-	format << wxT("%0") <<
-			(minimal? 0 : GetDigitCount())
-			<< wxLongLongFmtSpec << wxChar( offset_mode );
+   format << wxT("%0") << (minimal? 0 : GetDigitCount()) << wxLongLongFmtSpec << wxChar( offset_mode );
    if( offset_mode=='X' )
         format << wxChar('h');
 	else if ( offset_mode=='o')

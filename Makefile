@@ -1,6 +1,6 @@
 WXCONFIG ?= wx-config
 HOST=
-WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp -Wall
+WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -fopenmp -Wall -O3
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
 WXCXXFLAGS += -fopenmp
 LDFLAGS += -lgomp
@@ -38,7 +38,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.23 Beta
+VERSION = 0.24 Beta
 
 .DEFAULT_GOAL := all
 

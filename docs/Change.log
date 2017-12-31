@@ -1,3 +1,16 @@
+wxHexEditor v0.24 Beta  31/12/2017
+Fixed many critical bugs and assertions. (Thanks Mikhail Kasimov for Beta testing.)
+Fixed MacOSX dialog crashes and make OSX version usable again.
+Added Windows Disk & Partition raw write.
+Added TAG redo/undo support.
+Added Portable mode support.
+Added Clang compilation support.
+Added space check and error check while saving.
+Added "+Offset-" byte shifting feature.
+Added TAG remove with right click at TAG panel. 
+Added Preferences dialog save on change for example on font sizes.
+Added Quick and Normal Tag creation shortcuts.
+
 wxHexEditor v0.23 Beta  04/12/2014
 Added many languages!
 Fixed many bugs that leads to crash and memory leaks.

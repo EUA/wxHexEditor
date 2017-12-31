@@ -11,7 +11,7 @@
 
 Name:			wxHexEditor
 Summary:		A hex editor for view / edit huge files and devices
-Version:		0.23
+Version:		0.24
 Release:		1
 License:		GPL
 Group:			Editors
@@ -81,6 +81,8 @@ it's writen by cross-platform API, wxWidgets.
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Thu Nov 29 2014 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.24-0
+- Updated to version v0.24
 * Thu Nov 29 2014 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.23-0
 - Updated to version v0.23, fixed build requirements for udis86 compilation
 * Thu May 09 2013 Erdem U. Altinyurt <spamjunkeater@gmail.com> - 0.22-0

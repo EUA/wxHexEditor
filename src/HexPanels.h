@@ -103,10 +103,13 @@ class TagPanel : public TagPanelGui{
 		:TagPanelGui( (wxWindow*) parent_, id, pos, size, style){
 			parent = parent_;
 			this->Connect( idDeleteTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnDeleteTag ) );
+			m_buttonClear->Show(true);
 			}
 		class HexEditorFrame *parent;
 		void Set( ArrayOfTAG& TagArray );
 		void Clear( void );
+		void OnClear( wxCommandEvent& event );
+		void OnHideAll( wxCommandEvent& event );
 		void OnTagSelect( wxCommandEvent& event );
 		//void OnUpdate( wxCommandEvent& event ){}
 		void OnRightMouse( wxMouseEvent& event );
@@ -122,7 +125,7 @@ class SearchPanel : public TagPanel{
 	public:
 	SearchPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 	:TagPanel( parent_, id, pos, size, style){
-	m_buttonClear->Show(true);};
+	m_buttonClear->Show(true);}
 	void OnTagSelect( wxCommandEvent& event );
 	void OnRightMouse( wxMouseEvent& event ){};
 	void OnClear( wxCommandEvent& event );

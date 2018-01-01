@@ -484,29 +484,56 @@ void FindDialog::FindSomeBytes( void ){
 	time (&ts);
 	te=ts;
 	uint64_t read_speed=0;
-	//Search step 1: From cursor to file end.
-	do{
-		findfile->Seek( current_offset, wxFromStart );
-		readed = findfile->Read( buffer , search_step );
-		read_speed += readed;
-		for( int i=0; i < readed ; i++)
-			if( buffer[i] != diff_search ){
-				parent->Goto( current_offset+i );
-				//Destroy();
-				return;
-				}
+	//From cursor to file end.
+	//backward search
+	unsigned options = chkSearchBackwards->GetValue() ? SEARCH_BACKWARDS : 0;
+	uint64_t backward_offset;
+	if( options & SEARCH_BACKWARDS )
+		do{
+			backward_offset = current_offset < search_step ? 0 : current_offset-search_step;
+			search_step = backward_offset + search_step > current_offset ? current_offset-backward_offset-1 : search_step;
+			findfile->Seek( backward_offset, wxFromStart );
+			readed=findfile->Read( buffer , search_step );
+			read_speed += readed;
+			for( int i=readed; i >= 0 ; i--)
+				if( buffer[i] != diff_search ){
+					parent->Goto( backward_offset+i );
+					return;
+					}
+			time(&te);
+			if(ts != te ){
+					ts=te;
+					emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
+					read_speed=0;
+					}
+			if( ! progress_gauge.Update((findfile->Length()-current_offset)*1000/findfile->Length(), emsg))		// update progress and break on abort
+				break;
 
-		time(&te);
-		if(ts != te ){
-				ts=te;
-				emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
-				read_speed=0;
-				}
-		if( ! progress_gauge.Update(current_offset*1000/findfile->Length(), emsg))		// update progress and break on abort
-			break;
+			current_offset += readed;
+			}while(backward_offset > 0);
+	else
+		do{
+			findfile->Seek( current_offset, wxFromStart );
+			readed = findfile->Read( buffer , search_step );
+			read_speed += readed;
+			for( int i=0; i < readed ; i++)
+				if( buffer[i] != diff_search ){
+					parent->Goto( current_offset+i );
+					//Destroy();
+					return;
+					}
 
-		current_offset += readed;
-		}while(readed >= search_step); //indicate also file end.
+			time(&te);
+			if(ts != te ){
+					ts=te;
+					emsg = msg + wxT("\n") + _("Search Speed : ") + wxString::Format( wxT("%.2f "), 1.0*read_speed/MB) + _("MB/s");
+					read_speed=0;
+					}
+			if( ! progress_gauge.Update(current_offset*1000/findfile->Length(), emsg))		// update progress and break on abort
+				break;
+
+			current_offset += readed;
+			}while(readed >= search_step); //indicate also file end.
 	wxBell();
 	}
 

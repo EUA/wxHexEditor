@@ -2810,17 +2810,13 @@ wxString wxHexOffsetCtrl::GetFormatedOffsetString( uint64_t c_offset, bool minim
 wxString wxHexOffsetCtrl::GetFormatString( bool minimal ){
    wxString format;
    if(offset_mode=='s'){
-   	int sector_digit=0;
-   	int offset_digit=0;
+   	unsigned sector_digit=0;
+   	unsigned offset_digit=0;
    	if(!minimal){
 			while((1+offset_limit/sector_size) > pow(10,++sector_digit));
 			while(sector_size > pow(10,++offset_digit));
 			}
-        #ifdef __WXMAC__
         format << wxT("%0") << sector_digit << wxT("llu:%0") << offset_digit << wxT("u");
-        #else
-        format << wxT("%0") << sector_digit << wxLongLongFmtSpec << wxT(":%0") << offset_digit;
-        #endif
 		return format;
 		}
    format << wxT("%0") << (minimal? 0 : GetDigitCount()) << wxLongLongFmtSpec << wxChar( offset_mode );

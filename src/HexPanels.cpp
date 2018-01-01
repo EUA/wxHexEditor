@@ -304,6 +304,14 @@ void TagPanel::Clear( void ){
 	mutextag.Unlock();
 	}
 
+void TagPanel::OnHide( wxCommandEvent& event ){
+	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+	if( MyHexEditor != NULL ){
+		MyHexEditor->TagInvisible=!MyHexEditor->TagInvisible;
+		MyHexEditor->Reload();
+		}
+	}
+
 void TagPanel::OnClear( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	if( wxOK==wxMessageBox(_("There are no undo for this action.\nDo you want to delete all tags for this file?"),_("Warning"), wxOK|wxCANCEL|wxICON_WARNING) ){

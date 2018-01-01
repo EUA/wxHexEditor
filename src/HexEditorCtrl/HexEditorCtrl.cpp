@@ -371,19 +371,11 @@ void HexEditorCtrl::PreparePaintTAGs( void ){//TagElement& TAG ){
 	WX_CLEAR_ARRAY(hex_ctrl->TagArray);
 	WX_CLEAR_ARRAY(text_ctrl->TagArray);
 
-	//MainTagArray.Sort( TagElement::TagCompare );
-	//for( unsigned i = 0 ; i < MainTagArray.Count() ; i ++ )	//Painting all TAGs here.
-	//	PushTAGToControls(MainTagArray.Item(i));
-	PaintTAGsPrefilter( MainTagArray );
+    if(!TagInvisible)
+		PaintTAGsPrefilter( MainTagArray );
 
-	//HighlightArray.Sort( TagElement::TagCompare );
-   //for( unsigned i = 0 ; i < HighlightArray.Count() ; i ++ )	//Just highlighting required sections.
-	//  PushTAGToControls(HighlightArray.Item(i));
 	PaintTAGsPrefilter( HighlightArray );
 
-	//CompareArray.Sort( TagElement::TagCompare );
-	//for( unsigned i = 0 ; i < CompareArray.Count() ; i ++ )	//Just highlighting diff sections.
-	//	PushTAGToControls(CompareArray.Item(i));
 	PaintTAGsPrefilter( CompareArray );
 	}
 

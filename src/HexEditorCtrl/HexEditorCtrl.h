@@ -137,6 +137,7 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		ArrayOfTAG CompareArray;
 		ArrayOfTAG HighlightArray;
 		ArrayOfTAG MainTagArray;
+		bool TagInvisible=false;
 		wxFont stdfont;
 		bool ZebraEnable;
 		int *ZebraStriping;

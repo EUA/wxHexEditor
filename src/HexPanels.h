@@ -104,12 +104,13 @@ class TagPanel : public TagPanelGui{
 			parent = parent_;
 			this->Connect( idDeleteTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnDeleteTag ) );
 			m_buttonClear->Show(true);
+			m_buttonHide->Show(true);
 			}
 		class HexEditorFrame *parent;
 		void Set( ArrayOfTAG& TagArray );
 		void Clear( void );
 		void OnClear( wxCommandEvent& event );
-		void OnHideAll( wxCommandEvent& event );
+		void OnHide( wxCommandEvent& event );
 		void OnTagSelect( wxCommandEvent& event );
 		//void OnUpdate( wxCommandEvent& event ){}
 		void OnRightMouse( wxMouseEvent& event );

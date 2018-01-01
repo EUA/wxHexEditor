@@ -1814,6 +1814,7 @@ void CopyAsDialog::PrepareOptions( int SelectedFunction ){
 		chcOption->Insert(_("Quad Hex"),2);
 		chcOption->Insert(_("with 0x"),3);
 		chcOption->Insert(_("with 0x and Comma"),4);
+		chcOption->Insert(_("with \\x"),5);
 		chkOffset->Enable(false);
 		chkHex->Enable(false);
 		chkText->Enable(false);
@@ -2062,6 +2063,7 @@ void CopyAsDialog::Copy( void ){
 				case 2: HexFormat=wxT("%02X"); quad=true; break; //Quad
 				case 3: HexFormat=wxT("0x%02X ");break; //Ox
 				case 4: HexFormat=wxT("0x%02X, ");break; //Ox with period
+				case 5: HexFormat=wxT("\\x%02X");break; //\x
 				}
 
 			for(unsigned current_offset = 0; current_offset < select->GetSize() ; current_offset ++){

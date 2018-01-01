@@ -110,6 +110,10 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		}
 	}
 
+uint64_t TagElement::Size( void ){
+	return end-start+1;
+	}
+
 void TagElement::Hide( void ){
 	if( visible )
 		{

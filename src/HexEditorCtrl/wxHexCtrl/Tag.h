@@ -66,6 +66,7 @@ class TagElement{
 		bool visible;
 
 		void Show( const wxPoint& pos, wxWindow *parent );
+		uint64_t Size( void );
 		void Hide( void );
 		bool isCover( uint64_t );
 		void print(void);

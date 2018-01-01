@@ -329,7 +329,8 @@ void TagPanel::Set( ArrayOfTAG& TagArray ){
 	for(unsigned i = 0 ; i < TagArray.Count() ; i++)
 		str.Add( TagArray.Item(i)->tag.IsEmpty() ?
 // TODO (death#1#): wxLongLongFmtSpec need here!!!
-					wxString::Format("%d. Offset %" wxLongLongFmtSpec "u",i+1, TagArray.Item(i)->start )
+					wxString::Format("%d. Offset %" wxLongLongFmtSpec "u - %" wxLongLongFmtSpec "u : %" wxLongLongFmtSpec "u",
+								i+1, TagArray.Item(i)->start, TagArray.Item(i)->end, TagArray.Item(i)->Size() )
 					: TagArray.Item(i)->tag );
 
 	TagPanelList->Clear();
@@ -379,6 +380,17 @@ void SearchPanel::OnClear( wxCommandEvent& event ){
 		WX_CLEAR_ARRAY(MyHexEditor->HighlightArray);
 		MyHexEditor->Reload();
 		}
+	}
+
+void SearchPanel::Set(ArrayOfTAG& TagArray){
+	mutextag.Lock();
+	wxArrayString str;
+	for(unsigned i = 0 ; i < TagArray.Count() ; i++)
+		str.Add( wxString::Format("%d. Offset %" wxLongLongFmtSpec "u",i+1, TagArray.Item(i)->start ) );
+	TagPanelList->Clear();
+	if(str.Count())
+		TagPanelList->InsertItems(str,0);
+	mutextag.Unlock();
 	}
 
 void SearchPanel::OnTagSelect(wxCommandEvent& event) {

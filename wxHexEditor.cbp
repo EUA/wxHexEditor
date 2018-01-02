@@ -69,14 +69,14 @@
 				<Option parameters="testfile.swp" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --cflags) -fopenmp -Wno-deprecated-declarations" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="$($(WXCONFIG) --libs)" />
 					<Add library="gomp" />
 					<Add library="mhash/bin/Release/libmhash.a" />

@@ -207,6 +207,8 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 			}
 		}
 
+	m_server = new IPCServer(this);
+    m_server->Create("59147"); //Just random number
 	}
 
 HexEditorFrame::~HexEditorFrame(){
@@ -1241,3 +1243,10 @@ void VersionChecker::OnChkDisplay( wxCommandEvent& event ){
 	myConfigBase::Get()->Write( _T("UpdateCheck"), !wxchk_display->GetValue());
 	}
 
+wxConnectionBase *IPCServer::OnAcceptConnection(const wxString& topic){
+    wxLogMessage("OnAcceptConnection(\"%s\")", topic);
+    if ( topic.StartsWith("OPEN FILE:")){
+		wxFileName a(topic.substr(10));
+		parent->OpenFile( a );
+		}
+}

@@ -55,14 +55,16 @@
 #include "../resources/win/png2c.h"
 #endif
 
+
 #define wxGetBitmapFromMemory(name) _wxGetBitmapFromMemory(name ## _png, sizeof(name ## _png))
 inline wxBitmap _wxGetBitmapFromMemory(const unsigned char *data, int length) {
    wxMemoryInputStream is(data, length);
    return wxBitmap(wxImage(is, wxBITMAP_TYPE_ANY, -1), -1);
- }
+	}
 
+class IPCServer;
 class DnDFile;
-class HexEditorFrame : public HexEditorGui {
+class HexEditorFrame : public HexEditorGui{
 	public:
 		HexEditorFrame();
 		HexEditorFrame(	wxWindow* parent, wxWindowID id = wxID_ANY );
@@ -109,6 +111,7 @@ class HexEditorFrame : public HexEditorGui {
 		wxToolBar* Toolbar;
 #endif
 		friend class DnDFile;
+		IPCServer* m_server;
 	};
 
 class HexEditorArtProvider : public wxArtProvider{
@@ -133,6 +136,16 @@ class VersionChecker : public UpdateDialogGui {
 	public:
 		VersionChecker( wxString _url, wxString current_version, wxWindow *parent = NULL, wxWindowID id = 1  );
 		void OnChkDisplay( wxCommandEvent& event );
+	};
+
+#include <wx/ipc.h>
+//For open files with wxHexEditor mime
+class IPCServer : public wxServer{
+	public:
+		IPCServer(HexEditorFrame *parent_): parent(parent_){};
+		virtual wxConnectionBase *OnAcceptConnection(const wxString& topic);
+	private:
+		HexEditorFrame *parent;
 	};
 
 #endif

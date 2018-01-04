@@ -2888,7 +2888,7 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(parent, wxID_ANY){
 	GetInstalledLanguages( LangNames, LangIds );
 
-	chkPortable->Hide(); //Not yet ready.
+	//chkPortable->Hide();
 
 	chcLang->Clear();
 	LangNames.Sort();

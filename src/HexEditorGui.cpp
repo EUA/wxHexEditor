@@ -222,6 +222,10 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	devicesMenu->Append( menuDevicesRam );
 	menuDevicesRam->Enable( false );
 	
+	wxMenuItem* menuDevicesMemorySPD;
+	menuDevicesMemorySPD = new wxMenuItem( devicesMenu, idDeviceMemorySPD, wxString( wxT("Open Memory SPD") ) , wxT("Allow to edit Memory SPD values"), wxITEM_NORMAL );
+	devicesMenu->Append( menuDevicesMemorySPD );
+	
 	menuDeviceDisk = new wxMenu();
 	wxMenuItem* menuDeviceDiskItem = new wxMenuItem( devicesMenu, wxID_ANY, wxT("Open Disk Device"), wxEmptyString, wxITEM_NORMAL, menuDeviceDisk );
 	wxMenuItem* menuDevicesDiskItem1;
@@ -364,6 +368,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Connect( menuToolsXORView->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Connect( menuDevicesRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Connect( menuDevicesMemorySPD->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDevicesProcessRAM->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Connect( menuDeviceBackup->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
@@ -430,6 +435,7 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idXORView, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( idDeviceMemorySPD, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idProcessRAM, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceBackup, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
@@ -1820,6 +1826,11 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	
 	chkPortable = new wxCheckBox( this, wxID_ANY, wxT("Make program portable "), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerTags->Add( chkPortable, 0, wxALL, 5 );
+	
+	chkSingleInstance = new wxCheckBox( this, wxID_ANY, wxT("Single instance mode"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkSingleInstance->SetToolTip( wxT("Allows only one copy of the programx running at a time.\nOpening new files open new tabs on the program.") );
+	
+	bSizerTags->Add( chkSingleInstance, 0, wxALL, 5 );
 	
 	
 	bSizerMain->Add( bSizerTags, 0, 0, 5 );

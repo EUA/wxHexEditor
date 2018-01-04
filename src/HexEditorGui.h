@@ -69,18 +69,19 @@
 #define idCompare 1021
 #define idXORView 1022
 #define idDeviceRam 1023
-#define idProcessRAM 1024
-#define idDeviceBackup 1025
-#define idDeviceRestore 1026
-#define idDeviceErase 1027
-#define idFileRO 1028
-#define idFileRW 1029
-#define idFileDW 1030
-#define idDonate 1031
-#define idWiki 1032
-#define idBugReport 1033
-#define ID_CHK_UNSIGNED 1034
-#define ID_CHK_BIGENDIAN 1035
+#define idDeviceMemorySPD 1024
+#define idProcessRAM 1025
+#define idDeviceBackup 1026
+#define idDeviceRestore 1027
+#define idDeviceErase 1028
+#define idFileRO 1029
+#define idFileRW 1030
+#define idFileDW 1031
+#define idDonate 1032
+#define idWiki 1033
+#define idBugReport 1034
+#define ID_CHK_UNSIGNED 1035
+#define ID_CHK_BIGENDIAN 1036
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -508,6 +509,7 @@ class PreferencesDialogGui : public wxDialog
 		wxSpinCtrl* spinBytePerLine;
 		wxCheckBox* chkAutoShowTagPanel;
 		wxCheckBox* chkPortable;
+		wxCheckBox* chkSingleInstance;
 		wxButton* BtnCancel;
 		wxButton* BtnSave;
 		

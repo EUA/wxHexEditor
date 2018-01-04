@@ -58,21 +58,22 @@ void MyClient::Connect(const wxString& sHost, const wxString& sService, const wx
 bool wxHexEditorApp::OnInit() {
 	wxImage::AddHandler(new wxPNGHandler);
 	SetLanguage();
+	bool SingleInstance;
+	if( myConfigBase::Get()->Read( _T("SingleInstance"), &SingleInstance, false ) ){
+		wxSingleInstanceChecker* m_checker = new wxSingleInstanceChecker;
+		if ( m_checker->IsAnotherRunning() ){
+			delete m_checker;
+			m_checker = NULL;
 
-//    wxSingleInstanceChecker* m_checker = new wxSingleInstanceChecker;
-//    if ( m_checker->IsAnotherRunning() )
-//    {
-//        delete m_checker; // OnExit() won't be called if we return false
-//        m_checker = NULL;
-//
-//		MyClient *m_client = new MyClient;
-//		for(int ii = 1; ii < argc; ++ii) {
-//			wxString str(argv[ii]);
-//			wxFileName fl(str);
-//			m_client->Connect("localhost", "59147", "OPEN FILE:"+fl.GetLongPath());
-//		}
-//
-//    }
+			MyClient *m_client = new MyClient;
+			for(int ii = 1; ii < argc; ++ii) {
+				wxString str(argv[ii]);
+				wxFileName fl(str);
+				m_client->Connect("localhost", "59147", "OPEN FILE:"+fl.GetLongPath());
+				}
+
+			}
+		}
 
 	frame = new HexEditorFrame( 0L );
 	// frame->Connect( wxEVT_MOTION,	wxMouseEventHandler(wxHexEditorApp::OnMouseMove),NULL, this);

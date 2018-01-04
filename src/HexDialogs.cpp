@@ -2915,6 +2915,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	if( myConfigBase::Get()->Read( _T("ColourHexSelectionForeground"), &TempString) )		clrPickerSelectionForeground->SetColour(TempString);
 	if( myConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )		clrPickerSelectionBackground->SetColour(TempString);
 	if( myConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )					chkAutoShowTagPanel->SetValue( TempBool );
+	if( myConfigBase::Get()->Read( _T("SingleInstance"), &TempBool ) )						chkSingleInstance->SetValue( TempBool );
 	if( myConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
 	if( myConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)				comboCustomHexFormat->SetValue( TempString );
 	comboCustomHexFormat->Enable( chkCustom->IsChecked() );
@@ -3183,6 +3184,7 @@ void PreferencesDialog::SaveRegistry( void ) {
 	myConfigBase::Get()->Write( _T("FontSize"), spinFontSize->GetValue() );
 
 	myConfigBase::Get()->Write( _T("AutoShowTagPanel"), chkAutoShowTagPanel->GetValue() );
+	myConfigBase::Get()->Write( _T("SingleInstance"), chkSingleInstance->GetValue() );
 
 	myConfigBase::Get()->Flush();
 

@@ -87,6 +87,8 @@ class HexEditorFrame : public HexEditorGui{
 		void OnHelpMenu( wxCommandEvent& event );
 		void OnActivate( wxActivateEvent& event );
 
+		void OpenMemorySPDDevice( void );
+
 		void ActionEnabler( void );
 		void ActionDisabler( void );
 		void OnNotebookTabSelection( wxAuiNotebookEvent& event );

@@ -2887,9 +2887,6 @@ void XORViewDialog::EventHandler( wxCommandEvent& event ){
 
 PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(parent, wxID_ANY){
 	GetInstalledLanguages( LangNames, LangIds );
-
-	//chkPortable->Hide();
-
 	chcLang->Clear();
 	LangNames.Sort();
 	chcLang->Append( LangNames );
@@ -2921,6 +2918,9 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	comboCustomHexFormat->Enable( chkCustom->IsChecked() );
 	if( myConfigBase::Get()->Read( _T("useBytesPerLineLimit"), &TempBool	)	) 			chkBytePerLineLimit->SetValue( TempBool );
 	spinBytePerLine->Enable( chkBytePerLineLimit->IsChecked() );
+
+	chkPortable->SetValue( wxFileExists(wxT("wxHexEditor.cfg")) );
+
 
 	int TempInt;
 	myConfigBase::Get()->Read( _T("BytesPerLineLimit"), &TempInt, 16);
@@ -3160,6 +3160,15 @@ void PreferencesDialog::EventHandler( wxCommandEvent& event ) {
 		comboCustomHexFormat->Enable( event.IsChecked() );
 	if(event.GetId() == chkBytePerLineLimit->GetId() )
 		spinBytePerLine->Enable( event.IsChecked() );
+    if(event.GetId() == chkPortable->GetId() ){
+		if( event.IsChecked() ){
+			wxFile f(wxT("wxHexEditor.cfg"), wxFile::write );
+			f.Close();
+			}
+		else{
+			wxRemoveFile(wxT("wxHexEditor.cfg"));
+			}
+		}
 
 	//Redrawing because we need to re-interpret the readed bytes.
 	//SaveRegistry();

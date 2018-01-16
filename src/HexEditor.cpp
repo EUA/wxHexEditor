@@ -922,11 +922,12 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 					*/
 				break;
 
-            //Not working?
-            //case (WXK_CONTROL_T):
-            case (0x54):
+            //case (WXK_CONTROL_T): //Not working?
+            case (0x54): //! Normal T
                 if( event.ControlDown() )
-                   HexEditorCtrl::TagCreator( !event.ShiftDown() );
+					HexEditorCtrl::TagCreator( !event.ShiftDown() );
+				else
+					event.Skip();
                 break;
 
 			default: {

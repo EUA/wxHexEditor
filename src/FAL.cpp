@@ -209,7 +209,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		ProcessID=a;
 		RAMProcess=true;
 		if((ptrace(PTRACE_ATTACH, ProcessID, NULL, NULL)) < 0 ){
-			wxMessageBox( _("Process cannot open."),_("Error"), wxOK|wxICON_ERROR );
+			wxMessageBox( wxString::Format(_("Process ID:%d cannot be open."),ProcessID ),_("Error"), wxOK|wxICON_ERROR );
 			ProcessID=-1;
 			return false;
 			}
@@ -279,7 +279,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		ProcessID=a;
 		RAMProcess=true;
 		if((ptrace(PTRACE_ATTACH, ProcessID, NULL, NULL)) < 0 ){
-			wxMessageBox( _("Process cannot open."),_("Error"), wxOK|wxICON_ERROR );
+			wxMessageBox( wxString::Format(_("Process ID:%d cannot be open."),ProcessID ),_("Error"), wxOK|wxICON_ERROR );
 			ProcessID=-1;
 			return false;
 			}

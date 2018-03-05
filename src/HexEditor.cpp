@@ -1427,36 +1427,41 @@ void HexEditor::OnMouseTest( wxMouseEvent& event ) {
 	}
 
 void HexEditor::FindDialog( void ) {
-	::FindDialog *myfind = new ::FindDialog( this, myfile );
-	myfind->ShowModal();
-	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-	myfind->Destroy();
-	#endif
+	::FindDialog myfind( this, myfile );
+	myfind.ShowModal();
+//	::FindDialog *myfind = new ::FindDialog( this, myfile );
+//	myfind->ShowModal();
+//	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+//	myfind->Destroy();
+//	#endif
 	}
 
 void HexEditor::ReplaceDialog( void ) {
-	::ReplaceDialog *myfind = new ::ReplaceDialog( this, myfile );
-	myfind->ShowModal();
-	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
-	myfind->Destroy();
-	#endif
+	::ReplaceDialog myfind( this, myfile );
+	myfind.ShowModal();
+//	::ReplaceDialog *myfind = new ::ReplaceDialog( this, myfile );
+//	myfind->ShowModal();
+//	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.
+//	myfind->Destroy();
+//	#endif
 	}
 
 void HexEditor::CopyAsDialog( void ) {
-	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this, myfile, HexEditorCtrl::select, &MainTagArray );
-	mycopyas->ShowModal();
-	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this manually... Really Weird...
-	mycopyas->Destroy();
-	#endif
+	::CopyAsDialog mycopyas( this, myfile, HexEditorCtrl::select, &MainTagArray );
+	mycopyas.ShowModal();
+//	::CopyAsDialog *mycopyas = new ::CopyAsDialog( this, myfile, HexEditorCtrl::select, &MainTagArray );
+//	mycopyas->ShowModal();
+//	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this manually... Really Weird...
+//	mycopyas->Destroy();
+//	#endif
 	}
 
 void HexEditor::GotoDialog( void ) {
 	uint64_t newoffset;
-	::GotoDialog *mygoto = new ::GotoDialog( this, newoffset, CursorOffset(), FileLength(), FDtoBlockSize( GetFD() ) );
-	if( mygoto->ShowModal() == wxID_OK ) {
+	::GotoDialog mygoto( this, newoffset, CursorOffset(), FileLength(), FDtoBlockSize( GetFD() ) );
+	if( mygoto.ShowModal() == wxID_OK ) {
 		Goto( newoffset );
 		}
-	mygoto->Destroy();
 	}
 
 bool HexEditor::InsertBytes( void ) {

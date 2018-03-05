@@ -1182,9 +1182,10 @@ void FindDialog::OnFindAll( bool internal ){
 		parent->Goto( parent->HighlightArray.Item(0)->start );
 
 		if( !internal ){
-			this->Hide();
+			//this->Hide(); //This make assertion when issued EndModal!
 			OSXwxMessageBox(wxString::Format(_("Found %d matches."), static_cast<int>( parent->HighlightArray.GetCount()) ), _("Find All Done!"), wxOK, parent );
 			EndModal(0);
+			//this->Show();
 			}
 		}
 

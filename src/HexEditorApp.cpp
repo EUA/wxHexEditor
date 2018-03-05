@@ -59,7 +59,8 @@ bool wxHexEditorApp::OnInit() {
 	wxImage::AddHandler(new wxPNGHandler);
 	SetLanguage();
 	bool SingleInstance;
-	if( myConfigBase::Get()->Read( _T("SingleInstance"), &SingleInstance, false ) ){
+	myConfigBase::Get()->Read( _T("SingleInstance"), &SingleInstance, false );
+	if( SingleInstance ){
 		wxSingleInstanceChecker* m_checker = new wxSingleInstanceChecker;
 		if ( m_checker->IsAnotherRunning() ){
 			delete m_checker;
@@ -72,6 +73,7 @@ bool wxHexEditorApp::OnInit() {
 				m_client->Connect("localhost", "59147", "OPEN FILE:"+fl.GetLongPath());
 				}
 
+			Exit();
 			}
 		}
 

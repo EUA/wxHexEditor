@@ -114,7 +114,27 @@ bool IsWinDevice( wxFileName myfilename ){
 bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
 	//Windows special device opening
 	std::cout << "WinOSDepOpen"<< std::endl;
-	if(IsWinDevice(myfilename)){
+		//Handling Memory Process Debugging Here
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
+		long int a;
+		myfilename.GetFullPath().Mid(5).ToLong(&a);
+		ProcessID=a;
+		RAMProcess=true;
+		//HANDLE WINAPI OpenProcess(  _In_ DWORD dwDesiredAccess,  _In_ BOOL  bInheritHandle,  _In_ DWORD dwProcessId );
+		hDevice = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessID);
+		if( hDevice == NULL ){
+			wxMessageBox( wxString::Format(_("Process ID:%d cannot be open."),ProcessID ),_("Error"), wxOK|wxICON_ERROR );
+			ProcessID=-1;
+			return false;
+			}
+		//waitpid(ProcessID, NULL, WUNTRACED);
+		//BlockRWSize=4;
+		//BlockRWCount=0x800000000000LL/4;
+		FAM = ReadOnly;
+		return true;
+		}
+
+	else if(IsWinDevice(myfilename)){
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
 		if(myfilename.GetFullPath().StartsWith( wxT(".:")))
 			devnm = wxString(wxT("\\\\.")) + myfilename.GetFullPath().AfterFirst(':');
@@ -324,8 +344,10 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 	}
 
 bool FAL::Close(){
-			#ifndef __WXMSW__
 			if( ProcessID >=0 )
+			#ifdef __WXMSW__
+				CloseHandle(hDevice);
+		    #else
 				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, NULL)) >= 0 );
 			#endif
 			#ifdef __WXMSW__
@@ -517,15 +539,22 @@ bool FAL::Apply( void ){
 
 					//First read the original sector
 					if ( ProcessID >=0 ){
-						#ifndef __WXMSW__
 						long word=0;
+						#ifdef __WXMSW__
+						SIZE_T written=0;
+						#endif
+						char* addr=0;
 						//unsigned long *ptr = (unsigned long *) buffer;
 						while (rd < rd_size) {
-							word = ptrace(PTRACE_PEEKTEXT, ProcessID, reinterpret_cast<char*>(StartSector*BlockRWSize+rd), NULL);
+							addr = reinterpret_cast<char*>(StartSector*BlockRWSize+rd);
+						#ifdef __WXMSW__
+							ReadProcessMemory(hDevice, addr, &word, sizeof(word), &written);
+						#else
+							word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr, NULL);
+						#endif
 							memcpy( bfr+rd , &word, 4);
 							rd += 4;
 							}
-						#endif
 						}
 					else{
 						wxFile::Seek(StartSector*BlockRWSize);
@@ -546,15 +575,22 @@ bool FAL::Apply( void ){
 					if ( ProcessID >=0 ){
 						int wr=0;
 						long word=0;
-						#ifndef __WXMSW__
+					#ifdef __WXMSW__
+						SIZE_T written=0;
+					#endif
+						char* addr;
 						while (wr < rd_size) {
-								memcpy(&word, bfr + wr, sizeof(word));
-								if( ptrace(PTRACE_POKETEXT, ProcessID, reinterpret_cast<char*>(StartSector*BlockRWSize+wr), word) == -1 )
-									wxMessageBox( _("Error on Write operation to Process RAM"), _("FATAL ERROR") );
-								wr += 4;
+							addr = reinterpret_cast<char*>(StartSector*BlockRWSize+wr);
+							memcpy(&word, bfr + wr, sizeof(word));
+							#ifdef __WXMSW__
+							if( WriteProcessMemory(hDevice, addr, &word, sizeof(word), &written) == 0 )
+							#else
+							if( ptrace(PTRACE_POKETEXT, ProcessID, addr, word) == -1 )
+							#endif
+								wxMessageBox( _("Error on Write operation to Process RAM"), _("FATAL ERROR") );
+							wr += 4;
 							}
 						success*=true;
-						#endif
 						}
 					//disk block devices:
 					else{
@@ -800,14 +836,22 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			//If reading from a process memory
 			if ( ProcessID >=0 ){
 				long word=0;
+			#ifdef __WXMSW__
+				SIZE_T written=0;
+			#endif
+				char* addr;
 				//unsigned long *ptr = (unsigned long *) buffer;
-				#ifndef __WXMSW__
 				while (rd < rd_size) {
-					word = ptrace(PTRACE_PEEKTEXT, ProcessID, reinterpret_cast<char*>(StartSector*BlockRWSize+rd), NULL);
+					addr = reinterpret_cast<char*>(StartSector*BlockRWSize+rd);
+				#ifdef __WXMSW__
+					ReadProcessMemory(hDevice, addr, &word, sizeof(word), &written);
+				#else
+					word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr, NULL);
+				#endif
 					memcpy( bfr+rd , &word, 4);
 					rd += 4;
 					}
-				#endif
+
 				}
 			//Reading from a file
 			else

@@ -690,6 +690,7 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	#define I2C_SMBUS_BLOCK_MAX 32
 #endif
 
+#ifdef __WXGTK__
 union i2c_smbus_data {
     __u8 byte;
     __u16 word;
@@ -723,6 +724,7 @@ static inline __s32 i2c_smbus_write_byte_data(int file, __u8 command, __u8 value
 static inline __s32 i2c_smbus_write_byte(int file, __u8 value){
     return i2c_smbus_access(file, I2C_SMBUS_WRITE, value, I2C_SMBUS_BYTE, NULL);
 }
+
 
 void HexEditorFrame::OpenMemorySPDDevice( void ){
 	int file;
@@ -775,6 +777,9 @@ void HexEditorFrame::OpenMemorySPDDevice( void ){
 
 	OpenFile( xfl ) ;
 	}
+#else
+void HexEditorFrame::OpenMemorySPDDevice( void ){}
+#endif // __WXGTK__
 
 void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){

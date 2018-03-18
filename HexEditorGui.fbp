@@ -2875,7 +2875,7 @@
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">2</property>
-                            <property name="flag">wxALIGN_CENTER_HORIZONTAL</property>
+                            <property name="flag"></property>
                             <property name="proportion">1</property>
                             <object class="wxButton" expanded="0">
                                 <property name="BottomDockable">1</property>

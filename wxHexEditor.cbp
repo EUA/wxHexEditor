@@ -51,6 +51,7 @@
 					<Add option="-D_DEBUG_MOUSE_x" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_" />
+					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

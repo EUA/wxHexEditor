@@ -443,7 +443,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 bool HexEditor::FileClose( bool WithoutChange ) {
 	if( myfile != NULL ) {
 		if( myfile->IsChanged() && !WithoutChange) {
-			int state = wxMessageBox( _( "Do you want to save file?\n"), _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
+			int state = wxMessageBox( wxString(_( "Do you want to save ")).append( myfile->GetFileName().GetName() + "?\n") , _("File Has Changed!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 			switch(state) {
 				case(wxYES):
 					if( !FileSave( false ) )

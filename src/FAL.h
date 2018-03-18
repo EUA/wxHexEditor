@@ -25,6 +25,8 @@
 ///This file also available under propertieary license.
 ///Contact admin for licensing it.
 
+/// FAL stands for File Abstraction Layer
+
 // Journaling File Structure :)
 #ifndef FAL_H
 #define FAL_H

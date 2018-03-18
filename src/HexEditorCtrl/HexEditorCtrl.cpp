@@ -793,7 +793,8 @@ void HexEditorCtrl::TagCreator( bool QuickTag ){
 		int a=wxID_SAVE;
 		if( !QuickTag ){
 			TagDialog x( *TE, this );
-			a=x.ShowModal();
+			a=x.ShowModal(); //This one blocks
+			//a=x.Show();
 			}
 		if( a == wxID_SAVE ){
 			last_tag_color = TE->NoteClrData.GetColour();
@@ -835,7 +836,8 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ){
 			TagHideAll();	//Hide first, or BUG by double hide...
 			TagElement TAGtemp = *TAG;
 			TagDialog *x=new TagDialog( TAGtemp, this );
-			switch( x->ShowModal() ){
+			switch( x->ShowModal() ){ //blocker
+			//switch( x->Show() ){ //Non-blocker but allways return 1=True...
 				case wxID_SAVE:
 					*TAG = TAGtemp;
 					PreparePaintTAGs();

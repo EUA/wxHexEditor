@@ -1606,12 +1606,13 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 	#else
 		for(int i=0 ; i <= bfr_size - search_size ; i++ )
 			if( bfr[i] == search[0] )
-				if(! memcmp( bfr+i, search, search_size ))	//if match found
+				if(! memcmp( bfr+i, search, search_size )){	//if match found
 					ret_ptr->push_back(i);
 					if(options & SEARCH_FINDALL)
 						continue;
 					else
 						return i;
+					}
 	#endif //__SSE2__
 		}
 

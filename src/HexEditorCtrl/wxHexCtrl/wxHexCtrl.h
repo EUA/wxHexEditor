@@ -140,7 +140,9 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 			bool selected;		//select available variable
 			} select;
 virtual void TagPainter( wxDC* DC, TagElement& TG );
+#ifdef _Use_Graphics_Contex_
 virtual void TagPainterGC( wxGraphicsContext* gc, TagElement& TG );
+#endif // _Use_Graphics_Contex_
 		void RePaint( void );
 
 inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );

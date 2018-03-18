@@ -839,6 +839,7 @@ void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){
 //	if(gc) delete gc;
 	}
 
+#ifdef _Use_Graphics_Contex_
 void wxHexCtrl::TagPainterGC( wxGraphicsContext* gc, TagElement& TG ){
 	wxGraphicsFont wxgfont = gc->CreateFont( HexDefaultAttr.GetFont(), TG.FontClrData.GetColour() ) ;
 	gc->SetFont( wxgfont );
@@ -894,6 +895,7 @@ void wxHexCtrl::TagPainterGC( wxGraphicsContext* gc, TagElement& TG ){
 
 		}
 	}
+#endif // _Use_Graphics_Contex_
 
 bool wxHexCtrl::IsAllowedChar(const char& chr){
 	return isxdigit( chr );

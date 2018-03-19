@@ -361,7 +361,7 @@ bool HexEditor::FileSave( bool question ) {
 			}
 		int select = wxYES;
 		if ( question )
-			select=wxMessageBox( _( "Do you want to save this file?"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
+			select=wxMessageBox( wxString(_( "Do you want to save ")).append( myfile->GetFileName().GetName() + "?\n"), _("File Save"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 
 		switch( select ) {
 			case(wxYES):
@@ -931,46 +931,46 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
                 break;
 
 			default: {
-////This part handled by wxMenuItem shortcuts.
-////					if( event.ControlDown() )
-////						switch( event.GetKeyCode() ) {
-////							case( 0x5a ):		// CTRL+Z = UNDO
-////								if(event.ShiftDown())
-////									DoRedo();	// UNDO with shift = REDO
-////								else
-////									DoUndo();
-////								break;
-////							case( 0x59 ):		// CTRL+Y = REDO
-////								DoRedo();
-////								break;
-////							case( 0x53 ): {	// CTRL+S = SAVE
-////									FileSave();
-////									// TODO (death#1#): File Name star'in * when file changed & saved
-////									}
-////								break;
-////							case( 0x41 ):		// CTRL+A = ALL
-////								Select(0, FileLength());
-////								break;
-////							case( 0x58 ):		// CTRL+X = CUT
-////								wxBell();
-////								break;
-////							case( 0x43 ):		// CTRL+C = COPY
-////								CopySelection();
-////								break;
-////							case( 0x56 ):		// CTRL+V = PASTE
-////								PasteFromClipboard();
-////								break;
-////							case( 0x46 ):		// CTRL+F = FIND
-////							   FindDialog();
-////								break;
-////							case( 0x4f ):		// CTRL+O = OPEN
-////								wxBell();
-////								break;
-////							default:
-////								event.Skip();// ->OnKeyboardChar( event );
-////								break;
-////							}
-////					else if ( not event.AltDown() )
+//This part handled by wxMenuItem shortcuts.
+//					if( event.ControlDown() )
+//						switch( event.GetKeyCode() ) {
+//							case( 0x5a ):		// CTRL+Z = UNDO
+//								if(event.ShiftDown())
+//									DoRedo();	// UNDO with shift = REDO
+//								else
+//									DoUndo();
+//								break;
+//							case( 0x59 ):		// CTRL+Y = REDO
+//								DoRedo();
+//								break;
+//							case( 0x53 ): {	// CTRL+S = SAVE
+//									FileSave();
+//									// TODO (death#1#): File Name star'in * when file changed & saved
+//									}
+//								break;
+//							case( 0x41 ):		// CTRL+A = ALL
+//								Select(0, FileLength());
+//								break;
+//							case( 0x58 ):		// CTRL+X = CUT
+//								wxBell();
+//								break;
+//							case( 0x43 ):		// CTRL+C = COPY
+//								CopySelection();
+//								break;
+//							case( 0x56 ):		// CTRL+V = PASTE
+//								PasteFromClipboard();
+//								break;
+//							case( 0x46 ):		// CTRL+F = FIND
+//							   FindDialog();
+//								break;
+//							case( 0x4f ):		// CTRL+O = OPEN
+//								wxBell();
+//								break;
+//							default:
+//								event.Skip();// ->OnKeyboardChar( event );
+//								break;
+//							}
+//					else if ( not event.AltDown() )
 						event.Skip();// ->OnKeyboardChar( event );
 					}
 
@@ -983,6 +983,13 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 	}
 
 void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
+	if( event.AltDown() || event.ControlDown() ){
+		//Control if CTRL or ALT true.
+		//This will throw event for wxMenu options only if ALT or CTRL modifiers.
+		//otherwise event.skip() will also run wxHex::OnChar which makes artefacts.
+		event.Skip(); //This required for ALT+F or CTRL+X...
+		return;
+		}
 	if(myfile != NULL ) {
 		wxChar chr = event.GetKeyCode();
 
@@ -1050,9 +1057,6 @@ void HexEditor::OnKeyboardChar( wxKeyEvent& event ) {
 #endif
 	wxUpdateUIEvent eventx( UNREDO_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
-
-	if( event.AltDown() || event.ControlDown() ) //Control if CTRL or ALT true otherwise evet.skip will also run wxHex::OnChar which makes artefacts.
-	   event.Skip(); //This required for ALT+F or CTRL+X...
 	}
 
 void HexEditor::SetLocalHexInsertionPoint( int hex_location, bool from_comparator ) {
@@ -1429,6 +1433,8 @@ void HexEditor::OnMouseTest( wxMouseEvent& event ) {
 void HexEditor::FindDialog( void ) {
 	::FindDialog myfind( this, myfile );
 	myfind.ShowModal();
+
+	//myfind.Show(true);
 //	::FindDialog *myfind = new ::FindDialog( this, myfile );
 //	myfind->ShowModal();
 //	#ifndef __WXOSX__ // TODO: This might leak memory but OSX magically give error if I Destroy this.. Really Weird. Please help to fix this.

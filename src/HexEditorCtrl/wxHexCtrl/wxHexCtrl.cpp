@@ -554,13 +554,13 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 					*/
 					if(textLenghtLimit >= textLength)
 						break;
-
+					///rebuilding buffer from text
 					//First half of byte
 					RenderedHexByte += CharAt(textLenghtLimit++);
 					chr = RenderedHexByte.ToAscii()[0];
 					chrC = atoh( chr ) << 4;
 
-					//Space could be here
+					//Space could be here deu custom formating
 					int i=1;
 					while( IsDenied( x+i ) ){
 						RenderedHexByte+=wxT(" ");
@@ -583,6 +583,10 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 					RGB.Set(col[chrC]);
 					//dcTemp->SetTextBackground( wxColour(R,G,B) );
 					dcTemp->SetTextBackground( RGB );
+					int cc=col[chrC];
+				    //chr&0xda //RRrG GgBb
+				    //chr&0x90 //RrrG ggbb //looks better
+					dcTemp->SetTextForeground( chrC&0x90 ? *wxBLACK : *wxWHITE );
 					dcTemp->DrawText( RenderedHexByte, m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 					chrC = 0;
 					x+=i;
@@ -594,6 +598,8 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 					wxString stt=CharAt(textLenghtLimit++);
 					RGB.Set(col[chrC]);
 					dcTemp->SetTextBackground( RGB );
+					int cc=col[chrC];
+					dcTemp->SetTextForeground( chrC&0x90 ? *wxBLACK : *wxWHITE );
 					dcTemp->DrawText( stt, m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 					x++;
 					}

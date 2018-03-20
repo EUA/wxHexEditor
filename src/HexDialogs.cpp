@@ -1133,9 +1133,9 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 			}
 		if( progress_gauge != NULL)
 		if(first_run){
-			if( ! progress_gauge->Update( percentage) );		// update progress and break on abort
+			if( ! progress_gauge->Update( percentage ) )		// update progress and break on abort
 				break;
-				}
+			}
 		else if( ! progress_gauge->Update( percentage, emsg))		// update progress and break on abort
 			break;
 #endif //_DEBUG_FIND_UNIT_TEST_

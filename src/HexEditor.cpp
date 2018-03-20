@@ -1474,8 +1474,17 @@ bool HexEditor::InsertBytes( void ) {
 #ifdef _DEBUG_
 	std::cout << "Insert Bytes!" << std::endl;
 #endif
+    int dsize=0;
+    if (wxTheClipboard->Open()){
+		if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+			wxTextDataObject data;
+			wxTheClipboard->GetData( data );
+			dsize=data.GetDataSize();
+			}
+		wxTheClipboard->Close();
+		}
 	long injection_size = wxGetNumberFromUser( wxString::Format(_("Notice!: This command will increase the file size and will generate too much overhead on file save.\n" \
-	                      "How many bytes do you want to inject to location to offset location %lld?"), CursorOffset()), _("Bytes"), _("Injection!"), 0, 0, 0x7fffffff ); //Max long up to 2 GB insertion.
+	                      "How many bytes do you want to inject to location to offset location %lld?"), CursorOffset()), _("Bytes"), _("Injection!"), dsize, 1, 0x7fffffff ); //Max long up to 2 GB insertion.
 	std::cout << "insert " << injection_size << " bytes " << std::endl;
 	if( injection_size == -1 )
 		return false;

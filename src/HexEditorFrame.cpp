@@ -516,8 +516,17 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 		wxString lngt;
 		long unsigned int size=0;
 		while(1){
-			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."),
-                                    _("Enter File Size:"));
+			int dsize=0;
+			if (wxTheClipboard->Open()){
+				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+					wxTextDataObject data;
+					wxTheClipboard->GetData( data );
+					dsize=data.GetDataSize();
+					}
+				wxTheClipboard->Close();
+				}
+			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."), _("Enter File Size:"), wxString::Format(wxT("%u"),dsize ) );
+
 			if(lngt.IsEmpty()){
 				return;
 			}

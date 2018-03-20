@@ -1415,8 +1415,11 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 			statusbar->SetStatusText(_("Block Size: N/A") ,4);
 			}
 		else {
-			statusbar->SetStatusText(wxString::Format(_("Selected Block: %" wxLongLongFmtSpec "u -> %" wxLongLongFmtSpec "u"),select->GetStart(),select->GetEnd()), 3);
-			statusbar->SetStatusText(wxString::Format(_("Block Size: %" wxLongLongFmtSpec "u"), select->GetSize()), 4);
+			statusbar->SetStatusText(wxString::Format(_("Selected Block: %" wxLongLongFmtSpec "u -> %" wxLongLongFmtSpec "u" \
+									" (0x%" wxLongLongFmtSpec "X -> 0x%" wxLongLongFmtSpec "X)"), \
+									select->GetStart(),select->GetEnd(),select->GetStart(),select->GetEnd()), 3);
+			statusbar->SetStatusText(wxString::Format(_("Block Size: %" wxLongLongFmtSpec "u" \
+									" (0x%" wxLongLongFmtSpec "X)"), select->GetSize(), select->GetSize()), 4);
 			}
 		}
 #endif // wxUSE_STATUSBAR

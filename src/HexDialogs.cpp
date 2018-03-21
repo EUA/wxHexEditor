@@ -2942,6 +2942,7 @@ PreferencesDialog::PreferencesDialog( wxWindow* parent ):PreferencesDialogGui(pa
 	if( myConfigBase::Get()->Read( _T("ColourHexSelectionBackground"), &TempString) )		clrPickerSelectionBackground->SetColour(TempString);
 	if( myConfigBase::Get()->Read( _T("AutoShowTagPanel"), &TempBool ) )					chkAutoShowTagPanel->SetValue( TempBool );
 	if( myConfigBase::Get()->Read( _T("SingleInstance"), &TempBool ) )						chkSingleInstance->SetValue( TempBool );
+
 	if( myConfigBase::Get()->Read( _T("UseCustomHexFormat"), &TempBool ) )					chkCustom->SetValue( TempBool );
 	if( myConfigBase::Get()->Read( _T("CustomHexFormat"), &TempString	)	)				comboCustomHexFormat->SetValue( TempString );
 	comboCustomHexFormat->Enable( chkCustom->IsChecked() );

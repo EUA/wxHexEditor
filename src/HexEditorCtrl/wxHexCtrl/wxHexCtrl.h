@@ -149,6 +149,7 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		void OnTagHideAll( void );
 		bool *TagMutex;
 		int *ZebraStriping;
+		bool Hex2ColorMode;
 
 	protected:
 		wxDC* UpdateDC( wxDC* dc=NULL);
@@ -157,7 +158,8 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		wxBitmap*   internalBufferBMP;
 		wxString	HexFormat;
 		bool		DrawCharByChar;
-		int CtrlType;
+		enum CtrlTypes {HexControl, TextControl, OffsetControl};
+		CtrlTypes CtrlType;
 		// event handlers
 		wxPoint LastRightClickPosition;	//Holds last right click for TagEdit function
 		void OnPaint( wxPaintEvent &event );
@@ -209,7 +211,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 		wxString Codepage;
 		wxFontEncoding FontEnc;
 //		wxHexTextCtrl():wxHexCtrl(){}
-		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){CtrlType=1;}
+		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){CtrlType=TextControl;}
 		wxHexTextCtrl( wxWindow *parent,
 				wxWindowID id,
 				const wxString &value = wxEmptyString,
@@ -218,7 +220,7 @@ class wxHexTextCtrl : public wxHexCtrl{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator) :
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
-				CtrlType=1;
+				CtrlType=TextControl;
 				wxWindow::SetCursor( wxCURSOR_CHAR );
 
 				FontEnc=wxFONTENCODING_ALTERNATIVE;
@@ -269,20 +271,21 @@ class wxHexOffsetCtrl : public wxHexCtrl{
 				long style = 0,
 				const wxValidator& validator = wxDefaultValidator) :
 				wxHexCtrl(parent, id, value, pos, size, style, validator){
-				wxCaret *caret = GetCaret();
-				if(caret)
-					GetCaret()->Hide();
-				SetCaret( NULL );
+			wxCaret *caret = GetCaret();
+			if(caret)
+				GetCaret()->Hide();
+			SetCaret( NULL );
 
-            //offset_mode='u';
-            CtrlType=2;
-            offset_mode=myConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
-            if( offset_mode=='s' )	// No force to sector mode at startup.
-					offset_mode='u';
+			//offset_mode='u';
+			CtrlType=OffsetControl;
+			offset_mode=myConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
+			if( offset_mode=='s' )	// No force to sector mode at startup.
+				offset_mode='u';
 
 				offset_position=0;
 				digit_count=6;
 				};
+
 		wxString GetFormatString( bool minimal=false );
 		wxString GetFormatedOffsetString( uint64_t c_offset, bool minimal=false );
 		void SetOffsetLimit( uint64_t max_offset ){offset_limit = max_offset;}

@@ -686,6 +686,11 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 		::ChecksumDialog mcd( this );
 		mcd.ShowModal();
 		}
+	else if( event.GetId() == idHex2Color){
+		GetActiveHexEditor()->SetHex2ColorMode( event.IsChecked() );
+		wxUpdateUIEvent eventx( RESET_STYLE_EVENT );
+		wxPostEvent( this, eventx );
+		}
 	event.Skip(false);
 	}
 
@@ -984,7 +989,10 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 //	mbar->Check(idToolbar, Toolbar->IsShown());
 
 	mbar->Check(idXORView, (MyNotebook->GetPageCount() && GetActiveHexEditor()->IsFileUsingXORKey()));
+	mbar->Check(idHex2Color, (MyNotebook->GetPageCount() && GetActiveHexEditor()->GetHex2ColorMode()));
+
 	mbar->Enable(idXORView, MyNotebook->GetPageCount() );
+	mbar->Enable(idHex2Color, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowOffset, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowHex, MyNotebook->GetPageCount() );
 	mbar->Enable(idShowText, MyNotebook->GetPageCount() );

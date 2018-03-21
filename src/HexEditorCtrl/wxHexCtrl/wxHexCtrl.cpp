@@ -73,7 +73,7 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	ZebraStriping=new int;
 	*ZebraStriping=-1;
 
-	CtrlType=0;
+	CtrlType=HexControl;
 
 	DrawCharByChar=false;
 
@@ -100,21 +100,22 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 									wxT(""),			// facename
 									wxFONTENCODING_CP437) );// msdos encoding
 
-   ClearSelection( false );
-   SetDefaultStyle( HexDefaultAttr );
+	ClearSelection( false );
+	SetDefaultStyle( HexDefaultAttr );
 
-   m_Caret.x = m_Caret.y =
-   m_Window.x = m_Window.y = 1;
-   m_Margin.x = m_Margin.y = 0;
+	m_Caret.x = m_Caret.y =
+	m_Window.x = m_Window.y = 1;
+	m_Margin.x = m_Margin.y = 0;
 	LastRightClickPosition = wxPoint(0,0);
-   select.selected = false;
+	select.selected = false;
 
 	CreateCaret();
 
+	myConfigBase::Get()->Read( _T("Hex2ColorMode"), &Hex2ColorMode );
   //  ChangeSize();
 
    //wxCaret *caret = GetCaret();
-   if ( mycaret )
+	if ( mycaret )
 		mycaret->Show(false);
 
 }
@@ -476,8 +477,7 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 //	char bux[1000];  //++//
 
 	//Normal process
-#define Hex_2_Color_Engine_Prototype 0
-	if( !Hex_2_Color_Engine_Prototype || CtrlType==2 ){
+	if( !Hex2ColorMode || CtrlType==OffsetControl ){
 		dcTemp->SetPen(*wxTRANSPARENT_PEN);
 	   //Drawing line by line
 		for ( int y = 0 ; y < m_Window.y; y++ ){	//Draw base hex value without color tags
@@ -545,7 +545,7 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 		wxString RenderedHexByte;
 		for ( int y = 0 ; y < m_Window.y; y++ ){
 			for ( int x = 0 ; x < m_Window.x; ){
-				if(CtrlType==0){
+				if(CtrlType==HexControl){
 					RenderedHexByte.Empty();
 					/*while( IsDenied( x ) ){
 						RenderedHexByte=" ";
@@ -605,7 +605,7 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 					}
 				}
 			}
-	}//Hex_2_Color_Engine_Prototype
+	}
 
 #ifndef _Use_Graphics_Contex_ //Uding_Graphics_Context disable TAG painting at buffer.
 	int TAC = TagArray.Count();

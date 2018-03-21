@@ -129,6 +129,8 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void SetFont( wxFont f );
 		void SetFont( );
 		void SetStyle( );
+		void SetHex2ColorMode(bool mode);
+		bool GetHex2ColorMode(void);
 		void ControlShow( panels control, bool hide );
 		bool ControlIsShown(panels control);
       //void OnOffsetScroll( wxScrollEvent& event );

@@ -430,6 +430,15 @@ void HexEditorCtrl::PushTAGToControls( TagElement* TAG){
 	hex_ctrl->TagArray.Add( TAX );
 	}
 
+void HexEditorCtrl::SetHex2ColorMode( bool mode ){
+	hex_ctrl->Hex2ColorMode = mode;
+	text_ctrl->Hex2ColorMode = mode;
+	}
+
+bool HexEditorCtrl::GetHex2ColorMode( void ){
+	return hex_ctrl->Hex2ColorMode;
+	}
+
 void HexEditorCtrl::PaintSelection( void ){
 	PreparePaintTAGs();
 	if( select->GetState() ){
@@ -511,7 +520,7 @@ void HexEditorCtrl::ControlShow( panels control, bool show ){
 bool HexEditorCtrl::ControlIsShown(panels control){
 	switch(control){
 		case OFFSET_CTRL:return offset_ctrl->IsShown();
-		case HEX_CTRL	: return	hex_ctrl->IsShown();
+		case HEX_CTRL	: return hex_ctrl->IsShown();
 		case TEXT_CTRL	: return text_ctrl->IsShown();
 		}
 	return false;

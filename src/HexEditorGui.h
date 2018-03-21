@@ -68,20 +68,21 @@
 #define idChecksum 1020
 #define idCompare 1021
 #define idXORView 1022
-#define idDeviceRam 1023
-#define idDeviceMemorySPD 1024
-#define idProcessRAM 1025
-#define idDeviceBackup 1026
-#define idDeviceRestore 1027
-#define idDeviceErase 1028
-#define idFileRO 1029
-#define idFileRW 1030
-#define idFileDW 1031
-#define idDonate 1032
-#define idWiki 1033
-#define idBugReport 1034
-#define ID_CHK_UNSIGNED 1035
-#define ID_CHK_BIGENDIAN 1036
+#define idHex2Color 1023
+#define idDeviceRam 1024
+#define idDeviceMemorySPD 1025
+#define idProcessRAM 1026
+#define idDeviceBackup 1027
+#define idDeviceRestore 1028
+#define idDeviceErase 1029
+#define idFileRO 1030
+#define idFileRW 1031
+#define idFileDW 1032
+#define idDonate 1033
+#define idWiki 1034
+#define idBugReport 1035
+#define ID_CHK_UNSIGNED 1036
+#define ID_CHK_BIGENDIAN 1037
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui

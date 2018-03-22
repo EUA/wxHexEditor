@@ -174,6 +174,11 @@ virtual	long Read( unsigned char* buffer, int size );
 		bool IsInjected( void );
 		const DiffNode* GetFirstUndoNodeOrLast( void );
 		int GetBlockSize( void );
+		#ifdef __WXMSW__
+		HANDLE GetHandle( void ){
+			return hDevice;
+			}
+		#endif
 
 	protected:
 		long ReadR( unsigned char* buffer, unsigned size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );

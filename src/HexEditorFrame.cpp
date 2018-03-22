@@ -457,9 +457,10 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 		myConfigBase::Get()->Read( _T("AutoShowTagPanel"), &autoShowTagsSwitch, true );
 
 		//Detect from file name if we are opening a RAM Process:
-		if( (x->MainTagArray.Count() > 0 && autoShowTagsSwitch)  || filename.GetFullPath().Lower().StartsWith( wxT("-pid=")) )
-		MyAUI->GetPane(MyTagPanel).Show( true );
-		MyAUI->Update();
+		if( (x->MainTagArray.Count() > 0 && autoShowTagsSwitch) || filename.GetFullPath().Lower().StartsWith( wxT("-pid=")) ){
+			MyAUI->GetPane(MyTagPanel).Show( true );
+			MyAUI->Update();
+			}
 
 		int found = -1;
 		//For loop updates Open Recent Menu properly.

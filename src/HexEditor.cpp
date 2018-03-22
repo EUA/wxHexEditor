@@ -261,7 +261,8 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 //			copy_mark = new copy_maker();
 
 		if( myfile->IsProcess() ){
-			#ifdef __WXGTK__
+			///autogenerate Memory Map as Tags...
+		#ifdef __WXGTK__
 			//offset_scroll->Enable(false);
 			std::cout << "PID MAPS loading..." << std::endl;
 			wxString command( wxT("cat /proc/") );
@@ -286,8 +287,50 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 				tmp->NoteClrData.SetColour( *wxCYAN );
 				MainTagArray.Add(tmp);
 				}
-			#endif
-			}
+		#endif
+		#ifdef __WXMSW__
+            MEMORY_BASIC_INFORMATION mymeminfo;
+            LPCVOID addr, addr_old;
+            addr=addr_old=0;
+            wxChar bfrx[200];
+			memset( bfrx, 0, 200);
+			wxString name, name_old;
+			while( true ){
+				if( addr_old > addr )
+					break;
+				addr_old=addr;
+				VirtualQueryEx( myfile->GetHandle(), addr, &mymeminfo, sizeof( MEMORY_BASIC_INFORMATION));
+				GetMappedFileName(myfile->GetHandle(), (LPVOID)addr, bfrx, 200);
+				name=wxString(bfrx);
+				//std::cout << "Addr :" << addr << " - " << mymeminfo.RegionSize << "   \t State: " << \
+				(mymeminfo.State & MEM_COMMIT  ? "Commit" : "") << \
+				(mymeminfo.State & MEM_FREE  ? "Free" : "") << \
+				(mymeminfo.State & MEM_RESERVE  ? "Reserve" : "") << \
+				"  Type: " << \
+				(mymeminfo.Type & MEM_IMAGE  ? "Image   " : "") << \
+				(mymeminfo.Type & MEM_IMAGE  ? "Mapped  " : "") << \
+				(mymeminfo.Type & MEM_IMAGE  ? "Private " : "") << \
+				"\tName: " << wxString(bfrx).c_str() << std::endl;
+				if( name!=name_old){
+					name_old=name;
+					TagElement *tmp = new TagElement();
+					long long unsigned int x;
+					tmp->start = reinterpret_cast<uint64_t>(addr);
+
+					//tmp->end = reinterpret_cast<uint64_t>(addr+mymeminfo.RegionSize);
+					//Just for indicate start of the DLL.
+					tmp->start = reinterpret_cast<uint64_t>(addr+1);
+
+					ProcessRAMMap.Add(x);
+					tmp->tag = name;
+
+					tmp->FontClrData.SetColour( *wxBLACK );
+					tmp->NoteClrData.SetColour( *wxCYAN );
+					MainTagArray.Add(tmp);
+					}
+				addr+=mymeminfo.RegionSize;
+		#endif
+				}
 
 		LoadTAGS( myfilename.GetFullPath().Append(wxT(".tags")) ); //Load tags to wxHexEditorCtrl
 

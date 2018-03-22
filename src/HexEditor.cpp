@@ -385,10 +385,10 @@ bool HexEditor::FileSave( bool question ) {
 bool HexEditor::FileSave( wxString savefilename ) {
 // TODO (death#1#): Protection to save opened file/samefile
 	wxFFile savefile( savefilename, wxT("wb") );
-
+	wxFileName saveflnm(savefilename); //to extract path for wxGetDiskSpace
 	wxDiskspaceSize_t available, total;
 	do{
-		wxGetDiskSpace( savefilename, &total, &available );
+		wxGetDiskSpace( saveflnm.GetPath(), &total, &available );
 		if( FileLength() > available ){
 			int state = wxMessageBox( wxString::Format( _( "There are not enough free disk space.\nRequired: %s\nAvailable: %s"),
 															wxFileName::GetHumanReadableSize( wxULongLong(FileLength()) ),

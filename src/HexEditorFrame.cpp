@@ -1002,7 +1002,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		std::cout << "HexEditorFrame::Ram event :" << event.GetString().ToAscii() << std::endl ;
 #endif
 		this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorFrame::OnDevicesMenu ) );
-		#ifdef __WXGTK__
+		#ifndef __WXMAC__
 		mbar->Enable(idProcessRAM, true);
 		#endif
 		wxMenuItemList devMen = menuDeviceDisk->GetMenuItems();

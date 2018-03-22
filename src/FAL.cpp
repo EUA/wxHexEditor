@@ -128,7 +128,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			return false;
 			}
 		//waitpid(ProcessID, NULL, WUNTRACED);
-		//BlockRWSize=4;
+		BlockRWSize=4;
 		//BlockRWCount=0x800000000000LL/4;
 		FAM = ReadOnly;
 		return true;
@@ -160,6 +160,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 											FILE_FLAG_NO_BUFFERING | FILE_ATTRIBUTE_READONLY  | FILE_FLAG_RANDOM_ACCESS,
 											NULL);
 			//Check if drive is mounted
+		//#ifdef FSCTL_IS_VOLUME_MOUNTED //not available on Win???
 			if(!DeviceIoControl (hDevice, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL)
 				&& (!devnm.StartsWith("\\\\.\\PhysicalDrive" ) ) //PhysicalDrive can not checked since it's not logical volume to mount.
 				){
@@ -168,6 +169,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 				wxMessageBox( _("Device is not mounted"), _("Error"), wxOK|wxICON_ERROR );
 				return false;
 				}
+		//#endif //FSCTL_IS_VOLUME_MOUNTED
 			}
 
 		else{
@@ -829,7 +831,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			if( EndSector > BlockRWCount-1 )
 				EndSector = BlockRWCount-1;
 
-		   int rd_size = (EndSector - StartSector + 1)*BlockRWSize; //+1 for read least one sector
+			int rd_size = (EndSector - StartSector + 1)*BlockRWSize; //+1 for read least one sector
 			char *bfr = new char[rd_size];
 			int rd=0;
 
@@ -846,7 +848,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 				#ifdef __WXMSW__
 					ReadProcessMemory(hDevice, addr, &word, sizeof(word), &written);
 				#else
-					word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr, NULL);
+					word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr);
 				#endif
 					memcpy( bfr+rd , &word, 4);
 					rd += 4;

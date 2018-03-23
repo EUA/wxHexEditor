@@ -39,6 +39,10 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexDialogs.h"
 
+#ifdef __WXMSW__
+#include <psapi.h>
+#endif
+
 #if wxCHECK_VERSION( 2,9,0 ) && !defined(__WXMAC__) && !defined( __WXMSW__)
 //Only GTK port is working good on detect changes of file.
 //MSW cannot detect changes in individual files yet in wxWidgets 3.1.0

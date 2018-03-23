@@ -514,6 +514,7 @@ HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	std::cout << "OnMenuEvent: "  << event.GetId() << std::endl;
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
+		/*
 		wxString lngt;
 		long unsigned int size=0;
 		while(1){
@@ -563,6 +564,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			//Openning the file with text editor.
 			OpenFile( flname );
 			}
+		*/
+		OpenFile( wxFileName("-buf") );
 		}
 	else if( event.GetId() == wxID_OPEN ){
 		wxFileDialog filediag(this,

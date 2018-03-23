@@ -319,7 +319,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 
 					//tmp->end = reinterpret_cast<uint64_t>(addr+mymeminfo.RegionSize);
 					//Just for indicate start of the DLL.
-					tmp->start = reinterpret_cast<uint64_t>(addr+1);
+					tmp->end = reinterpret_cast<uint64_t>(addr+1);
 
 					ProcessRAMMap.Add(x);
 					tmp->tag = name;
@@ -329,6 +329,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 					MainTagArray.Add(tmp);
 					}
 				addr+=mymeminfo.RegionSize;
+				}
 		#endif
 				}
 

@@ -158,7 +158,7 @@ class FAL : private wxFile
 			return ProcessID;
 			}
 		bool IsOpened(){
-			if( ProcessID >=0 )
+			if( ProcessID >=0 || FileType==FAL_Buffer )
 				return true;
 			return wxFile::IsOpened(); };
 		int  fd() const { return wxFile::fd(); };
@@ -190,6 +190,8 @@ virtual	long Read( unsigned char* buffer, int size );
 		void ModificationPatcher( uint64_t location, unsigned char* data, int size, DiffNode* Patch);
 
 	private:
+		enum FALFileTypes {FAL_File, FAL_Device, FAL_Process, FAL_Buffer} FileType;
+		wxMemoryBuffer internal_file_buffer;
 		int BlockRWSize;
 		uint64_t BlockRWCount;
 		bool RAMProcess;

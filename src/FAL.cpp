@@ -239,7 +239,14 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		BlockRWSize=4;
 		BlockRWCount=0x800000000000LL/4;
 		FAM = ReadOnly;
+		FileType=FAL_Process;
 		return true;
+		}
+
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
+		memset( internal_file_buffer.GetWriteBuf(1024), 0 , 1024 );
+		internal_file_buffer.UngetWriteBuf(1024);
+		FileType=FAL_Buffer;
 		}
 
 	else if(!DoFileExists){
@@ -287,6 +294,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 	#endif
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxShell( cmd );
+		FileType=FAL_File;
 		}
 
 	return FALOpen(myfilename, FAM, ForceBlockRW);
@@ -341,6 +349,8 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 
 		return true;
 		}
+	else if(FileType==FAL_Buffer)
+		return true;
 	else
 		return false;
 	}
@@ -594,13 +604,14 @@ bool FAL::Apply( void ){
 							}
 						success*=true;
 						}
-					//disk block devices:
 					else{
 						wxFile::Seek(StartSector*BlockRWSize);
 						success*=Write(bfr, rd_size);//*= to make update success true or false
-
 						}
 					delete [] bfr;
+					}
+				else if (FileType==FAL_Buffer){
+					memcpy( internal_file_buffer.GetData(),(DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size  );
 					}
 				else{
 					//if already written and makeing undo, than use old_data
@@ -692,6 +703,9 @@ int FAL::GetBlockSize( void ){
 wxFileOffset FAL::Length( int PatchIndice ){
 	if( ProcessID >=0 )
 		return 0x800000000000LL;
+
+	if (FileType==FAL_Buffer)
+		return internal_file_buffer.GetDataLen();
 
 	if ( BlockRWSize > 0 )
 		return BlockRWSize*BlockRWCount;
@@ -808,7 +822,8 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 		//Block Read/Write mechanism.
 		//if( 0 )//for debugging
 
-#ifdef __WXGTK__ //Linux file read speed up hack for Block devices.
+#ifdef __WXGTK__
+		//Linux file read speed up hack for Block devices.
 		//Block read code just allowed for memory devices under linux.
 		//Because you can read arbitrary locations from block devices at linux.
 		//Kernel handle the job...
@@ -817,7 +832,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 		if( ProcessID >=0 )
 #else
 		if( BlockRWSize > 0 )
-#endif // __WXGTK__
+#endif
 			{
 			///NOTE:This function just read +1 more sectors and copies to buffer via memcpy, thus inefficient, at least for SSD's.
 			///TODO:Need to read 1 sector at start to bfs, than read to buffer directly and read one more sector to bfr.
@@ -866,7 +881,10 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			delete [] bfr;
 			return wxMin(wxMin( rd, rd_size-StartShift), size);
 			}
-
+		else if(FileType==FAL_Buffer){
+			memcpy( buffer, internal_file_buffer.GetData()+from, size );
+			return (from+size > internal_file_buffer.GetDataLen() ? internal_file_buffer.GetDataLen()-from : size);
+			}
 		wxFile::Seek( from ); //Since this is the Deepest layer
 		return wxFile::Read( buffer, size ); //Ends recursion. here
 		}
@@ -1094,7 +1112,7 @@ wxFileOffset FAL::Seek(wxFileOffset ofs, wxSeekMode mode){
 
 	get_ptr = put_ptr = ofs;
 
-	if( BlockRWSize > 0 )
+	if( BlockRWSize > 0 || FileType==FAL_Buffer || ProcessID > 0 )
 		return ofs;
 
 	return wxFile::Seek( ofs, mode );

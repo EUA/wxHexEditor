@@ -38,7 +38,7 @@ BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale
 
-VERSION = 0.24 Beta
+VERSION = 0.25 Beta
 
 .DEFAULT_GOAL := all
 
@@ -85,7 +85,7 @@ win_debug: win
 
 host_test:
 ifeq ($(HOST),)
-		echo "Cross-Compiling host NOT detected."
+	echo "Cross-Compiling host NOT detected."
 else
 CC = $(shell echo `$(WXCONFIG) --cc`)
 CXX = $(shell echo `$(WXCONFIG) --cxx`)
@@ -95,7 +95,7 @@ win: host_test $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ) src/windrv.o
-	$(CXX) $(OBJECTS) src/windrv.o $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -static ${LDFLAGS} -lpthread -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
+	$(CXX) $(OBJECTS) src/windrv.o $(RESOURCE_OBJ) $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -static ${LDFLAGS} -lpthread -lpsapi -static-libgcc -static-libstdc++ -Wl,--stack,32000000 -o $@
 
 maclink: $(OBJECTS)
 	$(CXX) $(OBJECTS) ${LDFLAGS} $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -lexpat -Wl,-stack_size,0x2000000 -o $(EXECUTABLE)

@@ -100,6 +100,7 @@ class HexEditor: public HexEditorCtrl
 		void BlockSelect( void );
 		void DoUndo( void );
 		void DoRedo( void );
+		void OpenMemorySPDDevice( int );
 
 		bool CutSelection( void );
 		bool DeleteSelection( void );

@@ -469,7 +469,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 				found = i;
 
 		if( found != -1 )
-				MyFileHistory->RemoveFileFromHistory( found );
+			MyFileHistory->RemoveFileFromHistory( found );
 		MyFileHistory->AddFileToHistory( filename.GetFullPath() );
 		MyFileHistory->Save( *(myConfigBase::Get()) );
 		myConfigBase::Get()->Flush();
@@ -514,57 +514,56 @@ HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	std::cout << "OnMenuEvent: "  << event.GetId() << std::endl;
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
-		/*
-		wxString lngt;
-		long unsigned int size=0;
-		while(1){
-			int dsize=0;
-			if (wxTheClipboard->Open()){
-				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
-					wxTextDataObject data;
-					wxTheClipboard->GetData( data );
-					dsize=data.GetDataSize();
-					}
-				wxTheClipboard->Close();
-				}
-			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."), _("Enter File Size:"), wxString::Format(wxT("%u"),dsize ) );
-
-			if(lngt.IsEmpty()){
-				return;
-			}
-			else if( lngt.ToULong( &size, 10 ) && (size > 0) )// ToULongLong has problems with Windows...
-				break;
-
-			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),lngt.ToULong( &size, 10 ) ) ,_T("Error!"), wxICON_ERROR, this );
-			}
-		//Save file
-		wxFileDialog filediag(this,
-									_("Choose a file for save as"),
-									wxEmptyString,
-									wxEmptyString,
-									wxFileSelectorDefaultWildcardStr,
-									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
-									wxDefaultPosition);
-
-		if(wxID_OK == filediag.ShowModal()){
-			wxFileName flname(filediag.GetPath());
-			//create file
-			wxFile crt;
-			if( !crt.Create( flname.GetFullPath(), true ) ){
-				wxMessageBox( _("File cannot create!") ,_T("Error"), wxICON_ERROR, this );
-				return;
-				}
-			if( !crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
-				wxMessageBox( _("File cannot open.") ,_T("Error"), wxICON_ERROR, this );
-				return;
-				}
-			crt.Seek( size-1 );
-			crt.Write("\0x00", 1);
-			crt.Close();
-			//Openning the file with text editor.
-			OpenFile( flname );
-			}
-		*/
+//		wxString lngt;
+//		long unsigned int size=0;
+//		while(1){
+//			int dsize=0;
+//			if (wxTheClipboard->Open()){
+//				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+//					wxTextDataObject data;
+//					wxTheClipboard->GetData( data );
+//					dsize=data.GetDataSize();
+//					}
+//				wxTheClipboard->Close();
+//				}
+//			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."), _("Enter File Size:"), wxString::Format(wxT("%u"),dsize ) );
+//
+//			if(lngt.IsEmpty()){
+//				return;
+//			}
+//			else if( lngt.ToULong( &size, 10 ) && (size > 0) )// ToULongLong has problems with Windows...
+//				break;
+//
+//			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),lngt.ToULong( &size, 10 ) ) ,_T("Error!"), wxICON_ERROR, this );
+//			}
+//		//Save file
+//		wxFileDialog filediag(this,
+//									_("Choose a file for save as"),
+//									wxEmptyString,
+//									wxEmptyString,
+//									wxFileSelectorDefaultWildcardStr,
+//									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+//									wxDefaultPosition);
+//
+//		if(wxID_OK == filediag.ShowModal()){
+//			wxFileName flname(filediag.GetPath());
+//			//create file
+//			wxFile crt;
+//			if( !crt.Create( flname.GetFullPath(), true ) ){
+//				wxMessageBox( _("File cannot create!") ,_T("Error"), wxICON_ERROR, this );
+//				return;
+//				}
+//			if( !crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
+//				wxMessageBox( _("File cannot open.") ,_T("Error"), wxICON_ERROR, this );
+//				return;
+//				}
+//			crt.Seek( size-1 );
+//			crt.Write("\0x00", 1);
+//			crt.Close();
+//			//Openning the file with text editor.
+//			OpenFile( flname );
+//			}
+//
 		OpenFile( wxFileName("-buf") );
 		}
 	else if( event.GetId() == wxID_OPEN ){
@@ -698,106 +697,6 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	event.Skip(false);
 	}
 
-#ifdef __WXGTK__
-	#include <linux/i2c-dev.h>
-	#define I2C_SMBUS_READ    1
-	#define I2C_SMBUS_WRITE   0
-	#define I2C_SMBUS_BYTE    1
-	#define I2C_SMBUS_BYTE_DATA 2
-	#define I2C_SMBUS_WORD_DATA 3
-	#define I2C_SMBUS_BLOCK_MAX 32
-#endif
-
-#ifdef __WXGTK__
-union i2c_smbus_data {
-    __u8 byte;
-    __u16 word;
-    __u8 block[I2C_SMBUS_BLOCK_MAX + 2]; /* block[0] is used for length */
-                                                /* and one more for PEC */
-};
-
-static inline __s32 i2c_smbus_access(int file, char read_write, __u8 command, int size, union i2c_smbus_data *data){
-        struct i2c_smbus_ioctl_data args;
-        args.read_write = read_write;
-        args.command = command;
-        args.size = size;
-        args.data = data;
-        return ioctl(file, I2C_SMBUS, &args);
-}
-
-static inline __s32 i2c_smbus_read_byte_data(int file, __u8 command){
-    union i2c_smbus_data data;
-    if (i2c_smbus_access(file, I2C_SMBUS_READ, command, I2C_SMBUS_BYTE_DATA, &data))
-        return -1;
-    else
-        return 0x0FF & data.byte;
-}
-
-static inline __s32 i2c_smbus_write_byte_data(int file, __u8 command, __u8 value){
-    union i2c_smbus_data data;
-    data.byte = value;
-    return i2c_smbus_access(file, I2C_SMBUS_WRITE, command, I2C_SMBUS_BYTE_DATA, &data);
-}
-
-static inline __s32 i2c_smbus_write_byte(int file, __u8 value){
-    return i2c_smbus_access(file, I2C_SMBUS_WRITE, value, I2C_SMBUS_BYTE, NULL);
-}
-
-
-void HexEditorFrame::OpenMemorySPDDevice( void ){
-	int file;
-	char filename[40];
-	int addr = 0x50;
-
-	sprintf(filename,"/dev/i2c-0");
-	if ((file = open(filename,O_RDWR)) < 0) {
-		printf("Failed to open the bus.");
-		return;
-		}
-
-	if (ioctl(file, I2C_SLAVE, addr) < 0){
-		printf("ioctl() Error! %s\n", strerror(errno));
-		return;
-		}
-
-	uint8_t buf[512] = {0};
-	printf("\r\n   : ");
-	for(int i = 0; i<=0x0F; i++)
-		printf("%02X ",i);
-	for(int i = 0; i<256; i++) {
-		if( i%0x10==0 ) printf("\r\n%03X: ",i);
-		buf[i]=i2c_smbus_read_byte_data(file, i);
-		printf( "%02X ", buf[i] );
-		}
-
-	//Flip to page 1
-	ioctl(file, I2C_SLAVE, 0x37);
-	i2c_smbus_write_byte(file, 0x0);
-	ioctl(file, I2C_SLAVE, addr);
-
-	for(int i = 0; i<256; i++) {
-		if(  i%0x10==0 ) printf("\r\n%03X: ",i+0x100);
-		buf[i]=i2c_smbus_read_byte_data(file, i);
-		printf( "%02X ", buf[i] );
-		}
-	printf("\r\n");
-
-	//Flip to page 0 back
-	ioctl(file, I2C_SLAVE, 0x36);
-	i2c_smbus_write_byte(file, 0x0);
-	ioctl(file, I2C_SLAVE, addr);
-	wxFileName xfl=wxFileNameFromPath(wxString("/tmp/wxhexeditor-memorySPD-dump"));
-	FAL *bufile = new FAL(xfl , FAL::ReadWrite, 0 );
-	bufile->Add(0,reinterpret_cast<char*>(buf),512,true);
-	bufile->Apply();
-	bufile->Close();
-	delete bufile;
-
-	OpenFile( xfl ) ;
-	}
-#else
-void HexEditorFrame::OpenMemorySPDDevice( void ){}
-#endif // __WXGTK__
 
 void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){
@@ -807,7 +706,8 @@ void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 		}
 
 	else if( event.GetId() == idDeviceMemorySPD ){
-		OpenMemorySPDDevice();
+		HexEditor* x=OpenFile( wxFileName(wxString("-buf")) );
+		x->OpenMemorySPDDevice( 0x50 );
 		}
 
 	else if( event.GetId() == idDeviceRam ){

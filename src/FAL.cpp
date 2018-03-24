@@ -134,6 +134,12 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 
+	else if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
+		memset( internal_file_buffer.GetWriteBuf(512), 0 , 512 );
+		internal_file_buffer.UngetWriteBuf(512);
+		FileType=FAL_Buffer;
+		}
+
 	else if(IsWinDevice(myfilename)){
 		//wxFileName converts "\\.\E:" to ".:\E:"  so we need to fix this
 		if(myfilename.GetFullPath().StartsWith( wxT(".:")))
@@ -244,8 +250,8 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		}
 
 	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
-		memset( internal_file_buffer.GetWriteBuf(1024), 0 , 1024 );
-		internal_file_buffer.UngetWriteBuf(1024);
+		memset( internal_file_buffer.GetWriteBuf(512), 0 , 512 );
+		internal_file_buffer.UngetWriteBuf(512);
 		FileType=FAL_Buffer;
 		}
 
@@ -317,6 +323,12 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		BlockRWSize=4;
 		FAM == ReadOnly;
 		return true;
+		}
+
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
+		memset( internal_file_buffer.GetWriteBuf(512), 0 , 512 );
+		internal_file_buffer.UngetWriteBuf(512);
+		FileType=FAL_Buffer;
 		}
 
 	if( !myfilename.IsFileReadable() ){

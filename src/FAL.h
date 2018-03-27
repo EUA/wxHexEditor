@@ -179,6 +179,8 @@ virtual	long Read( unsigned char* buffer, int size );
 			return hDevice;
 			}
 		#endif
+		enum FALFileTypes {FAL_File, FAL_Device, FAL_Process, FAL_Buffer};
+        FALFileTypes GetFileType(){ return FileType; }
 
 	protected:
 		long ReadR( unsigned char* buffer, unsigned size, uint64_t location, ArrayOfNode *Patches, int PatchIndice );
@@ -190,7 +192,7 @@ virtual	long Read( unsigned char* buffer, int size );
 		void ModificationPatcher( uint64_t location, unsigned char* data, int size, DiffNode* Patch);
 
 	private:
-		enum FALFileTypes {FAL_File, FAL_Device, FAL_Process, FAL_Buffer} FileType;
+		FALFileTypes FileType;
 		wxMemoryBuffer internal_file_buffer;
 		int BlockRWSize;
 		uint64_t BlockRWCount;

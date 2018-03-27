@@ -319,9 +319,9 @@
 				<Option parameters="testfile.swp" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-std=c++0x" />
 					<Add option="-g" />
-					<Add option="$($(WXCONFIG) --cflags)" />
+					<Add option="-std=c++0x" />
+					<Add option="`wxgtk2u-3.0-config --cflags`" />
 					<Add option="-Wno-deprecated-declarations" />
 					<Add option="-fopenmp" />
 					<Add option="-D_Bool=bool" />

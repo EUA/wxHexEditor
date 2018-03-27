@@ -42,10 +42,10 @@ VERSION = 0.25 Beta
 
 .DEFAULT_GOAL := all
 
+all:$(EXECUTABLE) langs
+
 clang: CXX=clang++ -D_Bool=bool -std=c++11 -lomp
 clang: all
-
-all:$(EXECUTABLE) langs
 
 $(OBJECTS): $(LIBS) $(SOURCES)
 

@@ -43,8 +43,8 @@
 #include <psapi.h>
 #endif
 
-#if wxCHECK_VERSION( 2,9,0 ) && !defined(__WXMAC__) && !defined( __WXMSW__)
-//Only GTK port is working good on detect changes of file.
+#if wxCHECK_VERSION( 2,9,0 ) && defined(__linux__)
+//Only GTK port of Linux is working good on detect changes of file.
 //MSW cannot detect changes in individual files yet in wxWidgets 3.1.0
 	#define _FSWATCHER_  1
 	#include <wx/fswatcher.h>
@@ -138,6 +138,9 @@ class HexEditor: public HexEditorCtrl
 			}
 		bool IsAvailable_Redo( void ) {
 			return myfile->IsAvailable_Redo();
+			}
+        FAL::FALFileTypes GetFileType( void ) {
+			return myfile->GetFileType();
 			}
 		int HashVerify(wxString hash_file,FAL* File=NULL);
 

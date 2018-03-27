@@ -1713,7 +1713,7 @@ void HexEditor::OnOffsetMouse(wxMouseEvent& event){
 		}
 	}
 
-#ifdef __WXGTK__
+#ifdef __linux__
 	#include <linux/i2c-dev.h>
 	#define I2C_SMBUS_READ    1
 	#define I2C_SMBUS_WRITE   0

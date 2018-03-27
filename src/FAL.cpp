@@ -32,6 +32,10 @@
 	#include <sys/ptrace.h> //No ptrace at windows
 #endif
 
+#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+#include <sys/param.h> //defines BSD
+#endif
+
 #if defined(__WXMAC__) || defined(BSD)
 	#define PTRACE_ATTACH PT_ATTACH
 	#define PTRACE_DETACH PT_DETACH
@@ -48,10 +52,14 @@
 WX_DEFINE_OBJARRAY(ArrayOfNode);
 
 bool IsBlockDev( int FD ){
-	struct stat *sbufptr = new struct stat;
-   fstat( FD, sbufptr );
+    struct stat *sbufptr = new struct stat;
+    fstat( FD, sbufptr );
 #ifdef __WXMSW__
 	return sbufptr->st_mode==0;	//Enable block size detection code on windows targets,
+#elif defined (BSD)
+    //return S_ISBLK( sbufptr->st_mode ); //this not working on BSD
+    return S_ISCHR( sbufptr->st_mode ); //well, this works...
+    //return !S_ISREG( sbufptr->st_mode ); //if not an ordinary file, it might be block...
 #else
 	return S_ISBLK( sbufptr->st_mode );
 #endif
@@ -59,9 +67,11 @@ bool IsBlockDev( int FD ){
 
 int FDtoBlockSize( int FD ){
 	int block_size=0;
-#if defined(__WXGTK__) && !defined(BSD)
+#if defined(__linux__)
 	ioctl(FD, BLKSSZGET, &block_size);
-#elif defined (__WXMAC__) || defined(BSD)
+#elif defined (BSD)
+    ioctl(FD, DIOCGSECTORSIZE, &block_size);
+#elif defined (__WXMAC__)
 	ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
 #elif defined (__WXMSW__)
 	struct stat *sbufptr = new struct stat;
@@ -78,10 +88,13 @@ int FDtoBlockSize( int FD ){
 
 uint64_t FDtoBlockCount( int FD ) {
 	uint64_t block_count=0;
-#if defined(__WXGTK__) && !defined(BSD)
+#if defined(__linux__)
 	ioctl(FD, BLKGETSIZE64, &block_count);
 	block_count/=FDtoBlockSize( FD );
-#elif defined (__WXMAC__) || defined(BSD)
+#elif defined (BSD)
+    ioctl(FD, DIOCGMEDIASIZE, &block_count);
+    block_count/=FDtoBlockSize(FD);
+#elif defined (__WXMAC__)
 	ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
 #elif defined (__WXMSW__)
 	DWORD dwResult;
@@ -236,7 +249,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		myfilename.GetFullPath().Mid(5).ToLong(&a);
 		ProcessID=a;
 		RAMProcess=true;
-		if((ptrace(PTRACE_ATTACH, ProcessID, NULL, NULL)) < 0 ){
+		if((ptrace(PTRACE_ATTACH, ProcessID, NULL, 0)) < 0 ){
 			wxMessageBox( wxString::Format(_("Process ID:%d cannot be open."),ProcessID ),_("Error"), wxOK|wxICON_ERROR );
 			ProcessID=-1;
 			return false;
@@ -340,6 +353,9 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 #endif
 
 bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW){
+#ifdef _DEBUG_
+    std::cout<< "FAL:FALOpen( " << myfilename.GetFullPath().ToAscii() << " )" << std::endl;
+#endif // _DEBUG_
 	if(myfilename.IsFileReadable()){//FileExists()){
 		if( FAM == ReadOnly)
 			Open(myfilename.GetFullPath(), wxFile::read);
@@ -372,7 +388,7 @@ bool FAL::Close(){
 			#ifdef __WXMSW__
 				CloseHandle(hDevice);
 		    #else
-				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, NULL)) >= 0 );
+				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, 0)) >= 0 );
 			#endif
 			#ifdef __WXMSW__
 			if(IsWinDevice( the_file ) ){
@@ -574,7 +590,7 @@ bool FAL::Apply( void ){
 						#ifdef __WXMSW__
 							ReadProcessMemory(hDevice, addr, &word, sizeof(word), &written);
 						#else
-							word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr, NULL);
+							word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr, 0);
 						#endif
 							memcpy( bfr+rd , &word, 4);
 							rd += 4;
@@ -834,8 +850,9 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 		//Block Read/Write mechanism.
 		//if( 0 )//for debugging
 
-#ifdef __WXGTK__
+#ifdef __linux__
 		//Linux file read speed up hack for Block devices.
+		//This macro disables blockRW code.
 		//Block read code just allowed for memory devices under linux.
 		//Because you can read arbitrary locations from block devices at linux.
 		//Kernel handle the job...
@@ -875,7 +892,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 				#ifdef __WXMSW__
 					ReadProcessMemory(hDevice, addr, &word, sizeof(word), &written);
 				#else
-					word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr);
+					word = ptrace(PTRACE_PEEKTEXT, ProcessID, addr, 0);
 				#endif
 					memcpy( bfr+rd , &word, 4);
 					rd += 4;
@@ -894,7 +911,7 @@ long FAL::ReadR( unsigned char* buffer, unsigned size, uint64_t from, ArrayOfNod
 			return wxMin(wxMin( rd, rd_size-StartShift), size);
 			}
 		else if(FileType==FAL_Buffer){
-			memcpy( buffer, internal_file_buffer.GetData()+from, size );
+			memcpy( buffer, reinterpret_cast<char*>(internal_file_buffer.GetData())+from, size );
 			return (from+size > internal_file_buffer.GetDataLen() ? internal_file_buffer.GetDataLen()-from : size);
 			}
 		wxFile::Seek( from ); //Since this is the Deepest layer

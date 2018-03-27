@@ -31,7 +31,7 @@
 
 wxArrayString GetDeviceList( bool WithPartitions=true){
 	wxArrayString disks;
-#ifdef __WXGTK__ //linux
+#ifdef __linux__ //linux
 	if(wxDir::Exists(wxT("/dev/disk/by-id")) ){
 		wxDir::GetAllFiles(wxT("/dev/disk/by-id"), &disks );
 		}
@@ -64,6 +64,10 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 			}
 	///No Sort for MSW, because PhysicalDrive0 is better at top.
 	//disks.Sort();
+#elif defined ( BSD )
+	wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("vt*"), wxDIR_FILES );
+	wxDir::GetAllFiles(wxT("/dev"), &disks, wxT("da*"), wxDIR_FILES );
+	disks.Sort();
 #endif
 	if( WithPartitions )
 		return disks;
@@ -485,7 +489,7 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( filename.GetFullPath().Append(wxT(".sha256")) );
 #if _FSWATCHER_
-		if(!filename.GetFullPath().Lower().StartsWith( wxT("-pid="))){
+		if(x->GetFileType()==FAL::FAL_File){
 			if(file_watcher!=NULL){
 				file_watcher->Add( filename.GetFullPath() );
 				//file_watcher->Add( filename.GetFullPath(), wxFSW_EVENT_MODIFY );

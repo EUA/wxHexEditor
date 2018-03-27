@@ -58,28 +58,31 @@ PS: If you face with " _rpl_malloc " error, you can use
 
 ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
 
+PS2: for 64Bit build, you need to run with HOST=x86_64-w64-mingw32 instead of HOST=i686-w64-mingw32.
+
 -----------------------------------------------------
 OS X
 -----------------------------------------------------
 You need to have Xcode Commandline Tools installed on your Mac.
-For OS X, you need to have wxWidgets.
 
-You can easily install it with Homebrew installation:
+You can easily install required dependencies with Homebrew installation:
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 After you could install required dependencies with this command:
 brew install wxmac gettext autoconf automake
 
-Or you can compile wxWidgets with:
+Instead of wxmac library, you might need to compile wxWidgets from source.
+Download wxWidgets source to your disk and with:
 tar xvf wxWidgets-<version>.tar.bz2
 cd wxWidgets
 mkdir release
 cd release
 ../configure --with-osx_cocoa --with-macosx-version-min=10.7  --disable-shared  --disable-mediactrl --with-{zlib,expat,libpng,libtiff,jpeg}=builtin --with-opengl --enable-universal-binary=x86_64,i386 CXXFLAGS="-stdlib=libc++ -std=c++11" OBJCXXFLAGS="-stdlib=libc++ -std=c++11" LDFLAGS="-stdlib=libc++" --enable-{release,unicode,monolithic}
 
-You might have some compilation issues with wxWidgets 3.1 using OSX 10.13.
+PS:You might have some compilation issues with wxWidgets 3.1 using OSX 10.13.
 
-Then extract the wxHexEditor and compile with:
+After you make ready the dependencies,
+then extract the wxHexEditor and compile with:
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 make mac WXCONFIG=<wx-config path>
@@ -90,3 +93,21 @@ If everything is OK, your executable is available to execute under:
 ./wxHexEditor.app/Contents/MacOS/wxHexEditor
 
 That's all.
+
+-----------------------------------------------------
+BSD
+-----------------------------------------------------
+First of all, you need to install all dependencies.
+In FreeBSD, you can use pkg command
+
+pkg install automake autoconf wx30-gtk2 gmake
+
+Then extract the wxHexEditor and compile with:
+tar xvf wxHexEditor-v<version>-src.tar.bz2
+cd wxHexEditor
+gmake WXCONFIG=<wx-config path>
+
+for example : gmake WXCONFIG=wxgtk2u-3.0-config
+
+If you are lucky, this will compile the (dependencies mhash and udis86 than) program without any error.
+

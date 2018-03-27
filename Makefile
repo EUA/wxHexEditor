@@ -44,7 +44,10 @@ VERSION = 0.25 Beta
 
 all:$(EXECUTABLE) langs
 
-clang: CXX=clang++ -D_Bool=bool -std=c++11 -lomp
+clang:
+CC = clang
+CXX = clang++
+OPT_FLAGS = -D_Bool=bool -std=c++11 -lomp
 clang: all
 
 $(OBJECTS): $(LIBS) $(SOURCES)
@@ -69,7 +72,7 @@ langs: $(MOBJECTS)
 	$(MSGFMT) $< -o $@
 
 udis86/libudis86/.libs/libudis86.a:
-	cd udis86;./autogen.sh
+	cd udis86; sh ./autogen.sh
 	cd udis86;./configure --host=$(HOST) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS) ${OPTFLAGS}" CXXFLAGS="$(CXXFLAGS) ${OPTFLAGS}" CPPFLAGS="$(CPPFLAGS)"
 	cd udis86/libudis86; $(MAKE) $(MFLAGS)
 
@@ -84,12 +87,12 @@ win_debug: LDFLAGS += -Wl,--subsystem,console -mconsole
 win_debug: win
 
 host_test:
-ifeq ($(HOST),)
-	echo "Cross-Compiling host NOT detected."
-else
+#ifeq ($(HOST),)
+#	echo "Cross-Compiling host NOT detected."
+#else
 CC = $(shell echo `$(WXCONFIG) --cc`)
 CXX = $(shell echo `$(WXCONFIG) --cxx`)
-endif
+#endif
 
 win: host_test $(RESOURCES) $(EXECUTABLE_WIN)
 

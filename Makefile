@@ -172,6 +172,8 @@ prepmacdir: langs
 		cp locale/$$i/wxHexEditor.mo $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i/; done
 
 install:
+	# Can't use install -D because FreeBSD doesn't have the semantics.
+	mkdir -p $(DESTDIR)/$(BINDIR) $(DESTDIR)/$(DATADIR)/pixmaps $(DESTDIR)/$(DATADIR)/applications
 	install -m 755 $(EXECUTABLE) $(DESTDIR)/$(BINDIR)/$(EXECUTABLE)
 	install -m 644 resources/wxHexEditor.png $(DESTDIR)/$(DATADIR)/pixmaps/wxHexEditor.png
 	install -m 644 resources/wxHexEditor.desktop $(DESTDIR)/$(DATADIR)/applications/wxHexEditor.desktop

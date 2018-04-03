@@ -601,17 +601,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 				switch( event.GetId() ){
 					//case wxID_OPEN: not handled here!
 					case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
-					case wxID_SAVEAS:		{
-												wxFileDialog filediag(this,_("Choose a file for save as"),
-																					wxEmptyString,
-																					wxEmptyString,
-																					wxFileSelectorDefaultWildcardStr,
-																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
-																					wxDefaultPosition);
-												if(wxID_OK == filediag.ShowModal())
-													MyHexEditor->FileSave( filediag.GetPath() );
-												break;
-												}
+					case wxID_SAVEAS:	MyHexEditor->FileSaveAs();		break;
 					case idClose:{
 						if( MyHexEditor->FileClose() ){
 							MyNotebook->DeletePage( MyNotebook->GetSelection() );// delete MyHexEditor; not neccessery, DeletePage also delete this

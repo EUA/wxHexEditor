@@ -393,7 +393,22 @@ void HexEditor::FileSetXORKey( bool enable ){
 	GetEventHandler()->ProcessEvent( new_event );
 	}
 
+bool HexEditor::FileSaveAs( void ) {
+	wxFileDialog filediag(this,_("Choose a file for save as"),
+									wxEmptyString,
+									wxEmptyString,
+									wxFileSelectorDefaultWildcardStr,
+									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+									wxDefaultPosition);
+	if(wxID_OK == filediag.ShowModal())
+		return FileSave( filediag.GetPath() );
+	return false;
+	}
+
 bool HexEditor::FileSave( bool question ) {
+	if( myfile->GetFileType() == FAL::FAL_Buffer)
+		return FileSaveAs();
+
 	if( myfile->IsChanged() ) {
 		if ( myfile->GetAccessMode() == FAL::ReadOnly) {
 			wxMessageBox( _( "File in Read Only mode. Cannot save file."), _("File Save"), wxOK|wxICON_EXCLAMATION, this );

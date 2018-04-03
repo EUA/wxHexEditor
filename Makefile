@@ -33,7 +33,7 @@ EXECUTABLE=wxHexEditor
 EXECUTABLE_WIN=$(EXECUTABLE).exe
 EXECUTABLE_DIR_MAC=$(EXECUTABLE).app
 
-PREFIX      = /usr
+PREFIX      = /usr/local
 BINDIR      = $(PREFIX)/bin
 DATADIR     = $(PREFIX)/share
 LOCALEDIR   = $(DATADIR)/locale

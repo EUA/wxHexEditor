@@ -732,9 +732,6 @@ wxFileOffset FAL::Length( int PatchIndice ){
 	if( ProcessID >=0 )
 		return 0x800000000000LL;
 
-	if (FileType==FAL_Buffer)
-		return internal_file_buffer.GetDataLen();
-
 	if ( BlockRWSize > 0 )
 		return BlockRWSize*BlockRWCount;
 
@@ -756,7 +753,12 @@ wxFileOffset FAL::Length( int PatchIndice ){
 
 	if(! IsOpened() )
 		return -1;
-	wxFileOffset max_size=wxFile::Length();
+
+	wxFileOffset max_size;
+	if (FileType==FAL_Buffer)
+		max_size=internal_file_buffer.GetDataLen();
+	else
+		max_size=wxFile::Length();
 
 	#ifdef __WXGTK__
 	///WorkAround for wxFile::Length() zero size bug

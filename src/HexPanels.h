@@ -51,6 +51,7 @@ class DataInterpreter : public InterpreterGui{
 			wxFont f = GetFont();
 			f.SetPointSize(10);
 			m_textctrl_binary->SetFont(f);
+			m_textctrl_ascii->SetFont(f);
 			m_textctrl_8bit->SetFont(f);
 			m_textctrl_16bit->SetFont(f);
 			m_textctrl_32bit->SetFont(f);
@@ -66,6 +67,7 @@ class DataInterpreter : public InterpreterGui{
 		void OnTextEdit( wxKeyEvent& event );
 		void OnTextMouse( wxMouseEvent& event );
 		void OnCheckEdit( wxCommandEvent& event );
+		wxString AsciiSymbol( unsigned char a );
 	protected:
 		struct unidata{
 			char *raw, *mraw;	//big endian and little endian

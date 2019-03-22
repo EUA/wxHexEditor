@@ -61,7 +61,7 @@ MyFrame::MyFrame(wxFrame *frame, const wxString& title)
 
 	wxString ch;
 	for(int j=0 ; j < 90 ; j++ ){
-        ch.Append(j);
+        ch.Append(wxChar(j));
         hex_ctrl->SetBinValue( ch.char_str(),90,true );
         }
 }

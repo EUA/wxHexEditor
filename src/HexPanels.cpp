@@ -119,6 +119,7 @@ void DataInterpreter::OnTextMouse( wxMouseEvent& event ){
 	else
 		event.Skip();
 	}
+
 void DataInterpreter::OnTextEdit( wxKeyEvent& event ){
 	if( ( event.GetKeyCode() == '0'
 			|| event.GetKeyCode() == '1'
@@ -193,12 +194,14 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 			}
 		m_textctrl_binary ->ChangeValue( bn );
 		if( m_check_unsigned->GetValue() ){
+			m_textctrl_ascii->ChangeValue( AsciiSymbol(*X->ubit8 ) );
 			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit8 ));
 			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit16 ));
 			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%u"),  *X->ubit32 ));
 			m_textctrl_64bit->ChangeValue( wxString::Format("%" wxLongLongFmtSpec "u",*X->ubit64 ));
 			}
 		else {
+			m_textctrl_ascii->ChangeValue( AsciiSymbol(*X->ubit8 ) );
 			m_textctrl_8bit ->ChangeValue( wxString::Format(wxT("%i"),  *X->bit8 ));
 			m_textctrl_16bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit16 ));
 			m_textctrl_32bit->ChangeValue( wxString::Format(wxT("%i"),  *X->bit32 ));
@@ -206,6 +209,19 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 			}
 		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
 		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
+	}
+
+wxString DataInterpreter::AsciiSymbol( unsigned char ch ){
+    static wxString AsciiTable[]={"NUL","SOH","STX","ETX","EOT","ENQ","ACK","BEL","BS","HT","LF","VT",
+								"FF","CR","SO","SI","DLE","DC1","DC2","DC3","DC4","NAK","SYN","ETB",
+								"CAN","EM","SUB","ESC","FS","GS","RS","US","SP"};//32 SP means SPACE
+	if( ch <= 32 )
+		return AsciiTable[ch];
+	else if( ch > 32 && ch < 127 )
+		return wxString((char)ch);
+	else if( ch == 127 )
+		return wxString("DEL");
+	return wxEmptyString;
 	}
 
 void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey ){

@@ -382,8 +382,8 @@ void HexEditorFrame::PrepareAUI( void ){
 					Caption(_("DataInterpreter")).
 					TopDockable(false).
 					BottomDockable(false).
-					//BestSize(wxSize(174,218)).
-					Resizable(false).
+					BestSize(wxSize(200,270)).
+					//Resizable(true).
 					Show(true).
 					Left().Layer(1).Position(0) );
 
@@ -600,7 +600,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			if( MyHexEditor != NULL ){
 				switch( event.GetId() ){
 					//case wxID_OPEN: not handled here!
-					case wxID_SAVE:		MyHexEditor->FileSave( false );		break;
+					case wxID_SAVE:		MyHexEditor->FileSave( false );	break;
 					case wxID_SAVEAS:	MyHexEditor->FileSaveAs();		break;
 					case idClose:{
 						if( MyHexEditor->FileClose() ){
@@ -690,7 +690,6 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 		}
 	event.Skip(false);
 	}
-
 
 void HexEditorFrame::OnDevicesMenu( wxCommandEvent& event ){
 	if( event.GetId() >= idDiskDevice ){

@@ -1774,6 +1774,28 @@ static inline __s32 i2c_smbus_write_byte(int file, __u8 value){
     return i2c_smbus_access(file, I2C_SMBUS_WRITE, value, I2C_SMBUS_BYTE, NULL);
 }
 
+
+static inline __s32 i2c_smbus_read_word_data(int file, __u8 command)
+{
+	union i2c_smbus_data data;
+	if (i2c_smbus_access(file,I2C_SMBUS_READ,command,
+	                     I2C_SMBUS_WORD_DATA,&data))
+		return -1;
+	else
+		return 0x0FFFF & data.word;
+}
+
+static inline __s32 i2c_smbus_write_word_data(int file, __u8 command,
+                                              __u16 value)
+{
+	union i2c_smbus_data data;
+	data.word = value;
+	return i2c_smbus_access(file,I2C_SMBUS_WRITE,command,
+	                        I2C_SMBUS_WORD_DATA, &data);
+}
+
+
+
 static inline __s32 i2c_smbus_read_block_data(int file, __u8 command, __u8 *values){
   union i2c_smbus_data data;
   int i;
@@ -1802,9 +1824,6 @@ static inline __s32 i2c_smbus_read_i2c_block_data(int file, __u8 command, __u8 l
   }
 }
 
-
-
-
 void HexEditor::OpenMemorySPDDevice( int addr ){
 	int file;
 	char filename[40];
@@ -1814,6 +1833,13 @@ void HexEditor::OpenMemorySPDDevice( int addr ){
 		wxMessageBox( _("Failed to open the bus."), _("Error"), wxOK|wxICON_ERROR) ;
 		return;
 		}
+//
+//	for( int i=0x50; i <= 0x58 ; i++)
+//		if (ioctl(file, I2C_SLAVE, addr) == 0){
+//			int d=i2c_smbus_read_byte_data(file, 0);
+//			if ( d != 0)
+//				printf("Detected RAM Module at 0x%02X - %d\r\n", i, d);
+//			}
 
 	if (ioctl(file, I2C_SLAVE, addr) < 0){
 		printf("ioctl() Error! %s\n", strerror(errno));
@@ -1825,35 +1851,23 @@ void HexEditor::OpenMemorySPDDevice( int addr ){
 	for(int i = 0; i<=0x0F; i++)
 		printf("%02X ",i);
 
-#define i2xtest
-#ifdef i2xtest
 	for(int i = 0; i<256; i++) {
 		if( i%0x10==0 ) printf("\r\n%03X: ",i);
 		buf[i]=i2c_smbus_read_byte_data(file, i);
 		printf( "%02X ", buf[i] );
 		}
-#else
-	for(int i = 0; i<256; i+=32) {
-		i2c_smbus_read_block_data(file, i, buf+i);
-		}
-#endif
 
 	//Flip to page 1
 	ioctl(file, I2C_SLAVE, 0x37);
 	i2c_smbus_write_byte(file, 0x0);
 	ioctl(file, I2C_SLAVE, addr);
 
-#ifdef i2xtest
 	for(int i = 0; i<256; i++) {
 		if(  i%0x10==0 ) printf("\r\n%03X: ",i+0x100);
 		buf[i+0xFF]=i2c_smbus_read_byte_data(file, i);
 		printf( "%02X ", buf[i] );
 		}
-#else
-	for(int i = 0; i<256; i+=32) {
-		i2c_smbus_read_block_data(file, i, buf+i+0xFF);
-		}
-#endif
+
 	printf("\r\n");
 
 	//Flip to page 0 back
@@ -1869,7 +1883,7 @@ void HexEditor::OpenMemorySPDDevice( int addr ){
 	//delete bufile;
 	//OpenFile( xfl );
 
-	myfile->Add(0,reinterpret_cast<char*>(buf),512,true);
+	myfile->Add(0,reinterpret_cast<char*>(buf),512,false);
 	myfile->Apply();
 	ReDraw();
 	}

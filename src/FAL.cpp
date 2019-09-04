@@ -424,7 +424,7 @@ FAL::~FAL(){
 #ifndef __WXMSW__
 	if(!oldOwner.IsEmpty() ){
 		//Will restore owner on file close.
-		wwxString cmd, spacer = wxT(" ");
+		wxString cmd, spacer = wxT(" ");
 		if ( wxFile::Exists( wxT("/usr/bin/pkexec"))){
 			cmd = wxT("pkexec --user root chown \"");
 			spacer = wxT("\" \"");

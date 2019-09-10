@@ -420,7 +420,7 @@ void FindDialog::OnChar( wxKeyEvent& event ){
 	}
 
 void FindDialog::EventHandler( wxCommandEvent& event ){
-	WX_CLEAR_ARRAY(parent->HighlightArray )
+	WX_CLEAR_ARRAY(parent->HighlightArray);
 	parent->HighlightArray.Shrink();
 
 	if( event.GetId() == btnFind->GetId())

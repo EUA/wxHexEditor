@@ -64,9 +64,9 @@ HexEditorCtrl::~HexEditorCtrl( void ){
 	Dynamic_Disconnector();
 	Clear();
 
-	WX_CLEAR_ARRAY(MainTagArray)
-	WX_CLEAR_ARRAY(HighlightArray)
-   WX_CLEAR_ARRAY(CompareArray)
+	WX_CLEAR_ARRAY(MainTagArray);
+	WX_CLEAR_ARRAY(HighlightArray);
+	WX_CLEAR_ARRAY(CompareArray);
 
    MainTagArray.Shrink();
    HighlightArray.Shrink();

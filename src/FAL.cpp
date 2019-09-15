@@ -295,18 +295,22 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//Changing owner of file...
 		//I think it's better than changing permissions directly. Doesn't it?
 		//Will restore owner on file close.
-		wxString cmd;
-		if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
+		wxString cmd, spacer = wxT(" ");
+		if ( wxFile::Exists( wxT("/usr/bin/pkexec"))){
+			cmd = wxT("pkexec --user root chown \"");
+			spacer = wxT("\" \"");
+		}
+		else if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
 			cmd = wxT("gnomesu -u root -c \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksu")))
 			cmd = wxT("gksu -u root \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksudo")))
 			cmd = wxT("gksudo -u root \"chown ");
 		else{
-			wxMessageBox(_("For using this function, please install \"gnomesu\" or \"gksu\" tools first."),_("Error"), wxOK|wxCANCEL|wxICON_ERROR);
+			wxMessageBox(_("For using this function, please install \"pkexec\", \"gnomesu\" or \"gksu\" tools first."),_("Error"), wxOK|wxCANCEL|wxICON_ERROR);
 			return false;
 			}
-		cmd+=wxGetUserId() + wxT(" ")+ myfilename.GetFullPath() +wxT("\"");
+		cmd+=wxGetUserId() + spacer + myfilename.GetFullPath() +wxT("\"");
 	#ifdef _DEBUG_
 		std::cout << "Changing permission of " << myfilename.GetFullPath().ToAscii() << std::endl;
 		std::cout << cmd.ToAscii() << std::endl;
@@ -420,14 +424,18 @@ FAL::~FAL(){
 #ifndef __WXMSW__
 	if(!oldOwner.IsEmpty() ){
 		//Will restore owner on file close.
-		wxString cmd;
-		if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
+		wwxString cmd, spacer = wxT(" ");
+		if ( wxFile::Exists( wxT("/usr/bin/pkexec"))){
+			cmd = wxT("pkexec --user root chown \"");
+			spacer = wxT("\" \"");
+		}
+		else if( wxFile::Exists( wxT("/usr/bin/gnomesu")))
 			cmd = wxT("gnomesu -c \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksu")))
 			cmd = wxT("gksu -u root \"chown ");
 		else if( wxFile::Exists( wxT("/usr/bin/gksudo")))
 			cmd = wxT("gksudo -u root \"chown ");
-		cmd += oldOwner + wxT(" ")+ the_file.GetFullPath() +wxT("\"");
+		cmd += oldOwner + spacer + the_file.GetFullPath() +wxT("\"");
 #ifdef _DEBUG_
 		std::cout << "Changing permission of " << the_file.GetFullPath().ToAscii() << std::endl;
 		std::cout << cmd.ToAscii() << std::endl;

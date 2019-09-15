@@ -69,10 +69,10 @@ int FDtoBlockSize( int FD ){
 	int block_size=0;
 #if defined(__linux__)
 	ioctl(FD, BLKSSZGET, &block_size);
-#elif defined (BSD)
-    ioctl(FD, DIOCGSECTORSIZE, &block_size);
 #elif defined (__WXMAC__)
 	ioctl(FD, DKIOCGETBLOCKSIZE, &block_size);
+#elif defined (BSD)
+    ioctl(FD, DIOCGSECTORSIZE, &block_size);
 #elif defined (__WXMSW__)
 	struct stat *sbufptr = new struct stat;
    fstat( FD, sbufptr );
@@ -91,11 +91,11 @@ uint64_t FDtoBlockCount( int FD ) {
 #if defined(__linux__)
 	ioctl(FD, BLKGETSIZE64, &block_count);
 	block_count/=FDtoBlockSize( FD );
+#elif defined (__WXMAC__)
+	ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
 #elif defined (BSD)
     ioctl(FD, DIOCGMEDIASIZE, &block_count);
     block_count/=FDtoBlockSize(FD);
-#elif defined (__WXMAC__)
-	ioctl(FD, DKIOCGETBLOCKCOUNT, &block_count);
 #elif defined (__WXMSW__)
 	DWORD dwResult;
 	DISK_GEOMETRY driveInfo;

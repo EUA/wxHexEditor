@@ -44,11 +44,10 @@ VERSION = 0.25 Beta
 
 all:$(EXECUTABLE) langs
 
-clang:
-CC = clang
-CXX = clang++
-OPT_FLAGS = -D_Bool=bool -std=c++11 -lomp
-clang: all
+#For Clang:
+#CC=clang
+#CXX=clang++
+#OPT_FLAGS=-D_Bool=bool -std=c++11 -lomp
 
 $(OBJECTS): $(LIBS) $(SOURCES)
 

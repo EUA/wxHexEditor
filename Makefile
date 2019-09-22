@@ -3,7 +3,6 @@ HOST=
 WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -Wall -O2
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
 WXCXXFLAGS += -fopenmp
-LDFLAGS += -lgomp
 #add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
 #LDFLAGS += -Wl,--subsystem,console -mconsole
 RC = `$(WXCONFIG) --rescomp`
@@ -22,7 +21,7 @@ SOURCES= src/HexEditorGui.cpp \
 			src/HexEditorCtrl/wxHexCtrl/Tag.cpp\
 			src/HexEditorCtrl/HexEditorCtrlGui.cpp\
 			src/HexEditorFrame.cpp
-LIBS = udis86/libudis86/.libs/libudis86.a mhash/lib/.libs/libmhash.a
+LIBS = udis86/libudis86/.libs/libudis86.a mhash/lib/.libs/libmhash.a -lgomp
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
 LANGUAGEDIRS=`ls -l ./locale | grep ^d | sed s/.*\ //g;`
@@ -54,10 +53,10 @@ $(OBJECTS): $(LIBS) $(SOURCES)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) ${LDFLAGS} $(LIBS) ${CXXFLAGS} ${OPTFLAGS} $(WXLDFLAGS) -o $@
+	$(CXX) ${CXXFLAGS} ${CPPFLAGS} $(OBJECTS) $(LIBS) $(WXLDFLAGS) ${LDFLAGS} -o $@
 
 .cpp.o: $(LIBS)
-	$(CXX) -c $(WXCXXFLAGS) $(OPTFLAGS) $(CXXFLAGS) $(CPPFLAGS) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $(OPTFLAGS) $(WXCXXFLAGS) $< -o $@
 
 %.o : %.rc
 	$(RC) $(RCFLAGS) $< -o $@

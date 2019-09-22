@@ -516,7 +516,9 @@ HexEditor* HexEditorFrame::GetActiveHexEditor( void ){
 	}
 
 void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
+#ifdef _DEBUG_
 	std::cout << "OnMenuEvent: "  << event.GetId() << std::endl;
+#endif
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
 //		wxString lngt;
 //		long unsigned int size=0;

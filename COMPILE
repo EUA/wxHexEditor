@@ -98,16 +98,16 @@ That's all.
 BSD
 -----------------------------------------------------
 First of all, you need to install all dependencies.
-In FreeBSD, you can use pkg command
+In FreeBSD 12.0, you can use pkg command
 
-pkg install automake autoconf wx30-gtk2 gmake
+pkg install autotools wx31-gtk3 gmake openmp python
 
 Then extract the wxHexEditor and compile with:
 tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 gmake WXCONFIG=<wx-config path>
 
-for example : gmake WXCONFIG=wxgtk2u-3.0-config
+for example : gmake WXCONFIG=wxgtk3u-3.1-config
 
 If you are lucky, this will compile the (dependencies mhash and udis86 than) program without any error.
 

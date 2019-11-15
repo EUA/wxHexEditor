@@ -93,8 +93,9 @@ class HexEditor: public HexEditorCtrl
 		bool FileOpen( wxFileName& filename  );
 		bool FileReOpen( void );
 		bool FileSave( bool question = true );
-		bool FileSave( wxString filename );
 		bool FileSaveAs( void );
+		bool FileSaveAs( wxString filename );
+		bool FileSaveGeneric( wxString filename, uint64_t fstart, uint64_t flength );
 		bool FileClose( bool WithoutChange = false );
 		bool SaveAsDump( void );
 		bool FillSelection( void );

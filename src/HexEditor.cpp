@@ -401,7 +401,7 @@ bool HexEditor::FileSaveAs( void ) {
 									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
 									wxDefaultPosition);
 	if(wxID_OK == filediag.ShowModal())
-		return FileSave( filediag.GetPath() );
+		return FileSaveAs( filediag.GetPath() );
 	return false;
 	}
 
@@ -441,25 +441,30 @@ bool HexEditor::FileSave( bool question ) {
 	return false;
 	}
 
-bool HexEditor::FileSave( wxString savefilename ) {
+bool HexEditor::FileSaveAs( wxString savefilename){
+	FileSaveGeneric( savefilename, 0, FileLength() );
+	}
+
+bool HexEditor::FileSaveGeneric( wxString savefilename, uint64_t fstart, uint64_t flength ) {
 // TODO (death#1#): Protection to save opened file/samefile
 	wxFFile savefile( savefilename, wxT("wb") );
 	wxFileName saveflnm(savefilename); //to extract path for wxGetDiskSpace
 	wxDiskspaceSize_t available, total;
+	uint64_t SaveLength = flength;
 	do{
 		wxGetDiskSpace( saveflnm.GetPath(), &total, &available );
-		if( FileLength() > available ){
+		if( SaveLength > available ){
 			int state = wxMessageBox( wxString::Format( _( "There are not enough free disk space.\nRequired: %s\nAvailable: %s"),
-															wxFileName::GetHumanReadableSize( wxULongLong(FileLength()) ),
+															wxFileName::GetHumanReadableSize( wxULongLong(SaveLength) ),
 															wxFileName::GetHumanReadableSize( wxULongLong(available.GetValue()) ) ), _("Not Enought Space"), wxCANCEL|wxOK|wxICON_QUESTION, this );
 			if(state==wxCANCEL)
 				return false;
 			}
-		}while(FileLength() > available);
+		}while( SaveLength > available);
 
 	if(savefile.IsOpened()) {
-		myfile->Seek( 0, wxFromStart);
-		int64_t range = FileLength();
+		myfile->Seek( fstart, wxFromStart);
+		int64_t range = SaveLength;
 		wxString msg = _("File save in progress");
 		wxString emsg = wxT("\n");
 		wxProgressDialog mpd( _("Saving file"),msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
@@ -471,7 +476,9 @@ bool HexEditor::FileSave( wxString savefilename ) {
 
 		time_t ts,te;
 		time (&ts);
-		while( savefile.Tell() < FileLength() ) {
+		while( savefile.Tell() < SaveLength ) {
+			if( SaveLength - savefile.Tell() < BlockSz ) //for last bytes...
+				BlockSz = SaveLength - savefile.Tell();
 			rd=myfile->Read( buffer, BlockSz );
 			readfrom+=rd;
 			if( savefile.Write( buffer, rd ) != rd ){
@@ -479,7 +486,7 @@ bool HexEditor::FileSave( wxString savefilename ) {
 				wxRemoveFile( savefilename );
 				return false;
 				};
-			memset(buffer,0,BlockSz);
+			memset(buffer,0,BlockSz); //not needed but...
 			time(&te);
 			if(ts != te ){
 				ts=te;
@@ -493,11 +500,23 @@ bool HexEditor::FileSave( wxString savefilename ) {
 				return false;
 				}
 			}
+		savefile.Close();
 		return true;
 		}
 	else
 		return false;
 	}
+
+bool HexEditor::SaveAsDump( void ){
+   wxFileDialog filediag(this,
+   _("Choose a file for saving dump"), wxEmptyString, wxEmptyString, wxT("*"),
+   wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
+
+   if(wxID_OK == filediag.ShowModal())
+	   return FileSaveGeneric( filediag.GetPath(), select->GetStart(), select->GetSize() );
+	else
+		return false;
+   }
 
 bool HexEditor::FileClose( bool WithoutChange ) {
 	if( myfile != NULL ) {
@@ -648,36 +667,6 @@ bool HexEditor::FillSelection( void ){
 	Reload();
 	return true;
 	}
-
-bool HexEditor::SaveAsDump( void ){
-   wxFileDialog filediag(this,
-   _("Choose a file for saving dump"), wxEmptyString, wxEmptyString, wxT("*"),
-   wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR, wxDefaultPosition);
-
-   if(wxID_OK == filediag.ShowModal()) {
-// TODO (death#1#): Avoid overwrite of original file!
-	wxFFile savefile( filediag.GetPath(), wxT("wb") );
-      if(savefile.IsOpened()) {
-         int rd;
-         wxMemoryBuffer m_buffer;
-         void* buff=NULL;
-			buff = m_buffer.GetWriteBuf( select->GetSize() );
-
-			myfile->Seek( select->GetStart(), wxFromStart);
-			rd = myfile->Read( static_cast< char*>( buff ), select->GetSize() );
-
-			m_buffer.UngetWriteBuf( rd );
-			savefile.Write( m_buffer.GetData(), rd );
-			savefile.Close();
-			return true;
-			}
-	  else {
-			wxMessageBox( wxString(_("Dump cannot saved as ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
-			return false;
-			}
-      }
-	return false;
-   }
 
 void HexEditor::OnOffsetScroll( wxScrollEvent& event ) {
 	LoadFromOffset( static_cast<int64_t>(offset_scroll->GetThumbPosition()) * BytePerLine() );

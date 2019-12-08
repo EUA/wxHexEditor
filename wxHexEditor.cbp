@@ -84,7 +84,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/release/wx-config" />
+					<Variable name="WXCONFIG" value="\home\compile\wxWidgets-3.1.0\release\wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Custom Debug">
@@ -123,7 +123,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/debug/wx-config" />
+					<Variable name="WXCONFIG" value="\home\compile\wxWidgets-3.1.0\debug\wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Release">
@@ -142,18 +142,18 @@
 					<Add option="-DwxUSE_UNICODE" />
 					<Add option="-DNDEBUG" />
 					<Add option="-DwxDEBUG_LEVEL=0" />
-					<Add directory="$(wxdir)/include" />
-					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
+					<Add directory="$$(wxdir)/include" />
+					<Add directory="$$(wxdir)/lib/gcc_lib/mswu" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="($wxdir)/include" />
-					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
+					<Add directory="$$(wxdir)/include" />
+					<Add directory="$$(wxdir)/lib/gcc_lib/mswu" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-mthreads" />
-					<Add library="wxmsw30u" />
-					<Add library="wxmsw30u_gl" />
+					<Add library="wxmsw31u" />
+					<Add library="wxmsw31u_gl" />
 					<Add library="wxjpeg" />
 					<Add library="wxpng" />
 					<Add library="wxtiff" />
@@ -175,10 +175,14 @@
 					<Add library="comdlg32" />
 					<Add library="mhash/bin/Release/libmhash.a" />
 					<Add library="udis86/bin/Release/libudis86.a" />
-					<Add directory="($wxdir)/lib/gcc_lib" />
+					<Add library="oleacc" />
+					<Add library="version" />
+					<Add library="uxtheme" />
+					<Add library="shlwapi" />
+					<Add directory="$$(wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>
-					<Variable name="wxdir" value="C:/wxWidgets-3.0.1" />
+					<Variable name="wxdir" value="C:\wxWidgets" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Debug">
@@ -206,17 +210,17 @@
 					<Add option="-D_DEBUG_MOUSE_" />
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_" />
-					<Add directory="$(wxdir)/include" />
-					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
+					<Add directory="$$(wxdir)/include" />
+					<Add directory="$$(wxdir)/lib/gcc_lib/mswu" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="($wxdir)/include" />
-					<Add directory="$(wxdir)/lib/gcc_lib/mswu" />
+					<Add directory="$$(wxdir)/include" />
+					<Add directory="$$(wxdir)/lib/gcc_lib/mswu" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-mthreads" />
-					<Add library="wxmsw30u" />
-					<Add library="wxmsw30u_gl" />
+					<Add library="wxmsw31u" />
+					<Add library="wxmsw31u_gl" />
 					<Add library="wxjpeg" />
 					<Add library="wxpng" />
 					<Add library="wxtiff" />
@@ -238,10 +242,14 @@
 					<Add library="comdlg32" />
 					<Add library="mhash/bin/Debug/libmhash.a" />
 					<Add library="udis86/bin/Debug/libudis86.a" />
-					<Add directory="$(wxdir)/lib/gcc_lib" />
+					<Add library="oleacc" />
+					<Add library="version" />
+					<Add library="uxtheme" />
+					<Add library="shlwapi" />
+					<Add directory="$$(wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>
-					<Variable name="wxdir" value="C:/wxWidgets-3.0.1" />
+					<Variable name="wxdir" value="C:\wxWidgets" />
 				</Environment>
 			</Target>
 			<Target title="MacOS Release">
@@ -268,7 +276,7 @@
 					<Add after="make prepmacdir EXECUTABLE_DIR_MAC=$(TARGET_OUTPUT_DIR)../../" />
 				</ExtraCommands>
 				<Environment>
-					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
+					<Variable name="WXCONFIG" value="~\Desktop\wxWidgets-3.0.1\release\wx-config" />
 				</Environment>
 			</Target>
 			<Target title="MacOS Debug">
@@ -307,7 +315,7 @@
 					<Add after="make prepmacdir EXECUTABLE_DIR_MAC=$(TARGET_OUTPUT_DIR)../../" />
 				</ExtraCommands>
 				<Environment>
-					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
+					<Variable name="WXCONFIG" value="~\Desktop\wxWidgets-3.0.1\release\wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Clang Custom Debug">
@@ -319,9 +327,9 @@
 				<Option parameters="testfile.swp" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-g" />
 					<Add option="-std=c++0x" />
-					<Add option="`wxgtk2u-3.0-config --cflags`" />
+					<Add option="-g" />
+					<Add option="$($(WXCONFIG) --cflags)" />
 					<Add option="-Wno-deprecated-declarations" />
 					<Add option="-fopenmp" />
 					<Add option="-D_Bool=bool" />
@@ -343,7 +351,7 @@
 					<Add library="omp" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/debug/wx-config" />
+					<Variable name="WXCONFIG" value="\home\compile\wxWidgets-3.1.0\debug\wx-config" />
 				</Environment>
 			</Target>
 		</Build>
@@ -360,6 +368,7 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="resources/resource.rc">
+			<Option compilerVar="WINDRES" />
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="resources/wxHexEditor.desktop">
@@ -434,10 +443,6 @@
 			<Option target="Win32 Debug" />
 		</Unit>
 		<Extensions>
-			<envvars />
-			<code_completion />
-			<debugger />
-			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="0" line="0" />
 				<doxyfile_project />
@@ -447,6 +452,7 @@
 				<doxyfile_dot />
 				<general />
 			</DoxyBlocks>
+			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

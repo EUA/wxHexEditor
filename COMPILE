@@ -30,46 +30,73 @@ Than you could use this command for installing wxHexEditor to your computer.
   make install
 
 -----------------------------------------------------
-WINDOWS
------------------------------------------------------
-For generating Windows executables, I use Linux to cross-compile a Windows executable via MinGW.
-If you have cygwin, than good luck to build this with make command. But you are better to use C::B.
-
 On Linux Cross-Compiling To WINDOWS
 -----------------------------------------------------
 If you have Linux installation and want to build Win32/Win64 build of wxHexEditor, follow this guide.
 This is how I compile.
-First, I compile the wxWidgets library with a cross compiler:
+First, we need mingw-w64 toolchain. At AUR linux, I use;
 
-tar xvf wxWidgets-<version>.tar.bz2
-cd wxWidgets
-mkdir release
-cd release
-../configure --enable-{monolithic,static,unicode} --disable-{debug,shared} --host=i686-w64-mingw32
-make
+  yaourt -S mingw-w64-gcc mingw-w64-win-iconv 
+
+I compile the wxWidgets library with a cross compiler:
+
+  tar xvf wxWidgets-<version>.tar.bz2
+  cd wxWidgets
+  mkdir release
+  cd release
+  ../configure --enable-{monolithic,static,unicode} --disable-{debug,shared} --host=i686-w64-mingw32
+  make
 
 Then I extract the wxHexEditor:
 
-tar xvf wxHexEditor-v<version>-src.tar.bz2
-cd wxHexEditor
-make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
+  tar xvf wxHexEditor-v<version>-src.tar.bz2
+  cd wxHexEditor
+  make win WXCONFIG=<wx-config path> HOST=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
 
 PS: If you face with " _rpl_malloc " error, you can use 
 
-ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=i686-w64-mingw32
+ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=x86_64-w64-mingw32
 
-PS2: for 64Bit build, you need to run with HOST=x86_64-w64-mingw32 instead of HOST=i686-w64-mingw32.
+PS2: for 32Bit build, you need to run with HOST=i686-w64-mingw32 instead of HOST=x86_64-w64-mingw32.
+
+-----------------------------------------------------
+WINDOWS
+-----------------------------------------------------
+For generating Windows executables, I use Linux to cross-compile a Windows executable via MinGW.
+But you can use windows to compile it also.
+
+*Download latest nightly of Code Blocks compiler from http://forums.codeblocks.org/index.php/board,20.0.html
+ With all support files, DLLs etc.
+
+*Download MinGW Toolchains targets Win64 or Win32 from from https://sourceforge.net/projects/mingw-w64/files/
+and extract to C:\mingw64 
+
+*You can download Headers and Release DLL files also but I prefer building from source code.
+If you choose download just Headers and Release DLLs,
+than please adjust
+C::B->Project->Build options->Win32 Release->Search directories settings. (Also for Debug if needed.)
+
+for build wxWidget from source code:
+Download latest wxWidgets source code and extract it to root and remove versioning from en of the directory name.
+
+  PATH=%PATH%c:\mingw64\bin
+  cd C:\wxWidgets\build\msw
+  mingw32-make -f makefile.gcc BUILD=release MONOLITHIC=1 SHARED=0 USE_XRC=1 -j1
+
+You can increase -j1 for multi-thread building but you need to watch memory to have enough room.
+Also C::B->Project->Build options->Win32 Release->Custom variables need wxWidgets path (if you use different version).
+
+Also you need to generate udis86/libudis86/tab.c and tab.h files. I copy this files from linux.
+Don't know how to build it via MSW.
 
 -----------------------------------------------------
 OS X
 -----------------------------------------------------
-You need to have Xcode Commandline Tools installed on your Mac.
-
-You can easily install required dependencies with Homebrew installation:
+You can easily install required dependencies and Xcode Commandline Tools with Homebrew installation:
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 After you could install required dependencies with this command:
-brew install wxmac gettext autoconf automake
+brew install wxmac gettext autoconf automake libtool
 
 Instead of wxmac library, you might need to compile wxWidgets from source.
 Download wxWidgets source to your disk and with:

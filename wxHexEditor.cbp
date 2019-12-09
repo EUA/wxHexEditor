@@ -179,6 +179,7 @@
 					<Add library="version" />
 					<Add library="uxtheme" />
 					<Add library="shlwapi" />
+					<Add library="psapi" />
 					<Add directory="$$(wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>
@@ -246,6 +247,7 @@
 					<Add library="version" />
 					<Add library="uxtheme" />
 					<Add library="shlwapi" />
+					<Add library="psapi" />
 					<Add directory="$$(wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>

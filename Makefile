@@ -84,15 +84,7 @@ src/windrv.o:
 win_debug: LDFLAGS += -Wl,--subsystem,console -mconsole
 win_debug: win
 
-host_test:
-ifeq ($(HOST),)
-	echo "Cross-Compiling host NOT detected."
-else
-	CC = $(shell echo `$(WXCONFIG) --cc`)
-	CXX = $(shell echo `$(WXCONFIG) --cxx`)
-endif
-
-win: host_test $(RESOURCES) $(EXECUTABLE_WIN)
+win: $(RESOURCES) $(EXECUTABLE_WIN)
 
 #Stack override required for file comparison function...
 $(EXECUTABLE_WIN): $(OBJECTS) $(RESOURCE_OBJ) src/windrv.o

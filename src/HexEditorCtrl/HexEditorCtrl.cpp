@@ -690,7 +690,6 @@ inline uint8_t HexEditorCtrl::GetCharToHexSize( void ){
 //------EVENTS---------//
 void HexEditorCtrl::OnMouseLeft(wxMouseEvent& event){
 	select->SetState( false );
-
 	if( event.GetEventObject() == hex_ctrl ){
 		hex_ctrl->SetFocus();
 		focus=HEX_CTRL;
@@ -762,8 +761,10 @@ void HexEditorCtrl::OnMouseRight( wxMouseEvent& event ){
 		OnResize(mevent);
 		return;//to avoid ShowContextMenu
 		}
+#ifdef _DEBUG_
 	else
 		std::cout << "Right click captured without ctrl!\n";
+#endif
 	ShowContextMenu( event );
 	}
 
@@ -772,7 +773,7 @@ void HexEditorCtrl::OnFocus( wxFocusEvent& event){
 	std::cout << "HexEditorCtrl::OnFocus( wxFocusEvent& event ) \n" ;
 #endif
 	if( event.GetWindow() == hex_ctrl ||
-		 event.GetWindow() == text_ctrl  )
+		event.GetWindow() == text_ctrl  )
 		LastFocused=event.GetWindow();
 	event.Skip();//let wxHexCtrl::Focus set the cursor
 	}

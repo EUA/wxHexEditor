@@ -1175,13 +1175,14 @@ void wxHexCtrl::OnMouseMove( wxMouseEvent& event ){
 			if( (TagDetect >= TAX->start ) && (TagDetect < TAX->end ) ){	//end not included!
 				if( !(*TagMutex) && wxTheApp->IsActive() ) {
 					*TagMutex=true;
-					TAX->Show( this->ClientToScreen(event.GetPosition() ) , this );
+					TAX->Show( this->ClientToScreen(event.GetPosition() ) , GetParent() );
 					}
 				break;
 				}
 			}
 		}
 	}
+
 TagElement* wxHexCtrl::GetTagByPix( wxPoint PixPos ){
 	unsigned TagDetect = PixelCoordToInternalPosition( PixPos );
 	TagElement *TAX;

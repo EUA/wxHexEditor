@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 02:24+0300\n"
+"POT-Creation-Date: 2019-12-13 17:50+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/HexDialogs.h:70 src/HexEditorGui.h:303 src/HexEditorFrame.cpp:300
-#: src/HexEditorGui.cpp:134 src/HexEditorGui.cpp:955
+#: src/HexDialogs.h:70 src/HexEditorGui.h:308 src/HexEditorFrame.cpp:304
+#: src/HexEditorGui.cpp:138 src/HexEditorGui.cpp:982
 msgid "Find"
 msgstr ""
 
@@ -26,154 +26,156 @@ msgstr ""
 msgid "Find & Replace"
 msgstr ""
 
-#: src/HexEditorGui.h:123
+#: src/HexEditorGui.h:125
 msgid "wxHexEditor Alpha Development version"
 msgstr ""
 
-#: src/HexEditorGui.h:266 src/HexEditorFrame.cpp:302 src/HexEditorGui.cpp:144
+#: src/HexEditorGui.h:271 src/HexEditorFrame.cpp:306 src/HexEditorGui.cpp:148
 msgid "Go to Offset"
 msgstr ""
 
-#: src/HexEditorGui.h:327
+#: src/HexEditorGui.h:332
 msgid "New wxHexEditor Version!"
 msgstr ""
 
-#: src/HexEditorGui.h:366 src/HexEditorGui.cpp:210
+#: src/HexEditorGui.h:371 src/HexEditorGui.cpp:214
 msgid "Compare Files"
 msgstr ""
 
-#: src/HexEditorGui.h:419 src/HexEditorGui.cpp:206
+#: src/HexEditorGui.h:424 src/HexEditorGui.cpp:210
 msgid "Calculate Checksum"
 msgstr ""
 
-#: src/HexEditorGui.h:450
+#: src/HexEditorGui.h:455
 msgid "Copy Selected Block As"
 msgstr ""
 
-#: src/HexEditorGui.h:477
+#: src/HexEditorGui.h:482
 msgid "XORView Thru Warning!"
 msgstr ""
 
-#: src/HexEditorGui.h:527 src/HexEditorGui.cpp:284
+#: src/HexEditorGui.h:532 src/HexEditorGui.cpp:292
 msgid "Preferences"
 msgstr ""
 
-#: src/HexEditorGui.h:553
+#: src/HexEditorGui.h:558
 msgid "Disk/Partition Backup Tool"
 msgstr ""
 
-#: src/HexEditorGui.h:579
+#: src/HexEditorGui.h:584
 msgid "Disk/Partition Restore Tool"
 msgstr ""
 
-#: src/HexEditorGui.h:604
+#: src/HexEditorGui.h:609
 msgid "Disk/Partition Erase Tool"
 msgstr ""
 
-#: src/HexEditor.h:217 src/HexEditor.h:237
+#: src/HexEditor.h:227 src/HexEditor.h:247
 msgid "Clipboard could not be opened."
 msgstr ""
 
-#: src/HexEditor.h:217 src/HexEditor.h:237 src/HexEditor.cpp:1568
+#: src/HexEditor.h:227 src/HexEditor.h:247 src/HexEditor.cpp:1634
 msgid "Operation cancelled!"
 msgstr ""
 
-#: src/HexEditor.h:217 src/HexEditor.h:237 src/HexEditor.cpp:1568
+#: src/HexEditor.h:227 src/HexEditor.h:247 src/HexEditor.cpp:1634
 msgid "Copy To Clipboard Error"
 msgstr ""
 
-#: src/FAL.cpp:148
-msgid "Device is not mounted"
+#: src/FAL.cpp:139 src/FAL.cpp:253 src/FAL.cpp:335
+#, c-format
+msgid "Process ID:%d cannot be open."
 msgstr ""
 
-#: src/FAL.cpp:148 src/FAL.cpp:193 src/FAL.cpp:212 src/FAL.cpp:224
-#: src/FAL.cpp:244 src/FAL.cpp:258 src/FAL.cpp:282 src/FAL.cpp:293
-#: src/FAL.cpp:309 src/FAL.cpp:399 src/FAL.cpp:407 src/HexDialogs.cpp:734
-#: src/HexDialogs.cpp:2253 src/HexDialogs.cpp:2257 src/HexDialogs.cpp:2706
-#: src/HexEditor.cpp:245 src/HexEditor.cpp:433 src/HexEditor.cpp:473
-#: src/HexEditor.cpp:616 src/HexEditor.cpp:647 src/HexEditorFrame.cpp:617
-#: src/HexEditorFrame.cpp:633 src/HexEditorFrame.cpp:637
-#: src/HexEditorFrame.cpp:1313
+#: src/FAL.cpp:139 src/FAL.cpp:188 src/FAL.cpp:234 src/FAL.cpp:253
+#: src/FAL.cpp:272 src/FAL.cpp:292 src/FAL.cpp:310 src/FAL.cpp:335
+#: src/FAL.cpp:352 src/FAL.cpp:371 src/FAL.cpp:469 src/FAL.cpp:477
+#: src/HexDialogs.cpp:734 src/HexDialogs.cpp:2281 src/HexDialogs.cpp:2285
+#: src/HexDialogs.cpp:2734 src/HexEditor.cpp:245 src/HexEditor.cpp:499
+#: src/HexEditor.cpp:551 src/HexEditor.cpp:695 src/HexEditor.cpp:1825
+#: src/HexEditorFrame.cpp:625 src/HexEditorFrame.cpp:641
+#: src/HexEditorFrame.cpp:645 src/HexEditorFrame.cpp:657
+#: src/HexEditorFrame.cpp:1249
 msgid "Error"
 msgstr ""
 
-#: src/FAL.cpp:193 src/FAL.cpp:230 src/FAL.cpp:293
+#: src/FAL.cpp:188
+msgid "Device is not mounted"
+msgstr ""
+
+#: src/FAL.cpp:234 src/FAL.cpp:278 src/FAL.cpp:352
 msgid "File is not readable by permissions."
 msgstr ""
 
-#: src/FAL.cpp:193
+#: src/FAL.cpp:234
 msgid ""
 "Please change file permissons or run this program with Windows UAC "
 "privileges."
 msgstr ""
 
-#: src/FAL.cpp:212 src/FAL.cpp:282
-#, c-format
-msgid "Process ID:%d cannot be open."
-msgstr ""
-
-#: src/FAL.cpp:224
+#: src/FAL.cpp:272
 msgid "File does not exists at path:"
 msgstr ""
 
-#: src/FAL.cpp:231
+#: src/FAL.cpp:279
 msgid "Please change file permissons or run this program with root privileges."
 msgstr ""
 
-#: src/FAL.cpp:232
+#: src/FAL.cpp:280
 msgid ""
 "You can also try to own the file temporarily (requires root's password.)"
 msgstr ""
 
-#: src/FAL.cpp:233
+#: src/FAL.cpp:281
 msgid "Do you want to own the file?"
 msgstr ""
 
-#: src/FAL.cpp:233 src/HexEditor.cpp:1562 src/HexPanels.cpp:317
+#: src/FAL.cpp:281 src/HexEditor.cpp:1628 src/HexPanels.cpp:333
 msgid "Warning"
 msgstr ""
 
-#: src/FAL.cpp:244
+#: src/FAL.cpp:292
 msgid "Unknown error on \"stat -c %U"
 msgstr ""
 
-#: src/FAL.cpp:258
+#: src/FAL.cpp:310
 msgid ""
-"For using this function, please install \"gnomesu\" or \"gksu\" tools first."
+"For using this function, please install \"pkexec\", \"gnomesu\" or \"gksu\" "
+"tools first."
 msgstr ""
 
-#: src/FAL.cpp:293
+#: src/FAL.cpp:352
 msgid "Please change file permissons or run this program with root privileges"
 msgstr ""
 
-#: src/FAL.cpp:309 src/HexEditor.cpp:245 src/HexEditorFrame.cpp:547
+#: src/FAL.cpp:371 src/HexEditor.cpp:245
 msgid "File cannot open."
 msgstr ""
 
-#: src/FAL.cpp:399
+#: src/FAL.cpp:469
 msgid ""
 "File load error!.\n"
 "File closed but not opened while access change. For avoid corruption close "
 "the program"
 msgstr ""
 
-#: src/FAL.cpp:407
+#: src/FAL.cpp:477
 msgid "File cannot open in this mode : "
 msgstr ""
 
-#: src/FAL.cpp:422
+#: src/FAL.cpp:492
 msgid "Access Invalid"
 msgstr ""
 
-#: src/FAL.cpp:436 src/FAL.cpp:446 src/FAL.cpp:456
+#: src/FAL.cpp:506 src/FAL.cpp:516 src/FAL.cpp:526
 msgid "Not Enought RAM"
 msgstr ""
 
-#: src/FAL.cpp:553
+#: src/FAL.cpp:638
 msgid "Error on Write operation to Process RAM"
 msgstr ""
 
-#: src/FAL.cpp:553
+#: src/FAL.cpp:638
 msgid "FATAL ERROR"
 msgstr ""
 
@@ -189,13 +191,13 @@ msgstr ""
 msgid "Value must be even digit!"
 msgstr ""
 
-#: src/HexDialogs.cpp:163 src/HexEditorGui.cpp:752 src/HexEditorGui.cpp:758
+#: src/HexDialogs.cpp:163 src/HexEditorGui.cpp:779 src/HexEditorGui.cpp:785
 #: src/HexEditorCtrl/HexEditorCtrl.cpp:44
 #: src/HexEditorCtrl/HexEditorCtrlGui.cpp:33
 msgid "Offset"
 msgstr ""
 
-#: src/HexDialogs.cpp:169 src/HexEditorGui.cpp:758
+#: src/HexDialogs.cpp:169 src/HexEditorGui.cpp:785
 msgid "Sector"
 msgstr ""
 
@@ -207,27 +209,27 @@ msgstr ""
 msgid "wxHexEditor Searching"
 msgstr ""
 
-#: src/HexDialogs.cpp:506 src/HexDialogs.cpp:529 src/HexDialogs.cpp:960
-#: src/HexDialogs.cpp:1111
+#: src/HexDialogs.cpp:506 src/HexDialogs.cpp:529 src/HexDialogs.cpp:966
+#: src/HexDialogs.cpp:1119
 msgid "Search Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:506 src/HexDialogs.cpp:529 src/HexDialogs.cpp:960
-#: src/HexDialogs.cpp:1111 src/HexDialogs.cpp:2452 src/HexDialogs.cpp:2815
-#: src/HexDialogs.cpp:3279 src/HexDialogs.cpp:3369 src/HexDialogs.cpp:3430
-#: src/HexEditor.cpp:195 src/HexEditor.cpp:427
+#: src/HexDialogs.cpp:506 src/HexDialogs.cpp:529 src/HexDialogs.cpp:966
+#: src/HexDialogs.cpp:1119 src/HexDialogs.cpp:2480 src/HexDialogs.cpp:2843
+#: src/HexDialogs.cpp:3308 src/HexDialogs.cpp:3398 src/HexDialogs.cpp:3459
+#: src/HexEditor.cpp:195 src/HexEditor.cpp:493
 msgid "MB/s"
 msgstr ""
 
-#: src/HexDialogs.cpp:571 src/HexDialogs.cpp:1171
+#: src/HexDialogs.cpp:571 src/HexDialogs.cpp:1182
 msgid "Search"
 msgstr ""
 
-#: src/HexDialogs.cpp:588 src/HexDialogs.cpp:1179
+#: src/HexDialogs.cpp:588 src/HexDialogs.cpp:1190
 msgid "Search value not found"
 msgstr ""
 
-#: src/HexDialogs.cpp:588 src/HexDialogs.cpp:1179
+#: src/HexDialogs.cpp:588 src/HexDialogs.cpp:1190
 msgid "Nothing found!"
 msgstr ""
 
@@ -235,287 +237,287 @@ msgstr ""
 msgid "Finding matches..."
 msgstr ""
 
-#: src/HexDialogs.cpp:1186
+#: src/HexDialogs.cpp:1197
 #, c-format
 msgid "Found %d matches."
 msgstr ""
 
-#: src/HexDialogs.cpp:1186
+#: src/HexDialogs.cpp:1197
 msgid "Find All Done!"
 msgstr ""
 
-#: src/HexDialogs.cpp:1692 src/HexDialogs.cpp:1717
+#: src/HexDialogs.cpp:1720 src/HexDialogs.cpp:1745
 msgid ""
 "Search and Replace sizes are not equal!\n"
 "Replacing with different size are not supported yet."
 msgstr ""
 
-#: src/HexDialogs.cpp:1692 src/HexDialogs.cpp:1717 src/HexDialogs.cpp:2048
+#: src/HexDialogs.cpp:1720 src/HexDialogs.cpp:1745 src/HexDialogs.cpp:2076
 #: src/HexEditor.cpp:164
 msgid "Error!"
 msgstr ""
 
-#: src/HexDialogs.cpp:1700 src/HexDialogs.cpp:1738 src/HexEditorFrame.cpp:301
-#: src/HexEditorGui.cpp:139 src/HexEditorGui.cpp:972
+#: src/HexDialogs.cpp:1728 src/HexDialogs.cpp:1766 src/HexEditorFrame.cpp:305
+#: src/HexEditorGui.cpp:143 src/HexEditorGui.cpp:999
 msgid "Replace"
 msgstr ""
 
-#: src/HexDialogs.cpp:1759
+#: src/HexDialogs.cpp:1787
 #, c-format
 msgid "%d records changed."
 msgstr ""
 
-#: src/HexDialogs.cpp:1759 src/HexEditor.cpp:1576 src/HexEditorFrame.cpp:824
+#: src/HexDialogs.cpp:1787 src/HexEditor.cpp:1642 src/HexEditorFrame.cpp:757
 msgid "Info"
 msgstr ""
 
-#: src/HexDialogs.cpp:1807
+#: src/HexDialogs.cpp:1835
 msgid "Not Available"
 msgstr ""
 
-#: src/HexDialogs.cpp:1813
+#: src/HexDialogs.cpp:1841
 msgid "Raw Hex"
 msgstr ""
 
-#: src/HexDialogs.cpp:1814
+#: src/HexDialogs.cpp:1842
 msgid "With Space"
 msgstr ""
 
-#: src/HexDialogs.cpp:1815
+#: src/HexDialogs.cpp:1843
 msgid "Quad Hex"
 msgstr ""
 
-#: src/HexDialogs.cpp:1816
+#: src/HexDialogs.cpp:1844
 msgid "with 0x"
 msgstr ""
 
-#: src/HexDialogs.cpp:1817
+#: src/HexDialogs.cpp:1845
 msgid "with 0x and Comma"
 msgstr ""
 
-#: src/HexDialogs.cpp:1818
+#: src/HexDialogs.cpp:1846
 msgid "with \\x"
 msgstr ""
 
-#: src/HexDialogs.cpp:1825
+#: src/HexDialogs.cpp:1853
 msgid "HTML format"
 msgstr ""
 
-#: src/HexDialogs.cpp:1826
+#: src/HexDialogs.cpp:1854
 msgid "HTML with TAGs"
 msgstr ""
 
-#: src/HexDialogs.cpp:1827
+#: src/HexDialogs.cpp:1855
 msgid "phpBB forum style"
 msgstr ""
 
-#: src/HexDialogs.cpp:1828
+#: src/HexDialogs.cpp:1856
 msgid "WiKi format"
 msgstr ""
 
-#: src/HexDialogs.cpp:1829
+#: src/HexDialogs.cpp:1857
 msgid "WiKi with TAGs"
 msgstr ""
 
-#: src/HexDialogs.cpp:1835
+#: src/HexDialogs.cpp:1863
 msgid "8bit - Byte "
 msgstr ""
 
-#: src/HexDialogs.cpp:1836
+#: src/HexDialogs.cpp:1864
 msgid "16bit - Words"
 msgstr ""
 
-#: src/HexDialogs.cpp:1837
+#: src/HexDialogs.cpp:1865
 msgid "32bit - Dwords"
 msgstr ""
 
-#: src/HexDialogs.cpp:1838
+#: src/HexDialogs.cpp:1866
 msgid "64bit - Qwords"
 msgstr ""
 
-#: src/HexDialogs.cpp:2048
+#: src/HexDialogs.cpp:2076
 msgid "Selected block bigger than limit."
 msgstr ""
 
-#: src/HexDialogs.cpp:2253
+#: src/HexDialogs.cpp:2281
 msgid "File #1 is not readable."
 msgstr ""
 
-#: src/HexDialogs.cpp:2257
+#: src/HexDialogs.cpp:2285
 msgid "File #2 is not readable."
 msgstr ""
 
-#: src/HexDialogs.cpp:2273
+#: src/HexDialogs.cpp:2301
 msgid "Error, File #1 cannot open."
 msgstr ""
 
-#: src/HexDialogs.cpp:2277
+#: src/HexDialogs.cpp:2305
 msgid "Error, File #2 cannot open."
 msgstr ""
 
-#: src/HexDialogs.cpp:2283
+#: src/HexDialogs.cpp:2311
 msgid "Error, Save File cannot open."
 msgstr ""
 
-#: src/HexDialogs.cpp:2286
+#: src/HexDialogs.cpp:2314
 msgid "Comparing files..."
 msgstr ""
 
-#: src/HexDialogs.cpp:2288
+#: src/HexDialogs.cpp:2316
 msgid "wxHexEditor Comparing"
 msgstr ""
 
-#: src/HexDialogs.cpp:2442
+#: src/HexDialogs.cpp:2470
 msgid "Sorry, this program supports up to 500K differences."
 msgstr ""
 
-#: src/HexDialogs.cpp:2442
+#: src/HexDialogs.cpp:2470
 msgid "Remaining differences not shown."
 msgstr ""
 
-#: src/HexDialogs.cpp:2442
+#: src/HexDialogs.cpp:2470
 msgid "Error on Comparison"
 msgstr ""
 
-#: src/HexDialogs.cpp:2452
+#: src/HexDialogs.cpp:2480
 msgid "Comparison Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:2474
+#: src/HexDialogs.cpp:2502
 msgid "File #1 : "
 msgstr ""
 
-#: src/HexDialogs.cpp:2474
+#: src/HexDialogs.cpp:2502
 msgid "File #2 : "
 msgstr ""
 
-#: src/HexDialogs.cpp:2517 src/HexDialogs.cpp:2521
+#: src/HexDialogs.cpp:2545 src/HexDialogs.cpp:2549
 msgid "This part doesn't exist at compared file"
 msgstr ""
 
-#: src/HexDialogs.cpp:2564
+#: src/HexDialogs.cpp:2592
 msgid "Error, Save File is not selected."
 msgstr ""
 
-#: src/HexDialogs.cpp:2706
+#: src/HexDialogs.cpp:2734
 msgid "Cannot calculate checksum of an empty file."
 msgstr ""
 
-#: src/HexDialogs.cpp:2712
+#: src/HexDialogs.cpp:2740
 msgid "File: "
 msgstr ""
 
-#: src/HexDialogs.cpp:2713
+#: src/HexDialogs.cpp:2741
 msgid "Notice: Checksum includes non-saved changes."
 msgstr ""
 
-#: src/HexDialogs.cpp:2731
+#: src/HexDialogs.cpp:2759
 msgid "Results copied to the clipboard."
 msgstr ""
 
-#: src/HexDialogs.cpp:2731
+#: src/HexDialogs.cpp:2759
 msgid "Checksum Results"
 msgstr ""
 
-#: src/HexDialogs.cpp:2752 src/HexEditor.cpp:173
+#: src/HexDialogs.cpp:2780 src/HexEditor.cpp:173
 msgid "Please wait while calculating checksum."
 msgstr ""
 
-#: src/HexDialogs.cpp:2754 src/HexEditor.cpp:175
+#: src/HexDialogs.cpp:2782 src/HexEditor.cpp:175
 msgid "Calculating Checksum"
 msgstr ""
 
-#: src/HexDialogs.cpp:2815 src/HexEditor.cpp:195
+#: src/HexDialogs.cpp:2843 src/HexEditor.cpp:195
 msgid "Hash Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3212
+#: src/HexDialogs.cpp:3241
 msgid "Are you sure about resetting colours?"
 msgstr ""
 
-#: src/HexDialogs.cpp:3212
+#: src/HexDialogs.cpp:3241
 msgid "Resetting Hex Colours"
 msgstr ""
 
-#: src/HexDialogs.cpp:3251
+#: src/HexDialogs.cpp:3280
 msgid "Please wait while backing up disk/partition image."
 msgstr ""
 
-#: src/HexDialogs.cpp:3253
+#: src/HexDialogs.cpp:3282
 msgid "Disk/Partition Backup"
 msgstr ""
 
-#: src/HexDialogs.cpp:3271
+#: src/HexDialogs.cpp:3300
 msgid "Error on writing to backup image."
 msgstr ""
 
-#: src/HexDialogs.cpp:3271 src/HexDialogs.cpp:3336
+#: src/HexDialogs.cpp:3300 src/HexDialogs.cpp:3365
 msgid "ERROR!"
 msgstr ""
 
-#: src/HexDialogs.cpp:3279
+#: src/HexDialogs.cpp:3308
 msgid "Backup Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3308
+#: src/HexDialogs.cpp:3337
 msgid "Backup operation completed."
 msgstr ""
 
-#: src/HexDialogs.cpp:3308 src/HexDialogs.cpp:3377 src/HexDialogs.cpp:3437
+#: src/HexDialogs.cpp:3337 src/HexDialogs.cpp:3406 src/HexDialogs.cpp:3466
 msgid "Operation Complete"
 msgstr ""
 
-#: src/HexDialogs.cpp:3332 src/HexDialogs.cpp:3392
+#: src/HexDialogs.cpp:3361 src/HexDialogs.cpp:3421
 msgid "WARNING! THIS OPERATION WILL DESTROY EVERY INFORMATION AT :\n"
 msgstr ""
 
-#: src/HexDialogs.cpp:3332 src/HexDialogs.cpp:3392
+#: src/HexDialogs.cpp:3361 src/HexDialogs.cpp:3421
 msgid "ARE YOU SURE?"
 msgstr ""
 
-#: src/HexDialogs.cpp:3332 src/HexDialogs.cpp:3341 src/HexDialogs.cpp:3392
+#: src/HexDialogs.cpp:3361 src/HexDialogs.cpp:3370 src/HexDialogs.cpp:3421
 msgid "WARNING!"
 msgstr ""
 
-#: src/HexDialogs.cpp:3336
+#: src/HexDialogs.cpp:3365
 msgid "ERROR!: Disk space is smaller than the image file."
 msgstr ""
 
-#: src/HexDialogs.cpp:3341
+#: src/HexDialogs.cpp:3370
 msgid ""
 "WARNING!: Disk space is bigger than the image file. \n"
 "Remaining space will remain untouched."
 msgstr ""
 
-#: src/HexDialogs.cpp:3345
+#: src/HexDialogs.cpp:3374
 msgid "Please wait while restoring disk/partition."
 msgstr ""
 
-#: src/HexDialogs.cpp:3347
+#: src/HexDialogs.cpp:3376
 msgid "Disk/Partition Restore"
 msgstr ""
 
-#: src/HexDialogs.cpp:3369
+#: src/HexDialogs.cpp:3398
 msgid "Restore Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3377
+#: src/HexDialogs.cpp:3406
 msgid "Restore operation completed."
 msgstr ""
 
-#: src/HexDialogs.cpp:3395
+#: src/HexDialogs.cpp:3424
 msgid "Please wait while erasing disk/partition image."
 msgstr ""
 
-#: src/HexDialogs.cpp:3397
+#: src/HexDialogs.cpp:3426
 msgid "Disk/Partition Erase"
 msgstr ""
 
-#: src/HexDialogs.cpp:3430
+#: src/HexDialogs.cpp:3459
 msgid "Erase Speed : "
 msgstr ""
 
-#: src/HexDialogs.cpp:3437
+#: src/HexDialogs.cpp:3466
 msgid "Erase operation completed."
 msgstr ""
 
@@ -547,7 +549,7 @@ msgstr ""
 msgid "Critical Error. File pointer is not empty!"
 msgstr ""
 
-#: src/HexEditor.cpp:335
+#: src/HexEditor.cpp:379
 msgid ""
 "Switching to XORView Thru mode will reset Undo&Redo buffer. Unsaved changes "
 "will be discarded.\n"
@@ -555,45 +557,49 @@ msgid ""
 "inject) while XORView Thru mode is active."
 msgstr ""
 
-#: src/HexEditor.cpp:335
+#: src/HexEditor.cpp:379
 msgid "XORView Thru Warning"
 msgstr ""
 
-#: src/HexEditor.cpp:355
+#: src/HexEditor.cpp:397
+msgid "Choose a file for save as"
+msgstr ""
+
+#: src/HexEditor.cpp:414
 msgid "File in Read Only mode. Cannot save file."
 msgstr ""
 
-#: src/HexEditor.cpp:355 src/HexEditor.cpp:364 src/HexEditor.cpp:380
+#: src/HexEditor.cpp:414 src/HexEditor.cpp:423 src/HexEditor.cpp:439
 msgid "File Save"
 msgstr ""
 
-#: src/HexEditor.cpp:359
+#: src/HexEditor.cpp:418
 msgid ""
 "File has some insertion/deletions. You cannot save this file-self (yet). "
 "Please use SaveAs."
 msgstr ""
 
-#: src/HexEditor.cpp:359
+#: src/HexEditor.cpp:418
 msgid "File Save Error."
 msgstr ""
 
-#: src/HexEditor.cpp:364
-msgid "Do you want to save this file?"
+#: src/HexEditor.cpp:423 src/HexEditor.cpp:524
+msgid "Do you want to save "
 msgstr ""
 
-#: src/HexEditor.cpp:369
+#: src/HexEditor.cpp:428
 msgid "File cannot saved. Operation Cancelled"
 msgstr ""
 
-#: src/HexEditor.cpp:369
+#: src/HexEditor.cpp:428
 msgid "File Save Error"
 msgstr ""
 
-#: src/HexEditor.cpp:380
+#: src/HexEditor.cpp:439
 msgid "File is not changed. Nothing to save.\n"
 msgstr ""
 
-#: src/HexEditor.cpp:393
+#: src/HexEditor.cpp:457
 #, c-format
 msgid ""
 "There are not enough free disk space.\n"
@@ -601,163 +607,155 @@ msgid ""
 "Available: %s"
 msgstr ""
 
-#: src/HexEditor.cpp:395
+#: src/HexEditor.cpp:459
 msgid "Not Enought Space"
 msgstr ""
 
-#: src/HexEditor.cpp:404
+#: src/HexEditor.cpp:468
 msgid "File save in progress"
 msgstr ""
 
-#: src/HexEditor.cpp:406
+#: src/HexEditor.cpp:470
 msgid "Saving file"
 msgstr ""
 
-#: src/HexEditor.cpp:427
+#: src/HexEditor.cpp:493
 msgid "Write Speed : "
 msgstr ""
 
-#: src/HexEditor.cpp:433
+#: src/HexEditor.cpp:499
 msgid "File cannot save as "
 msgstr ""
 
-#: src/HexEditor.cpp:446
-msgid "Do you want to save file?\n"
+#: src/HexEditor.cpp:512
+msgid "Choose a file for saving dump"
 msgstr ""
 
-#: src/HexEditor.cpp:446
+#: src/HexEditor.cpp:524
 msgid "File Has Changed!"
 msgstr ""
 
-#: src/HexEditor.cpp:461
+#: src/HexEditor.cpp:539
 msgid ""
 "TAG file cannot be saved to default location.\n"
 "Do you want to Export TAGs file?"
 msgstr ""
 
-#: src/HexEditor.cpp:461
+#: src/HexEditor.cpp:539
 msgid "TAGs Cannot Be Saved!!"
 msgstr ""
 
-#: src/HexEditor.cpp:463 src/HexEditorFrame.cpp:625
+#: src/HexEditor.cpp:541 src/HexEditorFrame.cpp:633
 msgid "Choose a file for export TAGs"
 msgstr ""
 
-#: src/HexEditor.cpp:473
+#: src/HexEditor.cpp:551
 msgid "TAGs cannot be exported to file : "
 msgstr ""
 
-#: src/HexEditor.cpp:576
+#: src/HexEditor.cpp:654
 msgid "Enter hex value(s) for fill"
 msgstr ""
 
-#: src/HexEditor.cpp:576
+#: src/HexEditor.cpp:654
 msgid "Fill Dialog"
 msgstr ""
 
-#: src/HexEditor.cpp:577
+#: src/HexEditor.cpp:655
 msgid "Fill"
 msgstr ""
 
-#: src/HexEditor.cpp:595
-msgid "Choose a file for saving dump"
-msgstr ""
-
-#: src/HexEditor.cpp:616
-msgid "Dump cannot saved as "
-msgstr ""
-
-#: src/HexEditor.cpp:628 src/HexEditor.cpp:1406
+#: src/HexEditor.cpp:676 src/HexEditor.cpp:1458
 msgid "Showing Page: %"
 msgstr ""
 
-#: src/HexEditor.cpp:647
+#: src/HexEditor.cpp:695
 msgid "File cannot read!"
 msgstr ""
 
-#: src/HexEditor.cpp:1070 src/HexEditor.cpp:1410
+#: src/HexEditor.cpp:1122 src/HexEditor.cpp:1462
 msgid "Selected Block: N/A"
 msgstr ""
 
-#: src/HexEditor.cpp:1071 src/HexEditor.cpp:1411
+#: src/HexEditor.cpp:1123 src/HexEditor.cpp:1463
 msgid "Block Size: N/A"
 msgstr ""
 
-#: src/HexEditor.cpp:1120 src/HexEditorFrame.cpp:307 src/HexEditorGui.cpp:92
-#: src/HexEditorGui.cpp:1569
+#: src/HexEditor.cpp:1172 src/HexEditorFrame.cpp:311 src/HexEditorGui.cpp:96
+#: src/HexEditorGui.cpp:1596
 msgid "Copy"
 msgstr ""
 
-#: src/HexEditor.cpp:1121
+#: src/HexEditor.cpp:1173
 msgid "CopyAs"
 msgstr ""
 
-#: src/HexEditor.cpp:1122 src/HexEditorFrame.cpp:308 src/HexEditorGui.cpp:112
+#: src/HexEditor.cpp:1174 src/HexEditorFrame.cpp:312 src/HexEditorGui.cpp:116
 msgid "Paste"
 msgstr ""
 
-#: src/HexEditor.cpp:1125 src/HexEditorGui.cpp:107
+#: src/HexEditor.cpp:1177 src/HexEditorGui.cpp:111
 msgid "Cut"
 msgstr ""
 
-#: src/HexEditor.cpp:1126 src/HexEditorGui.cpp:122 src/HexPanels.cpp:358
+#: src/HexEditor.cpp:1178 src/HexEditorGui.cpp:126 src/HexPanels.cpp:374
 msgid "Delete"
 msgstr ""
 
-#: src/HexEditor.cpp:1127 src/HexEditorFrame.cpp:312 src/HexEditorGui.cpp:127
+#: src/HexEditor.cpp:1179 src/HexEditorFrame.cpp:316 src/HexEditorGui.cpp:131
 msgid "Insert"
 msgstr ""
 
-#: src/HexEditor.cpp:1136 src/HexEditorGui.cpp:102
+#: src/HexEditor.cpp:1188 src/HexEditorGui.cpp:106
 msgid "Save As Dump"
 msgstr ""
 
-#: src/HexEditor.cpp:1137 src/HexEditorGui.cpp:117
+#: src/HexEditor.cpp:1189 src/HexEditorGui.cpp:121
 msgid "Fill Selection"
 msgstr ""
 
-#: src/HexEditor.cpp:1139
+#: src/HexEditor.cpp:1191
 msgid "Set Selection Block Start"
 msgstr ""
 
-#: src/HexEditor.cpp:1141
+#: src/HexEditor.cpp:1193
 msgid "Set Selection Block End"
 msgstr ""
 
-#: src/HexEditor.cpp:1143
+#: src/HexEditor.cpp:1195
 msgid "Quick Tag"
 msgstr ""
 
-#: src/HexEditor.cpp:1143
+#: src/HexEditor.cpp:1195
 msgid "Creates empty tag with Random Color."
 msgstr ""
 
-#: src/HexEditor.cpp:1144
+#: src/HexEditor.cpp:1196
 msgid "New Tag"
 msgstr ""
 
-#: src/HexEditor.cpp:1145
+#: src/HexEditor.cpp:1197
 msgid "Tag Edit"
 msgstr ""
 
-#: src/HexEditor.cpp:1407
+#: src/HexEditor.cpp:1459
 msgid "Cursor Offset: "
 msgstr ""
 
-#: src/HexEditor.cpp:1408
+#: src/HexEditor.cpp:1460
 #, c-format
 msgid "Cursor Value: %u"
 msgstr ""
 
-#: src/HexEditor.cpp:1414
+#: src/HexEditor.cpp:1466
 msgid "Selected Block: %"
 msgstr ""
 
-#: src/HexEditor.cpp:1415
+#: src/HexEditor.cpp:1467
 msgid "Block Size: %"
 msgstr ""
 
-#: src/HexEditor.cpp:1471
+#: src/HexEditor.cpp:1537
 #, c-format
 msgid ""
 "Notice!: This command will increase the file size and will generate too much "
@@ -765,15 +763,15 @@ msgid ""
 "How many bytes do you want to inject to location to offset location %lld?"
 msgstr ""
 
-#: src/HexEditor.cpp:1472
+#: src/HexEditor.cpp:1538
 msgid "Bytes"
 msgstr ""
 
-#: src/HexEditor.cpp:1472
+#: src/HexEditor.cpp:1538
 msgid "Injection!"
 msgstr ""
 
-#: src/HexEditor.cpp:1557
+#: src/HexEditor.cpp:1623
 msgid ""
 "WARNING:\n"
 "The text you are copying includes a null character\n"
@@ -783,240 +781,227 @@ msgid ""
 "should copy from the Hex pane, not the text pane"
 msgstr ""
 
-#: src/HexEditor.cpp:1568
+#: src/HexEditor.cpp:1634
 msgid "You have no RAM to copy this data."
 msgstr ""
 
-#: src/HexEditor.cpp:1573
+#: src/HexEditor.cpp:1639
 msgid ""
 "You have tried to copy more than 10 MB of data.\n"
 "Copying above 10 MB to clipboard is not allowed.\n"
 "Only internal copy buffer used!"
 msgstr ""
 
-#: src/HexEditor.cpp:1605
+#: src/HexEditor.cpp:1671
 msgid "No data available at clipboad!"
 msgstr ""
 
-#: src/HexEditor.cpp:1607
+#: src/HexEditor.cpp:1673
 msgid "Note: Used internal binary copy buffer at paste operation."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:196
+#: src/HexEditor.cpp:1825
+msgid "Failed to open the bus."
+msgstr ""
+
+#: src/HexEditorFrame.cpp:200
 msgid "License Agreement"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:294
+#: src/HexEditorFrame.cpp:298
 msgid "New File"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:294
+#: src/HexEditorFrame.cpp:298
 msgid "New file"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:295
+#: src/HexEditorFrame.cpp:299
 msgid "Open File"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:295
+#: src/HexEditorFrame.cpp:299
 msgid "Open"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:296
+#: src/HexEditorFrame.cpp:300
 msgid "Save File"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:296 src/HexEditorGui.cpp:1844
+#: src/HexEditorFrame.cpp:300 src/HexEditorGui.cpp:1871
 #: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:59
 msgid "Save"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:297
+#: src/HexEditorFrame.cpp:301
 msgid "SaveAs File"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:297
+#: src/HexEditorFrame.cpp:301
 msgid "Save as"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:298
+#: src/HexEditorFrame.cpp:302
 msgid "Close File"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:298
+#: src/HexEditorFrame.cpp:302
 msgid "Close"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:301
+#: src/HexEditorFrame.cpp:305
 msgid "Find and replace"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:302
+#: src/HexEditorFrame.cpp:306
 msgid "GoTo"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:304
+#: src/HexEditorFrame.cpp:308
 msgid "Undo"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:305
+#: src/HexEditorFrame.cpp:309
 msgid "Redo"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:307
+#: src/HexEditorFrame.cpp:311
 msgid "Copy Block"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:308
+#: src/HexEditorFrame.cpp:312
 msgid "Paste Block"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:310
+#: src/HexEditorFrame.cpp:314
 msgid "Cut Block"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:310
+#: src/HexEditorFrame.cpp:314
 msgid "Cuts selected block and copies to clipboard"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:311
+#: src/HexEditorFrame.cpp:315
 msgid "Delete Block"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:311
+#: src/HexEditorFrame.cpp:315
 msgid "Deletes selected block"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:312
+#: src/HexEditorFrame.cpp:316
 msgid "Insert Block"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:324 src/HexEditorFrame.cpp:325
-#: src/HexEditorGui.cpp:156
+#: src/HexEditorFrame.cpp:328 src/HexEditorFrame.cpp:329
+#: src/HexEditorGui.cpp:160
 msgid "Toolbar"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:331 src/HexEditorFrame.cpp:332
+#: src/HexEditorFrame.cpp:335 src/HexEditorFrame.cpp:336
 msgid "TagPanel"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:342 src/HexEditorFrame.cpp:343
-#: src/HexEditorGui.cpp:168
+#: src/HexEditorFrame.cpp:346 src/HexEditorFrame.cpp:347
+#: src/HexEditorGui.cpp:172
 msgid "Disassembler Panel"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:354 src/HexEditorFrame.cpp:355
+#: src/HexEditorFrame.cpp:358 src/HexEditorFrame.cpp:359
 msgid "Search Results"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:366 src/HexEditorFrame.cpp:367
+#: src/HexEditorFrame.cpp:370 src/HexEditorFrame.cpp:371
 msgid "Comparison Results"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:377 src/HexEditorFrame.cpp:378
+#: src/HexEditorFrame.cpp:381 src/HexEditorFrame.cpp:382
 msgid "DataInterpreter"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:388 src/HexEditorFrame.cpp:389
-#: src/HexEditorGui.cpp:160
+#: src/HexEditorFrame.cpp:392 src/HexEditorFrame.cpp:393
+#: src/HexEditorGui.cpp:164
 msgid "InfoPanel"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:478
+#: src/HexEditorFrame.cpp:483
 msgid "MD5 File detected. Do you request MD5 verification?"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:478 src/HexEditorFrame.cpp:481
-#: src/HexEditorFrame.cpp:484
+#: src/HexEditorFrame.cpp:483 src/HexEditorFrame.cpp:486
+#: src/HexEditorFrame.cpp:489
 msgid "Checksum File Detected"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:481
+#: src/HexEditorFrame.cpp:486
 msgid "SHA1 File detected. Do you request SHA1 verification?"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:484
+#: src/HexEditorFrame.cpp:489
 msgid "SHA256 File detected. Do you request SHA256 verification?"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:519
-msgid "Please indicate file size in decimal."
-msgstr ""
-
-#: src/HexEditorFrame.cpp:520
-msgid "Enter File Size:"
-msgstr ""
-
-#: src/HexEditorFrame.cpp:527
-#, c-format
-msgid "Wrong input: %d please retry..."
-msgstr ""
-
-#: src/HexEditorFrame.cpp:531 src/HexEditorFrame.cpp:589
-msgid "Choose a file for save as"
-msgstr ""
-
-#: src/HexEditorFrame.cpp:543
-msgid "File cannot create!"
-msgstr ""
-
-#: src/HexEditorFrame.cpp:559
+#: src/HexEditorFrame.cpp:577
 msgid "Choose a file for editing"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:609
+#: src/HexEditorFrame.cpp:617
 msgid "Choose a file for import TAGs"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:617
+#: src/HexEditorFrame.cpp:625 src/HexEditorFrame.cpp:657
 msgid "TAGS cannot be imported from "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:633
+#: src/HexEditorFrame.cpp:641
 msgid "TAGs cannot be exported to "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:637
+#: src/HexEditorFrame.cpp:645
 msgid "There is no TAGs to Export in current active file!"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:795
+#: src/HexEditorFrame.cpp:649
+msgid "Choose a file for import template/TAGs to cursor offset"
+msgstr ""
+
+#: src/HexEditorFrame.cpp:728
 msgid "Please enter process identification number."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:795
+#: src/HexEditorFrame.cpp:728
 msgid "Enter PID:"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:795 src/HexEditorGui.cpp:238
+#: src/HexEditorFrame.cpp:728 src/HexEditorGui.cpp:246
 msgid "Open Process RAM"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:824
+#: src/HexEditorFrame.cpp:757
 msgid "Please restart program for changes."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:845
+#: src/HexEditorFrame.cpp:778
 msgid "This mode will write changes every change to file DIRECTLY."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:845
+#: src/HexEditorFrame.cpp:778
 msgid "Warning!"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:929
+#: src/HexEditorFrame.cpp:862
 msgid "wxHexEditor is a hex editor for HUGE files and devices."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1038
+#: src/HexEditorFrame.cpp:974
 msgid "You needed administration privileges to see available devices"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1313
+#: src/HexEditorFrame.cpp:1249
 msgid "Cannot open dropped file: "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1332 src/HexEditorGui.cpp:1049
+#: src/HexEditorFrame.cpp:1268 src/HexEditorGui.cpp:1076
 #, c-format
 msgid "New wxHexEditor version %s is available!"
 msgstr ""
@@ -1097,761 +1082,777 @@ msgstr ""
 msgid "Export TAGs"
 msgstr ""
 
-#: src/HexEditorGui.cpp:73
+#: src/HexEditorGui.cpp:71
+msgid "Import Template"
+msgstr ""
+
+#: src/HexEditorGui.cpp:77
 msgid "&Quit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:73
+#: src/HexEditorGui.cpp:77
 msgid "CTRL+Q"
 msgstr ""
 
-#: src/HexEditorGui.cpp:73
+#: src/HexEditorGui.cpp:77
 msgid "Quit the application"
 msgstr ""
 
-#: src/HexEditorGui.cpp:76
+#: src/HexEditorGui.cpp:80
 msgid "&File"
 msgstr ""
 
-#: src/HexEditorGui.cpp:80
+#: src/HexEditorGui.cpp:84
 msgid "&Undo"
 msgstr ""
 
-#: src/HexEditorGui.cpp:80
+#: src/HexEditorGui.cpp:84
 msgid "CTRL+Z"
 msgstr ""
 
-#: src/HexEditorGui.cpp:80
+#: src/HexEditorGui.cpp:84
 msgid "Undo last operation"
 msgstr ""
 
-#: src/HexEditorGui.cpp:85
+#: src/HexEditorGui.cpp:89
 msgid "&Redo"
 msgstr ""
 
-#: src/HexEditorGui.cpp:85
+#: src/HexEditorGui.cpp:89
 msgid "CTRL+Y"
 msgstr ""
 
-#: src/HexEditorGui.cpp:85
+#: src/HexEditorGui.cpp:89
 msgid "Reverts last undo"
 msgstr ""
 
-#: src/HexEditorGui.cpp:92
+#: src/HexEditorGui.cpp:96
 msgid "CTRL+C"
 msgstr ""
 
-#: src/HexEditorGui.cpp:92
+#: src/HexEditorGui.cpp:96
 msgid "Copies selection"
 msgstr ""
 
-#: src/HexEditorGui.cpp:97
+#: src/HexEditorGui.cpp:101
 msgid "Copy As"
 msgstr ""
 
-#: src/HexEditorGui.cpp:97
+#: src/HexEditorGui.cpp:101
 msgid "CTRL+SHIFT+C"
 msgstr ""
 
-#: src/HexEditorGui.cpp:97
+#: src/HexEditorGui.cpp:101
 msgid "Copies selection in special format"
 msgstr ""
 
-#: src/HexEditorGui.cpp:102
+#: src/HexEditorGui.cpp:106
 msgid "CTRL+ALT+S"
 msgstr ""
 
-#: src/HexEditorGui.cpp:102
+#: src/HexEditorGui.cpp:106
 msgid "Save selections as a file"
 msgstr ""
 
-#: src/HexEditorGui.cpp:107
+#: src/HexEditorGui.cpp:111
 msgid "CTRL+X"
 msgstr ""
 
-#: src/HexEditorGui.cpp:107
+#: src/HexEditorGui.cpp:111
 msgid "Cuts a selection"
 msgstr ""
 
-#: src/HexEditorGui.cpp:112
+#: src/HexEditorGui.cpp:116
 msgid "CTRL+V"
 msgstr ""
 
-#: src/HexEditorGui.cpp:112
+#: src/HexEditorGui.cpp:116
 msgid "Paste clipboard to cursor location"
 msgstr ""
 
-#: src/HexEditorGui.cpp:117
+#: src/HexEditorGui.cpp:121
 msgid "Fill selection blocks"
 msgstr ""
 
-#: src/HexEditorGui.cpp:122
+#: src/HexEditorGui.cpp:126
 msgid "Deletes selection"
 msgstr ""
 
-#: src/HexEditorGui.cpp:127
+#: src/HexEditorGui.cpp:131
 msgid "Inserts new bytes to cursor location"
 msgstr ""
 
-#: src/HexEditorGui.cpp:134
+#: src/HexEditorGui.cpp:138
 msgid "CTRL+F"
 msgstr ""
 
-#: src/HexEditorGui.cpp:139
+#: src/HexEditorGui.cpp:143
 msgid "CTRL+R"
 msgstr ""
 
-#: src/HexEditorGui.cpp:144
+#: src/HexEditorGui.cpp:148
 msgid "CTRL+G"
 msgstr ""
 
-#: src/HexEditorGui.cpp:144
+#: src/HexEditorGui.cpp:148
 msgid "Branches the given location"
 msgstr ""
 
-#: src/HexEditorGui.cpp:148
+#: src/HexEditorGui.cpp:152
 msgid "&Edit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:152
+#: src/HexEditorGui.cpp:156
 msgid "Data Interpreter"
 msgstr ""
 
-#: src/HexEditorGui.cpp:164
+#: src/HexEditorGui.cpp:168
 msgid "TAG Panel"
 msgstr ""
 
-#: src/HexEditorGui.cpp:172
+#: src/HexEditorGui.cpp:176
 msgid "Search Panel"
 msgstr ""
 
-#: src/HexEditorGui.cpp:176
+#: src/HexEditorGui.cpp:180
 msgid "Comparison Panel"
 msgstr ""
 
-#: src/HexEditorGui.cpp:182
+#: src/HexEditorGui.cpp:186
 msgid "Zebra Striping"
 msgstr ""
 
-#: src/HexEditorGui.cpp:188
+#: src/HexEditorGui.cpp:192
 msgid "Offset Control"
 msgstr ""
 
-#: src/HexEditorGui.cpp:193
+#: src/HexEditorGui.cpp:197
 msgid "Hex Control"
 msgstr ""
 
-#: src/HexEditorGui.cpp:198
+#: src/HexEditorGui.cpp:202
 msgid "Text Control"
 msgstr ""
 
-#: src/HexEditorGui.cpp:202
+#: src/HexEditorGui.cpp:206
 msgid "&View"
 msgstr ""
 
-#: src/HexEditorGui.cpp:214
+#: src/HexEditorGui.cpp:218
 msgid "XORView Thru"
 msgstr ""
 
-#: src/HexEditorGui.cpp:214
+#: src/HexEditorGui.cpp:218
 msgid "View your XOR encrypted file without decrypting!"
 msgstr ""
 
-#: src/HexEditorGui.cpp:217
+#: src/HexEditorGui.cpp:222
+msgid "Hex2Color Mode"
+msgstr ""
+
+#: src/HexEditorGui.cpp:222
+msgid "Colorize HEX values with representing colors."
+msgstr ""
+
+#: src/HexEditorGui.cpp:225
 msgid "Tools"
 msgstr ""
 
-#: src/HexEditorGui.cpp:221
+#: src/HexEditorGui.cpp:229
 msgid "Open RAM Device"
 msgstr ""
 
-#: src/HexEditorGui.cpp:226
+#: src/HexEditorGui.cpp:234
 msgid "Open Memory SPD"
 msgstr ""
 
-#: src/HexEditorGui.cpp:226
+#: src/HexEditorGui.cpp:234
 msgid "Allow to edit Memory SPD values"
 msgstr ""
 
-#: src/HexEditorGui.cpp:230
+#: src/HexEditorGui.cpp:238
 msgid "Open Disk Device"
 msgstr ""
 
-#: src/HexEditorGui.cpp:232
+#: src/HexEditorGui.cpp:240
 msgid "N/A on this OS (yet)"
 msgstr ""
 
-#: src/HexEditorGui.cpp:245
+#: src/HexEditorGui.cpp:253
 msgid "Device Image Tools"
 msgstr ""
 
-#: src/HexEditorGui.cpp:247 src/HexEditorGui.cpp:1942
+#: src/HexEditorGui.cpp:255 src/HexEditorGui.cpp:1969
 msgid "Backup"
 msgstr ""
 
-#: src/HexEditorGui.cpp:251 src/HexEditorGui.cpp:2004
+#: src/HexEditorGui.cpp:259 src/HexEditorGui.cpp:2031
 msgid "Restore"
 msgstr ""
 
-#: src/HexEditorGui.cpp:255 src/HexEditorGui.cpp:2065
+#: src/HexEditorGui.cpp:263 src/HexEditorGui.cpp:2092
 msgid "Erase"
 msgstr ""
 
-#: src/HexEditorGui.cpp:260
+#: src/HexEditorGui.cpp:268
 msgid "Devices"
 msgstr ""
 
-#: src/HexEditorGui.cpp:264
+#: src/HexEditorGui.cpp:272
 msgid "File Mode"
 msgstr ""
 
-#: src/HexEditorGui.cpp:266
+#: src/HexEditorGui.cpp:274
 msgid "Read Only"
 msgstr ""
 
-#: src/HexEditorGui.cpp:272
+#: src/HexEditorGui.cpp:280
 msgid "Writeable"
 msgstr ""
 
-#: src/HexEditorGui.cpp:277
+#: src/HexEditorGui.cpp:285
 msgid "Direct Write"
 msgstr ""
 
-#: src/HexEditorGui.cpp:287 src/HexEditorGui.cpp:929
+#: src/HexEditorGui.cpp:295 src/HexEditorGui.cpp:956
 msgid "Options"
 msgstr ""
 
-#: src/HexEditorGui.cpp:291
+#: src/HexEditorGui.cpp:299
 msgid "Donate"
 msgstr ""
 
-#: src/HexEditorGui.cpp:291
+#: src/HexEditorGui.cpp:299
 msgid "Donate some money to author as a return!"
 msgstr ""
 
-#: src/HexEditorGui.cpp:295
+#: src/HexEditorGui.cpp:303
 msgid "Wiki"
 msgstr ""
 
-#: src/HexEditorGui.cpp:295
+#: src/HexEditorGui.cpp:303
 msgid "Documentation page of wxHexEditor"
 msgstr ""
 
-#: src/HexEditorGui.cpp:299
+#: src/HexEditorGui.cpp:307
 msgid "Bug Reporting"
 msgstr ""
 
-#: src/HexEditorGui.cpp:299
+#: src/HexEditorGui.cpp:307
 msgid "Report bugs for smashing them!"
 msgstr ""
 
-#: src/HexEditorGui.cpp:303
+#: src/HexEditorGui.cpp:311
 msgid "&About"
 msgstr ""
 
-#: src/HexEditorGui.cpp:303
+#: src/HexEditorGui.cpp:311
 msgid "F1"
 msgstr ""
 
-#: src/HexEditorGui.cpp:303
+#: src/HexEditorGui.cpp:311
 msgid "Show info about this application"
 msgstr ""
 
-#: src/HexEditorGui.cpp:306
+#: src/HexEditorGui.cpp:314
 msgid "&Help"
 msgstr ""
 
-#: src/HexEditorGui.cpp:466
+#: src/HexEditorGui.cpp:480
 msgid "Unsigned"
 msgstr ""
 
-#: src/HexEditorGui.cpp:467
+#: src/HexEditorGui.cpp:481
 msgid "Sans"
 msgstr ""
 
-#: src/HexEditorGui.cpp:471
+#: src/HexEditorGui.cpp:485
 msgid "Big Endian"
 msgstr ""
 
-#: src/HexEditorGui.cpp:484
+#: src/HexEditorGui.cpp:498
 msgid "Binary"
 msgstr ""
 
-#: src/HexEditorGui.cpp:496
+#: src/HexEditorGui.cpp:510
 msgid "00000000"
 msgstr ""
 
-#: src/HexEditorGui.cpp:506
+#: src/HexEditorGui.cpp:520
 msgid "Press enter to make changes!"
 msgstr ""
 
-#: src/HexEditorGui.cpp:510
+#: src/HexEditorGui.cpp:524
 msgid "Edit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:512
+#: src/HexEditorGui.cpp:526
 msgid "Allow editing by Data Interpreter Panel"
 msgstr ""
 
-#: src/HexEditorGui.cpp:519
+#: src/HexEditorGui.cpp:533 src/HexEditorGui.cpp:1646
+msgid "ASCII"
+msgstr ""
+
+#: src/HexEditorGui.cpp:544
 msgid "8 bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:525 src/HexEditorGui.cpp:536 src/HexEditorGui.cpp:547
-#: src/HexEditorGui.cpp:558 src/HexEditorGui.cpp:569 src/HexEditorGui.cpp:580
+#: src/HexEditorGui.cpp:550 src/HexEditorGui.cpp:561 src/HexEditorGui.cpp:572
+#: src/HexEditorGui.cpp:583 src/HexEditorGui.cpp:594 src/HexEditorGui.cpp:605
 msgid "0"
 msgstr ""
 
-#: src/HexEditorGui.cpp:530
+#: src/HexEditorGui.cpp:555
 msgid "16 bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:541
+#: src/HexEditorGui.cpp:566
 msgid "32 bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:552
+#: src/HexEditorGui.cpp:577
 msgid "64 bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:563
+#: src/HexEditorGui.cpp:588
 msgid "Float"
 msgstr ""
 
-#: src/HexEditorGui.cpp:574
+#: src/HexEditorGui.cpp:599
 msgid "Double"
 msgstr ""
 
-#: src/HexEditorGui.cpp:633
+#: src/HexEditorGui.cpp:658
 msgid "Clear"
 msgstr ""
 
-#: src/HexEditorGui.cpp:636
+#: src/HexEditorGui.cpp:661
 msgid "Hide"
 msgstr ""
 
-#: src/HexEditorGui.cpp:692 src/HexEditorGui.cpp:701
+#: src/HexEditorGui.cpp:719 src/HexEditorGui.cpp:728
 msgid "INTEL"
 msgstr ""
 
-#: src/HexEditorGui.cpp:692
+#: src/HexEditorGui.cpp:719
 msgid "AMD"
 msgstr ""
 
-#: src/HexEditorGui.cpp:697
+#: src/HexEditorGui.cpp:724
 msgid "CPU Vendor"
 msgstr ""
 
-#: src/HexEditorGui.cpp:701
+#: src/HexEditorGui.cpp:728
 msgid "AT&T"
 msgstr ""
 
-#: src/HexEditorGui.cpp:705
+#: src/HexEditorGui.cpp:732
 msgid "Assembly Type"
 msgstr ""
 
-#: src/HexEditorGui.cpp:709
+#: src/HexEditorGui.cpp:736
 msgid "16 Bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:709
+#: src/HexEditorGui.cpp:736
 msgid "32 Bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:709
+#: src/HexEditorGui.cpp:736
 msgid "64 Bit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:713
+#: src/HexEditorGui.cpp:740
 msgid "Disassembly Bit Mode"
 msgstr ""
 
-#: src/HexEditorGui.cpp:765 src/HexEditorGui.cpp:766 src/HexEditorGui.cpp:767
-#: src/HexEditorGui.cpp:768 src/HexEditorGui.cpp:769 src/HexEditorGui.cpp:770
-#: src/HexEditorGui.cpp:771 src/HexEditorGui.cpp:772 src/HexEditorGui.cpp:773
-#: src/HexEditorGui.cpp:774 src/HexEditorGui.cpp:880 src/HexEditorGui.cpp:881
-#: src/HexEditorGui.cpp:882 src/HexEditorGui.cpp:883 src/HexEditorGui.cpp:884
-#: src/HexEditorGui.cpp:885 src/HexEditorGui.cpp:886 src/HexEditorGui.cpp:887
-#: src/HexEditorGui.cpp:888 src/HexEditorGui.cpp:889 src/HexEditorGui.cpp:899
-#: src/HexEditorGui.cpp:900 src/HexEditorGui.cpp:901 src/HexEditorGui.cpp:902
-#: src/HexEditorGui.cpp:903 src/HexEditorGui.cpp:904 src/HexEditorGui.cpp:905
-#: src/HexEditorGui.cpp:906 src/HexEditorGui.cpp:907 src/HexEditorGui.cpp:908
+#: src/HexEditorGui.cpp:792 src/HexEditorGui.cpp:793 src/HexEditorGui.cpp:794
+#: src/HexEditorGui.cpp:795 src/HexEditorGui.cpp:796 src/HexEditorGui.cpp:797
+#: src/HexEditorGui.cpp:798 src/HexEditorGui.cpp:799 src/HexEditorGui.cpp:800
+#: src/HexEditorGui.cpp:801 src/HexEditorGui.cpp:907 src/HexEditorGui.cpp:908
+#: src/HexEditorGui.cpp:909 src/HexEditorGui.cpp:910 src/HexEditorGui.cpp:911
+#: src/HexEditorGui.cpp:912 src/HexEditorGui.cpp:913 src/HexEditorGui.cpp:914
+#: src/HexEditorGui.cpp:915 src/HexEditorGui.cpp:916 src/HexEditorGui.cpp:926
+#: src/HexEditorGui.cpp:927 src/HexEditorGui.cpp:928 src/HexEditorGui.cpp:929
+#: src/HexEditorGui.cpp:930 src/HexEditorGui.cpp:931 src/HexEditorGui.cpp:932
+#: src/HexEditorGui.cpp:933 src/HexEditorGui.cpp:934 src/HexEditorGui.cpp:935
 msgid " "
 msgstr ""
 
-#: src/HexEditorGui.cpp:777
+#: src/HexEditorGui.cpp:804
 msgid "Decimal"
 msgstr ""
 
-#: src/HexEditorGui.cpp:781 src/HexEditorGui.cpp:922 src/HexEditorGui.cpp:1623
+#: src/HexEditorGui.cpp:808 src/HexEditorGui.cpp:949 src/HexEditorGui.cpp:1650
 msgid "Hex"
 msgstr ""
 
-#: src/HexEditorGui.cpp:790
+#: src/HexEditorGui.cpp:817
 msgid "Previous Sector"
 msgstr ""
 
-#: src/HexEditorGui.cpp:795
+#: src/HexEditorGui.cpp:822
 msgid "Next Sector"
 msgstr ""
 
-#: src/HexEditorGui.cpp:806
+#: src/HexEditorGui.cpp:833
 msgid "From beginning"
 msgstr ""
 
-#: src/HexEditorGui.cpp:806
+#: src/HexEditorGui.cpp:833
 msgid "From here"
 msgstr ""
 
-#: src/HexEditorGui.cpp:806
+#: src/HexEditorGui.cpp:833
 msgid "From end"
 msgstr ""
 
-#: src/HexEditorGui.cpp:808
+#: src/HexEditorGui.cpp:835
 msgid "Type of branch"
 msgstr ""
 
-#: src/HexEditorGui.cpp:812
+#: src/HexEditorGui.cpp:839
 msgid "Go!"
 msgstr ""
 
-#: src/HexEditorGui.cpp:875
+#: src/HexEditorGui.cpp:902
 msgid "Search: "
 msgstr ""
 
-#: src/HexEditorGui.cpp:892
+#: src/HexEditorGui.cpp:919
 msgid "Replace: "
 msgstr ""
 
-#: src/HexEditorGui.cpp:922
+#: src/HexEditorGui.cpp:949
 msgid "Text"
 msgstr ""
 
-#: src/HexEditorGui.cpp:924
+#: src/HexEditorGui.cpp:951
 msgid "Search as"
 msgstr ""
 
-#: src/HexEditorGui.cpp:931
+#: src/HexEditorGui.cpp:958
 msgid "Match Case"
 msgstr ""
 
-#: src/HexEditorGui.cpp:934
+#: src/HexEditorGui.cpp:961
 msgid "Search backwards"
 msgstr ""
 
-#: src/HexEditorGui.cpp:937
+#: src/HexEditorGui.cpp:964
 msgid "Wrap around"
 msgstr ""
 
-#: src/HexEditorGui.cpp:940
+#: src/HexEditorGui.cpp:967
 msgid "As UTF-8"
 msgstr ""
 
-#: src/HexEditorGui.cpp:959
+#: src/HexEditorGui.cpp:986
 msgid "Find All"
 msgstr ""
 
-#: src/HexEditorGui.cpp:962
+#: src/HexEditorGui.cpp:989
 msgid "Find Some Bytes"
 msgstr ""
 
-#: src/HexEditorGui.cpp:963
+#: src/HexEditorGui.cpp:990
 msgid ""
 "This function finds some different values at file. Usefull for finding non-"
 "null sections at disks."
 msgstr ""
 
-#: src/HexEditorGui.cpp:977
+#: src/HexEditorGui.cpp:1004
 msgid "Replace All"
 msgstr ""
 
-#: src/HexEditorGui.cpp:982 src/HexEditorGui.cpp:1185 src/HexEditorGui.cpp:1392
-#: src/HexEditorGui.cpp:1566 src/HexEditorGui.cpp:1635
-#: src/HexEditorGui.cpp:1841 src/HexEditorGui.cpp:1939
-#: src/HexEditorGui.cpp:2001 src/HexEditorGui.cpp:2062
-#: src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:53
+#: src/HexEditorGui.cpp:1009 src/HexEditorGui.cpp:1212
+#: src/HexEditorGui.cpp:1419 src/HexEditorGui.cpp:1593
+#: src/HexEditorGui.cpp:1662 src/HexEditorGui.cpp:1868
+#: src/HexEditorGui.cpp:1966 src/HexEditorGui.cpp:2028
+#: src/HexEditorGui.cpp:2089 src/HexEditorCtrl/wxHexCtrl/TagDialogGui.cpp:53
 msgid "Cancel"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1053
+#: src/HexEditorGui.cpp:1080
 msgid "Download new wxHexEditor"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1053
+#: src/HexEditorGui.cpp:1080
 msgid "http://www.wxhexeditor.org"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1056
+#: src/HexEditorGui.cpp:1083
 msgid "Do not show this again."
 msgstr ""
 
-#: src/HexEditorGui.cpp:1091
+#: src/HexEditorGui.cpp:1118
 msgid "File #1"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1095 src/HexEditorGui.cpp:1102
-#: src/HexEditorGui.cpp:1163 src/HexEditorGui.cpp:1257
-#: src/HexEditorGui.cpp:1930 src/HexEditorGui.cpp:1983
+#: src/HexEditorGui.cpp:1122 src/HexEditorGui.cpp:1129
+#: src/HexEditorGui.cpp:1190 src/HexEditorGui.cpp:1284
+#: src/HexEditorGui.cpp:1957 src/HexEditorGui.cpp:2010
 msgid "Select a file"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1095 src/HexEditorGui.cpp:1102
-#: src/HexEditorGui.cpp:1257 src/HexEditorGui.cpp:1930
-#: src/HexEditorGui.cpp:1983
+#: src/HexEditorGui.cpp:1122 src/HexEditorGui.cpp:1129
+#: src/HexEditorGui.cpp:1284 src/HexEditorGui.cpp:1957
+#: src/HexEditorGui.cpp:2010
 msgid "*"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1098
+#: src/HexEditorGui.cpp:1125
 msgid "File #2"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1109
+#: src/HexEditorGui.cpp:1136
 msgid "Search For"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1111
+#: src/HexEditorGui.cpp:1138
 msgid "Different bytes"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1115
+#: src/HexEditorGui.cpp:1142
 msgid "Same bytes"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1124
+#: src/HexEditorGui.cpp:1151
 msgid "Stop comparison after"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1132
+#: src/HexEditorGui.cpp:1159
 msgid "hits"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1142
+#: src/HexEditorGui.cpp:1169
 msgid "Merge sections if close as"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1150
+#: src/HexEditorGui.cpp:1177
 msgid "bytes"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1160
+#: src/HexEditorGui.cpp:1187
 msgid "Save Results to File"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1163
+#: src/HexEditorGui.cpp:1190
 msgid "*.txt"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1174
+#: src/HexEditorGui.cpp:1201
 msgid "Connect files for scrolling"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1175
+#: src/HexEditorGui.cpp:1202
 msgid ""
 "With this option enabled, compared files will always show same address "
 "location."
 msgstr ""
 
-#: src/HexEditorGui.cpp:1188
+#: src/HexEditorGui.cpp:1215
 msgid "Compare"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1245
+#: src/HexEditorGui.cpp:1272
 msgid "File To Hash:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1252
+#: src/HexEditorGui.cpp:1279
 msgid "Current File"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1270
+#: src/HexEditorGui.cpp:1297
 msgid "MD"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1272
+#: src/HexEditorGui.cpp:1299
 msgid "MD2 (slow!)"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1275
+#: src/HexEditorGui.cpp:1302
 msgid "MD4"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1278
+#: src/HexEditorGui.cpp:1305
 msgid "MD5"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1285
+#: src/HexEditorGui.cpp:1312
 msgid "SHA"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1287
+#: src/HexEditorGui.cpp:1314
 msgid "SHA1"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1290
+#: src/HexEditorGui.cpp:1317
 msgid "SHA224"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1293
+#: src/HexEditorGui.cpp:1320
 msgid "SHA256"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1296
+#: src/HexEditorGui.cpp:1323
 msgid "SHA384"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1299
+#: src/HexEditorGui.cpp:1326
 msgid "SHA512"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1306
+#: src/HexEditorGui.cpp:1333
 msgid "RipeMD"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1308
+#: src/HexEditorGui.cpp:1335
 msgid "RipeMD128"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1311
+#: src/HexEditorGui.cpp:1338
 msgid "RipeMD160"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1314
+#: src/HexEditorGui.cpp:1341
 msgid "RipeMD256"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1317
+#: src/HexEditorGui.cpp:1344
 msgid "RipeMD320"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1324
+#: src/HexEditorGui.cpp:1351
 msgid "HAVAL"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1326
+#: src/HexEditorGui.cpp:1353
 msgid "HAVAL128"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1329
+#: src/HexEditorGui.cpp:1356
 msgid "HAVAL160"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1332
+#: src/HexEditorGui.cpp:1359
 msgid "HAVAL192"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1335
+#: src/HexEditorGui.cpp:1362
 msgid "HAVAL224"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1338
+#: src/HexEditorGui.cpp:1365
 msgid "HAVAL256"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1345
+#: src/HexEditorGui.cpp:1372
 msgid "TIGER"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1347
+#: src/HexEditorGui.cpp:1374
 msgid "TIGER128"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1350
+#: src/HexEditorGui.cpp:1377
 msgid "TIGER160"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1353
+#: src/HexEditorGui.cpp:1380
 msgid "TIGER192"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1360
+#: src/HexEditorGui.cpp:1387
 msgid "Others"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1362
+#: src/HexEditorGui.cpp:1389
 msgid "ADLER32"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1365
+#: src/HexEditorGui.cpp:1392
 msgid "CRC32"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1368
+#: src/HexEditorGui.cpp:1395
 msgid "CRC32B"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1371
+#: src/HexEditorGui.cpp:1398
 msgid "WHIRLPOOL"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1374
+#: src/HexEditorGui.cpp:1401
 msgid "GOST"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1377
+#: src/HexEditorGui.cpp:1404
 msgid "SNEFRU128"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1380
+#: src/HexEditorGui.cpp:1407
 msgid "SNEFRU256"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1395
+#: src/HexEditorGui.cpp:1422
 msgid "Calculate"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1495
+#: src/HexEditorGui.cpp:1522
 msgid "Copy As :"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1499
+#: src/HexEditorGui.cpp:1526
 msgid "Full Text"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1499
+#: src/HexEditorGui.cpp:1526
 msgid "Special Hex"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1499
+#: src/HexEditorGui.cpp:1526
 msgid "Internet"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1499
+#: src/HexEditorGui.cpp:1526
 msgid "C/C++ Source"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1499
+#: src/HexEditorGui.cpp:1526
 msgid "Assembler Source"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1505
+#: src/HexEditorGui.cpp:1532
 msgid "Option:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1525
+#: src/HexEditorGui.cpp:1552
 msgid "As BigEndian"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1531
+#: src/HexEditorGui.cpp:1558
 msgid "Bytes Per Line"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1533
+#: src/HexEditorGui.cpp:1560
 msgid "16"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1545
+#: src/HexEditorGui.cpp:1572
 msgid "Include Offset Part"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1549
+#: src/HexEditorGui.cpp:1576
 msgid "Include Hex Part"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1553
+#: src/HexEditorGui.cpp:1580
 msgid "Include Text Part"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1608
+#: src/HexEditorGui.cpp:1635
 msgid ""
 "For switching XORView Thru mode, all Undo&Redo buffer will reset and non-"
 "saved changes will discarded.\n"
@@ -1859,206 +1860,202 @@ msgid ""
 "with XORView Thru mode enabled."
 msgstr ""
 
-#: src/HexEditorGui.cpp:1615
+#: src/HexEditorGui.cpp:1642
 msgid "Please enter XOR key as "
 msgstr ""
 
-#: src/HexEditorGui.cpp:1619
-msgid "ASCII"
-msgstr ""
-
-#: src/HexEditorGui.cpp:1638 src/HexEditorGui.cpp:2112
+#: src/HexEditorGui.cpp:1665 src/HexEditorGui.cpp:2139
 msgid "OK"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1676
+#: src/HexEditorGui.cpp:1703
 msgid "Colours"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1683
+#: src/HexEditorGui.cpp:1710
 msgid "Hex Colors:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1688
+#: src/HexEditorGui.cpp:1715
 msgid "Foreground Colour"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1693
+#: src/HexEditorGui.cpp:1720
 msgid "Background Colour"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1698
+#: src/HexEditorGui.cpp:1725
 msgid "Zebra Colour"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1702
+#: src/HexEditorGui.cpp:1729
 msgid "Selection Colours:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1707
+#: src/HexEditorGui.cpp:1734
 msgid "Selection Foreground Colour"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1712
+#: src/HexEditorGui.cpp:1739
 msgid "Selection Colour"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1716
+#: src/HexEditorGui.cpp:1743
 msgid "Reset"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1717
+#: src/HexEditorGui.cpp:1744
 msgid "Reset Colour Values to Default"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1730
+#: src/HexEditorGui.cpp:1757
 msgid "Language:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1745
+#: src/HexEditorGui.cpp:1772
 msgid "Character Encoding Family:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1760
+#: src/HexEditorGui.cpp:1787
 msgid "Character Encoding:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1769 src/HexPanels.cpp:221
+#: src/HexEditorGui.cpp:1796 src/HexPanels.cpp:237
 msgid "Size:"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1780
+#: src/HexEditorGui.cpp:1807
 msgid "Custom Hex Formating"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1788
+#: src/HexEditorGui.cpp:1815
 msgid "xx "
 msgstr ""
 
-#: src/HexEditorGui.cpp:1789
+#: src/HexEditorGui.cpp:1816
 msgid "xxxx "
 msgstr ""
 
-#: src/HexEditorGui.cpp:1790
+#: src/HexEditorGui.cpp:1817
 msgid "xx xx xx xx xx xx xx xx  "
 msgstr ""
 
-#: src/HexEditorGui.cpp:1791
+#: src/HexEditorGui.cpp:1818
 msgid "xxxx xxxx xxxx xxxx  "
 msgstr ""
 
-#: src/HexEditorGui.cpp:1793
+#: src/HexEditorGui.cpp:1820
 msgid "Recursive custom hex format pattern"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1797
+#: src/HexEditorGui.cpp:1824
 msgid "Enable"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1806
+#: src/HexEditorGui.cpp:1833
 msgid "Bytes Per Line Limit"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1823
+#: src/HexEditorGui.cpp:1850
 msgid "Auto show tag panel if tags detected"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1827
+#: src/HexEditorGui.cpp:1854
 msgid "Make program portable "
 msgstr ""
 
-#: src/HexEditorGui.cpp:1830
+#: src/HexEditorGui.cpp:1857
 msgid "Single instance mode"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1831
+#: src/HexEditorGui.cpp:1858
 msgid ""
 "Allows only one copy of the programx running at a time.\n"
 "Opening new files open new tabs on the program."
 msgstr ""
 
-#: src/HexEditorGui.cpp:1917 src/HexEditorGui.cpp:1979
+#: src/HexEditorGui.cpp:1944 src/HexEditorGui.cpp:2006
 msgid "Source :"
 msgstr ""
 
-#: src/HexEditorGui.cpp:1926 src/HexEditorGui.cpp:1986
-#: src/HexEditorGui.cpp:2041
+#: src/HexEditorGui.cpp:1953 src/HexEditorGui.cpp:2013
+#: src/HexEditorGui.cpp:2068
 msgid "Destination :"
 msgstr ""
 
-#: src/HexEditorGui.cpp:2053
+#: src/HexEditorGui.cpp:2080
 msgid "0x00"
 msgstr ""
 
-#: src/HexEditorGui.cpp:2053
+#: src/HexEditorGui.cpp:2080
 msgid "0xFF"
 msgstr ""
 
-#: src/HexEditorGui.cpp:2053
+#: src/HexEditorGui.cpp:2080
 msgid "0xRANDOM"
 msgstr ""
 
-#: src/HexEditorGui.cpp:2055
+#: src/HexEditorGui.cpp:2082
 msgid "Erase With "
 msgstr ""
 
-#: src/HexPanels.cpp:219
+#: src/HexPanels.cpp:235
 msgid "Name:"
 msgstr ""
 
-#: src/HexPanels.cpp:220
+#: src/HexPanels.cpp:236
 msgid "Path:"
 msgstr ""
 
-#: src/HexPanels.cpp:222
+#: src/HexPanels.cpp:238
 msgid "Access:"
 msgstr ""
 
-#: src/HexPanels.cpp:223
+#: src/HexPanels.cpp:239
 msgid "Device:"
 msgstr ""
 
-#: src/HexPanels.cpp:225 src/HexPanels.cpp:230
+#: src/HexPanels.cpp:241 src/HexPanels.cpp:246
 msgid "BLOCK"
 msgstr ""
 
-#: src/HexPanels.cpp:225 src/HexPanels.cpp:227
+#: src/HexPanels.cpp:241 src/HexPanels.cpp:243
 msgid "FILE"
 msgstr ""
 
-#: src/HexPanels.cpp:228
+#: src/HexPanels.cpp:244
 msgid "DIRECTORY"
 msgstr ""
 
-#: src/HexPanels.cpp:229
+#: src/HexPanels.cpp:245
 msgid "CHARACTER"
 msgstr ""
 
-#: src/HexPanels.cpp:231
+#: src/HexPanels.cpp:247
 msgid "FIFO"
 msgstr ""
 
-#: src/HexPanels.cpp:232
+#: src/HexPanels.cpp:248
 msgid "LINK"
 msgstr ""
 
-#: src/HexPanels.cpp:233
+#: src/HexPanels.cpp:249
 msgid "SOCKET"
 msgstr ""
 
-#: src/HexPanels.cpp:244
+#: src/HexPanels.cpp:260
 msgid "Sector Size: "
 msgstr ""
 
-#: src/HexPanels.cpp:245
+#: src/HexPanels.cpp:261
 msgid "Sector Count: "
 msgstr ""
 
-#: src/HexPanels.cpp:249
+#: src/HexPanels.cpp:265
 msgid "XORKey:"
 msgstr ""
 
-#: src/HexPanels.cpp:317
+#: src/HexPanels.cpp:333
 msgid ""
 "There are no undo for this action.\n"
 "Do you want to delete all tags for this file?"

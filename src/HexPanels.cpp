@@ -388,6 +388,23 @@ void TagPanel::OnDeleteTag( wxCommandEvent& event ){
 			}
 	}
 
+void TagPanel::OnKeyDown( wxKeyEvent& event ){
+    if( event.GetKeyCode() == WXK_DELETE ){
+        HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+        unsigned selection = TagPanelList->GetSelection();
+        if( MyHexEditor != NULL )
+            if( MyHexEditor->MainTagArray.Count() >= selection ){
+                MyHexEditor->MainTagArray.RemoveAt( selection );
+                wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
+                GetEventHandler()->ProcessEvent( eventx );
+                MyHexEditor->ReDraw();
+                }
+        if( TagPanelList->GetCount() )
+            TagPanelList->SetSelection( selection > TagPanelList->GetCount()-1 ? TagPanelList->GetCount()-1 : selection );
+        }
+    event.Skip();
+	}
+
 void SearchPanel::OnClear( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	TagPanelList->Clear();

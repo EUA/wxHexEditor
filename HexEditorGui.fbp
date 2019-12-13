@@ -3044,7 +3044,7 @@
                         <event name="OnChar"></event>
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>
-                        <event name="OnKeyDown"></event>
+                        <event name="OnKeyDown">OnKeyDown</event>
                         <event name="OnKeyUp"></event>
                         <event name="OnKillFocus"></event>
                         <event name="OnLeaveWindow"></event>

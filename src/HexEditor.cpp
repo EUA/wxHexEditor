@@ -1513,7 +1513,10 @@ void HexEditor::CopyAsDialog( void ) {
 void HexEditor::GotoDialog( void ) {
 	uint64_t newoffset;
 	::GotoDialog mygoto( this, newoffset, CursorOffset(), FileLength(), FDtoBlockSize( GetFD() ) );
-	if( mygoto.ShowModal() == wxID_OK ) {
+	if( mygoto.ShowModal() == wxID_OK ){
+        if(focus == HEX_CTRL ){}
+        else if(focus == TEXT_CTRL){}
+        else hex_ctrl->SetFocus();
 		Goto( newoffset );
 		}
 	}

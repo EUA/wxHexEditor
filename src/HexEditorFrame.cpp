@@ -614,37 +614,52 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 						break;
 						}
 					case idImportTAGs:	{
-												wxFileDialog filediag(this,_("Choose a file for import TAGs"),
-																					wxEmptyString,
-																					wxEmptyString,
-																					wxT("*.tags"),
-																					wxFD_OPEN|wxFD_CHANGE_DIR,
-																					wxDefaultPosition);
-												if(wxID_OK == filediag.ShowModal()){
-													if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
-														wxMessageBox( wxString(_( "TAGS cannot be imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
-													else
-														MyTagPanel->Set( MyHexEditor->MainTagArray );
-													}
-												break;
-												}
+                        wxFileDialog filediag(this,_("Choose a file for import TAGs"),
+                                                wxEmptyString,
+                                                wxEmptyString,
+                                                wxT("*.tags"),
+                                                wxFD_OPEN|wxFD_CHANGE_DIR,
+                                                wxDefaultPosition);
+                        if(wxID_OK == filediag.ShowModal()){
+                            if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()) ) )
+                                wxMessageBox( wxString(_( "TAGS cannot be imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+                            else
+                                MyTagPanel->Set( MyHexEditor->MainTagArray );
+                            }
+                        break;
+                        }
 					case idExportTAGs:	{
-												if( MyHexEditor->MainTagArray.Count() ){
-													wxFileDialog filediag(this,_("Choose a file for export TAGs"),
-																					wxEmptyString,
-																					wxEmptyString,
-																					wxT("*.tags"),
-																					wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
-																					wxDefaultPosition);
-													if(wxID_OK == filediag.ShowModal()){
-														if( !MyHexEditor->SaveTAGS( filediag.GetPath() ) )
-															wxMessageBox( wxString(_( "TAGs cannot be exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
-														}
-													}
-												else
-													wxMessageBox( _( "There is no TAGs to Export in current active file!"),_("Error"), wxOK|wxICON_ERROR, this );
-												break;
-												}
+                        if( MyHexEditor->MainTagArray.Count() ){
+                            wxFileDialog filediag(this,_("Choose a file for export TAGs"),
+                                                    wxEmptyString,
+                                                    wxEmptyString,
+                                                    wxT("*.tags"),
+                                                    wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+                                                    wxDefaultPosition);
+                            if(wxID_OK == filediag.ShowModal()){
+                                if( !MyHexEditor->SaveTAGS( filediag.GetPath() ) )
+                                    wxMessageBox( wxString(_( "TAGs cannot be exported to ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+                                }
+                            }
+                        else
+                            wxMessageBox( _( "There is no TAGs to Export in current active file!"),_("Error"), wxOK|wxICON_ERROR, this );
+                        break;
+                        }
+					case idImportTemplate:	{
+                        wxFileDialog filediag(this,_("Choose a file for import template/TAGs to cursor offset"),
+                                                wxEmptyString,
+                                                wxEmptyString,
+                                                wxT("*.template;*.tags"),
+                                                wxFD_OPEN|wxFD_CHANGE_DIR,
+                                                wxDefaultPosition);
+                        if(wxID_OK == filediag.ShowModal()){
+                            if( !MyHexEditor->LoadTAGS( wxFileNameFromPath(filediag.GetPath()), MyHexEditor->CursorOffset() ) )
+                                wxMessageBox( wxString(_( "TAGS cannot be imported from ")).Append( filediag.GetPath() ),_("Error"), wxOK|wxICON_ERROR, this );
+                            else
+                                MyTagPanel->Set( MyHexEditor->MainTagArray );
+                            }
+                        break;
+                        }
 					case wxID_UNDO:		MyHexEditor->DoUndo();					break;
 					case wxID_REDO:		MyHexEditor->DoRedo();					break;
 					case wxID_COPY:		MyHexEditor->CopySelection();			break;

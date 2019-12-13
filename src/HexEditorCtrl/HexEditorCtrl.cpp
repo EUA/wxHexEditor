@@ -878,7 +878,7 @@ void HexEditorCtrl::TagHideAll( void ){
 	TAGMutex = false;
 	}
 
-bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
+bool HexEditorCtrl::LoadTAGS( wxFileName flnm, int64_t use_offset ){
 	wxXmlDocument doc;
 	if( flnm.IsFileReadable() )
 		if( doc.Load( flnm.GetFullPath(), wxT("UTF-8")) )
@@ -886,7 +886,6 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 				wxXmlNode *child = doc.GetRoot()->GetChildren();
 
 				child = child->GetChildren();	//<filename> -> <TAG>
-
 				while (child) {
 					if (child->GetName() == wxT("TAG")) {
                         wxString propvalue = child->GetAttribute(wxT("id"), wxEmptyString);
@@ -902,7 +901,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 							#else
 								element->GetNodeContent().ToULongLong( &xxl, 10 );
 							#endif
-								tmp->start = xxl;
+								tmp->start = xxl + use_offset;
 								}
 							else if (element->GetName() == wxT("end_offset")){
 							#ifdef __WXMSW__
@@ -910,7 +909,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm ){
 							#else
 								element->GetNodeContent().ToULongLong( &xxl, 10 );
 							#endif
-								tmp->end = xxl;
+								tmp->end = xxl + use_offset;
 								}
 							else if (element->GetName() == wxT("tag_text"))
 								tmp->tag = element->GetNodeContent();

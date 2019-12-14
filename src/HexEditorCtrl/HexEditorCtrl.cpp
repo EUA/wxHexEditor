@@ -1010,7 +1010,6 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 			wxXmlProperty *ID = new wxXmlProperty( wxT("id"), wxString::Format(wxT("%d"),i), NULL );
 #endif
 
-
 			wxXmlNode *node_Tag = new wxXmlNode( node_File, wxXML_ELEMENT_NODE, wxT("TAG"), wxEmptyString, ID , NULL);
 
 			wxXmlNode *element_NoteColour		= new wxXmlNode( node_Tag, wxXML_ELEMENT_NODE, wxT("note_colour"), wxEmptyString, NULL, NULL);
@@ -1046,7 +1045,7 @@ void HexEditorCtrl::SearchResultsToTAGs( void ){
 		TagElement *tmp = new TagElement();
 		*tmp=*TAG;
         bool found=false;
-        for(int i=0; i < MainTagArray.Count(); i++)
+        for(unsigned i=0; i < MainTagArray.Count(); i++)
             if(*MainTagArray.Item(i)==*tmp)
                 found=true;
         if(!found )

@@ -638,7 +638,7 @@ bool FAL::Apply( void ){
 								wxMessageBox( _("Error on Write operation to Process RAM"), _("FATAL ERROR") );
 							wr += 4;
 							}
-						success*=true;
+						success&=true;
 						}
 					else{
 						wxFile::Seek(StartSector*BlockRWSize);
@@ -783,7 +783,7 @@ wxFileOffset FAL::Length( int PatchIndice ){
 
 	if(PatchIndice == -1)
 		PatchIndice = DiffArray.GetCount();
-	for( unsigned i=0 ; i < PatchIndice; i++ )
+	for( int i=0 ; i < PatchIndice; i++ )
 		if( DiffArray[i]->flag_undo && !DiffArray[i]->flag_commit )
 			continue;
 		else if( DiffArray[i]->flag_inject )

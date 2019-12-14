@@ -302,7 +302,8 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 				VirtualQueryEx( myfile->GetHandle(), addr, &mymeminfo, sizeof( MEMORY_BASIC_INFORMATION));
 				GetMappedFileName(myfile->GetHandle(), (LPVOID)addr, bfrx, 200);
 				name=wxString(bfrx);
-				//std::cout << "Addr :" << addr << " - " << mymeminfo.RegionSize << "   \t State: " << \
+				/*
+				std::cout << "Addr :" << addr << " - " << mymeminfo.RegionSize << "   \t State: " << \
 				(mymeminfo.State & MEM_COMMIT  ? "Commit" : "") << \
 				(mymeminfo.State & MEM_FREE  ? "Free" : "") << \
 				(mymeminfo.State & MEM_RESERVE  ? "Reserve" : "") << \
@@ -311,6 +312,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 				(mymeminfo.Type & MEM_IMAGE  ? "Mapped  " : "") << \
 				(mymeminfo.Type & MEM_IMAGE  ? "Private " : "") << \
 				"\tName: " << wxString(bfrx).c_str() << std::endl;
+				*/
 				if( name!=name_old){
 					name_old=name;
 					TagElement *tmp = new TagElement();

@@ -68,7 +68,7 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
    if( hexval.Len() < 2 )
       return false;
    //Remove all space chars and update the Search value
-   while( hexval.find(' ') != -1 )
+   while( hexval.find(' ') >= 0 )
       hexval.Remove( hexval.find(' '),1);
 
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
@@ -809,7 +809,7 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , ui
 		return -1;
 		}
 
-	bool first_run=true;
+	//bool first_run=true;
 	wxString emsg = gauge_msg + wxT("\n") ;
 	uint64_t current_offset = from;
 
@@ -833,7 +833,8 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , ui
 	time (&ts);
 	te=ts;
 	int found = -1, readed = -1,readed_prefetch = -1;
-	unsigned read_speed=0,percentage=0;
+	//unsigned read_speed=0,
+	unsigned   percentage=0;
 	uint64_t read_speed_offset=0,processfootprint=0;
 
 	if( findfile->IsProcess() )
@@ -895,7 +896,7 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , ui
 //		found = SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options );//Makes raw search here
 //		if(found >= 0){//We found something
 //			if( options & SEARCH_FINDALL ){
-//				TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+//				TagElement *mytag=new TagElement(current_offset+found, current_offset+found+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,255) );
 //				parent->HighlightArray.Add(mytag);
 //				current_offset += found+target.GetDataLen(); //Unprocessed bytes remaining at buffer!!!
 //				readed=search_step; //to stay in loop
@@ -990,12 +991,12 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from , ui
 
 	delete [] buffer;
 	delete [] buffer_prefetch;
-	if (! options & SEARCH_FINDALL)
+	if (! (options & SEARCH_FINDALL))
 		return found;
 
 	//Create tags from results and put them into HighlightArray
 	for(unsigned i=0 ; i < results.size() &&  i < 100000 ; i++ ){
-		TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,0) );
+		TagElement *mytag=new TagElement(results[i] , results[i]+target.GetDataLen()-1,wxEmptyString,*wxBLACK, wxColour(255,255,0,255) );
 		parent->HighlightArray.Add(mytag);
 		}
 
@@ -1019,7 +1020,7 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 		wxSwap( current_offset, end_offset);
 	uint64_t backward_offset = current_offset;
 
-	bool first_search=true;
+	//bool first_search=true;
 	unsigned BlockSz= 1024*1024*1;
 	unsigned search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
 
@@ -1042,7 +1043,8 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 	std::vector< int > partial_results;
 
 	unsigned read_speed=0,percentage=0;
-	uint64_t read_speed_offset=0,processfootprint=0;
+	//uint64_t read_speed_offset=0
+	uint64_t   processfootprint=0;
 	if( findfile->IsProcess() )
 		processfootprint = parent->ProcessRAM_GetFootPrint();
 	do{
@@ -1131,13 +1133,14 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from , u
 			percentage =  (findfile->Length()-totalread)*1000/findfile->Length();
 			percentage = percentage > 1000 ? 1000 : percentage;
 			}
-		if( progress_gauge != NULL)
-		if(first_run){
-			if( ! progress_gauge->Update( percentage ) )		// update progress and break on abort
-				break;
-			}
-		else if( ! progress_gauge->Update( percentage, emsg))		// update progress and break on abort
-			break;
+		if( progress_gauge != NULL){
+            if(first_run){
+                if( ! progress_gauge->Update( percentage ) )		// update progress and break on abort
+                    break;
+                }
+            else if( ! progress_gauge->Update( percentage, emsg))		// update progress and break on abort
+                break;
+            }
 #endif //_DEBUG_FIND_UNIT_TEST_
 		}while(backward_offset > end_offset);
 

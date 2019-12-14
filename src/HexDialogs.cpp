@@ -68,8 +68,11 @@ bool HexVerifyAndPrepare(wxString& hexval, wxString Value_Name, wxWindow* parent
    if( hexval.Len() < 2 )
       return false;
    //Remove all space chars and update the Search value
-   while( hexval.find(' ') >= 0 )
+   int x = hexval.find(' ');
+   while( x >= 0 ){ // using hexval.find(' ')>= 0 generate logic true due compiler error
       hexval.Remove( hexval.find(' '),1);
+      x=hexval.find(' ');
+      }
 
    for( unsigned i = 0 ; i < hexval.Len() ; i++ )
       if( !isxdigit( hexval[i] ) || hexval == ' ' ) { //Not hexadecimal!

@@ -663,6 +663,11 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	
 	bSizerBottom->Add( m_buttonHide, 1, 0, 5 );
 	
+	m_buttonTAG = new wxButton( this, wxID_ANY, _("Convert TAGs"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonTAG->Hide();
+	
+	bSizerBottom->Add( m_buttonTAG, 1, 0, 5 );
+	
 	
 	mainSize->Add( bSizerBottom, 0, wxEXPAND, 5 );
 	
@@ -677,6 +682,7 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	TagPanelList->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TagPanelGui::OnRightMouse ), NULL, this );
 	m_buttonClear->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnClear ), NULL, this );
 	m_buttonHide->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnHide ), NULL, this );
+	m_buttonTAG->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnTAG ), NULL, this );
 }
 
 TagPanelGui::~TagPanelGui()
@@ -687,6 +693,7 @@ TagPanelGui::~TagPanelGui()
 	TagPanelList->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TagPanelGui::OnRightMouse ), NULL, this );
 	m_buttonClear->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnClear ), NULL, this );
 	m_buttonHide->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnHide ), NULL, this );
+	m_buttonTAG->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnTAG ), NULL, this );
 	
 }
 

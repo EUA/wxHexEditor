@@ -936,7 +936,7 @@ bool HexEditorCtrl::LoadTAGS( wxFileName flnm, int64_t use_offset ){
 	}
 
 //Moves tags for deletion & insertions
-void HexEditorCtrl::MoveTAGS( uint64_t location, int64_t size ){
+void HexEditorCtrl::MoveTAGs( uint64_t location, int64_t size ){
 	for( unsigned i = 0 ; i < MainTagArray.Count() ; i++ ){
 		TagElement *TAG = MainTagArray.Item(i);
 
@@ -1037,6 +1037,30 @@ bool HexEditorCtrl::SaveTAGS( wxFileName flnm ){
 		return doc.Save(path);
 		}
 	}
+
+void HexEditorCtrl::SearchResultsToTAGs( void ){
+    std::cout << "wxHexEditorCtrl::SearchResultsToTAGs()" << std::endl;
+    for( unsigned i = 0 ; i < HighlightArray.Count() ; i++ ){
+            std::cout << "i:" << i << std::endl;
+		TagElement *TAG = HighlightArray.Item(i);
+		TagElement *tmp = new TagElement();
+		*tmp=*TAG;
+        bool found=false;
+        for(int i=0; i < MainTagArray.Count(); i++)
+            if(*MainTagArray.Item(i)==*tmp)
+                found=true;
+        if(!found )
+            MainTagArray.Add( tmp );
+        }
+    MainTagArray.Sort(TagElementSort);
+    WX_CLEAR_ARRAY( HighlightArray );
+
+    wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+
+	eventx.SetId( SEARCH_CHANGE_EVENT );
+	GetEventHandler()->ProcessEvent( eventx );
+    }
 
 void HexEditorCtrl::UpdateUI(wxUpdateUIEvent& event){
 	std::cout << "wxHexEditorCtrl::OnUpdateUI()" << std::endl;

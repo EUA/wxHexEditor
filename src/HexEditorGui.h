@@ -48,41 +48,42 @@
 #define idClose 1000
 #define idImportTAGs 1001
 #define idExportTAGs 1002
-#define wxID_QUIT 1003
-#define idCopyAs 1004
-#define idSaveAsDump 1005
-#define idFillSelection 1006
-#define idInsert 1007
-#define idGotoOffset 1008
-#define idInterpreter 1009
-#define idToolbar 1010
-#define idInfoPanel 1011
-#define idTagPanel 1012
-#define idDisassemblerPanel 1013
-#define idSearchPanel 1014
-#define idComparePanel 1015
-#define idZebraStriping 1016
-#define idShowOffset 1017
-#define idShowHex 1018
-#define idShowText 1019
-#define idChecksum 1020
-#define idCompare 1021
-#define idXORView 1022
-#define idHex2Color 1023
-#define idDeviceRam 1024
-#define idDeviceMemorySPD 1025
-#define idProcessRAM 1026
-#define idDeviceBackup 1027
-#define idDeviceRestore 1028
-#define idDeviceErase 1029
-#define idFileRO 1030
-#define idFileRW 1031
-#define idFileDW 1032
-#define idDonate 1033
-#define idWiki 1034
-#define idBugReport 1035
-#define ID_CHK_UNSIGNED 1036
-#define ID_CHK_BIGENDIAN 1037
+#define idImportTemplate 1003
+#define wxID_QUIT 1004
+#define idCopyAs 1005
+#define idSaveAsDump 1006
+#define idFillSelection 1007
+#define idInsert 1008
+#define idGotoOffset 1009
+#define idInterpreter 1010
+#define idToolbar 1011
+#define idInfoPanel 1012
+#define idTagPanel 1013
+#define idDisassemblerPanel 1014
+#define idSearchPanel 1015
+#define idComparePanel 1016
+#define idZebraStriping 1017
+#define idShowOffset 1018
+#define idShowHex 1019
+#define idShowText 1020
+#define idChecksum 1021
+#define idCompare 1022
+#define idXORView 1023
+#define idHex2Color 1024
+#define idDeviceRam 1025
+#define idDeviceMemorySPD 1026
+#define idProcessRAM 1027
+#define idDeviceBackup 1028
+#define idDeviceRestore 1029
+#define idDeviceErase 1030
+#define idFileRO 1031
+#define idFileRW 1032
+#define idFileDW 1033
+#define idDonate 1034
+#define idWiki 1035
+#define idBugReport 1036
+#define ID_CHK_UNSIGNED 1037
+#define ID_CHK_BIGENDIAN 1038
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -180,12 +181,15 @@ class TagPanelGui : public wxPanel
 		wxListBox* TagPanelList;
 		wxButton* m_buttonClear;
 		wxButton* m_buttonHide;
+		wxButton* m_buttonTAG;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnTagSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnRightMouse( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnClear( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnHide( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnTAG( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

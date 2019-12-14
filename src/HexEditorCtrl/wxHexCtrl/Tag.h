@@ -74,7 +74,7 @@ class TagElement{
 		static int TagCompare(TagElement **first, TagElement **second);
 //		bool operator<( TagElement a ){ return start < a.start; }
 //		bool operator>( TagElement a ){ return start > a.start; }
-
+        bool operator==( TagElement a ){ return (start == a.start && end == a.end); }
 //		void OnKillFocus( wxFocusEvent& event );
 		wxPopupWindow *wxP;
 	};

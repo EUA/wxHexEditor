@@ -442,7 +442,7 @@ bool HexEditor::FileSave( bool question ) {
 	}
 
 bool HexEditor::FileSaveAs( wxString savefilename){
-	FileSaveGeneric( savefilename, 0, FileLength() );
+	return FileSaveGeneric( savefilename, 0, FileLength() );
 	}
 
 bool HexEditor::FileSaveGeneric( wxString savefilename, uint64_t fstart, uint64_t flength ) {
@@ -587,7 +587,7 @@ void HexEditor::DoUndo( void ) {
 	const DiffNode* x = myfile->GetFirstUndoNodeOrLast();
 	if( x != NULL )
 		if( x->flag_inject )
-			MoveTAGS( x->start_offset, -x->size );
+			MoveTAGs( x->start_offset, -x->size );
 
 	Goto( myfile->Undo() );
 
@@ -605,7 +605,7 @@ void HexEditor::DoRedo( void ) {
 	const DiffNode* x = myfile->GetFirstUndoNodeOrLast();
 	if( x != NULL )
 		if( x->flag_inject )
-			MoveTAGS( x->start_offset, x->size );
+			MoveTAGs( x->start_offset, x->size );
 
 	Goto( myfile->Redo() );
 
@@ -1547,7 +1547,7 @@ bool HexEditor::InsertBytes( void ) {
 	bool success=myfile->Add( CursorOffset(), zerostream, injection_size, true );
 
 	if(success)
-		MoveTAGS( CursorOffset(), injection_size );
+		MoveTAGs( CursorOffset(), injection_size );
 	select->SetState( false );
 
 	delete [] zerostream;
@@ -1580,7 +1580,7 @@ bool HexEditor::DeleteSelection( void ) {
 	if( select->GetState() ) {
 		success = myfile->Add( std::min(select->StartOffset , select->EndOffset), NULL, -select->GetSize(), true );
 		if(success)
-			MoveTAGS( std::min(select->StartOffset , select->EndOffset), -select->GetSize() );
+			MoveTAGs( std::min(select->StartOffset , select->EndOffset), -select->GetSize() );
 
 		select->SetState( false );
 		}

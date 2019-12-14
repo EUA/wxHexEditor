@@ -99,12 +99,14 @@ class InfoPanel : public InfoPanelGui{
 };
 
 #define idDeleteTag 31001 //just random num
+#define idEditTag 31002 //just random num
 class TagPanel : public TagPanelGui{
 	public:
 		TagPanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
 		:TagPanelGui( (wxWindow*) parent_, id, pos, size, style){
 			parent = parent_;
 			this->Connect( idDeleteTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnDeleteTag ) );
+			this->Connect( idEditTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnEditTag ) );
 			m_buttonClear->Show(true);
 			m_buttonHide->Show(true);
 			}
@@ -117,8 +119,11 @@ class TagPanel : public TagPanelGui{
 		//void OnUpdate( wxCommandEvent& event ){}
 		void OnRightMouse( wxMouseEvent& event );
 		void OnDeleteTag( wxCommandEvent& event );
+		void OnEditTag( wxCommandEvent& event );
+		void OnKeyDown( wxKeyEvent& event );
 		~TagPanel(void){
 			this->Disconnect( idDeleteTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnDeleteTag ) );
+			this->Disconnect( idEditTag, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( TagPanel::OnEditTag ) );
 			}
 	protected:
 		wxMutex mutextag;
@@ -130,10 +135,12 @@ class SearchPanel : public TagPanel{
 	:TagPanel( parent_, id, pos, size, style){
 	m_buttonClear->Show(true);
 	m_buttonHide->Show(false);
+	m_buttonTAG->Show(true);
 	}
 	void OnTagSelect( wxCommandEvent& event );
 	void OnRightMouse( wxMouseEvent& event ){};
 	void OnClear( wxCommandEvent& event );
+	void OnTAG( wxCommandEvent& event );
 	void Set( ArrayOfTAG& TagArray );
 	};
 

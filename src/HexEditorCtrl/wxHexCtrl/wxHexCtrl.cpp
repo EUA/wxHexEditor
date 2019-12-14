@@ -583,7 +583,7 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 					RGB.Set(col[chrC]);
 					//dcTemp->SetTextBackground( wxColour(R,G,B) );
 					dcTemp->SetTextBackground( RGB );
-					int cc=col[chrC];
+					//int cc=col[chrC];
 				    //chr&0xda //RRrG GgBb
 				    //chr&0x90 //RrrG ggbb //looks better
 					dcTemp->SetTextForeground( chrC&0x90 ? *wxBLACK : *wxWHITE );
@@ -598,7 +598,7 @@ inline wxDC* wxHexCtrl::UpdateDC(wxDC *xdc ){
 					wxString stt=CharAt(textLenghtLimit++);
 					RGB.Set(col[chrC]);
 					dcTemp->SetTextBackground( RGB );
-					int cc=col[chrC];
+					//int cc=col[chrC];
 					dcTemp->SetTextForeground( chrC&0x90 ? *wxBLACK : *wxWHITE );
 					dcTemp->DrawText( stt, m_Margin.x + x*m_CharSize.x, m_Margin.y + y * m_CharSize.y );
 					x++;

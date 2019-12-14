@@ -144,8 +144,10 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		bool ZebraEnable;
 		int *ZebraStriping;
 
-		bool LoadTAGS( wxFileName );
+		bool LoadTAGS( wxFileName, int64_t use_offset=0 );
 		bool SaveTAGS( wxFileName );
+		void SearchResultsToTAGs( void );
+
 	protected:
 		void Dynamic_Connector();
 		void Dynamic_Disconnector();
@@ -159,7 +161,8 @@ class HexEditorCtrl: public HexEditorCtrlGui{
 		void PushTAGToControls( TagElement* TAG);
 //		void TagPaint( void );
 		bool TAGMutex;
-		void MoveTAGS( uint64_t location, int64_t size );
+		void MoveTAGs( uint64_t location, int64_t size );
+
 		uint8_t GetCharToHexSize();
 
 	public:

@@ -372,6 +372,7 @@ void TagPanel::OnRightMouse( wxMouseEvent& event ){
 	TagPanelList->SetSelection( TagPanelList->HitTest( event.GetPosition() ) );
 	wxMenu menu;
 	menu.Append(idDeleteTag, _("Delete"));
+	menu.Append(idEditTag,   _("Edit"));
 	PopupMenu(&menu, event.GetPosition() );
 	}
 
@@ -382,6 +383,34 @@ void TagPanel::OnDeleteTag( wxCommandEvent& event ){
 	if( MyHexEditor != NULL )
 		if( MyHexEditor->MainTagArray.Count() >= selection ){
 			MyHexEditor->MainTagArray.RemoveAt( selection );
+			wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
+			GetEventHandler()->ProcessEvent( eventx );
+			MyHexEditor->ReDraw();
+			}
+	}
+
+void TagPanel::OnEditTag( wxCommandEvent& event ){
+	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+	unsigned selection = TagPanelList->GetSelection();
+
+	if( MyHexEditor != NULL )
+		if( MyHexEditor->MainTagArray.Count() >= selection ){
+
+			TagElement *TAGtemp = MyHexEditor->MainTagArray.Item( selection );
+            TagDialog *x=new TagDialog( *TAGtemp, this );
+			switch( x->ShowModal() ){ //blocker
+			//switch( x->Show() ){ //Non-blocker but allways return 1=True...
+				case wxID_SAVE:
+					MyHexEditor->MainTagArray.Item( selection ) = TAGtemp;
+					break;
+				case wxID_DELETE:
+					//delete TAG;
+					MyHexEditor->MainTagArray.RemoveAt(selection);
+					break;
+				default:
+					break;
+				}
+
 			wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
 			GetEventHandler()->ProcessEvent( eventx );
 			MyHexEditor->ReDraw();
@@ -404,6 +433,16 @@ void TagPanel::OnKeyDown( wxKeyEvent& event ){
         }
     event.Skip();
 	}
+
+void SearchPanel::OnTAG( wxCommandEvent& event ){
+	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
+	TagPanelList->Clear();
+    MyHexEditor->SearchResultsToTAGs();
+//	if( MyHexEditor != NULL ){
+//		WX_CLEAR_ARRAY(MyHexEditor->HighlightArray);
+//		MyHexEditor->Reload();
+//		}
+   	}
 
 void SearchPanel::OnClear( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();

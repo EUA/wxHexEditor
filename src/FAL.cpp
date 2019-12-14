@@ -621,7 +621,7 @@ bool FAL::Apply( void ){
 
 					//if memory process
 					if ( ProcessID >=0 ){
-						int wr=0;
+						unsigned wr=0;
 						long word=0;
 					#ifdef __WXMSW__
 						SIZE_T written=0;

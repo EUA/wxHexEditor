@@ -49,8 +49,9 @@ public:
 
 void MyClient::Connect(const wxString& sHost, const wxString& sService, const wxString& sTopic)
 {
-    wxConnection *m_connection = (wxConnection *)MakeConnection(sHost, sService, sTopic);
-    m_connection->Disconnect();
+    //wxConnection *m_connection = (wxConnection *)MakeConnection(sHost, sService, sTopic);
+    //m_connection->Disconnect();
+    MakeConnection(sHost, sService, sTopic);
 }
 
 #include <wx/snglinst.h>

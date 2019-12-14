@@ -38,6 +38,7 @@
 				<Option parameters="testfile.swp " />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags` -fopenmp" />
@@ -84,7 +85,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="\home\compile\wxWidgets-3.1.0\release\wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Custom Debug">
@@ -96,8 +97,8 @@
 				<Option parameters="testfile.swp" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-std=c++0x" />
 					<Add option="-g" />
+					<Add option="-std=c++0x" />
 					<Add option="$($(WXCONFIG) --cflags)" />
 					<Add option="-fopenmp" />
 					<Add option="-Wno-deprecated-declarations" />
@@ -123,7 +124,7 @@
 					<Add library="udis86/bin/Release/libudis86.a" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="\home\compile\wxWidgets-3.1.0\debug\wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets/debug/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Release">
@@ -183,7 +184,7 @@
 					<Add directory="$$(wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>
-					<Variable name="wxdir" value="C:\wxWidgets" />
+					<Variable name="wxdir" value="C:/wxWidgets" />
 				</Environment>
 			</Target>
 			<Target title="Win32 Debug">
@@ -251,7 +252,7 @@
 					<Add directory="$$(wxdir)/lib/gcc_lib" />
 				</Linker>
 				<Environment>
-					<Variable name="wxdir" value="C:\wxWidgets" />
+					<Variable name="wxdir" value="C:/wxWidgets" />
 				</Environment>
 			</Target>
 			<Target title="MacOS Release">
@@ -278,7 +279,7 @@
 					<Add after="make prepmacdir EXECUTABLE_DIR_MAC=$(TARGET_OUTPUT_DIR)../../" />
 				</ExtraCommands>
 				<Environment>
-					<Variable name="WXCONFIG" value="~\Desktop\wxWidgets-3.0.1\release\wx-config" />
+					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="MacOS Debug">
@@ -317,7 +318,7 @@
 					<Add after="make prepmacdir EXECUTABLE_DIR_MAC=$(TARGET_OUTPUT_DIR)../../" />
 				</ExtraCommands>
 				<Environment>
-					<Variable name="WXCONFIG" value="~\Desktop\wxWidgets-3.0.1\release\wx-config" />
+					<Variable name="WXCONFIG" value="~/Desktop/wxWidgets-3.0.1/release/wx-config" />
 				</Environment>
 			</Target>
 			<Target title="Clang Custom Debug">
@@ -353,7 +354,7 @@
 					<Add library="omp" />
 				</Linker>
 				<Environment>
-					<Variable name="WXCONFIG" value="\home\compile\wxWidgets-3.1.0\debug\wx-config" />
+					<Variable name="WXCONFIG" value="/home/compile/wxWidgets-3.1.0/debug/wx-config" />
 				</Environment>
 			</Target>
 		</Build>

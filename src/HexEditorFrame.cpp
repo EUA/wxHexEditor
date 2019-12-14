@@ -585,7 +585,8 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 			OpenFile( flname );
 			}
 		}
-	else if( event.GetId() >= MyFileHistory->GetBaseId() && event.GetId() <= MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1){
+	else if( (event.GetId() >= static_cast<int>(MyFileHistory->GetBaseId())) &&
+             (event.GetId() <= static_cast<int>(MyFileHistory->GetBaseId()+MyFileHistory->GetCount()-1)) ){
 		wxString filename = MyFileHistory->GetHistoryFile( event.GetId() - MyFileHistory->GetBaseId() );
 		OpenFile( filename );
 		}
@@ -1286,4 +1287,5 @@ wxConnectionBase *IPCServer::OnAcceptConnection(const wxString& topic){
 		wxFileName a(topic.substr(10));
 		parent->OpenFile( a );
 		}
+    return NULL;
 }

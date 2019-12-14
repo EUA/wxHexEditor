@@ -472,7 +472,7 @@ void FindDialog::FindSomeBytes( void ){
 
 	uint64_t current_offset = parent->CursorOffset();
 	unsigned BlockSz= 10*1024*1024;
-	int search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
+	unsigned search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
 	if(buffer == NULL) return;
@@ -533,7 +533,7 @@ void FindDialog::FindSomeBytes( void ){
 				break;
 
 			current_offset += readed;
-			}while(readed >= search_step); //indicate also file end.
+			}while(static_cast<unsigned>(readed) >= search_step); //indicate also file end.
 	wxBell();
 	}
 

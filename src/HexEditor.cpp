@@ -471,16 +471,16 @@ bool HexEditor::FileSaveGeneric( wxString savefilename, uint64_t fstart, uint64_
 		wxString emsg = wxT("\n");
 		wxProgressDialog mpd( _("Saving file"),msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
 		mpd.Show();
-		int BlockSz = 128*1024;
+		unsigned BlockSz = 128*1024;
 		char *buffer = new char[BlockSz];
 		uint64_t readfrom=0,readspeed=0;
 		unsigned rd;
 
 		time_t ts,te;
 		time (&ts);
-		while( savefile.Tell() < SaveLength ) {
+		while( static_cast<uint64_t>(savefile.Tell()) < SaveLength ) {
 			if( SaveLength - savefile.Tell() < BlockSz ) //for last bytes...
-				BlockSz = SaveLength - savefile.Tell();
+				BlockSz = SaveLength - static_cast<uint64_t>(savefile.Tell());
 			rd=myfile->Read( buffer, BlockSz );
 			readfrom+=rd;
 			if( savefile.Write( buffer, rd ) != rd ){

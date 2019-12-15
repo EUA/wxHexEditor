@@ -147,7 +147,11 @@ class SearchPanel : public TagPanel{
 class ComparePanel : public TagPanel{
 	public:
 	ComparePanel(class HexEditorFrame* parent_, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-	:TagPanel( parent_, id, pos, size, style){};
+	:TagPanel( parent_, id, pos, size, style){
+        m_buttonClear->Show(false);
+        m_buttonHide->Show(false);
+        m_buttonTAG->Show(false);
+        };
 	void OnRightMouse( wxMouseEvent& event ){};
 	void OnTagSelect( wxCommandEvent& event );
 	};

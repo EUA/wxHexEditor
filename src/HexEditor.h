@@ -117,6 +117,7 @@ class HexEditor: public HexEditorCtrl
 			return myfile->Length();
 			}
 		bool FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool extension = false ); //adds new node
+
 		wxFileName GetFileName( void ) {
 			return myfile->GetFileName();
 			}

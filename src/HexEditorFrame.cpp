@@ -694,8 +694,8 @@ void HexEditorFrame::OnToolsMenu( wxCommandEvent& event ){
 	if( event.GetId() == idXORView )
 		GetActiveHexEditor()->FileSetXORKey( event.IsChecked() );
 	else if( event.GetId() == idCompare ){
-		::CompareDialog mcd( this );
-		mcd.ShowModal();
+        ::CompareDialog mcd( this );
+        mcd.ShowModal();
 		}
 	else if( event.GetId() == idChecksum){
 		::ChecksumDialog mcd( this );

@@ -24,6 +24,7 @@
 #define NANINT 0xFFFFFFFFFFFFFFFFLL
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
+#include <wx/filepicker.h>
 #include "../mhash/include/mhash.h"
 
 #ifdef __SSE2__
@@ -2230,8 +2231,9 @@ void CopyAsDialog::Copy( void ){
 
 CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 ):CompareDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);
-	filePick1->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
-	filePick2->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
+
+    filePick1->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::OnFileDrop),NULL, this);
+    filePick2->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::OnFileDrop),NULL, this);
 
 	if( File1 != wxEmptyString ){
 		filePick1->SetPath( File1 );
@@ -2278,8 +2280,8 @@ CompareDialog::CompareDialog( wxWindow* parent_, wxString File1, wxString File2 
 	}
 
 CompareDialog::~CompareDialog(void){
-	filePick1->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
-	filePick2->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::EventHandler2),NULL, this);
+	filePick1->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::OnFileDrop),NULL, this);
+	filePick2->Disconnect( wxEVT_DROP_FILES, wxDropFilesEventHandler(CompareDialog::OnFileDrop),NULL, this);
 	}
 
 bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff, int StopAfterNMatch, wxFileName flsave ){
@@ -2571,21 +2573,16 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	}
 
 void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "CompareDialog::OnFileChange()" << std::endl;
+#endif
 	if( filePick1->GetPath() != wxEmptyString && filePick2->GetPath() != wxEmptyString)
 		btnCompare->Enable(true);
 	else
 		btnCompare->Enable(false);
 	}
 
-void CompareDialog::EventHandler2( wxDropFilesEvent& event ){
-	wxBell();
-	if( filePick1->GetPath() != wxEmptyString && filePick2->GetPath() != wxEmptyString)
-		btnCompare->Enable(true);
-	else
-		btnCompare->Enable(false);
-	}
 
-// TODO (death#1#): Drag Drop file change event!
 void CompareDialog::EventHandler( wxCommandEvent& event ){
 #ifdef _DEBUG_
 	std::cout << "CompareDialog::EventHandler()" << std::endl;
@@ -2636,6 +2633,17 @@ void CompareDialog::EventHandler( wxCommandEvent& event ){
 	myConfigBase::Get()->Write( _T("CompareOptionStopAfter"), optionStopAfter );
 	myConfigBase::Get()->Write( _T("CompareOptionMergeSection"), optionMergeSection );
 	}
+
+void CompareDialog::OnFileDrop( wxDropFilesEvent& event ){
+#ifdef _DEBUG_
+	std::cout << "CompareDialog::OnFileDrop()" << std::endl;
+#endif
+	wxBell();
+	if( filePick1->GetPath() != wxEmptyString && filePick2->GetPath() != wxEmptyString)
+		btnCompare->Enable(true);
+	else
+		btnCompare->Enable(false);
+}
 
 ChecksumDialog::ChecksumDialog( wxWindow* parent_ ):ChecksumDialogGui(parent_, wxID_ANY){
 	parent = static_cast< HexEditorFrame* >(parent_);

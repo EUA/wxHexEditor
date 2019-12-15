@@ -30,6 +30,7 @@
 #include "HexEditorCtrl/HexEditorCtrl.h"
 #include "HexEditorGui.h"
 #include <vector>
+#include <wx/dnd.h>
 #ifdef WX_GCH
 	#include <wx_pch.h>
 #else
@@ -136,9 +137,9 @@ class CompareDialog : public CompareDialogGui{
 		enum{OPT_CMP_SEARCH_DIFF=0x01,OPT_CMP_STOP_AFTER=0x02, OPT_CMP_MERGE_SECTION=0x04, OPT_CMP_SAVE=0x8, OPT_CMP_CONNECT=0x10};
 		class HexEditorFrame* parent;
 		bool Compare( wxFileName f1, wxFileName f2, bool SearchForDiff, int StopAfterNMatch, wxFileName fsave);
-      void EventHandler( wxCommandEvent& event );
-      void EventHandler2( wxDropFilesEvent& event );
-      void OnFileChange( wxFileDirPickerEvent& event );
+        void EventHandler( wxCommandEvent& event );
+        void OnFileDrop( wxDropFilesEvent& event );
+        void OnFileChange( wxFileDirPickerEvent& event );
 	};
 
 class ChecksumDialog : public ChecksumDialogGui{

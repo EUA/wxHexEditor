@@ -170,7 +170,7 @@ void wxHexEditorApp::SetLanguage(void){
 
 #ifdef _DEBUG_EVENTS_
 int wxHexEditorApp::FilterEvent(wxEvent &mevent){
-	if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
+    if( mevent.IsKindOf(CLASSINFO(wxFocusEvent)) )
 		{
 		wxFocusEvent* event = static_cast<wxFocusEvent*>(&mevent);
 		std::cout << "Frame : " << frame << std::endl;

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="/media/sf_imagefiles/Templates/MBR/PartitionTableEntry(GPT).bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>GUID for the partition type</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#E296B5</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>16</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>GUID for this partition</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#8292ED</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>32</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>LBA sector to start of partition</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#3F2201</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>40</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>LBA sector to end of partition</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#036C60</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>48</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Attributes</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#D6D6D6</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>56</start_offset>
+      <end_offset>127</end_offset>
+      <tag_text>Name of partition</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#F9F383</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

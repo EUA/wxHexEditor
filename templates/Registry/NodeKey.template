@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\NodeKey">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Allocation Status and Node Size</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#F14700</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Node ID (Signature)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Node Type (0x2C=Root Node, 0x20=Regular Node)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8080</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>8</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Last Write</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Spare (unknown)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Parent Cell Index (offset to parent, relative to start of HBIN after subtracting FileOffset from HBIN Header)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>24</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Sub Key Count</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF00</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Sub Key Volatile Count</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FF80</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>Sub Key Index (offset to list, relative to HBIN after subtracting FileOffset from HBIN Header)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF00</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Sub Key Volatile Index (offset to list, relative to HBIN after subtracting FileOffset from HBIN Header)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FF80</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>40</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Value Count (number of value keys)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>44</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Value Index (offset to list, relative to start of HBIN after subtracting FileOffset from HBIN Header)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8040</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>48</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>Security Index (offset to list, relative to start of HBIN after subtracting FileOffset from HBIN Header)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>52</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Class Index (offset to list,relative to start of HBIN after subtracting FileOffset from HBIN Header)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>56</start_offset>
+      <end_offset>57</end_offset>
+      <tag_text>Max Name Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF80C0</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>58</start_offset>
+      <end_offset>58</end_offset>
+      <tag_text>User Flags</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#BE5500</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>59</start_offset>
+      <end_offset>59</end_offset>
+      <tag_text>Debug</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>60</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>Max Class Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>64</start_offset>
+      <end_offset>67</end_offset>
+      <tag_text>Max Value Name Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804000</note_colour>
+    </TAG>
+    <TAG id="19">
+      <start_offset>68</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>Max Value Data Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#004000</note_colour>
+    </TAG>
+    <TAG id="20">
+      <start_offset>72</start_offset>
+      <end_offset>75</end_offset>
+      <tag_text>WorkVar (Not sure)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="21">
+      <start_offset>76</start_offset>
+      <end_offset>77</end_offset>
+      <tag_text>Name Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8000FF</note_colour>
+    </TAG>
+    <TAG id="22">
+      <start_offset>78</start_offset>
+      <end_offset>79</end_offset>
+      <tag_text>Class Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#808040</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

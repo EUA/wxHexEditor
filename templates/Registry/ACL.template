@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\ACL.bon">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>0</end_offset>
+      <tag_text>ACL Revision</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#072400</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>1</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Spare</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>2</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>ACL Size</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#792400</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>ACL Count (Number of ACE within this ACL)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#D52400</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Spare</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

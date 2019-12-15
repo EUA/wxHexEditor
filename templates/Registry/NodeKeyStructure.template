@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\NodeKeyStructure.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Size and allocation</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AD1400</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FE1400</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

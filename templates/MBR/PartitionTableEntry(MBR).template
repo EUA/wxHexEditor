@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\MBR\PartitionTableEntry">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>0</end_offset>
+      <tag_text>Boot Flag</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8040</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>1</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>CHS Start (obselete)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>4</start_offset>
+      <end_offset>4</end_offset>
+      <tag_text>Partition Type</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FF00</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>5</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>CHS end (obselete)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>LBA start</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>12</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>LBA Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

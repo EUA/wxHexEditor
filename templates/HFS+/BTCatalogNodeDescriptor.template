@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="C:\Users\forensics\Desktop\NewTest\CatalogNodeDescriptor">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>fLink (Next Node, or 0)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>bLink (Previous Node or 0)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>8</start_offset>
+      <end_offset>8</end_offset>
+      <tag_text>kind (of node) 0xFF = Leaf, 0x00 = Index, 0x01 = Header, 0x02 Map</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800000</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>9</start_offset>
+      <end_offset>9</end_offset>
+      <tag_text>Height</tag_text>
+      <font_colour>#FFFF00</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>10</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>NumRecords</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>12</start_offset>
+      <end_offset>13</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

@@ -26,6 +26,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(OBJECTS:.o=.d)
 LANGUAGEDIRS=`ls -l ./locale | grep ^d | sed s/.*\ //g;`
 LANGUAGES=$(wildcard locale/*/wxHexEditor.po)
+TEMPLATEDIRS=`ls -l ./templates | grep ^d | sed s/.*\ //g;`
 RESOURCES= resources/resource.rc
 RESOURCE_OBJ=$(RESOURCES:.rc=.o)
 EXECUTABLE=wxHexEditor
@@ -155,11 +156,16 @@ prepmacdir: langs
 </dict>\n\
 </plist>\n\n" > $(EXECUTABLE_DIR_MAC)/Contents/Info.plist
 	@for i in $(LANGUAGEDIRS); do \
-		echo "mkdir -p $(EXECUTABLE_DIR_MAC)p/Contents/Resources/locale/$$i/"; \
+		echo "mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i/"; \
 		mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i; done
 	@for i in $(LANGUAGEDIRS); do \
 		echo "cp locale/$$i/wxHexEditor.mo $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i/"; \
 		cp locale/$$i/wxHexEditor.mo $(EXECUTABLE_DIR_MAC)/Contents/Resources/locale/$$i/; done
+	@for i in $(TEMPLATEDIRS); do \
+		echo "mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources/templates/$$i/"; \
+		mkdir -p $(EXECUTABLE_DIR_MAC)/Contents/Resources/templates/$$i/; \
+		echo "cp locale/$$i/* $(EXECUTABLE_DIR_MAC)/Contents/Resources/templates/$$i/"; \
+		cp templates/$$i/* $(EXECUTABLE_DIR_MAC)/Contents/Resources/templates/$$i/; done
 
 install:
 	# Can't use install -D because FreeBSD doesn't have the semantics.
@@ -171,11 +177,16 @@ install:
 		echo "install -m 644 locale/$$i/wxHexEditor.mo $(DESTDIR)/$(LOCALEDIR)/$$i/LC_MESSAGES/wxHexEditor.mo"; \
 		mkdir -p $(DESTDIR)/$(LOCALEDIR)/$$i/LC_MESSAGES/; \
 		install -m 644 locale/$$i/wxHexEditor.mo $(DESTDIR)/$(LOCALEDIR)/$$i/LC_MESSAGES/wxHexEditor.mo; done
+	@for i in $(TEMPLATEDIRS); do \
+		echo "install -m 644 templates/$$i/* $(DESTDIR)/$(LOCALEDIR)/wxHexEditor/$$i/"; \
+		mkdir -p $(DESTDIR)/$(DATADIR)/wxHexEditor/templates/$$i/; \
+		install -m 644 templates/$$i/* -t $(DESTDIR)/$(DATADIR)/wxHexEditor/templates/$$i; done
 
 uninstall:
 	rm -f $(DESTDIR)/$(BINDIR)/$(EXECUTABLE)
 	rm -f $(DESTDIR)/$(DATADIR)/pixmaps/wxHexEditor.png
 	rm -f $(DESTDIR)/$(DATADIR)/applications/wxHexEditor.desktop
+	rm -rf $(DESTDIR)/$(DATADIR)/wxHexEditor/templates
 	rm -f $(DESTDIR)/$(LOCALEDIR)/*/LC_MESSAGES/wxHexEditor.mo
 
 clean:

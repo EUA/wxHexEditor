@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\VBRExFAT">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>2</end_offset>
+      <tag_text>Jump Instructions</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>3</start_offset>
+      <end_offset>10</end_offset>
+      <tag_text>OEM Name</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>11</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>Must be zero</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#E0E0E0</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>64</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>Partition sector offset</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF80</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>72</start_offset>
+      <end_offset>79</end_offset>
+      <tag_text>Sectors in Volume</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>80</start_offset>
+      <end_offset>83</end_offset>
+      <tag_text>Sector offset to 1th FAT</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>84</start_offset>
+      <end_offset>87</end_offset>
+      <tag_text>Sector size of FAT</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080FF</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>88</start_offset>
+      <end_offset>91</end_offset>
+      <tag_text>Sector offset to HEAP/Data Region</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#808000</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>92</start_offset>
+      <end_offset>95</end_offset>
+      <tag_text>Number of Clusters in HEAP/Data Region</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>96</start_offset>
+      <end_offset>99</end_offset>
+      <tag_text>Cluster Address of Root Directory (Remember that the HEAP starts on CLuster 2.</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804000</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>100</start_offset>
+      <end_offset>103</end_offset>
+      <tag_text>Volume Serial Number</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080C0</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>104</start_offset>
+      <end_offset>105</end_offset>
+      <tag_text>File System Revision</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF00FF</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>106</start_offset>
+      <end_offset>107</end_offset>
+      <tag_text>Volume Flags</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#A0A0A0</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>108</start_offset>
+      <end_offset>108</end_offset>
+      <tag_text>Bytes Per Sector = 2^x</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>109</start_offset>
+      <end_offset>109</end_offset>
+      <tag_text>Sectors per Cluster = 2^x</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>110</start_offset>
+      <end_offset>110</end_offset>
+      <tag_text>Number of FATs</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FF00</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>111</start_offset>
+      <end_offset>111</end_offset>
+      <tag_text>Drive Select (BIOS INT13)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF00FF</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>112</start_offset>
+      <end_offset>112</end_offset>
+      <tag_text>Used storage in percent</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8040</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>113</start_offset>
+      <end_offset>119</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#D0D0D0</note_colour>
+    </TAG>
+    <TAG id="19">
+      <start_offset>120</start_offset>
+      <end_offset>509</end_offset>
+      <tag_text>Boot Code</tag_text>
+      <font_colour>#8080C0</font_colour>
+      <note_colour>#FFFFFF</note_colour>
+    </TAG>
+    <TAG id="20">
+      <start_offset>510</start_offset>
+      <end_offset>511</end_offset>
+      <tag_text>Boot Record Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8000FF</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

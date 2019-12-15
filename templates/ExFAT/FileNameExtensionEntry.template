@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\ExFAT\FileNameExtensionEntry">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>0</end_offset>
+      <tag_text>Type Identifier</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>1</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Secondary Flags (bit 0=Cluster use possible, bit 1=Contigous clusters)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>2</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>File Name</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

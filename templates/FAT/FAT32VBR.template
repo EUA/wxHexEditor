@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\FAT\FAT32VBR.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>2</end_offset>
+      <tag_text>Jump Instructions</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>3</start_offset>
+      <end_offset>10</end_offset>
+      <tag_text>OEM Name</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>11</start_offset>
+      <end_offset>12</end_offset>
+      <tag_text>Bytes per sector</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804040</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>13</start_offset>
+      <end_offset>13</end_offset>
+      <tag_text>Sectors per cluster</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>14</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Reserved sectors</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>16</start_offset>
+      <end_offset>16</end_offset>
+      <tag_text>Number of FATs</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>17</start_offset>
+      <end_offset>18</end_offset>
+      <tag_text>Root Entries</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>19</start_offset>
+      <end_offset>20</end_offset>
+      <tag_text>Total Sectors if small volume</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>21</start_offset>
+      <end_offset>21</end_offset>
+      <tag_text>Media Type (0xF0 = floppy, 0xF8 = fixed disk)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#1B0000</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>22</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Sectors per FAT</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#B10300</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>24</start_offset>
+      <end_offset>25</end_offset>
+      <tag_text>Sectors per track</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080C0</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>26</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Number of Heads</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#6D0500</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Hidden sectors</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#DF0500</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>Total Sectors for large volumes</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Sectors of one FAT</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#004080</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>40</start_offset>
+      <end_offset>41</end_offset>
+      <tag_text>Bahavior of FAT</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF80FF</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>42</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Major and Minor version</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#00FFFF</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>44</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Cluster to root directory</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800080</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>48</start_offset>
+      <end_offset>49</end_offset>
+      <tag_text>Sector to FSINFO</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#BF0C00</note_colour>
+    </TAG>
+    <TAG id="19">
+      <start_offset>50</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>Sector to backup VBR</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#010D00</note_colour>
+    </TAG>
+    <TAG id="20">
+      <start_offset>52</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="21">
+      <start_offset>64</start_offset>
+      <end_offset>64</end_offset>
+      <tag_text>Physical Disk Number</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800D00</note_colour>
+    </TAG>
+    <TAG id="22">
+      <start_offset>65</start_offset>
+      <end_offset>65</end_offset>
+      <tag_text>Current Head</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#B80D00</note_colour>
+    </TAG>
+    <TAG id="23">
+      <start_offset>66</start_offset>
+      <end_offset>66</end_offset>
+      <tag_text>Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#030E00</note_colour>
+    </TAG>
+    <TAG id="24">
+      <start_offset>67</start_offset>
+      <end_offset>70</end_offset>
+      <tag_text>Volume Serial Number</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="25">
+      <start_offset>71</start_offset>
+      <end_offset>81</end_offset>
+      <tag_text>Volume Label (check Volume label directory entry)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#DC0F00</note_colour>
+    </TAG>
+    <TAG id="26">
+      <start_offset>82</start_offset>
+      <end_offset>89</end_offset>
+      <tag_text>File System ID (User can change this manually)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AD1000</note_colour>
+    </TAG>
+    <TAG id="27">
+      <start_offset>509</start_offset>
+      <end_offset>90</end_offset>
+      <tag_text>Boot code</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="28">
+      <start_offset>510</start_offset>
+      <end_offset>511</end_offset>
+      <tag_text>Boot Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

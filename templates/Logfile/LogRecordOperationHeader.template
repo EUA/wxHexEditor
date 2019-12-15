@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Logfile\LogRecordOperationHeader">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Redo Operation</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080FF</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>2</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Undo Operation</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Redo Offset</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080FF</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Redo Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080FF</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>8</start_offset>
+      <end_offset>9</end_offset>
+      <tag_text>Undo Offset</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>10</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Undo Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>12</start_offset>
+      <end_offset>13</end_offset>
+      <tag_text>Target Attribute</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF00</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>14</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>LCNs to follow</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AA1F00</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>16</start_offset>
+      <end_offset>17</end_offset>
+      <tag_text>MFT Record Offset (If applicable)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>18</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Attribute Offset within the MFT (if applicable)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>20</start_offset>
+      <end_offset>21</end_offset>
+      <tag_text>MFT Cluster Index</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>22</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Reserved or Padding</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>24</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Target VCN</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>32</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Logical Cluster Number (index=0)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

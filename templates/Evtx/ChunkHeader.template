@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="C:\Users\forensics\Desktop\WinEvents\CnkHeader.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Chunk Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#1D2900</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>8</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Number of first record in Log</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>16</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Number of the last record in Log</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#932A00</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>24</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>First Record in File</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF00</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>32</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Last Record in File</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FF8040</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>40</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Size of Header</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>44</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Offset of Last Record</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#A33200</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>48</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>Offset to Next Record</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#193300</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>124</start_offset>
+      <end_offset>127</end_offset>
+      <tag_text>Checksum</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800080</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="C:\Users\forensics\Desktop\Registry\FromRegistryLesson\SYSTEM">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#043700</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Sequence 1 (Incremented in the beginning of a write operation)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#424E00</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Sequence 2 (Incremented at the end of a write operation)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#874E00</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>12</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Timestamp (UTC)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AC1200</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Major Version</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#1B1300</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>24</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Minor Version</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#1B1300</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Type (0=Normal, 1=Transaction log)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>Format (1=Direct memory load)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>RootCell (offset to the root cell, relative to the first hbin)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#871500</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>40</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Length (size of the Hive in bytes)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>44</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Cluster (FS sector size is this number multiplied with 512))</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800000</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>48</start_offset>
+      <end_offset>111</end_offset>
+      <tag_text>Filename</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>112</start_offset>
+      <end_offset>127</end_offset>
+      <tag_text>Reserved or for Win10 Rmid (GUID of Resource Manager)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8000FF</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>128</start_offset>
+      <end_offset>143</end_offset>
+      <tag_text>Reserved or for Win10 LogId (GUID for generating a physical log file, usually the same as RmId)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#D21A00</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>144</start_offset>
+      <end_offset>147</end_offset>
+      <tag_text>Reserved or for Win10 Flags (1=Locked hive, 2=Defragmented hive being written to disk) </tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>148</start_offset>
+      <end_offset>163</end_offset>
+      <tag_text>Reserved of for Win10 TmId (GUID used for generating a log file used by the Transaction Manager)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#081F00</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>164</start_offset>
+      <end_offset>167</end_offset>
+      <tag_text>Reserved of for WIn10 GUID signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#452000</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>168</start_offset>
+      <end_offset>175</end_offset>
+      <tag_text>Reserved or for Win10 Last reorganized timestamp (FILETIME)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#B02000</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>176</start_offset>
+      <end_offset>179</end_offset>
+      <tag_text>Reserved or Unknown</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="19">
+      <start_offset>180</start_offset>
+      <end_offset>183</end_offset>
+      <tag_text>Reserved or Unknown</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="20">
+      <start_offset>184</start_offset>
+      <end_offset>507</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#2D2600</note_colour>
+    </TAG>
+    <TAG id="21">
+      <start_offset>508</start_offset>
+      <end_offset>511</end_offset>
+      <tag_text>Checksum (XOR all DWORD in the first 508 bytes)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="22">
+      <start_offset>512</start_offset>
+      <end_offset>4087</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="23">
+      <start_offset>4088</start_offset>
+      <end_offset>4091</end_offset>
+      <tag_text>Boot type (no meaning on disk)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#022E00</note_colour>
+    </TAG>
+    <TAG id="24">
+      <start_offset>4092</start_offset>
+      <end_offset>4095</end_offset>
+      <tag_text>Boot recover (no meaning on disk)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#5D2E00</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

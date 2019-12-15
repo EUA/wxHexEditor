@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="C:\Users\forensics\Desktop\NewTest\HeaderRecord">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>treeDepth (current depth)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#A42300</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>2</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>rootNode (node number of root node)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#472400</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>6</start_offset>
+      <end_offset>9</end_offset>
+      <tag_text>leafRecords</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>10</start_offset>
+      <end_offset>13</end_offset>
+      <tag_text>firstLeafNode</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>14</start_offset>
+      <end_offset>17</end_offset>
+      <tag_text>lastLeafNode</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008080</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>18</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>nodeSize (in bytes)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>20</start_offset>
+      <end_offset>21</end_offset>
+      <tag_text>maxKeyLength</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>22</start_offset>
+      <end_offset>25</end_offset>
+      <tag_text>totalNodes</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>26</start_offset>
+      <end_offset>29</end_offset>
+      <tag_text>freeNodes</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#CF2800</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>30</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>clumpSize</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#808000</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>36</start_offset>
+      <end_offset>36</end_offset>
+      <tag_text>bTreeType ( 0x00 = Normal btree, 0x80 = User btree, 0xFF = reserved btree</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>37</start_offset>
+      <end_offset>37</end_offset>
+      <tag_text>keyCompareType  (0xCF=case insensitive, 0xBC=binary)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AC2C00</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>38</start_offset>
+      <end_offset>41</end_offset>
+      <tag_text>Attributes (0x1= bad close of B-tree, 0x2=key uses 16 bits, 0x4 = keys uses variable length)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#EE2E00</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>42</start_offset>
+      <end_offset>99</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

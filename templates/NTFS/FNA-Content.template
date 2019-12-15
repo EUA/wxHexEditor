@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\NTFS\SIA-Content.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Parent MFT Record</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>8</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Created</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>16</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Modified</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>24</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>MFT Record Modified</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804000</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>32</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Accessed</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>40</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Allocated Size of file</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800000</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>48</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Real Size of file</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF00FF</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>56</start_offset>
+      <end_offset>59</end_offset>
+      <tag_text>Flags (Attributes)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000A0</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>60</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>Reparse value</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>64</start_offset>
+      <end_offset>64</end_offset>
+      <tag_text>Length of name</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>65</start_offset>
+      <end_offset>65</end_offset>
+      <tag_text>Name space (0x0=POSIX, 0x1=Win32, 0x2=DOS, 0x3=Win32 &amp; DOS</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#BD3300</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>66</start_offset>
+      <end_offset>73</end_offset>
+      <tag_text>File Name</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

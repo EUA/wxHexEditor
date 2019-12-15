@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\ValueKey">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Allocation Status and value key size</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8080</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Node ID (Signature)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Name Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080FF</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Data Length (If MSB is set, then data is Resident)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>12</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Offset to Data (or the data if recident)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080C0</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Type (of data) 0=REG_NONE, 1=REG_SZ, 2=REG_EXPAND_SZ, 3=REG_BINARY, 4=REG_DWORD, 5=REG_DWORD_BIG_ENDIAN, 6=REG_LINK, 7REG_MULTI_SZ, 8=REG_RESOURCE_LIST, 9=REG_FULL_RESOURCE_DESCRIPTOR, A=REG_RESOURCE_REQUIREMENTS_LIST, B=REG_QWORD</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF80</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>20</start_offset>
+      <end_offset>21</end_offset>
+      <tag_text>Flags (Bit 0=1=&gt;ASCII, else Unicode)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>22</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Spare (Unknown)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

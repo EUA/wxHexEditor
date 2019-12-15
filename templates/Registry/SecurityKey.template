@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\SecurityKey.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Size (negative=allocated)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Signature</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Flink (Forward Link)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8A1900</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>12</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Blink (Backward link)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#D21900</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Reference count (objects that use this Security Key)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Descriptor Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>24</start_offset>
+      <end_offset>24</end_offset>
+      <tag_text>Revision (Start of descriptor)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>25</start_offset>
+      <end_offset>25</end_offset>
+      <tag_text>Spare</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>26</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Control</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Owner Offset (Relative to descriptor start)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#808040</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>Group offset (Relative to descriptor start)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#321E00</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>SACL Offset (relative to descriptor start)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000080</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>40</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>DACL offset (Relative to descriptor start)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

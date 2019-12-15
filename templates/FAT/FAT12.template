@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="/home/osf/Templates/FAT/FAT12.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>2</end_offset>
+      <tag_text>Jump Instruction</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#9CF20F</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>3</start_offset>
+      <end_offset>10</end_offset>
+      <tag_text>OEM</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#F2B40F</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

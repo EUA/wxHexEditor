@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\HBIN_Header.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Signature (ASCII hbin)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#5D4D00</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>FileOffset. Subtract this value from relative offsets (index) pointers. Then the offset will be relative to the HBIN.</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AA4E00</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Size (normally 4096 bytes)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>12</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>20</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Timestamp</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080C0</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Padding/Spare</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

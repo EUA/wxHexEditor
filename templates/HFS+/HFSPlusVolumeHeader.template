@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="/media/sf_imagefiles/Templates/HFS+/Volume Header.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Signature (H+ on HFSplus, or HX on HFSX (case sensitive))</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#A95792</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>2</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Version (0x04=HFSJ, 0x05=HFSX)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#E48AC9</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Attributes (8=UnmountedBit, 11=InconsistentBit, 12=NodeIDsReusedBit, 13=JournaledBit, 15=SoftwareLockBit)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#2F68D9</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Last mounted version (8.10 (Mac OS 8.1 - 9.2.2) or 10.0 (Mac OS X) or HFSJ (Mac OSX journaling))</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#2D81EC</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>12</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#D6D6D6</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Created Date (Local time) Unsigned + Big Endian + UTC</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#40F41C</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Modified Date (UTC) Unsigned + Big Endian + UTC</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#F59B9B</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>24</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Backup Date (UTC) Unsigned + Big Endian + UTC</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#EAB985</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Checked Date (UTC) Unsigned + Big Endian + UTC</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#BB1551</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>File Count (excluding special files)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#37CEE4</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Folder Count (excluding root folder)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0D5A56</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>40</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Block size (similar to Cluster size)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#DD0E18</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>44</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Total blocks</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#09109B</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>48</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>Free blocks</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#1D2819</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>52</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Next allocation block (hint)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#87CA66</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>56</start_offset>
+      <end_offset>59</end_offset>
+      <tag_text>Resource clump size</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#238975</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>60</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>Data clump size</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#BFDCFC</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>64</start_offset>
+      <end_offset>67</end_offset>
+      <tag_text>Next unused catalog id</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#033EB5</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>68</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>Write count (number of mounts)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#A55362</note_colour>
+    </TAG>
+    <TAG id="19">
+      <start_offset>72</start_offset>
+      <end_offset>79</end_offset>
+      <tag_text>Bitmap for textencodings (special codepages for Mac)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#38CF3D</note_colour>
+    </TAG>
+    <TAG id="20">
+      <start_offset>80</start_offset>
+      <end_offset>111</end_offset>
+      <tag_text>Finder Info (In 0x18 Volume Serial Number)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#F8F27C</note_colour>
+    </TAG>
+    <TAG id="21">
+      <start_offset>112</start_offset>
+      <end_offset>191</end_offset>
+      <tag_text>Allocation File (Data forks)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C23224</note_colour>
+    </TAG>
+    <TAG id="22">
+      <start_offset>192</start_offset>
+      <end_offset>271</end_offset>
+      <tag_text>Extents Overflow file (Data forks)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#3C5C02</note_colour>
+    </TAG>
+    <TAG id="23">
+      <start_offset>272</start_offset>
+      <end_offset>351</end_offset>
+      <tag_text>Catalog file (Data forks)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#DAA822</note_colour>
+    </TAG>
+    <TAG id="24">
+      <start_offset>352</start_offset>
+      <end_offset>431</end_offset>
+      <tag_text>Attributes file</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#521282</note_colour>
+    </TAG>
+    <TAG id="25">
+      <start_offset>432</start_offset>
+      <end_offset>511</end_offset>
+      <tag_text>Startup File (Data forks - not used)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#D6D6D6</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

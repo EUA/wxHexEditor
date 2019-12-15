@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="/home/osf/Desktop/Templates/HFS+/BTExtentKey">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>keyLength</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#1B2EC8</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>2</start_offset>
+      <end_offset>2</end_offset>
+      <tag_text>forkType (0=Data fork, FF=resource fork</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#E18024</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>3</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Pad (Reserved)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#B6B6BA</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>fileID (the extent belongs to)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#D05371</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>startBlock (relative to first block of the first extent)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#87EA96</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

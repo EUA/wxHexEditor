@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\ExFAT\StreamExtensionDirectoryEntry">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>0</end_offset>
+      <tag_text>Type Identifier</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>1</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Secondary Flags (bit 0=Cluster use possible, bit 1=Contigous clusters)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>2</start_offset>
+      <end_offset>2</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>3</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Length of FileName</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF80</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Check Sum for the name</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF80C0</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>8</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>File Size</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Starting Cluster</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>24</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>File Size</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8000FF</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

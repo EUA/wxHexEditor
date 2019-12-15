@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\SAM_F_ValueData">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Allocation Status and Key Data Length</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8080</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>12</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Last Login Date</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0080FF</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>28</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>Last Password Reset</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8040</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>36</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Account Expiration Date</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF00</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>44</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>Last Failed Login Attempt</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804040</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>52</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Relative ID (RID)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>56</start_offset>
+      <end_offset>59</end_offset>
+      <tag_text>User Group</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>70</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>Login Count</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

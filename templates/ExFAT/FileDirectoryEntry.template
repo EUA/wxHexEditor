@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\ExFAT\FDEtemplate.tags">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>0</end_offset>
+      <tag_text>Type Identifier</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>1</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Secondary Count, entries in this Entry Set</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>2</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Checksum computed from the complete Entry Set</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#80FF00</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>DOS Attributes</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF80C0</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>8</start_offset>
+      <end_offset>9</end_offset>
+      <tag_text>Creation Time</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>10</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Creation Date</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>12</start_offset>
+      <end_offset>13</end_offset>
+      <tag_text>Last Modified Time</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>14</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Last Modified Date</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>16</start_offset>
+      <end_offset>17</end_offset>
+      <tag_text>Last Accessed Time</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C81600</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>18</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Last Access Date</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C81600</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>20</start_offset>
+      <end_offset>20</end_offset>
+      <tag_text>Number of 10 milliseconds entities for Created</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>21</start_offset>
+      <end_offset>21</end_offset>
+      <tag_text>Number of 10 milliseconds entities for Last Modified</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>22</start_offset>
+      <end_offset>22</end_offset>
+      <tag_text>TimeZone for Created</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>23</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>TimeZone for Last Modified</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>24</start_offset>
+      <end_offset>24</end_offset>
+      <tag_text>TimeZone for Last Access</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C81400</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>25</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

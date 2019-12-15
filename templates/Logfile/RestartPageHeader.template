@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path=".">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>magic</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#FF9B46</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Offset to Update Sequence Array</tag_text>
+      <font_colour>#F6F514</font_colour>
+      <note_colour>#154BAD</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Entries in Update Sequence Array</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#906CF8</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>8</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Chkdsk Logical Sequence Number</tag_text>
+      <font_colour>#F3FA0F</font_colour>
+      <note_colour>#000F92</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>System Page Size</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#BB32FA</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Log Page Size</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#F305F4</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>24</start_offset>
+      <end_offset>25</end_offset>
+      <tag_text>Restart Area Offset</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#9D4EC9</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>26</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>Minor Version</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#FF2E98</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>28</start_offset>
+      <end_offset>29</end_offset>
+      <tag_text>Major Version</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#96D5CA</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>30</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Update Sequence Number</tag_text>
+      <font_colour>#F6F4F4</font_colour>
+      <note_colour>#4965D9</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>32</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Update Sequence Array</tag_text>
+      <font_colour>#FAF5F5</font_colour>
+      <note_colour>#107661</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>48</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Current Logical Sequence Number</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#50C144</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>56</start_offset>
+      <end_offset>57</end_offset>
+      <tag_text>Log clients</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#AFF6E9</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>58</start_offset>
+      <end_offset>59</end_offset>
+      <tag_text>Client Free List</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#6BA0C1</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>60</start_offset>
+      <end_offset>61</end_offset>
+      <tag_text>Client in use List</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#B601F0</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>62</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>Flags</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#DFF177</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>64</start_offset>
+      <end_offset>67</end_offset>
+      <tag_text>Sequence Number Bits</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#39ACF6</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>68</start_offset>
+      <end_offset>69</end_offset>
+      <tag_text>Restart Area Length</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#954B45</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>70</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>Client Array Offset</tag_text>
+      <font_colour>#FBEFEF</font_colour>
+      <note_colour>#4978A7</note_colour>
+    </TAG>
+    <TAG id="19">
+      <start_offset>72</start_offset>
+      <end_offset>79</end_offset>
+      <tag_text>File Size</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#422E95</note_colour>
+    </TAG>
+    <TAG id="20">
+      <start_offset>80</start_offset>
+      <end_offset>83</end_offset>
+      <tag_text>Last LSN Data Length</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#D558EE</note_colour>
+    </TAG>
+    <TAG id="21">
+      <start_offset>84</start_offset>
+      <end_offset>85</end_offset>
+      <tag_text>Log Record Header Length</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#C7F39E</note_colour>
+    </TAG>
+    <TAG id="22">
+      <start_offset>86</start_offset>
+      <end_offset>87</end_offset>
+      <tag_text>Log Page Data Offset</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#57FA5A</note_colour>
+    </TAG>
+    <TAG id="23">
+      <start_offset>88</start_offset>
+      <end_offset>91</end_offset>
+      <tag_text>Restart Log Open Count</tag_text>
+      <font_colour>#FEF5F5</font_colour>
+      <note_colour>#876229</note_colour>
+    </TAG>
+    <TAG id="24">
+      <start_offset>92</start_offset>
+      <end_offset>111</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFF9F9</font_colour>
+      <note_colour>#868288</note_colour>
+    </TAG>
+    <TAG id="25">
+      <start_offset>112</start_offset>
+      <end_offset>119</end_offset>
+      <tag_text>Oldest LSN</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#91E06C</note_colour>
+    </TAG>
+    <TAG id="26">
+      <start_offset>120</start_offset>
+      <end_offset>127</end_offset>
+      <tag_text>Client Restart LSN</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#5FF53D</note_colour>
+    </TAG>
+    <TAG id="27">
+      <start_offset>128</start_offset>
+      <end_offset>129</end_offset>
+      <tag_text>Previous Client</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#901E44</note_colour>
+    </TAG>
+    <TAG id="28">
+      <start_offset>130</start_offset>
+      <end_offset>131</end_offset>
+      <tag_text>Next Client</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#D6595E</note_colour>
+    </TAG>
+    <TAG id="29">
+      <start_offset>132</start_offset>
+      <end_offset>133</end_offset>
+      <tag_text>Sequence Number (0 in XP or newer)</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#69BAD2</note_colour>
+    </TAG>
+    <TAG id="30">
+      <start_offset>134</start_offset>
+      <end_offset>139</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#212121</font_colour>
+      <note_colour>#697162</note_colour>
+    </TAG>
+    <TAG id="31">
+      <start_offset>140</start_offset>
+      <end_offset>143</end_offset>
+      <tag_text>Client Name Length (in bytes)</tag_text>
+      <font_colour>#FDF1F1</font_colour>
+      <note_colour>#817B6A</note_colour>
+    </TAG>
+    <TAG id="32">
+      <start_offset>144</start_offset>
+      <end_offset>151</end_offset>
+      <tag_text>Client Name (Unicode)</tag_text>
+      <font_colour>#FAF5F5</font_colour>
+      <note_colour>#C57DF1</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="X:\CampusM3E\PracticalCampusM3E\Export\TerrorPlans.odt_lnk">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Header Size</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>LinkCLSID (have always this value)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>LinkFlags</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>24</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>File Attributes</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>28</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>CreationTime</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>36</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>AccessTime</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>44</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>WriteTime</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804000</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>52</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>File Size (Unsigned)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>56</start_offset>
+      <end_offset>59</end_offset>
+      <tag_text>Icon Index</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>60</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text>ShowCommand</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#808040</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>64</start_offset>
+      <end_offset>65</end_offset>
+      <tag_text>HotKey</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>66</start_offset>
+      <end_offset>67</end_offset>
+      <tag_text>Reserved1</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>68</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>Reserved 2</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>72</start_offset>
+      <end_offset>75</end_offset>
+      <tag_text>Reserved 3</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="C:\Users\forensics\Desktop\FolderData.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>RecordType (0x1=Folder, 0x2=File, 0x3=FolderThread, 0x4=FileThread)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C24900</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>2</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Flags (b0=kHFSFileLockedBit, b1=kHFSThreadExistsBit, b2=kHFSHasAttributesBit, b3=kHFSHasSecurityBit, b4=kHFSHasFolderCountBit, b5=kHFSHasLinkChainBit, b6=kHFSHasChildLinkBit, b7=kHFSHasDateAddedBit)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#DC7F00</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Reserved</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#3C0100</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>8</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>FileID</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#E00100</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>12</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>CreateDate</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>ContentModDate</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>AttributeModDate</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008000</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>24</start_offset>
+      <end_offset>27</end_offset>
+      <tag_text>AccessDate</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>28</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>BackupDate</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>32</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>OwnerID (HLNK=Next CNID)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#AF0600</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>GroupID (HLNK=Previous CNID)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#F30600</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>40</start_offset>
+      <end_offset>40</end_offset>
+      <tag_text>AdminFlags</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#930700</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>41</start_offset>
+      <end_offset>41</end_offset>
+      <tag_text>OwnerFlags</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#BE0700</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>42</start_offset>
+      <end_offset>43</end_offset>
+      <tag_text>Permissions</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#240A00</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>44</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>iNodeNum (when hardlinked)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="15">
+      <start_offset>48</start_offset>
+      <end_offset>51</end_offset>
+      <tag_text>LinkCount (HLNK= Sign "hlnk")</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#008040</note_colour>
+    </TAG>
+    <TAG id="16">
+      <start_offset>52</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>RawDevice (HLNK= Sign "hfs+")</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#804000</note_colour>
+    </TAG>
+    <TAG id="17">
+      <start_offset>56</start_offset>
+      <end_offset>71</end_offset>
+      <tag_text>UserInfo</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0B1300</note_colour>
+    </TAG>
+    <TAG id="18">
+      <start_offset>72</start_offset>
+      <end_offset>87</end_offset>
+      <tag_text>FinderFolderInfo</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#431300</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

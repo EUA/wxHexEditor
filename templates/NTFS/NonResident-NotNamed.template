@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\NTFS\NonResident-NotNamed.bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Attribute Type ID</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0A7000</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Length of Attribute (header and content)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#FFFF00</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>8</start_offset>
+      <end_offset>8</end_offset>
+      <tag_text>Non Resident Flag</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF8000</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>9</start_offset>
+      <end_offset>9</end_offset>
+      <tag_text>Length of Attribute Name (in Unicode elements)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000FF</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>10</start_offset>
+      <end_offset>11</end_offset>
+      <tag_text>Offset to name</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8B7100</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>12</start_offset>
+      <end_offset>13</end_offset>
+      <tag_text>Flags (Compressed, Sparse, Encrypted)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>14</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Attribute ID</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>16</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Starting Virtual Cluster Number (VCN)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#000000</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>24</start_offset>
+      <end_offset>31</end_offset>
+      <tag_text>Ending Virtual Cluster Number (VCN)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#296E00</note_colour>
+    </TAG>
+    <TAG id="9">
+      <start_offset>32</start_offset>
+      <end_offset>33</end_offset>
+      <tag_text>Offset to runlist</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0080</note_colour>
+    </TAG>
+    <TAG id="10">
+      <start_offset>34</start_offset>
+      <end_offset>35</end_offset>
+      <tag_text>Compression unit</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#408080</note_colour>
+    </TAG>
+    <TAG id="11">
+      <start_offset>36</start_offset>
+      <end_offset>39</end_offset>
+      <tag_text>Unused</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="12">
+      <start_offset>40</start_offset>
+      <end_offset>47</end_offset>
+      <tag_text>Allocation Size</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#D47000</note_colour>
+    </TAG>
+    <TAG id="13">
+      <start_offset>48</start_offset>
+      <end_offset>55</end_offset>
+      <tag_text>Actual Size</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="14">
+      <start_offset>56</start_offset>
+      <end_offset>63</end_offset>
+      <tag_text></tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#847100</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

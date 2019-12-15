@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\ACE24bytes">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>0</end_offset>
+      <tag_text>Type (0x0=Access_Allowed, 0x01=Access_Denied, 0x02=System_Audit)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C52600</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>1</start_offset>
+      <end_offset>1</end_offset>
+      <tag_text>Spare/padding</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#C0C0C0</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>2</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Size (of this ACE)</tag_text>
+      <font_colour>#000000</font_colour>
+      <note_colour>#F52700</note_colour>
+    </TAG>
+    <TAG id="3">
+      <start_offset>4</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Mask (0x1=Query Value, 0x2=Set Value, 0x4=Create Subkey, 0x8=Enumerate Subkeys, 0x10= Notify, 0x20=Create Link, 0x10000=Delete, 0x40000=Write DAC, 0x80000=Write owner, 0x20000=Read Control, 0xF002F=Full Control)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#0000A0</note_colour>
+    </TAG>
+    <TAG id="4">
+      <start_offset>8</start_offset>
+      <end_offset>8</end_offset>
+      <tag_text>Sid version (S-&lt;value&gt;)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#813F00</note_colour>
+    </TAG>
+    <TAG id="5">
+      <start_offset>9</start_offset>
+      <end_offset>9</end_offset>
+      <tag_text>Sub Authority Count</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#034000</note_colour>
+    </TAG>
+    <TAG id="6">
+      <start_offset>10</start_offset>
+      <end_offset>15</end_offset>
+      <tag_text>Authority ID (-&lt;this number as BE&gt;)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#794000</note_colour>
+    </TAG>
+    <TAG id="7">
+      <start_offset>16</start_offset>
+      <end_offset>19</end_offset>
+      <tag_text>Sub Authority 0 (-&lt;this value LE&gt;)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#8080FF</note_colour>
+    </TAG>
+    <TAG id="8">
+      <start_offset>20</start_offset>
+      <end_offset>23</end_offset>
+      <tag_text>Sub Authority 1 (-&lt;this value as LE&gt;)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#800040</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wxHexEditor_XML_TAG>
+  <filename path="G:\Templates\Registry\lh_SubkeyListIndex(lh).bin">
+    <TAG id="0">
+      <start_offset>0</start_offset>
+      <end_offset>3</end_offset>
+      <tag_text>Size (signed int32)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#C46F00</note_colour>
+    </TAG>
+    <TAG id="1">
+      <start_offset>4</start_offset>
+      <end_offset>5</end_offset>
+      <tag_text>Signature (lh or li)</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#267000</note_colour>
+    </TAG>
+    <TAG id="2">
+      <start_offset>6</start_offset>
+      <end_offset>7</end_offset>
+      <tag_text>Number of Entries in list</tag_text>
+      <font_colour>#FFFFFF</font_colour>
+      <note_colour>#FF0000</note_colour>
+    </TAG>
+  </filename>
+</wxHexEditor_XML_TAG>

@@ -72,6 +72,13 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	//Need to create object before Draw operation.
 	ZebraStriping=new int;
 	*ZebraStriping=-1;
+    wxString waylandStr;
+
+    //Wayland hack
+	waylander =  wxGetEnv( "WAYLAND_DISPLAY", &waylandStr );
+    if(waylander)
+        std::cout << "Wayland detected. You could have cosmetic cursor issues." << std::endl;
+
 
 	CtrlType=HexControl;
 
@@ -660,6 +667,9 @@ void wxHexCtrl::DrawSeperationLineAfterChar( wxDC* dcTemp, int seperationoffset 
 
 #define _Use_Graphics_Contex_x
 void wxHexCtrl::RePaint( void ){
+    if (waylander)
+        return this->Refresh();
+
 	PaintMutex.Lock();
 	wxCaretSuspend cs(this);
 
@@ -699,11 +709,16 @@ void wxHexCtrl::RePaint( void ){
 
 		///delete dcTemp;
 		}
+
 	PaintMutex.Unlock();
 	}
 
 void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 	PaintMutex.Lock();
+#ifdef _DEBUG_PAINT_
+	std::cout << "wxHexCtrl::OnPaint" << std::endl;
+#endif // _DEBUG_
+    wxCaretSuspend cs(this);
 	wxDC* dcTemp = UpdateDC(); // Prepare DC
 	if( dcTemp != NULL )
 		{
@@ -745,6 +760,7 @@ void wxHexCtrl::OnPaint( wxPaintEvent &WXUNUSED(event) ){
 		///delete dcTemp;
 		}
 	PaintMutex.Unlock();
+	//mycaret->Show();
 	}
 
 void wxHexCtrl::TagPainter( wxDC* DC, TagElement& TG ){

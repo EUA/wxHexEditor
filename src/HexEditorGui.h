@@ -157,7 +157,7 @@ class InterpreterGui : public wxPanel
 		wxTextCtrl* m_textctrl_double;
 		wxCollapsiblePane* m_collapsiblePane_TimeMachine;
 		wxCheckBox* m_checkBox50;
-		wxPanel* m_panel5;
+		wxPanel* m_panel_time;
 		wxStaticText* m_static_timeUTC;
 		wxSpinCtrl* m_spinCtrl_timeUTC;
 		wxStaticText* m_static_timeUnix;

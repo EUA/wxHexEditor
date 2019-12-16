@@ -559,7 +559,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	mainSizer->Add( numSizer, 0, wxEXPAND, 5 );
 
 	m_collapsiblePane_TimeMachine = new wxCollapsiblePane( this, wxID_ANY, _("Time Machine"), wxDefaultPosition, wxDefaultSize, wxCP_DEFAULT_STYLE );
-	m_collapsiblePane_TimeMachine->Collapse( false );
+	m_collapsiblePane_TimeMachine->Collapse( true );
 
 	m_collapsiblePane_TimeMachine->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_collapsiblePane_TimeMachine->Enable( false );
@@ -576,8 +576,8 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_checkBox50 = new wxCheckBox( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, _("Use local time"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	fgSizerUTC->Add( m_checkBox50, 0, wxALL, 5 );
 
-	m_panel5 = new wxPanel( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	fgSizerUTC->Add( m_panel5, 1, wxEXPAND | wxALL, 5 );
+	m_panel_time = new wxPanel( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	fgSizerUTC->Add( m_panel_time, 1, wxEXPAND | wxALL, 5 );
 
 	m_static_timeUTC = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("UTC"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
 	m_static_timeUTC->Wrap( -1 );

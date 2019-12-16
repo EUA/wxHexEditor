@@ -150,6 +150,7 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		bool *TagMutex;
 		int *ZebraStriping;
 		bool Hex2ColorMode;
+		bool waylander;
 
 	protected:
 		wxDC* UpdateDC( wxDC* dc=NULL);

@@ -934,7 +934,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		disks.Sort();
 		#endif // __WXMSW__
 
-		wxMenu *nm;
+		wxMenu *nm; //Create menu root
 		int last_item=0;
 		for( unsigned i =0 ; i < disks.Count() ; i++){
 			//Old way...
@@ -956,13 +956,16 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 //				last_item = i;
 //				}
 			#else
+            //if parttion found, than append to raw device,
 			if( disks.Item(i).StartsWith( disks.Item( last_item ) ) && i != 0 )
 				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
+            //if new device than add it to root menu
 			else{
 				nm=new wxMenu( );
 				nm->Append( idDiskDevice+i, disks.Item(i), wxT(""), wxITEM_NORMAL );
 				menuDeviceDisk->AppendSubMenu( nm, disks.Item(i) );
 				last_item = i;
+
 				}
 
 			#endif

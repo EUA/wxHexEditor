@@ -390,9 +390,9 @@ void HexEditorCtrl::PaintTAGsPrefilter( ArrayOfTAG& Arr ){
 	unsigned e=s;
 	if (c>0)
 		for( ; page_offset + GetByteCount() > static_cast<int>( Arr.Item(e)->start ) && e<c-1 ; e++ );
-//#ifdef _DEBUG_
+#ifdef _DEBUG_PAINT_
 	std::cout << "Tags needed between : " << s << " - " << e << std::endl;
-//#endif //_DEBUG_
+#endif //_DEBUG_PAINT_
 	for( unsigned i=s; i<=e ;i++)
 		PushTAGToControls( Arr.Item(i) );
 	}

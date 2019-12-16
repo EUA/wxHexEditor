@@ -642,7 +642,7 @@ bool FAL::Apply( void ){
 						}
 					else{
 						wxFile::Seek(StartSector*BlockRWSize);
-						success*=Write(bfr, rd_size);//*= to make update success true or false
+						success = Write(bfr, rd_size) && success;
 						}
 					delete [] bfr;
 					}
@@ -651,7 +651,7 @@ bool FAL::Apply( void ){
 					}
 				else{
 					//if already written and makeing undo, than use old_data
-					success*=Write((DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size);
+					success = Write((DiffArray[i]->flag_commit ? DiffArray[i]->old_data : DiffArray[i]->new_data), DiffArray[i]->size) && success;
 					}
 				if( success )
 					DiffArray[i]->flag_commit = DiffArray[i]->flag_commit ? false : true;	//alter state of commit flag

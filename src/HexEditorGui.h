@@ -1,12 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 16 2017)
+// C++ code generated with wxFormBuilder (version 3.9.0 Dec 16 2019)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __HEXEDITORGUI_H__
-#define __HEXEDITORGUI_H__
+#pragma once
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
@@ -27,6 +26,8 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/panel.h>
+#include <wx/spinctrl.h>
+#include <wx/collpane.h>
 #include <wx/listbox.h>
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -39,7 +40,6 @@
 #include <wx/statbmp.h>
 #include <wx/hyperlink.h>
 #include <wx/filepicker.h>
-#include <wx/spinctrl.h>
 #include <wx/clrpicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ class HexEditorGui : public wxFrame
 		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
-
+		wxAuiNotebook* MyNotebook;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -121,7 +121,7 @@ class HexEditorGui : public wxFrame
 
 
 	public:
-				wxAuiNotebook* MyNotebook;
+
 		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~HexEditorGui();
@@ -155,6 +155,23 @@ class InterpreterGui : public wxPanel
 		wxTextCtrl* m_textctrl_float;
 		wxStaticText* m_static_double;
 		wxTextCtrl* m_textctrl_double;
+		wxCollapsiblePane* m_collapsiblePane_TimeMachine;
+		wxCheckBox* m_checkBox50;
+		wxPanel* m_panel5;
+		wxStaticText* m_static_timeUTC;
+		wxSpinCtrl* m_spinCtrl_timeUTC;
+		wxStaticText* m_static_timeUnix;
+		wxTextCtrl* m_textctrl_timeUnix;
+		wxStaticText* m_static_timeUnix64;
+		wxTextCtrl* m_textctrl_timeUnix64;
+		wxStaticText* m_static_timeFAT;
+		wxTextCtrl* m_textctrl_timeFAT;
+		wxStaticText* m_static_timeNTFS;
+		wxTextCtrl* m_textctrl_timeNTFS;
+		wxStaticText* m_static_timeHFSp;
+		wxTextCtrl* m_textctrl_timeHFSp;
+		wxStaticText* m_static_timeAPFS;
+		wxTextCtrl* m_textctrl_timeAPFS;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnUpdate( wxCommandEvent& event ) { event.Skip(); }
@@ -165,7 +182,7 @@ class InterpreterGui : public wxPanel
 
 	public:
 
-		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		InterpreterGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL, const wxString& name = wxEmptyString );
 		~InterpreterGui();
 
 };
@@ -194,7 +211,7 @@ class TagPanelGui : public wxPanel
 
 	public:
 
-		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		TagPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL, const wxString& name = wxEmptyString );
 		~TagPanelGui();
 
 };
@@ -211,7 +228,7 @@ class InfoPanelGui : public wxPanel
 
 	public:
 
-		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL );
+		InfoPanelGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 140,111 ), long style = wxTAB_TRAVERSAL, const wxString& name = wxEmptyString );
 		~InfoPanelGui();
 
 };
@@ -235,7 +252,7 @@ class DisassemblerPanelGUI : public wxPanel
 
 	public:
 
-		DisassemblerPanelGUI( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 273,310 ), long style = wxTAB_TRAVERSAL );
+		DisassemblerPanelGUI( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 273,310 ), long style = wxTAB_TRAVERSAL, const wxString& name = wxEmptyString );
 		~DisassemblerPanelGUI();
 
 };
@@ -633,4 +650,3 @@ class OSXMessageDialogGui : public wxDialog
 
 };
 
-#endif //__HEXEDITORGUI_H__

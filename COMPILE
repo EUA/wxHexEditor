@@ -36,7 +36,9 @@ If you have Linux installation and want to build Win32/Win64 build of wxHexEdito
 This is how I compile.
 First, we need mingw-w64 toolchain. At AUR linux, I use;
 
-  yaourt -S mingw-w64-gcc mingw-w64-win-iconv 
+  yaourt -S mingw-w64-win-make mingw-w64-win-iconv
+
+This will install all required dependencies mingw-w64-{make,iconv,crt,binutils,winpthreads,headers,cmake,gcc,pkg-config,environment}
 
 I compile the wxWidgets library with a cross compiler:
 
@@ -44,18 +46,18 @@ I compile the wxWidgets library with a cross compiler:
   cd wxWidgets
   mkdir release
   cd release
-  ../configure --enable-{monolithic,static,unicode} --disable-{debug,shared} --host=i686-w64-mingw32
+  ../configure --enable-{monolithic,static,unicode} --disable-{debug,shared} --host=x86_64-w64-mingw32
   make
 
 Then I extract the wxHexEditor:
 
   tar xvf wxHexEditor-v<version>-src.tar.bz2
   cd wxHexEditor
-  make win WXCONFIG=<wx-config path> HOST=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
+  x86_64-w64-mingw32-make win WXCONFIG=<wx-config path> HOST=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
 
 PS: If you face with " _rpl_malloc " error, you can use 
 
-ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=x86_64-w64-mingw32
+  ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
 
 PS2: for 32Bit build, you need to run with HOST=i686-w64-mingw32 instead of HOST=x86_64-w64-mingw32.
 

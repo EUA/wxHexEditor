@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 16 2017)
+// C++ code generated with wxFormBuilder (version 3.9.0 Dec 16 2019)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -315,7 +315,7 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	this->SetMenuBar( mbar );
 
-	statusBar = this->CreateStatusBar( 5, wxST_SIZEGRIP, wxID_ANY );
+	statusBar = this->CreateStatusBar( 5, wxSTB_SIZEGRIP, wxID_ANY );
 	statusBar->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	wxBoxSizer* FrameSizer;
@@ -333,69 +333,69 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( HexEditorGui::OnKeyDown ) );
-	this->Connect( menuFileNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileOpenRecentDummy->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileClose->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileImportTAG->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileExportTAG->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileImportTemplate->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditCopy->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditCopyAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditSaveAsDump->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditCut->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditPaste->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditFill->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditInsert->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditFind->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditReplace->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuEditGotooffset->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Connect( menuViewInterprater->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileNew->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileOpen->GetId());
+	menuFileOpenRecent->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileOpenRecentDummy->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileSave->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileSaveAs->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileClose->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileImportTAG->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileExportTAG->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileImportTemplate->GetId());
+	fileMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuFileQuit->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditUndo->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditRedo->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditCopy->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditCopyAs->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditSaveAsDump->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditCut->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditPaste->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditFill->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditDelete->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditInsert->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditFind->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditReplace->GetId());
+	editMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ), this, menuEditGotooffset->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewInterprater->GetId());
 	this->Connect( menuViewInterprater->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuViewToolbar->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewInfopanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewTagPanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewDisassemblerPanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewToolbar->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewInfopanel->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewTagPanel->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewDisassemblerPanel->GetId());
 	this->Connect( menuViewDisassemblerPanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuViewSearchPanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewSearchPanel->GetId());
 	this->Connect( menuViewSearchPanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuViewComparisonPanel->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewComparisonPanel->GetId());
 	this->Connect( menuViewComparisonPanel->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuViewZebra->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewOffset->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewHex->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuViewText->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Connect( menuToolChecksum->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
-	this->Connect( menuToolCompare->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
-	this->Connect( menuToolsXORView->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewZebra->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewOffset->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewHex->GetId());
+	viewMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ), this, menuViewText->GetId());
+	toolsMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ), this, menuToolChecksum->GetId());
+	toolsMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ), this, menuToolCompare->GetId());
+	toolsMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ), this, menuToolsXORView->GetId());
 	this->Connect( menuToolsXORView->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuToolsHex2ColorMode->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
+	toolsMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ), this, menuToolsHex2ColorMode->GetId());
 	this->Connect( menuToolsHex2ColorMode->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuDevicesRam->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
+	devicesMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDevicesRam->GetId());
 	this->Connect( menuDevicesRam->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuDevicesMemorySPD->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuDevicesDiskItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuDevicesProcessRAM->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuDeviceBackup->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuDeviceRestore->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuDeviceErase->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
+	devicesMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDevicesMemorySPD->GetId());
+	menuDeviceDisk->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDevicesDiskItem1->GetId());
+	devicesMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDevicesProcessRAM->GetId());
+	menuDeviceImage->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDeviceBackup->GetId());
+	menuDeviceImage->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDeviceRestore->GetId());
+	menuDeviceImage->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ), this, menuDeviceErase->GetId());
+	menuOptionsFileMode->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ), this, menuOptionsFileModeRO->GetId());
 	this->Connect( menuOptionsFileModeRO->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
+	menuOptionsFileMode->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ), this, menuOptionsFileModeRW->GetId());
 	this->Connect( menuOptionsFileModeRW->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
+	menuOptionsFileMode->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ), this, menuOptionsFileModeDW->GetId());
 	this->Connect( menuOptionsFileModeDW->GetId(), wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Connect( menuOptionsPreferences->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
-	this->Connect( menuHelpDonate->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Connect( menuHelpWiki->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Connect( menuHelpBugReporting->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
+	optionsMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ), this, menuOptionsPreferences->GetId());
+	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpDonate->GetId());
+	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpWiki->GetId());
+	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpBugReporting->GetId());
+	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpAbout->GetId());
 }
 
 HexEditorGui::~HexEditorGui()
@@ -403,73 +403,20 @@ HexEditorGui::~HexEditorGui()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( HexEditorGui::OnClose ) );
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( HexEditorGui::OnKeyDown ) );
-	this->Disconnect( wxID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_OPEN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_SAVE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_SAVEAS, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idClose, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idImportTAGs, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idExportTAGs, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idImportTemplate, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_QUIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_UNDO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_REDO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idCopyAs, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idSaveAsDump, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_CUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_PASTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idFillSelection, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_DELETE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idInsert, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_FIND, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( wxID_REPLACE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idGotoOffset, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
-	this->Disconnect( idInterpreter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idInterpreter, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idToolbar, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idInfoPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idTagPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idDisassemblerPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idDisassemblerPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idSearchPanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idSearchPanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idComparePanel, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
 	this->Disconnect( idComparePanel, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idZebraStriping, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idShowOffset, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idShowHex, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idShowText, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnViewMenu ) );
-	this->Disconnect( idChecksum, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
-	this->Disconnect( idCompare, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
-	this->Disconnect( idXORView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idXORView, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idHex2Color, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnToolsMenu ) );
 	this->Disconnect( idHex2Color, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idDeviceRam, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
 	this->Disconnect( idDeviceRam, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idDeviceMemorySPD, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( idProcessRAM, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( idDeviceBackup, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( idDeviceRestore, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( idDeviceErase, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnDevicesMenu ) );
-	this->Disconnect( idFileRO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idFileRW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileRW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( idFileDW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
 	this->Disconnect( idFileDW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
-	this->Disconnect( wxID_PREFERENCES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnOptionsMenu ) );
-	this->Disconnect( idDonate, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Disconnect( idWiki, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Disconnect( idBugReport, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
-	this->Disconnect( wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ) );
 
 }
 
-InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name ) : wxPanel( parent, id, pos, size, style, name )
 {
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -494,6 +441,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	numSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	numSizer->AddGrowableCol( 1 );
 	numSizer->SetFlexibleDirection( wxHORIZONTAL );
+	numSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_NONE );
 
 	m_static_bin = new wxStaticText( this, ID_DEFAULT, _("Binary"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	m_static_bin->Wrap( -1 );
@@ -547,7 +495,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 
 	numSizer->Add( m_static_8bit, 0, wxALIGN_CENTER, 0 );
 
-	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
+	m_textctrl_8bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
 	m_textctrl_8bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	numSizer->Add( m_textctrl_8bit, 0, wxEXPAND, 1 );
@@ -558,7 +506,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 
 	numSizer->Add( m_static_16bit, 0, wxALIGN_CENTER, 0 );
 
-	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
+	m_textctrl_16bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
 	m_textctrl_16bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	numSizer->Add( m_textctrl_16bit, 0, wxEXPAND, 1 );
@@ -569,7 +517,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 
 	numSizer->Add( m_static_32bit, 0, wxALIGN_CENTER, 2 );
 
-	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_32bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_32bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	numSizer->Add( m_textctrl_32bit, 0, wxEXPAND, 1 );
@@ -580,7 +528,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 
 	numSizer->Add( m_static_64bit, 0, wxALIGN_CENTER, 2 );
 
-	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_64bit = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_64bit->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	numSizer->Add( m_textctrl_64bit, 0, wxEXPAND, 1 );
@@ -591,7 +539,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 
 	numSizer->Add( m_static_float, 0, wxALIGN_CENTER, 2 );
 
-	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_float = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_float->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	numSizer->Add( m_textctrl_float, 0, wxEXPAND, 1 );
@@ -600,15 +548,129 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_static_double->Wrap( -1 );
 	m_static_double->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
-	numSizer->Add( m_static_double, 0, wxALIGN_CENTER|wxBOTTOM|wxTOP, 3 );
+	numSizer->Add( m_static_double, 0, wxALIGN_CENTER, 3 );
 
-	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_double = new wxTextCtrl( this, ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_double->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	numSizer->Add( m_textctrl_double, 0, wxEXPAND, 1 );
 
 
-	mainSizer->Add( numSizer, 1, wxEXPAND, 5 );
+	mainSizer->Add( numSizer, 0, wxEXPAND, 5 );
+
+	m_collapsiblePane_TimeMachine = new wxCollapsiblePane( this, wxID_ANY, _("Time Machine"), wxDefaultPosition, wxDefaultSize, wxCP_DEFAULT_STYLE );
+	m_collapsiblePane_TimeMachine->Collapse( false );
+
+	m_collapsiblePane_TimeMachine->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+	m_collapsiblePane_TimeMachine->Enable( false );
+	m_collapsiblePane_TimeMachine->Hide();
+
+	wxBoxSizer* bSizerTimeMachine;
+	bSizerTimeMachine = new wxBoxSizer( wxVERTICAL );
+
+	wxFlexGridSizer* fgSizerUTC;
+	fgSizerUTC = new wxFlexGridSizer( 0, 5, 0, 0 );
+	fgSizerUTC->SetFlexibleDirection( wxBOTH );
+	fgSizerUTC->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_checkBox50 = new wxCheckBox( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, _("Use local time"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	fgSizerUTC->Add( m_checkBox50, 0, wxALL, 5 );
+
+	m_panel5 = new wxPanel( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	fgSizerUTC->Add( m_panel5, 1, wxEXPAND | wxALL, 5 );
+
+	m_static_timeUTC = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("UTC"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeUTC->Wrap( -1 );
+	m_static_timeUTC->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgSizerUTC->Add( m_static_timeUTC, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	m_spinCtrl_timeUTC = new wxSpinCtrl( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxALIGN_RIGHT|wxSP_ARROW_KEYS, -12, 12, 0 );
+	fgSizerUTC->Add( m_spinCtrl_timeUTC, 0, 0, 5 );
+
+
+	bSizerTimeMachine->Add( fgSizerUTC, 0, wxEXPAND, 5 );
+
+	wxFlexGridSizer* fgtimeSizer;
+	fgtimeSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgtimeSizer->AddGrowableCol( 1 );
+	fgtimeSizer->SetFlexibleDirection( wxHORIZONTAL );
+	fgtimeSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_static_timeUnix = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("Unix32"), wxPoint( -1,-1 ), wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeUnix->Wrap( -1 );
+	m_static_timeUnix->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_static_timeUnix, 1, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeUnix = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeUnix->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_textctrl_timeUnix, 0, wxEXPAND, 5 );
+
+	m_static_timeUnix64 = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("Unix64"), wxPoint( -1,-1 ), wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeUnix64->Wrap( -1 );
+	m_static_timeUnix64->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_static_timeUnix64, 0, wxALL, 5 );
+
+	m_textctrl_timeUnix64 = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeUnix64->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_textctrl_timeUnix64, 0, wxEXPAND, 5 );
+
+	m_static_timeFAT = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("FAT"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeFAT->Wrap( -1 );
+	m_static_timeFAT->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_static_timeFAT, 0, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeFAT = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeFAT->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_textctrl_timeFAT, 0, wxEXPAND, 5 );
+
+	m_static_timeNTFS = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("NTFS"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeNTFS->Wrap( -1 );
+	m_static_timeNTFS->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_static_timeNTFS, 0, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeNTFS = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeNTFS->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_textctrl_timeNTFS, 0, wxEXPAND, 5 );
+
+	m_static_timeHFSp = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("HFS+"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeHFSp->Wrap( -1 );
+	m_static_timeHFSp->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_static_timeHFSp, 0, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeHFSp = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeHFSp->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_textctrl_timeHFSp, 0, wxEXPAND, 5 );
+
+	m_static_timeAPFS = new wxStaticText( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, _("APFS"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeAPFS->Wrap( -1 );
+	m_static_timeAPFS->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_static_timeAPFS, 0, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeAPFS = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeAPFS->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer->Add( m_textctrl_timeAPFS, 0, wxEXPAND, 5 );
+
+
+	bSizerTimeMachine->Add( fgtimeSizer, 1, wxEXPAND, 5 );
+
+
+	m_collapsiblePane_TimeMachine->GetPane()->SetSizer( bSizerTimeMachine );
+	m_collapsiblePane_TimeMachine->GetPane()->Layout();
+	bSizerTimeMachine->Fit( m_collapsiblePane_TimeMachine->GetPane() );
+	mainSizer->Add( m_collapsiblePane_TimeMachine, 1, wxEXPAND, 5 );
 
 
 	this->SetSizer( mainSizer );
@@ -644,7 +706,7 @@ InterpreterGui::~InterpreterGui()
 
 }
 
-TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name ) : wxPanel( parent, id, pos, size, style, name )
 {
 	wxBoxSizer* mainSize;
 	mainSize = new wxBoxSizer( wxVERTICAL );
@@ -697,7 +759,7 @@ TagPanelGui::~TagPanelGui()
 
 }
 
-InfoPanelGui::InfoPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+InfoPanelGui::InfoPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name ) : wxPanel( parent, id, pos, size, style, name )
 {
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -715,7 +777,7 @@ InfoPanelGui::~InfoPanelGui()
 {
 }
 
-DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+DisassemblerPanelGUI::DisassemblerPanelGUI( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name ) : wxPanel( parent, id, pos, size, style, name )
 {
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -844,6 +906,7 @@ GotoDialogGui::GotoDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerBottom->Add( m_branch, 0, wxBOTTOM|wxLEFT, 5 );
 
 	m_button_go = new wxButton( this, wxID_ANY, _("Go!"), wxDefaultPosition, wxDefaultSize, 0 );
+
 	m_button_go->SetDefault();
 	bSizerBottom->Add( m_button_go, 1, wxALIGN_CENTER|wxTOP|wxLEFT, 5 );
 
@@ -987,6 +1050,7 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerButtons = new wxBoxSizer( wxVERTICAL );
 
 	btnFind = new wxButton( this, wxID_ANY, _("Find"), wxDefaultPosition, wxDefaultSize, 0 );
+
 	btnFind->SetDefault();
 	bSizerButtons->Add( btnFind, 0, wxALIGN_CENTER|wxTOP, 2 );
 
@@ -1220,6 +1284,7 @@ CompareDialogGui::CompareDialogGui( wxWindow* parent, wxWindowID id, const wxStr
 	bSizerButtons->Add( btnCancel, 1, wxALL, 5 );
 
 	btnCompare = new wxButton( this, wxID_ANY, _("Compare"), wxDefaultPosition, wxDefaultSize, 0 );
+
 	btnCompare->SetDefault();
 	btnCompare->Enable( false );
 
@@ -1427,6 +1492,7 @@ ChecksumDialogGui::ChecksumDialogGui( wxWindow* parent, wxWindowID id, const wxS
 	bSizerButtons->Add( btnCancel, 1, wxALL|wxEXPAND, 5 );
 
 	btnCalculate = new wxButton( this, wxID_ANY, _("Calculate"), wxDefaultPosition, wxDefaultSize, 0 );
+
 	btnCalculate->SetDefault();
 	btnCalculate->Enable( false );
 

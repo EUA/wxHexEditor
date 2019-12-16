@@ -75,6 +75,10 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
 		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
 
+#ifdef _TIME_MACHINE_
+        unidata.big.ubit64
+
+#endif // _TIME_MACHINE_
 		wxCommandEvent event;
 		OnUpdate( event );
 
@@ -209,6 +213,15 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 			}
 		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
 		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
+#ifdef HAS_A_TIME_MACHINE
+		m_textctrl_timeUnix->ChangeValue( getUnixDate(*X->bit32) );
+		m_textctrl_timeUnix64->ChangeValue( getUnixDate(*X->bit64) );
+		m_textctrl_timeNTFS->ChangeValue( getNTFSDate(*X->bit64) );
+		m_textctrl_timeAPFS->ChangeValue( getAPFSDate(*X->bit64) );
+		m_textctrl_timeHFSp->ChangeValue( getHFSpDate(*X->bit64) );
+		m_textctrl_timeFAT->ChangeValue( getFATDate( X->ubit32 ) );
+
+#endif // HAS_A_TIME_MACHINE
 	}
 
 wxString DataInterpreter::AsciiSymbol( unsigned char ch ){
@@ -223,6 +236,86 @@ wxString DataInterpreter::AsciiSymbol( unsigned char ch ){
 		return wxString("DEL");
 	return wxEmptyString;
 	}
+
+#ifdef HAS_A_TIME_MACHINE
+wxString DataInterpreter::getFATDate( uint32_t *FATpack ){
+    //FAT DATE and TIME structure
+    //<------- 0x19 --------> <------- 0x18 --------><------- 0x17 --------> <------- 0x16 -------->
+    //15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+    // y  y  y  y  y  y  y  m  m  m  m  d  d  d  d  d  h  h  h  h  h  m  m  m  m  m  m  x  x  x  x  x
+    FATDate = *reinterpret_cast<FATDate_t*>(FATpack);
+    wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
+    return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+    }
+
+wxString DataInterpreter::getNTFSDate( int64_t windowsTicks ){
+    #define WINDOWS_TICK 10000000
+    #define SEC_TO_UNIX_EPOCH 11644473600LL
+    int64_t seconds=windowsTicks/WINDOWS_TICK - SEC_TO_UNIX_EPOCH;
+    int64_t remainingTicks=windowsTicks-seconds*WINDOWS_TICK;
+    return (getUnixDate(seconds));
+    }
+
+wxString DataInterpreter::getHFSpDate( int64_t HFSpTicks ){
+    #define SEC_FROM_UNIX_EPOCH 2082844800LL
+    int64_t seconds= HFSpTicks - SEC_FROM_UNIX_EPOCH;
+    return (getUnixDate(seconds));
+    }
+
+wxString DataInterpreter::getAPFSDate( int64_t appleTicks ){
+    #define APPLE_TICK 1000000000
+    #define SEC_TO_UNIX_EPOCH 0LL
+    int64_t seconds=appleTicks/APPLE_TICK - SEC_TO_UNIX_EPOCH;
+    int64_t remainingTicks=appleTicks-seconds*APPLE_TICK;
+    return (getUnixDate(seconds));
+    }
+
+wxString DataInterpreter::getUnixDate( int64_t seconds ){
+    wxDateTime aDate(seconds);
+    return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+
+    /*
+    struct tm * timeinfo;
+    char * theTime = NULL;
+
+    if(seconds != sec ) // conversion to time_t lost data...
+        return invalid;
+    #ifdef __WXMSW__
+    wxDateTime aDate(sec);
+    #endif
+    wxDateTime aDate(sec);
+    wxString a = aDate.Format("%c", wxDateTime::UTC);
+    */
+    /*
+    if(m_check_UTC->GetValue() ){
+        #ifdef __WXMSW__
+        return aDate.Format("%c", wxDateTime::UTC).c_str(); // Uses UTC
+        #else
+        theTime = asctime(gmtime(&sec));
+        if(strlen(theTime) > 0){
+            theTime[strlen(theTime)-1] = '\0';
+            return theTime;  // Copy of string
+        }
+        else
+            return invalid;
+       #endif
+    }else{
+        #ifdef __WXMSW__
+        return aDate.Format("%c", wxDateTime::Local).c_str(); // Uses local time
+        #else
+        theTime = asctime(localtime(&sec));
+        if(strlen(theTime) > 0){
+            theTime[strlen(theTime)-1] = '\0';
+            return theTime;  // Copy of string
+        }
+        else
+            return invalid;
+        #endif
+    }
+    */
+
+}
+#endif // HAS_A_TIME_MACHINE
 
 void InfoPanel::Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey ){
 		static wxMutex mutexinfo;

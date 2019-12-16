@@ -43,6 +43,7 @@
 #include <stdint.h>
 #include <wx/memory.h>
 
+#define HAS_A_TIME_MACHINEx
 class DataInterpreter : public InterpreterGui{
 	public:
 		DataInterpreter(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
@@ -59,6 +60,11 @@ class DataInterpreter : public InterpreterGui{
 			m_textctrl_float->SetFont(f);
 			m_textctrl_double->SetFont(f);
 #endif
+#ifdef HAS_A_TIME_MACHINE
+            m_collapsiblePane_TimeMachine->Enable(true);
+            m_collapsiblePane_TimeMachine->Show(true);
+#endif
+
 			unidata.raw = unidata.mraw = NULL;
 			};
 		void Set( wxMemoryBuffer buffer );
@@ -68,6 +74,14 @@ class DataInterpreter : public InterpreterGui{
 		void OnTextMouse( wxMouseEvent& event );
 		void OnCheckEdit( wxCommandEvent& event );
 		wxString AsciiSymbol( unsigned char a );
+
+#ifdef HAS_A_TIME_MACHINE
+		wxString getUnixDate( int64_t seconds );
+		wxString getNTFSDate( int64_t windowsTicks );
+		wxString getAPFSDate( int64_t AppleTicks );
+		wxString getHFSpDate( int64_t HFSpTicks );
+		wxString getFATDate (uint32_t *FATDate_raw );
+#endif // HAS_A_TIME_MACHINE
 	protected:
 		struct unidata{
 			char *raw, *mraw;	//big endian and little endian
@@ -86,6 +100,18 @@ class DataInterpreter : public InterpreterGui{
 			short size;
 			char *mirrorbfr;
 			}unidata;
+
+#ifdef HAS_A_TIME_MACHINE
+    #pragma pack (1)
+        struct FATDate_t{
+            unsigned Sec :5;
+            unsigned Min :6;
+            unsigned Hour :5;
+            unsigned Day :5;
+            unsigned Month :4;
+            unsigned Year :7;
+        }FATDate;
+#endif //HAS_A_TIME_MACHINE
 	};
 
 class InfoPanel : public InfoPanelGui{

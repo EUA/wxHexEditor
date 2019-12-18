@@ -156,7 +156,7 @@ class InterpreterGui : public wxPanel
 		wxStaticText* m_static_double;
 		wxTextCtrl* m_textctrl_double;
 		wxCollapsiblePane* m_collapsiblePane_TimeMachine;
-		wxCheckBox* m_checkBox50;
+		wxCheckBox* m_checkBoxLocal;
 		wxPanel* m_panel_time;
 		wxStaticText* m_static_timeUTC;
 		wxSpinCtrl* m_spinCtrl_timeUTC;
@@ -178,6 +178,7 @@ class InterpreterGui : public wxPanel
 		virtual void OnTextEdit( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnTextMouse( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnCheckEdit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSpin( wxSpinEvent& event ) { event.Skip(); }
 
 
 	public:

@@ -43,7 +43,7 @@
 #include <stdint.h>
 #include <wx/memory.h>
 
-#define HAS_A_TIME_MACHINEx
+#define HAS_A_TIME_MACHINE
 class DataInterpreter : public InterpreterGui{
 	public:
 		DataInterpreter(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
@@ -70,18 +70,12 @@ class DataInterpreter : public InterpreterGui{
 		void Set( wxMemoryBuffer buffer );
 		void Clear( void );
 		void OnUpdate( wxCommandEvent& event );
+		void OnSpin( wxSpinEvent& event );
 		void OnTextEdit( wxKeyEvent& event );
 		void OnTextMouse( wxMouseEvent& event );
 		void OnCheckEdit( wxCommandEvent& event );
 		wxString AsciiSymbol( unsigned char a );
 
-#ifdef HAS_A_TIME_MACHINE
-		wxString getUnixDate( int64_t seconds );
-		wxString getNTFSDate( int64_t windowsTicks );
-		wxString getAPFSDate( int64_t AppleTicks );
-		wxString getHFSpDate( int64_t HFSpTicks );
-		wxString getFATDate (uint32_t *FATDate_raw );
-#endif // HAS_A_TIME_MACHINE
 	protected:
 		struct unidata{
 			char *raw, *mraw;	//big endian and little endian
@@ -111,6 +105,11 @@ class DataInterpreter : public InterpreterGui{
             unsigned Month :4;
             unsigned Year :7;
         }FATDate;
+
+
+        enum TimeFormats{ UNIX32, UNIX64, FAT, NTFS, APFS, HFSp };
+
+		wxString FluxCapacitor( unidata::endian *unit, TimeFormats format );
 #endif //HAS_A_TIME_MACHINE
 	};
 

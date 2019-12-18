@@ -934,7 +934,7 @@ void HexEditorFrame::OnUpdateUI(wxUpdateUIEvent& event){
 		disks.Sort();
 		#endif // __WXMSW__
 
-		wxMenu *nm; //Create menu root
+		wxMenu *nm=NULL; //Create menu root
 		int last_item=0;
 		for( unsigned i =0 ; i < disks.Count() ; i++){
 			//Old way...

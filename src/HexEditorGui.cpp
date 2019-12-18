@@ -573,8 +573,8 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	fgSizerUTC->SetFlexibleDirection( wxBOTH );
 	fgSizerUTC->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	m_checkBox50 = new wxCheckBox( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, _("Use local time"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-	fgSizerUTC->Add( m_checkBox50, 0, wxALL, 5 );
+	m_checkBoxLocal = new wxCheckBox( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, _("Use local time"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	fgSizerUTC->Add( m_checkBoxLocal, 0, wxALL, 5 );
 
 	m_panel_time = new wxPanel( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	fgSizerUTC->Add( m_panel_time, 1, wxEXPAND | wxALL, 5 );
@@ -688,6 +688,8 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_textctrl_binary->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
 	m_textctrl_binary->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
 	m_check_edit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnCheckEdit ), NULL, this );
+	m_checkBoxLocal->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
+	m_spinCtrl_timeUTC->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( InterpreterGui::OnSpin ), NULL, this );
 }
 
 InterpreterGui::~InterpreterGui()
@@ -703,6 +705,8 @@ InterpreterGui::~InterpreterGui()
 	m_textctrl_binary->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
 	m_textctrl_binary->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( InterpreterGui::OnTextMouse ), NULL, this );
 	m_check_edit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnCheckEdit ), NULL, this );
+	m_checkBoxLocal->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( InterpreterGui::OnUpdate ), NULL, this );
+	m_spinCtrl_timeUTC->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( InterpreterGui::OnSpin ), NULL, this );
 
 }
 

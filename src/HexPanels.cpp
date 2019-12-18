@@ -75,10 +75,6 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
 		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
 
-#ifdef _TIME_MACHINE_
-        unidata.big.ubit64
-
-#endif // _TIME_MACHINE_
 		wxCommandEvent event;
 		OnUpdate( event );
 
@@ -214,15 +210,23 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 		m_textctrl_float ->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitfloat ));
 		m_textctrl_double->ChangeValue( wxString::Format(wxT("%.14g"), *X->bitdouble ));
 #ifdef HAS_A_TIME_MACHINE
-		m_textctrl_timeUnix->ChangeValue( getUnixDate(*X->bit32) );
-		m_textctrl_timeUnix64->ChangeValue( getUnixDate(*X->bit64) );
-		m_textctrl_timeNTFS->ChangeValue( getNTFSDate(*X->bit64) );
-		m_textctrl_timeAPFS->ChangeValue( getAPFSDate(*X->bit64) );
-		m_textctrl_timeHFSp->ChangeValue( getHFSpDate(*X->bit64) );
-		m_textctrl_timeFAT->ChangeValue( getFATDate( X->ubit32 ) );
-
+		m_textctrl_timeUnix->ChangeValue( FluxCapacitor(X, UNIX32) );
+		m_textctrl_timeUnix64->ChangeValue( FluxCapacitor(X, UNIX64) );
+		m_textctrl_timeNTFS->ChangeValue( FluxCapacitor(X, NTFS) );
+		m_textctrl_timeAPFS->ChangeValue( FluxCapacitor(X, APFS) );
+		m_textctrl_timeHFSp->ChangeValue( FluxCapacitor(X, HFSp) );
+		m_textctrl_timeFAT->ChangeValue(  FluxCapacitor(X, FAT) );
 #endif // HAS_A_TIME_MACHINE
 	}
+
+// TODO (death#1#): Enable Local need to disable UTC ...
+//Hide UTC +03's ?
+//UTC , Local Time Machine state need to remember
+//Silence those assertions!
+//Disable resize issue with Time Machine
+void DataInterpreter::OnSpin( wxSpinEvent &event ){
+    OnUpdate( event );
+    }
 
 wxString DataInterpreter::AsciiSymbol( unsigned char ch ){
     static wxString AsciiTable[]={"NUL","SOH","STX","ETX","EOT","ENQ","ACK","BEL","BS","HT","LF","VT",
@@ -238,41 +242,52 @@ wxString DataInterpreter::AsciiSymbol( unsigned char ch ){
 	}
 
 #ifdef HAS_A_TIME_MACHINE
-wxString DataInterpreter::getFATDate( uint32_t *FATpack ){
-    //FAT DATE and TIME structure
-    //<------- 0x19 --------> <------- 0x18 --------><------- 0x17 --------> <------- 0x16 -------->
-    //15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
-    // y  y  y  y  y  y  y  m  m  m  m  d  d  d  d  d  h  h  h  h  h  m  m  m  m  m  m  x  x  x  x  x
-    FATDate = *reinterpret_cast<FATDate_t*>(FATpack);
-    wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
-    return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
-    }
-
-wxString DataInterpreter::getNTFSDate( int64_t windowsTicks ){
+wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats TimeFormat ){
     #define WINDOWS_TICK 10000000
-    #define SEC_TO_UNIX_EPOCH 11644473600LL
-    int64_t seconds=windowsTicks/WINDOWS_TICK - SEC_TO_UNIX_EPOCH;
-    int64_t remainingTicks=windowsTicks-seconds*WINDOWS_TICK;
-    return (getUnixDate(seconds));
-    }
-
-wxString DataInterpreter::getHFSpDate( int64_t HFSpTicks ){
-    #define SEC_FROM_UNIX_EPOCH 2082844800LL
-    int64_t seconds= HFSpTicks - SEC_FROM_UNIX_EPOCH;
-    return (getUnixDate(seconds));
-    }
-
-wxString DataInterpreter::getAPFSDate( int64_t appleTicks ){
+    #define WIN_SEC_TO_UNIX_EPOCH 11644473600LL
+    #define HFSp_SEC_FROM_UNIX_EPOCH 2082844800LL
     #define APPLE_TICK 1000000000
-    #define SEC_TO_UNIX_EPOCH 0LL
-    int64_t seconds=appleTicks/APPLE_TICK - SEC_TO_UNIX_EPOCH;
-    int64_t remainingTicks=appleTicks-seconds*APPLE_TICK;
-    return (getUnixDate(seconds));
-    }
+    #define APPLE_SEC_TO_UNIX_EPOCH 0LL
+    int64_t seconds=-1;
+    switch( TimeFormat ){
+        case UNIX32:
+            seconds = *timeraw->bit32; break;
+        case UNIX64:
+            seconds = *timeraw->bit64; break;
+        case FAT:{
+            //FAT DATE and TIME structure
+            //<------- 0x19 --------> <------- 0x18 --------><------- 0x17 --------> <------- 0x16 -------->
+            //15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+            // y  y  y  y  y  y  y  m  m  m  m  d  d  d  d  d  h  h  h  h  h  m  m  m  m  m  m  x  x  x  x  x
+            FATDate = *reinterpret_cast<FATDate_t*>(timeraw->ubit32);
+            wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
+            return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+            }
+        case NTFS:
+            seconds = *timeraw->bit64/WINDOWS_TICK - WIN_SEC_TO_UNIX_EPOCH;
+            //int64_t remainingTicks=windowsTicks-seconds*WINDOWS_TICK;
+            break;
 
-wxString DataInterpreter::getUnixDate( int64_t seconds ){
+        case HFSp:
+            seconds = *timeraw->bit64 - HFSp_SEC_FROM_UNIX_EPOCH;
+            break;
+
+        case APFS:
+            seconds = *timeraw->bit64/APPLE_TICK - APPLE_SEC_TO_UNIX_EPOCH;
+            //int64_t remainingTicks=appleTicks-seconds*APPLE_TICK;
+            break;
+
+        }
+    seconds += m_spinCtrl_timeUTC->GetValue()*60*60;
     wxDateTime aDate(seconds);
-    return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+
+    m_spinCtrl_timeUTC->Enable(! m_checkBoxLocal->IsChecked());
+    m_static_timeUTC->Enable(! m_checkBoxLocal->IsChecked());
+
+    if( m_checkBoxLocal->IsChecked() )
+        return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::Local ) : _("OUTATIME") );
+    else
+        return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
 
     /*
     struct tm * timeinfo;

@@ -63,6 +63,8 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 		unidata.little.ubit64 = reinterpret_cast< uint64_t*>(unidata.raw);
 		unidata.little.bitfloat = reinterpret_cast< float* >(unidata.raw);
 		unidata.little.bitdouble = reinterpret_cast< double* >(unidata.raw);
+		//unidata.little.bitf128 = reinterpret_cast< _Float128* >(unidata.raw);
+		unidata.little.raw = reinterpret_cast< char* >(unidata.raw);
 
 		unidata.big.bit8   = reinterpret_cast< int8_t*  >(unidata.mraw+(size - 1));
 		unidata.big.ubit8  = reinterpret_cast< uint8_t* >(unidata.mraw+(size - 1));
@@ -74,6 +76,8 @@ void DataInterpreter::Set( wxMemoryBuffer buffer ){
 		unidata.big.ubit64 = reinterpret_cast< uint64_t*>(unidata.mraw+(size - 8));
 		unidata.big.bitfloat = reinterpret_cast< float* >(unidata.mraw+(size - 4));
 		unidata.big.bitdouble = reinterpret_cast< double* >(unidata.mraw+(size - 8));
+		//unidata.big.bitf128 = reinterpret_cast< _Float128* >(unidata.mraw+(size - 16));
+        unidata.big.raw = reinterpret_cast< char* >(unidata.raw);
 
 		wxCommandEvent event;
 		OnUpdate( event );
@@ -216,6 +220,11 @@ void DataInterpreter::OnUpdate( wxCommandEvent& event ){
 		m_textctrl_timeAPFS->ChangeValue( FluxCapacitor(X, APFS) );
 		m_textctrl_timeHFSp->ChangeValue( FluxCapacitor(X, HFSp) );
 		m_textctrl_timeFAT->ChangeValue(  FluxCapacitor(X, FAT) );
+		#ifdef HAS_A_EXFAT_TIME
+		m_textctrl_timeExFAT_Creation->ChangeValue(  FluxCapacitor(X, exFAT_C) );
+		m_textctrl_timeExFAT_Modification->ChangeValue(  FluxCapacitor(X, exFAT_M) );
+		m_textctrl_timeExFAT_Access->ChangeValue(  FluxCapacitor(X, exFAT_A) );
+		#endif //exfat
 #endif // HAS_A_TIME_MACHINE
 	}
 
@@ -254,15 +263,6 @@ wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats T
             seconds = *timeraw->bit32; break;
         case UNIX64:
             seconds = *timeraw->bit64; break;
-        case FAT:{
-            //FAT DATE and TIME structure
-            //<------- 0x19 --------> <------- 0x18 --------><------- 0x17 --------> <------- 0x16 -------->
-            //15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
-            // y  y  y  y  y  y  y  m  m  m  m  d  d  d  d  d  h  h  h  h  h  m  m  m  m  m  m  x  x  x  x  x
-            FATDate = *reinterpret_cast<FATDate_t*>(timeraw->ubit32);
-            wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
-            return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
-            }
         case NTFS:
             seconds = *timeraw->bit64/WINDOWS_TICK - WIN_SEC_TO_UNIX_EPOCH;
             //int64_t remainingTicks=windowsTicks-seconds*WINDOWS_TICK;
@@ -276,7 +276,43 @@ wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats T
             seconds = *timeraw->bit64/APPLE_TICK - APPLE_SEC_TO_UNIX_EPOCH;
             //int64_t remainingTicks=appleTicks-seconds*APPLE_TICK;
             break;
+        case FAT:{
+            //FAT DATE and TIME structure
+            //<------- 0x19 --------> <------- 0x18 --------><------- 0x17 --------> <------- 0x16 -------->
+            //15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+            // y  y  y  y  y  y  y  m  m  m  m  d  d  d  d  d  h  h  h  h  h  m  m  m  m  m  m  x  x  x  x  x
+            FATDate = *reinterpret_cast<FATDate_t*>(timeraw->ubit32);
+            wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
+            return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+            }
+#ifdef HAS_A_EXFAT_TIME
+        case exFAT_C:
+        case exFAT_M:
+        case exFAT_A:
+            FATDate = *reinterpret_cast<FATDate_t*>( TimeFormat==exFAT_C ? timeraw->raw+0 :
+                                                     TimeFormat==exFAT_M ? timeraw->raw+4 : timeraw->raw+8 );
 
+            wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
+
+            int centiseconds = 0;
+            if( TimeFormat != exFAT_A )
+                centiseconds = timeraw->raw[(TimeFormat==exFAT_C ? 12 : 13)];
+            if(centiseconds > 199 || ! aDate.IsValid())
+                return _("OUTATIME");
+            aDate.SetMillisecond( 10*centiseconds );
+
+            uint8_t timezone = static_cast<int>(timeraw->raw[(TimeFormat==exFAT_C ? 14 :
+                                                              TimeFormat==exFAT_M ? 15 : 16 )] );
+            if(!(timezone & 0x80 ))
+                return _("OUTATIME");
+            if( timezone & 0x40 )   //Negative
+                timezone=(~timezone+1)*15;
+            else
+                timezone=(timezone&0x7F)*15;
+
+            aDate += wxTimeSpan::Minutes(timezone);
+            return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+#endif
         }
     seconds += m_spinCtrl_timeUTC->GetValue()*60*60;
     wxDateTime aDate(seconds);

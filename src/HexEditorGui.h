@@ -172,6 +172,13 @@ class InterpreterGui : public wxPanel
 		wxTextCtrl* m_textctrl_timeHFSp;
 		wxStaticText* m_static_timeAPFS;
 		wxTextCtrl* m_textctrl_timeAPFS;
+		wxCollapsiblePane* m_collapsiblePaneExFAT;
+		wxStaticText* m_static_timeExFAT_Creation;
+		wxTextCtrl* m_textctrl_timeExFAT_Creation;
+		wxStaticText* m_static_timeExFAT_Modification;
+		wxTextCtrl* m_textctrl_timeExFAT_Modification;
+		wxStaticText* m_static_timeExFAT_Access;
+		wxTextCtrl* m_textctrl_timeExFAT_Access;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnUpdate( wxCommandEvent& event ) { event.Skip(); }

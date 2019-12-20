@@ -44,6 +44,7 @@
 #include <wx/memory.h>
 
 #define HAS_A_TIME_MACHINE
+#define HAS_A_EXFAT_TIME
 class DataInterpreter : public InterpreterGui{
 	public:
 		DataInterpreter(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
@@ -63,6 +64,10 @@ class DataInterpreter : public InterpreterGui{
 #ifdef HAS_A_TIME_MACHINE
             m_collapsiblePane_TimeMachine->Enable(true);
             m_collapsiblePane_TimeMachine->Show(true);
+#ifdef HAS_A_EXFAT_TIME
+            m_collapsiblePaneExFAT->Enable(true);
+            m_collapsiblePaneExFAT->Show(true);
+#endif
 #endif
 
 			unidata.raw = unidata.mraw = NULL;
@@ -90,6 +95,8 @@ class DataInterpreter : public InterpreterGui{
 				uint64_t *ubit64;
 				float  *bitfloat;
 				double *bitdouble;
+				_Float128 *bitf128;
+				char *raw;
 				} little, big;
 			short size;
 			char *mirrorbfr;
@@ -107,7 +114,7 @@ class DataInterpreter : public InterpreterGui{
         }FATDate;
 
 
-        enum TimeFormats{ UNIX32, UNIX64, FAT, NTFS, APFS, HFSp };
+        enum TimeFormats{ UNIX32, UNIX64, FAT, NTFS, APFS, HFSp, exFAT_C,exFAT_M,exFAT_A, };
 
 		wxString FluxCapacitor( unidata::endian *unit, TimeFormats format );
 #endif //HAS_A_TIME_MACHINE

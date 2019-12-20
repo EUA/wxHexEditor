@@ -104,7 +104,7 @@
 					<Add option="-Wno-deprecated-declarations" />
 					<Add option="-msse2" />
 					<Add option="-D_DEBUG_=9" />
-					<Add option="-D_DEBUG_MUTEX_x" />
+					<Add option="-D_DEBUG_MUTEX_" />
 					<Add option="-D_DEBUG_FILE_" />
 					<Add option="-D_DEBUG_FIND_x" />
 					<Add option="-D_DEBUG_SELECT_x" />
@@ -115,6 +115,7 @@
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_x" />
 					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
+					<Add option="-D_DEBUG_PAINT_" />
 					<Add option="-D_FSWATCHER_" />
 				</Compiler>
 				<Linker>

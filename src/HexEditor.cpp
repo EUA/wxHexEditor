@@ -1430,7 +1430,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 	std::cout << "UpdateCursorLocation() read file for panels" << std::endl;
 #endif
 
-	int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 8 )), 8);
+	int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 17 )), 17);
 	if(size>0)
 		bfr.UngetWriteBuf( size );
 
@@ -1457,7 +1457,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 	}
 #if wxUSE_STATUSBAR
 	if( statusbar != NULL ) {
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/ByteCapacity() ), 0);
+		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/wxMax(1,ByteCapacity()) ), 0);    //wxMax for avoid divide by zero
 		statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
 		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), reinterpret_cast<uint8_t*>(bfr.GetData())[0]), 2);
 		if( !select->GetState() ) {

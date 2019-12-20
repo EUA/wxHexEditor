@@ -559,10 +559,9 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	mainSizer->Add( numSizer, 0, wxEXPAND, 5 );
 
 	m_collapsiblePane_TimeMachine = new wxCollapsiblePane( this, wxID_ANY, _("Time Machine"), wxDefaultPosition, wxDefaultSize, wxCP_DEFAULT_STYLE );
-	m_collapsiblePane_TimeMachine->Collapse( true );
+	m_collapsiblePane_TimeMachine->Collapse( false );
 
 	m_collapsiblePane_TimeMachine->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
-	m_collapsiblePane_TimeMachine->Enable( false );
 	m_collapsiblePane_TimeMachine->Hide();
 
 	wxBoxSizer* bSizerTimeMachine;
@@ -612,7 +611,7 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_static_timeUnix64->Wrap( -1 );
 	m_static_timeUnix64->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
-	fgtimeSizer->Add( m_static_timeUnix64, 0, wxALL, 5 );
+	fgtimeSizer->Add( m_static_timeUnix64, 0, wxALIGN_CENTER, 5 );
 
 	m_textctrl_timeUnix64 = new wxTextCtrl( m_collapsiblePane_TimeMachine->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	m_textctrl_timeUnix64->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
@@ -664,7 +663,57 @@ InterpreterGui::InterpreterGui( wxWindow* parent, wxWindowID id, const wxPoint& 
 	fgtimeSizer->Add( m_textctrl_timeAPFS, 0, wxEXPAND, 5 );
 
 
-	bSizerTimeMachine->Add( fgtimeSizer, 1, wxEXPAND, 5 );
+	bSizerTimeMachine->Add( fgtimeSizer, 0, wxEXPAND, 5 );
+
+	m_collapsiblePaneExFAT = new wxCollapsiblePane( m_collapsiblePane_TimeMachine->GetPane(), wxID_ANY, _("exFAT Time & Date"), wxDefaultPosition, wxDefaultSize, wxCP_DEFAULT_STYLE );
+	m_collapsiblePaneExFAT->Collapse( false );
+
+	m_collapsiblePaneExFAT->Hide();
+
+	wxFlexGridSizer* fgtimeSizer1;
+	fgtimeSizer1 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgtimeSizer1->AddGrowableCol( 1 );
+	fgtimeSizer1->SetFlexibleDirection( wxHORIZONTAL );
+	fgtimeSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_static_timeExFAT_Creation = new wxStaticText( m_collapsiblePaneExFAT->GetPane(), ID_DEFAULT, _("Creation"), wxPoint( -1,-1 ), wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeExFAT_Creation->Wrap( -1 );
+	m_static_timeExFAT_Creation->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer1->Add( m_static_timeExFAT_Creation, 1, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeExFAT_Creation = new wxTextCtrl( m_collapsiblePaneExFAT->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeExFAT_Creation->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer1->Add( m_textctrl_timeExFAT_Creation, 0, wxEXPAND, 5 );
+
+	m_static_timeExFAT_Modification = new wxStaticText( m_collapsiblePaneExFAT->GetPane(), ID_DEFAULT, _("Modification"), wxPoint( -1,-1 ), wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeExFAT_Modification->Wrap( -1 );
+	m_static_timeExFAT_Modification->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer1->Add( m_static_timeExFAT_Modification, 0, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeExFAT_Modification = new wxTextCtrl( m_collapsiblePaneExFAT->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeExFAT_Modification->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer1->Add( m_textctrl_timeExFAT_Modification, 0, wxEXPAND, 5 );
+
+	m_static_timeExFAT_Access = new wxStaticText( m_collapsiblePaneExFAT->GetPane(), ID_DEFAULT, _("Access"), wxDefaultPosition, wxSize( -1,-1 ), wxALIGN_LEFT );
+	m_static_timeExFAT_Access->Wrap( -1 );
+	m_static_timeExFAT_Access->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer1->Add( m_static_timeExFAT_Access, 0, wxALIGN_CENTER, 5 );
+
+	m_textctrl_timeExFAT_Access = new wxTextCtrl( m_collapsiblePaneExFAT->GetPane(), ID_DEFAULT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_textctrl_timeExFAT_Access->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+
+	fgtimeSizer1->Add( m_textctrl_timeExFAT_Access, 0, wxEXPAND, 5 );
+
+
+	m_collapsiblePaneExFAT->GetPane()->SetSizer( fgtimeSizer1 );
+	m_collapsiblePaneExFAT->GetPane()->Layout();
+	fgtimeSizer1->Fit( m_collapsiblePaneExFAT->GetPane() );
+	bSizerTimeMachine->Add( m_collapsiblePaneExFAT, 1, wxEXPAND | wxALL, 5 );
 
 
 	m_collapsiblePane_TimeMachine->GetPane()->SetSizer( bSizerTimeMachine );

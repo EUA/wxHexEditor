@@ -321,8 +321,7 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddStretchableSpacer();
 #endif
 */
-   Toolbar->Realize();
-
+    Toolbar->Realize();
 	//MyAUI->LoadPerspective()???
 	MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(_("Toolbar")).

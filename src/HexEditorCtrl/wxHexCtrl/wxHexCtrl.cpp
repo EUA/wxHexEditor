@@ -72,9 +72,11 @@ wxHexCtrl::wxHexCtrl(wxWindow *parent,
 	//Need to create object before Draw operation.
 	ZebraStriping=new int;
 	*ZebraStriping=-1;
-    wxString waylandStr;
+
+	Hex2ColorMode=false;
 
     //Wayland hack
+    wxString waylandStr;
 	waylander =  wxGetEnv( "WAYLAND_DISPLAY", &waylandStr );
     if(waylander)
         std::cout << "Wayland detected. You could have cosmetic cursor issues." << std::endl;

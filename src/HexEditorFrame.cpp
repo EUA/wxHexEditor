@@ -288,6 +288,9 @@ void HexEditorFrame::PrepareAUI( void ){
 //    item.SetLabel(_("Customize..."));
 //    append_items.Add(item);
 
+
+    Toolbar = m_auiToolBar;
+/*
 #ifdef _WX_AUIBAR_H_
 	Toolbar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE );// wxAUI_TB_OVERFLOW);
 #else
@@ -314,14 +317,16 @@ void HexEditorFrame::PrepareAUI( void ){
 	Toolbar->AddTool(wxID_CUT, _("Cut Block"), wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR), _("Cuts selected block and copies to clipboard"));
 	Toolbar->AddTool(wxID_DELETE, _("Delete Block"), wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR), _("Deletes selected block"));
 	Toolbar->AddTool(idInsert, _("Insert Block"), wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR), _("Insert"));
-/*
-#ifdef _WX_AUIBAR_H_
-	Toolbar->AddStretchSpacer();
-#else
-	Toolbar->AddStretchableSpacer();
-#endif
-*/
+
+//#ifdef _WX_AUIBAR_H_
+//	Toolbar->AddStretchSpacer();
+//#else
+//	Toolbar->AddStretchableSpacer();
+//#endif
+
+
     Toolbar->Realize();
+*/
 	//MyAUI->LoadPerspective()???
 	MyAUI -> AddPane(Toolbar, wxAuiPaneInfo().
                   Name(_("Toolbar")).

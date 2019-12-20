@@ -315,6 +315,45 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	this->SetMenuBar( mbar );
 
+	m_auiToolBar = new wxAuiToolBar( this, wxNEW, wxDefaultPosition, wxDefaultSize, wxAUI_TB_HORZ_LAYOUT );
+	m_tool_NewFile = m_auiToolBar->AddTool( wxID_NEW, _("tool"), wxArtProvider::GetBitmap( wxART_NEW, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("New file"), wxEmptyString, NULL );
+
+	m_tool_Open = m_auiToolBar->AddTool( wxID_OPEN, _("Open"), wxArtProvider::GetBitmap( wxART_FILE_OPEN, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Open"), wxEmptyString, NULL );
+
+	m_tool_Save = m_auiToolBar->AddTool( wxID_SAVE, _("Save"), wxArtProvider::GetBitmap( wxART_FILE_SAVE, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Save"), wxEmptyString, NULL );
+
+	m_tool_SaveAs = m_auiToolBar->AddTool( wxID_SAVEAS, _("Save as"), wxArtProvider::GetBitmap( wxART_FILE_SAVE_AS, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Save as"), wxEmptyString, NULL );
+
+	m_tool_Close = m_auiToolBar->AddTool( idClose, _("Close"), wxArtProvider::GetBitmap( wxART_CLOSE, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Close"), wxEmptyString, NULL );
+
+	m_auiToolBar->AddSeparator();
+
+	m_tool_Find = m_auiToolBar->AddTool( wxID_FIND, _("Find"), wxArtProvider::GetBitmap( wxART_FIND, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Find"), wxEmptyString, NULL );
+
+	m_tool_Replace = m_auiToolBar->AddTool( wxID_REPLACE, _("Find and replace"), wxArtProvider::GetBitmap( wxART_FIND_AND_REPLACE, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Find and Replace"), wxEmptyString, NULL );
+
+	m_tool_GotoOffset = m_auiToolBar->AddTool( idGotoOffset, _("Go to Offset"), wxArtProvider::GetBitmap( wxART_GO_FORWARD, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Go to Offset"), wxEmptyString, NULL );
+
+	m_auiToolBar->AddSeparator();
+
+	m_tool_Undo = m_auiToolBar->AddTool( wxID_UNDO, _("Undo"), wxArtProvider::GetBitmap( wxART_UNDO, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Undo"), wxEmptyString, NULL );
+
+	m_tool_Redo = m_auiToolBar->AddTool( wxID_REDO, _("Redo"), wxArtProvider::GetBitmap( wxART_REDO, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Redo"), wxEmptyString, NULL );
+
+	m_auiToolBar->AddSeparator();
+
+	m_tool_Copy = m_auiToolBar->AddTool( wxID_COPY, _("Copy"), wxArtProvider::GetBitmap( wxART_COPY, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Copy"), wxEmptyString, NULL );
+
+	m_tool_Paste = m_auiToolBar->AddTool( wxID_PASTE, _("Paste"), wxArtProvider::GetBitmap( wxART_PASTE, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Paste"), wxEmptyString, NULL );
+
+	m_tool_Cut = m_auiToolBar->AddTool( wxID_CUT, _("Cut"), wxArtProvider::GetBitmap( wxART_CUT, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Cut selected block and copies to clipboard"), wxEmptyString, NULL );
+
+	m_tool_Delete = m_auiToolBar->AddTool( wxID_DELETE, _("Delete"), wxArtProvider::GetBitmap( wxART_DELETE, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Delete selected block"), wxEmptyString, NULL );
+
+	m_tool_insert = m_auiToolBar->AddTool( idInsert, _("Insert"), wxArtProvider::GetBitmap( wxART_GO_DOWN, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, _("Insert block"), wxEmptyString, NULL );
+
+	m_auiToolBar->Realize();
+
 	statusBar = this->CreateStatusBar( 5, wxSTB_SIZEGRIP, wxID_ANY );
 	statusBar->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
@@ -396,6 +435,21 @@ HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& tit
 	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpWiki->GetId());
 	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpBugReporting->GetId());
 	helpMenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( HexEditorGui::OnHelpMenu ), this, menuHelpAbout->GetId());
+	this->Connect( m_tool_NewFile->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Open->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Save->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_SaveAs->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Close->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Find->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Replace->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_GotoOffset->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Undo->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Redo->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Copy->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Paste->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Cut->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_Delete->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Connect( m_tool_insert->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 }
 
 HexEditorGui::~HexEditorGui()
@@ -413,6 +467,21 @@ HexEditorGui::~HexEditorGui()
 	this->Disconnect( idFileRO, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idFileRW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
 	this->Disconnect( idFileDW, wxEVT_UPDATE_UI, wxUpdateUIEventHandler( HexEditorGui::OnUpdateUI ) );
+	this->Disconnect( m_tool_NewFile->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Open->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Save->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_SaveAs->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Close->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Find->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Replace->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_GotoOffset->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Undo->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Redo->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Copy->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Paste->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Cut->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_Delete->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
+	this->Disconnect( m_tool_insert->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( HexEditorGui::OnMenuEvent ) );
 
 }
 
@@ -1076,7 +1145,7 @@ FindDialogGui::FindDialogGui( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizerOptions->Add( m_searchtype, 1, wxALL, 3 );
 
 	wxStaticBoxSizer* sbSizerSearchOptions;
-	sbSizerSearchOptions = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Options") ), wxVERTICAL );
+	sbSizerSearchOptions = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("asa") ), wxVERTICAL );
 
 	chkMatchCase = new wxCheckBox( sbSizerSearchOptions->GetStaticBox(), wxID_ANY, _("Match Case"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerSearchOptions->Add( chkMatchCase, 0, wxALL, 5 );

@@ -18,6 +18,8 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/aui/aui.h>
+#include <wx/aui/auibar.h>
 #include <wx/statusbr.h>
 #include <wx/aui/auibook.h>
 #include <wx/sizer.h>
@@ -82,8 +84,9 @@
 #define idDonate 1034
 #define idWiki 1035
 #define idBugReport 1036
-#define ID_CHK_UNSIGNED 1037
-#define ID_CHK_BIGENDIAN 1038
+#define wxNEW 1037
+#define ID_CHK_UNSIGNED 1038
+#define ID_CHK_BIGENDIAN 1039
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class HexEditorGui
@@ -105,6 +108,22 @@ class HexEditorGui : public wxFrame
 		wxMenu* optionsMenu;
 		wxMenu* menuOptionsFileMode;
 		wxMenu* helpMenu;
+		wxAuiToolBar* m_auiToolBar;
+		wxAuiToolBarItem* m_tool_NewFile;
+		wxAuiToolBarItem* m_tool_Open;
+		wxAuiToolBarItem* m_tool_Save;
+		wxAuiToolBarItem* m_tool_SaveAs;
+		wxAuiToolBarItem* m_tool_Close;
+		wxAuiToolBarItem* m_tool_Find;
+		wxAuiToolBarItem* m_tool_Replace;
+		wxAuiToolBarItem* m_tool_GotoOffset;
+		wxAuiToolBarItem* m_tool_Undo;
+		wxAuiToolBarItem* m_tool_Redo;
+		wxAuiToolBarItem* m_tool_Copy;
+		wxAuiToolBarItem* m_tool_Paste;
+		wxAuiToolBarItem* m_tool_Cut;
+		wxAuiToolBarItem* m_tool_Delete;
+		wxAuiToolBarItem* m_tool_insert;
 		wxStatusBar* statusBar;
 		wxAuiNotebook* MyNotebook;
 

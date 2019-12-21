@@ -23,6 +23,8 @@
 
 #include "HexEditorFrame.h"
 #define idDiskDevice 10000
+#include "wx/fswatcher.h"
+
 #ifdef  __WXMAC__
 	#include <dirent.h>	//for pre 2.9.0 wx releases
 #elif defined( __WXMSW__ )
@@ -95,15 +97,15 @@ wxArrayString GetDeviceList( bool WithPartitions=true){
 
 HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 				HexEditorGui( parent, id, wxString(_T("wxHexEditor ")) << _T( _VERSION_STR_ ) ){
-	#if defined( _DEBUG_ ) && defined( __WXMSW__ )
+#if defined( _DEBUG_ ) && defined( __WXMSW__ )
 	int no = AttachConsole(ATTACH_PARENT_PROCESS); //doesn't work!, don't know why....
 	///Use LDFLAGS="Wl,--subsystem,console -mconsole" to have debug window
 	//wxMessageBox( wxString::Format(" Attach %d", no)    , "none" );
 	//AllocConsole();
 	#endif
-	#if _FSWATCHER_
+#if _FSWATCHER_
 	file_watcher=NULL;
-	#endif // _FSWATCHER_
+#endif // _FSWATCHER_
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
 	license= wxT("wxHexEditor is a hex editor for HUGE files and devices.\n"
@@ -255,7 +257,7 @@ HexEditorFrame::~HexEditorFrame(){
 
 	MyAUI->UnInit();
 #if _FSWATCHER_
-	delete file_watcher;
+//	delete file_watcher;
 #endif // _FSWATCHER_
 	}
 
@@ -455,6 +457,10 @@ void HexEditorFrame::ActionDisabler( void ){
 HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
+
+    if( filename.IsRelative() ) //Make Relative path to Absolute
+       filename.Normalize();
+
 	if(x->FileOpen( filename )){
 		MyNotebook->AddPage( x, x->GetFileName().GetFullName(), true );
 		x->Show();
@@ -483,26 +489,25 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 		myConfigBase::Get()->Flush();
 //		mbar->Check(idFileRO, x->GetFileAccessMode()==FAL::FileAccessMode::ReadOnly);
 
-		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".md5")) ) )
+		if( wxFileExists( filename.GetFullPath().Append(wxT(".md5")) ) )
 			if(wxYES==wxMessageBox(_("MD5 File detected. Do you request MD5 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ) )
 				x->HashVerify( filename.GetFullPath().Append(wxT(".md5")) );
-		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".sha1")) ) )
+		if( wxFileExists( filename.GetFullPath().Append(wxT(".sha1")) ) )
 			if(wxYES==wxMessageBox(_("SHA1 File detected. Do you request SHA1 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( filename.GetFullPath().Append(wxT(".sha1")) );
-		if( wxFileName::FileExists( filename.GetFullPath().Append(wxT(".sha256")) ) )
+		if( wxFileExists( filename.GetFullPath().Append(wxT(".sha256")) ) )
 			if(wxYES==wxMessageBox(_("SHA256 File detected. Do you request SHA256 verification?"), _("Checksum File Detected"), wxYES_NO|wxNO_DEFAULT, this ))
 				x->HashVerify( filename.GetFullPath().Append(wxT(".sha256")) );
+
 #if _FSWATCHER_
 		if(x->GetFileType()==FAL::FAL_File){
-			if(file_watcher!=NULL){
-				file_watcher->Add( filename.GetFullPath() );
-				//file_watcher->Add( filename.GetFullPath(), wxFSW_EVENT_MODIFY );
-				Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, x);
+				//file_watcher->Add( filename );
+				file_watcher->Add( filename, wxFSW_EVENT_MODIFY );
+				file_watcher->Connect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, x);
 				}
 			else{
 				std::cout << "File_watcher event is null! File Watcher is not working!" << std::endl;
 				}
-			}
 #endif // _FSWATCHER_
 		ActionEnabler();
 		return x;
@@ -1176,8 +1181,8 @@ void HexEditorFrame::OnNotebookTabClose( wxAuiNotebookEvent& event ){
 #if _FSWATCHER_
 				if(!FileNameProxy.GetFullPath().Lower().StartsWith( wxT("-pid=")))
 					if(file_watcher!=NULL){
+						file_watcher->Disconnect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
 						file_watcher->Remove( FileNameProxy );
-						Disconnect(wxEVT_FSWATCHER, wxFileSystemWatcherEventHandler(HexEditor::OnFileModify), NULL, MyHexEditor);
 						}
 #endif // _FSWATCHER_
 				MyNotebook->DeletePage( event.GetSelection() );

@@ -56,7 +56,12 @@ void MyClient::Connect(const wxString& sHost, const wxString& sService, const wx
 
 #include <wx/snglinst.h>
 #include <wx/stdpaths.h>
+
+#include <sys/resource.h>
 bool wxHexEditorApp::OnInit() {
+//    wxLog::AddTraceMask("EventSource");
+//    wxLog::AddTraceMask(wxTRACE_FSWATCHER);
+
 	wxImage::AddHandler(new wxPNGHandler);
 	SetLanguage();
 	bool SingleInstance;
@@ -73,7 +78,6 @@ bool wxHexEditorApp::OnInit() {
 				wxFileName fl(str);
 				m_client->Connect("localhost", "59147", "OPEN FILE:"+fl.GetLongPath());
 				}
-
 			Exit();
 			}
 		}
@@ -116,7 +120,7 @@ void wxHexEditorApp::MyAppInit(){
 	}
 
     // create the file system watcher here, because it needs an active loop
-void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)) //wxOVERRIDE
+void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop))// wxOVERRIDE
 	{
 	static bool first_run=true;
 	if(first_run){
@@ -124,9 +128,11 @@ void wxHexEditorApp::OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)) //wxOVERR
 #if _FSWATCHER_
 		if(frame->file_watcher == NULL ){
 			frame->file_watcher = new wxFileSystemWatcher();
-			frame->file_watcher->SetOwner(frame);
+			//Not need since all file operations are tracked by HexEditor class
+			//frame->file_watcher->SetOwner(this);
 			}
 #endif // _FSWATCHER_
+        //After wxFileSystemWatcher init, we can continue to file related initialization
 		MyAppInit();
 		}
 	}

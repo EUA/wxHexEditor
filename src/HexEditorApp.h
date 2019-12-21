@@ -55,7 +55,7 @@
 
 class wxHexEditorApp : public wxApp {
 	public:
-		virtual bool OnInit();
+		virtual bool OnInit();// wxOVERRIDE;
 		void MyAppInit(void);
 		void SetLanguage(void);
 #ifdef _DEBUG_EVENTS_
@@ -67,7 +67,7 @@ class wxHexEditorApp : public wxApp {
 		wxLocale myLocale;
 
 		// create the file system watcher here, because it needs an active loop
-		virtual void OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop)); // wxOVERRIDE;
+		virtual void OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop));// wxOVERRIDE;
    };
 
 DECLARE_APP(wxHexEditorApp)

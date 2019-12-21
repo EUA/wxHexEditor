@@ -73,8 +73,8 @@ class HexEditorFrame : public HexEditorGui{
 		class HexEditor* OpenFile(wxFileName flname, bool openAtRight=false);
 		class HexEditor* GetActiveHexEditor(void);
 #if _FSWATCHER_
-		wxFileSystemWatcher *file_watcher;
-#endif
+   		wxFileSystemWatcher *file_watcher;
+#endif // _FSWATCHER_
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
 		void OnToolsMenu( wxCommandEvent& event );

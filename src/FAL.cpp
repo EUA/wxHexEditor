@@ -317,9 +317,8 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 	#endif
 		//wxExecute( cmd , output, errors, wxEXEC_SYNC);
 		wxShell( cmd );
-		FileType=FAL_File;
 		}
-
+    FileType=FAL_File;
 	return FALOpen(myfilename, FAM, ForceBlockRW);
 	}
 

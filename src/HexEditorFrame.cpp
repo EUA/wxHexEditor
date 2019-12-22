@@ -458,8 +458,10 @@ HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight){
 	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 
-    if( filename.IsRelative() ) //Make Relative path to Absolute
-       filename.Normalize();
+	if( !filename.GetName().StartsWith(wxT("-buf")) &&
+        !filename.GetName().StartsWith(wxT("-pid")) )
+        if( filename.IsRelative() ) //Make Relative path to Absolute
+            filename.Normalize();
 
 	if(x->FileOpen( filename )){
 		MyNotebook->AddPage( x, x->GetFileName().GetFullName(), true );

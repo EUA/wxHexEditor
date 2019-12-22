@@ -111,7 +111,13 @@ FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	BlockRWSize = ForceBlockRW;
 	ProcessID=-1;
 	get_ptr = put_ptr = 0;
-	OSDependedOpen( myfilename, FAM, ForceBlockRW  );
+	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
+		memset( internal_file_buffer.GetWriteBuf(1024), 0 , 1024 );
+		internal_file_buffer.UngetWriteBuf(1024);
+		FileType=FAL_Buffer;
+		}
+    else
+        OSDependedOpen( myfilename, FAM, ForceBlockRW  );
 	}
 
 #ifdef __WXMSW__
@@ -145,12 +151,6 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		//BlockRWCount=0x800000000000LL/4;
 		FAM = ReadOnly;
 		return true;
-		}
-
-	else if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
-		memset( internal_file_buffer.GetWriteBuf(512), 0 , 512 );
-		internal_file_buffer.UngetWriteBuf(512);
-		FileType=FAL_Buffer;
 		}
 
 	else if(IsWinDevice(myfilename)){
@@ -262,12 +262,6 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 
-	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
-		memset( internal_file_buffer.GetWriteBuf(512), 0 , 512 );
-		internal_file_buffer.UngetWriteBuf(512);
-		FileType=FAL_Buffer;
-		}
-
 	else if(!DoFileExists){
 		wxMessageBox(wxString(_("File does not exists at path:"))+wxT("\n")+myfilename.GetFullPath(),_("Error"), wxOK|wxICON_ERROR);
 		return false;
@@ -339,12 +333,6 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		BlockRWSize=4;
 		FAM == ReadOnly;
 		return true;
-		}
-
-	if(myfilename.GetFullPath().Lower().StartsWith( wxT("-buf"))){
-		memset( internal_file_buffer.GetWriteBuf(512), 0 , 512 );
-		internal_file_buffer.UngetWriteBuf(512);
-		FileType=FAL_Buffer;
 		}
 
 	if( !myfilename.IsFileReadable() ){

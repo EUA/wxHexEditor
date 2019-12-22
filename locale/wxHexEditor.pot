@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-20 14:45+0300\n"
+"POT-Creation-Date: 2019-12-22 05:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,20 +82,20 @@ msgstr ""
 msgid "Copy To Clipboard Error"
 msgstr ""
 
-#: src/FAL.cpp:139 src/FAL.cpp:253 src/FAL.cpp:335
+#: src/FAL.cpp:145 src/FAL.cpp:253 src/FAL.cpp:328
 #, c-format
 msgid "Process ID:%d cannot be open."
 msgstr ""
 
-#: src/FAL.cpp:139 src/FAL.cpp:188 src/FAL.cpp:234 src/FAL.cpp:253
-#: src/FAL.cpp:272 src/FAL.cpp:292 src/FAL.cpp:310 src/FAL.cpp:335
-#: src/FAL.cpp:352 src/FAL.cpp:371 src/FAL.cpp:469 src/FAL.cpp:477
+#: src/FAL.cpp:145 src/FAL.cpp:188 src/FAL.cpp:234 src/FAL.cpp:253
+#: src/FAL.cpp:266 src/FAL.cpp:286 src/FAL.cpp:304 src/FAL.cpp:328
+#: src/FAL.cpp:339 src/FAL.cpp:358 src/FAL.cpp:456 src/FAL.cpp:464
 #: src/HexDialogs.cpp:738 src/HexDialogs.cpp:2289 src/HexDialogs.cpp:2293
 #: src/HexDialogs.cpp:2748 src/HexEditor.cpp:245 src/HexEditor.cpp:501
 #: src/HexEditor.cpp:553 src/HexEditor.cpp:697 src/HexEditor.cpp:1827
-#: src/HexEditorFrame.cpp:630 src/HexEditorFrame.cpp:646
-#: src/HexEditorFrame.cpp:650 src/HexEditorFrame.cpp:662
-#: src/HexEditorFrame.cpp:1257
+#: src/HexEditorFrame.cpp:651 src/HexEditorFrame.cpp:667
+#: src/HexEditorFrame.cpp:671 src/HexEditorFrame.cpp:683
+#: src/HexEditorFrame.cpp:1278
 msgid "Error"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Device is not mounted"
 msgstr ""
 
-#: src/FAL.cpp:234 src/FAL.cpp:278 src/FAL.cpp:352
+#: src/FAL.cpp:234 src/FAL.cpp:272 src/FAL.cpp:339
 msgid "File is not readable by permissions."
 msgstr ""
 
@@ -113,69 +113,69 @@ msgid ""
 "privileges."
 msgstr ""
 
-#: src/FAL.cpp:272
+#: src/FAL.cpp:266
 msgid "File does not exists at path:"
 msgstr ""
 
-#: src/FAL.cpp:279
+#: src/FAL.cpp:273
 msgid "Please change file permissons or run this program with root privileges."
 msgstr ""
 
-#: src/FAL.cpp:280
+#: src/FAL.cpp:274
 msgid ""
 "You can also try to own the file temporarily (requires root's password.)"
 msgstr ""
 
-#: src/FAL.cpp:281
+#: src/FAL.cpp:275
 msgid "Do you want to own the file?"
 msgstr ""
 
-#: src/FAL.cpp:281 src/HexEditor.cpp:1630 src/HexPanels.cpp:477
+#: src/FAL.cpp:275 src/HexEditor.cpp:1630 src/HexPanels.cpp:477
 msgid "Warning"
 msgstr ""
 
-#: src/FAL.cpp:292
+#: src/FAL.cpp:286
 msgid "Unknown error on \"stat -c %U"
 msgstr ""
 
-#: src/FAL.cpp:310
+#: src/FAL.cpp:304
 msgid ""
 "For using this function, please install \"pkexec\", \"gnomesu\" or \"gksu\" "
 "tools first."
 msgstr ""
 
-#: src/FAL.cpp:352
+#: src/FAL.cpp:339
 msgid "Please change file permissons or run this program with root privileges"
 msgstr ""
 
-#: src/FAL.cpp:371 src/HexEditor.cpp:245
+#: src/FAL.cpp:358 src/HexEditor.cpp:245 src/HexEditorFrame.cpp:588
 msgid "File cannot open."
 msgstr ""
 
-#: src/FAL.cpp:469
+#: src/FAL.cpp:456
 msgid ""
 "File load error!.\n"
 "File closed but not opened while access change. For avoid corruption close "
 "the program"
 msgstr ""
 
-#: src/FAL.cpp:477
+#: src/FAL.cpp:464
 msgid "File cannot open in this mode : "
 msgstr ""
 
-#: src/FAL.cpp:492
+#: src/FAL.cpp:479
 msgid "Access Invalid"
 msgstr ""
 
-#: src/FAL.cpp:506 src/FAL.cpp:516 src/FAL.cpp:526
+#: src/FAL.cpp:493 src/FAL.cpp:503 src/FAL.cpp:513
 msgid "Not Enought RAM"
 msgstr ""
 
-#: src/FAL.cpp:638
+#: src/FAL.cpp:625
 msgid "Error on Write operation to Process RAM"
 msgstr ""
 
-#: src/FAL.cpp:638
+#: src/FAL.cpp:625
 msgid "FATAL ERROR"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 msgid "%d records changed."
 msgstr ""
 
-#: src/HexDialogs.cpp:1794 src/HexEditor.cpp:1644 src/HexEditorFrame.cpp:762
+#: src/HexDialogs.cpp:1794 src/HexEditor.cpp:1644 src/HexEditorFrame.cpp:783
 msgid "Info"
 msgstr ""
 
@@ -561,7 +561,7 @@ msgstr ""
 msgid "XORView Thru Warning"
 msgstr ""
 
-#: src/HexEditor.cpp:399
+#: src/HexEditor.cpp:399 src/HexEditorFrame.cpp:572
 msgid "Choose a file for save as"
 msgstr ""
 
@@ -645,7 +645,7 @@ msgstr ""
 msgid "TAGs Cannot Be Saved!!"
 msgstr ""
 
-#: src/HexEditor.cpp:543 src/HexEditorFrame.cpp:638
+#: src/HexEditor.cpp:543 src/HexEditorFrame.cpp:659
 msgid "Choose a file for export TAGs"
 msgstr ""
 
@@ -805,119 +805,136 @@ msgstr ""
 msgid "Failed to open the bus."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:200
+#: src/HexEditorFrame.cpp:202
 msgid "License Agreement"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:332 src/HexEditorFrame.cpp:333
+#: src/HexEditorFrame.cpp:334 src/HexEditorFrame.cpp:335
 #: src/HexEditorGui.cpp:160
 msgid "Toolbar"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:339 src/HexEditorFrame.cpp:340
+#: src/HexEditorFrame.cpp:341 src/HexEditorFrame.cpp:342
 msgid "TagPanel"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:350 src/HexEditorFrame.cpp:351
+#: src/HexEditorFrame.cpp:352 src/HexEditorFrame.cpp:353
 #: src/HexEditorGui.cpp:172
 msgid "Disassembler Panel"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:362 src/HexEditorFrame.cpp:363
+#: src/HexEditorFrame.cpp:364 src/HexEditorFrame.cpp:365
 msgid "Search Results"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:374 src/HexEditorFrame.cpp:375
+#: src/HexEditorFrame.cpp:376 src/HexEditorFrame.cpp:377
 msgid "Comparison Results"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:385 src/HexEditorFrame.cpp:386
+#: src/HexEditorFrame.cpp:387 src/HexEditorFrame.cpp:388
 msgid "DataInterpreter"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:396 src/HexEditorFrame.cpp:397
+#: src/HexEditorFrame.cpp:398 src/HexEditorFrame.cpp:399
 #: src/HexEditorGui.cpp:164
 msgid "InfoPanel"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:487
+#: src/HexEditorFrame.cpp:495
 msgid "MD5 File detected. Do you request MD5 verification?"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:487 src/HexEditorFrame.cpp:490
-#: src/HexEditorFrame.cpp:493
+#: src/HexEditorFrame.cpp:495 src/HexEditorFrame.cpp:498
+#: src/HexEditorFrame.cpp:501
 msgid "Checksum File Detected"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:490
+#: src/HexEditorFrame.cpp:498
 msgid "SHA1 File detected. Do you request SHA1 verification?"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:493
+#: src/HexEditorFrame.cpp:501
 msgid "SHA256 File detected. Do you request SHA256 verification?"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:581
+#: src/HexEditorFrame.cpp:546
+msgid "Please indicate file size."
+msgstr ""
+
+#: src/HexEditorFrame.cpp:546
+msgid "Enter File Size:"
+msgstr ""
+
+#: src/HexEditorFrame.cpp:568
+#, c-format
+msgid "Wrong input: %d please retry..."
+msgstr ""
+
+#: src/HexEditorFrame.cpp:584
+msgid "File cannot create!"
+msgstr ""
+
+#: src/HexEditorFrame.cpp:602
 msgid "Choose a file for editing"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:622
+#: src/HexEditorFrame.cpp:643
 msgid "Choose a file for import TAGs"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:630 src/HexEditorFrame.cpp:662
+#: src/HexEditorFrame.cpp:651 src/HexEditorFrame.cpp:683
 msgid "TAGS cannot be imported from "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:646
+#: src/HexEditorFrame.cpp:667
 msgid "TAGs cannot be exported to "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:650
+#: src/HexEditorFrame.cpp:671
 msgid "There is no TAGs to Export in current active file!"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:654
+#: src/HexEditorFrame.cpp:675
 msgid "Choose a file for import template/TAGs to cursor offset"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:733
+#: src/HexEditorFrame.cpp:754
 msgid "Please enter process identification number."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:733
+#: src/HexEditorFrame.cpp:754
 msgid "Enter PID:"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:733 src/HexEditorGui.cpp:246
+#: src/HexEditorFrame.cpp:754 src/HexEditorGui.cpp:246
 msgid "Open Process RAM"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:762
+#: src/HexEditorFrame.cpp:783
 msgid "Please restart program for changes."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:783
+#: src/HexEditorFrame.cpp:804
 msgid "This mode will write changes every change to file DIRECTLY."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:783
+#: src/HexEditorFrame.cpp:804
 msgid "Warning!"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:867
+#: src/HexEditorFrame.cpp:888
 msgid "wxHexEditor is a hex editor for HUGE files and devices."
 msgstr ""
 
-#: src/HexEditorFrame.cpp:982
+#: src/HexEditorFrame.cpp:1003
 msgid "You needed administration privileges to see available devices"
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1257
+#: src/HexEditorFrame.cpp:1278
 msgid "Cannot open dropped file: "
 msgstr ""
 
-#: src/HexEditorFrame.cpp:1276 src/HexEditorGui.cpp:1269
+#: src/HexEditorFrame.cpp:1297 src/HexEditorGui.cpp:1269
 #, c-format
 msgid "New wxHexEditor version %s is available!"
 msgstr ""

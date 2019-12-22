@@ -43,7 +43,7 @@
 #include <stdint.h>
 #include <wx/memory.h>
 
-#define HAS_A_TIME_MACHINE
+#define HAS_A_TIME_MACHINEx
 #define HAS_A_EXFAT_TIME
 class DataInterpreter : public InterpreterGui{
 	public:

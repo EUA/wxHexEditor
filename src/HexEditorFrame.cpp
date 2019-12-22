@@ -531,57 +531,71 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ){
 	std::cout << "OnMenuEvent: "  << event.GetId() << std::endl;
 #endif
 	if( event.GetId() == wxID_NEW ){	//GetFile Lenght, Save file as, Create file, Open file as RW
-//		wxString lngt;
-//		long unsigned int size=0;
-//		while(1){
-//			int dsize=0;
-//			if (wxTheClipboard->Open()){
-//				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
-//					wxTextDataObject data;
-//					wxTheClipboard->GetData( data );
-//					dsize=data.GetDataSize();
-//					}
-//				wxTheClipboard->Close();
-//				}
-//			lngt = wxGetTextFromUser( _("Please indicate file size in decimal."), _("Enter File Size:"), wxString::Format(wxT("%u"),dsize ) );
-//
-//			if(lngt.IsEmpty()){
-//				return;
-//			}
-//			else if( lngt.ToULong( &size, 10 ) && (size > 0) )// ToULongLong has problems with Windows...
+		wxString user_input;
+		long unsigned int size=0;
+		while(1){
+			int dsize=0;
+			if (wxTheClipboard->Open()){
+				if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+					wxTextDataObject data;
+					wxTheClipboard->GetData( data );
+					dsize=data.GetDataSize();
+					}
+				wxTheClipboard->Close();
+				}
+			user_input = wxGetTextFromUser( _("Please indicate file size."), _("Enter File Size:"), wxString::Format(wxT("%u"),dsize ) );
+
+			if(user_input.IsEmpty()){
+				return;
+			}
+			wxRegEx filesz("^([0-9]+) *((?=[KMGT])([KMGT])(?:i?B)?|B?)$" , wxRE_ICASE | wxRE_ADVANCED);
+			if( filesz.IsValid() ){
+                if( filesz.Matches(user_input) ){
+                    wxString num = filesz.GetMatch( user_input, 1 );
+                    user_input.ToULong( &size, 10 );
+                    wxString multipler = filesz.GetMatch( user_input, 2 );
+                    if( multipler.StartsWith(wxT("T")) )         size*=1024*1024*1024*1024;
+                    else if( multipler.StartsWith(wxT("G")) )    size*=1024*1024*1024;
+                    else if( multipler.StartsWith(wxT("M")) )    size*=1024*1024;
+                    else if( multipler.StartsWith(wxT("K")) )    size*=1024;
+
+                    break;
+                    }
+            }
+//			else if( user_input.ToULong( &size, 10 ) && (size > 0) )// ToULongLong has problems with Windows...
 //				break;
-//
-//			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),lngt.ToULong( &size, 10 ) ) ,_T("Error!"), wxICON_ERROR, this );
-//			}
-//		//Save file
-//		wxFileDialog filediag(this,
-//									_("Choose a file for save as"),
-//									wxEmptyString,
-//									wxEmptyString,
-//									wxFileSelectorDefaultWildcardStr,
-//									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
-//									wxDefaultPosition);
-//
-//		if(wxID_OK == filediag.ShowModal()){
-//			wxFileName flname(filediag.GetPath());
-//			//create file
-//			wxFile crt;
-//			if( !crt.Create( flname.GetFullPath(), true ) ){
-//				wxMessageBox( _("File cannot create!") ,_T("Error"), wxICON_ERROR, this );
-//				return;
-//				}
-//			if( !crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
-//				wxMessageBox( _("File cannot open.") ,_T("Error"), wxICON_ERROR, this );
-//				return;
-//				}
-//			crt.Seek( size-1 );
-//			crt.Write("\0x00", 1);
-//			crt.Close();
-//			//Openning the file with text editor.
-//			OpenFile( flname );
-//			}
-//
-		OpenFile( wxFileName("-buf") );
+
+			wxMessageBox( wxString::Format(_("Wrong input: %d please retry..."),user_input ) ,_T("Error!"), wxICON_ERROR, this );
+			}
+		//Save file
+		wxFileDialog filediag(this,
+									_("Choose a file for save as"),
+									wxEmptyString,
+									wxEmptyString,
+									wxFileSelectorDefaultWildcardStr,
+									wxFD_SAVE|wxFD_OVERWRITE_PROMPT|wxFD_CHANGE_DIR,
+									wxDefaultPosition);
+
+		if(wxID_OK == filediag.ShowModal()){
+			wxFileName flname(filediag.GetPath());
+			//create file
+			wxFile crt;
+			if( !crt.Create( flname.GetFullPath(), true ) ){
+				wxMessageBox( _("File cannot create!") ,_T("Error"), wxICON_ERROR, this );
+				return;
+				}
+			if( !crt.Open( flname.GetFullPath(), wxFile::read_write ) ){
+				wxMessageBox( _("File cannot open.") ,_T("Error"), wxICON_ERROR, this );
+				return;
+				}
+			crt.Seek( size-1 );
+			crt.Write("\0x00", 1);
+			crt.Close();
+			//Openning the file with text editor.
+			OpenFile( flname );
+			}
+
+		//OpenFile( wxFileName("-buf") );
 		}
 	else if( event.GetId() == wxID_OPEN ){
 		wxFileDialog filediag(this,

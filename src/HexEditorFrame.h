@@ -44,6 +44,7 @@
 #include <wx/textdlg.h>
 #include <wx/mstream.h>
 #include <wx/docview.h>
+#include <wx/regex.h>
 
 #if _FSWATCHER_
 #include <wx/fswatcher.h>

@@ -59,13 +59,13 @@
 
 #define wxGetBitmapFromMemory(name) _wxGetBitmapFromMemory(name ## _png, sizeof(name ## _png))
 inline wxBitmap _wxGetBitmapFromMemory(const unsigned char *data, int length) {
-   wxMemoryInputStream is(data, length);
-   return wxBitmap(wxImage(is, wxBITMAP_TYPE_ANY, -1), -1);
+	wxMemoryInputStream is(data, length);
+	return wxBitmap(wxImage(is, wxBITMAP_TYPE_ANY, -1), -1);
 	}
 
 class IPCServer;
 class DnDFile;
-class HexEditorFrame : public HexEditorGui{
+class HexEditorFrame : public HexEditorGui {
 	public:
 		HexEditorFrame();
 		HexEditorFrame(	wxWindow* parent, wxWindowID id = wxID_ANY );
@@ -74,7 +74,7 @@ class HexEditorFrame : public HexEditorGui{
 		class HexEditor* OpenFile(wxFileName flname, bool openAtRight=false);
 		class HexEditor* GetActiveHexEditor(void);
 #if _FSWATCHER_
-   		wxFileSystemWatcher *file_watcher;
+		wxFileSystemWatcher *file_watcher;
 #endif // _FSWATCHER_
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
@@ -117,19 +117,19 @@ class HexEditorFrame : public HexEditorGui{
 		IPCServer* m_server;
 	};
 
-class HexEditorArtProvider : public wxArtProvider{
-protected:
-    virtual wxBitmap CreateBitmap(const wxArtID& id, const wxArtClient& client,
-                                  const wxSize& size);
+class HexEditorArtProvider : public wxArtProvider {
+	protected:
+		virtual wxBitmap CreateBitmap(const wxArtID& id, const wxArtClient& client,
+		                              const wxSize& size);
 	};
 
 
-class DnDFile : public wxFileDropTarget{
+class DnDFile : public wxFileDropTarget {
 	public:
 		DnDFile( HexEditorFrame* myHexFramework) {
 			HexFramework = myHexFramework;
 			}
-	virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
+		virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
 	private:
 		wxAuiNotebook *m_pOwner;
 		HexEditorFrame *HexFramework;
@@ -143,9 +143,9 @@ class VersionChecker : public UpdateDialogGui {
 
 #include <wx/ipc.h>
 //For open files with wxHexEditor mime
-class IPCServer : public wxServer{
+class IPCServer : public wxServer {
 	public:
-		IPCServer(HexEditorFrame *parent_): parent(parent_){};
+		IPCServer(HexEditorFrame *parent_): parent(parent_) {};
 		virtual wxConnectionBase *OnAcceptConnection(const wxString& topic);
 	private:
 		HexEditorFrame *parent;

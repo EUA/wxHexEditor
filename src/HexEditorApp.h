@@ -39,15 +39,15 @@
 #endif // _VERSION_
 
 #ifdef __WXMSW__
-	#define _VERSION_STR_ _VERSION_S_ " for Windows"
+#define _VERSION_STR_ _VERSION_S_ " for Windows"
 #elif defined(__WXOSX__)
-	#define _VERSION_STR_ _VERSION_S_ " for Mac"
+#define _VERSION_STR_ _VERSION_S_ " for Mac"
 #elif defined(__WXGTK__) && defined(__linux__)
-	#define _VERSION_STR_ _VERSION_S_ " for Linux"
+#define _VERSION_STR_ _VERSION_S_ " for Linux"
 #elif defined(__WXGTK__) && defined(BSD)
-	#define _VERSION_STR_ _VERSION_S_ " for BSD"
+#define _VERSION_STR_ _VERSION_S_ " for BSD"
 #else
-	#define _VERSION_STR_ _VERSION_S_
+#define _VERSION_STR_ _VERSION_S_
 #endif
 
 #include <wx/app.h>
@@ -56,7 +56,7 @@
 class wxHexEditorApp : public wxApp {
 	public:
 		virtual bool OnInit();// wxOVERRIDE;
-		void MyAppInit(void);
+		void PostAppInit(void);
 		void SetLanguage(void);
 #ifdef _DEBUG_EVENTS_
 		int FilterEvent(wxEvent &evt);
@@ -68,7 +68,7 @@ class wxHexEditorApp : public wxApp {
 
 		// create the file system watcher here, because it needs an active loop
 		virtual void OnEventLoopEnter(wxEventLoopBase* WXUNUSED(loop));// wxOVERRIDE;
-   };
+	};
 
 DECLARE_APP(wxHexEditorApp)
 

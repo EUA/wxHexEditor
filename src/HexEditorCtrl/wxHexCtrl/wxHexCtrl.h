@@ -49,32 +49,33 @@ int atoh( const char );
 
 WX_DEFINE_ARRAY(TagElement*, ArrayOfTAG);
 
-class wxHexCtrl : public wxScrolledWindow{
+class wxHexCtrl : public wxScrolledWindow {
 	public:
 //		wxHexCtrl() { }
-		wxHexCtrl( wxWindow *parent ){};
+		wxHexCtrl( wxWindow *parent ) {};
 
 		wxHexCtrl( wxWindow *parent,
-				wxWindowID id,
-				const wxString &value = wxEmptyString,
-				const wxPoint &pos = wxDefaultPosition,
-				const wxSize &size = wxDefaultSize,
-				long style = 0,
-				const wxValidator& validator = wxDefaultValidator);
+		           wxWindowID id,
+		           const wxString &value = wxEmptyString,
+		           const wxPoint &pos = wxDefaultPosition,
+		           const wxSize &size = wxDefaultSize,
+		           long style = 0,
+		           const wxValidator& validator = wxDefaultValidator);
 		~wxHexCtrl();
-		wxChar CharAt(unsigned offset){
-			if( offset >= m_text.Len() ){
+		wxChar CharAt(unsigned offset) {
+			if( offset >= m_text.Len() ) {
 				//std::cout << "Buff lower for offset : " << offset << std::endl;
 				return 0;
 				}
-		return m_text.GetChar(offset);}
+			return m_text.GetChar(offset);
+			}
 
 		// Operations
 		void SetFormat( wxString fmt );
 		wxString GetFormat( void );
-virtual void SetDefaultStyle( wxTextAttr& new_attr );
+		virtual void SetDefaultStyle( wxTextAttr& new_attr );
 		void SetSelectionStyle( wxTextAttr& new_attr );
-virtual void CreateCaret( void );
+		virtual void CreateCaret( void );
 		void MoveCaret( int x );
 		void MoveCaret( wxPoint p );
 		void Clear( bool ClearDC=true, bool cursor_reset=true );
@@ -84,9 +85,9 @@ virtual void CreateCaret( void );
 		wxString GetValue( void );
 		long ReadBytes( char* buffer, int start_location, int byte_count, bool no_repaint = false );
 		char ReadByte(int byte_location);
-static wxMemoryBuffer HexToBin(const wxString& HexValue);
-virtual void Replace(unsigned from, unsigned to, const wxString& value);
-virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true);
+		static wxMemoryBuffer HexToBin(const wxString& HexValue);
+		virtual void Replace(unsigned from, unsigned to, const wxString& value);
+		virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true);
 		void WriteByte( const unsigned char& byte );
 		void WriteHex( const wxString& text_value );
 
@@ -105,28 +106,44 @@ virtual void Replace(unsigned hex_location, const wxChar& value, bool paint=true
 		// Shaper Classes, All other classes has to be depended to this function for proper action!
 		bool IsDeniedCache[1024];//cache, Enought for this days...
 		int CPL;
-virtual bool IsDenied() { return IsDenied( m_Caret.x );}
-virtual bool IsDenied( int x );
-virtual bool IsDenied_NoCache( int x );
-virtual bool IsAllowedChar(const char& chr);
+		virtual bool IsDenied() {
+			return IsDenied( m_Caret.x );
+			}
+		virtual bool IsDenied( int x );
+		virtual bool IsDenied_NoCache( int x );
+		virtual bool IsAllowedChar(const char& chr);
 //virtual	const char Filter(const char& ch);
 		int xCountDenied( int x );
-		wxSize GetCharSize(){return m_CharSize;}
+		wxSize GetCharSize() {
+			return m_CharSize;
+			}
 
 		// Movement Support
-virtual void DrawCursorShadow(wxDC*);
-virtual int CharacterPerLine( bool NoCache=false );
-virtual int BytePerLine( void ){ return CharacterPerLine() / 2; }
-virtual int ByteCapacity( void ){ return m_Window.y*BytePerLine(); }
-virtual int GetByteCount( void ){ return m_text.Length()/2;	}
-		int LineCount( void )	{ return m_Window.y; }
-		int ActiveLine( void )	{ return m_Caret.y+1; } //ReAllocated, start from 1, NOT 0
+		virtual void DrawCursorShadow(wxDC*);
+		virtual int CharacterPerLine( bool NoCache=false );
+		virtual int BytePerLine( void ) {
+			return CharacterPerLine() / 2;
+			}
+		virtual int ByteCapacity( void ) {
+			return m_Window.y*BytePerLine();
+			}
+		virtual int GetByteCount( void ) {
+			return m_text.Length()/2;
+			}
+		int LineCount( void )	{
+			return m_Window.y;
+			}
+		int ActiveLine( void )	{
+			return m_Caret.y+1;   //ReAllocated, start from 1, NOT 0
+			}
 		int GetInsertionPoint( void );
-virtual void SetInsertionPoint( unsigned int pos );
-		int GetLastPosition( void ){ return m_text.Length() - 1; }
-virtual int ToVisiblePosition( int InternalPosition );
-virtual int ToInternalPosition( int VisiblePosition );
-virtual int PixelCoordToInternalPosition( wxPoint mouse );
+		virtual void SetInsertionPoint( unsigned int pos );
+		int GetLastPosition( void ) {
+			return m_text.Length() - 1;
+			}
+		virtual int ToVisiblePosition( int InternalPosition );
+		virtual int ToInternalPosition( int VisiblePosition );
+		virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		wxPoint InternalPositionToVisibleCoord( int position );
 		wxPoint PixelCoordToInternalCoord( wxPoint mouse );
 
@@ -136,16 +153,16 @@ virtual int PixelCoordToInternalPosition( wxPoint mouse );
 		TagElement* GetTagByPix( wxPoint PixelCoord );
 		void SetSelection( unsigned start, unsigned end );
 		void ClearSelection( bool RePaint = true );
-		struct selector: public TagElement{		//select
+		struct selector: public TagElement {		//select
 			bool selected;		//select available variable
 			} select;
-virtual void TagPainter( wxDC* DC, TagElement& TG );
+		virtual void TagPainter( wxDC* DC, TagElement& TG );
 #ifdef _Use_Graphics_Contex_
-virtual void TagPainterGC( wxGraphicsContext* gc, TagElement& TG );
+		virtual void TagPainterGC( wxGraphicsContext* gc, TagElement& TG );
 #endif // _Use_Graphics_Contex_
 		void RePaint( void );
 
-inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
+		inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		void OnTagHideAll( void );
 		bool *TagMutex;
 		int *ZebraStriping;
@@ -166,8 +183,8 @@ inline void DrawSeperationLineAfterChar( wxDC* DC, int offset );
 		void OnPaint( wxPaintEvent &event );
 		void OnSize( wxSizeEvent &event );
 		void OnChar( wxKeyEvent &event );
-virtual void OnMouseLeft( wxMouseEvent& event );
-virtual void OnMouseRight( wxMouseEvent& event );
+		virtual void OnMouseLeft( wxMouseEvent& event );
+		virtual void OnMouseRight( wxMouseEvent& event );
 		virtual void OnMouseMove( wxMouseEvent& event );
 		void OnKillFocus( wxFocusEvent& event ); //tempotarily publicized
 		void OnFocus( wxFocusEvent& event );
@@ -179,7 +196,7 @@ virtual void OnMouseRight( wxMouseEvent& event );
 
 		void OnTestCall(void); // 4 Test
 	public:
-virtual void ChangeSize();	// update the geometry
+		virtual void ChangeSize();	// update the geometry
 	protected:
 		wxPoint   m_Margin;	// the margin around the text (looks nicer)
 		wxPoint   m_Caret;	// position (in text coords) of the caret
@@ -190,117 +207,145 @@ virtual void ChangeSize();	// update the geometry
 		//wxTextAttr HexSelectAttr;
 
 		wxSize  m_CharSize;	// size (in pixels) of one character
-	   // DECLARE_DYNAMIC_CLASS(wxHexCtrl)
+		// DECLARE_DYNAMIC_CLASS(wxHexCtrl)
 	};
 
 ///Wrapper for Portable vs Registry configbase.
 //if there are wxHexEditor.cfg file exits on current path, wxHexEditor switches to portable version.
-class myConfigBase{
+class myConfigBase {
 	public:
-	static wxConfigBase* Get(){
-		static wxFileConfig* AppConfigFile=new wxFileConfig("", "","wxHexEditor.cfg", "",  wxCONFIG_USE_RELATIVE_PATH);
-		if( wxFileExists ("wxHexEditor.cfg") )
-			return AppConfigFile;
-		else
-			return wxConfigBase::Get();
-		}
+		static wxConfigBase* Get() {
+			static wxFileConfig* AppConfigFile=new wxFileConfig("", "","wxHexEditor.cfg", "",  wxCONFIG_USE_RELATIVE_PATH);
+			if( wxFileExists ("wxHexEditor.cfg") )
+				return AppConfigFile;
+			else
+				return wxConfigBase::Get();
+			}
 	};
 
-class wxHexTextCtrl : public wxHexCtrl{
+class wxHexTextCtrl : public wxHexCtrl {
 	public:
 		wxString CodepageTable;
 		wxString Codepage;
 		wxFontEncoding FontEnc;
 //		wxHexTextCtrl():wxHexCtrl(){}
-		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ){CtrlType=TextControl;}
+		wxHexTextCtrl( wxWindow *parent ): wxHexCtrl( parent ) {
+			CtrlType=TextControl;
+			}
 		wxHexTextCtrl( wxWindow *parent,
-				wxWindowID id,
-				const wxString &value = wxEmptyString,
-				const wxPoint &pos = wxDefaultPosition,
-				const wxSize &size = wxDefaultSize,
-				long style = 0,
-				const wxValidator& validator = wxDefaultValidator) :
-				wxHexCtrl(parent, id, value, pos, size, style, validator){
-				CtrlType=TextControl;
-				wxWindow::SetCursor( wxCURSOR_CHAR );
+		               wxWindowID id,
+		               const wxString &value = wxEmptyString,
+		               const wxPoint &pos = wxDefaultPosition,
+		               const wxSize &size = wxDefaultSize,
+		               long style = 0,
+		               const wxValidator& validator = wxDefaultValidator) :
+			wxHexCtrl(parent, id, value, pos, size, style, validator) {
+			CtrlType=TextControl;
+			wxWindow::SetCursor( wxCURSOR_CHAR );
 
-				FontEnc=wxFONTENCODING_ALTERNATIVE;
+			FontEnc=wxFONTENCODING_ALTERNATIVE;
 
-				wxString cp;
-				myConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS CP437") );
-				PrepareCodepageTable(cp);
-				};
+			wxString cp;
+			myConfigBase::Get()->Read( _T("CharacterEncoding"), &cp, wxT("DOS CP437") );
+			PrepareCodepageTable(cp);
+			};
 
 //wxArrayString GetSupportedEncodings(void);
 		wxString PrepareCodepageTable(wxString);
-inline bool IsDenied(){ return false; }
-inline bool IsDenied( int x ){ return false; }
-inline int CharacterPerLine( void ){ return m_Window.x; }
-inline int BytePerLine( void ){ return CharacterPerLine(); }
-inline int GetByteCount( void ){ return m_text.Length(); }
+		inline bool IsDenied() {
+			return false;
+			}
+		inline bool IsDenied( int x ) {
+			return false;
+			}
+		inline int CharacterPerLine( void ) {
+			return m_Window.x;
+			}
+		inline int BytePerLine( void ) {
+			return CharacterPerLine();
+			}
+		inline int GetByteCount( void ) {
+			return m_text.Length();
+			}
 		void Replace(unsigned text_location, const wxChar& value, bool paint);
 		void ChangeValue( const wxString& value, bool paint );
 		void SetBinValue( char* buffer, int len, bool paint );
 		void SetDefaultStyle( wxTextAttr& new_attr );		//For caret diet (to 1 pixel)
 		int PixelCoordToInternalPosition( wxPoint mouse );
-		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
-		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
+		int ToVisiblePosition( int InternalPosition ) {
+			return InternalPosition;
+			}
+		int ToInternalPosition( int VisiblePosition ) {
+			return VisiblePosition;
+			}
 //		bool IsAllowedChar(const unsigned char& chr);
 		int GetInsertionPoint( void );
 		void SetInsertionPoint( unsigned int pos );
 		void ChangeSize();
 		wxChar Filter(const unsigned char& chr);
 		wxString FilterMBBuffer(const char *str, int len, int fontenc);
-virtual void DrawCursorShadow(wxDC* dcTemp);
+		virtual void DrawCursorShadow(wxDC* dcTemp);
 
 	};
 
-class wxHexOffsetCtrl : public wxHexCtrl{
+class wxHexOffsetCtrl : public wxHexCtrl {
 	public:
 //		wxHexOffsetCtrl():wxHexCtrl(){ hex_offset=false;offset_position=0; }
-		wxHexOffsetCtrl(wxWindow *parent): wxHexCtrl( parent ){
+		wxHexOffsetCtrl(wxWindow *parent): wxHexCtrl( parent ) {
 			offset_mode='u';
 			offset_position=0;
 			digit_count=6;
 			}
 
 		wxHexOffsetCtrl(wxWindow *parent,
-				wxWindowID id,
-				const wxString &value = wxEmptyString,
-				const wxPoint &pos = wxDefaultPosition,
-				const wxSize &size = wxDefaultSize,
-				long style = 0,
-				const wxValidator& validator = wxDefaultValidator) :
-				wxHexCtrl(parent, id, value, pos, size, style, validator){
-                    wxCaret *caret = GetCaret();
-                    if(caret)
-                        GetCaret()->Hide();
-                    SetCaret( NULL );
+		                wxWindowID id,
+		                const wxString &value = wxEmptyString,
+		                const wxPoint &pos = wxDefaultPosition,
+		                const wxSize &size = wxDefaultSize,
+		                long style = 0,
+		                const wxValidator& validator = wxDefaultValidator) :
+			wxHexCtrl(parent, id, value, pos, size, style, validator) {
+			wxCaret *caret = GetCaret();
+			if(caret)
+				GetCaret()->Hide();
+			SetCaret( NULL );
 
-                    //offset_mode='u';
-                    CtrlType=OffsetControl;
-                    offset_mode=myConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
-                    if( offset_mode=='s' )	// No force to sector mode at startup.
-                        offset_mode='u';
+			//offset_mode='u';
+			CtrlType=OffsetControl;
+			offset_mode=myConfigBase::Get()->Read( _T("LastOffsetMode"), wxT("u") )[0];
+			if( offset_mode=='s' )	// No force to sector mode at startup.
+				offset_mode='u';
 
-                    offset_position=0;
-                    digit_count=6;
-                    };
+			offset_position=0;
+			digit_count=6;
+			};
 
 		wxString GetFormatString( bool minimal=false );
 		wxString GetFormatedOffsetString( uint64_t c_offset, bool minimal=false );
-		void SetOffsetLimit( uint64_t max_offset ){offset_limit = max_offset;}
+		void SetOffsetLimit( uint64_t max_offset ) {
+			offset_limit = max_offset;
+			}
 		unsigned GetDigitCount( void );
 		unsigned GetLineSize( void );  //Digit count plus Formating chars like h,o if required
-inline bool IsDenied(){ return false; }
-inline bool IsDenied( int x ){ return false; }
-		int ToVisiblePosition( int InternalPosition ){ return InternalPosition; }
-		int ToInternalPosition( int VisiblePosition ){ return VisiblePosition; }
+		inline bool IsDenied() {
+			return false;
+			}
+		inline bool IsDenied( int x ) {
+			return false;
+			}
+		int ToVisiblePosition( int InternalPosition ) {
+			return InternalPosition;
+			}
+		int ToInternalPosition( int VisiblePosition ) {
+			return VisiblePosition;
+			}
 		void SetValue( uint64_t position );
 		void SetValue( uint64_t position, int byteperline );
 		void OnMouseRight( wxMouseEvent& event );
 		void OnMouseLeft( wxMouseEvent& event );
-		void OnMouseMove( wxMouseEvent& event ){event.Skip(false);}
+		void OnMouseMove( wxMouseEvent& event ) {
+			event.Skip(false);
+			}
 		char offset_mode;
 		uint64_t offset_position;
 		int BytePerLine;
@@ -309,6 +354,6 @@ inline bool IsDenied( int x ){ return false; }
 	private:
 		uint64_t offset_limit;
 		unsigned digit_count;
-inline void DrawCursorShadow(wxDC* dcTemp){}
+		inline void DrawCursorShadow(wxDC* dcTemp) {}
 	};
 #endif

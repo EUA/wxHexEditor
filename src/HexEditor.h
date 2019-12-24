@@ -46,10 +46,10 @@
 #if wxCHECK_VERSION( 2,9,0 ) && defined(__linux__)
 //Only GTK port of Linux is working good on detect changes of file.
 //MSW cannot detect changes in individual files yet in wxWidgets 3.1.0
-	#define _FSWATCHER_  1
-	#include <wx/fswatcher.h>
+#define _FSWATCHER_  1
+#include <wx/fswatcher.h>
 #else
-	#define _FSWATCHER_  0
+#define _FSWATCHER_  0
 #endif
 
 #define idInjection 3000
@@ -61,8 +61,8 @@ class scrollthread;
 class copy_maker;
 
 class HexEditor: public HexEditorCtrl
-   /*, protected FAL*/
-   {
+/*, protected FAL*/
+	{
 	public:
 		HexEditor(wxWindow* parent,
 		          int id,
@@ -130,7 +130,7 @@ class HexEditor: public HexEditorCtrl
 		wxString GetFileAccessModeString( void ) {
 			return myfile->GetAccessModeString();
 			}
-		bool IsBlockDevice( void ){
+		bool IsBlockDevice( void ) {
 			return myfile->GetBlockSize() > 0;
 			}
 		int GetFD( void ) {
@@ -142,7 +142,7 @@ class HexEditor: public HexEditorCtrl
 		bool IsAvailable_Redo( void ) {
 			return myfile->IsAvailable_Redo();
 			}
-        FAL::FALFileTypes GetFileType( void ) {
+		FAL::FALFileTypes GetFileType( void ) {
 			return myfile->GetFileType();
 			}
 		int HashVerify(wxString hash_file,FAL* File=NULL);
@@ -279,7 +279,7 @@ class scrollthread:wxThreadHelper {
 				speed_mtx.Lock();
 				thread_speed=speed;
 				speed_mtx.Unlock();
-				if(speed == 0){
+				if(speed == 0) {
 					wxMicroSleep( 25 );
 					continue;	// loop to "while" for init of class and wait for GetThread()->Pause();
 					}
@@ -297,7 +297,7 @@ class scrollthread:wxThreadHelper {
 #if _DEBUG_THREAD_SCROLL_
 				std::cout << " \t- offset : " << newoffset << std::endl;
 #endif
-				if( newoffset != parent->page_offset ){
+				if( newoffset != parent->page_offset ) {
 					parent->page_offset=newoffset;
 
 					while( ThreadScrool.TryLock() != wxMUTEX_NO_ERROR )
@@ -318,7 +318,7 @@ class scrollthread:wxThreadHelper {
 
 		void UpdateSpeed(int new_speed) {
 #if _DEBUG_THREAD_SCROLL_
-				std::cout << "UpdateSpeed:" << new_speed << std::endl;
+			std::cout << "UpdateSpeed:" << new_speed << std::endl;
 #endif
 			if (new_speed == 0 && speed == 0 )
 				return;
@@ -332,7 +332,7 @@ class scrollthread:wxThreadHelper {
 			speed_mtx.Unlock();
 			}
 
-		void Exit(void){
+		void Exit(void) {
 			if( !GetThread()->IsRunning() ) //We can only "Delete" running threads
 				GetThread()->Resume();// Resume the thread for kill it
 			GetThread()->Delete();

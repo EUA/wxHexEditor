@@ -73,13 +73,13 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 
 	nDosLinkCreated = FakeDosNameForDevice (szTmp, szDosDevice, szCFDevice, FALSE);
 
-	dev = CreateFileW (szCFDevice, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+	dev = CreateFileW (szCFDevice, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 
 	bResult = DeviceIoControl (dev, IOCTL_DISK_GET_PARTITION_INFO, NULL, 0, &diskInfo, sizeof (diskInfo), &dwResult, NULL);
 
 	// Test if device is removable
 	if (// n == 0 &&
-		DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL))
+	   DeviceIoControl (dev, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &driveInfo, sizeof (driveInfo), &dwResult, NULL))
 		removable = driveInfo.MediaType == RemovableMedia;
 
 	RemoveFakeDosName(szTmp, szDosDevice);
@@ -124,17 +124,17 @@ void windowsHDD::list_devices() {
 
 	//Add logical Drives here directly.
 	uint32_t drives=GetLogicalDrives();
-		for(int i=2; i<32 ; i++){	//i=2 drops A: and B: flopies if available
-			if((drives>>i) & 0x01 ){
-				//printf("%c: ", 'A' + i);
-				_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
-				char* ascii = new char[wcslen(szTmp) + 1];
-				memset(ascii, 0, wcslen(szTmp) + 1);
-				wcstombs( ascii, szTmp, wcslen(szTmp) );
-				printf( "Device Found: %s \r\n", ascii );
-				//list_device(format_str, szTmp, 0);
-				if( GetDriveType(ascii+4) != 4 )	//ascii+4 for strip out Z: , !=4 checks if its Network Drive
-					devicenames.push_back(ascii);
+	for(int i=2; i<32 ; i++) {	//i=2 drops A: and B: flopies if available
+		if((drives>>i) & 0x01 ) {
+			//printf("%c: ", 'A' + i);
+			_snwprintf(szTmp, sizeof(szTmp), L"\\\\.\\%c:", 'A' + i);
+			char* ascii = new char[wcslen(szTmp) + 1];
+			memset(ascii, 0, wcslen(szTmp) + 1);
+			wcstombs( ascii, szTmp, wcslen(szTmp) );
+			printf( "Device Found: %s \r\n", ascii );
+			//list_device(format_str, szTmp, 0);
+			if( GetDriveType(ascii+4) != 4 )	//ascii+4 for strip out Z: , !=4 checks if its Network Drive
+				devicenames.push_back(ascii);
 			}
 		}
 
@@ -163,7 +163,7 @@ void windowsHDD::list_devices() {
 //		}
 	}
 
-vector<string> windowsHDD::getdevicenamevector(){
+vector<string> windowsHDD::getdevicenamevector() {
 	list_devices();
 	return devicenames;
 	}

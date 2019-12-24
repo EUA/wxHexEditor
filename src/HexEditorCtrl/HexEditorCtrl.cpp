@@ -20,7 +20,7 @@
 *               home  : www.wxhexeditor.org                             *
 *               email : spamjunkeater@gmail.com                         *
 *************************************************************************/
-
+extern int fake_block_size;
 #include "HexEditorCtrl.h"
 //???
 //BEGIN_EVENT_TABLE(,wxScrolledWindow )
@@ -156,6 +156,22 @@ void HexEditorCtrl::ReadFromBuffer( uint64_t position, unsigned lenght, char *bu
 			draw_line += sector_size;
 			}
 		while (draw_line < lenght );
+		}
+	else if(fake_block_size>1){
+		offset_ctrl->sector_size=fake_block_size;
+		unsigned draw_line=fake_block_size-(page_offset%fake_block_size);
+		hex_ctrl->ThinSeparationLines.Clear();
+		text_ctrl->ThinSeparationLines.Clear();
+		do {
+			hex_ctrl->ThinSeparationLines.Add( 2*draw_line );
+			text_ctrl->ThinSeparationLines.Add( draw_line );
+			draw_line += fake_block_size;
+			}
+		while (draw_line < lenght );
+		}
+	else if(hex_ctrl->ThinSeparationLines.Count() ){
+		hex_ctrl->ThinSeparationLines.Clear();
+		text_ctrl->ThinSeparationLines.Clear();
 		}
 
 	if(ProcessRAMMap.Count()) {

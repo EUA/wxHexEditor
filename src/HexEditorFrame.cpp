@@ -25,6 +25,8 @@
 #define idDiskDevice 10000
 #include "wx/fswatcher.h"
 
+int fake_block_size;
+
 #ifdef  __WXMAC__
 #include <dirent.h>	//for pre 2.9.0 wx releases
 #elif defined( __WXMSW__ )
@@ -103,6 +105,18 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	//wxMessageBox( wxString::Format(" Attach %d", no)    , "none" );
 	//AllocConsole();
 #endif
+
+	bool TempBool=false;
+	myConfigBase::Get()->Read( _T("FakeBlockLines"), &TempBool	);
+	if( TempBool ){
+		uint64_t get_block_size=0;
+		wxString TempString;
+		myConfigBase::Get()->Read( _T("FakeBlockSize"), &TempString );
+		if( kMGT_ToUInt(TempString, &get_block_size) )
+			fake_block_size=get_block_size;
+		fake_block_size=get_block_size;
+		}
+
 #if _FSWATCHER_
 	file_watcher=NULL;
 #endif // _FSWATCHER_
@@ -531,7 +545,7 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ) {
 #endif
 	if( event.GetId() == wxID_NEW ) {	//GetFile Lenght, Save file as, Create file, Open file as RW
 		wxString user_input;
-		long unsigned int size=0;
+		uint64_t size=0;
 		while(1) {
 			int dsize=0;
 			if (wxTheClipboard->Open()) {
@@ -547,20 +561,9 @@ void HexEditorFrame::OnMenuEvent( wxCommandEvent& event ) {
 			if(user_input.IsEmpty()) {
 				return;
 				}
-			wxRegEx filesz("^([0-9]+) *((?=[KMGT])([KMGT])(?:i?B)?|B?)$", wxRE_ICASE | wxRE_ADVANCED);
-			if( filesz.IsValid() ) {
-				if( filesz.Matches(user_input) ) {
-					wxString num = filesz.GetMatch( user_input, 1 );
-					user_input.ToULong( &size, 10 );
-					wxString multipler = filesz.GetMatch( user_input, 2 );
-					if( multipler.StartsWith(wxT("T")) )         size*=1024*1024*1024*1024;
-					else if( multipler.StartsWith(wxT("G")) )    size*=1024*1024*1024;
-					else if( multipler.StartsWith(wxT("M")) )    size*=1024*1024;
-					else if( multipler.StartsWith(wxT("K")) )    size*=1024;
+			if( kMGT_ToUInt( user_input, &size ) )
+				break;
 
-					break;
-					}
-				}
 //			else if( user_input.ToULong( &size, 10 ) && (size > 0) )// ToULongLong has problems with Windows...
 //				break;
 

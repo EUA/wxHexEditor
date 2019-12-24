@@ -118,20 +118,6 @@ bool wxHexEditorApp::OnInit() {
 	return true;
 	}
 
-uint64_t UnkFormatToUInt(wxString input ){
-	long long unsigned int ret=0;
-	input=input.Lower();
-	if( input.Find('x')!=-1 )
-		input.StartsWith('x') || input.StartsWith("0x") ? input.After('x').ToULongLong(&ret, 16) : input.Before('x').ToULongLong(&ret, 16);
-	else if( input.Lower().Find('o')!=-1 )
-		input.StartsWith('o') || input.StartsWith("0o") ? input.After('o').ToULongLong(&ret, 8) : input.Before('o').ToULongLong(&ret, 8);
-	else if( input.Lower().Find('b')!=-1 )
-		input.StartsWith('b') || input.StartsWith("0b") ? input.After('b').ToULongLong(&ret, 2) : input.Before('b').ToULongLong(&ret, 2);
-	else
-		input.ToULongLong(&ret, 10);
-	return ret;
-	}
-
 void wxHexEditorApp::PostAppInit() {
 	wxCmdLineParser parser(cmdLineDesc, argc, argv);
 	if ( parser.Parse()==0 ) {
@@ -270,3 +256,55 @@ void wxHexEditorApp::OnMouseMove(wxMouseEvent &event) {
 	return;
 	}
 #endif
+
+uint64_t UnkFormatToUInt(wxString input ){
+	long long unsigned int ret=0;
+	input=input.Lower();
+	if( input.Find('x')!=-1 )
+		input.StartsWith('x') || input.StartsWith("0x") ? input.After('x').ToULongLong(&ret, 16): input.Before('x').ToULongLong(&ret, 16);
+	else if( input.Lower().Find('o')!=-1 )
+		input.StartsWith('o') || input.StartsWith("0o") ? input.After('o').ToULongLong(&ret, 8) : input.Before('o').ToULongLong(&ret, 8);
+	else if( input.Lower().Find('b')!=-1 )
+		input.StartsWith('b') || input.StartsWith("0b") ? input.After('b').ToULongLong(&ret, 2) : input.Before('b').ToULongLong(&ret, 2);
+	else
+		input.ToULongLong(&ret, 10);
+	return ret;
+	}
+
+bool kMGT_ToUInt( wxString user_input, uint64_t *size ){
+	wxRegEx filesz("^([0-9]+) *((?=[KMGT])([KMGT])(?:i?B)?|B?)$", wxRE_ICASE | wxRE_ADVANCED);
+	long long unsigned int xsize;
+	if( filesz.Matches(user_input) ) {
+		wxString num = filesz.GetMatch( user_input, 1 );
+		user_input.ToULongLong( &xsize, 10 );
+		*size=xsize;
+		wxString multipler = filesz.GetMatch( user_input, 2 ).Upper();
+		if(		multipler.StartsWith(wxT("T")) )		*size*=1024*1024*1024*1024;
+		else if( multipler.StartsWith(wxT("G")) )		*size*=1024*1024*1024;
+		else if( multipler.StartsWith(wxT("M")) )		*size*=1024*1024;
+		else if( multipler.StartsWith(wxT("K")) )		*size*=1024;
+		return true;
+		}
+	return false;
+	}
+
+#ifndef __WXMSW__
+#include <sys/resource.h>
+void SetStackLimit(void){
+	const rlim_t kStackSize = 32L * 1024L * 1024L;
+	struct rlimit rl;
+	int result;
+
+	result = getrlimit(RLIMIT_STACK, &rl);
+	fprintf(stderr, "current stack limit = %ul\n", static_cast<unsigned int>(rl.rlim_cur) );
+	if (result == 0) {
+		if (rl.rlim_cur < kStackSize) {
+			rl.rlim_cur = kStackSize;
+			result = setrlimit(RLIMIT_STACK, &rl);
+			if (result != 0) {
+				fprintf(stderr, "setrlimit returned result = %d\n", result);
+				}
+			}
+		}
+	}
+#endif // __WXMSW__

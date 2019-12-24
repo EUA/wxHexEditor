@@ -558,6 +558,9 @@ class PreferencesDialogGui : public wxDialog
 		wxCheckBox* chkCustom;
 		wxCheckBox* chkBytePerLineLimit;
 		wxSpinCtrl* spinBytePerLine;
+		wxStaticLine* m_staticline_format;
+		wxCheckBox* chkFakeBlockLines;
+		wxTextCtrl* textCtlFakeBlockSize;
 		wxCheckBox* chkAutoShowTagPanel;
 		wxCheckBox* chkPortable;
 		wxCheckBox* chkSingleInstance;

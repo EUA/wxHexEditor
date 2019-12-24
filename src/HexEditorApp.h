@@ -72,4 +72,7 @@ class wxHexEditorApp : public wxApp {
 
 DECLARE_APP(wxHexEditorApp)
 
+uint64_t UnkFormatToUInt(wxString input );
+bool kMGT_ToUInt( wxString user_input, uint64_t *size );
+void SetStackLimit(void);
 #endif // WXHEXEDITORAPP_H

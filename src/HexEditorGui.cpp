@@ -2022,19 +2022,45 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 
 	sbSizerFormat->Add( fgSizerCustomFormat, 1, wxEXPAND, 5 );
 
+	wxBoxSizer* bSizerCustomF2;
+	bSizerCustomF2 = new wxBoxSizer( wxHORIZONTAL );
+
 	wxBoxSizer* bSizerBytePerLine;
 	bSizerBytePerLine = new wxBoxSizer( wxHORIZONTAL );
 
 	chkBytePerLineLimit = new wxCheckBox( sbSizerFormat->GetStaticBox(), wxID_ANY, _("Bytes Per Line Limit"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizerBytePerLine->Add( chkBytePerLineLimit, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
-	spinBytePerLine = new wxSpinCtrl( sbSizerFormat->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 8 );
+	spinBytePerLine = new wxSpinCtrl( sbSizerFormat->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxSP_ARROW_KEYS, 1, 256, 8 );
 	spinBytePerLine->Enable( false );
 
 	bSizerBytePerLine->Add( spinBytePerLine, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 
-	sbSizerFormat->Add( bSizerBytePerLine, 0, 0, 5 );
+	bSizerCustomF2->Add( bSizerBytePerLine, 0, 0, 5 );
+
+	m_staticline_format = new wxStaticLine( sbSizerFormat->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizerCustomF2->Add( m_staticline_format, 0, wxEXPAND | wxALL, 5 );
+
+	wxBoxSizer* bSizerFakeBlock;
+	bSizerFakeBlock = new wxBoxSizer( wxHORIZONTAL );
+
+	chkFakeBlockLines = new wxCheckBox( sbSizerFormat->GetStaticBox(), wxID_ANY, _("Fake Block Size"), wxDefaultPosition, wxDefaultSize, 0 );
+	chkFakeBlockLines->SetToolTip( _("Shows fake block lines for ordinary files.") );
+
+	bSizerFakeBlock->Add( chkFakeBlockLines, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
+
+	textCtlFakeBlockSize = new wxTextCtrl( sbSizerFormat->GetStaticBox(), wxID_ANY, _("8k"), wxDefaultPosition, wxDefaultSize, 0 );
+	textCtlFakeBlockSize->Enable( false );
+	textCtlFakeBlockSize->SetToolTip( _("Fake block size") );
+
+	bSizerFakeBlock->Add( textCtlFakeBlockSize, 0, wxALL, 5 );
+
+
+	bSizerCustomF2->Add( bSizerFakeBlock, 0, 0, 5 );
+
+
+	sbSizerFormat->Add( bSizerCustomF2, 1, wxEXPAND, 5 );
 
 
 	bSizerMain->Add( sbSizerFormat, 0, wxEXPAND, 5 );
@@ -2094,6 +2120,7 @@ PreferencesDialogGui::PreferencesDialogGui( wxWindow* parent, wxWindowID id, con
 	chkBytePerLineLimit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	spinBytePerLine->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	spinBytePerLine->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	chkFakeBlockLines->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	chkPortable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	BtnSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 }
@@ -2118,6 +2145,7 @@ PreferencesDialogGui::~PreferencesDialogGui()
 	chkBytePerLineLimit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	spinBytePerLine->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	spinBytePerLine->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
+	chkFakeBlockLines->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	chkPortable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( PreferencesDialogGui::EventHandler ), NULL, this );
 	BtnSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PreferencesDialogGui::OnSave ), NULL, this );
 

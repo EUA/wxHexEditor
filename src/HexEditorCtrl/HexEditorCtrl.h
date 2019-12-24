@@ -206,7 +206,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 			return (hex_ctrl->IsShown() ? hex_ctrl->CharacterPerLine() : text_ctrl->CharacterPerLine()*2);
 			}
 		int BytePerLine( void )	{
-			return (hex_ctrl->IsShown() ? hex_ctrl->BytePerLine() : text_ctrl->BytePerLine() );
+			return wxMax(hex_ctrl->IsShown() ? hex_ctrl->BytePerLine() : text_ctrl->BytePerLine(), 1 );
 			}
 		unsigned ByteCapacity( void ) {
 			return (hex_ctrl->IsShown() ? hex_ctrl->ByteCapacity() : text_ctrl->ByteCapacity());

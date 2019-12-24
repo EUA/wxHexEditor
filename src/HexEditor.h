@@ -153,6 +153,7 @@ class HexEditor: public HexEditorCtrl
 		void GotoDialog( void );
 
 		void UpdateCursorLocation( bool force=false );
+		void UpdateStatusBar( void );
 		void ConnectScroll(HexEditor* connection);
 		void DisconnectScroll( void );
 

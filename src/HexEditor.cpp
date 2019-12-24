@@ -1119,12 +1119,13 @@ void HexEditor::SetLocalHexInsertionPoint( int hex_location, bool from_comparato
 
 void HexEditor::OnMouseLeft(wxMouseEvent& event) {
 	HexEditorCtrl::OnMouseLeft( event );
-#if wxUSE_STATUSBAR
-	if ( statusbar ) {
-		statusbar->SetStatusText(_("Selected Block: N/A"), 3);
-		statusbar->SetStatusText(_("Block Size: N/A"),4);
-		}
-#endif // wxUSE_STATUSBAR
+///UpdateCursorLocation() already update it
+//#if wxUSE_STATUSBAR
+//	if ( statusbar ) {
+//		statusbar->SetStatusText(_("Selected Block: N/A"), 3);
+//		statusbar->SetStatusText(_("Block Size: N/A"),4);
+//		}
+//#endif // wxUSE_STATUSBAR
 	UpdateCursorLocation();
 #ifdef _DEBUG_MOUSE_
 	std::cout << "CaptureMouse()\n" ;

@@ -57,11 +57,12 @@ void MyClient::Connect(const wxString& sHost, const wxString& sService, const wx
 #include <sys/resource.h>
 #include <wx/cmdline.h>
 
-static const wxCmdLineEntryDesc cmdLineDesc[] = {
-		{ wxCMD_LINE_SWITCH, "h", "help", "show this help message",     wxCMD_LINE_VAL_NONE,    wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_OPTION, "o", "offset", "open file offset",         wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, "s", "select", "open file and select given offset", wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, "c", "compare", "compare given two files", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE   },
+const wxCmdLineEntryDesc cmdLineDesc[] = {
+		{ wxCMD_LINE_SWITCH, "h", "help", "show this help message",     	wxCMD_LINE_VAL_NONE,    wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_OPTION, "o", "offset", "open file and goto offset",	wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, "s", "select", "select given offset in --select=<start>:<end> or --select=<start>+<length> notation.",
+																								wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, "c", "compare", "compare given two files", 	wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE   },
 		{wxCMD_LINE_PARAM, NULL, NULL, "", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE | wxCMD_LINE_PARAM_OPTIONAL },
 	wxCMD_LINE_DESC_END
 	};
@@ -74,11 +75,16 @@ bool wxHexEditorApp::OnInit() {
 	if( parser.Parse()==-1 )
 		return false;
 	if( parser.Parse()==0 )
-		if (parser.Found("c"))
+		if (parser.Found("c")){
 			if( parser.GetParamCount()!=1){
 				wxPrintf("Error: Only two filenames allowed for --compare option." "\r\n");
 				return false;
 				}
+			if( parser.Found("s") || parser.Found("o") ){
+				wxPrintf("Error: --compare option cannot mixed with other options" "\r\n");
+				return false;
+				}
+			}
 
 	wxImage::AddHandler(new wxPNGHandler);
 	SetLanguage();
@@ -110,15 +116,8 @@ bool wxHexEditorApp::OnInit() {
 	}
 
 void wxHexEditorApp::PostAppInit() {
-	// Open all of the files specified on the command line (assumes no flags)
-	//processing --flags
 	wxCmdLineParser parser(cmdLineDesc, argc, argv);
 	if ( parser.Parse()==0 ) {
-		if (parser.Found("o")) {
-			}
-		if (parser.Found("s")) {
-			}
-
 		wxString compare_with;
 		if (parser.Found("c", &compare_with)) {
 			if( parser.GetParamCount()!=1) {
@@ -136,6 +135,36 @@ void wxHexEditorApp::PostAppInit() {
 		wxFileName fn = wxFileName(parser.GetParam(i));
 		//  if(fn.FileExists() || str.Lower().StartsWith(wxT("-pid")))
 		frame->OpenFile(fn.GetFullPath());
+		if ( parser.Parse()==0 ) {
+			HexEditor* whx = frame->GetActiveHexEditor();
+			wxString param;
+			if (parser.Found("o", &param)) {
+				long long unsigned int offset=0;
+				param.ToULongLong( &offset );
+				whx->Goto( offset , true );
+				}
+			if (parser.Found("s", &param)) {
+				long long unsigned int select_start=0;
+				long long unsigned int select_end=0;
+				if( param.Find(':') != -1){
+					param.BeforeFirst(':').ToULongLong(&select_start);
+					param.AfterFirst(':').ToULongLong(&select_end);
+					}
+				else	if( param.Find('+')!=-1 ){
+					param.BeforeFirst('+').ToULongLong( &select_start );
+					param.AfterFirst('+').ToULongLong( &select_end );
+					if(select_end <= 0)
+						continue;
+					select_end+=select_start-1;
+					}
+				else{
+					param.ToULongLong( &select_start );
+					select_end=select_start;
+					}
+				whx->Select(select_start,select_end);
+				whx->UpdateCursorLocation();//To update statusBar.
+				}
+			}
 		}
 	}
 

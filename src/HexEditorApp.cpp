@@ -59,9 +59,11 @@ void MyClient::Connect(const wxString& sHost, const wxString& sService, const wx
 
 const wxCmdLineEntryDesc cmdLineDesc[] = {
 		{ wxCMD_LINE_SWITCH, "h", "help", "show this help message",     	wxCMD_LINE_VAL_NONE,    wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_OPTION, "o", "offset", "open file and goto offset",	wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, "s", "select", "select given offset in --select=<start>:<end> or --select=<start>+<length> notation.",
-																								wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, "o", "offset", "open file and go to offset",	wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, "s", "select", "select given offset." "\r\n" \
+	                     "      --select=<byte offset>" "\r\n" \
+	                     "      --select=<start>:<end>" "\r\n" \
+	                     "      --select=<start>+<length>",					wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, "c", "compare", "compare given two files", 	wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE   },
 		{wxCMD_LINE_PARAM, NULL, NULL, "", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE | wxCMD_LINE_PARAM_OPTIONAL },
 	wxCMD_LINE_DESC_END
@@ -72,6 +74,7 @@ bool wxHexEditorApp::OnInit() {
 //    wxLog::AddTraceMask(wxTRACE_FSWATCHER);
 
 	wxCmdLineParser parser(cmdLineDesc, argc, argv);
+	parser.SetLogo( "wxHexEditor " _VERSION_S_ );
 	if( parser.Parse()==-1 )
 		return false;
 	if( parser.Parse()==0 )
@@ -115,6 +118,20 @@ bool wxHexEditorApp::OnInit() {
 	return true;
 	}
 
+uint64_t UnkFormatToUInt(wxString input ){
+	long long unsigned int ret=0;
+	input=input.Lower();
+	if( input.Find('x')!=-1 )
+		input.StartsWith('x') || input.StartsWith("0x") ? input.After('x').ToULongLong(&ret, 16) : input.Before('x').ToULongLong(&ret, 16);
+	else if( input.Lower().Find('o')!=-1 )
+		input.StartsWith('o') || input.StartsWith("0o") ? input.After('o').ToULongLong(&ret, 8) : input.Before('o').ToULongLong(&ret, 8);
+	else if( input.Lower().Find('b')!=-1 )
+		input.StartsWith('b') || input.StartsWith("0b") ? input.After('b').ToULongLong(&ret, 2) : input.Before('b').ToULongLong(&ret, 2);
+	else
+		input.ToULongLong(&ret, 10);
+	return ret;
+	}
+
 void wxHexEditorApp::PostAppInit() {
 	wxCmdLineParser parser(cmdLineDesc, argc, argv);
 	if ( parser.Parse()==0 ) {
@@ -139,27 +156,24 @@ void wxHexEditorApp::PostAppInit() {
 			HexEditor* whx = frame->GetActiveHexEditor();
 			wxString param;
 			if (parser.Found("o", &param)) {
-				long long unsigned int offset=0;
-				param.ToULongLong( &offset );
-				whx->Goto( offset , true );
+				whx->Goto( UnkFormatToUInt(param), true );
 				}
 			if (parser.Found("s", &param)) {
-				long long unsigned int select_start=0;
-				long long unsigned int select_end=0;
+				uint64_t select_start=0;
+				uint64_t select_end=0;
 				if( param.Find(':') != -1){
-					param.BeforeFirst(':').ToULongLong(&select_start);
-					param.AfterFirst(':').ToULongLong(&select_end);
+					select_start= UnkFormatToUInt(param.BeforeFirst(':'));
+					select_end	= UnkFormatToUInt(param.AfterFirst(':'));
 					}
 				else	if( param.Find('+')!=-1 ){
-					param.BeforeFirst('+').ToULongLong( &select_start );
-					param.AfterFirst('+').ToULongLong( &select_end );
+					select_start= UnkFormatToUInt(param.BeforeFirst('+'));
+					select_end	= UnkFormatToUInt(param.AfterFirst('+'));
 					if(select_end <= 0)
 						continue;
 					select_end+=select_start-1;
 					}
 				else{
-					param.ToULongLong( &select_start );
-					select_end=select_start;
+					select_end=select_start=UnkFormatToUInt( param );
 					}
 				whx->Select(select_start,select_end);
 				whx->UpdateCursorLocation();//To update statusBar.

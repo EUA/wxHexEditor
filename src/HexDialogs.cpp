@@ -2545,7 +2545,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		for(int i = 0 ; i < diffHit-1 ; i+=2){
 			TagElement *mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
 			hexeditor1->CompareArray.Add(mytag);
-			mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
+							mytag=new TagElement(diffBuff[i], diffBuff[i+1],wxEmptyString,*wxBLACK, *wxRED );
 			hexeditor2->CompareArray.Add(mytag);
 			}
 		if( file1size != file2size ){

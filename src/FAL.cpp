@@ -732,7 +732,7 @@ wxFileOffset FAL::Length( int PatchIndice ){
 
 	#ifdef __WXGTK__
 		if( the_file.GetFullPath() == wxT("/dev/mem") ){
-			return 512*1024*1024;
+			return 512*MB;
 			}
 	#endif
 	#ifdef __WXMAC__

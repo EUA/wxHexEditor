@@ -177,7 +177,7 @@ int HexEditor::HashVerify(wxString hash_file, FAL* File) {
 
 	MHASH myhash=mhash_init(hash_alg);
 
-	enum { rdBlockSz=2*128*1024 };
+	enum { rdBlockSz = 256*KB };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
@@ -472,7 +472,7 @@ bool HexEditor::FileSaveGeneric( wxString savefilename, uint64_t fstart, uint64_
 		wxString emsg = wxT("\n");
 		wxProgressDialog mpd( _("Saving file"),msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME|wxPD_SMOOTH );
 		mpd.Show();
-		unsigned BlockSz = 128*1024;
+		unsigned BlockSz = 128*KB;
 		char *buffer = new char[BlockSz];
 		uint64_t readfrom=0,readspeed=0;
 		unsigned rd;
@@ -1638,7 +1638,7 @@ bool HexEditor::CopySelection( void ) {
 				return false;
 				}
 			}
-		else {
+		else if (size < 1*GB ){
 			wxMessageBox(_( "You have tried to copy more than 10 MB of data.\n"\
 			                "Copying above 10 MB to clipboard is not allowed.\n"\
 			                "Only internal copy buffer used!"),
@@ -1666,6 +1666,7 @@ bool HexEditor::CopySelection( void ) {
 		wxBell();
 		return false;
 		}
+	return false;
 	}
 
 bool HexEditor::PasteFromClipboard( void ) {

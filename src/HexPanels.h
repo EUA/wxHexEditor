@@ -95,7 +95,7 @@ class DataInterpreter : public InterpreterGui{
 				uint64_t *ubit64;
 				float  *bitfloat;
 				double *bitdouble;
-				_Float128 *bitf128;
+				//_Float128 *bitf128;
 				char *raw;
 				} little, big;
 			short size;
@@ -123,11 +123,9 @@ class DataInterpreter : public InterpreterGui{
 class InfoPanel : public InfoPanelGui{
 	public:
 		InfoPanel(wxWindow* parent, int id = -1, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( -1,-1 ), int style = wxTAB_TRAVERSAL )
-		:InfoPanelGui( parent, id, pos, size, style){
-		}
+		:InfoPanelGui( parent, id, pos, size, style){}
 		void Set( wxFileName flnm, uint64_t lenght, wxString AccessMode, int FD, wxString XORKey );
-		void OnUpdate( wxCommandEvent& event ){
-			}
+		void OnUpdate( wxCommandEvent& event ){}
 };
 
 #define idDeleteTag 31001 //just random num

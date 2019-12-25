@@ -38,6 +38,13 @@
 #include <wx/dynarray.h>
 #include <stdint.h>
 
+//this utility uses old ECS format.
+#define KB 1024
+#define MB 1024*KB
+#define GB 1024*MB
+//#define TB 1024*GB
+#define TB 1099511627776LL
+
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 	#include <sys/param.h>		// for BSD
 #endif

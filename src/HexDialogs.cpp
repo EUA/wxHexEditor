@@ -453,7 +453,7 @@ void FindDialog::FindSomeBytes( void ) {
 	//progress_gauge.SetIcon(search_ICON);
 
 	uint64_t current_offset = parent->CursorOffset();
-	unsigned BlockSz= 10*1024*1024;
+	unsigned BlockSz= 10*MB;
 	unsigned search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
 	findfile->Seek( current_offset, wxFromStart );
 	char* buffer = new char [search_step];
@@ -658,7 +658,7 @@ bool FindDialog::FindBinaryUnitTest( void ) {
 	wxFileName a(wxT("tempfile-deleteable"));
 	wxFile b(a.GetFullPath(),wxFile::write );
 
-	int fs=1024*1024*3;
+	int fs=3*MB;
 	char *buff= new char[fs];
 	memset( buff, 0, fs );
 	b.Write( buff, fs );
@@ -800,7 +800,7 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from, uin
 	if( options & SEARCH_FINDALL )
 		current_offset = 0;
 
-	unsigned BlockSz= 1024*1024*1;
+	unsigned BlockSz = MB;
 	unsigned search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
 
 	char* buffer = new char [search_step];
@@ -1006,7 +1006,7 @@ uint64_t FindDialog::FindBinaryBackward(wxMemoryBuffer target, uint64_t from, ui
 	uint64_t backward_offset = current_offset;
 
 	//bool first_search=true;
-	unsigned BlockSz= 1024*1024*1;
+	unsigned BlockSz = MB;
 	unsigned search_step = findfile->Length() < BlockSz ? findfile->Length() : BlockSz ;
 
 	char* buffer = new char [search_step];
@@ -2522,7 +2522,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 		fs.Write( ln );
 		wxString line;
 		for(int i = 0 ; i < diffHit-1 ; i+=2) {
-			line = wxString::Format( "%s found %" wxLongLongFmtSpec "u - %" wxLongLongFmtSpec "u \t Total : %" wxLongLongFmtSpec "u bytes.\n", ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i], diffBuff[i+1], diffBuff[i+1]-diffBuff[i]+1 );
+			line = wxString::Format( "%s found %" wxLongLongFmtSpec "u + %" wxLongLongFmtSpec "u bytes.\n", ( SearchForDiff ? wxT("Diff"):wxT("Match")), diffBuff[i], diffBuff[i+1]-diffBuff[i]+1 );
 			fs.Write( line );
 			}
 
@@ -2826,7 +2826,7 @@ wxString ChecksumDialog::CalculateChecksum(FAL& f, int options) {
 		if( options & (1 << algs[j] ))
 			myhash[i++]= mhash_init(algs[j]);
 
-	int rdBlockSz=1024*1024;
+	int rdBlockSz = MB;
 	unsigned char *buffer = new unsigned char[rdBlockSz];
 	unsigned char *buffer_prefetch = new unsigned char[rdBlockSz];
 	int readed=rdBlockSz;
@@ -3334,7 +3334,7 @@ void DeviceBackupDialog::OnBackup( wxCommandEvent &event ) {
 
 	MHASH myhash = mhash_init( MHASH_MD5 );
 
-	enum { rdBlockSz=1024*1024 };
+	enum { rdBlockSz=MB };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
@@ -3426,7 +3426,7 @@ void DeviceRestoreDialog::OnRestore( wxCommandEvent &event ) {
 	wxProgressDialog mypd(_("Disk/Partition Restore"), msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	enum { rdBlockSz=1024*1024 };
+	enum { rdBlockSz=MB };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 
@@ -3476,7 +3476,7 @@ void DeviceEraseDialog::OnErase( wxCommandEvent &event ) {
 	wxProgressDialog mypd(_("Disk/Partition Erase"), msg+emsg, 1000, this, wxPD_APP_MODAL|wxPD_AUTO_HIDE|wxPD_CAN_ABORT|wxPD_REMAINING_TIME);
 	mypd.Show();
 
-	enum { rdBlockSz=1024*1024 };
+	enum { rdBlockSz=MB };
 	unsigned char buff[rdBlockSz];
 	int rd=rdBlockSz;
 

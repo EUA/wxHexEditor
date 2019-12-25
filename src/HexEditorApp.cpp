@@ -279,10 +279,10 @@ bool kMGT_ToUInt( wxString user_input, uint64_t *size ){
 		user_input.ToULongLong( &xsize, 10 );
 		*size=xsize;
 		wxString multipler = filesz.GetMatch( user_input, 2 ).Upper();
-		if(		multipler.StartsWith(wxT("T")) )		*size*=1024*1024*1024*1024;
-		else if( multipler.StartsWith(wxT("G")) )		*size*=1024*1024*1024;
-		else if( multipler.StartsWith(wxT("M")) )		*size*=1024*1024;
-		else if( multipler.StartsWith(wxT("K")) )		*size*=1024;
+		if(		multipler.StartsWith(wxT("T")) )		*size*=TB;
+		else if( multipler.StartsWith(wxT("G")) )		*size*=GB;
+		else if( multipler.StartsWith(wxT("M")) )		*size*=MB;
+		else if( multipler.StartsWith(wxT("K")) )		*size*=KB;
 		return true;
 		}
 	return false;

@@ -55,7 +55,7 @@
 #define idInjection 3000
 #define idBlockSelect 3001
 
-#define MB (1024*1024)	//this utility uses old ECS format.
+
 
 class scrollthread;
 class copy_maker;

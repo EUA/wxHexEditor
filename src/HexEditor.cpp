@@ -31,6 +31,7 @@ HexEditor::HexEditor(	wxWindow* parent,
                         InfoPanel *infopanel_,
                         TagPanel *tagpanel_,
                         DisassemblerPanel *dasmpanel_,
+                        copy_maker *copy_mark_,
                         wxFileName* myfilename_,
                         const wxPoint& pos,
                         const wxSize& size,
@@ -40,7 +41,8 @@ HexEditor::HexEditor(	wxWindow* parent,
 	interpreter(interpreter_),
 	infopanel(infopanel_),
 	tagpanel(tagpanel_),
-	dasmpanel(dasmpanel_) {
+	dasmpanel(dasmpanel_),
+	copy_mark(copy_mark_){
 	ComparatorHexEditor=NULL;
 	// Here, code praying to the GOD for protecting our open file from wxHexEditor's bugs and other things.
 	// This is really crucial step! Be adviced to not remove it, even if you don't believer.
@@ -55,7 +57,6 @@ HexEditor::HexEditor(	wxWindow* parent,
 		}
 	offset_scroll->Enable( true );
 	Dynamic_Connector();
-	copy_mark = new copy_maker( );
 	BlockSelectOffset = -1;
 	MouseCapture = false;
 	}
@@ -83,7 +84,6 @@ HexEditor::~HexEditor() {
 		delete myscrollthread;
 		}
 #endif
-	delete copy_mark;
 	}
 
 void HexEditor::Dynamic_Connector() {
@@ -1602,16 +1602,17 @@ bool HexEditor::DeleteSelection( void ) {
 bool HexEditor::CopySelection( void ) {
 	if( select->GetState()) {
 		uint64_t RAM_limit = 10*MB;
-		if(select->GetSize() < RAM_limit) {								//copy to clipboard if < 10 MB
+		uint64_t size = select->GetSize();
+		if(size < RAM_limit) {								//copy to clipboard if < 10 MB
 			myfile->Seek( select->GetStart(), wxFromStart );
 			void* buff=NULL;
-			buff = copy_mark->m_buffer.GetWriteBuf( select->GetSize() );
+			buff = copy_mark->m_buffer.GetWriteBuf( size );
 			if( buff != NULL ) {
-				myfile->Read( static_cast< char*>( buff ), select->GetSize() );
-				copy_mark->m_buffer.UngetWriteBuf( select->GetSize() );
+				myfile->Read( static_cast< char*>( buff ), size );
+				copy_mark->m_buffer.UngetWriteBuf( size );
 				wxString CopyString;
 				if( focus == HEX_CTRL ) {
-					for( unsigned i=0 ; i<select->GetSize() ; i++ )
+					for( unsigned i=0 ; i<size ; i++ )
 						CopyString << wxString::Format(wxT("%02X "),static_cast<unsigned char>(copy_mark->m_buffer[i]));
 					CopyString.Trim();	//remove last ' '
 					}
@@ -1621,7 +1622,7 @@ bool HexEditor::CopySelection( void ) {
 					//CopyString << wxString::FromAscii( static_cast<const char*>(copy_mark->m_buffer.GetData()) );
 					CopyString << wxString::From8BitData( static_cast<const char*>(copy_mark->m_buffer.GetData()) );
 
-					if( select->GetSize() > CopyString.size() ) {
+					if( size > CopyString.size() ) {
 						wxMessageBox(_( "WARNING:\n"\
 						                "The text you are copying includes a null character\n"\
 						                "(00 in the hex pane) and will be truncated!\n\n"\
@@ -1644,18 +1645,19 @@ bool HexEditor::CopySelection( void ) {
 			             _("Info"), wxOK|wxICON_INFORMATION, this);
 
 			void* buff=NULL;
-			buff = copy_mark->m_buffer.GetWriteBuf( select->GetSize() );
-			if( buff != NULL ) {
+			buff = copy_mark->m_buffer.GetWriteBuf( size );
+			if( buff != NULL ){
 				myfile->Seek( select->GetStart(), wxFromStart );
-				myfile->Read( static_cast<char*>(buff), select->GetSize());
-				copy_mark->m_buffer.UngetWriteBuf( select->GetSize() );
+				int64_t rd = myfile->Read( static_cast<char*>(buff), size );
+				copy_mark->m_buffer.UngetWriteBuf( rd );
+				copy_mark->m_buffer.SetDataLen( rd );
 				wxString CopyString = wxT("wxHexEditor Internal Buffer Object : ");
 				CopyString += wxString::Format(wxT("%p"), (copy_mark->m_buffer.GetData()) );
 				copy_mark->SetClipboardData( CopyString );
 				return true;
 				}
 			else {
-// TODO (death#1#): If there is no ram, use HDD temp file
+// TODO (death#1#): If there is no ram, we could use HDD as a temp file
 				return false;
 				}
 			}
@@ -1673,6 +1675,7 @@ bool HexEditor::PasteFromClipboard( void ) {
 		wxMessageBox(_("No data available at clipboad!"));
 	else if( str.StartsWith(wxT("wxHexEditor Internal Buffer Object : "))) {
 		wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
+		std::cout<< "Copy buff len:" << copy_mark->m_buffer.GetDataLen() << std::endl;
 		myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->m_buffer.GetDataLen(), 0 );
 		Select(CursorOffset(), CursorOffset()+copy_mark->m_buffer.GetDataLen()-1);
 		Goto( CursorOffset() + copy_mark->m_buffer.GetDataLen());

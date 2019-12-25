@@ -272,6 +272,7 @@ HexEditorFrame::~HexEditorFrame() {
 #if _FSWATCHER_
 //	delete file_watcher;
 #endif // _FSWATCHER_
+	delete copy_mark;
 	}
 
 void HexEditorFrame::PrepareAUI( void ) {
@@ -468,7 +469,7 @@ void HexEditorFrame::ActionDisabler( void ) {
 	}
 
 HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight) {
-	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel );
+	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel, copy_mark );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 
 	if( !filename.GetName().StartsWith(wxT("-buf")) &&

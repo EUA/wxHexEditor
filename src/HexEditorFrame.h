@@ -65,6 +65,7 @@ inline wxBitmap _wxGetBitmapFromMemory(const unsigned char *data, int length) {
 
 class IPCServer;
 class DnDFile;
+class copy_maker;
 class HexEditorFrame : public HexEditorGui {
 	public:
 		HexEditorFrame();
@@ -73,6 +74,7 @@ class HexEditorFrame : public HexEditorGui {
 		void TagHideAll();
 		class HexEditor* OpenFile(wxFileName flname, bool openAtRight=false);
 		class HexEditor* GetActiveHexEditor(void);
+		copy_maker *copy_mark;
 #if _FSWATCHER_
 		wxFileSystemWatcher *file_watcher;
 #endif // _FSWATCHER_
@@ -149,6 +151,60 @@ class IPCServer : public wxServer {
 		virtual wxConnectionBase *OnAcceptConnection(const wxString& topic);
 	private:
 		HexEditorFrame *parent;
+	};
+
+class copy_maker {
+	public:
+		bool copied;		//copy in action or not
+		int64_t start;		//copy start position
+		int64_t size;		//size of copy
+		wxMemoryBuffer m_buffer; //uses RAM, for small data
+		//wxFile *tempfile;	//uses Temp HDD File and delete after.
+		FAL *sourcefile;	//uses HDD File and NOT delete after.
+		copy_maker( ) {
+			copied = false;
+			start = size = 0;
+			//	tempfile = NULL;
+			sourcefile = NULL;
+			}
+		~copy_maker( ) {
+			//if(tempfile != NULL)
+			//if(sourcefile != NULL)
+			}
+		bool SetClipboardData( wxString& CopyString) {
+			if(wxTheClipboard->Open()) {
+//					if (wxTheClipboard->IsSupported( wxDF_TEXT )){
+				wxTheClipboard->Clear();
+				int isok = wxTheClipboard->SetData( new wxTextDataObject( CopyString ));
+				wxTheClipboard->Flush();
+				wxTheClipboard->Close();
+				return isok;
+				}
+			else {
+				wxMessageBox( wxString(_( "Clipboard could not be opened.")) + wxT("\n") + _("Operation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+				return false;
+				}
+			}
+
+		wxString GetClipboardData( void ) {
+			if(wxTheClipboard->Open()) {
+				if (wxTheClipboard->IsSupported( wxDF_TEXT )) {
+					wxTextDataObject data;
+					wxTheClipboard->GetData( data );
+					wxTheClipboard->Close();
+					return data.GetText();
+					}
+				else {
+					wxBell();
+					wxTheClipboard->Close();
+					return wxString();
+					}
+				}
+			else {
+				wxMessageBox( wxString(_( "Clipboard could not be opened.")) + wxT("\n") + _("Operation cancelled!"), _("Copy To Clipboard Error"), wxOK|wxICON_ERROR);
+				return wxString();
+				}
+			}
 	};
 
 #endif

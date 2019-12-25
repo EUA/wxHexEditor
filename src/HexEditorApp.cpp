@@ -100,7 +100,7 @@ bool wxHexEditorApp::OnInit() {
 			m_checker = NULL;
 
 			MyClient *m_client = new MyClient;
-			for(int i = 0; i < parser.GetParamCount() ; i++ ) {
+			for(unsigned i = 0; i < parser.GetParamCount() ; i++ ) {
 				m_client->Connect("localhost", "59147", "OPEN FILE:"+wxFileName(parser.GetParam(i)).GetLongPath());
 //				m_client->Connect("localhost", "59147", "COMPARE FILES:"+wxFileName(parser.GetParam(i)).GetLongPath());
 //				m_client->Connect("localhost", "59147", "RELOAD TAGS:"+wxFileName(parser.GetParam(i)).GetLongPath());
@@ -134,7 +134,7 @@ void wxHexEditorApp::PostAppInit() {
 			}
 		}
 
-	for(int i = 0; i < parser.GetParamCount() ; i++ ) {
+	for(unsigned i = 0; i < parser.GetParamCount() ; i++ ) {
 		wxFileName fn = wxFileName(parser.GetParam(i));
 		//  if(fn.FileExists() || str.Lower().StartsWith(wxT("-pid")))
 		frame->OpenFile(fn.GetFullPath());
@@ -273,9 +273,9 @@ uint64_t UnkFormatToUInt(wxString input ){
 
 bool kMGT_ToUInt( wxString user_input, uint64_t *size ){
 	wxRegEx filesz("^([0-9]+) *((?=[KMGT])([KMGT])(?:i?B)?|B?)$", wxRE_ICASE | wxRE_ADVANCED);
-	long long unsigned int xsize;
 	if( filesz.Matches(user_input) ) {
 		wxString num = filesz.GetMatch( user_input, 1 );
+	   long long unsigned int xsize=0;
 		user_input.ToULongLong( &xsize, 10 );
 		*size=xsize;
 		wxString multipler = filesz.GetMatch( user_input, 2 ).Upper();

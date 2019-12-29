@@ -168,6 +168,8 @@ class copy_maker {
 			sourcefile = NULL;
 			}
 		~copy_maker( ) {
+			///if( m_buffer.GetDataLen() )
+			///	m_buffer.Clear();
 			//if(tempfile != NULL)
 			//if(sourcefile != NULL)
 			}

@@ -1657,9 +1657,20 @@ bool HexEditor::CopySelection( void ) {
 				return true;
 				}
 			else {
-// TODO (death#1#): If there is no ram, we could use HDD as a temp file
-				return false;
 				}
+			}
+		else{
+			wxMessageBox(_( "Not supported to copy regions bigger than 1GB."),
+			 _("Info"), wxOK|wxICON_INFORMATION, this);
+		/// TODO (death#1#): If there is no ram, we could use HDD as a temp file? Or Copy on Write mechanism need here.
+//			copy_mark->sourcefile = myfile;
+//			copy_mark->copied = true;
+//			wxString CopyString = wxT("wxHexEditor Internal Copy Mark File : ");
+//			CopyString += myfile->GetFileName().GetFullName();
+//			CopyString += wxString::Format(wxT(" Offset %u:"), select->GetStart() );
+//			CopyString += wxString::Format(wxT(" Size %u:"), select->GetSize() );
+//			copy_mark->SetClipboardData( CopyString );
+//			return true;
 			}
 		}
 	else {
@@ -1674,6 +1685,17 @@ bool HexEditor::PasteFromClipboard( void ) {
 	wxString str = copy_mark->GetClipboardData();
 	if( str.IsEmpty() )
 		wxMessageBox(_("No data available at clipboad!"));
+//	else if( str.StartsWith(wxT("wxHexEditor Internal Copy Mark File : "))) {
+//		wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
+//		std::cout<< "Copy buff len:" << copy_mark->size << std::endl;
+
+		///This don't work. Need new mechanism here.
+//		myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->size, 0 );
+
+//		Select(CursorOffset(), CursorOffset()+copy_mark->size-1);
+//		Goto( CursorOffset() + copy_mark->size );
+//		ret = true;
+//		}
 	else if( str.StartsWith(wxT("wxHexEditor Internal Buffer Object : "))) {
 		wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
 		std::cout<< "Copy buff len:" << copy_mark->m_buffer.GetDataLen() << std::endl;

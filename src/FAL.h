@@ -39,10 +39,9 @@
 #include <stdint.h>
 
 //this utility uses old ECS format.
-#define KB 1024
-#define MB 1024*KB
-#define GB 1024*MB
-//#define TB 1024*GB
+#define KB 1024LL
+#define MB 1048576LL
+#define GB 1073741824LL
 #define TB 1099511627776LL
 
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))

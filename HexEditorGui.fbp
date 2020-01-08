@@ -2586,7 +2586,7 @@
                         <property name="resize">Resizable</property>
                         <property name="show">1</property>
                         <property name="size"></property>
-                        <property name="style">wxCP_DEFAULT_STYLE</property>
+                        <property name="style">wxCP_DEFAULT_STYLE|wxCP_NO_TLW_RESIZE</property>
                         <property name="subclass">; ; forward_declare</property>
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip"></property>
@@ -3685,7 +3685,7 @@
                                     <property name="resize">Resizable</property>
                                     <property name="show">1</property>
                                     <property name="size"></property>
-                                    <property name="style">wxCP_DEFAULT_STYLE</property>
+                                    <property name="style">wxCP_DEFAULT_STYLE|wxCP_NO_TLW_RESIZE</property>
                                     <property name="subclass">; ; forward_declare</property>
                                     <property name="toolbar_pane">0</property>
                                     <property name="tooltip"></property>

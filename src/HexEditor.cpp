@@ -538,8 +538,13 @@ bool HexEditor::FileClose( bool WithoutChange ) {
 					wxBell();
 				}
 			}
+		if( myfile->FileLockedBy != wxEmptyString ){
+			wxMessageBox( wxString(_( "This file is currently locked by: ")).append( myfile->FileLockedBy ), _("File Is Locked!"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
+			return false;
+			}
+
 		if( !SaveTAGS( myfile->GetFileName() ) && MainTagArray.Count() != 0 )
-			while( wxYES == wxMessageBox( _( "TAG file cannot be saved to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Be Saved!!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) ) {
+			while( wxYES == wxMessageBox( _( "TAG file cannot be saved to default location.\nDo you want to Export TAGs file?"), _("TAGs Cannot Be Saved!"), wxYES_NO|wxYES_DEFAULT|wxICON_EXCLAMATION, this ) ) {
 				wxFileDialog filediag(this,_("Choose a file for export TAGs"),
 				                      wxEmptyString,
 				                      wxEmptyString,
@@ -776,7 +781,12 @@ void HexEditor::OnResize( wxSizeEvent &event ) {
 	}
 
 bool HexEditor::FileAddDiff( int64_t start_byte, const char* data, int64_t size, bool injection ) {
-	return myfile->Add( start_byte, data, size, injection );
+	if( myfile->FileLock ){
+		wxMessageBox( _("File is locked for edit."), _("Error") , wxOK|wxICON_ERROR);
+		return false;
+		}
+	else
+		return myfile->Add( start_byte, data, size, injection );
 	}
 
 void HexEditor::OnKeyboardSelector(wxKeyEvent& event) {
@@ -1653,6 +1663,9 @@ bool HexEditor::CopySelection( void ) {
 				copy_mark->m_buffer.SetDataLen( rd );
 				wxString CopyString = wxT("wxHexEditor Internal Buffer Object : ");
 				CopyString += wxString::Format(wxT("%p"), (copy_mark->m_buffer.GetData()) );
+				copy_mark->copied = true;
+				copy_mark->size = select->GetSize();
+				copy_mark->start = select->GetStart();
 				copy_mark->SetClipboardData( CopyString );
 				return true;
 				}
@@ -1660,17 +1673,24 @@ bool HexEditor::CopySelection( void ) {
 				}
 			}
 		else{
-			wxMessageBox(_( "Not supported to copy regions bigger than 1GB."),
-			 _("Info"), wxOK|wxICON_INFORMATION, this);
+			wxMessageBox(_( "You have tried to copy more than 1 GB of data.\n"\
+			                "Copying above 10 MB to clipboard is not allowed.\n"\
+			                "Current file will be locked for further changes.\n"\
+			                "Only internal copy mark used!"),
+			             _("Info"), wxOK|wxICON_INFORMATION, this);
+
 		/// TODO (death#1#): If there is no ram, we could use HDD as a temp file? Or Copy on Write mechanism need here.
-//			copy_mark->sourcefile = myfile;
-//			copy_mark->copied = true;
-//			wxString CopyString = wxT("wxHexEditor Internal Copy Mark File : ");
-//			CopyString += myfile->GetFileName().GetFullName();
-//			CopyString += wxString::Format(wxT(" Offset %u:"), select->GetStart() );
-//			CopyString += wxString::Format(wxT(" Size %u:"), select->GetSize() );
-//			copy_mark->SetClipboardData( CopyString );
-//			return true;
+			myfile->FileLock=true;
+			copy_mark->sourcefile = myfile;
+			copy_mark->copied = true;
+			copy_mark->size = select->GetSize();
+			copy_mark->start = select->GetStart();
+			wxString CopyString = wxT("wxHexEditor Internal Copy Mark File : ");
+			CopyString += myfile->GetFileName().GetFullName();
+			CopyString += wxString::Format(wxT(" Offset %" wxLongLongFmtSpec "u:"), select->GetStart() );
+			CopyString += wxString::Format(wxT(" Size %" wxLongLongFmtSpec "u:"), select->GetSize() );
+			copy_mark->SetClipboardData( CopyString );
+			return true;
 			}
 		}
 	else {
@@ -1685,17 +1705,24 @@ bool HexEditor::PasteFromClipboard( void ) {
 	wxString str = copy_mark->GetClipboardData();
 	if( str.IsEmpty() )
 		wxMessageBox(_("No data available at clipboad!"));
-//	else if( str.StartsWith(wxT("wxHexEditor Internal Copy Mark File : "))) {
-//		wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
-//		std::cout<< "Copy buff len:" << copy_mark->size << std::endl;
+	else if( str.StartsWith(wxT("wxHexEditor Internal Copy Mark File : "))) {
+		wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
+		std::cout<< "Copy buff len:" << copy_mark->size << std::endl;
 
 		///This don't work. Need new mechanism here.
-//		myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->size, 0 );
+		//myfile->Add( CursorOffset(), static_cast<const char*>(copy_mark->m_buffer.GetData()), copy_mark->size, 0 );
+		DiffNode* newnode = new DiffNode( CursorOffset(), copy_mark->size, false );
 
-//		Select(CursorOffset(), CursorOffset()+copy_mark->size-1);
-//		Goto( CursorOffset() + copy_mark->size );
-//		ret = true;
-//		}
+		newnode->virtual_node = copy_mark->sourcefile;
+		newnode->virtual_node_size = copy_mark->size;
+		newnode->virtual_node_start_offset = copy_mark->start;
+
+		myfile->AddDiffNode( newnode );
+
+		Select(CursorOffset(), CursorOffset()+copy_mark->size-1);
+		Goto( CursorOffset() + copy_mark->size );
+		ret = true;
+		}
 	else if( str.StartsWith(wxT("wxHexEditor Internal Buffer Object : "))) {
 		wxMessageBox(_("Note: Used internal binary copy buffer at paste operation."));
 		std::cout<< "Copy buff len:" << copy_mark->m_buffer.GetDataLen() << std::endl;

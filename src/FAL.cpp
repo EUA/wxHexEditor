@@ -105,9 +105,20 @@ uint64_t FDtoBlockCount( int FD ) {
 	return block_count;
 	}
 
+bool DiffNode::Apply( unsigned char *data_buffer, int64_t size, int64_t irq_skip ){
+	if(virtual_node==NULL){
+		memcpy(data_buffer, flag_undo ? old_data : new_data+irq_skip, size );
+		return true;
+		}
+	virtual_node->Seek( virtual_node_start_offset+irq_skip, wxFromStart);
+	virtual_node->Read( data_buffer, size );
+	return true;
+	}
+
 FAL::FAL(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBlockRW ){
 	file_access_mode = FAM;
 	the_file = myfilename;
+	FileLock=false;
 	BlockRWSize = ForceBlockRW;
 	ProcessID=-1;
 	get_ptr = put_ptr = 0;
@@ -375,36 +386,36 @@ bool FAL::FALOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned ForceBloc
 	}
 
 bool FAL::Close(){
-			if( ProcessID >=0 )
-			#ifdef __WXMSW__
-				CloseHandle(hDevice);
-		    #else
-				return ((ptrace(PTRACE_DETACH, ProcessID, NULL, 0)) >= 0 );
-			#endif
-			#ifdef __WXMSW__
-			if(IsWinDevice( the_file ) ){
-				DWORD dwResult;
+	if( ProcessID >=0 )
+	#ifdef __WXMSW__
+		CloseHandle(hDevice);
+	 #else
+		return ((ptrace(PTRACE_DETACH, ProcessID, NULL, 0)) >= 0 );
+	#endif
+	#ifdef __WXMSW__
+	if(IsWinDevice( the_file ) ){
+		DWORD dwResult;
 
-				// unlock volume
-				//DeviceIoControl (hDevice, FSCTL_UNLOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL);
+		// unlock volume
+		//DeviceIoControl (hDevice, FSCTL_UNLOCK_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL);
 
-				wdd.RemoveFakeDosName(devnm.wchar_str(), szDosDevice);
-				wxFile::Detach();
-				//_close( reinterpret_cast<int>(hDevice) );
-				CloseHandle( hDevice ); //Not neccessary, already closed by _close
+		wdd.RemoveFakeDosName(devnm.wchar_str(), szDosDevice);
+		wxFile::Detach();
+		//_close( reinterpret_cast<int>(hDevice) );
+		CloseHandle( hDevice ); //Not neccessary, already closed by _close
 
-				//mount
-				//if (!DeviceIoControl (hDevice, FSCTL_MOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
-				//	DWORD err = GetLastError ();
-				//	wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
-				//	}
+		//mount
+		//if (!DeviceIoControl (hDevice, FSCTL_MOUNT_VOLUME, NULL, 0, NULL, 0, &dwResult, NULL)){
+		//	DWORD err = GetLastError ();
+		//	wxMessageBox( wxString::Format( wxT("Error %d attempting to dismount volume: %s"), err, devnm) );
+		//	}
 
-				hDevice=NULL;
-				return true;
-				}
-			#endif // __WXMSW__
-			return wxFile::Close();
-			};
+		hDevice=NULL;
+		return true;
+		}
+	#endif // __WXMSW__
+	return wxFile::Close();
+	};
 
 FAL::~FAL(){
 	Close();
@@ -1071,29 +1082,36 @@ void FAL::ModificationPatcher(uint64_t current_location, unsigned char* data, in
 	* data                                = ... *
 	* changed data                        = xxx *
 	********************************************/
-	if( Patch->flag_undo && !Patch->flag_commit )	// Allready committed to disk, nothing to do here
+	if( Patch->flag_undo && !Patch->flag_commit )	// Already committed to disk, nothing to do here
 		return;
 	///State: ...[...(xxx]xxx)...
 	if(current_location <= Patch->start_offset && current_location+size >= Patch->start_offset){
 		int irq_loc = Patch->start_offset - current_location;
 		///...[...(xxx)...]... //not neccessery, this line includes this state too
 		int irq_size = (size - irq_loc > Patch->size) ? (Patch->size) : (size - irq_loc);
-		memcpy(data+irq_loc , Patch->flag_undo ? Patch->old_data : Patch->new_data, irq_size );
+
+		//memcpy(data+irq_loc , Patch->flag_undo ? Patch->old_data : Patch->new_data, irq_size );
+		Patch->Apply(data+irq_loc, irq_size, 0);
 		}
 
 	///State: ...(xxx[xxx)...]...
 	else if (current_location <= Patch->start_offset + Patch->size && current_location+size >= Patch->start_offset + Patch->size){
 		int irq_skipper = current_location - Patch->start_offset;	//skip this bytes from start
 		int irq_size = Patch->size - irq_skipper;
-		memcpy(data, Patch->flag_undo ? Patch->old_data : Patch->new_data + irq_skipper, irq_size );
+
+		//memcpy(data, Patch->flag_undo ? Patch->old_data : Patch->new_data + irq_skipper, irq_size );
+		Patch->Apply(data, irq_size, irq_skipper);
 		}
 
 	///State: ...(xxx[xxx]xxx)...
 	else if(Patch->start_offset <= current_location && Patch->start_offset + Patch->size >= current_location+size){
 		int irq_skipper = current_location - Patch->start_offset;	//skip this bytes from start
-		memcpy(data, Patch->flag_undo ? Patch->old_data : Patch->new_data + irq_skipper, size );
+
+		//memcpy(data, Patch->flag_undo ? Patch->old_data : Patch->new_data + irq_skipper, size );
+		Patch->Apply(data, size, irq_skipper);
 		}
  	}
+
 
 bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injection ){
 	//Check for undos first
@@ -1124,6 +1142,43 @@ bool FAL::Add( uint64_t start_byte, const char* data, int64_t size, bool injecti
 	ApplyXOR( rtn->new_data, size, start_byte );
 	if( rtn != NULL ){
 		DiffArray.Add( rtn );						//Add new node to tail
+		if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
+			Apply();
+		return true;
+		}
+	else
+		return false;							//if not created successfuly
+	}
+
+bool FAL::AddDiffNode( DiffNode *new_node ){
+	//Check for undos first
+	for( unsigned i=0 ; i < DiffArray.GetCount() ; i++ ){
+		if( DiffArray[i]->flag_undo ){
+			if(DiffArray.Item(i)->flag_commit ){	// commited undo node
+				DiffArray[i]->flag_undo = false;		//we have to survive this node as it unwriten, non undo node
+				DiffArray[i]->flag_commit = false;
+				unsigned char *temp_buffer = DiffArray[i]->old_data;	//swap old <-> new data
+				DiffArray[i]->old_data = DiffArray[i]->new_data;
+				DiffArray[i]->new_data = temp_buffer;
+				}
+			else{									// non committed undo node
+				while( i < (DiffArray.GetCount()) ){	// delete beyond here
+					#ifdef _DEBUG_FILE_
+						std::cout << "DiffArray.GetCount() : " << DiffArray.GetCount() << " while i = " << i<< std::endl;
+					#endif
+					DiffNode *temp;
+					temp = *(DiffArray.Detach( i ));
+					delete temp;
+					}
+				break;								// break for addition
+				}
+			}
+		}
+	//Adding node here
+	//DiffNode *rtn = NewNode( start_byte, data, size, injection );
+	//ApplyXOR( rtn->new_data, size, start_byte );
+	if( new_node != NULL ){
+		DiffArray.Add( new_node );						//Add new node to tail
 		if( file_access_mode == DirectWrite )	//Direct Write mode is always applies directly.
 			Apply();
 		return true;

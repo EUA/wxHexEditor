@@ -105,7 +105,7 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 	//wxMessageBox( wxString::Format(" Attach %d", no)    , "none" );
 	//AllocConsole();
 #endif
-
+   MyCopyMark = new copy_maker();
 	bool TempBool=false;
 	myConfigBase::Get()->Read( _T("FakeBlockLines"), &TempBool	);
 	if( TempBool ){
@@ -272,7 +272,7 @@ HexEditorFrame::~HexEditorFrame() {
 #if _FSWATCHER_
 //	delete file_watcher;
 #endif // _FSWATCHER_
-	delete copy_mark;
+	delete MyCopyMark;
 	}
 
 void HexEditorFrame::PrepareAUI( void ) {
@@ -469,7 +469,7 @@ void HexEditorFrame::ActionDisabler( void ) {
 	}
 
 HexEditor* HexEditorFrame::OpenFile(wxFileName filename, bool openAtRight) {
-	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel, copy_mark );
+	HexEditor *x = new HexEditor(MyNotebook, -1, statusBar,	MyInterpreter,	MyInfoPanel, MyTagPanel, MyDisassemblerPanel, MyCopyMark );
 	x->Hide();//Hiding hex editor for avoiding visual artifacts on loading file...
 
 	if( !filename.GetName().StartsWith(wxT("-buf")) &&

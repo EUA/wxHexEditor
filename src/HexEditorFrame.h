@@ -74,7 +74,7 @@ class HexEditorFrame : public HexEditorGui {
 		void TagHideAll();
 		class HexEditor* OpenFile(wxFileName flname, bool openAtRight=false);
 		class HexEditor* GetActiveHexEditor(void);
-		copy_maker *copy_mark;
+		copy_maker *MyCopyMark;
 #if _FSWATCHER_
 		wxFileSystemWatcher *file_watcher;
 #endif // _FSWATCHER_
@@ -156,8 +156,8 @@ class IPCServer : public wxServer {
 class copy_maker {
 	public:
 		bool copied;		//copy in action or not
-		int64_t start;		//copy start position
-		int64_t size;		//size of copy
+		uint64_t start;		//copy start position
+		uint64_t size;		//size of copy
 		wxMemoryBuffer m_buffer; //uses RAM, for small data
 		//wxFile *tempfile;	//uses Temp HDD File and delete after.
 		FAL *sourcefile;	//uses HDD File and NOT delete after.

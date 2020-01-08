@@ -99,6 +99,7 @@
 
 int FDtoBlockSize( int FD );
 uint64_t FDtoBlockCount( int FD );
+class FAL;
 
 class DiffNode{
 	public:
@@ -110,6 +111,12 @@ class DiffNode{
 		unsigned char *old_data;			//old data buffer
 		unsigned char *new_data;			//new data buffer
 		inline uint64_t end_offset( void ){ return start_offset + abs(size); }
+		bool Apply( unsigned char *buffer, int64_t size, int64_t irq_skip );
+		FAL* virtual_node;
+		uint64_t virtual_node_start_offset;
+		uint64_t virtual_node_size;
+
+
 //	DiffNode *prev, *next;
 	DiffNode( uint64_t start, int64_t size_, bool inject){
 		start_offset = start;
@@ -117,6 +124,8 @@ class DiffNode{
 		size = size_;
 		flag_commit = flag_undo = false;
 		old_data = new_data = NULL;
+		virtual_node = NULL;
+		virtual_node_start_offset = 0;
 		}
 	~DiffNode( void ){
 		delete [] new_data;
@@ -136,6 +145,8 @@ class FAL : private wxFile
 	    FAL(wxFileName& myfilename, FileAccessMode FAM = ReadOnly, unsigned ForceBlockRW=0);
 		~FAL();
 
+		bool FileLock;
+		wxString FileLockedBy;
 		wxString oldOwner;
 
 		bool SetAccessMode( FileAccessMode fam );
@@ -175,6 +186,7 @@ virtual	long Read( unsigned char* buffer, int size );
 		void ApplyXOR( unsigned char* buffer, unsigned size, uint64_t from );
 
 		bool Add( uint64_t start_byte, const char* data, int64_t size, bool injection=false ); //adds new node
+		bool AddDiffNode( DiffNode *new_node );
 		bool IsAvailable_Undo( void );
 		bool IsAvailable_Redo( void );
 		bool IsInjected( void );

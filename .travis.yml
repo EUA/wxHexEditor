@@ -1,0 +1,23 @@
+language: cpp
+compiler: gcc
+sudo: require
+dist: xenial
+
+install:
+  - sudo apt-get -y install  build-essential libwxgtk3.0-dev libmhash-dev libdisasm-dev
+
+script:
+  - sed -i -e 's| -lgomp||g' Makefile # FIXME: https://github.com/EUA/wxHexEditor/issues/150#issuecomment-575944402
+  - sed -i -e 's|/usr/local|appdir/usr|g' Makefile # FIXME: https://github.com/probonopd/linuxdeployqt#for-projects-that-use-cmake-autotools-or-meson-with-ninja-instead-of-qmake
+  - make -j$(nproc)
+  - sudo make install ; sudo mv /appdir . ; sudo chown -R $USER appdir ; find appdir/ # FIXME: https://github.com/probonopd/linuxdeployqt#for-projects-that-use-cmake-autotools-or-meson-with-ninja-instead-of-qmake
+  - cp appdir/usr/share/pixmaps/wxHexEditor.png appdir/
+  - wget -c -nv https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+  - chmod +x ./appimagetool-*.AppImage
+  - ./appimagetool-*.AppImage deploy appdir/usr/share/applications/*.desktop
+  - ./appimagetool-*.AppImage appdir/
+
+# do not build tags that we create when we upload to GitHub Releases
+branches:
+  except:
+    - /^(?i:continuous)/

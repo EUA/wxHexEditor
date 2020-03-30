@@ -54,7 +54,9 @@ void MyClient::Connect(const wxString& sHost, const wxString& sService, const wx
 
 #include <wx/snglinst.h>
 #include <wx/stdpaths.h>
+#if !defined(__MINGW32__)
 #include <sys/resource.h>
+#endif
 #include <wx/cmdline.h>
 
 const wxCmdLineEntryDesc cmdLineDesc[] = {

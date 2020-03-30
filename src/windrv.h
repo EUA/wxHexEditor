@@ -59,11 +59,11 @@ static t_opt opt = {
 class windowsHDD
 	{	private:
 		vector<string> devicenames;
-		void list_device(WCHAR *format_str, WCHAR *szTmp, int n);
+		void list_device(const WCHAR *format_str, const WCHAR *szTmp, int n);
 		void list_devices();
 	public:
-		bool FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly);
-		bool RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice);
+		bool FakeDosNameForDevice (const WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly);
+		bool RemoveFakeDosName (const WCHAR *lpszDiskFile, const WCHAR *lpszDosDevice);
 		vector<string> getdevicenamevector();
 	};
 #endif // __WinDrv__

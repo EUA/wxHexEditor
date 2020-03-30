@@ -26,7 +26,10 @@
 
 using namespace std;
 
-bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice, BOOL bNameOnly)	{
+bool windowsHDD::FakeDosNameForDevice (
+	const WCHAR *lpszDiskFile, WCHAR *lpszDosDevice, WCHAR *lpszCFDevice,
+	BOOL bNameOnly
+)	{
 	if (wcsncmp(lpszDiskFile, L"\\\\", 2) == 0) {
 		wcscpy(lpszCFDevice, lpszDiskFile);
 		return 1;
@@ -47,7 +50,7 @@ bool windowsHDD::FakeDosNameForDevice (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice
 	}
 
 
-bool windowsHDD::RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice) {
+bool windowsHDD::RemoveFakeDosName (const WCHAR *lpszDiskFile, const WCHAR *lpszDosDevice) {
 	BOOL bDosLinkRemoved = DefineDosDeviceW (DDD_RAW_TARGET_PATH | DDD_EXACT_MATCH_ON_REMOVE |
 	                       DDD_REMOVE_DEFINITION, lpszDosDevice, lpszDiskFile);
 	if (bDosLinkRemoved == FALSE)
@@ -55,7 +58,7 @@ bool windowsHDD::RemoveFakeDosName (WCHAR *lpszDiskFile, WCHAR *lpszDosDevice) {
 	return 0;
 	}
 
-void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
+void windowsHDD::list_device(const WCHAR *format_str, const WCHAR *szTmp, int n) {
 	int nDosLinkCreated;
 	HANDLE dev = INVALID_HANDLE_VALUE;
 	DWORD dwResult;
@@ -95,7 +98,7 @@ void windowsHDD::list_device(WCHAR *format_str, WCHAR *szTmp, int n) {
 	}
 
 void windowsHDD::list_devices() {
-	WCHAR *format_str = L"%-30s %9S %-9s %-20S\n";
+	const WCHAR *format_str = L"%-30s %9S %-9s %-20S\n";
 	WCHAR szTmp[MAX_PATH];
 	int i;
 	for (i = 0; i < 64; i++) {
@@ -133,7 +136,7 @@ void windowsHDD::list_devices() {
 			wcstombs( ascii, szTmp, wcslen(szTmp) );
 			printf( "Device Found: %s \r\n", ascii );
 			//list_device(format_str, szTmp, 0);
-			if( GetDriveType(ascii+4) != 4 )	//ascii+4 for strip out Z: , !=4 checks if its Network Drive
+			if( GetDriveTypeA(ascii+4) != 4 )	//ascii+4 for strip out Z: , !=4 checks if its Network Drive
 				devicenames.push_back(ascii);
 			}
 		}

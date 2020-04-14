@@ -21,7 +21,7 @@
 *               email : spamjunkeater@gmail.com                         *
 *************************************************************************/
 
-#define NANINT 0xFFFFFFFFFFFFFFFFULL;
+#define NANINT 0xFFFFFFFFFFFFFFFFULL
 #include "HexDialogs.h"
 #include <wx/progdlg.h>
 #include <wx/filepicker.h>
@@ -562,7 +562,7 @@ bool FindDialog::OnFind( bool internal ) {
 		found = FindBinary( search_binary, parent->CursorOffset()+(options&SEARCH_BACKWARDS ? 0:1), options ); //+1 for forward operations!
 		}
 
-	if( found != -1 ) {
+	if( found != NANINT ) {
 		parent->Goto( found );
 		parent->Select( found,  found+search_size-1 );
 		return true;

@@ -290,7 +290,7 @@ bool HexEditor::FileOpen(wxFileName& myfilename ) {
 #endif
 #ifdef __WXMSW__
 			MEMORY_BASIC_INFORMATION mymeminfo;
-			LPCVOID addr, addr_old;
+			const uint8_t *addr, *addr_old;
 			addr=addr_old=0;
 			wxChar bfrx[200];
 			memset( bfrx, 0, 200);

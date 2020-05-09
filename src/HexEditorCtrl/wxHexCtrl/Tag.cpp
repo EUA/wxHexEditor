@@ -95,7 +95,11 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		std::cout << "Show tag element " << this << std::endl;
 #endif
 		visible = true;
-		wxP = new wxPopupWindow( parent );
+#ifdef __WXMAC__
+		wxP = new wxPopupTransientWindow( parent );
+#else
+		wxP = new wxPopupWindow( parent );  //OSX doesn't like that. Gives wxNonOwnedWindow::Show(bool) error...
+#endif
 		wxP->SetBackgroundColour( NoteClrData.GetColour() );
 		wxP->SetForegroundColour( FontClrData.GetColour() );
 		wxStaticText *text = new wxStaticText( wxP, wxID_ANY, tag );

@@ -1259,7 +1259,9 @@ void HexEditorFrame::OnActivate( wxActivateEvent& event ) {
 #ifdef _DEBUG_MOUSE_
 	std::cout << "HexEditorFrame::OnActivate( wxActivateEvent& event ) \n" ;
 #endif
+#ifndef __WXMAC__ //Otherwise to much trigger avoid popupwindow
 	TagHideAll();
+#endif // __WXMAC__
 	}
 
 void HexEditorFrame::TagHideAll( void ) {

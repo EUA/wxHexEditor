@@ -55,7 +55,7 @@ Then I extract the wxHexEditor:
   cd wxHexEditor
   x86_64-w64-mingw32-make win WXCONFIG=<wx-config path> HOST=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
 
-PS: If you face with " _rpl_malloc " error, you can use 
+PS: If you face with " _rpl_malloc " error, you can use
 
   ac_cv_func_malloc_0_nonnull=yes make win WXCONFIG=<wx-congif path> HOST=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
 
@@ -71,7 +71,7 @@ But you can use windows to compile it also.
  With all support files, DLLs etc.
 
 *Download MinGW Toolchains targets Win64 or Win32 from from https://sourceforge.net/projects/mingw-w64/files/
-and extract to C:\mingw64 
+and extract to C:\mingw64
 
 *You can download Headers and Release DLL files also but I prefer building from source code.
 If you choose download just Headers and Release DLLs,
@@ -106,9 +106,12 @@ tar xvf wxWidgets-<version>.tar.bz2
 cd wxWidgets
 mkdir release
 cd release
-../configure --with-osx_cocoa --with-macosx-version-min=10.7  --disable-shared  --disable-mediactrl --with-{zlib,expat,libpng,libtiff,jpeg}=builtin --with-opengl --enable-universal-binary=x86_64,i386 CXXFLAGS="-stdlib=libc++ -std=c++11" OBJCXXFLAGS="-stdlib=libc++ -std=c++11" LDFLAGS="-stdlib=libc++" --enable-{release,unicode,monolithic}
-
-PS:You might have some compilation issues with wxWidgets 3.1 using OSX 10.13.
+../configure --with-osx_cocoa \
+    --with-macosx-version-min=10.9 \
+    --with-macosx-sdk=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk \
+    --disable-shared  --disable-mediactrl --with-{zlib,expat,libpng,libtiff}=builtin \
+    --with-opengl --enable-{unicode,monolithic}
+PS: I use this configuration at Catalina using Clang compiler....
 
 After you make ready the dependencies,
 then extract the wxHexEditor and compile with:
@@ -116,9 +119,9 @@ tar xvf wxHexEditor-v<version>-src.tar.bz2
 cd wxHexEditor
 make mac WXCONFIG=<wx-config path>
 
-Opps! I forgot to say that, you probably need to remove -lgomp and -fopenmp included lines at Makefile manually due clang doesn't support OpenMP yet.
+Opps! I forgot to say that, you probably need to remove -lgomp flag from Makefile.
 
-If everything is OK, your executable is available to execute under:
+If everything is OK, you can also execute program with this command:
 ./wxHexEditor.app/Contents/MacOS/wxHexEditor
 
 That's all.

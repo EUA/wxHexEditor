@@ -58,6 +58,10 @@ class wxHexEditorApp : public wxApp {
 		virtual bool OnInit();// wxOVERRIDE;
 		void PostAppInit(void);
 		void SetLanguage(void);
+#ifdef __WXMAC__	//for preferences and about
+		DECLARE_EVENT_TABLE()
+#endif // __WXMAC__
+		void OnHelp(wxCommandEvent& evt);
 #ifdef _DEBUG_EVENTS_
 		int FilterEvent(wxEvent &evt);
 		void OnMouseMove(wxMouseEvent &event);

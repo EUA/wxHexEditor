@@ -41,6 +41,21 @@
 #include "HexEditorApp.h"
 IMPLEMENT_APP(wxHexEditorApp)
 
+#ifdef __WXMAC__
+BEGIN_EVENT_TABLE(wxHexEditorApp, wxApp)
+EVT_MENU(wxID_ABOUT, wxHexEditorApp::OnHelp)
+EVT_MENU(wxID_PREFERENCES, wxHexEditorApp::OnHelp)
+END_EVENT_TABLE()
+
+void wxHexEditorApp::OnHelp(wxCommandEvent& evt)
+{
+	if( evt.GetId() == wxID_ABOUT )
+		frame->OnHelpMenu(evt);
+	else
+		frame->OnOptionsMenu(evt);
+}
+#endif
+
 class MyClient: public wxClient {
 	public:
 		void Connect(const wxString& sHost, const wxString& sService, const wxString& sTopic);

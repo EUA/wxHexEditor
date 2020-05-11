@@ -80,13 +80,13 @@ class HexEditorFrame : public HexEditorGui {
 #endif // _FSWATCHER_
 		//this two need public for About and Preferences at Mac
       void OnHelpMenu( wxCommandEvent& event );
-  		void OnDevicesMenu( wxCommandEvent& event );
+		void OnOptionsMenu( wxCommandEvent& event );
 	protected:
 		void OnMenuEvent( wxCommandEvent& event );
 		void OnToolsMenu( wxCommandEvent& event );
 		void OnUpdateUI( wxUpdateUIEvent& event );
 		void OnViewMenu( wxCommandEvent& event );
-		void OnOptionsMenu( wxCommandEvent& event );
+  		void OnDevicesMenu( wxCommandEvent& event );
 		void OnOptionsFileMode( wxCommandEvent& event );
 		void OnClose( wxCloseEvent& event );
 		void OnActivate( wxActivateEvent& event );

@@ -2,7 +2,7 @@ WXCONFIG ?= wx-config
 HOST=
 OPT_FLAGS += -fopenmp
 LIBS += -lgomp
-WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -MMD -Wall -O2 -DNDEBUG
+WXCXXFLAGS= `$(WXCONFIG) --cxxflags` -Iudis86 -Imhash/include -fopenmp -MMD -Wall -O2 -DNDEBUG
 WXLDFLAGS = `$(WXCONFIG) --libs` `$(WXCONFIG) --libs aui` `$(WXCONFIG) --libs core`
 #add this ldflags for WinConsole  "-Wl,--subsystem,console -mconsole" for win-debug
 #LDFLAGS += -Wl,--subsystem,console -mconsole
@@ -50,7 +50,7 @@ all:$(EXECUTABLE) langs
 #CXX=clang++
 #OPT_FLAGS=-D_Bool=bool -std=c++11 -lomp
 
-$(OBJECTS): $(LIBS) $(SOURCES)
+$(OBJECTS): $(SOURCES)
 
 MOBJECTS=$(LANGUAGES:.po=.mo)
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Dec 16 2019)
+// C++ code generated with wxFormBuilder (version Apr  9 2021)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -42,6 +42,7 @@
 #include <wx/statbmp.h>
 #include <wx/hyperlink.h>
 #include <wx/filepicker.h>
+#include <wx/wrapsizer.h>
 #include <wx/clrpicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -141,7 +142,7 @@ class HexEditorGui : public wxFrame
 
 	public:
 
-		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		HexEditorGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxHexEditor Alpha Development version"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 747,399 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~HexEditorGui();
 
@@ -314,7 +315,7 @@ class GotoDialogGui : public wxDialog
 
 	public:
 
-		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Go to Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		GotoDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Go to Offset"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 443,188 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~GotoDialogGui();
 
 };
@@ -351,7 +352,7 @@ class FindDialogGui : public wxDialog
 
 	public:
 
-		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		FindDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 650,231 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~FindDialogGui();
 
 };
@@ -414,7 +415,7 @@ class CompareDialogGui : public wxDialog
 
 	public:
 
-		CompareDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Compare Files"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+		CompareDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Compare Files"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,410 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~CompareDialogGui();
 
 };
@@ -473,6 +474,33 @@ class ChecksumDialogGui : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+/// Class XORViewDialogGui
+///////////////////////////////////////////////////////////////////////////////
+class XORViewDialogGui : public wxDialog
+{
+	private:
+
+	protected:
+		wxStaticText* txtWarning;
+		wxStaticText* txtSelection;
+		wxRadioButton* radioASCII;
+		wxRadioButton* radioHex;
+		wxTextCtrl* XORtext;
+		wxButton* btnCancel;
+		wxButton* btnOK;
+
+		// Virtual event handlers, overide them in your derived class
+		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
+
+
+	public:
+
+		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~XORViewDialogGui();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
 /// Class CopyAsDialogGui
 ///////////////////////////////////////////////////////////////////////////////
 class CopyAsDialogGui : public wxDialog
@@ -498,35 +526,8 @@ class CopyAsDialogGui : public wxDialog
 
 	public:
 
-		CopyAsDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Copy Selected Block As"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		CopyAsDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Copy Selected Block As"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 326,296 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~CopyAsDialogGui();
-
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class XORViewDialogGui
-///////////////////////////////////////////////////////////////////////////////
-class XORViewDialogGui : public wxDialog
-{
-	private:
-
-	protected:
-		wxStaticText* txtWarning;
-		wxStaticText* txtSelection;
-		wxRadioButton* radioASCII;
-		wxRadioButton* radioHex;
-		wxTextCtrl* XORtext;
-		wxButton* btnCancel;
-		wxButton* btnOK;
-
-		// Virtual event handlers, overide them in your derived class
-		virtual void EventHandler( wxCommandEvent& event ) { event.Skip(); }
-
-
-	public:
-
-		XORViewDialogGui( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("XORView Thru Warning!"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-		~XORViewDialogGui();
 
 };
 

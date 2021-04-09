@@ -120,8 +120,13 @@ HexEditorFrame::HexEditorFrame( wxWindow* parent,int id ):
 #if _FSWATCHER_
 	file_watcher=NULL;
 #endif // _FSWATCHER_
+#ifndef __linux__
+    // Dont set the icon as the XPM on linux,
+    // as linux desktops have their own mechanisms,
+    // and this overrides them, resulting in inconsistant visual style
 	wxIcon wxHexEditor_ICON ( wxhex_xpm );
 	this->SetIcon(wxHexEditor_ICON);
+#endif
 	license= wxT("wxHexEditor is a hex editor for HUGE files and devices.\n"
 	             "Copyright (C) 2006-2012  Erdem U. Altinyurt\n"
 	             "\n"

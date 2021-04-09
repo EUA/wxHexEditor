@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.wxhexeditor.wxHexEditor</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>wxHexEditor</name>
+  <summary>Advanced large file hex editor</summary>
+  <summary xml:lang="de_DE">Umfangreicher Hex-Editor für große Dateien</summary>
+  <description>
+    <p>Directly edit and analyze large files.</p>
+    <p xml:lang="de_DE">Bearbeiten und analysieren Sie große Dateien direkt.</p>
+    <p>Advanced Features include:</p>
+    <ul>
+      <li>Editing very large files (bigger than RAM)</li>
+      <li>Compare files</li>
+      <li>Directly edit XOR encrypted files</li>
+      <li>Colorized overlays</li>
+    </ul>
+    <p xml:lang="de_DE">Besondere Funktionen:</p>
+    <ul xml:lang="de_DE">
+      <li>Bearbeiten von sehr großen Dateien (größer als RAM)</li>
+      <li>Vergleichen von Dateien</li>
+      <li>direktes bearbeiten XOR chiffrierter Dateien</li>
+      <li>eingefärbte Markierungen</li>
+    </ul>
+  </description>
+  
+  <launchable type="desktop-id">org.wxhexeditor.wxHexEditor.desktop</launchable>
+  
+  <screenshots>
+    <screenshot type="default">
+      <image>
+        https://raw.githubusercontent.com/EUA/wxHexEditor/master/contrib/screenshots/screenshot-1.png
+      </image>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://raw.githubusercontent.com/EUA/wxHexEditor/master/contrib/screenshots/screenshot-2.png
+      </image>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://raw.githubusercontent.com/EUA/wxHexEditor/master/contrib/screenshots/screenshot-3.png
+      </image>
+    </screenshot>
+  </screenshots>
+  
+  <url type="homepage">http://www.wxhexeditor.org/</url>
+  
+  <content_rating type="oars-1.1" />
+  
+  <kudos>
+    <kudo>UserDocs</kudo>
+    <kudo>HiDpiIcon</kudo>
+  </kudos>
+  
+  <releases>
+    <release version="0.24" date="2017-12-31"/>
+  </releases>
+  
+  <translation type="gettext" />
+  
+  <developer_name>Erdem U. Altinyurt</developer_name>
+  <url type="bugtracker">https://github.com/EUA/wxHexEditor/issues</url>
+  <url type="donation">https://sourceforge.net/donate/index.php?group_id=185385</url>
+  <url type="help">http://wiki.wxhexeditor.org/</url>
+
+</component>

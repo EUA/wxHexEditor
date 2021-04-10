@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
-    <FileVersion major="1" minor="13" />
+    <FileVersion major="1" minor="15" />
     <object class="Project" expanded="1">
         <property name="class_decoration">; wxHexCtrl/wxHexCtrl.h</property>
         <property name="code_generation">C++</property>
@@ -138,7 +138,7 @@
                         <property name="resize">Resizable</property>
                         <property name="show">1</property>
                         <property name="size" />
-                        <property name="style">wxALIGN_CENTRE</property>
+                        <property name="style">wxALIGN_CENTER_HORIZONTAL</property>
                         <property name="subclass" />
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip" />
@@ -304,7 +304,7 @@
                         <property name="resize">Resizable</property>
                         <property name="show">1</property>
                         <property name="size" />
-                        <property name="style">wxALIGN_CENTRE</property>
+                        <property name="style">wxALIGN_CENTER_HORIZONTAL</property>
                         <property name="subclass" />
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip" />

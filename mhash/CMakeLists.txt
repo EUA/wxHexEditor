@@ -19,7 +19,7 @@ elseif(UNIX)
 endif()
 
 configure_file(${mhash_config_source} mutils/mhash_config.h COPYONLY)
-target_sources(mhash PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/mhash_config.h)
+target_sources(mhash PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/mutils/mhash_config.h)
 target_include_directories(
 	mhash
 	PUBLIC

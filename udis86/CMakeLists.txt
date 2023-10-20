@@ -12,7 +12,7 @@ make_directory(${CMAKE_BINARY_DIR}/libudis86)
 add_custom_target(
  run ALL
  COMMAND ${Python_EXECUTABLE} scripts/ud_itab.py ${CMAKE_CURRENT_SOURCE_DIR}/docs/x86/optable.xml ${CMAKE_BINARY_DIR}/libudis86
- BYPRODUCTS itab.h itab.c
+ BYPRODUCTS ${CMAKE_BINARY_DIR}/libudis86/itab.h ${CMAKE_BINARY_DIR}/libudis86/itab.c
  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
  COMMENT "Generating itab"
 )
@@ -24,6 +24,6 @@ target_sources(
 
 target_include_directories(
 	udis
-	PUBLIC ${CMAKE_BINARY_DIR}
-	PRIVATE ${CMAKE_BINARY_DIR}/libudis86 libudis86
+	PUBLIC ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/libudis86
+	PRIVATE libudis86
 )

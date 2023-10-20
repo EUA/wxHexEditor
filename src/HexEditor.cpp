@@ -807,6 +807,7 @@ void HexEditor::OnKeyboardSelector(wxKeyEvent& event) {
 #endif
 		if( event.ShiftDown() ) {
 			Selector();
+			UpdateCursorLocation();
 			}
 		else if( event.ControlDown() || event.AltDown() ) {
 			//do nothing!

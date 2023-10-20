@@ -1443,9 +1443,10 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 #endif
 
 	int size = myfile->Read( reinterpret_cast<char*>(bfr.GetWriteBuf( 17 )), 17);
-	if(size>0)
+	uint8_t cursor_value =0;
+	if(size>0) {}
 		bfr.UngetWriteBuf( size );
-
+		cursor_value=reinterpret_cast<uint8_t*>(bfr.GetData())[0];
 	if(size>0) {
 		if( interpreter != NULL ) {
 			interpreter->Set( bfr );
@@ -1471,7 +1472,7 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 	if( statusbar != NULL ) {
 		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/wxMax(1,ByteCapacity()) ), 0);    //wxMax for avoid divide by zero
 		statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
-		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), reinterpret_cast<uint8_t*>(bfr.GetData())[0]), 2);
+		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), cursor_value), 2);
 		if( !select->GetState() ) {
 			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
 			statusbar->SetStatusText(_("Block Size: N/A"),4);

@@ -342,7 +342,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 			}
 		waitpid(ProcessID, NULL, WUNTRACED);
 		BlockRWSize=4;
-		FAM == ReadOnly;
+		FAM = ReadOnly;
 		return true;
 		}
 

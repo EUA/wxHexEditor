@@ -242,7 +242,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		return true;
 		}
 	if( !myfilename.IsFileReadable() ){
-		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with Windows UAC privileges."),_("Error"), wxOK|wxICON_ERROR);
+		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissions or run this program with Windows UAC privileges."),_("Error"), wxOK|wxICON_ERROR);
 		return false;
 		}
 
@@ -281,7 +281,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 	//Owning file
 	else if( !myfilename.IsFileReadable() && DoFileExists ){ // "and myfilename.FileExist()" not used because it's for just plain files, not for block ones.
 		if( wxCANCEL == wxMessageBox(wxString(_("File is not readable by permissions."))+ wxT("\n")+
-												        _("Please change file permissons or run this program with root privileges.")+wxT("\n")+
+												        _("Please change file permissions or run this program with root privileges.")+wxT("\n")+
 												        _("You can also try to own the file temporarily (requires root's password.)")+wxT("\n")+wxT("\n")+
 												        _("Do you want to own the file?"),_("Warning"), wxOK|wxCANCEL|wxICON_WARNING) )
 
@@ -347,7 +347,7 @@ bool FAL::OSDependedOpen(wxFileName& myfilename, FileAccessMode FAM, unsigned Fo
 		}
 
 	if( !myfilename.IsFileReadable() ){
-		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissons or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
+		wxMessageBox(wxString(_("File is not readable by permissions."))+wxT("\n")+_("Please change file permissions or run this program with root privileges"),_("Error"), wxOK|wxICON_ERROR );
 		return false;
 		}
 	return FALOpen(myfilename, FAM, ForceBlockRW);
@@ -501,7 +501,7 @@ DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, boo
 	if( size < 0 ){//Deletion!
 		newnode->old_data = new unsigned char[-size];
 		if( newnode->old_data == NULL )
-			wxLogError( _("Not Enought RAM") );
+			wxLogError( _("Not Enough RAM") );
 		else{
 			Seek( start_byte, wxFromStart );
 			Read( newnode->old_data, -size );
@@ -511,17 +511,17 @@ DiffNode* FAL::NewNode( uint64_t start_byte, const char* data, int64_t size, boo
 	else if( inject ){
 		newnode->new_data = new unsigned char[size];
 		if( newnode->new_data == NULL )
-			wxLogError( _("Not Enought RAM") );
+			wxLogError( _("Not Enough RAM") );
 		else{
 			memcpy( newnode->new_data, data, size);
 			return newnode;
 			}
 		}
-	else{// Normal opeariton
+	else{// Normal operation
 		newnode->old_data = new unsigned char[size];
 		newnode->new_data = new unsigned char[size];
 		if( newnode->old_data == NULL || newnode->new_data == NULL){
-			wxLogError( _("Not Enought RAM") );
+			wxLogError( _("Not Enough RAM") );
 			delete [] newnode->old_data;
 			delete [] newnode->new_data;
 			return NULL;

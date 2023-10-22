@@ -458,7 +458,7 @@ bool HexEditor::FileSaveGeneric( wxString savefilename, uint64_t fstart, uint64_
 		if( SaveLength > available ) {
 			int state = wxMessageBox( wxString::Format( _( "There are not enough free disk space.\nRequired: %s\nAvailable: %s"),
 			                          wxFileName::GetHumanReadableSize( wxULongLong(SaveLength) ),
-			                          wxFileName::GetHumanReadableSize( wxULongLong(available.GetValue()) ) ), _("Not Enought Space"), wxCANCEL|wxOK|wxICON_QUESTION, this );
+			                          wxFileName::GetHumanReadableSize( wxULongLong(available.GetValue()) ) ), _("Not Enough Space"), wxCANCEL|wxOK|wxICON_QUESTION, this );
 			if(state==wxCANCEL)
 				return false;
 			}

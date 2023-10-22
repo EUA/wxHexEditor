@@ -2397,7 +2397,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 			rd1=rd1_prefetch;
 			rd2=rd2_prefetch;
 			}
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 		std::cout << "Diff Compare Start Offset: " << mb << std::endl;
 #endif
 		bool show_limit_message=false;
@@ -2420,12 +2420,9 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 			#pragma omp section
 			//#pragma omp task
 				{
-//				bfr_int1 = static_cast<int*>(buffer1.GetData());
-//				bfr_int2 = static_cast<int*>(buffer2.GetData());
 				bfr_int1 = reinterpret_cast<int*>(buffer1);
 				bfr_int2 = reinterpret_cast<int*>(buffer2);
 
-//				for( unsigned i = 0 ; (i < wxMin( buffer1.GetDataLen(), buffer2.GetDataLen())) && !BreakDoubleFor; i ++ ){
 				for( int i = 0 ; (i < wxMin( rd1, rd2)) && !BreakDoubleFor; ) {
 					if(diffHit >= 500000) {
 						show_limit_message=true;
@@ -2435,19 +2432,21 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 						}
 
 					//Here we made the comparison on INTEGER for speedup
-					if( bfr_int1[i/sizeof(int)]==bfr_int2[i/sizeof(int)]  ) {
-						//bytes are eq, goto check next integer
-						if( !diff ) {
-							i+=sizeof(int);
-							continue;
+					if (i%sizeof(int)==0) //otherwise we can't find some diffs! Bug#190
+						if( bfr_int1[i/sizeof(int)]==bfr_int2[i/sizeof(int)]  ) {
+							//bytes are eq, goto check next integer
+							if( !diff ) {
+								i+=sizeof(int);
+								continue;
+								}
 							}
-						}
+
 
 					//If integer comparison is failed, here we made the comparison in byte
 					if((buffer1[i] != buffer2[i]) == SearchForDiff) {
 						//Different bytes found.
 						if(!diff) { //Set difference start
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 							std::cout << "Diff Start " << mb+i << " to " ;
 #endif
 							diff=true;
@@ -2455,7 +2454,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 							      compare_range > 0 && diffHit>1) {
 								diffHit--; //re-push old diff ending to stack
 								//StopAfterNMatch++;//and count 2 difference as 1
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 								std::cout << "StopAfterNMatch:" << StopAfterNMatch << std::endl;
 #endif
 								}
@@ -2476,7 +2475,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 					else {			//bytes are eq.
 						if(diff) { //Set difference end
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 							std::cout << mb+i-1 << std::endl;
 #endif
 							diff=false;
@@ -2484,7 +2483,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 
 
 							if( --StopAfterNMatch == 0 ) {
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 								std::cout << "Break comparison due StopAfterNMatch." << std::endl ;
 #endif
 								BreakDoubleFor=true;
@@ -2597,7 +2596,7 @@ bool CompareDialog::Compare( wxFileName fl1, wxFileName fl2, bool SearchForDiff,
 	}
 
 void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ) {
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 	std::cout << "CompareDialog::OnFileChange()" << std::endl;
 #endif
 	if( filePick1->GetPath() != wxEmptyString && filePick2->GetPath() != wxEmptyString)
@@ -2608,7 +2607,7 @@ void CompareDialog::OnFileChange( wxFileDirPickerEvent& event ) {
 
 
 void CompareDialog::EventHandler( wxCommandEvent& event ) {
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 	std::cout << "CompareDialog::EventHandler()" << std::endl;
 #endif
 	if(event.GetId() == wxID_CANCEL)
@@ -2659,7 +2658,7 @@ void CompareDialog::EventHandler( wxCommandEvent& event ) {
 	}
 
 void CompareDialog::OnFileDrop( wxDropFilesEvent& event ) {
-#ifdef _DEBUG_
+#ifdef _DEBUG_COMPARE_
 	std::cout << "CompareDialog::OnFileDrop()" << std::endl;
 #endif
 	wxBell();

@@ -921,6 +921,8 @@ uint64_t FindDialog::FindBinaryForward(wxMemoryBuffer target, uint64_t from, uin
 #else	 //code without prefetching
 		found = /*MultiThread*/SearchAtBuffer( buffer, readed, static_cast<char*>(target.GetData()),target.GetDataLen(), options, &partial_results );//Makes raw search here
 #endif //_READ_PREFETCH_
+
+		if (found >= 0) found += current_offset;
 		if( partial_results.size() > 0 ) { // Houston, We found something!
 			if( options & SEARCH_FINDALL ) {
 				for(unsigned i=0 ; i < partial_results.size() ; i++ )
@@ -1182,9 +1184,11 @@ void FindDialog::OnFindAll( bool internal ) {
 		parent->Goto( parent->HighlightArray.Item(0)->start );
 
 		if( !internal ) {
-			//this->Hide(); //This make assertion when issued EndModal!
+			this->Hide();
 			OSXwxMessageBox(wxString::Format(_("Found %d matches."), static_cast<int>( parent->HighlightArray.GetCount()) ), _("Find All Done!"), wxOK, parent );
-			EndModal(0);
+			#ifdef __WXMAC__
+				EndModal(0);
+			#endif
 			//this->Show();
 			}
 		}
@@ -1307,8 +1311,17 @@ void FindDialog::OnFindAll( bool internal ) {
 //Returns indice of first found if used with (  options & SEARCH_FINDALL) ret_ptr return vector pointer filled with locations at buffer
 //WARNING! THIS FUNCTION WILL CHANGE BFR and/or SEARCH strings if SEARCH_MATCHCASE not selected as an option!
 inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, int search_size, unsigned options, std::vector<int> *ret_ptr ) {
+	static const int REG_SZ = sizeof(__m128i);
+
+	char internal_array[REG_SZ];
+
 	if( bfr_size < search_size )
 		return -1;
+	if(bfr_size < REG_SZ) {
+		memset(&internal_array[0], 0, sizeof(internal_array));
+		memcpy(&internal_array[0], bfr, bfr_size);
+		bfr = &internal_array[0];
+	}
 
 	///SEARCH_FINDALL operation supersedes SEARCH_BACKWARDS and SEARCH_WRAPAROUND
 	if(options & SEARCH_FINDALL)
@@ -1399,114 +1412,114 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		//Search at no match case ASCII handled here
 		///Search text already need to be lowered at FindText()
 #ifdef __SSE2__
-		__m128i b = _mm_set1_epi8 ( search[0] );
-		__m128i c = _mm_set1_epi8 ( UTF8SpeedHackChrs[0] );
-		if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) { //Normal Operation
-			for(int i=0; i <= bfr_size-search_size ; i+=16 ) {
-				__m128i a = _mm_loadu_si128 ( reinterpret_cast<__m128i*>(bfr+i));
-				__m128i r1 = _mm_cmpeq_epi8 ( a, b );
-				__m128i r2 = _mm_cmpeq_epi8 ( a, c );
-				short reg1=_mm_movemask_epi8( r1 );
-				short reg2=_mm_movemask_epi8( r2 );
-				if(reg1 || reg2) {	//If SIMD return a possible match in this block
-#ifdef _DEBUG_FIND_
-					char s[16];
-					__m128i* k = (__m128i*)(s);
-					std::cout << "\nSSE2 Debug for i=" << i << std::hex << "\t Reg1 : 0x" << reg1 << "\t Reg2 : 0x" << reg2 << std::dec;
-					_mm_storeu_si128(k, a);
-					std::cout << "\nREG MMX A=";
-					for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':s[z]);
-					_mm_storeu_si128(k, b);
-					std::cout << "\nREG MMX B=";
-					for(int z=0; z< 16 ; z++ ) std::cout << s[z];
-					_mm_storeu_si128(k, r1);
-					std::cout << "\nREG MMX R=";
-					for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':'X');
-					_mm_storeu_si128(k, c);
-					std::cout << "\nREG MMX C=";
-					for(int z=0; z< 16 ; z++ ) std::cout << s[z];
-					_mm_storeu_si128(k, r2);
-					std::cout << "\nREG MMX R=";
-					for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':'X');
-					std::cout << std::endl;
-#endif // _DEBUG_FIND_
-					for(short j=0 ; j < 16 ; j++ ) {
-						//since search[0] allready lowered & UTF8SpeedHackChrs[0] is uppered
-						if( bfr[i+j] == search[0] || bfr[i+j] == UTF8SpeedHackChrs[0] )	{
-							//we got first byte match here, let lower bfr[i:search_size] to full match
-							//partialy lowering buffer
-							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
-								bfr[k]=tolower(bfr[k]);
-							if(! memcmp( bfr+i+j, search, search_size )) {	//if match found
-								ret_ptr->push_back(i+j);
-								if(options & SEARCH_FINDALL)
-									continue;
-								else
-									return i+j;
-								}
-							}
-						}
-					}
-				}
-			}
-		else { //Backward Search!
-			for(int i=bfr_size - search_size ; i >= 0 ; i-=16 ) {
-				__m128i a = _mm_loadu_si128 ( reinterpret_cast<__m128i*>(bfr+i));
-				__m128i r1 = _mm_cmpeq_epi8 ( a, b );
-				__m128i r2 = _mm_cmpeq_epi8 ( a, c );
-				short reg1=_mm_movemask_epi8( r1 );
-				short reg2=_mm_movemask_epi8( r2 );
-				if(reg1 || reg2) {	//If SIMD return a possible match in this block
+		const char FirstChL = search[0];
+		const char FirstChU = toupper(FirstChL);
 
+		const __m128i b = _mm_set1_epi8(FirstChL);
+		const __m128i c = _mm_set1_epi8(FirstChU);
+		if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) { //Normal Operation
+			for(int i = 0; i <= bfr_size - std::max(search_size, REG_SZ) ; i += REG_SZ) {
+				const __m128i a = _mm_loadu_si128 ( reinterpret_cast<__m128i*>(bfr+i));
+				const __m128i r1 = _mm_cmpeq_epi8 ( a, b );
+				const __m128i r2 = _mm_cmpeq_epi8 ( a, c );
+				const int reg1 = _mm_movemask_epi8( r1 );
+				const int reg2 = _mm_movemask_epi8( r2 );
+				if(reg1 || reg2) {	//If SIMD return a possible match in this block
 #ifdef _DEBUG_FIND_
-					char s[16];
+					char s[REG_SZ];
 					__m128i* k = (__m128i*)(s);
 					std::cout << "\nSSE2 Debug for i=" << i << std::hex << "\t Reg1 : 0x" << reg1 << "\t Reg2 : 0x" << reg2 << std::dec;
 					_mm_storeu_si128(k, a);
 					std::cout << "\nREG MMX A=";
-					for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':s[z]);
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':s[z]);
 					_mm_storeu_si128(k, b);
 					std::cout << "\nREG MMX B=";
-					for(int z=0; z< 16 ; z++ ) std::cout << s[z];
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << s[z];
 					_mm_storeu_si128(k, r1);
 					std::cout << "\nREG MMX R=";
-					for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':'X');
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':'X');
 					_mm_storeu_si128(k, c);
 					std::cout << "\nREG MMX C=";
-					for(int z=0; z< 16 ; z++ ) std::cout << s[z];
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << s[z];
 					_mm_storeu_si128(k, r2);
 					std::cout << "\nREG MMX R=";
-					for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':'X');
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':'X');
 					std::cout << std::endl;
 #endif // _DEBUG_FIND_
-					for( short j=15 ; j>=0 ; j--)
+					for(int j = 0; j < REG_SZ; j++ ) {
+						const int  ij   = i + j;
+						if(ij > bfr_size - search_size) break;
+						const char bfij = bfr[ij];
 						//since search[0] allready lowered & UTF8SpeedHackChrs[0] is uppered
-						if(( bfr[i+j] == search[0] || bfr[i+j] == UTF8SpeedHackChrs[0] )) {
+						if (bfij == FirstChL || bfij == FirstChU)	{
 							//we got first byte match here, let lower bfr[i:search_size] to full match
 							//partialy lowering buffer
-							for( int k = i+j ; (k < bfr_size) && (k-(i+j)<search_size); k++)
-								bfr[k]=tolower(bfr[k]);
-							if(! memcmp( bfr+i+j, search, search_size )) {	//if match found
-								ret_ptr->push_back(i+j);
+							for (int k = ij + 1; (k < bfr_size) && ((k - ij) < search_size); k++)
+								bfr[k] = tolower(bfr[k]);
+							if (!memcmp(bfr + ij + 1, search + 1, search_size - 1)) {	//if match found
+								ret_ptr->push_back(ij);
 								if(options & SEARCH_FINDALL)
 									continue;
 								else
-									return i+j;
-								}
+									return ij;
 							}
+						}
 					}
 				}
-			//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
-			for(int i=16 ; i >= 0 ; i-- )
-				if( bfr[i] == search[0] )
-					if(! memcmp( bfr+i, search, search_size )) {	//if match found
-						ret_ptr->push_back(i);
-						if(options & SEARCH_FINDALL)
-							continue;
-						else
-							return i;
-						}
 			}
+		}
+		else { //Backward Search!
+			for (int i = bfr_size - std::max(search_size, REG_SZ); i > -REG_SZ; i -= REG_SZ) {
+				if (i < 0) i = 0;
+				__m128i a = _mm_loadu_si128 ( reinterpret_cast<__m128i*>(bfr+i));
+				__m128i r1 = _mm_cmpeq_epi8 ( a, b );
+				__m128i r2 = _mm_cmpeq_epi8 ( a, c );
+				int reg1=_mm_movemask_epi8( r1 );
+				int reg2=_mm_movemask_epi8( r2 );
+				if(reg1 || reg2) {	//If SIMD return a possible match in this block
+#ifdef _DEBUG_FIND_
+					char s[REG_SZ];
+					__m128i* k = (__m128i*)(s);
+					std::cout << "\nSSE2 Debug for i=" << i << std::hex << "\t Reg1 : 0x" << reg1 << "\t Reg2 : 0x" << reg2 << std::dec;
+					_mm_storeu_si128(k, a);
+					std::cout << "\nREG MMX A=";
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':s[z]);
+					_mm_storeu_si128(k, b);
+					std::cout << "\nREG MMX B=";
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << s[z];
+					_mm_storeu_si128(k, r1);
+					std::cout << "\nREG MMX R=";
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':'X');
+					_mm_storeu_si128(k, c);
+					std::cout << "\nREG MMX C=";
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << s[z];
+					_mm_storeu_si128(k, r2);
+					std::cout << "\nREG MMX R=";
+					for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':'X');
+					std::cout << std::endl;
+#endif // _DEBUG_FIND_
+					for (int j = std::min(REG_SZ - 1, bfr_size - search_size - i); j >= 0; j--) {
+						const int  ij   = i + j;
+						const char bfij = bfr[ij];
+
+						if (bfij == FirstChL || bfij == FirstChU) {
+							//we got first byte match here, let lower bfr[i:search_size] to full match
+							//partialy lowering buffer
+							for (int k = ij + 1; (k < bfr_size) && ((k - ij) < search_size); k++)
+								bfr[k] = tolower(bfr[k]);
+							if (!memcmp(bfr + ij + 1, search + 1, search_size - 1)) {	//if match found
+								ret_ptr->push_back(ij);
+								if(options & SEARCH_FINDALL)
+									continue;
+								else
+									return ij;
+							}
+						}
+					}
+				}
+				if (!i) break;
+			}
+		}
 #else
 		//Forward Operation
 		if((options & SEARCH_FINDALL) || !( options & SEARCH_BACKWARDS)) {
@@ -1554,11 +1567,11 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 		//681 clk with SSE2 vs 1200clk with C++
 		__m128i b = _mm_set1_epi8 ( search[0] );
 
-		for(int i=0; i <= bfr_size-search_size ; i+=16 ) {
+		for(int i = 0; i <= bfr_size - std::max(search_size, REG_SZ) ; i += REG_SZ ) {
 			__m128i a = _mm_loadu_si128 ( reinterpret_cast<__m128i*>(bfr+i));
 			__m128i r = _mm_cmpeq_epi8 ( a, b );
 			short reg=_mm_movemask_epi8( r );
-#ifdef _DEBUG_FIND_
+		#ifdef _DEBUG_FIND_
 			char s[16];
 			__m128i* k = (__m128i*)(s);
 			std::cout << " SSE2 Debug for i=" << i << std::hex << "\t Reg : 0x" << reg << std::dec;
@@ -1572,19 +1585,22 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 			std::cout << "\nREG MMX R=";
 			for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':'X');
 			std::cout << std::endl;
-#endif // _DEBUG_FIND_
+		#endif // _DEBUG_FIND_
 			if( reg )
-				for( short j=0 ; j<=15 ; j++)
+				for(int j = 0; j < REG_SZ; j++ ) {
+					const int  ij   = i + j;
+					if(ij > bfr_size - search_size) break;
+					const char bfij = bfr[ij];
 					//if( (1<<j) & reg)
-					if( bfr[i+j] == search[0] ) //xxxclk
-						if(! memcmp( bfr+i+j, search, search_size ))	//if match found
-							if(i+j< bfr_size-search_size) { //to avoid matches buffer bigger than mem
-								ret_ptr->push_back(i+j);
-								if(options & SEARCH_FINDALL)
-									continue;
-								else
-									return i+j;
-								}
+					if( bfij == search[0] ) //xxxclk
+						if(! memcmp( bfr + ij + 1, search + 1, search_size - 1 )) {	//if match found
+							ret_ptr->push_back(ij);
+							if(options & SEARCH_FINDALL)
+								continue;
+							else
+								return i+j;
+						}
+				}
 			}
 		//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
 //		for(int i=0 ; i < 16 ; i++ )
@@ -1610,50 +1626,45 @@ inline int FindDialog::SearchAtBuffer( char *bfr, int bfr_size, char* search, in
 #ifdef __SSE2__
 		//676clk with SSE2, 1251 clk with C++
 		__m128i b = _mm_set1_epi8 ( search[0] );
-		for(int i=bfr_size - search_size ; i >= 0 ; i-=16 ) {
+		for (int i = bfr_size - std::max(search_size, REG_SZ); i > -REG_SZ; i -= REG_SZ) {
+			if (i < 0) i = 0;
 			__m128i a = _mm_loadu_si128 ( reinterpret_cast<__m128i*>(bfr+i));
 			__m128i r = _mm_cmpeq_epi8 ( a, b );
 			short reg=_mm_movemask_epi8( r );
 #ifdef _DEBUG_FIND_
 
-			char s[16];
+			char s[REG_SZ];
 			__m128i* k = (__m128i*)(s);
 			std::cout << " SSE2 Debug for i=" << i << std::hex << "\t Reg : 0x" << reg << std::dec;
 			_mm_storeu_si128(k, a);
 			std::cout << "\nREG MMX A=";
-			for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':s[z]);
+			for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':s[z]);
 			_mm_storeu_si128(k, b);
 			std::cout << "\nREG MMX B=";
-			for(int z=0; z< 16 ; z++ ) std::cout << s[z];
+			for(int z=0; z< REG_SZ ; z++ ) std::cout << s[z];
 			_mm_storeu_si128(k, r);
 			std::cout << "\nREG MMX R=";
-			for(int z=0; z< 16 ; z++ ) std::cout << (s[z]==0?' ':'X');
+			for(int z=0; z< REG_SZ ; z++ ) std::cout << (s[z]==0?' ':'X');
 			std::cout << std::endl;
 #endif // _DEBUG_FIND_
 			if( reg ) {
-				for( short j=15 ; j>=0 ; j--)
+				for( int j = std::min(REG_SZ - 1, bfr_size - search_size - i); j >= 0; j--) {
+					const int  ij   = i + j;
+					const char bfij = bfr[ij];
 					//if( (1<<j) & reg)
-					if( bfr[i+j] == search[0] )
-						if(! memcmp( bfr+i+j, search, search_size )) {	//if match found
-							ret_ptr->push_back(i+j);
+					if( bfij == search[0] )
+						if (!memcmp(bfr + ij + 1, search + 1, search_size - 1)) {	//if match found
+							ret_ptr->push_back(ij);
 							if(options & SEARCH_FINDALL ) {
 								continue;
 								}
 							else
-								return i+j;
-							}
+								return ij;
+						}
 				}
 			}
-		//Process last chunk that smaller than 16 byte (SSE2 register's max load is 16 bytes)
-		for(int i=16 ; i >= 0 ; i-- )
-			if( bfr[i] == search[0] )
-				if(! memcmp( bfr+i, search, search_size )) {	//if match found
-					ret_ptr->push_back(i);
-					if(options & SEARCH_FINDALL)
-						continue;
-					else
-						return i;
-					}
+			if (!i) break;
+		}
 #else
 		for(int i=bfr_size - search_size ; i >= 0 ; i-- )
 			if( bfr[i] == search[0] )
@@ -1774,7 +1785,9 @@ void ReplaceDialog::OnReplaceAll( void ) {
 		wxUpdateUIEvent eventx( UNREDO_EVENT );
 		wxPostEvent( parent, eventx);
 		OSXwxMessageBox(wxString::Format(_("%d records changed."), parent->HighlightArray.Count() ), _("Info"), wxOK, parent);
-		EndModal(0);
+		#ifdef __WXMAC__
+			EndModal(0);
+		#endif
 		}
 	}
 

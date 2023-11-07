@@ -53,6 +53,9 @@
 					<Add option="-D_DEBUG_EVENTS_x" />
 					<Add option="-D_DEBUG_THREAD_SCROLL_" />
 					<Add option="-D_DEBUG_FIND_UNIT_TEST_x" />
+					<Add option="-D_DEBUG_SELECT_" />
+					<Add option="-D_DEBUG_FILE_" />
+					<Add option="-D_DEBUG_COMPARE_" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />

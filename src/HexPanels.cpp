@@ -258,6 +258,13 @@ wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats T
     #define APPLE_TICK 1000000000
     #define APPLE_SEC_TO_UNIX_EPOCH 0LL
     int64_t seconds=-1;
+
+	 wxDateTime::TZ TimeFmt;
+    if( m_checkBoxLocal->IsChecked() )
+		TimeFmt = wxDateTime::Local;
+	 else
+		TimeFmt = wxDateTime::UTC;
+
     switch( TimeFormat ){
         case UNIX32:
             seconds = *timeraw->bit32; break;
@@ -283,7 +290,7 @@ wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats T
             // y  y  y  y  y  y  y  m  m  m  m  d  d  d  d  d  h  h  h  h  h  m  m  m  m  m  m  x  x  x  x  x
             FATDate = *reinterpret_cast<FATDate_t*>(timeraw->ubit32);
             wxDateTime aDate( FATDate.Day, static_cast<wxDateTime::Month>(FATDate.Month),FATDate.Year,FATDate.Hour,FATDate.Min,FATDate.Sec, 0 );
-            return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+            return ( aDate.IsValid() ? aDate.Format("%c", TimeFmt ) : _("OUTATIME") );
             }
 #ifdef HAS_A_EXFAT_TIME
         case exFAT_C:
@@ -311,7 +318,7 @@ wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats T
                 timezone=(timezone&0x7F)*15;
 
             aDate += wxTimeSpan::Minutes(timezone);
-            return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+            return ( aDate.IsValid() ? aDate.Format("%c", TimeFmt ) : _("OUTATIME") );
 #endif
         }
     seconds += m_spinCtrl_timeUTC->GetValue()*60*60;
@@ -320,10 +327,7 @@ wxString DataInterpreter::FluxCapacitor( unidata::endian *timeraw, TimeFormats T
     m_spinCtrl_timeUTC->Enable(! m_checkBoxLocal->IsChecked());
     m_static_timeUTC->Enable(! m_checkBoxLocal->IsChecked());
 
-    if( m_checkBoxLocal->IsChecked() )
-        return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::Local ) : _("OUTATIME") );
-    else
-        return ( aDate.IsValid() ? aDate.Format("%c", wxDateTime::UTC ) : _("OUTATIME") );
+	 return ( aDate.IsValid() ? aDate.Format("%c", TimeFmt ) : _("OUTATIME") );
 
     /*
     struct tm * timeinfo;

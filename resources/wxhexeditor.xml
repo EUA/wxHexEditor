@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop-application">
+  <id>wxhexeditor</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>wxHexEditor</name>
+  <summary>Hex editor</summary>
+  <summary xml:lang="bs">Heksadekadni editor</summary>
+  <summary xml:lang="ca">Editor hexadecimal</summary>
+  <summary xml:lang="ca-valencia">Editor hexadecimal</summary>
+  <summary xml:lang="cs">Hexa editor</summary>
+  <summary xml:lang="de">Hex-Editor</summary>
+  <summary xml:lang="el">Επεξεργαστής δεκαεξαδικών</summary>
+  <summary xml:lang="en-GB">Hex editor</summary>
+  <summary xml:lang="es">Editor hexadecimal</summary>
+  <summary xml:lang="et">Binaarfailide redaktor</summary>
+  <summary xml:lang="fi">Heksaeditori</summary>
+  <summary xml:lang="fr">Éditeur hexadécimal</summary>
+  <summary xml:lang="gl">Editor de bytes</summary>
+  <summary xml:lang="hu">Hexaszerkesztő</summary>
+  <summary xml:lang="id">Editor Hex</summary>
+  <summary xml:lang="it">Editor esadecimale</summary>
+  <summary xml:lang="ko">16진수 편집기</summary>
+  <summary xml:lang="nl">Hexbewerker</summary>
+  <summary xml:lang="nn">Heksadesimal-redigering</summary>
+  <summary xml:lang="pl">Edytor szesnastkowy</summary>
+  <summary xml:lang="pt">Editor hexadecimal</summary>
+  <summary xml:lang="pt-BR">Editor hexadecimal</summary>
+  <summary xml:lang="ro">Redactor hexazecimal</summary>
+  <summary xml:lang="ru">Шестнадцатеричный редактор</summary>
+  <summary xml:lang="sk">Hex editor</summary>
+  <summary xml:lang="sl">Šestnajstiški urejevalnik</summary>
+  <summary xml:lang="sr">Хексадекадни уређивач</summary>
+  <summary xml:lang="sr-Latn">Heksadekadni uređivač</summary>
+  <summary xml:lang="sr-ijekavian">Хексадекадни уређивач</summary>
+  <summary xml:lang="sr-ijekavianlatin">Heksadekadni uređivač</summary>
+  <summary xml:lang="sv">Hexeditor</summary>
+  <summary xml:lang="tr">Hex düzenleyici</summary>
+  <summary xml:lang="uk">Шістнадцятковий редактор</summary>
+  <summary xml:lang="x-test">xxHex editorxx</summary>
+  <summary xml:lang="zh-CN">十六进制编辑器</summary>
+  <summary xml:lang="zh-TW">十六進位資料編輯器</summary>
+  <description>
+    <p>wxHexEditor is a hex editor that is capable of handling very large
+files. It supports files up to 2^64 bytes. It can also act as a
+disk editor.</p>
+    <p>Features:</p>
+    <ul>
+      <li>Small footprint on RAM</li>
+      <li>Raw Disk Access</li>
+      <li>Does not create temporary files.</li>
+    </ul>
+  </description>
+  <url type="homepage">http://www.wxhexeditor.org/</url>
+  <url type="bugtracker">https://github.com/EUA/wxHexEditor/issues</url>
+  <url type="help">http://wiki.wxhexeditor.org/</url>
+  <url type="donation">http://wiki.wxhexeditor.org/index.php?title=Donation</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://www.wxhexeditor.org/images/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <provides>
+    <binary>wxHexEditor</binary>
+  </provides>
+  <launchable type="desktop-id">wxHexEditor.desktop</launchable>
+  <releases>
+    <release version="0.24" date="2017-12-31"/>
+  </releases>
+  <update_contact>https://github.com/EUA/</update_contact>
+</component>
